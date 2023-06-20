@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8782708746327882312}
   m_Layer: 0
   m_Name: Block
-  m_TagString: Untagged
+  m_TagString: Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51,7 +51,7 @@ MonoBehaviour:
   top: 0
   Selected: 0
   Type: 0
-  Destroyable: 0
+  Destroyable: 1
 --- !u!33 &4110329766916996031
 MeshFilter:
   m_ObjectHideFlags: 0

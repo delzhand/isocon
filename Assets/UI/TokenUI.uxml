@@ -1,0 +1,41 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/ui.uss?fileID=7433441132597879392&amp;guid=49924054ed88c3a4eb7aa25df48cddd3&amp;type=3#ui" />
+    <ui:VisualElement name="Container" class="modeselect" style="position: absolute; bottom: 0; left: 0; top: 0; justify-content: space-between; width: auto; flex-direction: row; background-color: rgba(102, 102, 102, 0); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; height: auto; right: 0;">
+        <ui:VisualElement name="TokenDisplay" class="token-display" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; top: 203px; left: 167px; opacity: 0;">
+            <ui:VisualElement name="CharId" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                <ui:Label tabindex="-1" text="Gradis" display-tooltip-when-elided="true" name="Name" class="actor-name" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
+                <ui:Label tabindex="-1" text="Enochian" display-tooltip-when-elided="true" name="Job" class="job-name wright" />
+            </ui:VisualElement>
+            <ui:VisualElement name="HpAndVig" class="hp-vig" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                <ui:VisualElement name="HpSeg1" class="hpseg test" />
+                <ui:VisualElement name="HpSeg2" class="hpseg" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                <ui:VisualElement name="HpSeg3" class="hpseg" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                <ui:ProgressBar value="4" name="VigorBar" high-value="32" class="vigor-bar" />
+                <ui:ProgressBar value="24" high-value="32" name="HpBar" class="hp-bar" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
+                <ui:VisualElement name="HpNum" class="foo">
+                    <ui:Label tabindex="-1" text="24" display-tooltip-when-elided="true" name="CHP" />
+                    <ui:Label tabindex="-1" text="+4" display-tooltip-when-elided="true" name="VIG" />
+                    <ui:Label tabindex="-1" text="/32" display-tooltip-when-elided="true" name="MHP" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="TokenDisplay" class="token-display" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; top: 89px; left: 274px; opacity: 0;">
+            <ui:VisualElement name="CharId" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                <ui:Label tabindex="-1" text="Duvala" display-tooltip-when-elided="true" name="Name" class="actor-name" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
+                <ui:Label tabindex="-1" text="Shade" display-tooltip-when-elided="true" name="Job" class="job-name vagabond" />
+            </ui:VisualElement>
+            <ui:VisualElement name="HpAndVig" class="hp-vig" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                <ui:VisualElement name="HpSeg1" class="hpseg test" />
+                <ui:VisualElement name="HpSeg2" class="hpseg" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                <ui:VisualElement name="HpSeg3" class="hpseg" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                <ui:ProgressBar value="7" name="VigorBar" high-value="28" class="vigor-bar" />
+                <ui:ProgressBar value="14" high-value="28" name="HpBar" class="hp-bar" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
+                <ui:VisualElement name="HpNum" class="foo">
+                    <ui:Label tabindex="-1" text="14" display-tooltip-when-elided="true" name="CHP" />
+                    <ui:Label tabindex="-1" text="+7" display-tooltip-when-elided="true" name="VIG" />
+                    <ui:Label tabindex="-1" text="/28" display-tooltip-when-elided="true" name="MHP" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

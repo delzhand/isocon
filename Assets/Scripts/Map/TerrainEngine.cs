@@ -25,6 +25,7 @@ public class TerrainEngine : MonoBehaviour
                 try {
                     GameObject column = new GameObject();
                     column.name = x + "," + y;
+                    column.tag = "Column";
                     column.transform.parent = map.transform;
                     column.transform.localPosition = new Vector3(x, 0, y);
                     column.transform.localScale = Vector3.one;
@@ -44,6 +45,34 @@ public class TerrainEngine : MonoBehaviour
         }
     }
 
+    public static Vector3 Center() {
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        float lowX = float.MaxValue;
+        float highX = float.MinValue;
+        float lowZ = float.MaxValue;
+        float highZ = float.MinValue;
+        for (int i = 0; i < blocks.Length; i++) {
+            float x = blocks[i].transform.position.x;
+            float z = blocks[i].transform.position.z;
+            if (x < lowX) {
+                lowX = x;
+            }
+            if (x > highX) {
+                highX = x;
+            }
+            if (z < lowZ) {
+                lowZ = z;
+            }
+            if (z > highZ) {
+                highZ = z;
+            }
+        }
+        float centerX = (highX - lowX) / 2f;
+        float centerZ = (highZ - lowZ) / 2f;
+        return new Vector3(lowX + centerX, 0, lowZ + centerZ);
+
+    }
+
     public static void AddBlocks() {        
         List<GameObject> selected = Block.GetAllSelected();
         List<Column> markedCols = new List<Column>();
@@ -56,7 +85,6 @@ public class TerrainEngine : MonoBehaviour
                 newblock.transform.parent = block.transform.parent;
                 newblock.transform.localPosition = new Vector3(0, currentTop.transform.localPosition.y + 1, 0);
                 newblock.transform.localScale = block.transform.localScale;
-                // Change type as appropriate
             }
         });
     }
@@ -69,15 +97,62 @@ public class TerrainEngine : MonoBehaviour
                 GameObject.DestroyImmediate(block);
             }
         });
-        if (!Block.AreAnySelected()) {
-            GameObject.Find("Canvas/BlockControls").GetComponent<UIDocument>().rootVisualElement.style.opacity = 0;
-        }
     }
 
     public static void RotateBlocks() {
         List<GameObject> selected = Block.GetAllSelected();
         selected.ForEach(block => {
             block.transform.Rotate(0, 90f, 0);
+        });
+    }
+
+    public static void CloneRow() {
+        List<GameObject> selected = Block.GetAllSelected();
+        GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
+        selected.ForEach(selectedBlock => {
+            for (int i = 0; i < columns.Length; i++) {
+                GameObject column = columns[i];
+                int x = column.GetComponent<Column>().X;
+                int y = column.GetComponent<Column>().Y;
+                if (x == selectedBlock.transform.parent.GetComponent<Column>().X) {
+                    GameObject clone = GameObject.Instantiate(column);
+                    clone.transform.parent = column.transform.parent;
+                    clone.transform.localScale = Vector3.one;
+                    clone.transform.localPosition += new Vector3(1, 0, 0);
+                    clone.name = (x+1) + "," + y;
+                    clone.GetComponent<Column>().Set(x + 1, y);
+                }
+                if (x > selectedBlock.transform.parent.GetComponent<Column>().X) {
+                    column.transform.localPosition += new Vector3(1, 0, 0);
+                    column.name = (x+1) + "," + y;
+                    column.GetComponent<Column>().Set((x+1), y);
+                }
+            }
+        });
+    }
+
+    public static void CloneColumn() {
+        List<GameObject> selected = Block.GetAllSelected();
+        GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
+        selected.ForEach(selectedBlock => {
+            for (int i = 0; i < columns.Length; i++) {
+                GameObject column = columns[i];
+                int x = column.GetComponent<Column>().X;
+                int y = column.GetComponent<Column>().Y;
+                if (y == selectedBlock.transform.parent.GetComponent<Column>().Y) {
+                    GameObject clone = GameObject.Instantiate(column);
+                    clone.transform.parent = column.transform.parent;
+                    clone.transform.localScale = Vector3.one;
+                    clone.transform.localPosition += new Vector3(0, 0, 1);
+                    clone.name = x + "," + (y+1);
+                    clone.GetComponent<Column>().Set(x, y + 1);
+                }
+                if (y > selectedBlock.transform.parent.GetComponent<Column>().Y) {
+                    column.transform.localPosition += new Vector3(0, 0, 1);
+                    column.name = x + "," + (y+1);
+                    column.GetComponent<Column>().Set(x, (y+1));
+                }
+            }
         });
     }
 

@@ -1,6 +1,172 @@
-.modeselect {
+.unity-button.active {
+    background-color: rgb(71, 126, 154);
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+}
+
+.token-display {
+    position: absolute;
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    font-size: 26px;
+}
+
+#CharId {
     flex-grow: 1;
-    background-color: rgba(0, 0, 0, 0);
     flex-direction: row;
-    align-items: flex-end;
+}
+
+#Name {
+    color: rgb(5, 185, 245);
+}
+
+.enemy #Name {
+    color: rgb(217, 102, 102);
+}
+
+#Job {
+    margin-left: 10px;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.vagabond {
+    background-color: rgb(254, 174, 0);
+}
+
+.wright {
+    background-color: rgb(0, 128, 255);
+}
+
+.token-display .unity-progress-bar {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    max-height: none;
+    min-height: none;
+    border-width: 0;
+}
+
+.token-display .unity-progress-bar__container {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    max-height: none;
+    min-height: none;
+    border-width: 0;
+}
+
+.token-display .unity-progress-bar__background {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    max-height: none;
+    min-height: none;
+    border-width: 0;
+}
+
+.token-display .unity-progress-bar__progress {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    max-height: none;
+    min-height: none;
+    border-width: 0;
+}
+
+.actor-name {
+    color: rgb(255, 255, 255);
+    font-size: 26px;
+}
+
+.hp-vig {
+    width: 250px;
+    height: 10px;
+}
+
+.hp-bar {
+    height: 10px;
+}
+
+.hp-bar .unity-progress-bar__background {
+    background-color: rgb(0, 75, 99);
+}
+
+.hp-bar .unity-progress-bar__progress {
+    background-color: rgb(5, 185, 245);
+}
+
+.enemy .hp-bar .unity-progress-bar__background {
+    background-color: #7a3a3a;
+}
+
+.enemy .hp-bar .unity-progress-bar__progress {
+    background-color: rgb(217, 102, 102);
+}
+
+.vigor-bar {
+    height: 5px;
+}
+
+.vigor-bar .unity-progress-bar__background {
+    background-color: transparent;
+}
+
+.vigor-bar .unity-progress-bar__progress {
+    background-color: rgb(201, 192, 10);
+}
+
+#HpNum {
+    -unity-font-style: bold;
+    font-size: 18px;
+    position: absolute;
+    right: 0;
+    bottom: -22px;
+    margin: 0;
+    padding: 0;
+    text-shadow: 1px 1px 0 rgb(0, 75, 99);
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+#CHP {
+    margin: 0;
+    padding: 0;
+}
+
+#MHP {
+    margin: 0;
+    padding: 0;
+}
+
+#VIG {
+    margin: 0;
+    padding: 0;
+    color: rgb(201, 192, 10);
+}
+
+.hpseg {
+    width: 1px;
+    height: 10px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(0, 0, 0);
+}
+
+#HpSeg1 {
+    left: 25%;
+}
+
+#HpSeg2 {
+    left: 50%;
+}
+
+#HpSeg3 {
+    left: 75%;
 }

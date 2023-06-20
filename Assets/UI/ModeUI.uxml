@@ -1,8 +1,10 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/ui.uss?fileID=7433441132597879392&amp;guid=49924054ed88c3a4eb7aa25df48cddd3&amp;type=3#ui" />
-    <ui:VisualElement name="Container" class="modeselect">
-        <ui:Button text="Quick Add" display-tooltip-when-elided="true" name="QuickAddMode" />
-        <ui:Button text="Quick Delete" display-tooltip-when-elided="true" name="QuickDeleteMode" />
+    <ui:VisualElement name="Container" class="modeselect" style="position: absolute; bottom: auto; left: auto; top: auto; justify-content: space-between; width: 100%; flex-direction: row; background-color: rgb(102, 102, 102); padding-left: 4px; padding-right: 4px; padding-top: 4px; padding-bottom: 4px;">
+        <ui:Button text="View Mode" display-tooltip-when-elided="true" name="ViewMode" tooltip="Click a block to focus the camera" />
+        <ui:Button text="Add Mode" display-tooltip-when-elided="true" name="AddMode" tooltip="Click a block to add a block in that column" />
+        <ui:Button text="Delete Mode" display-tooltip-when-elided="true" name="DeleteMode" tooltip="Click a block to delete it" />
+        <ui:Button text="Alter Mode" display-tooltip-when-elided="true" name="AlterMode" tooltip="Click a block to delete it" />
+        <ui:EnumField type="AlterOption, Assembly-CSharp" name="AlterOptionField" style="max-width: 200px;" />
     </ui:VisualElement>
-    <ui:Label tabindex="-1" text="Mode: Quick Add" display-tooltip-when-elided="true" style="-unity-text-align: middle-left; position: absolute;" />
 </ui:UXML>

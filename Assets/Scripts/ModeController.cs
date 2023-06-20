@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,18 +8,19 @@ public enum Mode {
     View,
     Add,
     Delete,
-    Mark
+    Alter
 }
 
 public class ModeController : MonoBehaviour
 {
     public Mode CurrentMode;
+    public AlterOption CurrentAlter = AlterOption.Shape_Solid;
 
     // Start is called before the first frame update
     void Start()
     {
-        CurrentMode = Mode.View;
         RegisterCallbacks();
+        viewMode(null);
     }
 
     // Update is called once per frame
@@ -27,39 +29,70 @@ public class ModeController : MonoBehaviour
     }
 
     private void RegisterCallbacks() {
-        UIDocument ui = GameObject.Find("CameraUI").GetComponent<UIDocument>();
+        UIDocument modeUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
 
-        Button rotateLeftButton = ui.rootVisualElement.Q("RotateLeftButton") as Button;
-        rotateLeftButton.RegisterCallback<ClickEvent>(rotateLeft);
+        Button viewModeButton = modeUI.rootVisualElement.Q("ViewMode") as Button;
+        viewModeButton.RegisterCallback<ClickEvent>(viewMode);
 
-        Button rotateRightButton = ui.rootVisualElement.Q("RotateRightButton") as Button;
-        rotateRightButton.RegisterCallback<ClickEvent>(rotateRight);
+        Button addModeButton = modeUI.rootVisualElement.Q("AddMode") as Button;
+        addModeButton.RegisterCallback<ClickEvent>(addMode);
 
-        Slider zoomSlider = ui.rootVisualElement.Q("ZoomSlider") as Slider;
-        zoomSlider.RegisterValueChangedCallback(zoom);
+        Button deleteModeButton = modeUI.rootVisualElement.Q("DeleteMode") as Button;
+        deleteModeButton.RegisterCallback<ClickEvent>(deleteMode);
 
-        Toggle overheadToggle = ui.rootVisualElement.Q("OverheadToggle") as Toggle;
-        overheadToggle.RegisterValueChangedCallback(overhead);
-    }
+        Button alterModeButton = modeUI.rootVisualElement.Q("AlterMode") as Button;
+        alterModeButton.RegisterCallback<ClickEvent>(alterMode);
 
-    private void rotateLeft(ClickEvent evt) {
-        CameraControl.RotateLeft();
-    }
-
-    private void rotateRight(ClickEvent evt) {
-        CameraControl.RotateRight();
-    }
-
-    private void zoom(ChangeEvent<float> evt) {
-        CameraControl.Zoom(evt.newValue);
-    }
-
-    private void overhead(ChangeEvent<bool> evt) {
-        CameraControl.ToggleOverhead();
+        EnumField alterOptionField = modeUI.rootVisualElement.Q("AlterOptionField") as EnumField;
+        alterOptionField.RegisterValueChangedCallback(alterOption);
     }
 
     public static Mode GetMode() {
         return GameObject.Find("Mode").GetComponent<ModeController>().CurrentMode;
     }
+
+    public static AlterOption GetAlterOption() {
+        return GameObject.Find("Mode").GetComponent<ModeController>().CurrentAlter;
+    }
+
+    private void viewMode(ClickEvent evt) {
+        CurrentMode = Mode.View;
+        activateButton("ViewMode");
+        Block.ToggleSpacers(false);
+    }
+
+    private void addMode(ClickEvent evt) {
+        CurrentMode = Mode.Add;
+        activateButton("AddMode");
+        Block.ToggleSpacers(false);
+    }
+
+    private void deleteMode(ClickEvent evt) {
+        CurrentMode = Mode.Delete;
+        activateButton("DeleteMode");
+        Block.ToggleSpacers(false);
+    }
+
+    private void alterMode(ClickEvent evt) {
+        CurrentMode = Mode.Alter;
+        activateButton("AlterMode");
+        Block.ToggleSpacers(false);
+    }
+
+    private void activateButton(string name) {
+        UIDocument doc = GameObject.Find("ModeUI").GetComponent<UIDocument>();
+
+        (doc.rootVisualElement.Q("AddMode") as Button).RemoveFromClassList("active");
+        (doc.rootVisualElement.Q("DeleteMode") as Button).RemoveFromClassList("active");
+        (doc.rootVisualElement.Q("ViewMode") as Button).RemoveFromClassList("active");
+        (doc.rootVisualElement.Q("AlterMode") as Button).RemoveFromClassList("active");
+
+        (doc.rootVisualElement.Q(name) as Button).AddToClassList("active");
+    }
+
+    private void alterOption(ChangeEvent<Enum> evt) {
+        CurrentAlter = (AlterOption)evt.newValue;
+    }
+
 
 }

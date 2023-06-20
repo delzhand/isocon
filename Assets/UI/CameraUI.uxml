@@ -1,8 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="Container" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-        <ui:Button text="Rotate &gt;" display-tooltip-when-elided="true" name="RotateRightButton" style="position: absolute; right: 0; top: 50%; justify-content: flex-start;" />
-        <ui:Button text="&lt; Rotate" display-tooltip-when-elided="true" name="RotateLeftButton" style="position: absolute; right: auto; top: 50%; justify-content: flex-start; left: 0;" />
-        <ui:Slider picking-mode="Ignore" label="Zoom" value="4.5" high-value="7" name="ZoomSlider" low-value="2.5" style="width: 50%; position: absolute; left: 0;" />
-        <ui:Toggle label="Top Down" name="OverheadToggle" style="position: absolute; bottom: auto; left: auto; right: 0;" />
+    <ui:VisualElement name="Container" style="flex-grow: 1; background-color: rgb(102, 102, 102); position: absolute; width: 100%; flex-direction: row; top: auto; bottom: 0; justify-content: space-around; padding-left: 4px; padding-right: 4px; padding-top: 4px; padding-bottom: 4px; color: rgb(255, 255, 255);">
+        <ui:Button text="&lt; Rotate" display-tooltip-when-elided="true" name="RotateLeftButton" style="position: relative; right: auto; top: auto; justify-content: flex-start; left: auto;" />
+        <ui:Label tabindex="-1" text="Zoom" display-tooltip-when-elided="true" name="ZoomLabel" />
+        <ui:Slider picking-mode="Ignore" value="4.5" high-value="7" name="ZoomSlider" low-value="2.5" style="width: 200px; position: relative; left: auto;" />
+        <ui:Toggle label="Top Down" name="OverheadToggle" style="position: relative; bottom: auto; left: auto; right: auto;" />
+        <ui:Button text="Rotate &gt;" display-tooltip-when-elided="true" name="RotateRightButton" style="position: relative; right: auto; top: auto; justify-content: flex-start;" />
     </ui:VisualElement>
 </ui:UXML>

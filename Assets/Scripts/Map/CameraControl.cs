@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class CameraControl : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class CameraControl : MonoBehaviour
 
     private Vector3 originPosition;
     private Vector3 targetPosition;
+    private Vector3 reservePosition;
 
     private bool isLocked;
     private bool overhead;
@@ -25,6 +27,21 @@ public class CameraControl : MonoBehaviour
         isLocked = false;
         overhead = false;
         CameraTransform = GameObject.Find("CameraOrigin").transform;
+
+        UIDocument cameraUI = GameObject.Find("CameraUI").GetComponent<UIDocument>();
+
+        Button rotateLeftButton = cameraUI.rootVisualElement.Q("RotateLeftButton") as Button;
+        rotateLeftButton.RegisterCallback<ClickEvent>(rotateLeft);
+
+        Button rotateRightButton = cameraUI.rootVisualElement.Q("RotateRightButton") as Button;
+        rotateRightButton.RegisterCallback<ClickEvent>(rotateRight);
+
+        Slider zoomSlider = cameraUI.rootVisualElement.Q("ZoomSlider") as Slider;
+        zoomSlider.RegisterValueChangedCallback(zoom);
+
+        Toggle overheadToggle = cameraUI.rootVisualElement.Q("OverheadToggle") as Toggle;
+        overheadToggle.RegisterValueChangedCallback(toggleOverhead);
+
     }
 
     // Update is called once per frame
@@ -43,15 +60,19 @@ public class CameraControl : MonoBehaviour
         }
     }
 
-    public static void RotateLeft() {
-        CameraControl.CameraTransform.GetComponent<CameraControl>().Rotate(90);
+    public static void ToggleUI(bool visible) {
+        
+    }
+    
+    private void rotateLeft(ClickEvent evt) {
+        rotate(90);
     }
 
-    public static void RotateRight() {
-        CameraControl.CameraTransform.GetComponent<CameraControl>().Rotate(-90);
+    private void rotateRight(ClickEvent evt) {
+        rotate(-90);
     }
 
-    public void Rotate(float value) {
+    private void rotate(float value) {
         if (!isLocked && !overhead) {
             initializeTransition(.35f);
             targetRotation = originalRotation * Quaternion.Euler(0, value, 0);
@@ -69,26 +90,25 @@ public class CameraControl : MonoBehaviour
         }
     }
 
-    public static void Zoom(float value) {
-        Camera.main.GetComponent<Camera>().orthographicSize = value;
+    private void zoom(ChangeEvent<float> evt) {
+        Camera.main.GetComponent<Camera>().orthographicSize = evt.newValue;
     }
 
-    public static void ToggleOverhead() {
-        CameraControl.CameraTransform.GetComponent<CameraControl>().Overhead();
-    }
-
-    public void Overhead() {
+    private void toggleOverhead(ChangeEvent<bool> evt) {
         if (!isLocked) {
             if (!overhead) {
                 overhead = true;
                 reserveRotation = GameObject.Find("CameraOrigin").transform.rotation;
+                reservePosition = GameObject.Find("CameraOrigin").transform.position;
                 initializeTransition(.35f);
                 targetRotation = Quaternion.Euler(0, 0, 30);
+                targetPosition = TerrainEngine.Center();
             }
             else {
                 overhead = false;
                 initializeTransition(.35f);
                 targetRotation = reserveRotation;
+                targetPosition = reservePosition;
             }
         }
     }

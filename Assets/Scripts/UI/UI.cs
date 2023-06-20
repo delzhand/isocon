@@ -8,7 +8,6 @@ public class UI : MonoBehaviour
     public static bool IsPointerOverUI(Vector2 screenPos) {
         GameObject uiObject = GameObject.Find("CameraUI");
         if (uiObject == null) {
-            Debug.Log("fail");
             return false;
         }
         UIDocument ui = uiObject.GetComponent<UIDocument>();
@@ -23,5 +22,10 @@ public class UI : MonoBehaviour
                 return true;
         }
         return false;        
+    }
+
+    public static void Log(string message) {
+        Label output = GameObject.Find("Canvas/DebugUI").GetComponent<UIDocument>().rootVisualElement.Q("Output") as Label;
+        output.text = message;
     }
 }

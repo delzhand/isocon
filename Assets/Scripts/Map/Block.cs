@@ -8,6 +8,7 @@ public enum BlockType
   Solid,
   Slope,
   Spacer,
+  Hidden
 }
 
 public enum BlockMarker
@@ -17,6 +18,21 @@ public enum BlockMarker
     Difficult,
     Interactive,
     Impassable
+}
+
+public enum AlterOption
+{
+    Shape_Solid,
+    Shape_Slope,
+    Shape_Empty,
+    Effect_None,
+    Effect_Dangerous,
+    Effect_Difficult,
+    Effect_Interactive,
+    Effect_Impassable,
+    Rotate,
+    Clone_Row,
+    Clone_Column
 }
 
 public class Block : MonoBehaviour
@@ -91,16 +107,55 @@ public class Block : MonoBehaviour
                 TerrainEngine.AddBlocks();
                 Block.DeselectAll();
                 break;
+            case Mode.Delete:
+                Block.DeselectAll();
+                Select();
+                TerrainEngine.RemoveBlocks();
+                Block.DeselectAll();
+                break;
+            case Mode.Alter:
+                Block.DeselectAll();
+                Select();
+                switch(ModeController.GetAlterOption()) {
+                    case AlterOption.Shape_Solid:
+                        TerrainEngine.ChangeType(BlockType.Solid);
+                        break;
+                    case AlterOption.Shape_Slope:
+                        TerrainEngine.ChangeType(BlockType.Slope);
+                        break;
+                    case AlterOption.Shape_Empty:
+                        TerrainEngine.ChangeType(BlockType.Spacer);
+                        break;
+                    case AlterOption.Rotate:
+                        TerrainEngine.RotateBlocks();
+                        break;
+                    case AlterOption.Effect_Dangerous:
+                        TerrainEngine.ChangeMarker(BlockMarker.Dangerous);
+                        break;
+                    case AlterOption.Effect_Difficult:
+                        TerrainEngine.ChangeMarker(BlockMarker.Difficult);
+                        break;
+                    case AlterOption.Effect_Impassable:
+                        TerrainEngine.ChangeMarker(BlockMarker.Impassable);
+                        break;
+                    case AlterOption.Effect_Interactive:
+                        TerrainEngine.ChangeMarker(BlockMarker.Interactive);
+                        break;
+                    case AlterOption.Effect_None:
+                        TerrainEngine.ChangeMarker(BlockMarker.None);
+                        break;
+                    case AlterOption.Clone_Row:
+                        TerrainEngine.CloneRow();
+                        Block.ResetMaterials();
+                        break;
+                    case AlterOption.Clone_Column:
+                        TerrainEngine.CloneColumn();
+                        Block.ResetMaterials();
+                        break;
+                }
+                Block.DeselectAll();
+                break;
         }
-        // if () {
-        //     if (Selected) {
-        //         Deselect();
-        //     }
-        //     else {
-        //         Select();
-        //     }
-
-        // }
     }
 
     public void Activate() {
@@ -143,13 +198,16 @@ public class Block : MonoBehaviour
         Type = blocktype;
         switch (Type) {
             case BlockType.Solid:
-                m = generateCubeMesh();
+                m = generateCubeMesh(1f);
                 break;
             case BlockType.Slope:
                 m = generateSlopeMesh();
                 break;
             case BlockType.Spacer:
-                m = generateCubeMesh();
+                m = generateCubeMesh(.3f);
+                break;
+            case BlockType.Hidden:
+                m = generateCubeMesh(0f);
                 break;
         }
         mf.mesh = m;
@@ -232,10 +290,29 @@ public class Block : MonoBehaviour
         mr.SetMaterials(materials);
     }
 
+    public static void ToggleSpacers(bool show) {
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        for(int i = 0; i < blocks.Length; i++) {
+            if (!show && blocks[i].GetComponent<Block>().Type == BlockType.Spacer) {
+                blocks[i].GetComponent<Block>().TypeChange(BlockType.Hidden);
+            }
+            if (show && blocks[i].GetComponent<Block>().Type == BlockType.Hidden) {
+                blocks[i].GetComponent<Block>().TypeChange(BlockType.Spacer);
+            }
+        }
+    }
+
+    public static void ResetMaterials() {
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < blocks.Length; i++) {
+            blocks[i].GetComponent<Block>().SetMaterials();
+        }
+    }
+
     // Cube
-    static Vector3[] getCubeVertices() {
+    static Vector3[] getCubeVertices(float size) {
         Vector3[] vertices = new Vector3[24];
-        float halfSize = 0.5f;
+        float halfSize = size/2f;
 
         vertices[0] = new Vector3(-halfSize, halfSize, -halfSize);
         vertices[1] = new Vector3(-halfSize, halfSize, halfSize);
@@ -360,10 +437,10 @@ public class Block : MonoBehaviour
         return uv;
     }
 
-    static Mesh generateCubeMesh()
+    static Mesh generateCubeMesh(float size)
     {
         Mesh mesh = new Mesh();
-        mesh.vertices = getCubeVertices();
+        mesh.vertices = getCubeVertices(size);
         mesh.subMeshCount = 6;
         mesh.SetTriangles(getCubeTriangles(), 0);
         mesh.SetTriangles(getCubeTopTriangles(), 1);
