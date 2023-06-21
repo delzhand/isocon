@@ -6,7 +6,6 @@
 
 .token-display {
     position: absolute;
-    background-color: rgb(0, 0, 0);
     color: rgb(255, 255, 255);
     font-size: 26px;
 }
@@ -14,14 +13,17 @@
 #CharId {
     flex-grow: 1;
     flex-direction: row;
+    font-size: 16px;
 }
 
 #Name {
     color: rgb(5, 185, 245);
+    text-shadow: 1px 1px 0 rgb(0, 75, 99);
 }
 
 .enemy #Name {
     color: rgb(217, 102, 102);
+    text-shadow: 1px 1px 0 rgb(122, 58, 58);
 }
 
 #Job {
@@ -41,6 +43,14 @@
 
 .wright {
     background-color: rgb(0, 128, 255);
+}
+
+.stalwart {
+    background-color: rgb(255, 85, 0);
+}
+
+.mendicant {
+    background-color: rgb(0, 187, 0);
 }
 
 .token-display .unity-progress-bar {
@@ -79,54 +89,81 @@
     border-width: 0;
 }
 
-.actor-name {
-    color: rgb(255, 255, 255);
-    font-size: 26px;
+#HpAndVig {
+    width: 150px;
+    height: 15px;
 }
 
-.hp-vig {
-    width: 250px;
+#HpBar {
     height: 10px;
 }
 
-.hp-bar {
-    height: 10px;
-}
-
-.hp-bar .unity-progress-bar__background {
+#HpBar .unity-progress-bar__background {
     background-color: rgb(0, 75, 99);
 }
 
-.hp-bar .unity-progress-bar__progress {
+#HpBar .unity-progress-bar__progress {
     background-color: rgb(5, 185, 245);
 }
 
-.enemy .hp-bar .unity-progress-bar__background {
-    background-color: #7a3a3a;
+.enemy #HpBar .unity-progress-bar__background {
+    background-color: rgb(122, 58, 58);
 }
 
-.enemy .hp-bar .unity-progress-bar__progress {
+.enemy #HpBar .unity-progress-bar__progress {
     background-color: rgb(217, 102, 102);
 }
 
-.vigor-bar {
+#VigorBar {
     height: 5px;
 }
 
-.vigor-bar .unity-progress-bar__background {
+#VigorBar .unity-progress-bar__background {
     background-color: transparent;
 }
 
-.vigor-bar .unity-progress-bar__progress {
+#VigorBar .unity-progress-bar__progress {
     background-color: rgb(201, 192, 10);
+}
+
+#Wounds {
+    height: 10px;
+    width: 150px;
+    position: absolute;
+    top: 5px;
+}
+
+.wound {
+    position: absolute;
+    height: 100%;
+    background-color: rgb(0, 0, 0);
+    width: 25%;
+    border-left-width: 1px;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    border-left-color: rgb(140, 0, 0);
+
+}
+
+#Wound1 {
+    left: 75%;
+}
+
+#Wound2 {
+    left: 50%;
+}
+
+#Wound3 {
+    left: 25%;
 }
 
 #HpNum {
     -unity-font-style: bold;
-    font-size: 18px;
+    font-size: 14px;
     position: absolute;
     right: 0;
-    bottom: -22px;
+    bottom: -10px;
     margin: 0;
     padding: 0;
     text-shadow: 1px 1px 0 rgb(0, 75, 99);
@@ -148,25 +185,4 @@
     margin: 0;
     padding: 0;
     color: rgb(201, 192, 10);
-}
-
-.hpseg {
-    width: 1px;
-    height: 10px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    background-color: rgb(0, 0, 0);
-}
-
-#HpSeg1 {
-    left: 25%;
-}
-
-#HpSeg2 {
-    left: 50%;
-}
-
-#HpSeg3 {
-    left: 75%;
 }
