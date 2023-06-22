@@ -22,7 +22,7 @@ public class Token : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        container = GameObject.Find("Canvas/TokenUI").GetComponent<UIDocument>().rootVisualElement;
+        container = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement;
         CreateLabelUI();
     }
 
@@ -63,6 +63,12 @@ public class Token : MonoBehaviour
         tokenDisplay.Q<ProgressBar>("HpBar").highValue = MHP;
         tokenDisplay.Q<ProgressBar>("VigorBar").value = VIG;
         tokenDisplay.Q<ProgressBar>("VigorBar").highValue = MHP;
+        if (VIG == 0) {
+            tokenDisplay.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Hidden;
+        }
+        else {
+            tokenDisplay.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Visible;
+        }
         for (int i = 1; i <= 3; i++) {
             if (Wounds >= i) {
                 tokenDisplay.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Visible;

@@ -17,12 +17,12 @@
 }
 
 #Name {
-    color: rgb(5, 185, 245);
+    color: white;
     text-shadow: 1px 1px 0 rgb(0, 75, 99);
 }
 
 .enemy #Name {
-    color: rgb(217, 102, 102);
+    color: white;
     text-shadow: 1px 1px 0 rgb(122, 58, 58);
 }
 

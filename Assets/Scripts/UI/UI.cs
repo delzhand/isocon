@@ -25,7 +25,7 @@ public class UI : MonoBehaviour
     }
 
     public static void Log(string message) {
-        Label output = GameObject.Find("Canvas/DebugUI").GetComponent<UIDocument>().rootVisualElement.Q("Output") as Label;
+        Label output = GameObject.Find("UICanvas/DebugUI").GetComponent<UIDocument>().rootVisualElement.Q("Output") as Label;
         output.text = message;
     }
 }
