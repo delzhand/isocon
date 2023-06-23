@@ -1,13 +1,13 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/ui.uss?fileID=7433441132597879392&amp;guid=49924054ed88c3a4eb7aa25df48cddd3&amp;type=3#ui" />
-    <ui:VisualElement name="TokenDisplay" class="token-display" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; top: 0; left: 0;">
+    <Style src="project://database/Assets/UI/Token.uss?fileID=7433441132597879392&amp;guid=0ae496f6d26532f439036c3c8ef22555&amp;type=3#Token" />
+    <ui:VisualElement name="TokenDisplay" class="token">
         <ui:VisualElement name="CharId" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-            <ui:Label tabindex="-1" text="Gradis" display-tooltip-when-elided="true" name="Name" class="actor-name" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
-            <ui:Label tabindex="-1" text="Enochian" display-tooltip-when-elided="true" name="Job" class="job-name" />
+            <ui:Label tabindex="-1" text="Gradis" display-tooltip-when-elided="true" name="Name" />
+            <ui:Label tabindex="-1" text="Enochian" display-tooltip-when-elided="true" name="Job" />
         </ui:VisualElement>
-        <ui:VisualElement name="HpAndVig" class="hp-vig" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-            <ui:ProgressBar value="3" name="VigorBar" high-value="12" class="vigor-bar" />
-            <ui:ProgressBar value="3.09" high-value="24" name="HpBar" class="hp-bar" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
+        <ui:VisualElement name="HpAndVig" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+            <ui:ProgressBar value="3" name="VigorBar" high-value="12" />
+            <ui:ProgressBar value="3.09" high-value="24" name="HpBar" />
             <ui:VisualElement name="Wounds" class="test">
                 <ui:VisualElement name="Wound1" class="wound" style="flex-grow: 1; background-color: rgb(0, 0, 0);">
                     <ui:Label tabindex="-1" text="X" display-tooltip-when-elided="true" name="X" style="color: rgb(255, 0, 0); font-size: 8px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-text-align: middle-center; -unity-font-style: bold;" />

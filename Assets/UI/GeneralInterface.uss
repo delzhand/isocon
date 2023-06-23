@@ -1,0 +1,5 @@
+.unity-button.active {
+    background-color: rgb(71, 126, 154);
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+}
