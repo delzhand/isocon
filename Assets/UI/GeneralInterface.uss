@@ -1,5 +1,79 @@
+.background {
+    background-color: rgba(244, 244, 244, .5);
+    padding: 2px;
+}
+
+.horizontal-container {
+    flex-direction: row;
+}
+
+.vertical-container {
+    flex-direction: column;
+}
+
+.unity-label {
+    color: #616161;
+}
+
+.unity-button {
+    background-color: #cdcdcd;
+    border-width: 0;
+    color: #616161;
+    padding: 0px 12px;
+    border-left-width: 4px;
+    border-color: #616161;
+    height: 24px;
+    font-size: 14px;
+    transition-duration: .25s;
+}
+
 .unity-button.active {
-    background-color: rgb(71, 126, 154);
-    color: rgb(255, 255, 255);
+    background-color: #616161;
+    border-color: #cdcdcd;
+    color: #cdcdcd;
+    border-left-width: 12px;
     -unity-font-style: bold;
+}
+
+.unity-enum-field {
+    background-color: #cdcdcd;
+    border-width: 0;
+    color: #616161;
+    border-color: #616161;
+    font-size: 14px;
+    transition-duration: .25s;
+    border-width: 0;
+}
+
+.unity-enum-field__input {
+    border-width: 0;
+    padding: 2px;
+    background-color: #cdcdcd;
+}
+
+.unity-enum-field__arrow {
+    color: #616161;
+}
+
+.unity-base-slider--horizontal {
+    width: 150px;
+}
+
+.unity-base-slider__dragger {
+    background-color: #616161;
+}
+
+.unity-toggle {
+    margin: 0;
+}
+
+.unity-toggle__input {
+}
+
+.unity-toggle__checkmark {
+    border-width: 0;
+    border-bottom-width: 2px;
+    background-color: #cdcdcd;
+    padding: 0;
+    color: #616161;
 }

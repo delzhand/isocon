@@ -28,7 +28,7 @@ public class CameraControl : MonoBehaviour
         overhead = false;
         CameraTransform = GameObject.Find("CameraOrigin").transform;
 
-        UIDocument cameraUI = GameObject.Find("CameraUI").GetComponent<UIDocument>();
+        UIDocument cameraUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
 
         Button rotateLeftButton = cameraUI.rootVisualElement.Q("RotateLeftButton") as Button;
         rotateLeftButton.RegisterCallback<ClickEvent>(rotateLeft);
@@ -60,10 +60,6 @@ public class CameraControl : MonoBehaviour
         }
     }
 
-    public static void ToggleUI(bool visible) {
-        
-    }
-    
     private void rotateLeft(ClickEvent evt) {
         rotate(90);
     }
@@ -74,7 +70,7 @@ public class CameraControl : MonoBehaviour
 
     private void rotate(float value) {
         if (!isLocked && !overhead) {
-            initializeTransition(.35f);
+            initializeTransition(.25f);
             targetRotation = originalRotation * Quaternion.Euler(0, value, 0);
         }
     }
@@ -85,7 +81,7 @@ public class CameraControl : MonoBehaviour
 
     public void Translate(Vector3 value) {
         if (!isLocked && !overhead) {
-            initializeTransition(.35f);
+            initializeTransition(.25f);
             targetPosition = value;
         }
     }
@@ -100,13 +96,13 @@ public class CameraControl : MonoBehaviour
                 overhead = true;
                 reserveRotation = GameObject.Find("CameraOrigin").transform.rotation;
                 reservePosition = GameObject.Find("CameraOrigin").transform.position;
-                initializeTransition(.35f);
+                initializeTransition(.25f);
                 targetRotation = Quaternion.Euler(0, 0, 30);
                 targetPosition = TerrainEngine.Center();
             }
             else {
                 overhead = false;
-                initializeTransition(.35f);
+                initializeTransition(.25f);
                 targetRotation = reserveRotation;
                 targetPosition = reservePosition;
             }

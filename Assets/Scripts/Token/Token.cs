@@ -41,14 +41,14 @@ public class Token : MonoBehaviour
         tokenDisplay = instance.Q("TokenDisplay");
         container.Add(tokenDisplay);
 
-        if (ActorName == "Gradis") {
-            template = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Templates/TokenPanel.uxml");
-            instance = template.Instantiate();
-            VisualElement tokenPanel = instance.Q("TokenPanel");
-            container.Add(tokenPanel);
-            tokenPanel.style.top = 100;
-            tokenPanel.style.left = 30;
-        }
+        // if (ActorName == "Gradis") {
+        //     template = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Templates/TokenPanel.uxml");
+        //     instance = template.Instantiate();
+        //     VisualElement tokenPanel = instance.Q("TokenPanel");
+        //     container.Add(tokenPanel);
+        //     tokenPanel.style.top = 100;
+        //     tokenPanel.style.left = 30;
+        // }
 
     }
 

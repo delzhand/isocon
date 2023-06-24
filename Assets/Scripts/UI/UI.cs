@@ -24,8 +24,17 @@ public class UI : MonoBehaviour
         return false;        
     }
 
+    public static void SetHelpText(string message) {
+        Label helptext = GameObject.Find("UICanvas/ModeUI").GetComponent<UIDocument>().rootVisualElement.Q("HelpText") as Label;
+        helptext.text = message;
+    }
+
     public static void Log(string message) {
         Label output = GameObject.Find("UICanvas/DebugUI").GetComponent<UIDocument>().rootVisualElement.Q("Output") as Label;
         output.text = message;
+    }
+
+    public static void SetScale(float value) {
+        GameObject.Find("UICanvas/ModeUI").GetComponent<UIDocument>().panelSettings.scale = value;
     }
 }

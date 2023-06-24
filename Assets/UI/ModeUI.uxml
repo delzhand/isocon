@@ -1,10 +1,52 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/ui.uss?fileID=7433441132597879392&amp;guid=49924054ed88c3a4eb7aa25df48cddd3&amp;type=3#ui" />
-    <ui:VisualElement name="Container" class="modeselect" style="position: absolute; bottom: auto; left: auto; top: auto; justify-content: space-between; width: 100%; flex-direction: row; background-color: rgb(102, 102, 102); padding-left: 4px; padding-right: 4px; padding-top: 4px; padding-bottom: 4px;">
-        <ui:Button text="View Mode" display-tooltip-when-elided="true" name="ViewMode" tooltip="Click a block to focus the camera" />
-        <ui:Button text="Add Mode" display-tooltip-when-elided="true" name="AddMode" tooltip="Click a block to add a block in that column" />
-        <ui:Button text="Delete Mode" display-tooltip-when-elided="true" name="DeleteMode" tooltip="Click a block to delete it" />
-        <ui:Button text="Alter Mode" display-tooltip-when-elided="true" name="AlterMode" tooltip="Click a block to delete it" />
-        <ui:EnumField type="AlterOption, Assembly-CSharp" name="AlterOptionField" style="max-width: 200px;" />
+    <Style src="project://database/Assets/UI/GeneralInterface.uss?fileID=7433441132597879392&amp;guid=49924054ed88c3a4eb7aa25df48cddd3&amp;type=3#GeneralInterface" />
+    <Style src="project://database/Assets/UI/Mode.uss?fileID=7433441132597879392&amp;guid=f9a6edc796b6e4c4b8488aa9fb07f8b9&amp;type=3#Mode" />
+    <ui:VisualElement name="ModeControls" class="modeselect background horizontal-container">
+        <ui:Button text="VIEW" display-tooltip-when-elided="true" name="ViewMode" tooltip="Click a block to focus the camera" />
+        <ui:Button text="ADD TOKEN" display-tooltip-when-elided="true" name="AddToken" tooltip="Click a block to delete it" />
+        <ui:Button text="ADD" display-tooltip-when-elided="true" name="AddMode" tooltip="Click a block to add a block in that column" style="display: none;" />
+        <ui:Button text="DELETE" display-tooltip-when-elided="true" name="DeleteMode" tooltip="Click a block to delete it" style="display: none;" />
+        <ui:Button text="EDIT MAP" display-tooltip-when-elided="true" name="AlterMode" tooltip="Click a block to delete it" />
+        <ui:Button text="APPEARANCE" display-tooltip-when-elided="true" name="Appearance" tooltip="Click a block to delete it" />
+        <ui:Button text="CONFIG" display-tooltip-when-elided="true" name="Config" tooltip="Click a block to delete it" />
+    </ui:VisualElement>
+    <ui:VisualElement name="AlterFlyout" class="background flyout">
+        <ui:Label tabindex="-1" text="ALTERATION" display-tooltip-when-elided="true" />
+        <ui:EnumField type="AlterOption, Assembly-CSharp" name="AlterOptionField" />
+    </ui:VisualElement>
+    <ui:VisualElement name="AppearanceFlyout" class="background flyout vertical-container" style="flex-direction: column;">
+        <ui:VisualElement class="horizontal-container">
+            <ui:Label tabindex="-1" text="PALETTE" display-tooltip-when-elided="true" />
+            <ui:EnumField type="Palette, Assembly-CSharp" name="PaletteEnum" />
+        </ui:VisualElement>
+        <ui:VisualElement class="horizontal-container">
+            <ui:Label tabindex="-1" text="BACKGROUND" display-tooltip-when-elided="true" />
+            <ui:EnumField type="Background, Assembly-CSharp" name="BackgroundEnum" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="ConfigFlyout" class="background flyout vertical-container" style="flex-direction: column;">
+        <ui:VisualElement class="horizontal-container">
+            <ui:Label tabindex="-1" text="UI SCALE" display-tooltip-when-elided="true" />
+            <ui:Slider picking-mode="Ignore" value="1" high-value="2.5" name="UIScaleSlider" low-value="1" />
+        </ui:VisualElement>
+        <ui:VisualElement class="horizontal-container">
+            <ui:Label tabindex="-1" text="ACTOR LABEL SCALE" display-tooltip-when-elided="true" />
+            <ui:Slider picking-mode="Ignore" value="1" high-value="2.5" low-value="1" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="CameraFlyout" class="background flyout vertical-container" style="flex-direction: column;">
+        <ui:VisualElement class="horizontal-container">
+            <ui:Label tabindex="-1" text="ZOOM" display-tooltip-when-elided="true" />
+            <ui:Slider picking-mode="Ignore" value="4.5" high-value="7" name="ZoomSlider" low-value="2.5" />
+        </ui:VisualElement>
+        <ui:VisualElement class="horizontal-container">
+            <ui:Label tabindex="-1" text="OVERHEAD VIEW" display-tooltip-when-elided="true" />
+            <ui:Toggle name="OverheadToggle" />
+        </ui:VisualElement>
+        <ui:Button text="ROTATE LEFT" display-tooltip-when-elided="true" name="RotateLeftButton" />
+        <ui:Button text="ROTATE RIGHT" display-tooltip-when-elided="true" name="RotateRightButton" />
+    </ui:VisualElement>
+    <ui:VisualElement name="HelpBar">
+        <ui:Label tabindex="-1" text="Welcome to IsoCON!" display-tooltip-when-elided="true" name="HelpText" />
     </ui:VisualElement>
 </ui:UXML>

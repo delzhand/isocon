@@ -22,17 +22,19 @@ public enum BlockMarker
 
 public enum AlterOption
 {
-    Shape_Solid,
-    Shape_Slope,
-    Shape_Empty,
-    Effect_None,
-    Effect_Dangerous,
-    Effect_Difficult,
-    Effect_Interactive,
-    Effect_Impassable,
-    Rotate,
-    Clone_Row,
-    Clone_Column
+    ADD_AT_POSITION,
+    DELETE_SELECTED,
+    ROTATE_SELECTED,
+    CLONE_ROW,
+    CLONE_COLUMN,
+    SET_SHAPE_SOLID,
+    SET_SHAPE_SLOPE,
+    SET_SHAPE_EMPTY,
+    REMOVE_EFFECTS,
+    SET_EFFECT_DANGER,
+    SET_EFFECT_DIFFICULT,
+    SET_EFFECT_INTERACTIVE,
+    SET_EFFECT_IMPASSABLE,
 }
 
 public class Block : MonoBehaviour
@@ -101,54 +103,48 @@ public class Block : MonoBehaviour
             case Mode.View:
                 CameraControl.GoToBlock(this);
                 break;
-            case Mode.Add:
-                Block.DeselectAll();
-                Select();
-                TerrainEngine.AddBlocks();
-                Block.DeselectAll();
-                break;
-            case Mode.Delete:
-                Block.DeselectAll();
-                Select();
-                TerrainEngine.RemoveBlocks();
-                Block.DeselectAll();
-                break;
             case Mode.Alter:
                 Block.DeselectAll();
                 Select();
                 switch(ModeController.GetAlterOption()) {
-                    case AlterOption.Shape_Solid:
+                    case AlterOption.ADD_AT_POSITION:
+                        TerrainEngine.AddBlocks();
+                        break;
+                    case AlterOption.DELETE_SELECTED:
+                        TerrainEngine.RemoveBlocks();
+                        break;
+                    case AlterOption.SET_SHAPE_SOLID:
                         TerrainEngine.ChangeType(BlockType.Solid);
                         break;
-                    case AlterOption.Shape_Slope:
+                    case AlterOption.SET_SHAPE_SLOPE:
                         TerrainEngine.ChangeType(BlockType.Slope);
                         break;
-                    case AlterOption.Shape_Empty:
+                    case AlterOption.SET_SHAPE_EMPTY:
                         TerrainEngine.ChangeType(BlockType.Spacer);
                         break;
-                    case AlterOption.Rotate:
+                    case AlterOption.ROTATE_SELECTED:
                         TerrainEngine.RotateBlocks();
                         break;
-                    case AlterOption.Effect_Dangerous:
+                    case AlterOption.SET_EFFECT_DANGER:
                         TerrainEngine.ChangeMarker(BlockMarker.Dangerous);
                         break;
-                    case AlterOption.Effect_Difficult:
+                    case AlterOption.SET_EFFECT_DIFFICULT:
                         TerrainEngine.ChangeMarker(BlockMarker.Difficult);
                         break;
-                    case AlterOption.Effect_Impassable:
+                    case AlterOption.SET_EFFECT_IMPASSABLE:
                         TerrainEngine.ChangeMarker(BlockMarker.Impassable);
                         break;
-                    case AlterOption.Effect_Interactive:
+                    case AlterOption.SET_EFFECT_INTERACTIVE:
                         TerrainEngine.ChangeMarker(BlockMarker.Interactive);
                         break;
-                    case AlterOption.Effect_None:
+                    case AlterOption.REMOVE_EFFECTS:
                         TerrainEngine.ChangeMarker(BlockMarker.None);
                         break;
-                    case AlterOption.Clone_Row:
+                    case AlterOption.CLONE_ROW:
                         TerrainEngine.CloneRow();
                         Block.ResetMaterials();
                         break;
-                    case AlterOption.Clone_Column:
+                    case AlterOption.CLONE_COLUMN:
                         TerrainEngine.CloneColumn();
                         Block.ResetMaterials();
                         break;

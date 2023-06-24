@@ -1,0 +1,75 @@
+#HelpBar {
+  background-color: rgba(0, 0, 0, .3);
+  position: absolute;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+#HelpText {
+  color: white;
+  padding: 0;
+  margin: 2px 4px;
+}
+
+#ModeControls {
+  border-top-width: 2px;
+  border-color: #615b4a;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.flyout {
+  flex-direction: row;
+  transition-duration: .25s;
+  position: absolute;
+  left: -100%;
+  top: 40px;
+  border-top-width: 2px;
+  border-color: #615b4a;
+  padding-left: 10px;
+  width: 450px;
+}
+
+.flyout.active {
+  left: 0%;
+}
+
+.flyout .unity-label {
+  width: 160px;
+}
+
+.flyout .unity-enum-field {
+  width: 330px;
+}
+
+#AlterFlyout {
+  width: 430px;
+}
+
+#AlterFlyout .unity-enum-field {
+  width: 240px;
+}
+
+#AppearanceFlyout {
+  width: 350px;
+}
+
+#AppearanceFlyout .unity-enum-field {
+  width: 162px;
+}
+
+#ConfigFlyout {
+  width: 350px;
+}
+
+#CameraFlyout {
+  width: auto;
+  padding-right: 3px;
+}
+
+#CameraFlyout .unity-label {
+  width: auto;
+}
