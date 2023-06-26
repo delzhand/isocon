@@ -1,5 +1,5 @@
 .background {
-    background-color: rgba(244, 244, 244, .5);
+    background-color: rgba(244, 244, 244, 0.5);
     padding: 2px;
 }
 
@@ -12,47 +12,66 @@
 }
 
 .unity-label {
-    color: #616161;
+    color: rgb(97, 97, 97);
 }
 
 .unity-button {
-    background-color: #cdcdcd;
+    background-color: rgb(205, 205, 205);
     border-width: 0;
-    color: #616161;
-    padding: 0px 12px;
+    color: rgb(97, 97, 97);
+    padding: 0 12px;
     border-left-width: 4px;
-    border-color: #616161;
+    border-color: rgb(97, 97, 97);
     height: 24px;
     font-size: 14px;
-    transition-duration: .25s;
+    transition-duration: 0.25s;
 }
 
 .unity-button.active {
-    background-color: #616161;
-    border-color: #cdcdcd;
-    color: #cdcdcd;
+    background-color: rgb(97, 97, 97);
+    border-color: rgb(205, 205, 205);
+    color: rgb(205, 205, 205);
+    border-left-width: 12px;
+    -unity-font-style: bold;
+}
+
+.unity-button:hover {
+    border-left-width: 12px;
+    -unity-font-style: bold;
+}
+
+.unity-button.hover {
     border-left-width: 12px;
     -unity-font-style: bold;
 }
 
 .unity-enum-field {
-    background-color: #cdcdcd;
+    background-color: rgb(205, 205, 205);
     border-width: 0;
-    color: #616161;
-    border-color: #616161;
+    color: rgb(97, 97, 97);
+    border-color: rgb(97, 97, 97);
     font-size: 14px;
-    transition-duration: .25s;
+    transition-duration: 0.25s;
     border-width: 0;
 }
 
 .unity-enum-field__input {
     border-width: 0;
     padding: 2px;
-    background-color: #cdcdcd;
+    background-color: rgb(205, 205, 205);
 }
 
 .unity-enum-field__arrow {
-    color: #616161;
+    color: rgb(97, 97, 97);
+}
+
+.unity-text-field {
+    margin: 0;
+}
+
+.unity-text-field__input {
+    border-width: 0;
+    margin: 0;
 }
 
 .unity-base-slider--horizontal {
@@ -60,7 +79,7 @@
 }
 
 .unity-base-slider__dragger {
-    background-color: #616161;
+    background-color: rgb(97, 97, 97);
 }
 
 .unity-toggle {
@@ -73,7 +92,10 @@
 .unity-toggle__checkmark {
     border-width: 0;
     border-bottom-width: 2px;
-    background-color: #cdcdcd;
+    background-color: rgb(205, 205, 205);
     padding: 0;
-    color: #616161;
+    color: rgb(97, 97, 97);
+}
+
+.unity-scroll-view {
 }

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -91,6 +93,66 @@ public class Block : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    }
+
+    public override string ToString(){
+        Column c = transform.parent.GetComponent<Column>();
+        string[] bits = new string[]{
+            c.X.ToString(),
+            c.Y.ToString(),
+            transform.localPosition.y.ToString(),
+            transform.localEulerAngles.y.ToString(),
+            Type.ToString(),
+            Destroyable.ToString(),
+            string.Join(",", markers.ToArray())
+        };
+        return string.Join("|", bits);
+    }  
+
+    public static GameObject FromString(string version, string block) {
+        string[] data = block.Split("|");
+        switch (version) {
+            case "v1":
+                return parseV1(data);
+        }
+        return null;
+    }
+
+    private static GameObject parseV1(string[] data) {
+        int x = int.Parse(data[0]);
+        int y = int.Parse(data[1]);
+        float z = float.Parse(data[2]);
+        float r = float.Parse(data[3]);
+        BlockType type = (BlockType)Enum.Parse(typeof(BlockType), data[4], true);
+        bool destroyable = bool.Parse(data[5]);
+        // string[] markersArray = bits[6].Split(",");
+        // List<BlockMarker> markers = new List<BlockMarker>();
+        // for(int i = 0; i < markersArray.Length; i++) {
+        //     BlockMarker bm = (BlockMarker)Enum.Parse(typeof(BlockMarker), markersArray[i], true);
+        // }
+
+        GameObject map = GameObject.Find("Terrain");
+        GameObject column = GameObject.Find(x+","+y);
+        if (column == null) {
+            column = new GameObject();
+            column.name = x + "," + y;
+            column.tag = "Column";
+            column.transform.parent = map.transform;
+            column.transform.localPosition = new Vector3(x, 0, y);
+            column.transform.localScale = Vector3.one;
+            column.AddComponent<Column>().Set(x, y);
+        }
+
+
+        GameObject block = Instantiate(Resources.Load("Prefabs/Block") as GameObject);
+        block.name = "block-" + x + "," + z + "," + y;
+        block.transform.parent = column.transform;
+        block.transform.localScale = Vector3.one;
+        block.transform.localPosition = new Vector3(0, z, 0);
+        block.transform.localRotation = Quaternion.Euler(0, r, 0);
+        block.GetComponent<Block>().Destroyable = destroyable;
+        block.GetComponent<Block>().TypeChange(type);
+        return block;
     }
 
     void OnMouseDown()

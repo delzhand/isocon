@@ -11,11 +11,15 @@ public enum Background {
     SUNSHINE,
     NIGHTTIME,
     SEASIDE,
+    ARKENDEPTHS,
+    SANDSTORM,
+    FANTASIA,
 }
 
 public class Environment : MonoBehaviour
 {
-
+    private static Background background = Background.SUNSHINE;
+    private static Palette palette = Palette.GREENFIELD;
     
     // Start is called before the first frame update
     void Start()
@@ -29,26 +33,38 @@ public class Environment : MonoBehaviour
         
     }
 
-    public static void ChangeBackground(Background background) {
-        Color c1 = Color.blue;
-        Color c2 = Color.blue;
-        switch (background) {
-            case Background.NIGHTTIME:
-                c1 = Color.black;
-                c2 = new Color(0, 38/255f, 60/255f);
-                break;
-            case Background.SUNSHINE:
-                c1 = new Color(177/255f, 214/255f, 128/255f);
-                c2 = new Color(38/255f, 113/255f, 156/255f);
-                break;
-            case Background.SEASIDE:
-                c1 = new Color(38/255f, 113/255f, 156/255f);
-                c2 = new Color(234/255f, 215/255f, 129/255f);
-                break;
-        }
+    private static Color FromRGB(int r, int g, int b) {
+        return new Color(r/255f, g/255f, b/255f);
+    }
+
+
+
+    public static void SetBackground(Background background) {
+        Environment.background = background;
+
+        Dictionary<Background,(Color, Color)> gradients = new Dictionary<Background, (Color, Color)>();
+        gradients.Add(Background.SUNSHINE, (Environment.FromRGB(177, 214, 128), Environment.FromRGB(38, 113, 156)));
+        gradients.Add(Background.NIGHTTIME, (Environment.FromRGB(0, 0, 0), Environment.FromRGB(0, 38, 60)));
+        gradients.Add(Background.SEASIDE, (Environment.FromRGB(38, 113, 156), Environment.FromRGB(234, 215, 129)));
+        gradients.Add(Background.SANDSTORM, (Environment.FromRGB(224, 221, 160), Environment.FromRGB(161, 161, 148)));
+        gradients.Add(Background.ARKENDEPTHS, (Environment.FromRGB(0, 0, 0), Environment.FromRGB(108, 0, 0)));
+        gradients.Add(Background.FANTASIA, (Environment.FromRGB(8, 0, 209), Environment.FromRGB(0, 108, 221)));
+
         MeshRenderer mr = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
-        mr.material.SetColor("_Color1", c1);
-        mr.material.SetColor("_Color2", c2);
+        mr.material.SetColor("_Color1", gradients[background].Item1);
+        mr.material.SetColor("_Color2", gradients[background].Item2);
+    }
+
+    public static Background GetBackground() {
+        return Environment.background;
+    }
+
+    public static Palette GetPalette() {
+        return Environment.palette;
+    }
+
+    public static void SetPalette(Palette palette) {
+        
     }
 
 }

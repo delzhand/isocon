@@ -1,75 +1,128 @@
 #HelpBar {
-  background-color: rgba(0, 0, 0, .3);
-  position: absolute;
-  width: 100%;
-  padding: 0;
-  margin: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    position: absolute;
+    width: 100%;
+    padding: 0;
+    margin: 0;
 }
 
 #HelpText {
-  color: white;
-  padding: 0;
-  margin: 2px 4px;
+    color: white;
+    padding: 0;
+    margin: 2px 4px;
 }
 
 #ModeControls {
-  border-top-width: 2px;
-  border-color: #615b4a;
-  bottom: 0;
-  left: 0;
-  position: absolute;
-  width: 100%;
+    border-top-width: 2px;
+    border-color: rgb(97, 91, 74);
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    width: 100%;
 }
 
 .flyout {
-  flex-direction: row;
-  transition-duration: .25s;
-  position: absolute;
-  left: -100%;
-  top: 40px;
-  border-top-width: 2px;
-  border-color: #615b4a;
-  padding-left: 10px;
-  width: 450px;
+    flex-direction: row;
+    transition-duration: 0.25s;
+    position: absolute;
+    left: -100%;
+    top: 40px;
+    border-top-width: 2px;
+    border-color: rgb(97, 91, 74);
+    padding-left: 10px;
+    width: 450px;
 }
 
 .flyout.active {
-  left: 0%;
+    left: 0;
 }
 
 .flyout .unity-label {
-  width: 160px;
+    width: 160px;
 }
 
 .flyout .unity-enum-field {
-  width: 330px;
+    width: 330px;
+}
+
+#ModalAnchor {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    height: 0;
+    width: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.modal {
+    width: 250px;
+    position: absolute;
+    left: -125px;
+    top: -200px;
+    opacity: 0;
+    transition-duration: 0.25s;
+    border-top-width: 2px;
+    border-color: rgb(97, 91, 74);
+    padding: 10px;
+}
+
+.modal.active {
+    top: -100px;
+    opacity: 1;
+}
+
+.modal .message {
+    white-space: normal;
+    background-color: rgb(97, 97, 97);
+    color: rgb(205, 205, 205);
+    width: 230px;
+    -unity-text-align: upper-center;
+    margin: 0 0 10px 0;
+}
+
+.modal .buttons {
+    justify-content: center;
 }
 
 #AlterFlyout {
-  width: 430px;
+    width: 430px;
 }
 
 #AlterFlyout .unity-enum-field {
-  width: 240px;
+    width: 240px;
 }
 
 #AppearanceFlyout {
-  width: 350px;
+    width: 350px;
 }
 
 #AppearanceFlyout .unity-enum-field {
-  width: 162px;
+    width: 162px;
 }
 
 #ConfigFlyout {
-  width: 350px;
+    width: 350px;
 }
 
 #CameraFlyout {
-  width: auto;
-  padding-right: 3px;
+    width: auto;
+    padding-right: 3px;
 }
 
 #CameraFlyout .unity-label {
-  width: auto;
+    width: auto;
+}
+
+#DataFlyout {
+    width: auto;
+}
+
+#FilenameModal .unity-text-field {
+    margin-bottom: 10px;
+}
+
+#LoadFileModal .unity-list-view {
+  height: 180px;
+  margin-bottom: 10px;
 }
