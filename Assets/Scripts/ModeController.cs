@@ -33,7 +33,10 @@ public class ModeController : MonoBehaviour
         flyouts = new String[]{"AlterFlyout", "AppearanceFlyout", "ConfigFlyout", "CameraFlyout", "DataFlyout"};
         modals = new String[]{"LoadFileModal", "FilenameModal", "LoadConfirmModal"};
         RegisterCallbacks();
-        CurrentMode = Mode.Other;
+        toggleElement(ElementType.Modal, null);
+        toggleElement(ElementType.Button, "ViewMode");
+        toggleElement(ElementType.Flyout, "CameraFlyout");
+        Block.ToggleSpacers(false);
     }
 
     // Update is called once per frame
@@ -90,9 +93,15 @@ public class ModeController : MonoBehaviour
 
 
         (modeUI.rootVisualElement.Q("UIScaleSlider") as Slider).RegisterValueChangedCallback((evt) => {
-            UI.SetScale(evt.newValue);
+            UI.SetScale("UICanvas/ModeUI", evt.newValue);
         });
         UI.AttachHelp(modeUI, "UIScaleSlider", "Make the general UI larger or smaller.");
+
+        (modeUI.rootVisualElement.Q("InfoScaleSlider") as Slider).RegisterValueChangedCallback((evt) => {
+            UI.SetScale("WorldCanvas/TokenUI", evt.newValue);
+        });
+        UI.AttachHelp(modeUI, "InfoScaleSlider", "Make the battle information larger or smaller.");
+
 
         (modeUI.rootVisualElement.Q("BackgroundEnum") as EnumField).RegisterValueChangedCallback((evt) => {
             Environment.SetBackground((Background)evt.newValue);

@@ -1,0 +1,64 @@
+#TerrainData {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  height: 100px;
+  width: 100px;
+}
+
+#Height,
+#HeightLabel {
+  color: white;
+  position: absolute;
+  top: 0;
+  right: 0;
+  -unity-font-style: bold;
+  text-shadow: 2px 2px 0 black;
+  margin: 0;
+  padding: 0;
+}
+
+#Height {
+  font-size: 30px;
+  right: 12px;
+  -unity-text-align: lower-right;
+}
+
+#HeightLabel {
+  font-size: 16px;
+  top: 14px;
+  -unity-text-align: lower-left;
+}
+
+#CoordsWrapper {
+  background-color: black;
+  border-radius: 10px;
+  position: absolute;
+  top: 35px;
+  right: 0;
+  padding: 2px 8px;
+}
+
+#Coords {
+  color: #FFF;
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+}
+
+#Effects {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  flex-direction: row;
+}
+
+.effect {
+  font-size: 10px;
+  background-color: #4d5e6f;
+  color: #FFF;
+  padding: 2px 4px;
+  margin: 0px 0px 0px 2px;
+  width: auto;
+  -unity-font-style: bold-and-italic;
+}

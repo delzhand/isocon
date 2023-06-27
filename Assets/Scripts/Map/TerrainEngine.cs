@@ -96,6 +96,9 @@ public class TerrainEngine : MonoBehaviour
                 GravityDrop(block.transform.parent.gameObject, block.transform.localPosition.y);
                 GameObject.DestroyImmediate(block);
             }
+            else {
+                UI.SetHelpText("Foundation blocks cannot be deleted (but can be changed to SHAPE_EMPTY)", HelpType.Error);
+            }
         });
     }
 

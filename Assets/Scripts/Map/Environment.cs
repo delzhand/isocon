@@ -47,7 +47,7 @@ public class Environment : MonoBehaviour
         gradients.Add(Background.NIGHTTIME, (Environment.FromRGB(0, 0, 0), Environment.FromRGB(0, 38, 60)));
         gradients.Add(Background.SEASIDE, (Environment.FromRGB(38, 113, 156), Environment.FromRGB(234, 215, 129)));
         gradients.Add(Background.SANDSTORM, (Environment.FromRGB(224, 221, 160), Environment.FromRGB(161, 161, 148)));
-        gradients.Add(Background.ARKENDEPTHS, (Environment.FromRGB(0, 0, 0), Environment.FromRGB(108, 0, 0)));
+        gradients.Add(Background.ARKENDEPTHS, (Environment.FromRGB(0, 0, 0), Environment.FromRGB(0, 108, 0)));
         gradients.Add(Background.FANTASIA, (Environment.FromRGB(8, 0, 209), Environment.FromRGB(0, 108, 221)));
 
         MeshRenderer mr = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();

@@ -65,11 +65,13 @@
     border-top-width: 2px;
     border-color: rgb(97, 91, 74);
     padding: 10px;
+    max-height: 0px;
 }
 
 .modal.active {
     top: -100px;
     opacity: 1;
+    max-height: 500px;
 }
 
 .modal .message {

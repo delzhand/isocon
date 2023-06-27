@@ -31,10 +31,10 @@ public class CameraControl : MonoBehaviour
         UIDocument cameraUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
 
         (cameraUI.rootVisualElement.Q("RotateLeftButton") as Button).RegisterCallback<ClickEvent>(rotateLeft);
-        UI.AttachHelp(cameraUI, "RotateLeftButton", "Rotate the battlefield clockwise.");
+        UI.AttachHelp(cameraUI, "RotateLeftButton", "Rotate the battlefield counter-clockwise.");
 
         (cameraUI.rootVisualElement.Q("RotateRightButton") as Button).RegisterCallback<ClickEvent>(rotateRight);
-        UI.AttachHelp(cameraUI, "RotateRightButton", "Rotate the battlefield counter-clockwise.");
+        UI.AttachHelp(cameraUI, "RotateRightButton", "Rotate the battlefield clockwise.");
 
         (cameraUI.rootVisualElement.Q("ZoomSlider") as Slider).RegisterValueChangedCallback(zoom);
         UI.AttachHelp(cameraUI, "ZoomSlider", "Zoom in or out.");

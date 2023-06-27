@@ -31,14 +31,14 @@
             <ui:Slider picking-mode="Ignore" value="1" high-value="2.5" name="UIScaleSlider" low-value="1" />
         </ui:VisualElement>
         <ui:VisualElement class="horizontal-container">
-            <ui:Label tabindex="-1" text="ACTOR LABEL SCALE" display-tooltip-when-elided="true" />
-            <ui:Slider picking-mode="Ignore" value="1" high-value="2.5" low-value="1" />
+            <ui:Label tabindex="-1" text="INFO SCALE" display-tooltip-when-elided="true" />
+            <ui:Slider picking-mode="Ignore" value="1" high-value="2.5" low-value="1" name="InfoScaleSlider" />
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="CameraFlyout" class="background flyout vertical-container" style="flex-direction: column;">
         <ui:VisualElement class="horizontal-container">
             <ui:Label tabindex="-1" text="ZOOM" display-tooltip-when-elided="true" />
-            <ui:Slider picking-mode="Ignore" value="4.5" high-value="7" name="ZoomSlider" low-value="2.5" />
+            <ui:Slider picking-mode="Ignore" value="4.5" high-value="2.5" name="ZoomSlider" low-value="7" />
         </ui:VisualElement>
         <ui:VisualElement class="horizontal-container">
             <ui:Label tabindex="-1" text="OVERHEAD VIEW" display-tooltip-when-elided="true" />
@@ -64,7 +64,7 @@
                 <ui:Button text="Cancel" display-tooltip-when-elided="true" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="FilenameModal" class="modal background" style="flex-grow: 1;">
+        <ui:VisualElement name="FilenameModal" class="modal background">
             <ui:Label tabindex="-1" text="Enter a filename" display-tooltip-when-elided="true" class="message" style="flex-wrap: wrap;" />
             <ui:TextField picking-mode="Ignore" name="Filename" />
             <ui:VisualElement name="Buttons" class="horizontal-container buttons" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">

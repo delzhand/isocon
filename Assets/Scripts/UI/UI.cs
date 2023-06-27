@@ -12,7 +12,8 @@ public enum HelpType {
 public class UI : MonoBehaviour
 {
     void Start() {
-        UI.SetScale(PlayerPrefs.GetFloat("UIScale"));
+        UI.SetScale("UICanvas/ModeUI", PlayerPrefs.GetFloat( "UIScale"));
+        UI.SetScale("WorldCanvas/TokenUI", PlayerPrefs.GetFloat( "InfoScale"));
     }
 
     public static bool IsPointerOverUI(Vector2 screenPos) {
@@ -76,11 +77,11 @@ public class UI : MonoBehaviour
         output.text = message;
     }
 
-    public static void SetScale(float value) {
-        GameObject.Find("UICanvas/ModeUI").GetComponent<UIDocument>().panelSettings.scale = value;
+    public static void SetScale(string element, float value) {
+        GameObject.Find(element).GetComponent<UIDocument>().panelSettings.scale = value;
     }
 
-    public static float GetScale() {
-        return GameObject.Find("UICanvas/ModeUI").GetComponent<UIDocument>().panelSettings.scale;
+    public static float GetScale(string element) {
+        return GameObject.Find(element).GetComponent<UIDocument>().panelSettings.scale;
     }
 }

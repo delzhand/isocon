@@ -71,7 +71,7 @@ public class Block : MonoBehaviour
         difficult = Resources.Load<Material>("Materials/Block/Marker/Difficult");
         interactive = Resources.Load<Material>("Materials/Block/Marker/Interactive");
         impassable = Resources.Load<Material>("Materials/Block/Marker/Impassable");
-        selectedMat = Resources.Load<Material>("Materials/Block/BlueTwirl");
+        selectedMat = Resources.Load<Material>("Materials/Block/Marker/Focused");
 
         side1 = Resources.Load<Material>("Materials/Block/Checker/SideA");
         side2 = Resources.Load<Material>("Materials/Block/Checker/SideB");
@@ -164,6 +164,9 @@ public class Block : MonoBehaviour
         switch (ModeController.GetMode()) {
             case Mode.View:
                 CameraControl.GoToBlock(this);
+                SetTerrainInfo();
+                DeselectAll();
+                Select();
                 break;
             case Mode.Alter:
                 Block.DeselectAll();
@@ -214,6 +217,49 @@ public class Block : MonoBehaviour
                 Block.DeselectAll();
                 break;
         }
+    }
+
+    public int getX() {
+        return this.transform.parent.GetComponent<Column>().X;
+    }
+
+    public int getY() {
+        return this.transform.parent.GetComponent<Column>().Y;
+    }
+
+    public void SetTerrainInfo() {
+        VisualElement root = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement;
+        string height = (transform.localPosition.y + 1).ToString();
+        if (Type == BlockType.Slope) {
+            height = transform.localPosition.y + "~" + (transform.localPosition.y + 1);
+        }
+        root.Q<Label>("Height").text = height;
+        root.Q<Label>("Coords").text = toAlpha(getY() + 1) + "" + (getX()+1);
+        root.Q("Effects").Clear();
+        markers.ForEach(marker => {
+            Label l = new Label();
+            l.text = marker.ToString();
+            l.AddToClassList("effect");
+            root.Q("Effects").Add(l);
+        });
+    }
+
+    private string toAlpha(int x) {
+        const int Base = 26;
+        const int Offset = 64; // ASCII offset for uppercase letters
+
+        string column = "";
+        
+        while (x > 0)
+        {
+            int remainder = x % Base;
+            char letter = (char)(remainder + Offset);
+            
+            column = letter + column;
+            x = (x - 1) / Base; // Adjust number for next iteration
+        }
+        
+        return column;    
     }
 
     public void Activate() {
@@ -293,55 +339,57 @@ public class Block : MonoBehaviour
         List<Material> materials = new List<Material>();
         MeshRenderer mr = GetComponent<MeshRenderer>();
 
+        // Checkerboard
+        if (transform.parent != null) {
+            // Checkerboard
+            float x = transform.parent.GetComponent<Column>().X;
+            float y = transform.parent.GetComponent<Column>().Y;
+            float z = transform.localPosition.y;
+            sides = (x + y + z);
+            if ((x + y + z) % 2 == 0) {
+                materials.Add(side2);
+            }
+            else {
+                materials.Add(side1);
+            }
+
+            top = (x + y);
+            if ((x + y) % 2 == 0) {
+                materials.Add(top2);
+            }
+            else {
+                materials.Add(top1);
+            }
+        }
+        else {
+            materials.Add(side1);
+            materials.Add(top1);
+        }
+
         // Modify
         if (Selected) {
             materials.Add(selectedMat);
             materials.Add(selectedMat);
-            materials.Add(selectedMat);
-            materials.Add(selectedMat);
         }
-        else {
-            if (transform.parent != null) {
-                // Checkerboard
-                float x = transform.parent.GetComponent<Column>().X;
-                float y = transform.parent.GetComponent<Column>().Y;
-                float z = transform.localPosition.y;
-                sides = (x + y + z);
-                if ((x + y + z) % 2 == 0) {
-                    materials.Add(side2);
-                }
-                else {
-                    materials.Add(side1);
-                }
+        // else {
+        //     materials.Add(side1);
+        //     materials.Add(top1);
+        // }
 
-                top = (x + y);
-                if ((x + y) % 2 == 0) {
-                    materials.Add(top2);
-                }
-                else {
-                    materials.Add(top1);
-                }
-            }
-            else {
-                materials.Add(side1);
-                materials.Add(top1);
-            }
+        materials.Add(normal);
 
-            materials.Add(normal);
-
-            // Markers
-            if (markers.Contains(BlockMarker.Impassable)) {
-                materials.Add(impassable);
-            }
-            if (markers.Contains(BlockMarker.Dangerous)) {
-                materials.Add(dangerous);
-            }
-            if (markers.Contains(BlockMarker.Difficult)) {
-                materials.Add(difficult);
-            }
-            if (markers.Contains(BlockMarker.Interactive)) {
-                materials.Add(interactive);
-            }
+        // Markers
+        if (markers.Contains(BlockMarker.Impassable)) {
+            materials.Add(impassable);
+        }
+        if (markers.Contains(BlockMarker.Dangerous)) {
+            materials.Add(dangerous);
+        }
+        if (markers.Contains(BlockMarker.Difficult)) {
+            materials.Add(difficult);
+        }
+        if (markers.Contains(BlockMarker.Interactive)) {
+            materials.Add(interactive);
         }
 
         // Apply

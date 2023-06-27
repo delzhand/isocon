@@ -23,7 +23,8 @@ public class State
         string fullFileName = State.FullFilePath(fileName) + ".json";
         File.WriteAllText(fullFileName, json);
         UI.SetHelpText("Map saved to " + fullFileName, HelpType.Success);
-        PlayerPrefs.SetFloat("UIScale", UI.GetScale());
+        PlayerPrefs.SetFloat("UIScale", UI.GetScale("UICanvas/ModeUI"));
+        PlayerPrefs.SetFloat("InfoScale", UI.GetScale("WorldCanvas/TokenUI"));
     }
 
     public static void LoadState(string fileName) {
