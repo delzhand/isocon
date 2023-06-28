@@ -19,7 +19,8 @@ public enum BlockMarker
     Dangerous,
     Difficult,
     Interactive,
-    Impassable
+    Impassable,
+    Pit
 }
 
 public enum AlterOption
@@ -37,6 +38,7 @@ public enum AlterOption
     SET_EFFECT_DIFFICULT,
     SET_EFFECT_INTERACTIVE,
     SET_EFFECT_IMPASSABLE,
+    SET_EFFECT_PIT,
 }
 
 public class Block : MonoBehaviour
@@ -52,31 +54,22 @@ public class Block : MonoBehaviour
     MeshRenderer mr;
     GameObject blockUI;
     List<BlockMarker> markers;
-    
-    static Material normal;
-    static Material dangerous;
-    static Material difficult;
-    static Material interactive;
-    static Material impassable;
-    static Material spacer;
-    static Material side1;
-    static Material side2;
-    static Material top1;
-    static Material top2;
-    static Material selectedMat;
+    static Dictionary<string, Material> materials = new Dictionary<string, Material>();
 
     void Awake() {
-        normal = Resources.Load<Material>("Materials/Block/Marker/Normal");
-        dangerous = Resources.Load<Material>("Materials/Block/Marker/Dangerous");
-        difficult = Resources.Load<Material>("Materials/Block/Marker/Difficult");
-        interactive = Resources.Load<Material>("Materials/Block/Marker/Interactive");
-        impassable = Resources.Load<Material>("Materials/Block/Marker/Impassable");
-        selectedMat = Resources.Load<Material>("Materials/Block/Marker/Focused");
-
-        side1 = Resources.Load<Material>("Materials/Block/Checker/SideA");
-        side2 = Resources.Load<Material>("Materials/Block/Checker/SideB");
-        top1 = Resources.Load<Material>("Materials/Block/Checker/TopA");
-        top2 = Resources.Load<Material>("Materials/Block/Checker/TopB");
+        if (materials.Count == 0) {
+            materials.Add("normal", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Normal")));
+            materials.Add("dangerous", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Dangerous")));
+            materials.Add("difficult", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Difficult")));
+            materials.Add("interactive", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Interactive")));
+            materials.Add("impassable", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Impassable")));
+            materials.Add("pit", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Pit")));
+            materials.Add("selectedMat", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+            materials.Add("side1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideA")));
+            materials.Add("side2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideB")));
+            materials.Add("top1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopA")));
+            materials.Add("top2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopB")));
+        }
 
         markers = new List<BlockMarker>();
         mf = GetComponent<MeshFilter>();
@@ -125,11 +118,14 @@ public class Block : MonoBehaviour
         float r = float.Parse(data[3]);
         BlockType type = (BlockType)Enum.Parse(typeof(BlockType), data[4], true);
         bool destroyable = bool.Parse(data[5]);
-        // string[] markersArray = bits[6].Split(",");
-        // List<BlockMarker> markers = new List<BlockMarker>();
-        // for(int i = 0; i < markersArray.Length; i++) {
-        //     BlockMarker bm = (BlockMarker)Enum.Parse(typeof(BlockMarker), markersArray[i], true);
-        // }
+        string[] markersArray = data[6].Split(",");
+        List<BlockMarker> markers = new List<BlockMarker>();
+        for(int i = 0; i < markersArray.Length; i++) {
+            if (markersArray[i].Length > 0) {
+                BlockMarker bm = (BlockMarker)Enum.Parse(typeof(BlockMarker), markersArray[i], true);
+                markers.Add(bm);
+            }
+        }
 
         GameObject map = GameObject.Find("Terrain");
         GameObject column = GameObject.Find(x+","+y);
@@ -152,6 +148,9 @@ public class Block : MonoBehaviour
         block.transform.localRotation = Quaternion.Euler(0, r, 0);
         block.GetComponent<Block>().Destroyable = destroyable;
         block.GetComponent<Block>().TypeChange(type);
+        for (int i = 0; i < markers.Count; i++) {
+            block.GetComponent<Block>().MarkerChange(markers[i]);
+        }
         return block;
     }
 
@@ -199,6 +198,9 @@ public class Block : MonoBehaviour
                     case AlterOption.SET_EFFECT_IMPASSABLE:
                         TerrainEngine.ChangeMarker(BlockMarker.Impassable);
                         break;
+                    case AlterOption.SET_EFFECT_PIT:
+                        TerrainEngine.ChangeMarker(BlockMarker.Pit);
+                        break;
                     case AlterOption.SET_EFFECT_INTERACTIVE:
                         TerrainEngine.ChangeMarker(BlockMarker.Interactive);
                         break;
@@ -217,6 +219,10 @@ public class Block : MonoBehaviour
                 Block.DeselectAll();
                 break;
         }
+    }
+
+    public static void SetColor(string id, Color color) {
+        materials[id].SetColor("_BaseColor", color);
     }
 
     public int getX() {
@@ -335,8 +341,15 @@ public class Block : MonoBehaviour
         SetMaterials();
     }
 
+    Material GetMaterial(string id, string path) {
+        if (!materials.ContainsKey(id)) {
+            materials.Add(id,  Resources.Load<Material>("Materials/Block/" + path));
+        }
+        return materials[id];
+    }
+
     void SetMaterials() {
-        List<Material> materials = new List<Material>();
+        List<Material> blockMaterials = new List<Material>();
         MeshRenderer mr = GetComponent<MeshRenderer>();
 
         // Checkerboard
@@ -347,53 +360,56 @@ public class Block : MonoBehaviour
             float z = transform.localPosition.y;
             sides = (x + y + z);
             if ((x + y + z) % 2 == 0) {
-                materials.Add(side2);
+                blockMaterials.Add(materials["side2"]);
             }
             else {
-                materials.Add(side1);
+                blockMaterials.Add(materials["side1"]);
             }
 
             top = (x + y);
             if ((x + y) % 2 == 0) {
-                materials.Add(top2);
+                blockMaterials.Add(materials["top2"]);
             }
             else {
-                materials.Add(top1);
+                blockMaterials.Add(materials["top1"]);
             }
         }
         else {
-            materials.Add(side1);
-            materials.Add(top1);
+            blockMaterials.Add(materials["side1"]);
+            blockMaterials.Add(materials["top1"]);
         }
 
         // Modify
         if (Selected) {
-            materials.Add(selectedMat);
-            materials.Add(selectedMat);
+            blockMaterials.Add(materials["selectedMat"]);
+            blockMaterials.Add(materials["selectedMat"]);
         }
         // else {
         //     materials.Add(side1);
         //     materials.Add(top1);
         // }
 
-        materials.Add(normal);
+        blockMaterials.Add(materials["normal"]);
 
         // Markers
         if (markers.Contains(BlockMarker.Impassable)) {
-            materials.Add(impassable);
+            blockMaterials.Add(materials["impassable"]);
         }
         if (markers.Contains(BlockMarker.Dangerous)) {
-            materials.Add(dangerous);
+            blockMaterials.Add(materials["dangerous"]);
         }
         if (markers.Contains(BlockMarker.Difficult)) {
-            materials.Add(difficult);
+            blockMaterials.Add(materials["difficult"]);
         }
         if (markers.Contains(BlockMarker.Interactive)) {
-            materials.Add(interactive);
+            blockMaterials.Add(materials["interactive"]);
+        }
+        if (markers.Contains(BlockMarker.Pit)) {
+            blockMaterials.Add(materials["pit"]);
         }
 
         // Apply
-        mr.SetMaterials(materials);
+        mr.SetMaterials(blockMaterials);
     }
 
     public static void ToggleSpacers(bool show) {

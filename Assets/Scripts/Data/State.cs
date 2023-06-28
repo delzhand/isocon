@@ -20,7 +20,7 @@ public class State
     public static void SaveState(string fileName) {
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
-        string fullFileName = State.FullFilePath(fileName) + ".json";
+        string fullFileName = State.FullFilePath(fileName).Replace(".json", "") + ".json";
         File.WriteAllText(fullFileName, json);
         UI.SetHelpText("Map saved to " + fullFileName, HelpType.Success);
         PlayerPrefs.SetFloat("UIScale", UI.GetScale("UICanvas/ModeUI"));
@@ -28,7 +28,8 @@ public class State
     }
 
     public static void LoadState(string fileName) {
-        string json = File.ReadAllText(State.FullFilePath(fileName));
+        string fullFileName = State.FullFilePath(fileName).Replace(".json", "") + ".json";
+        string json = File.ReadAllText(fullFileName);
         State state = JsonUtility.FromJson<State>(json);
         SetSceneFromState(state);
         UI.SetHelpText("Map loaded.", HelpType.Success);

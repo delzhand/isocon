@@ -5,15 +5,20 @@ using UnityEngine;
 public enum Palette {
     GREENFIELD,
     BLUECAVE,
+    ARKENDEPTH,
+
+    PYROFLOW,
+
 }
 
 public enum Background {
     SUNSHINE,
     NIGHTTIME,
     SEASIDE,
-    ARKENDEPTHS,
+    ARKENDEPTH,
     SANDSTORM,
     FANTASIA,
+    DEEPHEAT,
 }
 
 public class Environment : MonoBehaviour
@@ -37,8 +42,6 @@ public class Environment : MonoBehaviour
         return new Color(r/255f, g/255f, b/255f);
     }
 
-
-
     public static void SetBackground(Background background) {
         Environment.background = background;
 
@@ -47,8 +50,9 @@ public class Environment : MonoBehaviour
         gradients.Add(Background.NIGHTTIME, (Environment.FromRGB(0, 0, 0), Environment.FromRGB(0, 38, 60)));
         gradients.Add(Background.SEASIDE, (Environment.FromRGB(38, 113, 156), Environment.FromRGB(234, 215, 129)));
         gradients.Add(Background.SANDSTORM, (Environment.FromRGB(224, 221, 160), Environment.FromRGB(161, 161, 148)));
-        gradients.Add(Background.ARKENDEPTHS, (Environment.FromRGB(0, 0, 0), Environment.FromRGB(0, 108, 0)));
+        gradients.Add(Background.ARKENDEPTH, (Environment.FromRGB(0, 0, 0), Environment.FromRGB(0, 108, 0)));
         gradients.Add(Background.FANTASIA, (Environment.FromRGB(8, 0, 209), Environment.FromRGB(0, 108, 221)));
+        gradients.Add(Background.DEEPHEAT, (Environment.FromRGB(68, 0, 0), Environment.FromRGB(104, 60, 21)));
 
         MeshRenderer mr = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
         mr.material.SetColor("_Color1", gradients[background].Item1);
@@ -64,7 +68,26 @@ public class Environment : MonoBehaviour
     }
 
     public static void SetPalette(Palette palette) {
-        
+
+        Dictionary<Palette,(Color, Color)> palettes = new Dictionary<Palette, (Color, Color)>();
+        // Item1 = side
+        // Item2 = top
+        palettes.Add(Palette.GREENFIELD, (Environment.FromRGB(62, 113, 62), Environment.FromRGB(111, 90, 60)));
+        palettes.Add(Palette.BLUECAVE, (Environment.FromRGB(62, 76, 84), Environment.FromRGB(62, 76, 113)));
+        palettes.Add(Palette.ARKENDEPTH, (Environment.FromRGB(92, 92, 92), Environment.FromRGB(106, 154, 10)));
+        palettes.Add(Palette.PYROFLOW, (Environment.FromRGB(35, 35, 35), Environment.FromRGB(149, 22, 32)));
+
+        Block.SetColor("top1", palettes[palette].Item1);
+        Block.SetColor("top2", DarkenColor(palettes[palette].Item1, .2f));
+        Block.SetColor("side1", palettes[palette].Item2);
+        Block.SetColor("side2", DarkenColor(palettes[palette].Item2, .2f));
+    }
+
+    public static Color DarkenColor(Color originalColor, float percentage)
+    {
+        float darkenAmount = Mathf.Clamp01(percentage);
+        Color darkenedColor = Color.Lerp(originalColor, Color.black, darkenAmount);
+        return darkenedColor;
     }
 
 }

@@ -48,6 +48,7 @@ public class ModeController : MonoBehaviour
         UIDocument modeUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
 
         (modeUI.rootVisualElement.Q("ViewMode") as Button).RegisterCallback<ClickEvent>((evt) => {
+
             CurrentMode = Mode.View;
             toggleElement(ElementType.Button, "ViewMode");
             toggleElement(ElementType.Flyout, "CameraFlyout");
@@ -107,6 +108,12 @@ public class ModeController : MonoBehaviour
             Environment.SetBackground((Background)evt.newValue);
         });
         UI.AttachHelp(modeUI, "BackgroundEnum", "Change the background gradient to match the mood or setting of the battle.");
+
+        (modeUI.rootVisualElement.Q("PaletteEnum") as EnumField).RegisterValueChangedCallback((evt) => {
+            Environment.SetPalette((Palette)evt.newValue);
+        });
+        UI.AttachHelp(modeUI, "BackgroundEnum", "Change the background gradient to match the mood or setting of the battle.");
+
 
         (modeUI.rootVisualElement.Q("Data") as Button).RegisterCallback<ClickEvent>((evt) => {
             CurrentMode = Mode.Other;
