@@ -6,9 +6,8 @@ public enum Palette {
     GREENFIELD,
     BLUECAVE,
     ARKENDEPTH,
-
     PYROFLOW,
-
+    ICECASTLE,
 }
 
 public enum Background {
@@ -19,6 +18,7 @@ public enum Background {
     SANDSTORM,
     FANTASIA,
     DEEPHEAT,
+    CLOUDTOP
 }
 
 public class Environment : MonoBehaviour
@@ -68,14 +68,15 @@ public class Environment : MonoBehaviour
     }
 
     public static void SetPalette(Palette palette) {
-
+        Environment.palette = palette;
         Dictionary<Palette,(Color, Color)> palettes = new Dictionary<Palette, (Color, Color)>();
-        // Item1 = side
-        // Item2 = top
+        // Item1 = top
+        // Item2 = side
         palettes.Add(Palette.GREENFIELD, (Environment.FromRGB(62, 113, 62), Environment.FromRGB(111, 90, 60)));
         palettes.Add(Palette.BLUECAVE, (Environment.FromRGB(62, 76, 84), Environment.FromRGB(62, 76, 113)));
         palettes.Add(Palette.ARKENDEPTH, (Environment.FromRGB(92, 92, 92), Environment.FromRGB(106, 154, 10)));
         palettes.Add(Palette.PYROFLOW, (Environment.FromRGB(35, 35, 35), Environment.FromRGB(149, 22, 32)));
+        palettes.Add(Palette.ICECASTLE, (Environment.FromRGB(60, 130, 200), Environment.FromRGB(176, 176, 176)));
 
         Block.SetColor("top1", palettes[palette].Item1);
         Block.SetColor("top2", DarkenColor(palettes[palette].Item1, .2f));
