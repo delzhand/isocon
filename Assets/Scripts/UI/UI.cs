@@ -64,10 +64,10 @@ public class UI : MonoBehaviour
                 helpbar.style.backgroundColor = new Color(0, 0, 0, .3f);
                 break;
             case HelpType.Error:
-                helpbar.style.backgroundColor = new Color(1, 0, 0, .3f);
+                helpbar.style.backgroundColor = new Color(.8f, 0, 0, .3f);
                 break;
             case HelpType.Success:
-                helpbar.style.backgroundColor = new Color(0, 1, 0, .3f);
+                helpbar.style.backgroundColor = new Color(0, .8f, 0, .3f);
                 break;
         }
     }

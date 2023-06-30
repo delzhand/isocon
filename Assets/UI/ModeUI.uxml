@@ -10,6 +10,9 @@
         <ui:Button text="APPEARANCE" display-tooltip-when-elided="true" name="Appearance" tooltip="Click a block to delete it" />
         <ui:Button text="CONFIG" display-tooltip-when-elided="true" name="Config" tooltip="Click a block to delete it" />
         <ui:Button text="DATA" display-tooltip-when-elided="true" name="Data" tooltip="Click a block to delete it" />
+        <ui:VisualElement name="Info">
+            <ui:Label tabindex="-1" text="i" display-tooltip-when-elided="true" />
+        </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="AlterFlyout" class="background flyout">
         <ui:Label tabindex="-1" text="ALTERATION" display-tooltip-when-elided="true" />
@@ -55,6 +58,7 @@
         <ui:Button text="SAVE AS" display-tooltip-when-elided="true" name="SaveMapAsButton" />
         <ui:Button text="SAVE w/TOKENS" display-tooltip-when-elided="true" name="SaveStateButton" />
         <ui:Button text="LOAD" display-tooltip-when-elided="true" name="LoadButton" />
+        <ui:Button text="RESET" display-tooltip-when-elided="true" name="ResetButton" />
     </ui:VisualElement>
     <ui:VisualElement name="ModalAnchor" class="background vertical-container active" style="flex-direction: column;">
         <ui:VisualElement name="LoadConfirmModal" class="modal background" style="flex-grow: 1;">
@@ -76,6 +80,13 @@
             <ui:Label tabindex="-1" text="Select a file to load." display-tooltip-when-elided="true" class="message" style="flex-wrap: wrap;" />
             <ui:ListView name="FileList" />
             <ui:Button text="CANCEL" display-tooltip-when-elided="true" name="FileSelectCancel" />
+        </ui:VisualElement>
+        <ui:VisualElement name="InfoModal" class="modal background">
+            <ui:Label tabindex="-1" text="ABOUT ISOCON" display-tooltip-when-elided="true" class="message" style="flex-wrap: wrap;" />
+            <ui:Label tabindex="-1" text="©Derek Adams 2023&#10;Licensed under Creative Commons BY-NC-SA" display-tooltip-when-elided="true" class="longtext" />
+            <ui:VisualElement name="Buttons" class="horizontal-container buttons" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                <ui:Button text="Close" display-tooltip-when-elided="true" name="InfoClose" />
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

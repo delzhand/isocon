@@ -30,6 +30,8 @@ public enum AlterOption
     ROTATE_SELECTED,
     CLONE_ROW,
     CLONE_COLUMN,
+    DELETE_ROW,
+    DELETE_COLUMN,
     SET_SHAPE_SOLID,
     SET_SHAPE_SLOPE,
     SET_SHAPE_EMPTY,
@@ -58,17 +60,17 @@ public class Block : MonoBehaviour
 
     void Awake() {
         if (materials.Count == 0) {
-            materials.Add("normal", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Normal")));
-            materials.Add("dangerous", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Dangerous")));
-            materials.Add("difficult", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Difficult")));
-            materials.Add("interactive", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Interactive")));
-            materials.Add("impassable", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Impassable")));
-            materials.Add("pit", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Pit")));
-            materials.Add("selectedMat", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
             materials.Add("side1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideA")));
             materials.Add("side2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideB")));
             materials.Add("top1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopA")));
             materials.Add("top2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopB")));
+            // materials.Add("normal", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Normal")));
+            // materials.Add("dangerous", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Dangerous")));
+            // materials.Add("difficult", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Difficult")));
+            // materials.Add("interactive", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Interactive")));
+            // materials.Add("impassable", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Impassable")));
+            // materials.Add("pit", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Pit")));
+            materials.Add("selectedMat", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
         }
 
         markers = new List<BlockMarker>();
@@ -213,6 +215,14 @@ public class Block : MonoBehaviour
                         break;
                     case AlterOption.CLONE_COLUMN:
                         TerrainEngine.CloneColumn();
+                        Block.ResetMaterials();
+                        break;
+                    case AlterOption.DELETE_ROW:
+                        TerrainEngine.DeleteRow();
+                        Block.ResetMaterials();
+                        break;
+                    case AlterOption.DELETE_COLUMN:
+                        TerrainEngine.DeleteColumn();
                         Block.ResetMaterials();
                         break;
                 }
@@ -379,33 +389,28 @@ public class Block : MonoBehaviour
             blockMaterials.Add(materials["top1"]);
         }
 
-        // Modify
-        if (Selected) {
-            blockMaterials.Add(materials["selectedMat"]);
-            blockMaterials.Add(materials["selectedMat"]);
-        }
-        // else {
-        //     materials.Add(side1);
-        //     materials.Add(top1);
-        // }
-
-        blockMaterials.Add(materials["normal"]);
-
         // Markers
+        Material markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));
         if (markers.Contains(BlockMarker.Impassable)) {
-            blockMaterials.Add(materials["impassable"]);
+            markerMaterial.SetInt("_Impassable", 1);
         }
         if (markers.Contains(BlockMarker.Dangerous)) {
-            blockMaterials.Add(materials["dangerous"]);
+            markerMaterial.SetInt("_Dangerous", 1);
         }
         if (markers.Contains(BlockMarker.Difficult)) {
-            blockMaterials.Add(materials["difficult"]);
+            markerMaterial.SetInt("_Difficult", 1);
         }
         if (markers.Contains(BlockMarker.Interactive)) {
-            blockMaterials.Add(materials["interactive"]);
+            markerMaterial.SetInt("_Interactive", 1);
         }
         if (markers.Contains(BlockMarker.Pit)) {
-            blockMaterials.Add(materials["pit"]);
+            markerMaterial.SetInt("_Pit", 1);
+        }
+        blockMaterials.Add(markerMaterial);
+        
+        // Selected
+        if (Selected) {
+            blockMaterials.Add(materials["selectedMat"]);
         }
 
         // Apply
@@ -563,13 +568,11 @@ public class Block : MonoBehaviour
     {
         Mesh mesh = new Mesh();
         mesh.vertices = getCubeVertices(size);
-        mesh.subMeshCount = 6;
+        mesh.subMeshCount = 4;
         mesh.SetTriangles(getCubeTriangles(), 0);
         mesh.SetTriangles(getCubeTopTriangles(), 1);
         mesh.SetTriangles(getCubeTopTriangles(), 2);
         mesh.SetTriangles(getCubeTopTriangles(), 3);
-        mesh.SetTriangles(getCubeTopTriangles(), 4);
-        mesh.SetTriangles(getCubeTopTriangles(), 5);
         mesh.uv = getCubeUVs();
         mesh.normals = getNormals(mesh.vertices, mesh.triangles);
         return mesh;
@@ -635,13 +638,11 @@ public class Block : MonoBehaviour
     static Mesh generateSlopeMesh() {
         Mesh mesh = new Mesh();
         mesh.vertices = getSlopeVertices();
-        mesh.subMeshCount = 6;
+        mesh.subMeshCount = 4;
         mesh.SetTriangles(getSlopeTriangles(), 0);
         mesh.SetTriangles(getSlopeTopTriangles(), 1);
         mesh.SetTriangles(getSlopeTopTriangles(), 2);
         mesh.SetTriangles(getSlopeTopTriangles(), 3);
-        mesh.SetTriangles(getSlopeTopTriangles(), 4);
-        mesh.SetTriangles(getSlopeTopTriangles(), 5);
         mesh.uv = getSlopeUVs();
         mesh.normals = getNormals(mesh.vertices, mesh.triangles);
         return mesh;

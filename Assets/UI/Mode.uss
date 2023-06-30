@@ -128,3 +128,27 @@
   height: 180px;
   margin-bottom: 10px;
 }
+
+#Info {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    height: 24px;
+    width: 24px;
+    border-radius: 12px;
+    background-color: #616161;
+}
+
+#Info .unity-label {
+    color: rgb(205, 205, 205);
+    -unity-text-align: middle-center;
+    -unity-font-style: bold;
+    margin: 0;
+    padding: 0;
+    padding-top: 4px;
+}
+
+#InfoModal .longtext {
+    white-space: normal;
+    -unity-text-align: upper-center;
+}

@@ -31,7 +31,7 @@ public class ModeController : MonoBehaviour
         Environment.SetBackground(Background.FANTASIA);
         activeButtons = new String[]{"ViewMode", "AlterMode", "AddToken", "Appearance", "Config", "Data"};
         flyouts = new String[]{"AlterFlyout", "AppearanceFlyout", "ConfigFlyout", "CameraFlyout", "DataFlyout"};
-        modals = new String[]{"LoadFileModal", "FilenameModal", "LoadConfirmModal"};
+        modals = new String[]{"LoadFileModal", "FilenameModal", "LoadConfirmModal", "InfoModal"};
         RegisterCallbacks();
         toggleElement(ElementType.Modal, null);
         toggleElement(ElementType.Button, "ViewMode");
@@ -127,23 +127,26 @@ public class ModeController : MonoBehaviour
             DataController.currentOp = FileOp.Save;
             if (DataController.currentFileName != null && DataController.currentFileName.Length > 0) {
                 State.SaveState(DataController.currentFileName);
-                toggleElement(ElementType.Modal, null, false);
-                toggleElement(ElementType.Flyout, null, false);
+                toggleElement(ElementType.Modal, null);
+                toggleElement(ElementType.Flyout, null);
             }
             else {
                 toggleElement(ElementType.Modal, "FilenameModal");
             }
         });
 
-        (modeUI.rootVisualElement.Q("SaveMapButton") as Button).RegisterCallback<ClickEvent>((evt) => {
+        (modeUI.rootVisualElement.Q("SaveMapAsButton") as Button).RegisterCallback<ClickEvent>((evt) => {
             DataController.currentOp = FileOp.Save;
             toggleElement(ElementType.Modal, "FilenameModal");
         });
 
-
         (modeUI.rootVisualElement.Q("LoadButton") as Button).RegisterCallback<ClickEvent>((evt) => {
             DataController.InitializeFileList();
             toggleElement(ElementType.Modal, "LoadFileModal");
+        });
+
+        (modeUI.rootVisualElement.Q("FilenameCancel") as Button).RegisterCallback<ClickEvent>((evt) => {
+            toggleElement(ElementType.Modal, null);
         });
 
         (modeUI.rootVisualElement.Q("FilenameConfirm") as Button).RegisterCallback<ClickEvent>((evt) => {
@@ -156,6 +159,24 @@ public class ModeController : MonoBehaviour
             else {
                 UI.SetHelpText("Filename cannot be empty.", HelpType.Error);
             }
+        });
+
+        
+        (modeUI.rootVisualElement.Q("FileSelectCancel") as Button).RegisterCallback<ClickEvent>((evt) => {
+            toggleElement(ElementType.Modal, null);
+        });
+
+        (modeUI.rootVisualElement.Q("ResetButton") as Button).RegisterCallback<ClickEvent>((evt) => {
+            DataController.currentFileName = null;
+            TerrainEngine.ResetTerrain();
+        });
+
+        modeUI.rootVisualElement.Q("Info").RegisterCallback<ClickEvent>((evt) => {
+            toggleElement(ElementType.Modal, "InfoModal");
+        });
+
+        (modeUI.rootVisualElement.Q("InfoClose") as Button).RegisterCallback<ClickEvent>((evt) => {
+            toggleElement(ElementType.Modal, null);
         });
 
     }
@@ -174,7 +195,7 @@ public class ModeController : MonoBehaviour
         (doc.rootVisualElement.Q(name) as VisualElement).SetEnabled(false);
     }
 
-    private void toggleElement(ElementType type, string name = null, bool? on = null) {
+    private void toggleElement(ElementType type, string name = null) {
         UIDocument doc = GameObject.Find("ModeUI").GetComponent<UIDocument>();
         string[] elements = new string[]{};
         switch(type) {
@@ -191,16 +212,16 @@ public class ModeController : MonoBehaviour
         // Toggle all off
         // Disable modals because they don't get moved offscreen entirely by uss and can still be clicked otherwise
         for (int i = 0; i < elements.Length; i++) {
-            (doc.rootVisualElement.Q(elements[i]) as VisualElement).RemoveFromClassList("active");
+            doc.rootVisualElement.Q(elements[i]).RemoveFromClassList("active");
             if (type == ElementType.Modal) {
-                (doc.rootVisualElement.Q(elements[i]) as VisualElement).SetEnabled(false);
+                doc.rootVisualElement.Q(elements[i]).SetEnabled(false);
             }
         }
         // Toggle specific element on
         if (name != null) {
-            (doc.rootVisualElement.Q(name) as VisualElement).AddToClassList("active");
+            doc.rootVisualElement.Q(name).AddToClassList("active");
             if (type == ElementType.Modal) {
-                (doc.rootVisualElement.Q(name) as VisualElement).SetEnabled(true);
+                doc.rootVisualElement.Q(name).SetEnabled(true);
             }
         }
     }

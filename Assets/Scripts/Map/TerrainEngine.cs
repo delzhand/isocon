@@ -9,7 +9,7 @@ public class TerrainEngine : MonoBehaviour
     static GameObject map;
 
     void Start() {
-        InitializeTerrain(8, 8);
+        InitializeTerrain(8, 8, 3);
     }
 
     private static void findMap() {
@@ -18,7 +18,7 @@ public class TerrainEngine : MonoBehaviour
         }
     }
 
-    public static void InitializeTerrain(int length, int width) {
+    public static void InitializeTerrain(int length, int width, int height) {
         findMap();
         for (int y = 0; y < width; y++) {
             for (int x = 0; x < length; x++) {
@@ -31,18 +31,34 @@ public class TerrainEngine : MonoBehaviour
                     column.transform.localScale = Vector3.one;
                     column.AddComponent<Column>().Set(x, y);
 
-                    GameObject block = Instantiate(Resources.Load("Prefabs/Block") as GameObject);
-                    block.name = "block";
-                    block.transform.parent = column.transform;
-                    block.transform.localPosition = Vector3.zero;
-                    block.transform.localScale = Vector3.one;
-                    block.GetComponent<Block>().Destroyable = false;
+                    for (int z = 0; z < height; z++) {
+                        GameObject block = Instantiate(Resources.Load("Prefabs/Block") as GameObject);
+                        block.name = "block";
+                        block.transform.parent = column.transform;
+                        block.transform.localPosition = new Vector3(0, z-2, 0);
+                        block.transform.localScale = Vector3.one;
+                        if (z == 0) {
+                            block.GetComponent<Block>().Destroyable = false;
+                        }
+                    }
                 }
                 catch (Exception e) {
                     Debug.LogError(e.Message);
                 }
             }
         }
+    }
+
+    public static void ResetTerrain() {
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < blocks.Length; i++) {
+            GameObject.Destroy(blocks[i]);
+        }
+        GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
+        for (int i = 0; i < columns.Length; i++) {
+            GameObject.Destroy(columns[i]);
+        }
+        InitializeTerrain(8, 8, 3);
     }
 
     public static Vector3 Center() {
@@ -134,6 +150,27 @@ public class TerrainEngine : MonoBehaviour
         });
     }
 
+    public static void DeleteRow() {
+        List<GameObject> selected = Block.GetAllSelected();
+        GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
+        selected.ForEach(selectedBlock => {
+            int selectedX = selectedBlock.transform.parent.GetComponent<Column>().X;
+            for (int i = 0; i < columns.Length; i++) {
+                GameObject column = columns[i];
+                int x = column.GetComponent<Column>().X;
+                int y = column.GetComponent<Column>().Y;
+                if (x == selectedX) {
+                    GameObject.Destroy(columns[i]);
+                }
+                if (x > selectedX) {
+                    column.transform.localPosition -= new Vector3(1, 0, 0);
+                    column.name = (x-1) + "," + y;
+                    column.GetComponent<Column>().Set((x-1), y);
+                }
+            }
+        });
+    }
+
     public static void CloneColumn() {
         List<GameObject> selected = Block.GetAllSelected();
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
@@ -154,6 +191,27 @@ public class TerrainEngine : MonoBehaviour
                     column.transform.localPosition += new Vector3(0, 0, 1);
                     column.name = x + "," + (y+1);
                     column.GetComponent<Column>().Set(x, (y+1));
+                }
+            }
+        });
+    }
+
+    public static void DeleteColumn() {
+        List<GameObject> selected = Block.GetAllSelected();
+        GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
+        selected.ForEach(selectedBlock => {
+            int selectedY = selectedBlock.transform.parent.GetComponent<Column>().Y;
+            for (int i = 0; i < columns.Length; i++) {
+                GameObject column = columns[i];
+                int x = column.GetComponent<Column>().X;
+                int y = column.GetComponent<Column>().Y;
+                if (y == selectedY) {
+                    GameObject.Destroy(columns[i]);
+                }
+                if (y > selectedY) {
+                    column.transform.localPosition -= new Vector3(0, 0, 1);
+                    column.name = x + "," + (y-1);
+                    column.GetComponent<Column>().Set(x, (y-1));
                 }
             }
         });
