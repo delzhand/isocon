@@ -89,4 +89,8 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
+    <ui:VisualElement name="TokenFlyout" class="background flyout vertical-container" style="flex-direction: column;">
+        <ui:Button text="ADD OBJECT" display-tooltip-when-elided="true" name="AddObjectButton" />
+        <ui:Button text="ADD UNIT" display-tooltip-when-elided="true" name="AddUnitButton" />
+    </ui:VisualElement>
 </ui:UXML>

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3326459346945091228}
   - component: {fileID: 1443309407859687425}
+  - component: {fileID: 8047097260965485842}
   m_Layer: 0
   m_Name: TestToken
   m_TagString: Untagged
@@ -52,7 +53,29 @@ MonoBehaviour:
   CHP: 24
   MHP: 32
   VIG: 8
-  LabelOffset: {x: 0, y: -150}
+  Wounds: 1
+  InReserve: 1
+--- !u!65 &8047097260965485842
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 803489884830867950}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1001 &2174893363689088739
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -61,6 +84,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3326459346945091228}
     m_Modifications:
+    - target: {fileID: 361665813255702047, guid: 9c66dfa9f53455e4e979f3b7941f6c26,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -876546973899608171, guid: 0585ec58d6c2d714e976774b4a00af9f,
+        type: 3}
+    - target: {fileID: 2160974411622687656, guid: 9c66dfa9f53455e4e979f3b7941f6c26,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3150208618289858459, guid: 9c66dfa9f53455e4e979f3b7941f6c26,
         type: 3}
       propertyPath: m_RootOrder

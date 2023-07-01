@@ -164,10 +164,16 @@ public class Block : MonoBehaviour
         }
         switch (ModeController.GetMode()) {
             case Mode.View:
-                CameraControl.GoToBlock(this);
-                SetTerrainInfo();
-                DeselectAll();
-                Select();
+                if (Token.TokenHeld != null) {
+                    Debug.Log("Place token at " + this.name);
+                    Token.TokenHeld.PlaceAtBlock(this);
+                }
+                else {
+                    CameraControl.GoToBlock(this);
+                    SetTerrainInfo();
+                    DeselectAll();
+                    Select();
+                }
                 break;
             case Mode.Alter:
                 Block.DeselectAll();

@@ -7,6 +7,8 @@ using UnityEngine.UIElements;
 
 public class Token : MonoBehaviour
 {
+    public static Token TokenHeld = null;
+
     public VisualElement container;
     public VisualElement tokenDisplay;
 
@@ -18,6 +20,7 @@ public class Token : MonoBehaviour
     public int MHP = 32;
     public int VIG = 8;
     public int Wounds = 1;
+    public bool InReserve = true;
 
     // Start is called before the first frame update
     void Start()
@@ -53,8 +56,30 @@ public class Token : MonoBehaviour
     }
 
     private void alignToCamera() {
-        Transform camera = GameObject.Find("CameraOrigin").transform;
-        transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 90, 0);
+        if (InReserve) {
+            Transform camera = GameObject.Find("ReserveCamera").transform;
+            transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 180, 0);
+        }
+        else {
+            Transform camera = GameObject.Find("CameraOrigin").transform;
+            transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 90, 0);
+        }
+    }
+
+    void OnMouseDown()
+    {
+        switch (ModeController.GetMode()) {
+            case Mode.View:
+                Debug.Log(name + " clicked");
+                TokenHeld = this;
+                break;
+        }
+    }
+
+    public void PlaceAtBlock(Block block) {
+        transform.position = block.transform.position + new Vector3(0, .25f, 0);
+        InReserve = false;
+        TokenHeld = null;
     }
 
     private void updateData() {

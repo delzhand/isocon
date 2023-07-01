@@ -67,9 +67,10 @@ public class ModeController : MonoBehaviour
         (modeUI.rootVisualElement.Q("AddToken") as Button).RegisterCallback<ClickEvent>((evt) => {
             CurrentMode = Mode.Other;
             toggleElement(ElementType.Button, "AddToken");
+            toggleElement(ElementType.Flyout, "TokenFlyout");
             Block.ToggleSpacers(false);
         });
-        UI.AttachHelp(modeUI, "AddToken", "This mode is not yet implemented.");
+        UI.AttachHelp(modeUI, "AddToken", "Add objects and units to the field.");
 
         (modeUI.rootVisualElement.Q("Appearance") as Button).RegisterCallback<ClickEvent>((evt) => {
             CurrentMode = Mode.Other;
@@ -178,6 +179,15 @@ public class ModeController : MonoBehaviour
         (modeUI.rootVisualElement.Q("InfoClose") as Button).RegisterCallback<ClickEvent>((evt) => {
             toggleElement(ElementType.Modal, null);
         });
+
+        (modeUI.rootVisualElement.Q("AddObjectButton") as Button).RegisterCallback<ClickEvent>((evt) => {
+        });
+        UI.AttachHelp(modeUI, "AddObjectButton", "Create a generic object.");
+
+        (modeUI.rootVisualElement.Q("AddUnitButton") as Button).RegisterCallback<ClickEvent>((evt) => {
+        });
+        UI.AttachHelp(modeUI, "AddUnitButton", "Create a player, npc, or foe.");
+
 
     }
 
