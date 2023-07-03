@@ -14,7 +14,7 @@ public class State
     public string[] Blocks;
 
     public static string FullFilePath(string fileName) {
-        return Application.persistentDataPath + "/" + fileName;
+        return Application.persistentDataPath + "/maps/" + fileName;
     }
 
     public static void SaveState(string fileName) {
@@ -23,8 +23,6 @@ public class State
         string fullFileName = State.FullFilePath(fileName).Replace(".json", "") + ".json";
         File.WriteAllText(fullFileName, json);
         UI.SetHelpText("Map saved to " + fullFileName, HelpType.Success);
-        PlayerPrefs.SetFloat("UIScale", UI.GetScale("UICanvas/ModeUI"));
-        PlayerPrefs.SetFloat("InfoScale", UI.GetScale("WorldCanvas/TokenUI"));
     }
 
     public static void LoadState(string fileName) {

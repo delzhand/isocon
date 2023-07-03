@@ -1,0 +1,8 @@
+#FocusToken {
+  position: absolute;
+  right: 10px;
+  bottom: 20px;
+  background-color: #000;
+  height: 200px;
+  width: 200px;
+}

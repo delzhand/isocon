@@ -1,7 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/Token.uss?fileID=7433441132597879392&amp;guid=0ae496f6d26532f439036c3c8ef22555&amp;type=3#Token" />
-    <Style src="project://database/Assets/UI/TokenPanel.uss?fileID=7433441132597879392&amp;guid=6a1b0faf469140849b310c5871a18a44&amp;type=3#TokenPanel" />
-    <Style src="project://database/Assets/UI/TerrainData.uss?fileID=7433441132597879392&amp;guid=7291e5a659e64ac4ca52056f65e931ec&amp;type=3#TerrainData" />
+    <Style src="project://database/Assets/UI/Styles/Token.uss?fileID=7433441132597879392&amp;guid=0ae496f6d26532f439036c3c8ef22555&amp;type=3#Token" />
+    <Style src="project://database/Assets/UI/Styles/TokenPanel.uss?fileID=7433441132597879392&amp;guid=6a1b0faf469140849b310c5871a18a44&amp;type=3#TokenPanel" />
+    <Style src="project://database/Assets/UI/Styles/TerrainData.uss?fileID=7433441132597879392&amp;guid=7291e5a659e64ac4ca52056f65e931ec&amp;type=3#TerrainData" />
+    <Style src="project://database/Assets/UI/Styles/FocusToken.uss?fileID=7433441132597879392&amp;guid=6a1d69935070c434b8c09f06942cef46&amp;type=3#FocusToken" />
     <ui:VisualElement name="TerrainData" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
         <ui:Label tabindex="-1" text="1" display-tooltip-when-elided="true" name="Height" />
         <ui:Label tabindex="-1" text="h" display-tooltip-when-elided="true" name="HeightLabel" />
@@ -10,4 +11,5 @@
         </ui:VisualElement>
         <ui:VisualElement name="Effects" />
     </ui:VisualElement>
+    <ui:VisualElement name="FocusToken" />
 </ui:UXML>

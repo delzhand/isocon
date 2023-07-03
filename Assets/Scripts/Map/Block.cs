@@ -70,7 +70,10 @@ public class Block : MonoBehaviour
             // materials.Add("interactive", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Interactive")));
             // materials.Add("impassable", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Impassable")));
             // materials.Add("pit", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Pit")));
-            materials.Add("selectedMat", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+            materials.Add("unfocused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+            materials.Add("focused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+
+            materials["focused"].SetInt("_Focused", 1);
         }
 
         markers = new List<BlockMarker>();
@@ -402,9 +405,7 @@ public class Block : MonoBehaviour
         blockMaterials.Add(markerMaterial);
         
         // Selected
-        if (Selected) {
-            blockMaterials.Add(materials["selectedMat"]);
-        }
+        blockMaterials.Add(materials[Selected ? "focused" : "unfocused"]);
 
         // Apply
         mr.SetMaterials(blockMaterials);

@@ -24,25 +24,36 @@
     border-color: rgb(97, 97, 97);
     height: 24px;
     font-size: 14px;
-    transition-duration: 0.25s;
+}
+
+.unity-button.hover {
+    background-color: rgb(151, 151, 151);
+    border-color: rgb(205, 205, 205);
+    color: rgb(205, 205, 205);
+}
+
+.unity-button:hover {
+    background-color: rgb(151, 151, 151);
+    border-color: rgb(205, 205, 205);
+    color: rgb(205, 205, 205);
 }
 
 .unity-button.active {
     background-color: rgb(97, 97, 97);
     border-color: rgb(205, 205, 205);
     color: rgb(205, 205, 205);
-    border-left-width: 12px;
-    -unity-font-style: bold;
 }
 
-.unity-button:hover {
-    border-left-width: 12px;
-    -unity-font-style: bold;
+.unity-button.active.hover {
+    background-color: rgb(97, 97, 97);
+    border-color: rgb(205, 205, 205);
+    color: rgb(205, 205, 205);
 }
 
-.unity-button.hover {
-    border-left-width: 12px;
-    -unity-font-style: bold;
+.unity-button.active:hover {
+    background-color: rgb(97, 97, 97);
+    border-color: rgb(205, 205, 205);
+    color: rgb(205, 205, 205);
 }
 
 .unity-enum-field {

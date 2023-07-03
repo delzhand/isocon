@@ -37,6 +37,7 @@
             <ui:Label tabindex="-1" text="INFO SCALE" display-tooltip-when-elided="true" />
             <ui:Slider picking-mode="Ignore" value="1" high-value="3" low-value="0.5" name="InfoScaleSlider" />
         </ui:VisualElement>
+        <ui:DropdownField label="ICON VERSION" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="VersionField" />
     </ui:VisualElement>
     <ui:VisualElement name="CameraFlyout" class="background flyout vertical-container" style="flex-direction: column;">
         <ui:VisualElement class="horizontal-container">
@@ -59,6 +60,7 @@
         <ui:Button text="SAVE w/TOKENS" display-tooltip-when-elided="true" name="SaveStateButton" />
         <ui:Button text="LOAD" display-tooltip-when-elided="true" name="LoadButton" />
         <ui:Button text="RESET" display-tooltip-when-elided="true" name="ResetButton" />
+        <ui:Button text="EXIT ISOCON" display-tooltip-when-elided="true" name="ExitButton" />
     </ui:VisualElement>
     <ui:VisualElement name="ModalAnchor" class="background vertical-container active" style="flex-direction: column;">
         <ui:VisualElement name="LoadConfirmModal" class="modal background" style="flex-grow: 1;">
@@ -82,7 +84,7 @@
             <ui:Button text="CANCEL" display-tooltip-when-elided="true" name="FileSelectCancel" />
         </ui:VisualElement>
         <ui:VisualElement name="InfoModal" class="modal background">
-            <ui:Label tabindex="-1" text="ABOUT ISOCON" display-tooltip-when-elided="true" class="message" style="flex-wrap: wrap;" />
+            <ui:Label tabindex="-1" text="ABOUT ISOCON v0.1" display-tooltip-when-elided="true" class="message" style="flex-wrap: wrap;" />
             <ui:Label tabindex="-1" text="©Derek Adams 2023&#10;Licensed under Creative Commons BY-NC-SA" display-tooltip-when-elided="true" class="longtext" />
             <ui:VisualElement name="Buttons" class="horizontal-container buttons" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
                 <ui:Button text="Close" display-tooltip-when-elided="true" name="InfoClose" />
@@ -91,7 +93,9 @@
         <ui:VisualElement name="AddTokenModal" class="modal background">
             <ui:Label tabindex="-1" text="Create a Token" display-tooltip-when-elided="true" class="message" style="flex-wrap: wrap;" />
             <ui:TextField picking-mode="Ignore" label="Name" name="TokenNameField" />
-            <ui:DropdownField label="Avatar" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="TokenTypeDropdown" />
+            <ui:DropdownField label="Avatar" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="AvatarDropdown" />
+            <ui:DropdownField label="Type" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="TokenTypeDropdown" />
+            <ui:DropdownField label="Job" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="JobClassDropdown" />
             <ui:VisualElement name="Buttons" class="horizontal-container buttons" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
                 <ui:Button text="Confirm" display-tooltip-when-elided="true" name="AddTokenConfirm" />
                 <ui:Button text="Cancel" display-tooltip-when-elided="true" name="AddTokenCancel" />

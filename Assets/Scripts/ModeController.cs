@@ -45,10 +45,10 @@ public class ModeController : MonoBehaviour
     }
 
     private void RegisterCallbacks() {
+
         UIDocument modeUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
 
         (modeUI.rootVisualElement.Q("ViewMode") as Button).RegisterCallback<ClickEvent>((evt) => {
-
             CurrentMode = Mode.View;
             toggleElement(ElementType.Button, "ViewMode");
             toggleElement(ElementType.Flyout, "CameraFlyout");
@@ -95,16 +95,25 @@ public class ModeController : MonoBehaviour
         UI.AttachHelp(modeUI, "AlterOptionField", "Change what happens when a tile is clicked.");
 
 
+        (modeUI.rootVisualElement.Q("UIScaleSlider") as Slider).value = PlayerPrefs.GetFloat("UIScale", 1f);
         (modeUI.rootVisualElement.Q("UIScaleSlider") as Slider).RegisterValueChangedCallback((evt) => {
+            PlayerPrefs.SetFloat("UIScale", evt.newValue);
             UI.SetScale("UICanvas/ModeUI", evt.newValue);
         });
         UI.AttachHelp(modeUI, "UIScaleSlider", "Make the general UI larger or smaller.");
 
+        (modeUI.rootVisualElement.Q("InfoScaleSlider") as Slider).value = PlayerPrefs.GetFloat("InfoScale", 1f);
         (modeUI.rootVisualElement.Q("InfoScaleSlider") as Slider).RegisterValueChangedCallback((evt) => {
+            PlayerPrefs.SetFloat("InfoScale", evt.newValue);
             UI.SetScale("WorldCanvas/TokenUI", evt.newValue);
         });
         UI.AttachHelp(modeUI, "InfoScaleSlider", "Make the battle information larger or smaller.");
 
+        (modeUI.rootVisualElement.Q("VersionField") as DropdownField).choices = new List<string>{"1.5"};
+        (modeUI.rootVisualElement.Q("VersionField") as DropdownField).value = PlayerPrefs.GetString("IconVersion", "1.5");
+        (modeUI.rootVisualElement.Q("VersionField") as DropdownField).RegisterValueChangedCallback((evt) => {
+            PlayerPrefs.SetString("IconVersion", evt.newValue);
+        });
 
         (modeUI.rootVisualElement.Q("BackgroundEnum") as EnumField).RegisterValueChangedCallback((evt) => {
             Environment.SetBackground((Background)evt.newValue);
@@ -170,6 +179,15 @@ public class ModeController : MonoBehaviour
         (modeUI.rootVisualElement.Q("ResetButton") as Button).RegisterCallback<ClickEvent>((evt) => {
             DataController.currentFileName = null;
             TerrainEngine.ResetTerrain();
+        });
+
+        (modeUI.rootVisualElement.Q("ExitButton") as Button).RegisterCallback<ClickEvent>((evt) => {
+            #if UNITY_STANDALONE
+                Application.Quit();
+            #endif
+            #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+            #endif
         });
 
         modeUI.rootVisualElement.Q("Info").RegisterCallback<ClickEvent>((evt) => {

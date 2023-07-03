@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UIElements;
 
 public class Token : MonoBehaviour
@@ -63,18 +65,59 @@ public class Token : MonoBehaviour
 
     public static void InitModal() {
         UIDocument modeUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
-        DropdownField typeField = (modeUI.rootVisualElement.Q("TokenTypeDropdown") as DropdownField);
-        List<string> choices = new List<string>();
-        choices.Add("Enochian");
-        choices.Add("Shade");
-        choices.Add("Relict");
-        choices.Add("Object");
-        typeField.choices = choices;
+        List<string> avatars = new List<string>{
+            "Enochian",
+            "Shade",
+            "Relict",
+            "Object"
+        };
+        DirectoryInfo info = new DirectoryInfo(Application.persistentDataPath + "/tokens/");
+        FileInfo[] fileInfo = info.GetFiles();
+        for (int i = 0; i < fileInfo.Length; i++) {
+            avatars.Add("Custom: " + fileInfo[i].Name);
+        }        
+        (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField).choices = avatars;
+
+
+        (modeUI.rootVisualElement.Q("TokenTypeDropdown") as DropdownField).choices = new List<string>{
+            "Player",
+            "Foe",
+            "Object",
+            "NPC"
+        };
+
+        (modeUI.rootVisualElement.Q("JobClassDropdown") as DropdownField).choices = jobOptions();
+    }
+
+    private static List<string> jobOptions() {
+        string v = PlayerPrefs.GetString("IconVersion", "1.5");
+        switch(v) {
+            case "1.5":
+                return new List<string>{
+                    "Stalwart-Bastion",
+                    "Stalwart-Demon Slayer",
+                    "Stalwart-Colossus",
+                    "Stalwart-Knave",
+                    "Vagabond-Fool",
+                    "Vagabond-Freelancer",
+                    "Vagabond-Shade",
+                    "Vagabond-Warden",
+                    "Mendicant-Chanter",
+                    "Mendicant-Harvester",
+                    "Mendicant-Seer",
+                    "Wright-Enochian",
+                    "Wright-Geomancer",
+                    "Wright-Spellblade",
+                    "Wright-Stormbender",
+                };
+            default:
+                return new List<string>{};
+        }
     }
 
     public static void CreateNew() {
         UIDocument modeUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
-        DropdownField typeField = (modeUI.rootVisualElement.Q("TokenTypeDropdown") as DropdownField);
+        DropdownField typeField = (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField);
         TextField nameField = (modeUI.rootVisualElement.Q("TokenNameField") as TextField);
         GameObject newToken = Instantiate(Resources.Load<GameObject>("Prefabs/Token"));
         ReserveSpot openReserve = ReserveSpot.LastReserveSpot();
@@ -94,7 +137,37 @@ public class Token : MonoBehaviour
                 newToken.transform.Find("Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetTexture("_Image", t);
                 break;
             case "Object":
+                newToken.transform.Find("Avatar").gameObject.SetActive(false);
+                newToken.transform.Find("Object").gameObject.SetActive(true);
                 break;
+            default:
+                string filename = typeField.value;
+                filename = filename.Replace("Custom: ", "");
+                newToken.GetComponent<Token>().CustomCutout("file://" + Application.persistentDataPath + "/tokens/" + filename);
+                break;
+        }
+        
+    }
+
+    private void CustomCutout(string filename) {
+        StartCoroutine(LoadLocalFileIntoCutout(filename));
+    }
+
+    private IEnumerator LoadLocalFileIntoCutout(string filename) {
+        using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(filename))
+        {
+            yield return uwr.SendWebRequest();
+
+            if (uwr.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(uwr.error);
+            }
+            else
+            {
+                // Get downloaded asset bundle
+                Texture2D texture = DownloadHandlerTexture.GetContent(uwr);
+                transform.Find("Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetTexture("_Image", texture);
+            }
         }
     }
 
