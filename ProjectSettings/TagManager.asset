@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Block
   - Column
+  - Token
+  - Reserve
   layers:
   - Default
   - TransparentFX

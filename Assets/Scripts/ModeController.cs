@@ -31,7 +31,7 @@ public class ModeController : MonoBehaviour
         Environment.SetBackground(Background.FANTASIA);
         activeButtons = new String[]{"ViewMode", "AlterMode", "AddToken", "Appearance", "Config", "Data"};
         flyouts = new String[]{"AlterFlyout", "AppearanceFlyout", "ConfigFlyout", "CameraFlyout", "DataFlyout"};
-        modals = new String[]{"LoadFileModal", "FilenameModal", "LoadConfirmModal", "InfoModal"};
+        modals = new String[]{"LoadFileModal", "FilenameModal", "LoadConfirmModal", "InfoModal", "AddTokenModal"};
         RegisterCallbacks();
         toggleElement(ElementType.Modal, null);
         toggleElement(ElementType.Button, "ViewMode");
@@ -66,8 +66,9 @@ public class ModeController : MonoBehaviour
 
         (modeUI.rootVisualElement.Q("AddToken") as Button).RegisterCallback<ClickEvent>((evt) => {
             CurrentMode = Mode.Other;
+            toggleElement(ElementType.Flyout, null);
             toggleElement(ElementType.Button, "AddToken");
-            toggleElement(ElementType.Flyout, "TokenFlyout");
+            toggleElement(ElementType.Modal, "AddTokenModal");
             Block.ToggleSpacers(false);
         });
         UI.AttachHelp(modeUI, "AddToken", "Add objects and units to the field.");
@@ -161,7 +162,6 @@ public class ModeController : MonoBehaviour
                 UI.SetHelpText("Filename cannot be empty.", HelpType.Error);
             }
         });
-
         
         (modeUI.rootVisualElement.Q("FileSelectCancel") as Button).RegisterCallback<ClickEvent>((evt) => {
             toggleElement(ElementType.Modal, null);
@@ -180,15 +180,21 @@ public class ModeController : MonoBehaviour
             toggleElement(ElementType.Modal, null);
         });
 
-        (modeUI.rootVisualElement.Q("AddObjectButton") as Button).RegisterCallback<ClickEvent>((evt) => {
+        (modeUI.rootVisualElement.Q("AddTokenConfirm") as Button).RegisterCallback<ClickEvent>((evt) => {
+            Reserve.Adjust();
+            toggleElement(ElementType.Modal, null);
+            Token.CreateNew();
+            CurrentMode = Mode.View;
+            toggleElement(ElementType.Button, "ViewMode");
+            toggleElement(ElementType.Flyout, "CameraFlyout");
+            Block.ToggleSpacers(false);
         });
-        UI.AttachHelp(modeUI, "AddObjectButton", "Create a generic object.");
 
-        (modeUI.rootVisualElement.Q("AddUnitButton") as Button).RegisterCallback<ClickEvent>((evt) => {
+        (modeUI.rootVisualElement.Q("AddTokenCancel") as Button).RegisterCallback<ClickEvent>((evt) => {
+            toggleElement(ElementType.Modal, null);
         });
-        UI.AttachHelp(modeUI, "AddUnitButton", "Create a player, npc, or foe.");
 
-
+        Token.InitModal();
     }
 
     public static Mode GetMode() {

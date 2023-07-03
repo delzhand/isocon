@@ -9,136 +9,92 @@ public class Token : MonoBehaviour
 {
     public static Token TokenHeld = null;
 
-    public VisualElement container;
-    public VisualElement tokenDisplay;
-
-    public string ActorName = "Test";
-    public string ActorJob = "Enochian";
-    public string ActorClass = "wright";
-    public bool IsEnemy = false;
-    public int CHP = 24;
-    public int MHP = 32;
-    public int VIG = 8;
-    public int Wounds = 1;
     public bool InReserve = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        container = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement;
-        CreateLabelUI();
     }
 
     // Update is called once per frame
     void Update()
     {
         alignToCamera();
-        updateScreenPosition();
-        updateData();
-    }
-
-    private void CreateLabelUI()
-    {
-        VisualTreeAsset template = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Templates/TokenDisplay.uxml");
-        VisualElement instance = template.Instantiate();
-        tokenDisplay = instance.Q("TokenDisplay");
-        container.Add(tokenDisplay);
-
-        // if (ActorName == "Gradis") {
-        //     template = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Templates/TokenPanel.uxml");
-        //     instance = template.Instantiate();
-        //     VisualElement tokenPanel = instance.Q("TokenPanel");
-        //     container.Add(tokenPanel);
-        //     tokenPanel.style.top = 100;
-        //     tokenPanel.style.left = 30;
-        // }
-
     }
 
     private void alignToCamera() {
         if (InReserve) {
             Transform camera = GameObject.Find("ReserveCamera").transform;
-            transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 180, 0);
+            transform.Find("Avatar").transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 180, 0);
         }
         else {
             Transform camera = GameObject.Find("CameraOrigin").transform;
-            transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 90, 0);
+            transform.Find("Avatar").transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 90, 0);
         }
     }
 
     void OnMouseDown()
     {
-        switch (ModeController.GetMode()) {
-            case Mode.View:
-                Debug.Log(name + " clicked");
-                TokenHeld = this;
-                break;
+        if (ModeController.GetMode() == Mode.View) {
+            ChangeHeld(TokenHeld == this ? null : this);
         }
+    }
+
+    public static void ChangeHeld(Token token) {
+        GameObject[] allTokens = GameObject.FindGameObjectsWithTag("Token");
+        for (int i = 0; i < allTokens.Length; i++) {
+            allTokens[i].GetComponentInChildren<MeshRenderer>().material.SetInt("_Selected", 0);
+        }
+        if (token) {
+            token.GetComponentInChildren<MeshRenderer>().material.SetInt("_Selected", 1);
+        }
+        TokenHeld = token;
     }
 
     public void PlaceAtBlock(Block block) {
         transform.position = block.transform.position + new Vector3(0, .25f, 0);
         InReserve = false;
-        TokenHeld = null;
+        ReserveSpot rs = ReserveSpot.GetReserveSpot(this);
+        if (rs != null) {
+            rs.Token = null;
+        }
+        Token.ChangeHeld(null);
     }
 
-    private void updateData() {
-        tokenDisplay.Q<Label>("Name").text = ActorName;
-        tokenDisplay.Q<Label>("Job").text = ActorJob;
-        tokenDisplay.Q<Label>("Job").AddToClassList(ActorClass);
-        tokenDisplay.Q<Label>("CHP").text = CHP.ToString();
-        tokenDisplay.Q<Label>("MHP").text = "/" + MHP.ToString();
-        if (VIG > 0) {
-            tokenDisplay.Q<Label>("VIG").text = "+" + VIG;
-        }
-        else {
-            tokenDisplay.Q<Label>("VIG").text = "";
-        }
-        tokenDisplay.Q<ProgressBar>("HpBar").value = CHP;
-        tokenDisplay.Q<ProgressBar>("HpBar").highValue = MHP;
-        tokenDisplay.Q<ProgressBar>("VigorBar").value = VIG;
-        tokenDisplay.Q<ProgressBar>("VigorBar").highValue = MHP;
-        if (VIG == 0) {
-            tokenDisplay.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Hidden;
-        }
-        else {
-            tokenDisplay.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Visible;
-        }
-        for (int i = 1; i <= 3; i++) {
-            if (Wounds >= i) {
-                tokenDisplay.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Visible;
-            }
-            else {
-                tokenDisplay.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Hidden;
-            }
-        }
-        
-        if (IsEnemy) {
-            tokenDisplay.AddToClassList("enemy");
-        }
-        else {
-            tokenDisplay.RemoveFromClassList("enemy");
-        }
+    public static void InitModal() {
+        UIDocument modeUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
+        DropdownField typeField = (modeUI.rootVisualElement.Q("TokenTypeDropdown") as DropdownField);
+        List<string> choices = new List<string>();
+        choices.Add("Enochian");
+        choices.Add("Shade");
+        choices.Add("Relict");
+        choices.Add("Object");
+        typeField.choices = choices;
     }
 
-    private void updateScreenPosition() {
-        if (tokenDisplay == null) {
-            return;
-        }
-        Vector3 worldPos = transform.Find("Actor/Chibi/Cutout Quad/LabelAnchor").position;
-        Vector3 viewportPos = Camera.main.WorldToViewportPoint(worldPos);
-        if (tokenDisplay.resolvedStyle.width != float.NaN) {
-            Vector2 screenPos = new Vector2(
-                Mathf.RoundToInt((viewportPos.x * container.resolvedStyle.width)),
-                Mathf.RoundToInt((1f - viewportPos.y) * container.resolvedStyle.height)
-            );
-            Vector2 centerOffset = new Vector2(
-                -tokenDisplay.resolvedStyle.width/2f,
-                0
-            );
-            Vector2 pos = screenPos + centerOffset;
-            tokenDisplay.style.left = pos.x;
-            tokenDisplay.style.top = pos.y;
+    public static void CreateNew() {
+        UIDocument modeUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
+        DropdownField typeField = (modeUI.rootVisualElement.Q("TokenTypeDropdown") as DropdownField);
+        TextField nameField = (modeUI.rootVisualElement.Q("TokenNameField") as TextField);
+        GameObject newToken = Instantiate(Resources.Load<GameObject>("Prefabs/Token"));
+        ReserveSpot openReserve = ReserveSpot.LastReserveSpot();
+        newToken.name = nameField.value;
+        newToken.transform.parent = GameObject.Find("Reserve").transform;
+        newToken.transform.localPosition = openReserve.transform.localPosition;
+        newToken.GetComponent<Token>().InReserve = true;
+        openReserve.Token = newToken.GetComponent<Token>();
+        Token.ChangeHeld(null);
+        Reserve.Adjust();
+
+        switch(typeField.value) {
+            case "Enochian":
+            case "Shade":
+            case "Relict":
+                Texture2D t = Resources.Load<Texture2D>("Textures/Chibis/" + typeField.value);
+                newToken.transform.Find("Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetTexture("_Image", t);
+                break;
+            case "Object":
+                break;
         }
     }
 

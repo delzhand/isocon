@@ -165,8 +165,8 @@ public class Block : MonoBehaviour
         switch (ModeController.GetMode()) {
             case Mode.View:
                 if (Token.TokenHeld != null) {
-                    Debug.Log("Place token at " + this.name);
                     Token.TokenHeld.PlaceAtBlock(this);
+                    Reserve.Adjust();
                 }
                 else {
                     CameraControl.GoToBlock(this);
@@ -369,31 +369,18 @@ public class Block : MonoBehaviour
         MeshRenderer mr = GetComponent<MeshRenderer>();
 
         // Checkerboard
+        bool altSides = false;
+        bool altTop = false;
         if (transform.parent != null) {
             // Checkerboard
             float x = transform.parent.GetComponent<Column>().X;
             float y = transform.parent.GetComponent<Column>().Y;
             float z = transform.localPosition.y;
-            sides = (x + y + z);
-            if ((x + y + z) % 2 == 0) {
-                blockMaterials.Add(materials["side2"]);
-            }
-            else {
-                blockMaterials.Add(materials["side1"]);
-            }
-
-            top = (x + y);
-            if ((x + y) % 2 == 0) {
-                blockMaterials.Add(materials["top2"]);
-            }
-            else {
-                blockMaterials.Add(materials["top1"]);
-            }
+            altSides = ((x + y + z) % 2 == 0);
+            altTop = ((x + y) % 2 == 0);
         }
-        else {
-            blockMaterials.Add(materials["side1"]);
-            blockMaterials.Add(materials["top1"]);
-        }
+        blockMaterials.Add(materials["side" + (altSides ? "1" : "2")]);
+        blockMaterials.Add(materials["top" + (altSides ? "1" : "2")]);
 
         // Markers
         Material markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));

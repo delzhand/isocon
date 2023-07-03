@@ -35,7 +35,7 @@
         </ui:VisualElement>
         <ui:VisualElement class="horizontal-container">
             <ui:Label tabindex="-1" text="INFO SCALE" display-tooltip-when-elided="true" />
-            <ui:Slider picking-mode="Ignore" value="1" high-value="2.5" low-value="1" name="InfoScaleSlider" />
+            <ui:Slider picking-mode="Ignore" value="1" high-value="3" low-value="0.5" name="InfoScaleSlider" />
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="CameraFlyout" class="background flyout vertical-container" style="flex-direction: column;">
@@ -86,6 +86,15 @@
             <ui:Label tabindex="-1" text="©Derek Adams 2023&#10;Licensed under Creative Commons BY-NC-SA" display-tooltip-when-elided="true" class="longtext" />
             <ui:VisualElement name="Buttons" class="horizontal-container buttons" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
                 <ui:Button text="Close" display-tooltip-when-elided="true" name="InfoClose" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="AddTokenModal" class="modal background">
+            <ui:Label tabindex="-1" text="Create a Token" display-tooltip-when-elided="true" class="message" style="flex-wrap: wrap;" />
+            <ui:TextField picking-mode="Ignore" label="Name" name="TokenNameField" />
+            <ui:DropdownField label="Avatar" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="TokenTypeDropdown" />
+            <ui:VisualElement name="Buttons" class="horizontal-container buttons" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                <ui:Button text="Confirm" display-tooltip-when-elided="true" name="AddTokenConfirm" />
+                <ui:Button text="Cancel" display-tooltip-when-elided="true" name="AddTokenCancel" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
