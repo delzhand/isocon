@@ -5,6 +5,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 
 public class Token : MonoBehaviour
@@ -86,6 +87,12 @@ public class Token : MonoBehaviour
             "NPC"
         };
 
+        (modeUI.rootVisualElement.Q("SizeDropdown") as DropdownField).choices = new List<string>{
+            "1-Standard",
+            "2-Large",
+            "3-Enormous",
+        };
+
         (modeUI.rootVisualElement.Q("JobClassDropdown") as DropdownField).choices = jobOptions();
     }
 
@@ -94,21 +101,15 @@ public class Token : MonoBehaviour
         switch(v) {
             case "1.5":
                 return new List<string>{
-                    "Stalwart-Bastion",
-                    "Stalwart-Demon Slayer",
-                    "Stalwart-Colossus",
-                    "Stalwart-Knave",
-                    "Vagabond-Fool",
-                    "Vagabond-Freelancer",
-                    "Vagabond-Shade",
-                    "Vagabond-Warden",
-                    "Mendicant-Chanter",
-                    "Mendicant-Harvester",
-                    "Mendicant-Seer",
-                    "Wright-Enochian",
-                    "Wright-Geomancer",
-                    "Wright-Spellblade",
-                    "Wright-Stormbender",
+                    "Stalwart",
+                    "Vagabond",
+                    "Mendicant",
+                    "Wright",
+                    "Heavy",
+                    "Skirmisher",
+                    "Leader",
+                    "Artillery",
+                    "Mob",
                 };
             default:
                 return new List<string>{};
@@ -120,6 +121,10 @@ public class Token : MonoBehaviour
         DropdownField typeField = (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField);
         DropdownField jobField = (modeUI.rootVisualElement.Q("JobClassDropdown") as DropdownField);
         TextField nameField = (modeUI.rootVisualElement.Q("TokenNameField") as TextField);
+        Toggle eliteField = (modeUI.rootVisualElement.Q("EliteCheckbox") as Toggle);
+        IntegerField legendScale = (modeUI.rootVisualElement.Q("LegendScale") as IntegerField);
+        DropdownField sizeField = (modeUI.rootVisualElement.Q("SizeDropdown") as DropdownField);
+
         GameObject newToken = Instantiate(Resources.Load<GameObject>("Prefabs/Token"));
         ReserveSpot openReserve = ReserveSpot.LastReserveSpot();
         newToken.name = nameField.value;
@@ -149,25 +154,43 @@ public class Token : MonoBehaviour
         }
 
         string jobclass = jobField.value.Split("-")[0];
-        string job = jobField.value.Split("-")[1];
         HpBar hpbar = newToken.AddComponent<HpBar>();
         hpbar.VIG = 0;
         hpbar.Wounds = 0;
         switch(jobclass) {
             case "Wright":
+            case "Artillery":
                 hpbar.MHP = 32;
                 break;
             case "Vagabond":
+            case "Skirmisher":
                 hpbar.MHP = 28;
                 break;
             case "Stalwart":
-                hpbar.MHP = 40;
-                break;
+            case "Heavy":
+            case "Leader":
             case "Mendicant":
                 hpbar.MHP = 40;
                 break;
+            case "Legend":
+                hpbar.MHP = 50 * legendScale.value;
+                break;
+        }
+        if (eliteField.value) {
+            hpbar.MHP *= 2;
         }
         hpbar.CHP = hpbar.MHP;
+
+        if (sizeField.value == "2-Large") {
+            newToken.transform.Find("Avatar").transform.localScale = new Vector3(2, 2, 2);
+            newToken.transform.Find("Avatar").transform.localPosition -= new Vector3(0, 0, .5f);
+            newToken.transform.Find("Avatar/Shadow").GetComponent<DecalProjector>().size = new Vector3(2, 2, 3);
+        }
+        else if (sizeField.value == "3-Enormous") {
+            newToken.transform.Find("Avatar").transform.localScale = new Vector3(3, 3, 3);
+            newToken.transform.Find("Avatar").transform.localPosition -= new Vector3(0, 0, 1f);
+            newToken.transform.Find("Avatar/Shadow").GetComponent<DecalProjector>().size = new Vector3(3, 3, 4);
+        }
         
     }
 

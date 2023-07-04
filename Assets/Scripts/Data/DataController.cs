@@ -31,7 +31,7 @@ public class DataController : MonoBehaviour
     public static void InitializeFileList() {
         UIDocument modeUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
 
-        DirectoryInfo info = new DirectoryInfo(Application.persistentDataPath + "maps/");
+        DirectoryInfo info = new DirectoryInfo(Application.persistentDataPath + "/maps/");
         FileInfo[] fileInfo = info.GetFiles();
         List<string> items = new List<string>();
         for (int i = 0; i < fileInfo.Length; i++) {

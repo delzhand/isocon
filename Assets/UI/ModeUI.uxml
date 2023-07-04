@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/GeneralInterface.uss?fileID=7433441132597879392&amp;guid=49924054ed88c3a4eb7aa25df48cddd3&amp;type=3#GeneralInterface" />
-    <Style src="project://database/Assets/UI/Mode.uss?fileID=7433441132597879392&amp;guid=f9a6edc796b6e4c4b8488aa9fb07f8b9&amp;type=3#Mode" />
+    <Style src="project://database/Assets/UI/Styles/GeneralInterface.uss?fileID=7433441132597879392&amp;guid=49924054ed88c3a4eb7aa25df48cddd3&amp;type=3#GeneralInterface" />
+    <Style src="project://database/Assets/UI/Styles/Mode.uss?fileID=7433441132597879392&amp;guid=f9a6edc796b6e4c4b8488aa9fb07f8b9&amp;type=3#Mode" />
     <ui:VisualElement name="ModeControls" class="modeselect background horizontal-container">
         <ui:Button text="VIEW" display-tooltip-when-elided="true" name="ViewMode" tooltip="Click a block to focus the camera" />
         <ui:Button text="ADD TOKEN" display-tooltip-when-elided="true" name="AddToken" tooltip="Click a block to delete it" />
@@ -96,6 +96,9 @@
             <ui:DropdownField label="Avatar" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="AvatarDropdown" />
             <ui:DropdownField label="Type" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="TokenTypeDropdown" />
             <ui:DropdownField label="Job" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="JobClassDropdown" />
+            <ui:Toggle label="Elite" name="EliteCheckbox" />
+            <ui:IntegerField label="Legend HP Scale" value="1" name="LegendScale" />
+            <ui:DropdownField label="Size" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="SizeDropdown" />
             <ui:VisualElement name="Buttons" class="horizontal-container buttons" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
                 <ui:Button text="Confirm" display-tooltip-when-elided="true" name="AddTokenConfirm" />
                 <ui:Button text="Cancel" display-tooltip-when-elided="true" name="AddTokenCancel" />
