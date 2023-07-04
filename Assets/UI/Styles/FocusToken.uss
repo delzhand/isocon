@@ -19,8 +19,8 @@
   position: absolute;
   right: 10px;
   bottom: 20px;
-  background-color: rgba(.97, .97, .97, .5);
-  border-color: black;
+  /* background-color: rgba(.97, .97, .97, .5);
+  border-color: black; */
   border-width: 2px;
   border-radius: 4px;
   padding: 10px 10px 22px 40px;
@@ -44,6 +44,8 @@
 #Tag {
   color: white;
   padding: 2px;
+  padding-left: 6px;
+  padding-right: 6px;
   margin: 0;
   height: 20px;
 }

@@ -1,11 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/Token.uss?fileID=7433441132597879392&amp;guid=0ae496f6d26532f439036c3c8ef22555&amp;type=3#Token" />
-    <ui:VisualElement name="TokenDisplay" class="token">
-        <ui:VisualElement name="CharId" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-            <ui:Label tabindex="-1" text="Gradis" display-tooltip-when-elided="true" name="Name" />
-            <ui:Label tabindex="-1" text="Enochian" display-tooltip-when-elided="true" name="Job" />
-        </ui:VisualElement>
-        <ui:VisualElement name="HpAndVig" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+    <Style src="project://database/Assets/UI/Styles/TokenFloater.uss?fileID=7433441132597879392&amp;guid=db9f5488cbd5b104699c060ac772337b&amp;type=3#TokenFloater" />
+    <ui:VisualElement name="Floater" class="token">
+        <ui:VisualElement name="HpAndVig">
             <ui:ProgressBar value="3" name="VigorBar" high-value="12" />
             <ui:ProgressBar value="3.09" high-value="24" name="HpBar" />
             <ui:VisualElement name="Wounds" class="test">
@@ -18,11 +14,6 @@
                 <ui:VisualElement name="Wound3" class="wound test">
                     <ui:Label tabindex="-1" text="X" display-tooltip-when-elided="true" name="X" style="color: rgb(255, 0, 0); font-size: 8px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-text-align: middle-center; -unity-font-style: bold;" />
                 </ui:VisualElement>
-            </ui:VisualElement>
-            <ui:VisualElement name="HpNum" class="foo">
-                <ui:Label tabindex="-1" text="10" display-tooltip-when-elided="true" name="CHP" />
-                <ui:Label tabindex="-1" text="+4" display-tooltip-when-elided="true" name="VIG" />
-                <ui:Label tabindex="-1" text="/12" display-tooltip-when-elided="true" name="MHP" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

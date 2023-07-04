@@ -1,6 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Styles/TerrainData.uss?fileID=7433441132597879392&amp;guid=7291e5a659e64ac4ca52056f65e931ec&amp;type=3#TerrainData" />
     <Style src="project://database/Assets/UI/Styles/FocusToken.uss?fileID=7433441132597879392&amp;guid=6a1d69935070c434b8c09f06942cef46&amp;type=3#FocusToken" />
+    <Style src="project://database/Assets/UI/Styles/TokenFloater.uss?fileID=7433441132597879392&amp;guid=db9f5488cbd5b104699c060ac772337b&amp;type=3#TokenFloater" />
     <ui:VisualElement name="TerrainData" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
         <ui:Label tabindex="-1" text="1" display-tooltip-when-elided="true" name="Height" />
         <ui:Label tabindex="-1" text="h" display-tooltip-when-elided="true" name="HeightLabel" />
@@ -9,14 +10,14 @@
         </ui:VisualElement>
         <ui:VisualElement name="Effects" />
     </ui:VisualElement>
-    <ui:VisualElement name="FocusToken" style="right: 8px; bottom: 75px; width: 220px;">
+    <ui:VisualElement name="FocusToken" style="right: auto; bottom: 147px; width: 220px; left: 10px;">
         <ui:VisualElement name="Id">
-            <ui:Label tabindex="-1" text="Gradis" display-tooltip-when-elided="true" name="Name" />
-            <ui:Label tabindex="-1" text="Enochian" display-tooltip-when-elided="true" name="Tag" class="blue" />
+            <ui:Label tabindex="-1" text="Duvalla" display-tooltip-when-elided="true" name="Name" />
+            <ui:Label tabindex="-1" text="Shade" display-tooltip-when-elided="true" name="Tag" class="yellow" />
         </ui:VisualElement>
         <ui:VisualElement name="HpWrapper">
-            <ui:ProgressBar value="32" name="HpBar" high-value="40" />
-            <ui:ProgressBar value="10" name="VigBar" high-value="40" />
+            <ui:ProgressBar value="15" name="HpBar" high-value="28" />
+            <ui:ProgressBar value="3" name="VigBar" high-value="28" />
             <ui:VisualElement name="HpOverlay" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
                 <ui:VisualElement class="outline" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
                 <ui:VisualElement class="outline inner" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
@@ -30,9 +31,9 @@
                 <ui:VisualElement class="bit right bottom" />
             </ui:VisualElement>
             <ui:VisualElement name="HpVal" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-                <ui:Label tabindex="-1" text="/40" display-tooltip-when-elided="true" name="MHP" />
-                <ui:Label tabindex="-1" text="+8" display-tooltip-when-elided="true" name="VIG" />
-                <ui:Label tabindex="-1" text="32" display-tooltip-when-elided="true" name="CHP" />
+                <ui:Label tabindex="-1" text="/28" display-tooltip-when-elided="true" name="MHP" />
+                <ui:Label tabindex="-1" text="+3" display-tooltip-when-elided="true" name="VIG" />
+                <ui:Label tabindex="-1" text="15" display-tooltip-when-elided="true" name="CHP" />
             </ui:VisualElement>
             <ui:VisualElement name="HeartIcon">
                 <ui:VisualElement class="part" />
@@ -40,7 +41,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="ResolveWrapper">
-            <ui:ProgressBar value="2" high-value="6" name="ResolveBar" />
+            <ui:ProgressBar value="3" high-value="6" name="ResolveBar" />
             <ui:VisualElement name="ResolveOverlay">
                 <ui:VisualElement class="outline" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
                 <ui:VisualElement class="outline inner" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
@@ -62,11 +63,11 @@
                 <ui:Label tabindex="-1" text="DASH" display-tooltip-when-elided="true" />
             </ui:VisualElement>
             <ui:VisualElement name="Values">
-                <ui:Label tabindex="-1" text="D6" display-tooltip-when-elided="true" />
-                <ui:Label tabindex="-1" text="4" display-tooltip-when-elided="true" />
-                <ui:Label tabindex="-1" text="6" display-tooltip-when-elided="true" />
-                <ui:Label tabindex="-1" text="4" display-tooltip-when-elided="true" />
+                <ui:Label tabindex="-1" text="D10" display-tooltip-when-elided="true" />
                 <ui:Label tabindex="-1" text="2" display-tooltip-when-elided="true" />
+                <ui:Label tabindex="-1" text="10" display-tooltip-when-elided="true" />
+                <ui:Label tabindex="-1" text="4" display-tooltip-when-elided="true" />
+                <ui:Label tabindex="-1" text="4" display-tooltip-when-elided="true" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

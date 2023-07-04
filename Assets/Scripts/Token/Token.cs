@@ -118,6 +118,7 @@ public class Token : MonoBehaviour
     public static void CreateNew() {
         UIDocument modeUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
         DropdownField typeField = (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField);
+        DropdownField jobField = (modeUI.rootVisualElement.Q("JobClassDropdown") as DropdownField);
         TextField nameField = (modeUI.rootVisualElement.Q("TokenNameField") as TextField);
         GameObject newToken = Instantiate(Resources.Load<GameObject>("Prefabs/Token"));
         ReserveSpot openReserve = ReserveSpot.LastReserveSpot();
@@ -146,6 +147,27 @@ public class Token : MonoBehaviour
                 newToken.GetComponent<Token>().CustomCutout("file://" + Application.persistentDataPath + "/tokens/" + filename);
                 break;
         }
+
+        string jobclass = jobField.value.Split("-")[0];
+        string job = jobField.value.Split("-")[1];
+        HpBar hpbar = newToken.AddComponent<HpBar>();
+        hpbar.VIG = 0;
+        hpbar.Wounds = 0;
+        switch(jobclass) {
+            case "Wright":
+                hpbar.MHP = 32;
+                break;
+            case "Vagabond":
+                hpbar.MHP = 28;
+                break;
+            case "Stalwart":
+                hpbar.MHP = 40;
+                break;
+            case "Mendicant":
+                hpbar.MHP = 40;
+                break;
+        }
+        hpbar.CHP = hpbar.MHP;
         
     }
 
