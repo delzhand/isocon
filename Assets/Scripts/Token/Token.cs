@@ -78,7 +78,7 @@ public class Token : MonoBehaviour
             avatars.Add("Custom: " + fileInfo[i].Name);
         }        
         (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField).choices = avatars;
-
+        (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField).value = "Enochian";
 
         (modeUI.rootVisualElement.Q("TokenTypeDropdown") as DropdownField).choices = new List<string>{
             "Player",
@@ -86,14 +86,17 @@ public class Token : MonoBehaviour
             "Object",
             "NPC"
         };
+        (modeUI.rootVisualElement.Q("TokenTypeDropdown") as DropdownField).value = "Player";
 
         (modeUI.rootVisualElement.Q("SizeDropdown") as DropdownField).choices = new List<string>{
             "1-Standard",
             "2-Large",
             "3-Enormous",
         };
+        (modeUI.rootVisualElement.Q("SizeDropdown") as DropdownField).value = "1-Standard";
 
         (modeUI.rootVisualElement.Q("JobClassDropdown") as DropdownField).choices = jobOptions();
+        (modeUI.rootVisualElement.Q("JobClassDropdown") as DropdownField).value = defaultJobOption();
     }
 
     private static List<string> jobOptions() {
@@ -113,6 +116,16 @@ public class Token : MonoBehaviour
                 };
             default:
                 return new List<string>{};
+        }
+    }
+
+    private static string defaultJobOption() {
+        string v = PlayerPrefs.GetString("IconVersion", "1.5");
+        switch(v) {
+            case "1.5":
+                return "Stalwart";
+            default:
+                return null;
         }
     }
 
@@ -184,12 +197,14 @@ public class Token : MonoBehaviour
         if (sizeField.value == "2-Large") {
             newToken.transform.Find("Avatar").transform.localScale = new Vector3(2, 2, 2);
             newToken.transform.Find("Avatar").transform.localPosition -= new Vector3(0, 0, .5f);
-            newToken.transform.Find("Avatar/Shadow").GetComponent<DecalProjector>().size = new Vector3(2, 2, 3);
+            newToken.transform.Find("Avatar/Shadow").transform.localPosition = new Vector3(0, .1f, -.105f);
+            newToken.transform.Find("Avatar/Shadow").GetComponent<DecalProjector>().size = new Vector3(2, 2, 5);
         }
         else if (sizeField.value == "3-Enormous") {
             newToken.transform.Find("Avatar").transform.localScale = new Vector3(3, 3, 3);
             newToken.transform.Find("Avatar").transform.localPosition -= new Vector3(0, 0, 1f);
-            newToken.transform.Find("Avatar/Shadow").GetComponent<DecalProjector>().size = new Vector3(3, 3, 4);
+            newToken.transform.Find("Avatar/Shadow").transform.localPosition = new Vector3(0, .1f, -.125f);
+            newToken.transform.Find("Avatar/Shadow").GetComponent<DecalProjector>().size = new Vector3(3, 3, 5);
         }
         
     }
