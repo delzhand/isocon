@@ -73,11 +73,13 @@ public class Token : MonoBehaviour
             "Object"
         };
         DirectoryInfo info = new DirectoryInfo(Application.persistentDataPath + "/tokens/");
-        FileInfo[] fileInfo = info.GetFiles();
-        for (int i = 0; i < fileInfo.Length; i++) {
-            avatars.Add("Custom: " + fileInfo[i].Name);
-        }        
-        (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField).choices = avatars;
+        if (info.Exists) {
+            FileInfo[] fileInfo = info.GetFiles();
+            for (int i = 0; i < fileInfo.Length; i++) {
+                avatars.Add("Custom: " + fileInfo[i].Name);
+            }        
+            (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField).choices = avatars;
+        }
         (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField).value = "Enochian";
 
         (modeUI.rootVisualElement.Q("TokenTypeDropdown") as DropdownField).choices = new List<string>{

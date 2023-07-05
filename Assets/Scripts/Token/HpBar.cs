@@ -46,7 +46,7 @@ public class HpBar : MonoBehaviour
         if (container == null) {
             container = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement;
         }
-        VisualTreeAsset template = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Templates/TokenFloater.uxml");
+        VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/TokenFloater");
         VisualElement instance = template.Instantiate();
         floater = instance.Q("Floater");
         container.Add(floater);
