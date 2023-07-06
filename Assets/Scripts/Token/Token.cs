@@ -28,11 +28,11 @@ public class Token : MonoBehaviour
     private void alignToCamera() {
         if (InReserve) {
             Transform camera = GameObject.Find("ReserveCamera").transform;
-            transform.Find("Avatar").transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 180, 0);
+            transform.Find("Offset").transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 180, 0);
         }
         else {
             Transform camera = GameObject.Find("CameraOrigin").transform;
-            transform.Find("Avatar").transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 90, 0);
+            transform.Find("Offset").transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 90, 0);
         }
     }
 
@@ -133,7 +133,8 @@ public class Token : MonoBehaviour
 
     public static void CreateNew() {
         UIDocument modeUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
-        DropdownField typeField = (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField);
+        DropdownField avatarField = (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField);
+        DropdownField tokenTypeField = (modeUI.rootVisualElement.Q("TokenTypeDropdown") as DropdownField);
         DropdownField jobField = (modeUI.rootVisualElement.Q("JobClassDropdown") as DropdownField);
         TextField nameField = (modeUI.rootVisualElement.Q("TokenNameField") as TextField);
         Toggle eliteField = (modeUI.rootVisualElement.Q("EliteCheckbox") as Toggle);
@@ -150,19 +151,19 @@ public class Token : MonoBehaviour
         Token.ChangeHeld(null);
         Reserve.Adjust();
 
-        switch(typeField.value) {
+        switch(avatarField.value) {
             case "Enochian":
             case "Shade":
             case "Relict":
-                Texture2D t = Resources.Load<Texture2D>("Textures/Chibis/" + typeField.value);
-                newToken.transform.Find("Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetTexture("_Image", t);
+                Texture2D t = Resources.Load<Texture2D>("Textures/Chibis/" + avatarField.value);
+                newToken.transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetTexture("_Image", t);
                 break;
             case "Object":
-                newToken.transform.Find("Avatar").gameObject.SetActive(false);
-                newToken.transform.Find("Object").gameObject.SetActive(true);
+                newToken.transform.Find("Offset/Avatar").gameObject.SetActive(false);
+                newToken.transform.Find("Offset/Object").gameObject.SetActive(true);
                 break;
             default:
-                string filename = typeField.value;
+                string filename = avatarField.value;
                 filename = filename.Replace("Custom: ", "");
                 newToken.GetComponent<Token>().CustomCutout("file://" + Application.persistentDataPath + "/tokens/" + filename);
                 break;
@@ -197,18 +198,17 @@ public class Token : MonoBehaviour
         hpbar.CHP = hpbar.MHP;
 
         if (sizeField.value == "2-Large") {
-            newToken.transform.Find("Avatar").transform.localScale = new Vector3(2, 2, 2);
-            newToken.transform.Find("Avatar").transform.localPosition -= new Vector3(0, 0, .5f);
-            newToken.transform.Find("Avatar/Shadow").transform.localPosition = new Vector3(0, .1f, -.105f);
-            newToken.transform.Find("Avatar/Shadow").GetComponent<DecalProjector>().size = new Vector3(2, 2, 5);
+            Vector3 offset = new Vector3(0, 0, -.73f);
+            newToken.transform.Find("Offset").transform.localPosition += offset;
+            newToken.transform.Find("Base").transform.localPosition += offset;
+            newToken.transform.Find("Offset").transform.localScale = new Vector3(2, 2, 2);
+            newToken.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2, 2, 4);
         }
         else if (sizeField.value == "3-Enormous") {
-            newToken.transform.Find("Avatar").transform.localScale = new Vector3(3, 3, 3);
-            newToken.transform.Find("Avatar").transform.localPosition -= new Vector3(0, 0, 1f);
-            newToken.transform.Find("Avatar/Shadow").transform.localPosition = new Vector3(0, .1f, -.125f);
-            newToken.transform.Find("Avatar/Shadow").GetComponent<DecalProjector>().size = new Vector3(3, 3, 5);
+            newToken.transform.Find("Offset").transform.localScale = new Vector3(3, 3, 3);
+            newToken.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(3, 3, 4);
         }
-        
+
     }
 
     private void CustomCutout(string filename) {

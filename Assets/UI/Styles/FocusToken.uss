@@ -306,7 +306,8 @@
   left: 83.3%;
 }
 
-#ResolveBar {
+#GResolveBar,
+#PResolveBar {
   position: absolute;
   top: 0;
   left: 0;
@@ -314,17 +315,28 @@
   border-radius: 4px;
 }
 
-#ResolveBar .unity-progress-bar__background {
+#GResolveBar .unity-progress-bar__background,
+#PResolveBar .unity-progress-bar__background {
     background-color: #393c14;
     border-radius: 4px;
 }
 
-#ResolveBar .unity-progress-bar__progress {
+#GResolveBar .unity-progress-bar__progress,
+#PResolveBar .unity-progress-bar__progress {
     background-color: #fcff97;
     border-right-width: 1px;
     border-color: #feffd6;
     border-radius: 4px;
     border-width: 2px;
+}
+
+#GResolveBar .unity-progress-bar__background {
+    background-color: transparent;
+}
+
+#GResolveBar .unity-progress-bar__progress {
+    background-color: #ffaaaa;
+    border-color: #ecb6b6;
 }
 
 #ResolveOverlay .unity-label {

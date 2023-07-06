@@ -10,7 +10,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="Effects" />
     </ui:VisualElement>
-    <ui:VisualElement name="FocusToken" style="right: auto; bottom: 147px; width: 220px; left: 10px;">
+    <ui:VisualElement name="FocusToken" style="right: 30px; bottom: 50%; width: 220px; left: auto; display: flex;">
         <ui:VisualElement name="Id">
             <ui:Label tabindex="-1" text="Duvalla" display-tooltip-when-elided="true" name="Name" />
             <ui:Label tabindex="-1" text="Shade" display-tooltip-when-elided="true" name="Tag" class="yellow" />
@@ -41,7 +41,8 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="ResolveWrapper">
-            <ui:ProgressBar value="3" high-value="6" name="ResolveBar" />
+            <ui:ProgressBar value="3" high-value="6" name="PResolveBar" />
+            <ui:ProgressBar value="1" high-value="6" name="GResolveBar" />
             <ui:VisualElement name="ResolveOverlay">
                 <ui:VisualElement class="outline" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
                 <ui:VisualElement class="outline inner" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />

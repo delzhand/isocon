@@ -74,7 +74,7 @@ public class HpBar : MonoBehaviour
     }
 
     private void updateScreenPosition() {
-        Vector3 worldPos = transform.Find("Avatar/Cutout/Cutout Quad/LabelAnchor").position;
+        Vector3 worldPos = transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").position;
         Vector3 viewportPos = Camera.main.WorldToViewportPoint(worldPos);
         if (floater.resolvedStyle.width != float.NaN) {
             Vector2 screenPos = new Vector2(
