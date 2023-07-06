@@ -78,8 +78,8 @@ public class Token : MonoBehaviour
             for (int i = 0; i < fileInfo.Length; i++) {
                 avatars.Add("Custom: " + fileInfo[i].Name);
             }        
-            (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField).choices = avatars;
         }
+        (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField).choices = avatars;
         (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField).value = "Enochian";
 
         (modeUI.rootVisualElement.Q("TokenTypeDropdown") as DropdownField).choices = new List<string>{
@@ -176,23 +176,35 @@ public class Token : MonoBehaviour
         switch(jobclass) {
             case "Wright":
             case "Artillery":
+                hpbar.Color = "blue";
                 hpbar.MHP = 32;
                 break;
             case "Vagabond":
             case "Skirmisher":
+                hpbar.Color = "yellow";
                 hpbar.MHP = 28;
                 break;
             case "Stalwart":
             case "Heavy":
+                hpbar.Color = "red";
+                hpbar.MHP = 40;
+                break;
             case "Leader":
             case "Mendicant":
+                hpbar.Color = "green";
                 hpbar.MHP = 40;
                 break;
             case "Legend":
+                hpbar.Color = "purple";
                 hpbar.MHP = 50 * legendScale.value;
+                break;
+            case "Mob":
+                hpbar.Color = "gray";
+                hpbar.MHP = 2;
                 break;
         }
         if (eliteField.value) {
+            hpbar.Elite = true;
             hpbar.MHP *= 2;
         }
         hpbar.CHP = hpbar.MHP;

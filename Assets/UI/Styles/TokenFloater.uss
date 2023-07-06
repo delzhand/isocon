@@ -35,28 +35,19 @@
 }
 
 #Floater #HpBar .unity-progress-bar__background {
-    background-color: rgb(0, 75, 99);
+    background-color: #7b3b3b;
 }
 
 #Floater #HpBar .unity-progress-bar__progress {
-    background-color: rgb(5, 185, 245);
+    background-color: #f77474;
 }
-
-#Floater .enemy #HpBar .unity-progress-bar__background {
-    background-color: rgb(122, 58, 58);
-}
-
-#Floater .enemy #HpBar .unity-progress-bar__progress {
-    background-color: rgb(217, 102, 102);
-}
-
 
 #Floater #VigorBar .unity-progress-bar__background {
     background-color: transparent;
 }
 
 #Floater #VigorBar .unity-progress-bar__progress {
-    background-color: rgb(201, 192, 10);
+    background-color: #b2eef3;
 }
 
 #Floater #Wounds {
@@ -99,4 +90,51 @@
 
 #Floater #Wound3 {
     left: 25%;
+}
+
+
+#Floater #Color {
+    position: absolute;
+    right: -10px;
+    bottom: -1px;
+    height: 8px;
+    width: 8px;
+    border-radius: 2px;
+    background-color: white;
+}
+
+#Floater #Elite {
+    position: absolute;
+    right: -6px;
+    bottom: -1px;
+    height: 8px;
+    width: 4px;
+    border-radius: 0px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    background-color: #ca55ef;
+}
+
+#Floater #Color.blue {
+    background-color: #00a2ff;
+}
+  
+#Floater #Color.red {
+    background-color: #ee220c;
+}
+  
+#Floater #Color.yellow {
+    background-color: #feae00;
+}
+  
+#Floater #Color.green {
+    background-color: #61d836;
+}
+  
+#Floater #Color.gray {
+    background-color: #929292;
+}
+  
+#Floater #Color.purple {
+    background-color: #ca55ef;
 }

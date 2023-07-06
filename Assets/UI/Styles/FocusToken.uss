@@ -66,6 +66,14 @@
   background-color: #61d836;
 }
 
+#Tag.gray {
+  background-color: #929292;
+}
+
+#Tag.purple {
+  background-color: #ca55ef;
+}
+
 #HpWrapper {
   height: 16px;
   width: 100%;

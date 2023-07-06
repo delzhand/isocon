@@ -14,6 +14,8 @@ public class HpBar : MonoBehaviour
     public int MHP;
     public int VIG;
     public int Wounds;
+    public string Color;
+    public bool Elite;
 
     // Start is called before the first frame update
     void Start()
@@ -49,6 +51,8 @@ public class HpBar : MonoBehaviour
         VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/TokenFloater");
         VisualElement instance = template.Instantiate();
         floater = instance.Q("Floater");
+        floater.Q<VisualElement>("Color").AddToClassList(Color);
+        floater.Q<VisualElement>("Elite").style.visibility = Elite ? Visibility.Visible : Visibility.Hidden;
         container.Add(floater);
     }
 
