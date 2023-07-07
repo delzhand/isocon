@@ -1,0 +1,92 @@
+#ModifyPane {
+  position: absolute;
+  left: 304px;
+  bottom: 20px;
+  background-color: rgba(.97, .97, .97, .5);
+  border-color: black;
+  border-width: 2px;
+  border-radius: 4px;
+  padding: 10px;
+  flex-direction: row;
+}
+
+#ModifyPane .num-decrease,
+#ModifyPane .num-increase {
+  padding: 0;
+  margin: 0;
+  font-size: 18px;
+  color: red;
+  width: 26px;
+  height: 26px;
+  /* border-radius: 12px; */
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  /* margin-left: 2px; */
+  -unity-font-style: bold;
+  -unity-text-align: upper-center;
+}
+
+#ModifyPane .num-increase {
+  color: green;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+#ModifyPane .stat-edit {
+  flex-direction: row;
+  margin-bottom: 4px;
+}
+
+#ModifyPane .stat-edit .unity-label {
+  background-color: #666;
+  color: #FFF;
+  margin: 0;
+  padding: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+  font-size: 20px;
+  -unity-text-align: middle-left;
+  height: 26px;
+}
+
+#ModifyPane .stat-edit .unity-label.label {
+  width: 140px;
+  background-color: #666;
+}
+
+#ModifyPane .stat-edit .unity-label.value {
+  width: 40px;
+  background-color: #333333;
+  color: #FFF;
+  -unity-text-align: middle-center;
+  -unity-font-style: bold;
+  -unity-text-align: middle-right;
+}
+
+#ModifyPane .status-list {
+  margin-left: 4px;
+}
+
+#ModifyPane .status-list .unity-toggle {
+  color: #FFF;
+  background-color: #333;
+  font-size: 14px;
+  margin: 0px;
+  margin-bottom: 4px;
+  border-radius: 12px;
+  height: 26px;
+  border-width: 1px;
+  border-color: #666;
+}
+#ModifyPane .status-list .unity-toggle__label {
+  width: 150px;
+  padding-left: 4px;
+  -unity-text-align: middle-left;
+}
+#ModifyPane .status-list .unity-toggle__checkmark {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-width: 0;
+}

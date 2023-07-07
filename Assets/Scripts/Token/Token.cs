@@ -221,6 +221,30 @@ public class Token : MonoBehaviour
             newToken.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(3, 3, 4);
         }
 
+        // Material m = Instantiate(Resources.Load<Material>("Materials/Token/BorderBase"));
+        // switch (hpbar.Color) {
+        //     case "red":
+        //         m.SetColor("_Border", new Color(.93f, .13f, .05f));
+        //         break;
+        //     case "blue":
+        //         m.SetColor("_Border", new Color(0, .63f, 1));
+        //         break;
+        //     case "yellow":
+        //         m.SetColor("_Border", new Color(1, .68f, 0));
+        //         break;
+        //     case "green":
+        //         m.SetColor("_Border", new Color(.38f, .85f, .21f));
+        //         break;
+        //     case "purple":
+        //         m.SetColor("_Border", new Color(.79f, .33f, .94f));
+        //         break;
+        //     case "gray":
+        //         m.SetColor("_Border", new Color(.57f, .57f, .57f));
+        //         break;
+        // }
+        // newToken.transform.Find("Base").GetComponent<DecalProjector>().material = m;
+
+
     }
 
     private void CustomCutout(string filename) {

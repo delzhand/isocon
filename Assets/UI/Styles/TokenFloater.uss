@@ -95,20 +95,20 @@
 
 #Floater #Color {
     position: absolute;
-    right: -10px;
+    right: -14px;
     bottom: -1px;
-    height: 8px;
-    width: 8px;
+    height: 10px;
+    width: 12px;
     border-radius: 2px;
     background-color: white;
 }
 
 #Floater #Elite {
     position: absolute;
-    right: -6px;
+    right: -8px;
     bottom: -1px;
-    height: 8px;
-    width: 4px;
+    height: 10px;
+    width: 6px;
     border-radius: 0px;
     border-top-left-radius: 2px;
     border-bottom-left-radius: 2px;
