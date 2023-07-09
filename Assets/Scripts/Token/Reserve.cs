@@ -38,10 +38,11 @@ public class Reserve : MonoBehaviour
             spots[i].name = "Reserve " + (i+1);
             Vector3 position = new Vector3(i, .2f, -.5f * (i%2));
             spots[i].transform.localPosition = position;
-            Token t = spots[i].GetComponent<ReserveSpot>().Token;
-            if (t != null) {
-                t.transform.localPosition = position;
-            }
+            // Token t = spots[i].GetComponent<ReserveSpot>().Token;
+            // if (t) {
+            //     spots[i].GetComponent<ReserveSpot>().PlaceAtReserveSpot(t);
+            // }
+            spots[i].GetComponent<ReserveSpot>().SetTokenPosition();
         }
     }
 

@@ -17,6 +17,8 @@ public class HpBar : MonoBehaviour
     public string Color;
     public bool Elite;
 
+    public bool Focused = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,7 +33,7 @@ public class HpBar : MonoBehaviour
     }
 
     private void toggleFloater() {
-        if (PlayerPrefs.GetInt("ShowFloaters", 1) != 0) {
+        if (PlayerPrefs.GetInt("ShowFloaters", 1) != 0 && Focused) {
             if (floater == null) {
                 createFloater();
             }

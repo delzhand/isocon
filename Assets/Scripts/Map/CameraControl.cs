@@ -75,11 +75,13 @@ public class CameraControl : MonoBehaviour
     }
 
     public static void GoToBlock(Block block) {
-        CameraControl.CameraTransform.GetComponent<CameraControl>().Translate(block.transform.position);
+        if (block != null) {
+            CameraControl.CameraTransform.GetComponent<CameraControl>().Translate(block.transform.position);
+        }
     }
 
     public void Translate(Vector3 value) {
-        if (!isLocked && !overhead) {
+        if (!isLocked /*&& !overhead */) {
             initializeTransition(.25f);
             targetPosition = value;
         }
@@ -94,16 +96,16 @@ public class CameraControl : MonoBehaviour
             if (!overhead) {
                 overhead = true;
                 reserveRotation = GameObject.Find("CameraOrigin").transform.rotation;
-                reservePosition = GameObject.Find("CameraOrigin").transform.position;
+                // reservePosition = GameObject.Find("CameraOrigin").transform.position;
                 initializeTransition(.25f);
                 targetRotation = Quaternion.Euler(0, 0, 30);
-                targetPosition = TerrainEngine.Center();
+                // targetPosition = TerrainEngine.Center();
             }
             else {
                 overhead = false;
                 initializeTransition(.25f);
                 targetRotation = reserveRotation;
-                targetPosition = reservePosition;
+                // targetPosition = reservePosition;
             }
         }
     }

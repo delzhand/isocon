@@ -21,11 +21,25 @@ public class ReserveSpot : MonoBehaviour
     void OnMouseDown()
     {
         if (ModeController.GetMode() == Mode.View && Token.TokenHeld != null && !Token.TokenHeld.InReserve) {
-            Token.TokenHeld.transform.position = this.transform.position + new Vector3(0, .2f, 0);
-            Token = Token.TokenHeld;
-            Token.InReserve = true;
-            Token.ChangeHeld(null);
-            Reserve.Adjust();
+            PlaceAtReserveSpot(Token.TokenHeld);
+        }
+    }
+
+    public void PlaceAtReserveSpot(Token token) {
+        Token = token;
+        Token.InReserve = true;
+        Token.transform.Find("Base").gameObject.SetActive(false);
+        SetTokenPosition();
+        Token.ChangeHeld(null);
+        Reserve.Adjust();
+    }
+
+    public void SetTokenPosition() {
+        if (Token) {
+            Token.transform.position = this.transform.position + new Vector3(0, .2f, 0);
+            if (Token.Size == 2) {
+                Token.transform.position += new Vector3(.5f, 0, .5f);
+            }
         }
     }
 

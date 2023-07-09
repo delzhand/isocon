@@ -52,6 +52,7 @@ public class ModeController : MonoBehaviour
             CurrentMode = Mode.View;
             toggleElement(ElementType.Button, "ViewMode");
             toggleElement(ElementType.Flyout, "CameraFlyout");
+            toggleElement(ElementType.Modal, null);
             Block.ToggleSpacers(false);
         });
         UI.AttachHelp(modeUI, "ViewMode", "Click on any tile to focus the camera on it.");
@@ -60,6 +61,7 @@ public class ModeController : MonoBehaviour
             CurrentMode = Mode.Alter;
             toggleElement(ElementType.Button, "AlterMode");
             toggleElement(ElementType.Flyout, "AlterFlyout");
+            toggleElement(ElementType.Modal, null);
             Block.ToggleSpacers(true);
         });
         UI.AttachHelp(modeUI, "AlterMode", "Edit terrain by clicking on tiles.");
@@ -77,6 +79,7 @@ public class ModeController : MonoBehaviour
             CurrentMode = Mode.Other;
             toggleElement(ElementType.Button, "Appearance");
             toggleElement(ElementType.Flyout, "AppearanceFlyout");
+            toggleElement(ElementType.Modal, null);
             Block.ToggleSpacers(false);
         });
         UI.AttachHelp(modeUI, "Appearance", "Change the appearance of the map or background.");
@@ -85,6 +88,7 @@ public class ModeController : MonoBehaviour
             CurrentMode = Mode.Other;
             toggleElement(ElementType.Button, "Config");
             toggleElement(ElementType.Flyout, "ConfigFlyout");
+            toggleElement(ElementType.Modal, null);
             Block.ToggleSpacers(false);
         });
         UI.AttachHelp(modeUI, "Config", "Scale the UI or world markers.");
@@ -130,6 +134,7 @@ public class ModeController : MonoBehaviour
             CurrentMode = Mode.Other;
             toggleElement(ElementType.Button, "Data");
             toggleElement(ElementType.Flyout, "DataFlyout");
+            toggleElement(ElementType.Modal, null);
             Block.ToggleSpacers(false);
         });
         UI.AttachHelp(modeUI, "Data", "Save or load maps.");

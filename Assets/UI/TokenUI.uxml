@@ -11,7 +11,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="Effects" />
     </ui:VisualElement>
-    <ui:VisualElement name="ModifyPane">
+    <ui:VisualElement name="ModifyPane" style="display: none;">
         <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
             <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
                 <ui:Button text="-" display-tooltip-when-elided="true" class="num-decrease" />
@@ -84,70 +84,80 @@
             <ui:DropdownField label="Hatred" index="-1" choices="System.Collections.Generic.List`1[System.String]" style="display: none;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="FocusToken" style="width: 280px;">
-        <ui:VisualElement name="Id">
-            <ui:Label tabindex="-1" text="Duvalla" display-tooltip-when-elided="true" name="Name" />
-            <ui:VisualElement name="Tags" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-                <ui:Label tabindex="-1" text="Shade" display-tooltip-when-elided="true" name="Tag" class="yellow" />
-                <ui:Label tabindex="-1" text="Elite" display-tooltip-when-elided="true" name="Elite" class="yellow" style="visibility: hidden;" />
+    <ui:VisualElement name="FocusToken" style="width: 0; height: 0; display: none;">
+        <ui:VisualElement name="Pane" style="position: absolute; left: -120px; bottom: 100%;">
+            <ui:VisualElement name="Shadow" />
+            <ui:VisualElement name="Inner">
+                <ui:VisualElement name="Id">
+                    <ui:Label tabindex="-1" text="Duvalla" display-tooltip-when-elided="true" name="Name" />
+                    <ui:VisualElement name="Tags" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                        <ui:Label tabindex="-1" text="Shade" display-tooltip-when-elided="true" name="Tag" class="yellow" />
+                        <ui:Label tabindex="-1" text="Elite" display-tooltip-when-elided="true" name="Elite" class="yellow" style="visibility: hidden;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="HpWrapper">
+                    <ui:ProgressBar value="15" name="HpBar" high-value="28" />
+                    <ui:ProgressBar value="3" name="VigBar" high-value="28" />
+                    <ui:VisualElement name="HpOverlay" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                        <ui:VisualElement class="outline" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                        <ui:VisualElement class="outline inner" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                        <ui:VisualElement class="bit top left" />
+                        <ui:VisualElement class="bit top center" />
+                        <ui:VisualElement class="bit top right" />
+                        <ui:VisualElement class="bit left bottom" />
+                        <ui:VisualElement class="bit center bottom" />
+                        <ui:VisualElement class="bit leftside" />
+                        <ui:VisualElement class="bit rightside" />
+                        <ui:VisualElement class="bit right bottom" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="HpVal" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                        <ui:Label tabindex="-1" text="/28" display-tooltip-when-elided="true" name="MHP" />
+                        <ui:Label tabindex="-1" text="+3" display-tooltip-when-elided="true" name="VIG" />
+                        <ui:Label tabindex="-1" text="15" display-tooltip-when-elided="true" name="CHP" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="HeartIcon">
+                        <ui:VisualElement class="part" />
+                        <ui:VisualElement class="part two" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ResolveWrapper" style="display: flex;">
+                    <ui:ProgressBar value="3" high-value="6" name="PResolveBar" />
+                    <ui:ProgressBar value="1" high-value="6" name="GResolveBar" />
+                    <ui:VisualElement name="ResolveOverlay">
+                        <ui:VisualElement class="outline" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                        <ui:VisualElement class="outline inner" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                        <ui:VisualElement class="bit" />
+                        <ui:VisualElement class="bit one" />
+                        <ui:VisualElement class="bit two" />
+                        <ui:VisualElement class="bit three" />
+                        <ui:VisualElement class="bit four" />
+                        <ui:VisualElement class="bit five" />
+                        <ui:Label tabindex="-1" text="RES" display-tooltip-when-elided="true" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="Stats" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <ui:VisualElement name="Values">
+                        <ui:Label tabindex="-1" text="D10" display-tooltip-when-elided="true" name="DMG" />
+                        <ui:Label tabindex="-1" text="2" display-tooltip-when-elided="true" name="FRAY" />
+                        <ui:Label tabindex="-1" text="2" display-tooltip-when-elided="true" name="RNG" />
+                        <ui:Label tabindex="-1" text="10" display-tooltip-when-elided="true" name="DEF" />
+                        <ui:Label tabindex="-1" text="4/4" display-tooltip-when-elided="true" name="SPD" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="Labels">
+                        <ui:Label tabindex="-1" text="DMG" display-tooltip-when-elided="true" />
+                        <ui:Label tabindex="-1" text="FRAY" display-tooltip-when-elided="true" />
+                        <ui:Label tabindex="-1" text="RNG" display-tooltip-when-elided="true" />
+                        <ui:Label tabindex="-1" text="DEF" display-tooltip-when-elided="true" />
+                        <ui:Label tabindex="-1" text="SPD" display-tooltip-when-elided="true" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="Buttons">
+                    <ui:Button text="CLONE" display-tooltip-when-elided="true" name="CloneToken" />
+                    <ui:Button text="DELETE" display-tooltip-when-elided="true" name="DeleteToken" />
+                    <ui:Button text="EDIT" display-tooltip-when-elided="true" name="EditToken" />
+                </ui:VisualElement>
             </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement name="HpWrapper">
-            <ui:ProgressBar value="15" name="HpBar" high-value="28" />
-            <ui:ProgressBar value="3" name="VigBar" high-value="28" />
-            <ui:VisualElement name="HpOverlay" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-                <ui:VisualElement class="outline" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
-                <ui:VisualElement class="outline inner" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
-                <ui:VisualElement class="bit top left" />
-                <ui:VisualElement class="bit top center" />
-                <ui:VisualElement class="bit top right" />
-                <ui:VisualElement class="bit left bottom" />
-                <ui:VisualElement class="bit center bottom" />
-                <ui:VisualElement class="bit leftside" />
-                <ui:VisualElement class="bit rightside" />
-                <ui:VisualElement class="bit right bottom" />
-            </ui:VisualElement>
-            <ui:VisualElement name="HpVal" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-                <ui:Label tabindex="-1" text="/28" display-tooltip-when-elided="true" name="MHP" />
-                <ui:Label tabindex="-1" text="+3" display-tooltip-when-elided="true" name="VIG" />
-                <ui:Label tabindex="-1" text="15" display-tooltip-when-elided="true" name="CHP" />
-            </ui:VisualElement>
-            <ui:VisualElement name="HeartIcon">
-                <ui:VisualElement class="part" />
-                <ui:VisualElement class="part two" />
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement name="ResolveWrapper">
-            <ui:ProgressBar value="3" high-value="6" name="PResolveBar" />
-            <ui:ProgressBar value="1" high-value="6" name="GResolveBar" />
-            <ui:VisualElement name="ResolveOverlay">
-                <ui:VisualElement class="outline" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
-                <ui:VisualElement class="outline inner" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
-                <ui:VisualElement class="bit" />
-                <ui:VisualElement class="bit one" />
-                <ui:VisualElement class="bit two" />
-                <ui:VisualElement class="bit three" />
-                <ui:VisualElement class="bit four" />
-                <ui:VisualElement class="bit five" />
-                <ui:Label tabindex="-1" text="RES" display-tooltip-when-elided="true" />
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement name="Stats" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-            <ui:VisualElement name="Values">
-                <ui:Label tabindex="-1" text="D10" display-tooltip-when-elided="true" />
-                <ui:Label tabindex="-1" text="2" display-tooltip-when-elided="true" />
-                <ui:Label tabindex="-1" text="2" display-tooltip-when-elided="true" />
-                <ui:Label tabindex="-1" text="10" display-tooltip-when-elided="true" />
-                <ui:Label tabindex="-1" text="4/4" display-tooltip-when-elided="true" />
-            </ui:VisualElement>
-            <ui:VisualElement name="Labels">
-                <ui:Label tabindex="-1" text="DMG" display-tooltip-when-elided="true" />
-                <ui:Label tabindex="-1" text="FRAY" display-tooltip-when-elided="true" />
-                <ui:Label tabindex="-1" text="RNG" display-tooltip-when-elided="true" />
-                <ui:Label tabindex="-1" text="DEF" display-tooltip-when-elided="true" />
-                <ui:Label tabindex="-1" text="SPD" display-tooltip-when-elided="true" />
-            </ui:VisualElement>
+            <ui:VisualElement name="Arrow" style="display: none;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" />
 </ui:UXML>

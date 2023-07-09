@@ -11,8 +11,10 @@ using UnityEngine.UIElements;
 public class Token : MonoBehaviour
 {
     public static Token TokenHeld = null;
+    public static Vector3 Size2Offset = new Vector3(0, 0, -.73f);
 
     public bool InReserve = true;
+    public int Size = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +25,14 @@ public class Token : MonoBehaviour
     void Update()
     {
         alignToCamera();
+        if (Token.TokenHeld == this) {
+            GetComponent<UnitState>().Focused = true;
+            GetComponent<HpBar>().Focused = false;
+        }
+        else {
+            GetComponent<UnitState>().Focused = false;
+            GetComponent<HpBar>().Focused = true;
+        }
     }
 
     private void alignToCamera() {
@@ -44,6 +54,14 @@ public class Token : MonoBehaviour
     }
 
     public static void ChangeHeld(Token token) {
+        if (token == null) {
+            VisualElement element = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement.Q("FocusToken");
+            element.style.display = DisplayStyle.None;
+        }
+        else {
+            VisualElement element = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement.Q("FocusToken");
+            element.style.display = DisplayStyle.Flex;
+        }
         GameObject[] allTokens = GameObject.FindGameObjectsWithTag("Token");
         for (int i = 0; i < allTokens.Length; i++) {
             allTokens[i].GetComponentInChildren<MeshRenderer>().material.SetInt("_Selected", 0);
@@ -57,6 +75,8 @@ public class Token : MonoBehaviour
     public void PlaceAtBlock(Block block) {
         transform.position = block.transform.position + new Vector3(0, .25f, 0);
         InReserve = false;
+        transform.Find("Base").gameObject.SetActive(true);
+
         ReserveSpot rs = ReserveSpot.GetReserveSpot(this);
         if (rs != null) {
             rs.Token = null;
@@ -85,8 +105,6 @@ public class Token : MonoBehaviour
         (modeUI.rootVisualElement.Q("TokenTypeDropdown") as DropdownField).choices = new List<string>{
             "Player",
             "Foe",
-            "Object",
-            "NPC"
         };
         (modeUI.rootVisualElement.Q("TokenTypeDropdown") as DropdownField).value = "Player";
 
@@ -106,10 +124,22 @@ public class Token : MonoBehaviour
         switch(v) {
             case "1.5":
                 return new List<string>{
-                    "Stalwart",
-                    "Vagabond",
-                    "Mendicant",
-                    "Wright",
+                    "Stalwart-Bastion",
+                    "Stalwart-Demon Slayer",
+                    "Stalwart-Colossus",
+                    "Stalwart-Knave",
+                    "Vagabond-Fool",
+                    "Vagabond-Freelancer",
+                    "Vagabond-Shade",
+                    "Vagabond-Warden",
+                    "Mendicant-Chanter",
+                    "Mendicant-Harvester",
+                    "Mendicant-Sealer",
+                    "Mendicant-Seer",
+                    "Wright-Enochian",
+                    "Wright-Geomancer",
+                    "Wright-Spellblade",
+                    "Wright-Stormbender",
                     "Heavy",
                     "Skirmisher",
                     "Leader",
@@ -125,7 +155,7 @@ public class Token : MonoBehaviour
         string v = PlayerPrefs.GetString("IconVersion", "1.5");
         switch(v) {
             case "1.5":
-                return "Stalwart";
+                return "Stalwart-Bastion";
             default:
                 return null;
         }
@@ -142,14 +172,7 @@ public class Token : MonoBehaviour
         DropdownField sizeField = (modeUI.rootVisualElement.Q("SizeDropdown") as DropdownField);
 
         GameObject newToken = Instantiate(Resources.Load<GameObject>("Prefabs/Token"));
-        ReserveSpot openReserve = ReserveSpot.LastReserveSpot();
         newToken.name = nameField.value;
-        newToken.transform.parent = GameObject.Find("Reserve").transform;
-        newToken.transform.localPosition = openReserve.transform.localPosition;
-        newToken.GetComponent<Token>().InReserve = true;
-        openReserve.Token = newToken.GetComponent<Token>();
-        Token.ChangeHeld(null);
-        Reserve.Adjust();
 
         switch(avatarField.value) {
             case "Enochian":
@@ -170,6 +193,14 @@ public class Token : MonoBehaviour
         }
 
         string jobclass = jobField.value.Split("-")[0];
+        string job = "";
+        if (jobField.value.Split("-").Length > 1) {
+            job = jobField.value.Split("-")[0];
+        }
+
+        UnitState unitstate = newToken.AddComponent<UnitState>();
+        unitstate.Job = job;
+
         HpBar hpbar = newToken.AddComponent<HpBar>();
         hpbar.VIG = 0;
         hpbar.Wounds = 0;
@@ -178,29 +209,65 @@ public class Token : MonoBehaviour
             case "Artillery":
                 hpbar.Color = "blue";
                 hpbar.MHP = 32;
+                unitstate.Damage = 8;
+                unitstate.Fray = 3;
+                unitstate.Range = 6;
+                unitstate.Speed = 4;
+                unitstate.Dash = 2;
+                unitstate.Defense = 7;
                 break;
             case "Vagabond":
             case "Skirmisher":
                 hpbar.Color = "yellow";
                 hpbar.MHP = 28;
+                unitstate.Damage = 10;
+                unitstate.Fray = 2;
+                unitstate.Range = 4;
+                unitstate.Speed = 4;
+                unitstate.Dash = 4;
+                unitstate.Defense = 10;
                 break;
             case "Stalwart":
             case "Heavy":
                 hpbar.Color = "red";
                 hpbar.MHP = 40;
+                unitstate.Damage = 6;
+                unitstate.Fray = 4;
+                unitstate.Range = 3;
+                unitstate.Speed = 4;
+                unitstate.Dash = 2;
+                unitstate.Defense = 6;
                 break;
             case "Leader":
             case "Mendicant":
                 hpbar.Color = "green";
                 hpbar.MHP = 40;
+                unitstate.Damage = 6;
+                unitstate.Fray = 3;
+                unitstate.Range = 3;
+                unitstate.Speed = 4;
+                unitstate.Dash = 2;
+                unitstate.Defense = 8;
                 break;
             case "Legend":
                 hpbar.Color = "purple";
                 hpbar.MHP = 50 * legendScale.value;
+                unitstate.Damage = 8;
+                unitstate.Fray = 3;
+                unitstate.Range = 3;
+                unitstate.Speed = 4;
+                unitstate.Dash = 2;
+                unitstate.Defense = 8;
                 break;
             case "Mob":
                 hpbar.Color = "gray";
                 hpbar.MHP = 2;
+                unitstate.Damage = 6;
+                unitstate.Fray = 3;
+                unitstate.Range = 1;
+                unitstate.Speed = 4;
+                unitstate.Dash = 2;
+                unitstate.Defense = 8;
                 break;
         }
         if (eliteField.value) {
@@ -208,43 +275,48 @@ public class Token : MonoBehaviour
             hpbar.MHP *= 2;
         }
         hpbar.CHP = hpbar.MHP;
+        unitstate.Color = hpbar.Color;
+        unitstate.Foe = tokenTypeField.value == "Foe";
 
         if (sizeField.value == "2-Large") {
-            Vector3 offset = new Vector3(0, 0, -.73f);
-            newToken.transform.Find("Offset").transform.localPosition += offset;
-            newToken.transform.Find("Base").transform.localPosition += offset;
+            newToken.GetComponent<Token>().Size = 2;
+            newToken.transform.Find("Offset").transform.localPosition += Size2Offset;
+            newToken.transform.Find("Base").transform.localPosition += Size2Offset;
             newToken.transform.Find("Offset").transform.localScale = new Vector3(2, 2, 2);
             newToken.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2, 2, 4);
         }
         else if (sizeField.value == "3-Enormous") {
+            newToken.GetComponent<Token>().Size = 3;
             newToken.transform.Find("Offset").transform.localScale = new Vector3(3, 3, 3);
             newToken.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(3, 3, 4);
         }
 
-        // Material m = Instantiate(Resources.Load<Material>("Materials/Token/BorderBase"));
-        // switch (hpbar.Color) {
-        //     case "red":
-        //         m.SetColor("_Border", new Color(.93f, .13f, .05f));
-        //         break;
-        //     case "blue":
-        //         m.SetColor("_Border", new Color(0, .63f, 1));
-        //         break;
-        //     case "yellow":
-        //         m.SetColor("_Border", new Color(1, .68f, 0));
-        //         break;
-        //     case "green":
-        //         m.SetColor("_Border", new Color(.38f, .85f, .21f));
-        //         break;
-        //     case "purple":
-        //         m.SetColor("_Border", new Color(.79f, .33f, .94f));
-        //         break;
-        //     case "gray":
-        //         m.SetColor("_Border", new Color(.57f, .57f, .57f));
-        //         break;
-        // }
-        // newToken.transform.Find("Base").GetComponent<DecalProjector>().material = m;
+        Material m = Instantiate(Resources.Load<Material>("Materials/Token/BorderBase"));
+        switch (hpbar.Color) {
+            case "red":
+                m.SetColor("_Border", new Color(.93f, .13f, .05f));
+                break;
+            case "blue":
+                m.SetColor("_Border", new Color(0, .63f, 1));
+                break;
+            case "yellow":
+                m.SetColor("_Border", new Color(1, .68f, 0));
+                break;
+            case "green":
+                m.SetColor("_Border", new Color(.38f, .85f, .21f));
+                break;
+            case "purple":
+                m.SetColor("_Border", new Color(.79f, .33f, .94f));
+                break;
+            case "gray":
+                m.SetColor("_Border", new Color(.57f, .57f, .57f));
+                break;
+        }
+        newToken.transform.Find("Base").GetComponent<DecalProjector>().material = m;
+        newToken.transform.Find("Base").gameObject.SetActive(false);
 
-
+        ReserveSpot openReserve = ReserveSpot.LastReserveSpot();
+        openReserve.PlaceAtReserveSpot(newToken.GetComponent<Token>());
     }
 
     private void CustomCutout(string filename) {

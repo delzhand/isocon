@@ -64,12 +64,6 @@ public class Block : MonoBehaviour
             materials.Add("side2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideB")));
             materials.Add("top1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopA")));
             materials.Add("top2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopB")));
-            // materials.Add("normal", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Normal")));
-            // materials.Add("dangerous", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Dangerous")));
-            // materials.Add("difficult", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Difficult")));
-            // materials.Add("interactive", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Interactive")));
-            // materials.Add("impassable", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Impassable")));
-            // materials.Add("pit", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Pit")));
             materials.Add("unfocused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
             materials.Add("focused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
 

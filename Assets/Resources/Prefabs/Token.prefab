@@ -131,6 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InReserve: 1
+  Size: 1
 --- !u!65 &8047097260965485842
 BoxCollider:
   m_ObjectHideFlags: 0
