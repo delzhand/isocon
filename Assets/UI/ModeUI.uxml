@@ -57,7 +57,7 @@
     <ui:VisualElement name="DataFlyout" class="background flyout vertical-container" style="flex-direction: column;">
         <ui:Button text="SAVE" display-tooltip-when-elided="true" name="SaveMapButton" />
         <ui:Button text="SAVE AS" display-tooltip-when-elided="true" name="SaveMapAsButton" />
-        <ui:Button text="SAVE w/TOKENS" display-tooltip-when-elided="true" name="SaveStateButton" />
+        <ui:Button text="SAVE w/TOKENS" display-tooltip-when-elided="true" name="SaveStateButton" style="display: none;" />
         <ui:Button text="LOAD" display-tooltip-when-elided="true" name="LoadButton" />
         <ui:Button text="RESET" display-tooltip-when-elided="true" name="ResetButton" />
         <ui:Button text="EXIT ISOCON" display-tooltip-when-elided="true" name="ExitButton" />

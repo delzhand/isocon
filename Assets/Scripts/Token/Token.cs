@@ -87,10 +87,9 @@ public class Token : MonoBehaviour
     public static void InitModal() {
         UIDocument modeUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
         List<string> avatars = new List<string>{
-            "Enochian",
-            "Shade",
-            "Relict",
-            "Object"
+            // "Enochian",
+            // "Shade",
+            // "Relict",
         };
         DirectoryInfo info = new DirectoryInfo(Application.persistentDataPath + "/tokens/");
         if (info.Exists) {
