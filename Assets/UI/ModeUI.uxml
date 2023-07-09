@@ -52,7 +52,7 @@
         <ui:Button text="ROTATE RIGHT" display-tooltip-when-elided="true" name="RotateRightButton" />
     </ui:VisualElement>
     <ui:VisualElement name="HelpBar">
-        <ui:Label tabindex="-1" text="Welcome to IsoCON!" display-tooltip-when-elided="true" name="HelpText" />
+        <ui:Label tabindex="-1" text="Welcome to IsoCON (beta)!" display-tooltip-when-elided="true" name="HelpText" />
     </ui:VisualElement>
     <ui:VisualElement name="DataFlyout" class="background flyout vertical-container" style="flex-direction: column;">
         <ui:Button text="SAVE" display-tooltip-when-elided="true" name="SaveMapButton" />
@@ -85,7 +85,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="InfoModal" class="modal background">
             <ui:Label tabindex="-1" text="ABOUT ISOCON v0.1" display-tooltip-when-elided="true" class="message" style="flex-wrap: wrap;" />
-            <ui:Label tabindex="-1" text="©Derek Adams 2023&#10;Licensed under Creative Commons BY-NC-SA" display-tooltip-when-elided="true" class="longtext" />
+            <ui:Label tabindex="-1" text="©Derek Adams 2023&#10;Licensed under Creative Commons BY-NC-SA&#10;&#10;IsoCON is not an official ICON product; it is a third party work, and is not affiliated with Massif Press.&#10;&#10;ICON is copyright Massif Press." display-tooltip-when-elided="true" class="longtext" />
             <ui:VisualElement name="Buttons" class="horizontal-container buttons" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
                 <ui:Button text="Close" display-tooltip-when-elided="true" name="InfoClose" />
             </ui:VisualElement>

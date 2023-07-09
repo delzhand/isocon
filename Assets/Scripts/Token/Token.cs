@@ -27,11 +27,11 @@ public class Token : MonoBehaviour
         alignToCamera();
         if (Token.TokenHeld == this) {
             GetComponent<UnitState>().Focused = true;
-            GetComponent<HpBar>().Focused = false;
+            // GetComponent<HpBar>().Focused = false;
         }
         else {
             GetComponent<UnitState>().Focused = false;
-            GetComponent<HpBar>().Focused = true;
+            // GetComponent<HpBar>().Focused = true;
         }
     }
 

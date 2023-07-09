@@ -12,76 +12,88 @@
         <ui:VisualElement name="Effects" />
     </ui:VisualElement>
     <ui:VisualElement name="ModifyPane" style="display: none;">
-        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-            <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-                <ui:Button text="-" display-tooltip-when-elided="true" class="num-decrease" />
-                <ui:Label tabindex="-1" text="HP" display-tooltip-when-elided="true" name="HPLabel" class="label" />
-                <ui:Label tabindex="-1" text="15" display-tooltip-when-elided="true" name="HPVal" class="value" />
-                <ui:Button text="+" display-tooltip-when-elided="true" class="num-increase" />
+        <ui:VisualElement name="Shadow" />
+        <ui:VisualElement name="Inner">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                <ui:TextField picking-mode="Ignore" value="Name" name="NameEdit" class="unit-text-edit" />
+                <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <ui:Button text="-" display-tooltip-when-elided="true" name="CHP-down" class="num-decrease" />
+                    <ui:Label tabindex="-1" text="HP" display-tooltip-when-elided="true" name="HPLabel" class="label" />
+                    <ui:Label tabindex="-1" text="15" display-tooltip-when-elided="true" name="HPVal" class="value" />
+                    <ui:Button text="+" display-tooltip-when-elided="true" name="CHP-up" class="num-increase" />
+                </ui:VisualElement>
+                <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <ui:Button text="-" display-tooltip-when-elided="true" name="VIG-down" class="num-decrease" />
+                    <ui:Label tabindex="-1" text="VIGOR" display-tooltip-when-elided="true" name="HPLabel" class="label" />
+                    <ui:Label tabindex="-1" text="3" display-tooltip-when-elided="true" name="VigVal" class="value" />
+                    <ui:Button text="+" display-tooltip-when-elided="true" name="VIG-up" class="num-increase" />
+                </ui:VisualElement>
+                <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <ui:Button text="-" display-tooltip-when-elided="true" name="RES-down" class="num-decrease" />
+                    <ui:Label tabindex="-1" text="RESOLVE" display-tooltip-when-elided="true" name="HPLabel" class="label" />
+                    <ui:Label tabindex="-1" text="2" display-tooltip-when-elided="true" name="ResVal" class="value" />
+                    <ui:Button text="+" display-tooltip-when-elided="true" name="RES-up" class="num-increase" />
+                </ui:VisualElement>
+                <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <ui:Button text="-" display-tooltip-when-elided="true" name="GRES-down" class="num-decrease" />
+                    <ui:Label tabindex="-1" text="G-RESOLVE" display-tooltip-when-elided="true" name="HPLabel" class="label" />
+                    <ui:Label tabindex="-1" text="1" display-tooltip-when-elided="true" name="GResVal" class="value" />
+                    <ui:Button text="+" display-tooltip-when-elided="true" name="GRES-up" class="num-increase" />
+                </ui:VisualElement>
+                <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <ui:Button text="-" display-tooltip-when-elided="true" name="ATH-down" class="num-decrease" />
+                    <ui:Label tabindex="-1" text="AETHER" display-tooltip-when-elided="true" name="HPLabel" class="label" />
+                    <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="AthVal" class="value" />
+                    <ui:Button text="+" display-tooltip-when-elided="true" name="ATH-up" class="num-increase" />
+                </ui:VisualElement>
+                <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <ui:Button text="-" display-tooltip-when-elided="true" name="VGL-down" class="num-decrease" />
+                    <ui:Label tabindex="-1" text="VIGILANCE" display-tooltip-when-elided="true" name="HPLabel" class="label" />
+                    <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="VglVal" class="value" />
+                    <ui:Button text="+" display-tooltip-when-elided="true" name="VGL-up" class="num-increase" />
+                </ui:VisualElement>
+                <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <ui:Button text="-" display-tooltip-when-elided="true" name="BLS-down" class="num-decrease" />
+                    <ui:Label tabindex="-1" text="BLESSINGS" display-tooltip-when-elided="true" name="HPLabel" class="label" />
+                    <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="BlsVal" class="value" />
+                    <ui:Button text="+" display-tooltip-when-elided="true" name="BLS-up" class="num-increase" />
+                </ui:VisualElement>
+                <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <ui:Button text="-" display-tooltip-when-elided="true" name="WND-down" class="num-decrease" />
+                    <ui:Label tabindex="-1" text="WOUNDS" display-tooltip-when-elided="true" name="HPLabel" class="label" />
+                    <ui:Label tabindex="-1" text="3" display-tooltip-when-elided="true" name="WoundsVal" class="value" />
+                    <ui:Button text="+" display-tooltip-when-elided="true" name="WND-up" class="num-increase" />
+                </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-                <ui:Button text="-" display-tooltip-when-elided="true" class="num-decrease" />
-                <ui:Label tabindex="-1" text="VIGOR" display-tooltip-when-elided="true" name="HPLabel" class="label" />
-                <ui:Label tabindex="-1" text="3" display-tooltip-when-elided="true" name="HPVal" class="value" />
-                <ui:Button text="+" display-tooltip-when-elided="true" class="num-increase" />
+            <ui:VisualElement class="status-list">
+                <ui:Toggle label="Slashed" name="SlashedToggle" class="neg" />
+                <ui:Toggle label="Blind" name="BlindToggle" class="neg" />
+                <ui:Toggle label="Dazed" name="DazedToggle" class="neg" />
+                <ui:Toggle label="Pacified" name="PacifiedToggle" class="neg" />
+                <ui:Toggle label="Sealed" name="SealedToggle" class="neg" />
+                <ui:Toggle label="Shattered" name="ShatteredToggle" class="neg" />
+                <ui:Toggle label="Stunned" name="StunnedToggle" class="neg" />
+                <ui:Toggle label="Weakened" name="WeakenedToggle" class="neg" />
+                <ui:Toggle label="Vulnerable" name="VulnerableToggle" class="neg" />
+                <ui:TextField picking-mode="Ignore" name="MarkEdit" value="None" class="unit-text-edit has-label">
+                    <ui:Label tabindex="-1" text="Mark" display-tooltip-when-elided="true" />
+                </ui:TextField>
+                <ui:TextField picking-mode="Ignore" name="HatredEdit" value="None" class="unit-text-edit has-label">
+                    <ui:Label tabindex="-1" text="Hate" display-tooltip-when-elided="true" />
+                </ui:TextField>
             </ui:VisualElement>
-            <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-                <ui:Button text="-" display-tooltip-when-elided="true" class="num-decrease" />
-                <ui:Label tabindex="-1" text="RESOLVE" display-tooltip-when-elided="true" name="HPLabel" class="label" />
-                <ui:Label tabindex="-1" text="2" display-tooltip-when-elided="true" name="HPVal" class="value" />
-                <ui:Button text="+" display-tooltip-when-elided="true" class="num-increase" />
+            <ui:VisualElement class="status-list">
+                <ui:Toggle label="Counter" name="CounterToggle" class="pos" />
+                <ui:Toggle label="Defiance" name="DefianceToggle" class="pos" />
+                <ui:Toggle label="Dodge" name="DodgeToggle" class="pos" />
+                <ui:Toggle label="Evasion" name="EvasionToggle" class="pos" />
+                <ui:Toggle label="Flying" name="FlyingToggle" class="pos" />
+                <ui:Toggle label="Phasing" name="PhasingToggle" class="pos" />
+                <ui:Toggle label="Stealth" name="StealthToggle" class="pos" />
+                <ui:Toggle label="Sturdy" name="SturdyToggle" class="pos" />
+                <ui:Toggle label="Unstoppable" name="UnstoppableToggle" class="pos" />
+                <ui:Toggle label="Regeneration" name="RegenerationToggle" class="pos" />
             </ui:VisualElement>
-            <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-                <ui:Button text="-" display-tooltip-when-elided="true" class="num-decrease" />
-                <ui:Label tabindex="-1" text="G-RESOLVE" display-tooltip-when-elided="true" name="HPLabel" class="label" />
-                <ui:Label tabindex="-1" text="1" display-tooltip-when-elided="true" name="HPVal" class="value" />
-                <ui:Button text="+" display-tooltip-when-elided="true" class="num-increase" />
-            </ui:VisualElement>
-            <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-                <ui:Button text="-" display-tooltip-when-elided="true" class="num-decrease" />
-                <ui:Label tabindex="-1" text="AETHER" display-tooltip-when-elided="true" name="HPLabel" class="label" />
-                <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="HPVal" class="value" />
-                <ui:Button text="+" display-tooltip-when-elided="true" class="num-increase" />
-            </ui:VisualElement>
-            <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-                <ui:Button text="-" display-tooltip-when-elided="true" class="num-decrease" />
-                <ui:Label tabindex="-1" text="VIGILANCE" display-tooltip-when-elided="true" name="HPLabel" class="label" />
-                <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="HPVal" class="value" />
-                <ui:Button text="+" display-tooltip-when-elided="true" class="num-increase" />
-            </ui:VisualElement>
-            <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-                <ui:Button text="-" display-tooltip-when-elided="true" class="num-decrease" />
-                <ui:Label tabindex="-1" text="BLESSINGS" display-tooltip-when-elided="true" name="HPLabel" class="label" />
-                <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="HPVal" class="value" />
-                <ui:Button text="+" display-tooltip-when-elided="true" class="num-increase" />
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement class="status-list">
-            <ui:Toggle label="Slashed" />
-            <ui:Toggle label="Blind" />
-            <ui:Toggle label="Dazed" />
-            <ui:Toggle label="Pacified" />
-            <ui:Toggle label="Sealed" />
-            <ui:Toggle label="Shattered" />
-            <ui:Toggle label="Stunned" />
-        </ui:VisualElement>
-        <ui:VisualElement class="status-list">
-            <ui:Toggle label="Weakened" />
-            <ui:Toggle label="Vulnerable" />
-            <ui:Toggle label="Counter" />
-            <ui:Toggle label="Defiance" />
-            <ui:Toggle label="Dodge" />
-            <ui:Toggle label="Evasion" />
-            <ui:Toggle label="Flying" />
-        </ui:VisualElement>
-        <ui:VisualElement class="status-list">
-            <ui:Toggle label="Phasing" />
-            <ui:Toggle label="Stealth" />
-            <ui:Toggle label="Sturdy" />
-            <ui:Toggle label="Unstoppable" />
-            <ui:Toggle label="Regeneration" />
-            <ui:DropdownField label="Mark" index="-1" choices="System.Collections.Generic.List`1[System.String]" style="display: none;" />
-            <ui:DropdownField label="Hatred" index="-1" choices="System.Collections.Generic.List`1[System.String]" style="display: none;" />
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="FocusToken" style="width: 0; height: 0; display: none;">
@@ -150,6 +162,10 @@
                         <ui:Label tabindex="-1" text="DEF" display-tooltip-when-elided="true" />
                         <ui:Label tabindex="-1" text="SPD" display-tooltip-when-elided="true" />
                     </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="Statuses" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="Negative" class="neg" style="display: none;" />
+                    <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="Positive" class="pos" style="display: none;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="Buttons">
                     <ui:Button text="CLONE" display-tooltip-when-elided="true" name="CloneToken" />

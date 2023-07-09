@@ -1,13 +1,24 @@
 #ModifyPane {
   position: absolute;
-  left: 304px;
-  bottom: 20px;
-  background-color: rgba(.97, .97, .97, .5);
-  border-color: black;
-  border-width: 2px;
-  border-radius: 4px;
-  padding: 10px;
+  left: 305px;
+  bottom: 40px;
+}
+
+#ModifyPane #Inner {
   flex-direction: row;
+  padding: 10px;
+  background-color: rgb(121, 113, 95);
+  border-color: rgb(102, 95, 79);
+  border-width: 2px;
+}
+
+#ModifyPane #Shadow {
+  position: absolute;
+  background-color: black;
+  left: 4px;
+  top: 4px;
+  height: 100%;
+  width: 100%;
 }
 
 #ModifyPane .num-decrease,
@@ -37,6 +48,7 @@
 #ModifyPane .stat-edit {
   flex-direction: row;
   margin-bottom: 4px;
+  max-height: 26px;
 }
 
 #ModifyPane .stat-edit .unity-label {
@@ -80,6 +92,16 @@
   border-width: 1px;
   border-color: #666;
 }
+#ModifyPane .status-list .unity-toggle:focus {
+  color: #FFF;
+}
+#ModifyPane .status-list .unity-toggle.pos {
+  background-color: #234024;
+}
+#ModifyPane .status-list .unity-toggle.neg {
+  background-color: #422b2b;
+}
+
 #ModifyPane .status-list .unity-toggle__label {
   width: 150px;
   padding-left: 4px;
@@ -89,4 +111,42 @@
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   border-width: 0;
+}
+
+#ModifyPane .unit-text-edit {
+  margin: 0;
+  height: 26px;
+  margin-bottom: 4px;
+}
+
+#ModifyPane .unit-text-edit .unity-text-field__label {
+  position: absolute;
+  left: 0;
+  width: 20px;
+  background: #666;  
+  color: #FFF;
+  margin: 0;
+  padding: 0;
+}
+
+#ModifyPane .unit-text-edit.has-label .unity-label {
+  color: #FFF;
+  background-color: #666;
+  position: absolute;
+  left: 0;
+  top: -4px;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 14px;
+  padding: 5px;
+  width: 44px;
+}
+
+#ModifyPane .unit-text-edit .unity-text-field__input {
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+#ModifyPane .unit-text-edit.has-label .unity-text-field__input {
+  padding: 2px 8px 2px 50px;
+  border-radius: 12px;
 }

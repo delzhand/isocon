@@ -571,3 +571,28 @@
     border-color: rgb(205, 205, 205);
     color: rgb(205, 205, 205);
 }
+
+#Statuses {
+    flex-direction: row;
+    border-top-width: 2px;
+    border-color: rgb(102, 95, 79);
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+#Statuses .unity-label {
+    background-color: #888;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+#Statuses .unity-label.pos {
+    background-color:rgb(16, 84, 22);
+}
+
+#Statuses .unity-label.neg {
+    background-color:rgb(121, 39, 39);
+}

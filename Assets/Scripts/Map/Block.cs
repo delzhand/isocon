@@ -161,15 +161,17 @@ public class Block : MonoBehaviour
         }
         switch (ModeController.GetMode()) {
             case Mode.View:
-                if (Token.TokenHeld != null) {
-                    Token.TokenHeld.PlaceAtBlock(this);
-                    Reserve.Adjust();
-                }
-                else {
-                    CameraControl.GoToBlock(this);
-                    SetTerrainInfo();
-                    DeselectAll();
-                    Select();
+                if (!TokenController.IsEditing) {
+                    if (Token.TokenHeld != null) {
+                        Token.TokenHeld.PlaceAtBlock(this);
+                        Reserve.Adjust();
+                    }
+                    else {
+                        CameraControl.GoToBlock(this);
+                        SetTerrainInfo();
+                        DeselectAll();
+                        Select();
+                    }
                 }
                 break;
             case Mode.Alter:

@@ -19,6 +19,15 @@ public class UnitState : MonoBehaviour
     public int Defense;
     public int Speed;
     public int Dash;
+    public int Aether;
+    public int Blessings;
+    public int Vigilance;
+
+    public bool Slashed, Blind, Dazed, Pacified, Sealed, Shattered, Stunned, Weakened, Vulnerable;
+    public bool Counter, Defiance, Dodge, Evasion, Flying, Phasing, Stealth, Sturdy, Unstoppable, Regeneration;
+
+    public string Marked = "None";
+    public string Hatred = "None";
 
     // Start is called before the first frame update
     void Start()
@@ -88,6 +97,45 @@ public class UnitState : MonoBehaviour
         element.Q<Label>("SPD").text = Speed + "/" + Dash;
         element.Q<Label>("DEF").text = Defense.ToString();
 
+
+        element.Q("Statuses").Clear();
+
+        SetStatus(Slashed, "Slashed", "neg");
+        SetStatus(Blind, "Blind", "neg");
+        SetStatus(Dazed, "Dazed", "neg");
+        SetStatus(Pacified, "Pacified", "neg");
+        SetStatus(Sealed, "Sealed", "neg");
+        SetStatus(Shattered, "Shattered", "neg");
+        SetStatus(Stunned, "Stunned", "neg");
+        SetStatus(Weakened, "Weakened", "neg");
+        SetStatus(Vulnerable, "Vulnerable", "neg");
+
+        SetStatus(Counter, "Counter", "pos");
+        SetStatus(Defiance, "Defiance", "pos");
+        SetStatus(Dodge, "Dodge", "pos");
+        SetStatus(Evasion, "Evasion", "pos");
+        SetStatus(Flying, "Flying", "pos");
+        SetStatus(Phasing, "Phasing", "pos");
+        SetStatus(Stealth, "Stealth", "pos");
+        SetStatus(Sturdy, "Sturdy", "pos");
+        SetStatus(Unstoppable, "Unstoppable", "pos");
+        SetStatus(Regeneration, "Regeneration", "pos");
+
+        if (Marked.Length > 0 && Marked != "None") {
+            SetStatus(true, "Marked by " + Marked, "neg");
+        }
+        if (Hatred.Length > 0 && Hatred != "None") {
+            SetStatus(true, "Hatred of " + Hatred, "neg");
+        }
+    }
+
+    private void SetStatus(bool enabled, string name, string classes) {
+        if (enabled) {
+            VisualElement element = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement.Q("FocusToken");
+            Label label = new Label(name);
+            label.AddToClassList(classes);
+            element.Q("Statuses").Add(label);
+        }
     }
 
     private void updateScreenPosition() {
