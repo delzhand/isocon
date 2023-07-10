@@ -103,6 +103,13 @@ public class TokenController : MonoBehaviour
             Token.TokenHeld.GetComponent<UnitState>().Blessings--;
         });
 
+        edit.Q<Button>("WND-up").RegisterCallback<ClickEvent>((evt) => {
+            Token.TokenHeld.GetComponent<HpBar>().Wounds++;
+        });
+        edit.Q<Button>("WND-down").RegisterCallback<ClickEvent>((evt) => {
+            Token.TokenHeld.GetComponent<HpBar>().Wounds--;
+        });
+
         edit.Q<TextField>("HatredEdit").RegisterValueChangedCallback((evt) => {
             Token.TokenHeld.GetComponent<UnitState>().Hatred = evt.newValue;
         });
