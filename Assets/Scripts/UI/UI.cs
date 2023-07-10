@@ -12,8 +12,6 @@ public enum HelpType {
 public class UI : MonoBehaviour
 {
     void Start() {
-        UI.SetScale("UICanvas/ModeUI", PlayerPrefs.GetFloat( "UIScale"));
-        UI.SetScale("WorldCanvas/TokenUI", PlayerPrefs.GetFloat( "InfoScale"));
     }
 
     public static bool IsPointerOverUI(Vector2 screenPos) {
@@ -46,11 +44,11 @@ public class UI : MonoBehaviour
         });
     }
 
-    public static void AttachHelp(UIDocument root, string query, string text) {
-        root.rootVisualElement.Q(query).RegisterCallback<MouseOverEvent>((evt) => {
+    public static void AttachHelp(VisualElement root, string query, string text) {
+        root.Q(query).RegisterCallback<MouseOverEvent>((evt) => {
             UI.SetHelpText(text);
         });
-        root.rootVisualElement.Q(query).RegisterCallback<MouseOutEvent>((evt) => {
+        root.Q(query).RegisterCallback<MouseOutEvent>((evt) => {
             UI.SetHelpText("");
         });
     }

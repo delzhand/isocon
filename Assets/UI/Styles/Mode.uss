@@ -41,10 +41,6 @@
     width: 160px;
 }
 
-.flyout .unity-enum-field {
-    width: 330px;
-}
-
 #ModalAnchor {
     position: absolute;
     left: 50%;
@@ -87,20 +83,14 @@
     justify-content: center;
 }
 
-#AlterFlyout {
+#EditMapFlyout {
     width: 430px;
+    flex-direction: column;
 }
 
-#AlterFlyout .unity-enum-field {
+#EditMapFlyout .unity-enum-field,
+#EditMapFlyout .unity-popup-field {
     width: 240px;
-}
-
-#AppearanceFlyout {
-    width: 350px;
-}
-
-#AppearanceFlyout .unity-enum-field {
-    width: 162px;
 }
 
 #ConfigFlyout {
@@ -116,7 +106,7 @@
     width: auto;
 }
 
-#DataFlyout {
+#FileFlyout {
     width: auto;
 }
 

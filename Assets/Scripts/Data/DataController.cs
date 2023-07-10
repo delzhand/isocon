@@ -16,10 +16,13 @@ public class DataController : MonoBehaviour
     public static string currentFileName;
     public static FileOp currentOp;
     
+    private VisualElement root;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        root = GameObject.Find("ModeUI").GetComponent<UIDocument>().rootVisualElement;
+        setup();
     }
 
     // Update is called once per frame
@@ -28,7 +31,58 @@ public class DataController : MonoBehaviour
         
     }
 
-    public static void InitializeFileList() {
+    private void setup() {
+        List<(string, string, EventCallback<ClickEvent>)> uiConfig = new List<(string, string, EventCallback<ClickEvent>)>{
+            ("SaveMapButton", "Save the current map", SaveMap),
+            ("SaveMapAsButton", "Save a copy of the current map", SaveMapCopy),
+            ("LoadButton", "Load a map from the disk", LoadMap),
+            ("ResetButton", "Reset to the base map", ResetMap),
+            ("ExitButton", "Exit the program", ExitProgram),
+        };   
+
+        foreach((string, string, EventCallback<ClickEvent>) item in uiConfig) {
+            UI.AttachHelp(root, item.Item1, item.Item2);
+            root.Q(item.Item1).RegisterCallback<ClickEvent>(item.Item3);
+        }
+    }
+
+    private void SaveMap(ClickEvent evt) {
+        DataController.currentOp = FileOp.Save;
+        if (DataController.currentFileName != null && DataController.currentFileName.Length > 0) {
+            State.SaveState(DataController.currentFileName);
+        }
+        else {
+            GetComponent<ModeController>().ActivateElementByName("FilenameModal");
+        }
+    }
+
+    private void SaveMapCopy(ClickEvent evt) {
+        DataController.currentOp = FileOp.Save;
+        GetComponent<ModeController>().ActivateElementByName("FilenameModal");
+    }
+
+    private void LoadMap(ClickEvent evt) {
+        InitializeFileList();
+        GetComponent<ModeController>().ActivateElementByName("LoadFileModal");
+    }
+
+    private void ResetMap(ClickEvent evt) {
+        DataController.currentFileName = null;
+        TerrainEngine.ResetTerrain();
+    }
+
+    private void ExitProgram(ClickEvent evt) {
+        root.Q("ExitButton").RegisterCallback<ClickEvent>((evt) => {
+            #if UNITY_STANDALONE
+                Application.Quit();
+            #endif
+            #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+            #endif
+        });   
+    }
+
+    public void InitializeFileList() {
         UIDocument modeUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
 
         DirectoryInfo info = new DirectoryInfo(Application.persistentDataPath + "/maps/");
@@ -70,18 +124,18 @@ public class DataController : MonoBehaviour
         lv.selectionChanged += OnSelectionChanged;
     }
 
-    public static void OnItemsChosen(IEnumerable<object> objects)
+    public void OnItemsChosen(IEnumerable<object> objects)
     {
         foreach (string s in objects) {
             currentFileName = s;
             State.LoadState(s);
-            ModeController.CloseModal("LoadFileModal");
+            GetComponent<ModeController>().DeactivateByName("LoadFileModal");
             return;
         }
     }
 
     // Custom event handler for selectionChanged
-    public static void OnSelectionChanged(IEnumerable<object> objects)
+    public void OnSelectionChanged(IEnumerable<object> objects)
     {
     }
 

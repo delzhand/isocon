@@ -159,8 +159,8 @@ public class Block : MonoBehaviour
         if (UI.IsPointerOverUI(clickPosition)) {
             return;
         }
-        switch (ModeController.GetMode()) {
-            case Mode.View:
+        switch (ModeController.ClickMode) {
+            case ClickMode.Play:
                 if (!TokenController.IsEditing) {
                     if (Token.TokenHeld != null) {
                         Token.TokenHeld.PlaceAtBlock(this);
@@ -174,7 +174,7 @@ public class Block : MonoBehaviour
                     }
                 }
                 break;
-            case Mode.Alter:
+            case ClickMode.Edit:
                 Block.DeselectAll();
                 Select();
                 switch(ModeController.GetAlterOption()) {

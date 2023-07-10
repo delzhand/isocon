@@ -31,16 +31,16 @@ public class CameraControl : MonoBehaviour
         UIDocument cameraUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
 
         (cameraUI.rootVisualElement.Q("RotateLeftButton") as Button).RegisterCallback<ClickEvent>(rotateLeft);
-        UI.AttachHelp(cameraUI, "RotateLeftButton", "Rotate the battlefield counter-clockwise.");
+        UI.AttachHelp(cameraUI.rootVisualElement, "RotateLeftButton", "Rotate the battlefield counter-clockwise.");
 
         (cameraUI.rootVisualElement.Q("RotateRightButton") as Button).RegisterCallback<ClickEvent>(rotateRight);
-        UI.AttachHelp(cameraUI, "RotateRightButton", "Rotate the battlefield clockwise.");
+        UI.AttachHelp(cameraUI.rootVisualElement, "RotateRightButton", "Rotate the battlefield clockwise.");
 
         (cameraUI.rootVisualElement.Q("ZoomSlider") as Slider).RegisterValueChangedCallback(zoom);
-        UI.AttachHelp(cameraUI, "ZoomSlider", "Zoom in or out.");
+        UI.AttachHelp(cameraUI.rootVisualElement, "ZoomSlider", "Zoom in or out.");
 
         (cameraUI.rootVisualElement.Q("OverheadToggle") as Toggle).RegisterValueChangedCallback(toggleOverhead);
-        UI.AttachHelp(cameraUI, "OverheadToggle", "Toggle an overhead fixed perspective.");
+        UI.AttachHelp(cameraUI.rootVisualElement, "OverheadToggle", "Toggle an overhead fixed perspective.");
     }
 
     // Update is called once per frame

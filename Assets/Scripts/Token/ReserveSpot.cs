@@ -20,7 +20,7 @@ public class ReserveSpot : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (ModeController.GetMode() == Mode.View && Token.TokenHeld != null && !Token.TokenHeld.InReserve) {
+        if (ModeController.ClickMode == ClickMode.Play && Token.TokenHeld != null && !Token.TokenHeld.InReserve) {
             PlaceAtReserveSpot(Token.TokenHeld);
         }
     }

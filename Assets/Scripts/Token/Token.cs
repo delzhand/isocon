@@ -48,7 +48,7 @@ public class Token : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (ModeController.GetMode() == Mode.View) {
+        if (ModeController.ClickMode == ClickMode.Play) {
             ChangeHeld(TokenHeld == this ? null : this);
         }
     }
