@@ -99,12 +99,12 @@ public class ModeController : MonoBehaviour
         UI.AttachHelp(modeUI, "AlterOptionField", "Change what happens when a tile is clicked.");
 
 
-        (modeUI.rootVisualElement.Q("UIScaleSlider") as Slider).value = PlayerPrefs.GetFloat("UIScale", 1f);
-        (modeUI.rootVisualElement.Q("UIScaleSlider") as Slider).RegisterValueChangedCallback((evt) => {
-            PlayerPrefs.SetFloat("UIScale", evt.newValue);
-            UI.SetScale("UICanvas/ModeUI", evt.newValue);
+        modeUI.rootVisualElement.Q<DropdownField>("UIScaleDropdown").value = PlayerPrefs.GetFloat("UIScale", 1f).ToString();
+        modeUI.rootVisualElement.Q<DropdownField>("UIScaleDropdown").RegisterValueChangedCallback((evt) => {
+            PlayerPrefs.SetFloat("UIScale", float.Parse(evt.newValue));
+            UI.SetScale("UICanvas/ModeUI", float.Parse(evt.newValue));
         });
-        UI.AttachHelp(modeUI, "UIScaleSlider", "Make the general UI larger or smaller.");
+        UI.AttachHelp(modeUI, "UIScaleDropdown", "Make the general UI larger or smaller.");
 
         (modeUI.rootVisualElement.Q("InfoScaleSlider") as Slider).value = PlayerPrefs.GetFloat("InfoScale", 1f);
         (modeUI.rootVisualElement.Q("InfoScaleSlider") as Slider).RegisterValueChangedCallback((evt) => {

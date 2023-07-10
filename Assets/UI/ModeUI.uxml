@@ -28,10 +28,9 @@
             <ui:EnumField type="Background, Assembly-CSharp" name="BackgroundEnum" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="ConfigFlyout" class="background flyout vertical-container" style="flex-direction: column;">
+    <ui:VisualElement name="ConfigFlyout" class="background flyout vertical-container active" style="flex-direction: column;">
         <ui:VisualElement class="horizontal-container">
-            <ui:Label tabindex="-1" text="UI SCALE" display-tooltip-when-elided="true" />
-            <ui:Slider picking-mode="Ignore" value="1" high-value="2.5" name="UIScaleSlider" low-value="1" />
+            <ui:DropdownField label="UI SCALE" index="-1" choices=".5,.75,1,1.25,1.5,1.75,2,2.25,2.5" name="UIScaleDropdown" />
         </ui:VisualElement>
         <ui:VisualElement class="horizontal-container">
             <ui:Label tabindex="-1" text="INFO SCALE" display-tooltip-when-elided="true" />
