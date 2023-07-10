@@ -9,7 +9,7 @@
         <ui:Button text="EDIT MAP" display-tooltip-when-elided="true" name="AlterMode" tooltip="Click a block to delete it" />
         <ui:Button text="APPEARANCE" display-tooltip-when-elided="true" name="Appearance" tooltip="Click a block to delete it" />
         <ui:Button text="CONFIG" display-tooltip-when-elided="true" name="Config" tooltip="Click a block to delete it" />
-        <ui:Button text="DATA" display-tooltip-when-elided="true" name="Data" tooltip="Click a block to delete it" />
+        <ui:Button text="FILE" display-tooltip-when-elided="true" name="Data" tooltip="Click a block to delete it" />
         <ui:VisualElement name="Info">
             <ui:Label tabindex="-1" text="i" display-tooltip-when-elided="true" />
         </ui:VisualElement>
