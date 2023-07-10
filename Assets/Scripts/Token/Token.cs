@@ -194,7 +194,7 @@ public class Token : MonoBehaviour
         string jobclass = jobField.value.Split("-")[0];
         string job = "";
         if (jobField.value.Split("-").Length > 1) {
-            job = jobField.value.Split("-")[0];
+            job = jobField.value.Split("-")[1];
         }
 
         UnitState unitstate = newToken.AddComponent<UnitState>();
