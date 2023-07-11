@@ -92,7 +92,8 @@
   border-width: 1px;
   border-color: #666;
 }
-#ModifyPane .status-list .unity-toggle:focus {
+#ModifyPane .status-list .unity-toggle:focus .unity-label,
+#ModifyPane .status-list .unity-toggle:active .unity-label {
   color: #FFF;
 }
 #ModifyPane .status-list .unity-toggle.pos {

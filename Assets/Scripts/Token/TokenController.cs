@@ -20,13 +20,31 @@ public class TokenController : MonoBehaviour
         });
 
         element.Q<Button>("DeleteToken").RegisterCallback<ClickEvent>((evt) => {
-            GameObject.Destroy(Token.TokenHeld);
-            Reserve.Adjust();
+            Token.TokenHeld.GetComponent<HpBar>().DestroyFloater();
+            GameObject.Destroy(Token.TokenHeld.gameObject);
+            Token.ChangeHeld(null);
+            ReserveController.Adjust();
         });
 
         element.Q<Button>("EditToken").RegisterCallback<ClickEvent>((evt) => {
             EditToggle();
         });
+
+        Token.InitModal();
+
+        VisualElement root = GameObject.Find("ModeUI").GetComponent<UIDocument>().rootVisualElement;
+        root.Q("AddTokenConfirm").RegisterCallback<ClickEvent>((evt) => {
+            ReserveController.Adjust();
+            Token.CreateNew();
+            GetComponent<ModeController>().DeactivateByName("AddTokenModal");
+            ModeController.ClickMode = ClickMode.Play;
+        });
+
+        root.Q("AddTokenCancel").RegisterCallback<ClickEvent>((evt) => {
+            GetComponent<ModeController>().DeactivateByName("AddTokenModal");
+            ModeController.ClickMode = ClickMode.Play;
+        });
+
 
         InitCallbacks();
     }

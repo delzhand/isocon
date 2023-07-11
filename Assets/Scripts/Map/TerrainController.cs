@@ -3,23 +3,111 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Linq;
 
-public class TerrainEngine : MonoBehaviour
+public class TerrainController : MonoBehaviour
 {
     static GameObject map;
+    private VisualElement root;
 
     void Start() {
+        root = GameObject.Find("ModeUI").GetComponent<UIDocument>().rootVisualElement;
+        setup();
         InitializeTerrain(8, 8, 3);
     }
 
-    private static void findMap() {
-        if (map == null) {
-            map = GameObject.Find("Terrain");
+    private void setup() {
+        root.Q<DropdownField>("EditOperation").RegisterValueChangedCallback(editTerrainSelect);
+    }
+
+    private void editTerrainSelect(ChangeEvent<string> evt) {
+        resetConditionalElements();
+        switch (evt.newValue) {
+            case "EDIT TERRAIN":
+                showConditionalElement("EditTerrainOptions");
+                break;
+            case "EDIT BLOCK":
+                showConditionalElement("EditBlockOptions");
+                break;
+            case "MARK BLOCK":
+                showConditionalElement("MarkBlockOptions");
+                break;
+            case "APPEARANCE":
+                showConditionalElement("AppearanceOptions");
+                break;
+        }
+    }
+
+    private void resetConditionalElements() {
+        root.Q("EditTerrainOptions").style.display = DisplayStyle.None;
+        root.Q("EditBlockOptions").style.display = DisplayStyle.None;
+        root.Q("MarkBlockOptions").style.display = DisplayStyle.None;
+        root.Q("AppearanceOptions").style.display = DisplayStyle.None;
+    }
+
+    private void showConditionalElement(string name) {
+        root.Q(name).style.display = DisplayStyle.Flex;
+    }
+
+    private string getValue(RadioButtonGroup g, int i) {
+        IEnumerable<string> choices = g.choices;
+        string[] s = choices.ToArray();
+        return s[i];
+    }
+
+    public void Edit(Block block) {
+        int editOpIndex = root.Q<RadioButtonGroup>("EditMapDropdown").value;
+        string editOp = root.Q<RadioButtonGroup>("EditMapDropdown").choices.ToArray()[editOpIndex];
+        switch (editOp) {
+            case "ADD HEIGHT":
+                AddBlocks();
+                break;
+            case "REMOVE HEIGHT":
+                RemoveBlocks();
+                break;
+            case "CLONE ROW":
+                CloneRow();
+                break;
+            case "CLONE COLUMN":
+                CloneColumn();
+                break;
+            case "REMOVE ROW":
+                DeleteRow();
+                break;
+            case "REMOVE COLUMN":
+                DeleteColumn();
+                break;
+            case "SET SOLID":
+                ChangeType(BlockType.Solid);
+                break;
+            case "SET/ROTATE SLOPE":
+                ChangeType(BlockType.Slope);
+                break;
+            case "SET EMPTY":
+                ChangeType(BlockType.Spacer);
+                break;
+            case "MARK DIFFICULT":
+                ChangeMarker(BlockMarker.Difficult);
+                break;
+            case "MARK DANGEROUS":
+                ChangeMarker(BlockMarker.Dangerous);
+                break;
+            case "MARK PIT":
+                ChangeMarker(BlockMarker.Pit);
+                break;
+            case "MARK IMPASSABLE":
+                ChangeMarker(BlockMarker.Impassable);
+                break;
+            case "CLEAR MARKS":
+                ChangeMarker(BlockMarker.None);
+                break;
         }
     }
 
     public static void InitializeTerrain(int length, int width, int height) {
-        findMap();
+        if (map == null) {
+            map = GameObject.Find("Terrain");
+        }
         for (int y = 0; y < width; y++) {
             for (int x = 0; x < length; x++) {
                 try {

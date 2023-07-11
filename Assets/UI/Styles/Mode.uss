@@ -84,13 +84,22 @@
 }
 
 #EditMapFlyout {
-    width: 430px;
+    width: 240px;
     flex-direction: column;
 }
 
-#EditMapFlyout .unity-enum-field,
-#EditMapFlyout .unity-popup-field {
-    width: 240px;
+#EditMapFlyout .unity-radio-button {
+    margin: 0;
+}
+
+#EditMapFlyout .unity-radio-button__checkmark-background {
+    height: 16px;
+    width: 16px;
+    padding: 1px;
+}
+
+#EditMapFlyout .unity-radio-button__checkmark-background {
+
 }
 
 #ConfigFlyout {

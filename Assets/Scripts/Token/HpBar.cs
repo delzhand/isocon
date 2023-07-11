@@ -58,6 +58,11 @@ public class HpBar : MonoBehaviour
         container.Add(floater);
     }
 
+    public void DestroyFloater() {
+        container = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement;
+        container.Remove(floater);
+    }
+
     private void updateData() {
         floater.Q<ProgressBar>("HpBar").value = CHP;
         floater.Q<ProgressBar>("HpBar").highValue = MHP;

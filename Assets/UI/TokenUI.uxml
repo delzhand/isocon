@@ -13,7 +13,7 @@
     </ui:VisualElement>
     <ui:VisualElement name="ModifyPane" style="display: none;">
         <ui:VisualElement name="Shadow" />
-        <ui:VisualElement name="Inner">
+        <ui:VisualElement name="Inner" style="display: flex;">
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
                 <ui:TextField picking-mode="Ignore" value="Name" name="NameEdit" class="unit-text-edit" />
                 <ui:VisualElement class="stat-edit" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
@@ -96,7 +96,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="FocusToken" style="width: 0; height: 0; display: none;">
+    <ui:VisualElement name="FocusToken" style="display: none;">
         <ui:VisualElement name="Pane" style="position: absolute; left: -120px; bottom: 100%;">
             <ui:VisualElement name="Shadow" />
             <ui:VisualElement name="Inner">
@@ -109,6 +109,17 @@
                 </ui:VisualElement>
                 <ui:VisualElement name="HpWrapper">
                     <ui:ProgressBar value="15" name="HpBar" high-value="28" />
+                    <ui:VisualElement name="Wounds">
+                        <ui:VisualElement name="Wound1" class="wound">
+                            <ui:Label tabindex="-1" text="X" display-tooltip-when-elided="true" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="Wound2" class="wound">
+                            <ui:Label tabindex="-1" text="X" display-tooltip-when-elided="true" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="Wound3" class="wound">
+                            <ui:Label tabindex="-1" text="X" display-tooltip-when-elided="true" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
                     <ui:ProgressBar value="3" name="VigBar" high-value="28" />
                     <ui:VisualElement name="HpOverlay" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
                         <ui:VisualElement class="outline" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />

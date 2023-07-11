@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum Palette {
     GREENFIELD,
@@ -26,17 +27,26 @@ public class Environment : MonoBehaviour
     private static Background background = Background.SUNSHINE;
     private static Palette palette = Palette.GREENFIELD;
     
+    private VisualElement root;
+
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        root = GameObject.Find("ModeUI").GetComponent<UIDocument>().rootVisualElement;
+        setup();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    private void setup() {
+        root.Q<EnumField>("BackgroundEnum").RegisterValueChangedCallback((evt) => {
+            SetBackground((Background)evt.newValue);
+        });
+
+        root.Q<EnumField>("PaletteEnum").RegisterValueChangedCallback((evt) => {
+            SetPalette((Palette)evt.newValue);
+        });
     }
+
 
     public static Color FromRGB(int r, int g, int b) {
         return new Color(r/255f, g/255f, b/255f);

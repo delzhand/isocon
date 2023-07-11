@@ -68,7 +68,7 @@ public class DataController : MonoBehaviour
 
     private void ResetMap(ClickEvent evt) {
         DataController.currentFileName = null;
-        TerrainEngine.ResetTerrain();
+        TerrainController.ResetTerrain();
     }
 
     private void ExitProgram(ClickEvent evt) {

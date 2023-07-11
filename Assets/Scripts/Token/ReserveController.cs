@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Reserve : MonoBehaviour
+public class ReserveController : MonoBehaviour
 {
     public static int Size;
 
     // Start is called before the first frame update
     void Start()
     {
-            
+         Adjust();   
     }
 
     // Update is called once per frame

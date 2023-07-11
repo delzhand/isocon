@@ -23,31 +23,8 @@ public enum BlockMarker
     Pit
 }
 
-public enum AlterOption
-{
-    ADD_AT_POSITION,
-    DELETE_SELECTED,
-    ROTATE_SELECTED,
-    CLONE_ROW,
-    CLONE_COLUMN,
-    DELETE_ROW,
-    DELETE_COLUMN,
-    SET_SHAPE_SOLID,
-    SET_SHAPE_SLOPE,
-    SET_SHAPE_EMPTY,
-    REMOVE_EFFECTS,
-    SET_EFFECT_DANGER,
-    SET_EFFECT_DIFFICULT,
-    SET_EFFECT_INTERACTIVE,
-    SET_EFFECT_IMPASSABLE,
-    SET_EFFECT_PIT,
-}
-
 public class Block : MonoBehaviour
 {
-    public float sides;
-    public float top;
-
     public bool Selected = false;
     public BlockType Type = BlockType.Solid;
     public bool Destroyable = true;
@@ -155,84 +132,25 @@ public class Block : MonoBehaviour
 
     void OnMouseDown()
     {
-        Vector3 clickPosition = Input.mousePosition;
-        if (UI.IsPointerOverUI(clickPosition)) {
-            return;
+        if (ModeController.ClickMode == ClickMode.Play) {
+            if (!TokenController.IsEditing) {
+                if (Token.TokenHeld != null) {
+                    Token.TokenHeld.PlaceAtBlock(this);
+                    ReserveController.Adjust();
+                }
+                else {
+                    CameraControl.GoToBlock(this);
+                    SetTerrainInfo();
+                    DeselectAll();
+                    Select();
+                }
+            }
         }
-        switch (ModeController.ClickMode) {
-            case ClickMode.Play:
-                if (!TokenController.IsEditing) {
-                    if (Token.TokenHeld != null) {
-                        Token.TokenHeld.PlaceAtBlock(this);
-                        Reserve.Adjust();
-                    }
-                    else {
-                        CameraControl.GoToBlock(this);
-                        SetTerrainInfo();
-                        DeselectAll();
-                        Select();
-                    }
-                }
-                break;
-            case ClickMode.Edit:
-                Block.DeselectAll();
-                Select();
-                switch(ModeController.GetAlterOption()) {
-                    case AlterOption.ADD_AT_POSITION:
-                        TerrainEngine.AddBlocks();
-                        break;
-                    case AlterOption.DELETE_SELECTED:
-                        TerrainEngine.RemoveBlocks();
-                        break;
-                    case AlterOption.SET_SHAPE_SOLID:
-                        TerrainEngine.ChangeType(BlockType.Solid);
-                        break;
-                    case AlterOption.SET_SHAPE_SLOPE:
-                        TerrainEngine.ChangeType(BlockType.Slope);
-                        break;
-                    case AlterOption.SET_SHAPE_EMPTY:
-                        TerrainEngine.ChangeType(BlockType.Spacer);
-                        break;
-                    case AlterOption.ROTATE_SELECTED:
-                        TerrainEngine.RotateBlocks();
-                        break;
-                    case AlterOption.SET_EFFECT_DANGER:
-                        TerrainEngine.ChangeMarker(BlockMarker.Dangerous);
-                        break;
-                    case AlterOption.SET_EFFECT_DIFFICULT:
-                        TerrainEngine.ChangeMarker(BlockMarker.Difficult);
-                        break;
-                    case AlterOption.SET_EFFECT_IMPASSABLE:
-                        TerrainEngine.ChangeMarker(BlockMarker.Impassable);
-                        break;
-                    case AlterOption.SET_EFFECT_PIT:
-                        TerrainEngine.ChangeMarker(BlockMarker.Pit);
-                        break;
-                    case AlterOption.SET_EFFECT_INTERACTIVE:
-                        TerrainEngine.ChangeMarker(BlockMarker.Interactive);
-                        break;
-                    case AlterOption.REMOVE_EFFECTS:
-                        TerrainEngine.ChangeMarker(BlockMarker.None);
-                        break;
-                    case AlterOption.CLONE_ROW:
-                        TerrainEngine.CloneRow();
-                        Block.ResetMaterials();
-                        break;
-                    case AlterOption.CLONE_COLUMN:
-                        TerrainEngine.CloneColumn();
-                        Block.ResetMaterials();
-                        break;
-                    case AlterOption.DELETE_ROW:
-                        TerrainEngine.DeleteRow();
-                        Block.ResetMaterials();
-                        break;
-                    case AlterOption.DELETE_COLUMN:
-                        TerrainEngine.DeleteColumn();
-                        Block.ResetMaterials();
-                        break;
-                }
-                Block.DeselectAll();
-                break;
+        else if (ModeController.ClickMode == ClickMode.Edit) {
+            Block.DeselectAll();
+            Select();
+            GameObject.Find("Engine").GetComponent<TerrainController>().Edit(this);
+            Block.DeselectAll();
         }
     }
 

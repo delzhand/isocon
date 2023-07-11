@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -661,6 +661,9 @@ GameObject:
   - component: {fileID: 726269904}
   - component: {fileID: 726269905}
   - component: {fileID: 726269906}
+  - component: {fileID: 726269907}
+  - component: {fileID: 726269908}
+  - component: {fileID: 726269909}
   m_Layer: 0
   m_Name: Engine
   m_TagString: Untagged
@@ -680,8 +683,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 604421eca7bda2d4e866d41dfdd22446, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentMode: 0
-  CurrentAlter: 0
 --- !u!4 &726269903
 Transform:
   m_ObjectHideFlags: 0
@@ -731,6 +732,42 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1cc92cf392ce9d74b8b367e915398908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &726269907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 726269901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ba82be418fa5674b8e6a23a7906ce59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &726269908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 726269901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b22b27d59ae12348a366ff1145dddcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &726269909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 726269901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d7c75f49df8c0f4e98695b7030aebdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &793199493
@@ -1211,7 +1248,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1724271507}
-  - component: {fileID: 1724271506}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -1219,18 +1255,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1724271506
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1724271505}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b22b27d59ae12348a366ff1145dddcd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1724271507
 Transform:
   m_ObjectHideFlags: 0

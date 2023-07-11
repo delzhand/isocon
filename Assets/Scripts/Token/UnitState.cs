@@ -62,14 +62,14 @@ public class UnitState : MonoBehaviour
         else {
             element.Q<ProgressBar>("VigBar").style.visibility = Visibility.Visible;
         }
-        // for (int i = 1; i <= 3; i++) {
-        //     if (hp.Wounds >= i) {
-        //         element.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Visible;
-        //     }
-        //     else {
-        //         element.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Hidden;
-        //     }
-        // }
+        for (int i = 1; i <= 3; i++) {
+            if (hp.Wounds >= i) {
+                element.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Visible;
+            }
+            else {
+                element.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Hidden;
+            }
+        }
 
         if (!Foe) {
             element.Q<ProgressBar>("PResolveBar").value = Resolve + GResolve;

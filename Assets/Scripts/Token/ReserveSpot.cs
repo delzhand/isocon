@@ -20,8 +20,15 @@ public class ReserveSpot : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (ModeController.ClickMode == ClickMode.Play && Token.TokenHeld != null && !Token.TokenHeld.InReserve) {
-            PlaceAtReserveSpot(Token.TokenHeld);
+
+        if (ModeController.ClickMode == ClickMode.Play) {
+            if (Token.TokenHeld != null && !Token.TokenHeld.InReserve) {
+                PlaceAtReserveSpot(Token.TokenHeld);
+            }
+            else if (Token.TokenHeld == null) {
+                GameObject.Find("Engine").GetComponent<ModeController>().ActivateElementByName("AddTokenModal");
+                ModeController.ClickMode = ClickMode.Other;
+            }
         }
     }
 
@@ -31,7 +38,7 @@ public class ReserveSpot : MonoBehaviour
         Token.transform.Find("Base").gameObject.SetActive(false);
         SetTokenPosition();
         Token.ChangeHeld(null);
-        Reserve.Adjust();
+        ReserveController.Adjust();
     }
 
     public void SetTokenPosition() {

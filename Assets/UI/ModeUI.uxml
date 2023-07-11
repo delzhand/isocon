@@ -4,42 +4,15 @@
     <ui:VisualElement name="ModeControls" class="modeselect background horizontal-container">
         <ui:Button text="PLAY" display-tooltip-when-elided="true" name="Play" tooltip="Click a block to focus the camera" />
         <ui:Button text="EDIT MAP" display-tooltip-when-elided="true" name="EditMap" tooltip="Click a block to delete it" />
+        <ui:Button text="APPEARANCE" display-tooltip-when-elided="true" name="Appearance" tooltip="Click a block to delete it" />
         <ui:Button text="FILE" display-tooltip-when-elided="true" name="File" tooltip="Click a block to delete it" />
         <ui:Button text="CONFIG" display-tooltip-when-elided="true" name="Config" tooltip="Click a block to delete it" />
         <ui:VisualElement name="Info">
             <ui:Label tabindex="-1" text="i" display-tooltip-when-elided="true" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="EditMapFlyout" class="background flyout">
-        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
-            <ui:Label tabindex="-1" text="EDIT" display-tooltip-when-elided="true" />
-            <ui:DropdownField index="0" choices="EDIT TERRAIN,EDIT BLOCK,MARK BLOCK" />
-        </ui:VisualElement>
-        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
-            <ui:Label tabindex="-1" text="OPERATION" display-tooltip-when-elided="true" />
-            <ui:DropdownField index="0" choices="ADD HEIGHT,REMOVE HEIGHT,CLONE ROW,CLONE COLUMN,REMOVE ROW,REMOVE COLUMN" />
-        </ui:VisualElement>
-        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
-            <ui:Label tabindex="-1" text="SHAPE" display-tooltip-when-elided="true" />
-            <ui:DropdownField index="0" choices="NO CHANGE,SOLID,SLOPE/ROTATE,EMPTY" />
-        </ui:VisualElement>
-        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
-            <ui:Label tabindex="-1" text="EFFECT" display-tooltip-when-elided="true" />
-            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-                <ui:RadioButtonGroup value="0" choices="PLAIN,IMPASSABLE,SPECIAL" />
-                <ui:Toggle text="DIFFICULT" />
-                <ui:Toggle text="DANGEROUS" />
-                <ui:Toggle text="INTERACTIVE" />
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement class="horizontal-container">
-            <ui:Label tabindex="-1" text="PALETTE" display-tooltip-when-elided="true" />
-            <ui:EnumField type="Palette, Assembly-CSharp" name="PaletteEnum" />
-        </ui:VisualElement>
-        <ui:VisualElement class="horizontal-container">
-            <ui:Label tabindex="-1" text="BACKGROUND" display-tooltip-when-elided="true" />
-            <ui:EnumField type="Background, Assembly-CSharp" name="BackgroundEnum" />
-        </ui:VisualElement>
+    <ui:VisualElement name="EditMapFlyout" class="background flyout" style="display: flex;">
+        <ui:RadioButtonGroup value="0" choices="ADD HEIGHT,REMOVE HEIGHT,CLONE ROW,CLONE COLUMN,REMOVE ROW,REMOVE COLUMN,SET SOLID,SET/ROTATE SLOPE,SET EMPTY,CLEAR MARKS,MARK DIFFICULT,MARK DANGEROUS,MARK PIT,MARK IMPASSABLE" name="EditMapDropdown" />
     </ui:VisualElement>
     <ui:VisualElement name="ConfigFlyout" class="background flyout vertical-container" style="flex-direction: column;">
         <ui:VisualElement class="horizontal-container">
@@ -124,5 +97,39 @@
     <ui:VisualElement name="TokenFlyout" class="background flyout vertical-container" style="flex-direction: column;">
         <ui:Button text="ADD OBJECT" display-tooltip-when-elided="true" name="AddObjectButton" />
         <ui:Button text="ADD UNIT" display-tooltip-when-elided="true" name="AddUnitButton" />
+    </ui:VisualElement>
+    <ui:VisualElement name="_EditMapFlyout" class="background flyout active" style="display: none;">
+        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+            <ui:Label tabindex="-1" text="EDIT" display-tooltip-when-elided="true" />
+            <ui:DropdownField index="0" choices="EDIT TERRAIN,EDIT BLOCK,MARK BLOCK,APPEARANCE" name="EditOperation" />
+        </ui:VisualElement>
+        <ui:VisualElement name="EditTerrainOptions" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; display: flex;">
+            <ui:Label tabindex="-1" text="OPERATION" display-tooltip-when-elided="true" />
+            <ui:DropdownField index="0" choices="ADD HEIGHT,REMOVE HEIGHT,CLONE ROW,CLONE COLUMN,REMOVE ROW,REMOVE COLUMN" name="EditTerrainDropdown" />
+        </ui:VisualElement>
+        <ui:VisualElement name="EditBlockOptions" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; display: flex;">
+            <ui:Label tabindex="-1" text="SHAPE" display-tooltip-when-elided="true" />
+            <ui:DropdownField index="0" choices="NO CHANGE,SOLID,SLOPE/ROTATE,EMPTY" name="EditBlockDropdown" />
+        </ui:VisualElement>
+        <ui:VisualElement name="MarkBlockOptions" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; display: flex;">
+            <ui:Label tabindex="-1" text="EFFECT" display-tooltip-when-elided="true" />
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                <ui:RadioButtonGroup value="0" choices="PLAIN,IMPASSABLE,SPECIAL" />
+                <ui:Toggle text="DIFFICULT" />
+                <ui:Toggle text="DANGEROUS" />
+                <ui:Toggle text="INTERACTIVE" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="AppearanceOptions" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="AppearanceFlyout" class="background flyout vertical-container" style="flex-direction: column;">
+        <ui:VisualElement class="horizontal-container">
+            <ui:Label tabindex="-1" text="PALETTE" display-tooltip-when-elided="true" />
+            <ui:EnumField type="Palette, Assembly-CSharp" name="PaletteEnum" />
+        </ui:VisualElement>
+        <ui:VisualElement class="horizontal-container">
+            <ui:Label tabindex="-1" text="BACKGROUND" display-tooltip-when-elided="true" />
+            <ui:EnumField type="Background, Assembly-CSharp" name="BackgroundEnum" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
