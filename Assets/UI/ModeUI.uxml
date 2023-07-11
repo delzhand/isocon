@@ -132,4 +132,6 @@
             <ui:EnumField type="Background, Assembly-CSharp" name="BackgroundEnum" />
         </ui:VisualElement>
     </ui:VisualElement>
+    <ui:Button display-tooltip-when-elided="true" name="RotateCCW" class="rotate-button" style="background-color: rgba(205, 205, 205, 0); background-image: resource(&apos;Textures/rotateCCW&apos;);" />
+    <ui:Button display-tooltip-when-elided="true" name="RotateCW" class="rotate-button" style="background-color: rgba(205, 205, 205, 0); background-image: resource(&apos;Textures/rotateCW&apos;);" />
 </ui:UXML>

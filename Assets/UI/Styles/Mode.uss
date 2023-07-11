@@ -161,3 +161,22 @@
 #AddTokenModal.active {
     top: -200px;
 }
+
+.rotate-button {
+    height: 20px;
+    width: 30px;
+    position: absolute;
+    top: 50%;
+    translate: 0 -10px;
+    border-width: 0;
+    left: 10px;
+}
+
+#RotateCCW {
+
+}
+
+#RotateCW {
+    left: auto;
+    right: 10px;
+}
