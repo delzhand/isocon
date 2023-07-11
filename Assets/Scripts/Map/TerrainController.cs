@@ -101,6 +101,9 @@ public class TerrainController : MonoBehaviour
             case "CLEAR MARKS":
                 ChangeMarker(BlockMarker.None);
                 break;
+            case "FOCUS":
+                CameraControl.GoToBlock(block);
+                break;
         }
     }
 

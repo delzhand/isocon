@@ -84,8 +84,8 @@
 }
 
 #EditMapFlyout {
-    width: 240px;
     flex-direction: column;
+    width: auto;
 }
 
 #EditMapFlyout .unity-radio-button {
@@ -93,13 +93,25 @@
 }
 
 #EditMapFlyout .unity-radio-button__checkmark-background {
-    height: 16px;
-    width: 16px;
+    height: 14px;
+    width: 14px;
     padding: 1px;
 }
 
-#EditMapFlyout .unity-radio-button__checkmark-background {
+#EditMapFlyout .unity-radio-button__checkmark {
+    height: 10px;
+    width: 10px;
+}
 
+#EditMapFlyout .unity-radio-button-group__container {
+    flex-direction:column;
+    flex-wrap: wrap;
+    height: 180px;
+}
+
+#EditMapFlyout .unity-radio-button__text {
+    font-size: 14px;
+    white-space: normal;
 }
 
 #ConfigFlyout {
@@ -179,4 +191,12 @@
 #RotateCW {
     left: auto;
     right: 10px;
+}
+
+#CamControls {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    translate: -95px 0;
+    flex-direction: row;
 }

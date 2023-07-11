@@ -186,6 +186,7 @@ public class Token : MonoBehaviour
                 break;
             default:
                 string filename = avatarField.value;
+                Debug.Log(filename);
                 filename = filename.Replace("Custom: ", "");
                 newToken.GetComponent<Token>().CustomCutout("file://" + Application.persistentDataPath + "/tokens/" + filename);
                 break;
@@ -335,7 +336,7 @@ public class Token : MonoBehaviour
             {
                 // Get downloaded asset bundle
                 Texture2D texture = DownloadHandlerTexture.GetContent(uwr);
-                transform.Find("Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetTexture("_Image", texture);
+                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetTexture("_Image", texture);
             }
         }
     }
