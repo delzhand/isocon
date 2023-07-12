@@ -639,3 +639,24 @@
 #Statuses .unity-label.neg {
     background-color:rgb(121, 39, 39);
 }
+
+#QuickHP {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    height: 32px;
+    width: 200px;
+    translate: -100px 0;
+    padding-left: 30px;
+    padding-right: 10px;
+    border-radius: 10px;
+    background-color: rgb(121, 113, 95);
+    border-color: rgb(102, 95, 79);
+    border-width: 2px;
+
+}
+
+#QuickHP #HeartIcon {
+    top: 4px;
+    left: 6px;
+}

@@ -187,4 +187,11 @@
             <ui:VisualElement name="Arrow" style="display: none;" />
         </ui:VisualElement>
     </ui:VisualElement>
+    <ui:VisualElement name="QuickHP" style="display: none;">
+        <ui:SliderInt picking-mode="Ignore" value="42" high-value="100" name="HpSlider" />
+        <ui:VisualElement name="HeartIcon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+            <ui:VisualElement name="VisualElement" class="part" />
+            <ui:VisualElement name="VisualElement" class="part two" />
+        </ui:VisualElement>
+    </ui:VisualElement>
 </ui:UXML>

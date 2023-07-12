@@ -186,7 +186,6 @@ public class Token : MonoBehaviour
                 break;
             default:
                 string filename = avatarField.value;
-                Debug.Log(filename);
                 filename = filename.Replace("Custom: ", "");
                 newToken.GetComponent<Token>().CustomCutout("file://" + Application.persistentDataPath + "/tokens/" + filename);
                 break;

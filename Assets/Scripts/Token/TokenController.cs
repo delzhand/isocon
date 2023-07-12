@@ -45,7 +45,23 @@ public class TokenController : MonoBehaviour
             ModeController.ClickMode = ClickMode.Play;
         });
 
-
+        VisualElement tokenRoot = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement;
+        tokenRoot.Q("HpWrapper").RegisterCallback<ClickEvent>((evt) => {
+            if (tokenRoot.Q("QuickHP").style.display.value == DisplayStyle.None) {
+                tokenRoot.Q("QuickHP").style.display = DisplayStyle.Flex;
+                HpBar hp = Token.TokenHeld.GetComponent<HpBar>();
+                tokenRoot.Q<SliderInt>("HpSlider").highValue = hp.MHP;
+                tokenRoot.Q<SliderInt>("HpSlider").value = hp.CHP;
+                ModeController.ClickMode = ClickMode.Other;
+            }
+            else {
+                tokenRoot.Q("QuickHP").style.display = DisplayStyle.None;
+                ModeController.ClickMode = ClickMode.Play;
+            }
+        });
+        tokenRoot.Q<SliderInt>("HpSlider").RegisterValueChangedCallback<int>((evt) => {
+            Token.TokenHeld.GetComponent<HpBar>().CHP = evt.newValue;
+        });
         InitCallbacks();
     }
 
