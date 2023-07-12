@@ -13,6 +13,8 @@ public enum ClickMode {
 public class ModeController : MonoBehaviour
 {
     public static ClickMode ClickMode;
+    public static ClickMode ReserveClickMode;
+    
     private VisualElement root;
     private List<VisualElement> elements = new List<VisualElement>();
 

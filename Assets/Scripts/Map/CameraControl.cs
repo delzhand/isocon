@@ -41,6 +41,17 @@ public class CameraControl : MonoBehaviour
 
         root.Q<Toggle>("OverheadToggle").RegisterValueChangedCallback(toggleOverhead);
         UI.AttachHelp(root, "OverheadToggle", "Toggle an overhead fixed perspective.");
+
+        string[] blockingElements = new string[]{"RotateCCW", "RotateCW", "ZoomSlider", "OverheadToggle"};
+        foreach(string s in blockingElements) {
+            root.Q(s).RegisterCallback<MouseOverEvent>((evt) => {
+                ModeController.ReserveClickMode = ModeController.ClickMode;
+                ModeController.ClickMode = ClickMode.Other;
+            });
+            root.Q(s).RegisterCallback<MouseOutEvent>((evt) => {
+                ModeController.ClickMode = ModeController.ReserveClickMode;
+            });
+        }
     }
 
     // Update is called once per frame
