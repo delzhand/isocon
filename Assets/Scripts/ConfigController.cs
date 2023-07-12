@@ -13,8 +13,8 @@ public class ConfigController : MonoBehaviour
         root = GameObject.Find("ModeUI").GetComponent<UIDocument>().rootVisualElement;
         setup();
 
-        UI.SetScale("UICanvas/ModeUI", PlayerPrefs.GetFloat( "UIScale"));
-        UI.SetScale("WorldCanvas/TokenUI", PlayerPrefs.GetFloat( "InfoScale"));
+        UI.SetScale("UICanvas/ModeUI", PlayerPrefs.GetFloat("UIScale", 1f));
+        UI.SetScale("WorldCanvas/TokenUI", PlayerPrefs.GetFloat("InfoScale", 1f));
     }
 
     // Update is called once per frame

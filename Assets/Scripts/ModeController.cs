@@ -49,6 +49,7 @@ public class ModeController : MonoBehaviour
         Block.ToggleSpacers(false);
         ClickMode = ClickMode.Other;
         GameObject.Find("TokenUI").GetComponent<UIDocument>().rootVisualElement.style.display = DisplayStyle.None;
+        GameObject.Find("ReserveCamera").GetComponent<Camera>().enabled = false;
     }
 
     public void ActivateElement(VisualElement v) {
@@ -82,6 +83,7 @@ public class ModeController : MonoBehaviour
         ActivateElementByName("Play");
         ClickMode = ClickMode.Play;
         GameObject.Find("TokenUI").GetComponent<UIDocument>().rootVisualElement.style.display = DisplayStyle.Flex;
+        GameObject.Find("ReserveCamera").GetComponent<Camera>().enabled = true;
     }
 
     private void enterEditMapMode(ClickEvent evt) {
