@@ -14,36 +14,6 @@ public class UI : MonoBehaviour
     void Start() {
     }
 
-    public static bool IsPointerOverUI(Vector2 screenPos) {
-        GameObject uiObject = GameObject.Find("ModeUI");
-        if (uiObject == null) {
-            return false;
-        }
-        UIDocument ui = uiObject.GetComponent<UIDocument>();
-        Vector2 pointerUiPos = new Vector2{ x = screenPos.x , y = Screen.height - screenPos.y };
-        List<VisualElement> picked = new List<VisualElement>();
-        ui.rootVisualElement.panel.PickAll( pointerUiPos , picked );
-        //Debug.Log(picked.Count);
-        foreach( var ve in picked )
-        if( ve!=null )
-        {
-            Color32 bcol = ve.resolvedStyle.backgroundColor;
-            if( bcol.a!=0 && ve.enabledInHierarchy )
-                //Debug.Log("ui clicked");
-                return true;
-        }
-        return false;        
-    }
-
-    public static void AddHover(UIDocument root, string query) {
-        root.rootVisualElement.Q(query).RegisterCallback<MouseOverEvent>((evt) => {
-            root.rootVisualElement.Q(query).AddToClassList("hover");
-        });
-        root.rootVisualElement.Q(query).RegisterCallback<MouseOutEvent>((evt) => {
-            root.rootVisualElement.Q(query).RemoveFromClassList("hover");
-        });
-    }
-
     public static void AttachHelp(VisualElement root, string query, string text) {
         root.Q(query).RegisterCallback<MouseOverEvent>((evt) => {
             UI.SetHelpText(text);
@@ -51,6 +21,19 @@ public class UI : MonoBehaviour
         root.Q(query).RegisterCallback<MouseOutEvent>((evt) => {
             UI.SetHelpText("");
         });
+    }
+
+    public static void SetBlocking(VisualElement root) {
+        string[] blockingElements = new string[]{"ModeControls", "HelpBar", "EditMapFlyout", "RotateCCW", "RotateCW", "ZoomSlider", "OverheadToggle"};
+        foreach(string s in blockingElements) {
+            root.Q(s).RegisterCallback<MouseOverEvent>((evt) => {
+                ModeController.ReserveClickMode = ModeController.ClickMode;
+                ModeController.ClickMode = ClickMode.Other;
+            });
+            root.Q(s).RegisterCallback<MouseOutEvent>((evt) => {
+                ModeController.ClickMode = ModeController.ReserveClickMode;
+            });
+        }
     }
 
     public static void SetHelpText(string message, HelpType type = HelpType.Standard) {

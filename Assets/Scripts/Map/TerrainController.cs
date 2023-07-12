@@ -98,6 +98,9 @@ public class TerrainController : MonoBehaviour
             case "MARK IMPASSABLE":
                 ChangeMarker(BlockMarker.Impassable);
                 break;
+            case "MARK INTERACTIVE":
+                ChangeMarker(BlockMarker.Interactive);
+                break;
             case "CLEAR MARKS":
                 ChangeMarker(BlockMarker.None);
                 break;
@@ -318,6 +321,7 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void ChangeMarker(BlockMarker marker) {
+        Debug.Log("foo");
         List<GameObject> selected = Block.GetAllSelected();
         selected.ForEach(block => {
             block.GetComponent<Block>().MarkerChange(marker);

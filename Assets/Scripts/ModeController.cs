@@ -14,7 +14,7 @@ public class ModeController : MonoBehaviour
 {
     public static ClickMode ClickMode;
     public static ClickMode ReserveClickMode;
-    
+
     private VisualElement root;
     private List<VisualElement> elements = new List<VisualElement>();
 
@@ -23,6 +23,7 @@ public class ModeController : MonoBehaviour
     {        
         root = GameObject.Find("ModeUI").GetComponent<UIDocument>().rootVisualElement;
         setup();
+        UI.SetBlocking(root);
         enterPlayMode(null);
     }
 
@@ -83,9 +84,10 @@ public class ModeController : MonoBehaviour
     private void enterPlayMode(ClickEvent evt) {
         clearState();
         ActivateElementByName("Play");
-        ClickMode = ClickMode.Play;
         GameObject.Find("TokenUI").GetComponent<UIDocument>().rootVisualElement.style.display = DisplayStyle.Flex;
         GameObject.Find("ReserveCamera").GetComponent<Camera>().enabled = true;
+        // Because this can only happen when world clicks are suspended, we set reserveclickmode
+        ReserveClickMode = ClickMode.Play;
     }
 
     private void enterEditMapMode(ClickEvent evt) {
@@ -93,7 +95,8 @@ public class ModeController : MonoBehaviour
         ActivateElementByName("EditMap");
         ActivateElementByName("EditMapFlyout");
         Block.ToggleSpacers(true);
-        ClickMode = ClickMode.Edit;
+        // Because this can only happen when world clicks are suspended, we set reserveclickmode
+        ReserveClickMode = ClickMode.Edit;
     }
 
     private void enterAppearanceMode(ClickEvent evt) {
