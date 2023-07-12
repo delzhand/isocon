@@ -87,9 +87,9 @@ public class Token : MonoBehaviour
     public static void InitModal() {
         UIDocument modeUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
         List<string> avatars = new List<string>{
-            "Enochian",
-            "Shade",
-            "Relict",
+            // "Enochian",
+            // "Shade",
+            // "Relict",
         };
         DirectoryInfo info = new DirectoryInfo(Application.persistentDataPath + "/tokens/");
         if (info.Exists) {
@@ -99,7 +99,7 @@ public class Token : MonoBehaviour
             }        
         }
         (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField).choices = avatars;
-        (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField).value = "Enochian";
+        // (modeUI.rootVisualElement.Q("AvatarDropdown") as DropdownField).value = "Enochian";
 
         (modeUI.rootVisualElement.Q("TokenTypeDropdown") as DropdownField).choices = new List<string>{
             "Player",
@@ -169,7 +169,7 @@ public class Token : MonoBehaviour
         Toggle eliteField = (modeUI.rootVisualElement.Q("EliteCheckbox") as Toggle);
         IntegerField legendScale = (modeUI.rootVisualElement.Q("LegendScale") as IntegerField);
         DropdownField sizeField = (modeUI.rootVisualElement.Q("SizeDropdown") as DropdownField);
-
+        TextField foeJobField = modeUI.rootVisualElement.Q<TextField>("FoeJob");
         GameObject newToken = Instantiate(Resources.Load<GameObject>("Prefabs/Token"));
         newToken.name = nameField.value;
 
@@ -199,6 +199,11 @@ public class Token : MonoBehaviour
 
         UnitState unitstate = newToken.AddComponent<UnitState>();
         unitstate.Job = job;
+
+        string foeJob = foeJobField.value;
+        if (foeJob.Length > 0) {
+            unitstate.Job = foeJob;
+        }
 
         HpBar hpbar = newToken.AddComponent<HpBar>();
         hpbar.VIG = 0;

@@ -83,6 +83,7 @@
             <ui:DropdownField label="Avatar" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="AvatarDropdown" />
             <ui:DropdownField label="Type" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="TokenTypeDropdown" />
             <ui:DropdownField label="Job" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="JobClassDropdown" />
+            <ui:TextField picking-mode="Ignore" label="Foe Job" name="FoeJob" />
             <ui:Toggle label="Elite" name="EliteCheckbox" />
             <ui:IntegerField label="Legend HP Scale" value="1" name="LegendScale" />
             <ui:DropdownField label="Size" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="SizeDropdown" />

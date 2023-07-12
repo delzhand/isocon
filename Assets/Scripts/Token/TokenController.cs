@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 public class TokenController : MonoBehaviour
 {
     public static bool IsEditing;
+    public static bool IsQuickEditing;
 
     // Start is called before the first frame update
     void Start()
@@ -47,7 +48,8 @@ public class TokenController : MonoBehaviour
 
         VisualElement tokenRoot = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement;
         tokenRoot.Q("HpWrapper").RegisterCallback<ClickEvent>((evt) => {
-            if (tokenRoot.Q("QuickHP").style.display.value == DisplayStyle.None) {
+            IsQuickEditing = !IsQuickEditing;
+            if (IsQuickEditing) {
                 tokenRoot.Q("QuickHP").style.display = DisplayStyle.Flex;
                 HpBar hp = Token.TokenHeld.GetComponent<HpBar>();
                 tokenRoot.Q<SliderInt>("HpSlider").highValue = hp.MHP;

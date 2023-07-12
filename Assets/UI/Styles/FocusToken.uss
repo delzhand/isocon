@@ -653,7 +653,7 @@
     background-color: rgb(121, 113, 95);
     border-color: rgb(102, 95, 79);
     border-width: 2px;
-
+    display: none;
 }
 
 #QuickHP #HeartIcon {
