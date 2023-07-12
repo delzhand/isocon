@@ -7,6 +7,7 @@
         <ui:Button text="APPEARANCE" display-tooltip-when-elided="true" name="Appearance" tooltip="Click a block to delete it" />
         <ui:Button text="FILE" display-tooltip-when-elided="true" name="File" tooltip="Click a block to delete it" />
         <ui:Button text="CONFIG" display-tooltip-when-elided="true" name="Config" tooltip="Click a block to delete it" />
+        <ui:Label tabindex="-1" text="FPS: 0" display-tooltip-when-elided="true" name="FPS" style="margin-left: 115px;" />
         <ui:VisualElement name="Info">
             <ui:Label tabindex="-1" text="i" display-tooltip-when-elided="true" />
         </ui:VisualElement>
