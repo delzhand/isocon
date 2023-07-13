@@ -58,5 +58,6 @@ public class State
         foreach (string s in state.Blocks) {
             Block.FromString(state.Version, s);
         }
+        TerrainController.UpdateIndicators();
     }
 }

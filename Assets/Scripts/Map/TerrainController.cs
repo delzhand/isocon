@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Linq;
+using TMPro;
 
 public class TerrainController : MonoBehaviour
 {
     static GameObject map;
     private VisualElement root;
+    private List<Label> identifierLabels = new List<Label>();
 
     void Start() {
         root = GameObject.Find("ModeUI").GetComponent<UIDocument>().rootVisualElement;
@@ -141,6 +143,7 @@ public class TerrainController : MonoBehaviour
                 }
             }
         }
+        UpdateIndicators();
     }
 
     public static void ResetTerrain() {
@@ -242,6 +245,7 @@ public class TerrainController : MonoBehaviour
                 }
             }
         });
+        UpdateIndicators();
     }
 
     public static void DeleteRow() {
@@ -263,6 +267,7 @@ public class TerrainController : MonoBehaviour
                 }
             }
         });
+        UpdateIndicators();
     }
 
     public static void CloneColumn() {
@@ -288,6 +293,7 @@ public class TerrainController : MonoBehaviour
                 }
             }
         });
+        UpdateIndicators();
     }
 
     public static void DeleteColumn() {
@@ -309,6 +315,7 @@ public class TerrainController : MonoBehaviour
                 }
             }
         });
+        UpdateIndicators();
     }
 
     public static void ChangeType(BlockType type) {
@@ -317,11 +324,9 @@ public class TerrainController : MonoBehaviour
             block.GetComponent<Block>().TypeChange(type);
             block.transform.Rotate(0, 90f, 0);
         });
-
     }
 
     public static void ChangeMarker(BlockMarker marker) {
-        Debug.Log("foo");
         List<GameObject> selected = Block.GetAllSelected();
         selected.ForEach(block => {
             block.GetComponent<Block>().MarkerChange(marker);
@@ -349,5 +354,22 @@ public class TerrainController : MonoBehaviour
                 blocks[i].transform.localPosition -= new Vector3(0, 1, 0);
             }
         }
+    }
+
+    public static void ToggleIndicators() {
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < blocks.Length; i++) {
+            GameObject indicator = blocks[i].transform.Find("Indicator").gameObject;
+            indicator.SetActive(!indicator.activeSelf);
+        }
+    }
+
+    public static void UpdateIndicators() {
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < blocks.Length; i++) {
+            Block b = blocks[i].GetComponent<Block>();
+            TextMeshPro tm = blocks[i].transform.Find("Indicator").GetComponent<TextMeshPro>();
+            tm.text = b.getAlphaY() + b.getX();
+        } 
     }
 }

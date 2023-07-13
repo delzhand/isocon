@@ -41,6 +41,9 @@ public class CameraControl : MonoBehaviour
 
         root.Q<Toggle>("OverheadToggle").RegisterValueChangedCallback(toggleOverhead);
         UI.AttachHelp(root, "OverheadToggle", "Toggle an overhead fixed perspective.");
+
+        root.Q<Toggle>("IndicatorToggle").RegisterValueChangedCallback(toggleIndicators);
+        UI.AttachHelp(root, "IndicatorToggle", "Toggle row and column indicators.");
     }
 
     // Update is called once per frame
@@ -108,6 +111,10 @@ public class CameraControl : MonoBehaviour
                 // targetPosition = reservePosition;
             }
         }
+    }
+
+    private void toggleIndicators(ChangeEvent<bool> evt) {
+        TerrainController.ToggleIndicators();
     }
 
     private void initializeTransition(float duration) {

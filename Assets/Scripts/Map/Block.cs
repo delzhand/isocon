@@ -162,6 +162,10 @@ public class Block : MonoBehaviour
         return this.transform.parent.GetComponent<Column>().X;
     }
 
+    public string getAlphaY() {
+        return toAlpha(getY()+1);
+    }
+
     public int getY() {
         return this.transform.parent.GetComponent<Column>().Y;
     }
