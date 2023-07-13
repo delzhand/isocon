@@ -12,6 +12,8 @@ public class TerrainController : MonoBehaviour
     private VisualElement root;
     private List<Label> identifierLabels = new List<Label>();
 
+    public static bool ShowIndicators;
+
     void Start() {
         root = GameObject.Find("ModeUI").GetComponent<UIDocument>().rootVisualElement;
         setup();
@@ -143,7 +145,7 @@ public class TerrainController : MonoBehaviour
                 }
             }
         }
-        UpdateIndicators();
+        Reorg();
     }
 
     public static void ResetTerrain() {
@@ -186,6 +188,16 @@ public class TerrainController : MonoBehaviour
 
     }
 
+    public static Vector2 Size() {
+        Vector2 size = Vector2.zero;
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < blocks.Length; i++) {
+            size.x = Mathf.Max(size.x, blocks[i].GetComponent<Block>().getX()+1);
+            size.y = Mathf.Max(size.y, blocks[i].GetComponent<Block>().getY()+1);
+        }
+        return size;
+    }
+
     public static void AddBlocks() {        
         List<GameObject> selected = Block.GetAllSelected();
         List<Column> markedCols = new List<Column>();
@@ -200,6 +212,7 @@ public class TerrainController : MonoBehaviour
                 newblock.transform.localScale = block.transform.localScale;
             }
         });
+        Reorg();
     }
 
     public static void RemoveBlocks() {
@@ -213,6 +226,7 @@ public class TerrainController : MonoBehaviour
                 UI.SetHelpText("Foundation blocks cannot be deleted (but can be changed to SHAPE_EMPTY)", HelpType.Error);
             }
         });
+        Reorg();
     }
 
     public static void RotateBlocks() {
@@ -245,7 +259,7 @@ public class TerrainController : MonoBehaviour
                 }
             }
         });
-        UpdateIndicators();
+        Reorg();
     }
 
     public static void DeleteRow() {
@@ -267,7 +281,7 @@ public class TerrainController : MonoBehaviour
                 }
             }
         });
-        UpdateIndicators();
+        Reorg();
     }
 
     public static void CloneColumn() {
@@ -293,7 +307,7 @@ public class TerrainController : MonoBehaviour
                 }
             }
         });
-        UpdateIndicators();
+        Reorg();
     }
 
     public static void DeleteColumn() {
@@ -315,14 +329,18 @@ public class TerrainController : MonoBehaviour
                 }
             }
         });
-        UpdateIndicators();
+        Reorg();
     }
 
     public static void ChangeType(BlockType type) {
         List<GameObject> selected = Block.GetAllSelected();
         selected.ForEach(block => {
             block.GetComponent<Block>().TypeChange(type);
-            block.transform.Rotate(0, 90f, 0);
+            if (type == BlockType.Slope) {
+                block.transform.Rotate(0, 90f, 0);
+                // counter-rotate indicator
+                block.transform.Find("Indicator").transform.eulerAngles = new Vector3(90, -90, 0);
+            }
         });
     }
 
@@ -356,20 +374,67 @@ public class TerrainController : MonoBehaviour
         }
     }
 
-    public static void ToggleIndicators() {
-        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < blocks.Length; i++) {
-            GameObject indicator = blocks[i].transform.Find("Indicator").gameObject;
-            indicator.SetActive(!indicator.activeSelf);
-        }
+    public static void ToggleIndicators(bool visible) {
+        ShowIndicators = visible;
     }
 
-    public static void UpdateIndicators() {
+    public static void Reorg() {
+        UpdateIndicators();
+        HideObscuredBlocks();
+    }
+
+    private static void UpdateIndicators() {
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
         for (int i = 0; i < blocks.Length; i++) {
             Block b = blocks[i].GetComponent<Block>();
             TextMeshPro tm = blocks[i].transform.Find("Indicator").GetComponent<TextMeshPro>();
-            tm.text = b.getAlphaY() + b.getX();
-        } 
+            tm.text = b.getAlphaY() + (b.getX()+1);
+        }         
+    }
+
+    private static void HideObscuredBlocks() {
+        Vector2 size = Size();
+        bool[,,] solids = new bool[(int)size.x,(int)size.y,30];
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < blocks.Length; i++) {
+            Block b = blocks[i].GetComponent<Block>();
+            if (b.Type == BlockType.Solid) {
+                solids[b.getX(), b.getY(), b.getZ()] = true;
+            }
+        }
+        for (int i = 0; i < blocks.Length; i++) {
+            Block b = blocks[i].GetComponent<Block>();
+            int x = b.getX();
+            int y = b.getY();
+            int z = b.getZ();
+            try {
+                if (
+                    solids[x,y,z+1] && // obscured above
+                    solids[x+1,y,z] && // obscured west
+                    solids[x-1,y,z] && // obscured east
+                    solids[x,y-1,z] && // obscured south
+                    solids[x,y+1,z]    //obscured north
+                ) {
+                    hideBlock(b);
+                }
+                else {
+                    showBlock(b);
+                }
+            }
+            catch(Exception e) {
+                // Exceptions are fine, it means there's no block because it's out of bounds
+                showBlock(b);
+            }
+        }
+    }
+
+    private static void hideBlock(Block b) {
+        b.GetComponent<MeshRenderer>().enabled = false;
+        b.transform.Find("Indicator").GetComponent<TextMeshPro>().enabled = false;
+    }
+
+    private static void showBlock(Block b) {
+        b.GetComponent<MeshRenderer>().enabled = true;
+        b.transform.Find("Indicator").GetComponent<TextMeshPro>().enabled = true;
     }
 }

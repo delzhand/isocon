@@ -114,7 +114,7 @@ public class CameraControl : MonoBehaviour
     }
 
     private void toggleIndicators(ChangeEvent<bool> evt) {
-        TerrainController.ToggleIndicators();
+        TerrainController.ToggleIndicators(evt.newValue);
     }
 
     private void initializeTransition(float duration) {

@@ -25,6 +25,7 @@ public class ModeController : MonoBehaviour
         setup();
         UI.SetBlocking(root);
         enterPlayMode(null);
+        ClickMode = ClickMode.Play;
     }
 
     private void setup() {

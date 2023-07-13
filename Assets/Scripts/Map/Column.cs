@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Column : MonoBehaviour
 {
-    public Vector2 temp;
-
     private int x;
     public int X {
         get { return x; }
@@ -24,6 +22,5 @@ public class Column : MonoBehaviour
     }
 
     void Update() {
-        temp = new Vector2(X, Y);
     }
 }

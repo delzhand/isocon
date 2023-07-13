@@ -62,6 +62,15 @@ public class Block : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GameObject indicator = transform.Find("Indicator").gameObject;
+        if (Type == BlockType.Solid || Type == BlockType.Slope) {
+            indicator.transform.eulerAngles = new Vector3(90, -90, 0);
+            indicator.SetActive(TerrainController.ShowIndicators);
+        }
+        else {
+            indicator.SetActive(false);
+        }
+
     }
 
     public override string ToString(){
@@ -168,6 +177,10 @@ public class Block : MonoBehaviour
 
     public int getY() {
         return this.transform.parent.GetComponent<Column>().Y;
+    }
+
+    public int getZ() {
+        return (int)Math.Floor(this.transform.position.y)+2;
     }
 
     public void SetTerrainInfo() {
