@@ -175,17 +175,21 @@
 }
 
 .rotate-button {
-    height: 20px;
+    height: 30px;
     width: 30px;
     position: absolute;
     top: 50%;
-    translate: 0 -10px;
+    translate: 0 -15px;
     border-width: 0;
     left: 10px;
+    border-radius: 20px;
+    background-color: rgb(121, 113, 95);
+    border-color: rgb(102, 95, 79);
+    border-width: 2px;
+    padding: 4px;
 }
 
 #RotateCCW {
-
 }
 
 #RotateCW {
@@ -197,6 +201,17 @@
     position: absolute;
     top: 30px;
     left: 50%;
-    translate: -95px 0;
+    height: auto;
+    width: auto;
     flex-direction: row;
+    padding: 2px 10px;
+    border-radius: 20px;
+    background-color: rgb(121, 113, 95);
+    border-color: rgb(102, 95, 79);
+    border-width: 2px;
+    translate: -232px 0;
+}
+
+#CamControls .unity-label {
+    color: white;
 }

@@ -24,7 +24,7 @@ public class UI : MonoBehaviour
     }
 
     public static void SetBlocking(VisualElement root) {
-        string[] blockingElements = new string[]{"ModeControls", "HelpBar", "EditMapFlyout", "RotateCCW", "RotateCW", "ZoomSlider", "OverheadToggle"};
+        string[] blockingElements = new string[]{"ModeControls", "HelpBar", "EditMapFlyout", "RotateCCW", "RotateCW", "CamControls"};
         foreach(string s in blockingElements) {
             root.Q(s).RegisterCallback<MouseOverEvent>((evt) => {
                 ModeController.ReserveClickMode = ModeController.ClickMode;
