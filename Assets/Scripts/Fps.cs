@@ -8,7 +8,7 @@ public class Fps : MonoBehaviour
     private Label fpscounter;
     private IEnumerator Start()
     {
-        fpscounter = GameObject.Find("ModeUI").GetComponent<UIDocument>().rootVisualElement.Q<Label>("FPS");
+        fpscounter = UI.System.Q<Label>("FPS");
 
         GUI.depth = 2;
         while (true)

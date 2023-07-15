@@ -6,8 +6,6 @@ using UnityEngine.UIElements;
 public class UnitState : MonoBehaviour
 {
 
-    public bool Focused = false;
-
     public bool Foe;
     public string Color;
     public string Job;
@@ -38,7 +36,7 @@ public class UnitState : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Focused) {
+        if (TokenController.IsHeld(GetComponent<Token>())) {
             // updateScreenPosition();
             updateData();
         }
@@ -46,7 +44,7 @@ public class UnitState : MonoBehaviour
 
     private void updateData() {
         HpBar hp = GetComponent<HpBar>();
-        VisualElement element = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement.Q("FocusToken");
+        VisualElement element = UI.Token.Q("FocusToken");
         element.Q<Label>("CHP").text = hp.CHP.ToString();
         element.Q<Label>("MHP").text = "/" + hp.MHP.ToString();
         element.Q<Label>("VIG").text = hp.VIG > 0 ? "+" + hp.VIG.ToString() : "";

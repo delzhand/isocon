@@ -6,8 +6,6 @@ using UnityEngine.UIElements;
 
 public class HpBar : MonoBehaviour
 {
-    public static VisualElement container;
-    public static VisualElement focusPane;
     public VisualElement floater;
 
     public int CHP;
@@ -16,8 +14,6 @@ public class HpBar : MonoBehaviour
     public int Wounds;
     public string Color;
     public bool Elite;
-
-    public bool Focused = true;
 
     // Start is called before the first frame update
     void Start()
@@ -33,7 +29,7 @@ public class HpBar : MonoBehaviour
     }
 
     private void toggleFloater() {
-        if (PlayerPrefs.GetInt("ShowFloaters", 1) != 0 && Focused) {
+        if (PlayerPrefs.GetInt("ShowFloaters", 1) != 0) {
             if (floater == null) {
                 createFloater();
             }
@@ -47,20 +43,17 @@ public class HpBar : MonoBehaviour
     }
 
     private void createFloater() {
-        if (container == null) {
-            container = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement;
-        }
         VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/TokenFloater");
         VisualElement instance = template.Instantiate();
         floater = instance.Q("Floater");
         floater.Q<VisualElement>("Color").AddToClassList(Color);
         floater.Q<VisualElement>("Elite").style.visibility = Elite ? Visibility.Visible : Visibility.Hidden;
-        container.Add(floater);
+
+        UI.Token.Add(floater);
     }
 
     public void DestroyFloater() {
-        container = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement;
-        container.Remove(floater);
+        UI.Token.Remove(floater);
     }
 
     private void updateData() {
@@ -89,8 +82,8 @@ public class HpBar : MonoBehaviour
         Vector3 viewportPos = Camera.main.WorldToViewportPoint(worldPos);
         if (floater.resolvedStyle.width != float.NaN) {
             Vector2 screenPos = new Vector2(
-                Mathf.RoundToInt((viewportPos.x * container.resolvedStyle.width)),
-                Mathf.RoundToInt((1f - viewportPos.y) * container.resolvedStyle.height)
+                Mathf.RoundToInt((viewportPos.x * UI.Token.resolvedStyle.width)),
+                Mathf.RoundToInt((1f - viewportPos.y) * UI.Token.resolvedStyle.height)
             );
             Vector2 centerOffset = new Vector2(
                 -floater.resolvedStyle.width/2f,

@@ -1,114 +1,354 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 
 public class TokenController : MonoBehaviour
 {
-    public static bool IsEditing;
-    public static bool IsQuickEditing;
+    private static Token held = null;
+    public static Vector3 Size2Offset = new Vector3(0, 0, -.73f);
 
     // Start is called before the first frame update
     void Start()
     {
-        VisualElement element = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement.Q("FocusToken");
+        VisualElement element = UI.Token.Q("FocusToken");
 
         element.Q<Button>("CloneToken").RegisterCallback<ClickEvent>((evt) => {
-            GameObject newToken = GameObject.Instantiate(Token.TokenHeld.gameObject);
-            newToken.name = Token.TokenHeld.name;
+            GameObject newToken = GameObject.Instantiate(TokenController.held.gameObject);
+            newToken.name = TokenController.held.name;
             ReserveSpot openReserve = ReserveSpot.LastReserveSpot();
             openReserve.PlaceAtReserveSpot(newToken.GetComponent<Token>());
         });
 
         element.Q<Button>("DeleteToken").RegisterCallback<ClickEvent>((evt) => {
-            Token.TokenHeld.GetComponent<HpBar>().DestroyFloater();
-            GameObject.Destroy(Token.TokenHeld.gameObject);
-            Token.ChangeHeld(null);
+            TokenController.held.GetComponent<HpBar>().DestroyFloater();
+            GameObject.Destroy(TokenController.held.gameObject);
+            TokenController.DropHeld();
             ReserveController.Adjust();
         });
 
-        element.Q<Button>("EditToken").RegisterCallback<ClickEvent>((evt) => {
-            EditToggle();
+        // element.Q<Button>("EditToken").RegisterCallback<ClickEvent>((evt) => {
+        //     EditToggle();
+        // });
+
+        InitAddModal();
+
+
+        // UI.Token.Q("HpWrapper").RegisterCallback<ClickEvent>((evt) => {
+        //     IsQuickEditing = !IsQuickEditing;
+        //     if (IsQuickEditing) {
+        //         UI.Token.Q("QuickHP").style.display = DisplayStyle.Flex;
+        //         HpBar hp = TokenController.held.GetComponent<HpBar>();
+        //         UI.Token.Q<SliderInt>("HpSlider").highValue = hp.MHP;
+        //         UI.Token.Q<SliderInt>("HpSlider").value = hp.CHP;
+        //         ModeController.ClickMode = ClickMode.Other;
+        //     }
+        //     else {
+        //         UI.Token.Q("QuickHP").style.display = DisplayStyle.None;
+        //         ModeController.ClickMode = ClickMode.Play;
+        //     }
+        // });
+        UI.Token.Q<SliderInt>("HpSlider").RegisterValueChangedCallback<int>((evt) => {
+            held.GetComponent<HpBar>().CHP = evt.newValue;
         });
 
-        Token.InitModal();
+        UI.SetBlocking(UI.Token, new string[]{"QuickHP"});
 
-        VisualElement root = GameObject.Find("ModeUI").GetComponent<UIDocument>().rootVisualElement;
-        root.Q("AddTokenConfirm").RegisterCallback<ClickEvent>((evt) => {
-            ReserveController.Adjust();
-            Token.CreateNew();
-            GetComponent<ModeController>().DeactivateByName("AddTokenModal");
-            ModeController.ClickMode = ClickMode.Play;
-        });
-
-        root.Q("AddTokenCancel").RegisterCallback<ClickEvent>((evt) => {
-            GetComponent<ModeController>().DeactivateByName("AddTokenModal");
-            ModeController.ClickMode = ClickMode.Play;
-        });
-
-        VisualElement tokenRoot = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement;
-        tokenRoot.Q("HpWrapper").RegisterCallback<ClickEvent>((evt) => {
-            IsQuickEditing = !IsQuickEditing;
-            if (IsQuickEditing) {
-                tokenRoot.Q("QuickHP").style.display = DisplayStyle.Flex;
-                HpBar hp = Token.TokenHeld.GetComponent<HpBar>();
-                tokenRoot.Q<SliderInt>("HpSlider").highValue = hp.MHP;
-                tokenRoot.Q<SliderInt>("HpSlider").value = hp.CHP;
-                ModeController.ClickMode = ClickMode.Other;
-            }
-            else {
-                tokenRoot.Q("QuickHP").style.display = DisplayStyle.None;
-                ModeController.ClickMode = ClickMode.Play;
-            }
-        });
-        tokenRoot.Q<SliderInt>("HpSlider").RegisterValueChangedCallback<int>((evt) => {
-            Token.TokenHeld.GetComponent<HpBar>().CHP = evt.newValue;
-        });
-        InitCallbacks();
+        InitEditPaneCallbacks();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Token.TokenHeld) {
-            VisualElement edit = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement.Q("ModifyPane");
-            edit.Q<Label>("HPVal").text = Token.TokenHeld.GetComponent<HpBar>().CHP.ToString();
-            edit.Q<Label>("VigVal").text = Token.TokenHeld.GetComponent<HpBar>().VIG.ToString();
-            edit.Q<Label>("WoundsVal").text = Token.TokenHeld.GetComponent<HpBar>().Wounds.ToString();
-            edit.Q<Label>("ResVal").text = Token.TokenHeld.GetComponent<UnitState>().Resolve.ToString();
+        if (held) {
+            VisualElement edit = UI.Token.Q("ModifyPane");
+            edit.Q<Label>("HPVal").text = TokenController.held.GetComponent<HpBar>().CHP.ToString();
+            edit.Q<Label>("VigVal").text = TokenController.held.GetComponent<HpBar>().VIG.ToString();
+            edit.Q<Label>("WoundsVal").text = TokenController.held.GetComponent<HpBar>().Wounds.ToString();
+            edit.Q<Label>("ResVal").text = TokenController.held.GetComponent<UnitState>().Resolve.ToString();
             edit.Q<Label>("GResVal").text = UnitState.GResolve.ToString();
-            edit.Q<Label>("AthVal").text = Token.TokenHeld.GetComponent<UnitState>().Aether.ToString();
-            edit.Q<Label>("VglVal").text = Token.TokenHeld.GetComponent<UnitState>().Vigilance.ToString();
-            edit.Q<Label>("BlsVal").text = Token.TokenHeld.GetComponent<UnitState>().Blessings.ToString();
+            edit.Q<Label>("AthVal").text = TokenController.held.GetComponent<UnitState>().Aether.ToString();
+            edit.Q<Label>("VglVal").text = TokenController.held.GetComponent<UnitState>().Vigilance.ToString();
+            edit.Q<Label>("BlsVal").text = TokenController.held.GetComponent<UnitState>().Blessings.ToString();
         }
     }
 
-    public static void InitCallbacks() {
-        VisualElement edit = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement.Q("ModifyPane");
+    public void InitAddModal() {
+        UI.System.Q("AddTokenConfirm").RegisterCallback<ClickEvent>((evt) => {
+            ReserveController.Adjust();
+            CreateNew();
+            GetComponent<ModeController>().DeactivateByName("AddTokenModal");
+            ModeController.ClickMode = ClickMode.Play;
+        });
+
+        UI.System.Q("AddTokenCancel").RegisterCallback<ClickEvent>((evt) => {
+            GetComponent<ModeController>().DeactivateByName("AddTokenModal");
+            ModeController.ClickMode = ClickMode.Play;
+        });
+
+        List<string> avatars = new List<string>{};
+        DirectoryInfo info = new DirectoryInfo(Application.persistentDataPath + "/tokens/");
+        if (info.Exists) {
+            FileInfo[] fileInfo = info.GetFiles();
+            for (int i = 0; i < fileInfo.Length; i++) {
+                avatars.Add(fileInfo[i].Name);
+                if (i == 0) {
+                    UI.System.Q<DropdownField>("AvatarDropdown").value = fileInfo[i].Name;
+                }
+            }        
+        }
+        UI.System.Q<DropdownField>("AvatarDropdown").choices = avatars;
+
+        UI.System.Q<DropdownField>("TokenTypeDropdown").choices = new List<string>{
+            "Player",
+            "Foe",
+        };
+        UI.System.Q<DropdownField>("TokenTypeDropdown").value = "Player";
+
+        UI.System.Q<DropdownField>("SizeDropdown").choices = new List<string>{
+            "1-Standard",
+            "2-Large",
+            "3-Enormous",
+        };
+        UI.System.Q<DropdownField>("SizeDropdown").value = "1-Standard";
+
+        UI.System.Q<DropdownField>("JobClassDropdown").choices = jobOptions();
+        UI.System.Q<DropdownField>("JobClassDropdown").value = defaultJobOption();
+    }
+
+    private static List<string> jobOptions() {
+        string v = PlayerPrefs.GetString("IconVersion", "1.5");
+        switch(v) {
+            case "1.5":
+                return new List<string>{
+                    "Stalwart-Bastion",
+                    "Stalwart-Demon Slayer",
+                    "Stalwart-Colossus",
+                    "Stalwart-Knave",
+                    "Vagabond-Fool",
+                    "Vagabond-Freelancer",
+                    "Vagabond-Shade",
+                    "Vagabond-Warden",
+                    "Mendicant-Chanter",
+                    "Mendicant-Harvester",
+                    "Mendicant-Sealer",
+                    "Mendicant-Seer",
+                    "Wright-Enochian",
+                    "Wright-Geomancer",
+                    "Wright-Spellblade",
+                    "Wright-Stormbender",
+                    "Heavy",
+                    "Skirmisher",
+                    "Leader",
+                    "Artillery",
+                    "Mob",
+                };
+            default:
+                return new List<string>{};
+        }
+    }
+
+    private static string defaultJobOption() {
+        string v = PlayerPrefs.GetString("IconVersion", "1.5");
+        switch(v) {
+            case "1.5":
+                return "Stalwart-Bastion";
+            default:
+                return null;
+        }
+    }
+
+    public static void CreateNew() {
+        DropdownField avatarField = UI.System.Q<DropdownField>("AvatarDropdown");
+        DropdownField tokenTypeField = UI.System.Q<DropdownField>("TokenTypeDropdown");
+        DropdownField jobField = UI.System.Q<DropdownField>("JobClassDropdown");
+        TextField nameField = UI.System.Q<TextField>("TokenNameField");
+        Toggle eliteField = UI.System.Q<Toggle>("EliteCheckbox");
+        IntegerField legendScale = UI.System.Q<IntegerField>("LegendScale");
+        DropdownField sizeField = UI.System.Q<DropdownField>("SizeDropdown");
+        TextField foeJobField = UI.System.Q<TextField>("FoeJob");
+        GameObject newToken = Instantiate(Resources.Load<GameObject>("Prefabs/Token"));
+        newToken.name = nameField.value;
+
+        switch(avatarField.value) {
+            case "Enochian":
+            case "Shade":
+            case "Relict":
+                Texture2D t = Resources.Load<Texture2D>("Textures/Chibis/" + avatarField.value);
+                newToken.transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetTexture("_Image", t);
+                break;
+            case "Object":
+                newToken.transform.Find("Offset/Avatar").gameObject.SetActive(false);
+                newToken.transform.Find("Offset/Object").gameObject.SetActive(true);
+                break;
+            default:
+                string filename = avatarField.value;
+                filename = filename.Replace("Custom: ", "");
+                newToken.GetComponent<Token>().CustomCutout("file://" + Application.persistentDataPath + "/tokens/" + filename);
+                break;
+        }
+
+        string jobclass = jobField.value.Split("-")[0];
+        string job = "";
+        if (jobField.value.Split("-").Length > 1) {
+            job = jobField.value.Split("-")[1];
+        }
+
+        UnitState unitstate = newToken.AddComponent<UnitState>();
+        unitstate.Job = job;
+
+        string foeJob = foeJobField.value;
+        if (foeJob.Length > 0) {
+            unitstate.Job = foeJob;
+        }
+
+        HpBar hpbar = newToken.AddComponent<HpBar>();
+        hpbar.VIG = 0;
+        hpbar.Wounds = 0;
+        switch(jobclass) {
+            case "Wright":
+            case "Artillery":
+                hpbar.Color = "blue";
+                hpbar.MHP = 32;
+                unitstate.Damage = 8;
+                unitstate.Fray = 3;
+                unitstate.Range = 6;
+                unitstate.Speed = 4;
+                unitstate.Dash = 2;
+                unitstate.Defense = 7;
+                break;
+            case "Vagabond":
+            case "Skirmisher":
+                hpbar.Color = "yellow";
+                hpbar.MHP = 28;
+                unitstate.Damage = 10;
+                unitstate.Fray = 2;
+                unitstate.Range = 4;
+                unitstate.Speed = 4;
+                unitstate.Dash = 4;
+                unitstate.Defense = 10;
+                break;
+            case "Stalwart":
+            case "Heavy":
+                hpbar.Color = "red";
+                hpbar.MHP = 40;
+                unitstate.Damage = 6;
+                unitstate.Fray = 4;
+                unitstate.Range = 3;
+                unitstate.Speed = 4;
+                unitstate.Dash = 2;
+                unitstate.Defense = 6;
+                break;
+            case "Leader":
+            case "Mendicant":
+                hpbar.Color = "green";
+                hpbar.MHP = 40;
+                unitstate.Damage = 6;
+                unitstate.Fray = 3;
+                unitstate.Range = 3;
+                unitstate.Speed = 4;
+                unitstate.Dash = 2;
+                unitstate.Defense = 8;
+                break;
+            case "Legend":
+                hpbar.Color = "purple";
+                hpbar.MHP = 50 * legendScale.value;
+                unitstate.Damage = 8;
+                unitstate.Fray = 3;
+                unitstate.Range = 3;
+                unitstate.Speed = 4;
+                unitstate.Dash = 2;
+                unitstate.Defense = 8;
+                break;
+            case "Mob":
+                hpbar.Color = "gray";
+                hpbar.MHP = 2;
+                unitstate.Damage = 6;
+                unitstate.Fray = 3;
+                unitstate.Range = 1;
+                unitstate.Speed = 4;
+                unitstate.Dash = 2;
+                unitstate.Defense = 8;
+                break;
+        }
+        if (eliteField.value) {
+            hpbar.Elite = true;
+            hpbar.MHP *= 2;
+        }
+        hpbar.CHP = hpbar.MHP;
+        unitstate.Color = hpbar.Color;
+        unitstate.Foe = tokenTypeField.value == "Foe";
+
+        if (sizeField.value == "2-Large") {
+            newToken.GetComponent<Token>().Size = 2;
+            newToken.transform.Find("Offset").transform.localPosition += Size2Offset;
+            newToken.transform.Find("Base").transform.localPosition += Size2Offset;
+            newToken.transform.Find("Offset").transform.localScale = new Vector3(2, 2, 2);
+            newToken.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2, 2, 4);
+        }
+        else if (sizeField.value == "3-Enormous") {
+            newToken.GetComponent<Token>().Size = 3;
+            newToken.transform.Find("Offset").transform.localScale = new Vector3(3, 3, 3);
+            newToken.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(3, 3, 4);
+        }
+
+        Material m = Instantiate(Resources.Load<Material>("Materials/Token/BorderBase"));
+        switch (hpbar.Color) {
+            case "red":
+                m.SetColor("_Border", new Color(.93f, .13f, .05f));
+                break;
+            case "blue":
+                m.SetColor("_Border", new Color(0, .63f, 1));
+                break;
+            case "yellow":
+                m.SetColor("_Border", new Color(1, .68f, 0));
+                break;
+            case "green":
+                m.SetColor("_Border", new Color(.38f, .85f, .21f));
+                break;
+            case "purple":
+                m.SetColor("_Border", new Color(.79f, .33f, .94f));
+                break;
+            case "gray":
+                m.SetColor("_Border", new Color(.57f, .57f, .57f));
+                break;
+        }
+        newToken.transform.Find("Base").GetComponent<DecalProjector>().material = m;
+        newToken.transform.Find("Base").gameObject.SetActive(false);
+
+        ReserveSpot openReserve = ReserveSpot.LastReserveSpot();
+        openReserve.PlaceAtReserveSpot(newToken.GetComponent<Token>());
+    }
+
+    public static void InitEditPaneCallbacks() {
+        VisualElement edit = UI.Token.Q("ModifyPane");
 
         edit.Q<TextField>("NameEdit").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.name = evt.newValue;
+            TokenController.held.name = evt.newValue;
         });
 
         edit.Q<Button>("CHP-up").RegisterCallback<ClickEvent>((evt) => {
-            Token.TokenHeld.GetComponent<HpBar>().CHP++;
+            TokenController.held.GetComponent<HpBar>().CHP++;
         });
         edit.Q<Button>("CHP-down").RegisterCallback<ClickEvent>((evt) => {
-            Token.TokenHeld.GetComponent<HpBar>().CHP--;
+            TokenController.held.GetComponent<HpBar>().CHP--;
         });
 
         edit.Q<Button>("VIG-up").RegisterCallback<ClickEvent>((evt) => {
-            Token.TokenHeld.GetComponent<HpBar>().VIG++;
+            TokenController.held.GetComponent<HpBar>().VIG++;
         });
         edit.Q<Button>("VIG-down").RegisterCallback<ClickEvent>((evt) => {
-            Token.TokenHeld.GetComponent<HpBar>().VIG--;
+            TokenController.held.GetComponent<HpBar>().VIG--;
         });
 
         edit.Q<Button>("RES-up").RegisterCallback<ClickEvent>((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Resolve++;
+            TokenController.held.GetComponent<UnitState>().Resolve++;
         });
         edit.Q<Button>("RES-down").RegisterCallback<ClickEvent>((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Resolve--;
+            TokenController.held.GetComponent<UnitState>().Resolve--;
         });
 
         edit.Q<Button>("GRES-up").RegisterCallback<ClickEvent>((evt) => {
@@ -119,161 +359,238 @@ public class TokenController : MonoBehaviour
         });
 
         edit.Q<Button>("ATH-up").RegisterCallback<ClickEvent>((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Aether++;
+            TokenController.held.GetComponent<UnitState>().Aether++;
         });
         edit.Q<Button>("ATH-down").RegisterCallback<ClickEvent>((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Aether--;
+            TokenController.held.GetComponent<UnitState>().Aether--;
         });
 
         edit.Q<Button>("VGL-up").RegisterCallback<ClickEvent>((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Vigilance++;
+            TokenController.held.GetComponent<UnitState>().Vigilance++;
         });
         edit.Q<Button>("VGL-down").RegisterCallback<ClickEvent>((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Vigilance--;
+            TokenController.held.GetComponent<UnitState>().Vigilance--;
         });
 
         edit.Q<Button>("BLS-up").RegisterCallback<ClickEvent>((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Blessings++;
+            TokenController.held.GetComponent<UnitState>().Blessings++;
         });
         edit.Q<Button>("BLS-down").RegisterCallback<ClickEvent>((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Blessings--;
+            TokenController.held.GetComponent<UnitState>().Blessings--;
         });
 
         edit.Q<Button>("WND-up").RegisterCallback<ClickEvent>((evt) => {
-            Token.TokenHeld.GetComponent<HpBar>().Wounds++;
+            TokenController.held.GetComponent<HpBar>().Wounds++;
         });
         edit.Q<Button>("WND-down").RegisterCallback<ClickEvent>((evt) => {
-            Token.TokenHeld.GetComponent<HpBar>().Wounds--;
+            TokenController.held.GetComponent<HpBar>().Wounds--;
         });
 
         edit.Q<TextField>("HatredEdit").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Hatred = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Hatred = evt.newValue;
         });
 
         edit.Q<TextField>("MarkEdit").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Marked = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Marked = evt.newValue;
         });
 
         edit.Q<Toggle>("SlashedToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Slashed = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Slashed = evt.newValue;
         });
         edit.Q<Toggle>("BlindToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Blind = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Blind = evt.newValue;
         });
         edit.Q<Toggle>("DazedToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Dazed = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Dazed = evt.newValue;
         });
         edit.Q<Toggle>("PacifiedToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Pacified = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Pacified = evt.newValue;
         });
         edit.Q<Toggle>("SealedToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Sealed = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Sealed = evt.newValue;
         });
         edit.Q<Toggle>("ShatteredToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Shattered = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Shattered = evt.newValue;
         });
         edit.Q<Toggle>("StunnedToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Stunned = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Stunned = evt.newValue;
         });
         edit.Q<Toggle>("WeakenedToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Weakened = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Weakened = evt.newValue;
         });
         edit.Q<Toggle>("VulnerableToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Vulnerable = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Vulnerable = evt.newValue;
         });
         
         edit.Q<Toggle>("CounterToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Counter = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Counter = evt.newValue;
         });
         edit.Q<Toggle>("DefianceToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Defiance = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Defiance = evt.newValue;
         });
         edit.Q<Toggle>("DodgeToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Dodge = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Dodge = evt.newValue;
         });
         edit.Q<Toggle>("EvasionToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Evasion = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Evasion = evt.newValue;
         });
         edit.Q<Toggle>("FlyingToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Flying = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Flying = evt.newValue;
         });
         edit.Q<Toggle>("PhasingToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Phasing = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Phasing = evt.newValue;
         });
         edit.Q<Toggle>("StealthToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Stealth = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Stealth = evt.newValue;
         });
         edit.Q<Toggle>("SturdyToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Sturdy = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Sturdy = evt.newValue;
         });
         edit.Q<Toggle>("UnstoppableToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Unstoppable = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Unstoppable = evt.newValue;
         });
         edit.Q<Toggle>("RegenerationToggle").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Regeneration = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Regeneration = evt.newValue;
         });
 
         edit.Q<TextField>("MarkEdit").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Marked = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Marked = evt.newValue;
         });
 
         edit.Q<TextField>("HatredEdit").RegisterValueChangedCallback((evt) => {
-            Token.TokenHeld.GetComponent<UnitState>().Hatred = evt.newValue;
+            TokenController.held.GetComponent<UnitState>().Hatred = evt.newValue;
         });
 
     }
 
     public static void EditToggle() {
-        if (Token.TokenHeld == null) {
+        if (TokenController.held == null) {
             return;
         }
-        VisualElement edit = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement.Q("ModifyPane");
-        VisualElement element = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement.Q("FocusToken");
+        VisualElement edit = UI.Token.Q("ModifyPane");
+        VisualElement element = UI.Token.Q("FocusToken");
 
-        if (!IsEditing) {
-            element.Q<Button>("EditToken").text = "DONE";
-            element.Q<Button>("DeleteToken").style.display = DisplayStyle.None;
-            element.Q<Button>("CloneToken").style.display = DisplayStyle.None;
-            edit.style.display = DisplayStyle.Flex;
-            GrabValues();
-        }
-        else {
-            element.Q<Button>("EditToken").text = "EDIT";
-            element.Q<Button>("DeleteToken").style.display = DisplayStyle.Flex;
-            element.Q<Button>("CloneToken").style.display = DisplayStyle.Flex;
-            edit.style.display = DisplayStyle.None;
-        }
+        // if (!IsEditing) {
+        //     element.Q<Button>("EditToken").text = "DONE";
+        //     element.Q<Button>("DeleteToken").style.display = DisplayStyle.None;
+        //     element.Q<Button>("CloneToken").style.display = DisplayStyle.None;
+        //     edit.style.display = DisplayStyle.Flex;
+        //     GrabValues();
+        // }
+        // else {
+        //     element.Q<Button>("EditToken").text = "EDIT";
+        //     element.Q<Button>("DeleteToken").style.display = DisplayStyle.Flex;
+        //     element.Q<Button>("CloneToken").style.display = DisplayStyle.Flex;
+        //     edit.style.display = DisplayStyle.None;
+        // }
 
-        IsEditing = !IsEditing;
+        // IsEditing = !IsEditing;
 
     }
 
     public static void GrabValues() {
-        VisualElement edit = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement.Q("ModifyPane");
-        edit.Q<TextField>("NameEdit").value = Token.TokenHeld.name;
+        VisualElement edit = UI.Token.Q("ModifyPane");
+        edit.Q<TextField>("NameEdit").value = TokenController.held.name;
 
-        edit.Q<Toggle>("SlashedToggle").value = Token.TokenHeld.GetComponent<UnitState>().Slashed;
-        edit.Q<Toggle>("BlindToggle").value = Token.TokenHeld.GetComponent<UnitState>().Blind;
-        edit.Q<Toggle>("DazedToggle").value = Token.TokenHeld.GetComponent<UnitState>().Dazed;
-        edit.Q<Toggle>("PacifiedToggle").value = Token.TokenHeld.GetComponent<UnitState>().Pacified;
-        edit.Q<Toggle>("SealedToggle").value = Token.TokenHeld.GetComponent<UnitState>().Sealed;
-        edit.Q<Toggle>("ShatteredToggle").value = Token.TokenHeld.GetComponent<UnitState>().Shattered;
-        edit.Q<Toggle>("StunnedToggle").value = Token.TokenHeld.GetComponent<UnitState>().Stunned;
-        edit.Q<Toggle>("WeakenedToggle").value = Token.TokenHeld.GetComponent<UnitState>().Weakened;
-        edit.Q<Toggle>("VulnerableToggle").value = Token.TokenHeld.GetComponent<UnitState>().Vulnerable;
+        edit.Q<Toggle>("SlashedToggle").value = TokenController.held.GetComponent<UnitState>().Slashed;
+        edit.Q<Toggle>("BlindToggle").value = TokenController.held.GetComponent<UnitState>().Blind;
+        edit.Q<Toggle>("DazedToggle").value = TokenController.held.GetComponent<UnitState>().Dazed;
+        edit.Q<Toggle>("PacifiedToggle").value = TokenController.held.GetComponent<UnitState>().Pacified;
+        edit.Q<Toggle>("SealedToggle").value = TokenController.held.GetComponent<UnitState>().Sealed;
+        edit.Q<Toggle>("ShatteredToggle").value = TokenController.held.GetComponent<UnitState>().Shattered;
+        edit.Q<Toggle>("StunnedToggle").value = TokenController.held.GetComponent<UnitState>().Stunned;
+        edit.Q<Toggle>("WeakenedToggle").value = TokenController.held.GetComponent<UnitState>().Weakened;
+        edit.Q<Toggle>("VulnerableToggle").value = TokenController.held.GetComponent<UnitState>().Vulnerable;
         
-        edit.Q<Toggle>("CounterToggle").value = Token.TokenHeld.GetComponent<UnitState>().Counter;
-        edit.Q<Toggle>("DefianceToggle").value = Token.TokenHeld.GetComponent<UnitState>().Defiance;
-        edit.Q<Toggle>("DodgeToggle").value = Token.TokenHeld.GetComponent<UnitState>().Dodge;
-        edit.Q<Toggle>("EvasionToggle").value = Token.TokenHeld.GetComponent<UnitState>().Evasion;
-        edit.Q<Toggle>("FlyingToggle").value = Token.TokenHeld.GetComponent<UnitState>().Flying;
-        edit.Q<Toggle>("PhasingToggle").value = Token.TokenHeld.GetComponent<UnitState>().Phasing;
-        edit.Q<Toggle>("StealthToggle").value = Token.TokenHeld.GetComponent<UnitState>().Stealth;
-        edit.Q<Toggle>("SturdyToggle").value = Token.TokenHeld.GetComponent<UnitState>().Sturdy;
-        edit.Q<Toggle>("UnstoppableToggle").value = Token.TokenHeld.GetComponent<UnitState>().Unstoppable;
-        edit.Q<Toggle>("RegenerationToggle").value = Token.TokenHeld.GetComponent<UnitState>().Regeneration;
+        edit.Q<Toggle>("CounterToggle").value = TokenController.held.GetComponent<UnitState>().Counter;
+        edit.Q<Toggle>("DefianceToggle").value = TokenController.held.GetComponent<UnitState>().Defiance;
+        edit.Q<Toggle>("DodgeToggle").value = TokenController.held.GetComponent<UnitState>().Dodge;
+        edit.Q<Toggle>("EvasionToggle").value = TokenController.held.GetComponent<UnitState>().Evasion;
+        edit.Q<Toggle>("FlyingToggle").value = TokenController.held.GetComponent<UnitState>().Flying;
+        edit.Q<Toggle>("PhasingToggle").value = TokenController.held.GetComponent<UnitState>().Phasing;
+        edit.Q<Toggle>("StealthToggle").value = TokenController.held.GetComponent<UnitState>().Stealth;
+        edit.Q<Toggle>("SturdyToggle").value = TokenController.held.GetComponent<UnitState>().Sturdy;
+        edit.Q<Toggle>("UnstoppableToggle").value = TokenController.held.GetComponent<UnitState>().Unstoppable;
+        edit.Q<Toggle>("RegenerationToggle").value = TokenController.held.GetComponent<UnitState>().Regeneration;
 
-        edit.Q<TextField>("HatredEdit").value = Token.TokenHeld.GetComponent<UnitState>().Hatred;
-        edit.Q<TextField>("MarkEdit").value = Token.TokenHeld.GetComponent<UnitState>().Marked;
+        edit.Q<TextField>("HatredEdit").value = TokenController.held.GetComponent<UnitState>().Hatred;
+        edit.Q<TextField>("MarkEdit").value = TokenController.held.GetComponent<UnitState>().Marked;
+    }
+
+    public static void TokenClick(Token token) {
+        if (token == null) {
+            held = null;
+            GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
+            for (int i = 0; i < tokens.Length; i++) {
+                tokens[i].GetComponent<Token>().ClearState();
+            }
+        }
+        else if (token == held) {
+            token.AdvanceState();
+        }
+        else {
+            if (held != null) {
+                held.ClearState();
+            }
+            token.SetState(HoldState.Held);
+        }
+
+    }
+
+    public static void BlockClick(Block block) {
+        if (held != null) {
+            held.PlaceAtBlock(block);
+            ReserveController.Adjust();
+            // DropHeld();  
+        }
+        else {
+            CameraControl.GoToBlock(block);
+            block.SetTerrainInfo();
+            Block.DeselectAll();
+            block.Select();
+        }
+    }
+
+    public static void ReserveSpotClick(ReserveSpot spot) {
+        if (held != null && !held.InReserve) {
+            spot.PlaceAtReserveSpot(TokenController.held);
+        }
+        else if (TokenController.held == null) {
+            GameObject.Find("Engine").GetComponent<ModeController>().ActivateElementByName("AddTokenModal");
+            UI.System.Q<TextField>("TokenNameField").value = "Token Name";
+            ModeController.ClickMode = ClickMode.Other;
+        }
+    }
+
+    public static void SetHeld(Token token) {
+        held = token;
+    }
+
+    public static bool IsHeld(Token token)
+    {
+        return held == token;
+    }
+
+    public static void DropHeld() {
+        TokenClick(null);
+    }
+
+    public static void EnableQuickEdit() {
+        UI.Token.Q("QuickHP").style.display = DisplayStyle.Flex;
+        HpBar hp = held.GetComponent<HpBar>();
+        UI.Token.Q<SliderInt>("HpSlider").highValue = hp.MHP;
+        UI.Token.Q<SliderInt>("HpSlider").value = hp.CHP;
+    }
+
+    public static void EnableFocusPane() {
+        UI.Token.Q("FocusToken").style.display = DisplayStyle.Flex;
+    }
+
+    public static void DisableQuickEdit() {
+        UI.Token.Q("QuickHP").style.display = DisplayStyle.None;
+    }
+
+    public static void DisableFocusPane() {
+        UI.Token.Q("FocusToken").style.display = DisplayStyle.None;
     }
 }

@@ -15,15 +15,13 @@ public class ModeController : MonoBehaviour
     public static ClickMode ClickMode;
     public static ClickMode ReserveClickMode;
 
-    private VisualElement root;
     private List<VisualElement> elements = new List<VisualElement>();
 
     // Start is called before the first frame update
     void Start()
     {        
-        root = GameObject.Find("ModeUI").GetComponent<UIDocument>().rootVisualElement;
         setup();
-        UI.SetBlocking(root);
+        UI.SetBlocking(UI.System, new string[]{"ModeControls", "HelpBar", "EditMapFlyout", "RotateCCW", "RotateCW", "CamControls"});
         enterPlayMode(null);
         ClickMode = ClickMode.Play;
     }
@@ -39,8 +37,8 @@ public class ModeController : MonoBehaviour
         };
 
         foreach((string, string, EventCallback<ClickEvent>) item in uiConfig) {
-            UI.AttachHelp(root, item.Item1, item.Item2);
-            root.Q(item.Item1).RegisterCallback<ClickEvent>(item.Item3);
+            UI.AttachHelp(UI.System, item.Item1, item.Item2);
+            UI.System.Q(item.Item1).RegisterCallback<ClickEvent>(item.Item3);
         }
     }
 
@@ -52,7 +50,7 @@ public class ModeController : MonoBehaviour
         Block.DeselectAll();
         Block.ToggleSpacers(false);
         ClickMode = ClickMode.Other;
-        GameObject.Find("TokenUI").GetComponent<UIDocument>().rootVisualElement.style.display = DisplayStyle.None;
+        UI.Token.style.display = DisplayStyle.None;
         GameObject.Find("ReserveCamera").GetComponent<Camera>().enabled = false;
     }
 
@@ -66,7 +64,7 @@ public class ModeController : MonoBehaviour
     }
 
     public void ActivateElementByName(string name) {
-        VisualElement v = root.Q(name);
+        VisualElement v = UI.System.Q(name);
         ActivateElement(v);
     }
 
@@ -78,7 +76,7 @@ public class ModeController : MonoBehaviour
     }
 
     public void DeactivateByName(string name) {
-        VisualElement v = root.Q(name);
+        VisualElement v = UI.System.Q(name);
         DeactivateElement(v);
     }
 

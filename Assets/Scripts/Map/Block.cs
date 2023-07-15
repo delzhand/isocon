@@ -142,18 +142,11 @@ public class Block : MonoBehaviour
     void OnMouseDown()
     {
         if (ModeController.ClickMode == ClickMode.Play) {
-            if (!TokenController.IsEditing) {
-                if (Token.TokenHeld != null) {
-                    Token.TokenHeld.PlaceAtBlock(this);
-                    ReserveController.Adjust();
-                }
-                else {
-                    CameraControl.GoToBlock(this);
-                    SetTerrainInfo();
-                    DeselectAll();
-                    Select();
-                }
-            }
+            CameraControl.GoToBlock(this);
+            SetTerrainInfo();
+            // DeselectAll();
+            // Select();
+            TokenController.BlockClick(this);
         }
         else if (ModeController.ClickMode == ClickMode.Edit) {
             Block.DeselectAll();
@@ -184,19 +177,18 @@ public class Block : MonoBehaviour
     }
 
     public void SetTerrainInfo() {
-        VisualElement root = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement;
         string height = (transform.localPosition.y + 1).ToString();
         if (Type == BlockType.Slope) {
             height = transform.localPosition.y + "~" + (transform.localPosition.y + 1);
         }
-        root.Q<Label>("Height").text = height;
-        root.Q<Label>("Coords").text = toAlpha(getY() + 1) + "" + (getX()+1);
-        root.Q("Effects").Clear();
+        UI.Token.Q<Label>("Height").text = height;
+        UI.Token.Q<Label>("Coords").text = toAlpha(getY() + 1) + "" + (getX()+1);
+        UI.Token.Q("Effects").Clear();
         markers.ForEach(marker => {
             Label l = new Label();
             l.text = marker.ToString();
             l.AddToClassList("effect");
-            root.Q("Effects").Add(l);
+            UI.Token.Q("Effects").Add(l);
         });
     }
 

@@ -9,19 +9,17 @@ using TMPro;
 public class TerrainController : MonoBehaviour
 {
     static GameObject map;
-    private VisualElement root;
     private List<Label> identifierLabels = new List<Label>();
 
     public static bool ShowIndicators;
 
     void Start() {
-        root = GameObject.Find("ModeUI").GetComponent<UIDocument>().rootVisualElement;
         setup();
         InitializeTerrain(8, 8, 3);
     }
 
     private void setup() {
-        root.Q<DropdownField>("EditOperation").RegisterValueChangedCallback(editTerrainSelect);
+        UI.System.Q<DropdownField>("EditOperation").RegisterValueChangedCallback(editTerrainSelect);
     }
 
     private void editTerrainSelect(ChangeEvent<string> evt) {
@@ -43,14 +41,14 @@ public class TerrainController : MonoBehaviour
     }
 
     private void resetConditionalElements() {
-        root.Q("EditTerrainOptions").style.display = DisplayStyle.None;
-        root.Q("EditBlockOptions").style.display = DisplayStyle.None;
-        root.Q("MarkBlockOptions").style.display = DisplayStyle.None;
-        root.Q("AppearanceOptions").style.display = DisplayStyle.None;
+        UI.System.Q("EditTerrainOptions").style.display = DisplayStyle.None;
+        UI.System.Q("EditBlockOptions").style.display = DisplayStyle.None;
+        UI.System.Q("MarkBlockOptions").style.display = DisplayStyle.None;
+        UI.System.Q("AppearanceOptions").style.display = DisplayStyle.None;
     }
 
     private void showConditionalElement(string name) {
-        root.Q(name).style.display = DisplayStyle.Flex;
+        UI.System.Q(name).style.display = DisplayStyle.Flex;
     }
 
     private string getValue(RadioButtonGroup g, int i) {
@@ -60,8 +58,8 @@ public class TerrainController : MonoBehaviour
     }
 
     public void Edit(Block block) {
-        int editOpIndex = root.Q<RadioButtonGroup>("EditMapDropdown").value;
-        string editOp = root.Q<RadioButtonGroup>("EditMapDropdown").choices.ToArray()[editOpIndex];
+        int editOpIndex = UI.System.Q<RadioButtonGroup>("EditMapDropdown").value;
+        string editOp = UI.System.Q<RadioButtonGroup>("EditMapDropdown").choices.ToArray()[editOpIndex];
         switch (editOp) {
             case "ADD HEIGHT":
                 AddBlocks();

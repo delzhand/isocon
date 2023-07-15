@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ReserveSpot : MonoBehaviour
 {
@@ -20,15 +21,8 @@ public class ReserveSpot : MonoBehaviour
 
     void OnMouseDown()
     {
-
         if (ModeController.ClickMode == ClickMode.Play) {
-            if (Token.TokenHeld != null && !Token.TokenHeld.InReserve) {
-                PlaceAtReserveSpot(Token.TokenHeld);
-            }
-            else if (Token.TokenHeld == null) {
-                GameObject.Find("Engine").GetComponent<ModeController>().ActivateElementByName("AddTokenModal");
-                ModeController.ClickMode = ClickMode.Other;
-            }
+            TokenController.ReserveSpotClick(this);
         }
     }
 
@@ -37,7 +31,7 @@ public class ReserveSpot : MonoBehaviour
         Token.InReserve = true;
         Token.transform.Find("Base").gameObject.SetActive(false);
         SetTokenPosition();
-        Token.ChangeHeld(null);
+        TokenController.DropHeld();
         ReserveController.Adjust();
     }
 

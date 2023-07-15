@@ -16,12 +16,9 @@ public class DataController : MonoBehaviour
     public static string currentFileName;
     public static FileOp currentOp;
     
-    private VisualElement root;
-
     // Start is called before the first frame update
     void Start()
     {
-        root = GameObject.Find("ModeUI").GetComponent<UIDocument>().rootVisualElement;
         setup();
     }
 
@@ -41,8 +38,8 @@ public class DataController : MonoBehaviour
         };   
 
         foreach((string, string, EventCallback<ClickEvent>) item in uiConfig) {
-            UI.AttachHelp(root, item.Item1, item.Item2);
-            root.Q(item.Item1).RegisterCallback<ClickEvent>(item.Item3);
+            UI.AttachHelp(UI.System, item.Item1, item.Item2);
+            UI.System.Q(item.Item1).RegisterCallback<ClickEvent>(item.Item3);
         }
     }
 
@@ -72,7 +69,7 @@ public class DataController : MonoBehaviour
     }
 
     private void ExitProgram(ClickEvent evt) {
-        root.Q("ExitButton").RegisterCallback<ClickEvent>((evt) => {
+        UI.System.Q("ExitButton").RegisterCallback<ClickEvent>((evt) => {
             #if UNITY_STANDALONE
                 Application.Quit();
             #endif
@@ -83,8 +80,6 @@ public class DataController : MonoBehaviour
     }
 
     public void InitializeFileList() {
-        UIDocument modeUI = GameObject.Find("ModeUI").GetComponent<UIDocument>();
-
         DirectoryInfo info = new DirectoryInfo(Application.persistentDataPath + "/maps/");
         FileInfo[] fileInfo = info.GetFiles();
         List<string> items = new List<string>();
@@ -115,7 +110,7 @@ public class DataController : MonoBehaviour
 
         // listView.style.flexGrow = 1.0f;
 
-        ListView lv = modeUI.rootVisualElement.Q("FileList") as ListView;
+        ListView lv = UI.System.Q("FileList") as ListView;
         lv.makeItem = makeItem;
         lv.bindItem = bindItem;
         lv.fixedItemHeight = itemHeight;

@@ -27,22 +27,18 @@ public class Environment : MonoBehaviour
     private static Background background = Background.SUNSHINE;
     private static Palette palette = Palette.GREENFIELD;
     
-    private VisualElement root;
-
-
     // Start is called before the first frame update
     void Start()
     {
-        root = GameObject.Find("ModeUI").GetComponent<UIDocument>().rootVisualElement;
         setup();
     }
 
     private void setup() {
-        root.Q<EnumField>("BackgroundEnum").RegisterValueChangedCallback((evt) => {
+        UI.System.Q<EnumField>("BackgroundEnum").RegisterValueChangedCallback((evt) => {
             SetBackground((Background)evt.newValue);
         });
 
-        root.Q<EnumField>("PaletteEnum").RegisterValueChangedCallback((evt) => {
+        UI.System.Q<EnumField>("PaletteEnum").RegisterValueChangedCallback((evt) => {
             SetPalette((Palette)evt.newValue);
         });
     }

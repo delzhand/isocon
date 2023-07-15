@@ -11,7 +11,28 @@ public enum HelpType {
 
 public class UI : MonoBehaviour
 {
+    private static VisualElement tokenUI;
+    private static VisualElement systemUI;
+
     void Start() {
+    }
+
+    public static VisualElement Token {
+        get { 
+            if (tokenUI == null) {
+                tokenUI = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement;
+            }
+            return tokenUI;
+        }
+    }
+
+    public static VisualElement System {
+        get {
+            if (systemUI == null) {
+                systemUI = GameObject.Find("ModeUI").GetComponent<UIDocument>().rootVisualElement;
+            }
+            return systemUI;
+        }
     }
 
     public static void AttachHelp(VisualElement root, string query, string text) {
@@ -23,8 +44,7 @@ public class UI : MonoBehaviour
         });
     }
 
-    public static void SetBlocking(VisualElement root) {
-        string[] blockingElements = new string[]{"ModeControls", "HelpBar", "EditMapFlyout", "RotateCCW", "RotateCW", "CamControls"};
+    public static void SetBlocking(VisualElement root, string[] blockingElements) {
         foreach(string s in blockingElements) {
             root.Q(s).RegisterCallback<MouseOverEvent>((evt) => {
                 ModeController.ReserveClickMode = ModeController.ClickMode;
