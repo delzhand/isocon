@@ -50,8 +50,8 @@
     position: absolute;
     height: 0;
     width: 0;
-    left: 144px;
-    bottom: 40px;
+    left: 15px;
+    top: 15px;
 }
 
 #FocusToken #Inner {

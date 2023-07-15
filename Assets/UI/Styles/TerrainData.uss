@@ -1,7 +1,7 @@
 #TerrainData {
     position: absolute;
-    top: 30px;
-    right: 30px;
+    top: 10px;
+    right: 15px;
     height: 100px;
     width: 100px;
 }

@@ -17,7 +17,10 @@ public class Cutout : MonoBehaviour
     }
 
     void OnMouseDown() {
-        if (ModeController.ClickMode == ClickMode.Play) {
+        if (UI.ClicksSuspended) {
+            return;
+        }
+        if (ModeController.Mode == ClickMode.Play) {
             Token t = GetComponentInParent<Token>();
             TokenController.TokenClick(t);
         }

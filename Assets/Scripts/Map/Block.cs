@@ -141,14 +141,17 @@ public class Block : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (ModeController.ClickMode == ClickMode.Play) {
+        if (UI.ClicksSuspended) {
+            return;
+        }
+        if (ModeController.Mode == ClickMode.Play) {
             CameraControl.GoToBlock(this);
             SetTerrainInfo();
             // DeselectAll();
             // Select();
             TokenController.BlockClick(this);
         }
-        else if (ModeController.ClickMode == ClickMode.Edit) {
+        else if (ModeController.Mode == ClickMode.Edit) {
             Block.DeselectAll();
             Select();
             GameObject.Find("Engine").GetComponent<TerrainController>().Edit(this);
@@ -173,7 +176,7 @@ public class Block : MonoBehaviour
     }
 
     public int getZ() {
-        return (int)Math.Floor(this.transform.position.y)+2;
+        return (int)Math.Round(this.transform.position.y)+2;
     }
 
     public void SetTerrainInfo() {
@@ -181,14 +184,14 @@ public class Block : MonoBehaviour
         if (Type == BlockType.Slope) {
             height = transform.localPosition.y + "~" + (transform.localPosition.y + 1);
         }
-        UI.Token.Q<Label>("Height").text = height;
-        UI.Token.Q<Label>("Coords").text = toAlpha(getY() + 1) + "" + (getX()+1);
-        UI.Token.Q("Effects").Clear();
+        UI.GameInfo.Q<Label>("Height").text = height;
+        UI.GameInfo.Q<Label>("Coords").text = toAlpha(getY() + 1) + "" + (getX()+1);
+        UI.GameInfo.Q("Effects").Clear();
         markers.ForEach(marker => {
             Label l = new Label();
             l.text = marker.ToString();
             l.AddToClassList("effect");
-            UI.Token.Q("Effects").Add(l);
+            UI.GameInfo.Q("Effects").Add(l);
         });
     }
 

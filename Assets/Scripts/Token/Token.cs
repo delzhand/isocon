@@ -31,6 +31,20 @@ public class Token : MonoBehaviour
     void Update()
     {
         alignToCamera();
+
+        if (TokenController.IsHeld(this)) {
+            VisualElement edit = UI.GameInfo.Q("ModifyPane");
+            HpBar hp = GetComponent<HpBar>();
+            UnitState us = GetComponent<UnitState>();
+            edit.Q<Label>("HPVal").text = hp.CHP.ToString();
+            edit.Q<Label>("VigVal").text = hp.VIG.ToString();
+            edit.Q<Label>("WoundsVal").text = hp.Wounds.ToString();
+            edit.Q<Label>("ResVal").text = us.Resolve.ToString();
+            edit.Q<Label>("GResVal").text = UnitState.GResolve.ToString();
+            edit.Q<Label>("AthVal").text = us.Aether.ToString();
+            edit.Q<Label>("VglVal").text = us.Vigilance.ToString();
+            edit.Q<Label>("BlsVal").text = us.Blessings.ToString();
+        }
     }
 
     private void alignToCamera() {
@@ -84,20 +98,19 @@ public class Token : MonoBehaviour
                 ClearState();
                 break;
             case HoldState.Held:
-                Debug.Log("held mode");
                 TokenController.SetHeld(this);
                 TokenController.EnableFocusPane();
                 GetComponentInChildren<MeshRenderer>().material.SetInt("_Selected", 1);
                 GetComponentInChildren<MeshRenderer>().material.SetVector("_Color", new Vector4(2f, 2f, 0, 2f));
                 break;
             case HoldState.Edit:
-                Debug.Log("edit mode");
+                TokenController.DisableQuickEdit();
+                TokenController.EnableFullEdit();
                 // TokenController.SetHeld(this);
                 // GetComponentInChildren<MeshRenderer>().material.SetInt("_Selected", 1);
                 // GetComponentInChildren<MeshRenderer>().material.SetVector("_Color", new Vector4(2f, 0, 2f, 2f));
                 break;
             case HoldState.QuickHP:
-                Debug.Log("quick edit mode");
                 TokenController.EnableQuickEdit();
                 // TokenController.SetHeld(this);
                 // GetComponentInChildren<MeshRenderer>().material.SetInt("_Selected", 1);
@@ -116,6 +129,7 @@ public class Token : MonoBehaviour
         state = HoldState.None;
         TokenController.DisableFocusPane();
         TokenController.DisableQuickEdit();
+        TokenController.DisableFullEdit();
         GetComponentInChildren<MeshRenderer>().material.SetInt("_Selected", 0);
     }
 

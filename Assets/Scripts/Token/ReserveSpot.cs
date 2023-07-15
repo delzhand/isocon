@@ -21,7 +21,10 @@ public class ReserveSpot : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (ModeController.ClickMode == ClickMode.Play) {
+        if (UI.ClicksSuspended) {
+            return;
+        }
+        if (ModeController.Mode == ClickMode.Play) {
             TokenController.ReserveSpotClick(this);
         }
     }

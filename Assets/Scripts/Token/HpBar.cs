@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 public class HpBar : MonoBehaviour
 {
     public VisualElement floater;
+    public static bool SuppressFloaters;
 
     public int CHP;
     public int MHP;
@@ -29,7 +30,7 @@ public class HpBar : MonoBehaviour
     }
 
     private void toggleFloater() {
-        if (PlayerPrefs.GetInt("ShowFloaters", 1) != 0) {
+        if (PlayerPrefs.GetInt("ShowFloaters", 1) != 0 && !SuppressFloaters) {
             if (floater == null) {
                 createFloater();
             }
@@ -49,11 +50,11 @@ public class HpBar : MonoBehaviour
         floater.Q<VisualElement>("Color").AddToClassList(Color);
         floater.Q<VisualElement>("Elite").style.visibility = Elite ? Visibility.Visible : Visibility.Hidden;
 
-        UI.Token.Add(floater);
+        UI.GameInfo.Add(floater);
     }
 
     public void DestroyFloater() {
-        UI.Token.Remove(floater);
+        UI.GameInfo.Remove(floater);
     }
 
     private void updateData() {
@@ -82,8 +83,8 @@ public class HpBar : MonoBehaviour
         Vector3 viewportPos = Camera.main.WorldToViewportPoint(worldPos);
         if (floater.resolvedStyle.width != float.NaN) {
             Vector2 screenPos = new Vector2(
-                Mathf.RoundToInt((viewportPos.x * UI.Token.resolvedStyle.width)),
-                Mathf.RoundToInt((1f - viewportPos.y) * UI.Token.resolvedStyle.height)
+                Mathf.RoundToInt((viewportPos.x * UI.GameInfo.resolvedStyle.width)),
+                Mathf.RoundToInt((1f - viewportPos.y) * UI.GameInfo.resolvedStyle.height)
             );
             Vector2 centerOffset = new Vector2(
                 -floater.resolvedStyle.width/2f,

@@ -12,8 +12,9 @@ public enum ClickMode {
 
 public class ModeController : MonoBehaviour
 {
-    public static ClickMode ClickMode;
-    public static ClickMode ReserveClickMode;
+    public static ClickMode Mode;
+
+    public bool ClickSuppress;
 
     private List<VisualElement> elements = new List<VisualElement>();
 
@@ -21,9 +22,12 @@ public class ModeController : MonoBehaviour
     void Start()
     {        
         setup();
-        UI.SetBlocking(UI.System, new string[]{"ModeControls", "HelpBar", "EditMapFlyout", "RotateCCW", "RotateCW", "CamControls"});
+        UI.SetBlocking(UI.System, new string[]{"ModeControls", "HelpBar", "EditMapFlyout", "RotateCCW", "RotateCW", "CamControls", "AddTokenModal", "ClickBlocker"});
         enterPlayMode(null);
-        ClickMode = ClickMode.Play;
+    }
+
+    void Update() {
+        ClickSuppress = UI.ClicksSuspended;
     }
 
     private void setup() {
@@ -49,9 +53,9 @@ public class ModeController : MonoBehaviour
         elements.Clear();
         Block.DeselectAll();
         Block.ToggleSpacers(false);
-        ClickMode = ClickMode.Other;
-        UI.Token.style.display = DisplayStyle.None;
+        UI.GameInfo.style.display = DisplayStyle.None;
         GameObject.Find("ReserveCamera").GetComponent<Camera>().enabled = false;
+        Mode = ClickMode.Other;
     }
 
     public void ActivateElement(VisualElement v) {
@@ -85,8 +89,7 @@ public class ModeController : MonoBehaviour
         ActivateElementByName("Play");
         GameObject.Find("TokenUI").GetComponent<UIDocument>().rootVisualElement.style.display = DisplayStyle.Flex;
         GameObject.Find("ReserveCamera").GetComponent<Camera>().enabled = true;
-        // Because this can only happen when world clicks are suspended, we set reserveclickmode
-        ReserveClickMode = ClickMode.Play;
+        Mode = ClickMode.Play;
     }
 
     private void enterEditMapMode(ClickEvent evt) {
@@ -94,8 +97,7 @@ public class ModeController : MonoBehaviour
         ActivateElementByName("EditMap");
         ActivateElementByName("EditMapFlyout");
         Block.ToggleSpacers(true);
-        // Because this can only happen when world clicks are suspended, we set reserveclickmode
-        ReserveClickMode = ClickMode.Edit;
+        Mode = ClickMode.Edit;
     }
 
     private void enterAppearanceMode(ClickEvent evt) {

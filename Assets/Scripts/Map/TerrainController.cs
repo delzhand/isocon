@@ -15,7 +15,7 @@ public class TerrainController : MonoBehaviour
 
     void Start() {
         setup();
-        InitializeTerrain(8, 8, 3);
+        InitializeTerrain(3, 3, 1);
     }
 
     private void setup() {
@@ -352,7 +352,7 @@ public class TerrainController : MonoBehaviour
     private static GameObject TopBlock(GameObject column) {
         Block[] blocks = column.GetComponentsInChildren<Block>();
         GameObject top = null;
-        float highest = -1;
+        float highest = float.MinValue;
         for (int i = 0; i < blocks.Length; i++)
         {
             float height = blocks[i].transform.localPosition.y;
@@ -393,11 +393,13 @@ public class TerrainController : MonoBehaviour
     private static void HideObscuredBlocks() {
         Vector2 size = Size();
         bool[,,] solids = new bool[(int)size.x,(int)size.y,30];
+        GameObject[,,] blks = new GameObject[(int)size.x,(int)size.y,30];
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
         for (int i = 0; i < blocks.Length; i++) {
             Block b = blocks[i].GetComponent<Block>();
             if (b.Type == BlockType.Solid) {
                 solids[b.getX(), b.getY(), b.getZ()] = true;
+                blks[b.getX(), b.getY(), b.getZ()] = b.gameObject;
             }
         }
         for (int i = 0; i < blocks.Length; i++) {

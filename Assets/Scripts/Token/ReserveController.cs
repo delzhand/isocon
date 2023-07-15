@@ -5,6 +5,7 @@ using UnityEngine;
 public class ReserveController : MonoBehaviour
 {
     public static int Size;
+    private Vector3 anchorPos = new Vector3(0, 65, 4);
 
     // Start is called before the first frame update
     void Start()
@@ -14,8 +15,10 @@ public class ReserveController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        
+    {   
+        anchorPos.x = Screen.width - 40;
+        Vector3 worldPos = GameObject.Find("ReserveCamera").GetComponent<Camera>().ScreenToWorldPoint(anchorPos);
+        GameObject.Find("SpotRoot").transform.position = worldPos;
     }
 
     public static void Adjust() {
@@ -30,7 +33,7 @@ public class ReserveController : MonoBehaviour
 
         // Ensure at least one empty spot at the end
         GameObject newSpot = Instantiate(Resources.Load("Prefabs/ReserveTile") as GameObject);
-        newSpot.transform.parent = GameObject.Find("Reserve").transform;
+        newSpot.transform.parent = GameObject.Find("SpotRoot").transform;
 
         // Reposition spots
         spots = GameObject.FindGameObjectsWithTag("Reserve");
@@ -45,5 +48,4 @@ public class ReserveController : MonoBehaviour
             spots[i].GetComponent<ReserveSpot>().SetTokenPosition();
         }
     }
-
 }

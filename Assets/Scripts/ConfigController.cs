@@ -11,6 +11,9 @@ public class ConfigController : MonoBehaviour
         setup();
         UI.SetScale("UICanvas/ModeUI", PlayerPrefs.GetFloat("UIScale", 1f));
         UI.SetScale("WorldCanvas/TokenUI", PlayerPrefs.GetFloat("InfoScale", 1f));
+        if (PlayerPrefs.GetInt("ShowHelp", 1) == 0) {
+            UI.DisableHelp();
+        }
     }
 
     // Update is called once per frame
@@ -39,6 +42,15 @@ public class ConfigController : MonoBehaviour
             PlayerPrefs.SetString("IconVersion", evt.newValue);
         });
         UI.AttachHelp(UI.System, "VersionField", "Select which version of the ICON ruleset to use");
+
+        UI.System.Q<Toggle>("HelpBarToggle").RegisterValueChangedCallback<bool>((evt) => {
+            if (evt.newValue) {
+                UI.EnableHelp();
+            }
+            else {
+                UI.DisableHelp();
+            }
+        });
 
     }
 }

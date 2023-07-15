@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,18 +12,26 @@ public enum HelpType {
 
 public class UI : MonoBehaviour
 {
-    private static VisualElement tokenUI;
+    private static VisualElement gameUI;
     private static VisualElement systemUI;
+
+    private static List<string> suspensions = new List<string>();
 
     void Start() {
     }
 
-    public static VisualElement Token {
+    public static bool ClicksSuspended {
+        get {
+            return suspensions.Count > 0;
+        }
+    }
+
+    public static VisualElement GameInfo {
         get { 
-            if (tokenUI == null) {
-                tokenUI = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement;
+            if (gameUI == null) {
+                gameUI = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement;
             }
-            return tokenUI;
+            return gameUI;
         }
     }
 
@@ -44,16 +53,40 @@ public class UI : MonoBehaviour
         });
     }
 
+    public static void DisableHelp() {
+        System.Q("HelpBar").style.display = DisplayStyle.None;
+        PlayerPrefs.SetInt("ShowHelp", 0);
+    }
+
+    public static void EnableHelp() {
+        System.Q("HelpBar").style.display = DisplayStyle.Flex; 
+        PlayerPrefs.SetInt("ShowHelp", 1);
+    }
+
+
+
     public static void SetBlocking(VisualElement root, string[] blockingElements) {
         foreach(string s in blockingElements) {
-            root.Q(s).RegisterCallback<MouseOverEvent>((evt) => {
-                ModeController.ReserveClickMode = ModeController.ClickMode;
-                ModeController.ClickMode = ClickMode.Other;
-            });
-            root.Q(s).RegisterCallback<MouseOutEvent>((evt) => {
-                ModeController.ClickMode = ModeController.ReserveClickMode;
+            root.Q(s).RegisterCallback<MouseEnterEvent>((evt) => {
+                if (!suspensions.Contains(s)) {
+                    suspensions.Add(s);
+                    // printSuspensions("Enter " + s);
+                }
+            });            
+            root.Q(s).RegisterCallback<MouseLeaveEvent>((evt) => {
+                suspensions.Remove(s);
+                // printSuspensions("Leave " + s);
             });
         }
+    }
+
+    private static void printSuspensions(string s2) {
+        Debug.Log(s2);
+        StringBuilder sb = new StringBuilder();
+        foreach(string s in suspensions) {
+            sb.Append(s + " / ");
+        }
+        Debug.Log(sb.ToString());
     }
 
     public static void SetHelpText(string message, HelpType type = HelpType.Standard) {

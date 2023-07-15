@@ -14,25 +14,23 @@ public class TokenController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        VisualElement element = UI.Token.Q("FocusToken");
-
-        element.Q<Button>("CloneToken").RegisterCallback<ClickEvent>((evt) => {
+        UI.GameInfo.Q<Button>("CloneButton").RegisterCallback<ClickEvent>((evt) => {
             GameObject newToken = GameObject.Instantiate(TokenController.held.gameObject);
             newToken.name = TokenController.held.name;
             ReserveSpot openReserve = ReserveSpot.LastReserveSpot();
             openReserve.PlaceAtReserveSpot(newToken.GetComponent<Token>());
         });
 
-        element.Q<Button>("DeleteToken").RegisterCallback<ClickEvent>((evt) => {
+        UI.GameInfo.Q<Button>("DeleteButton").RegisterCallback<ClickEvent>((evt) => {
             TokenController.held.GetComponent<HpBar>().DestroyFloater();
             GameObject.Destroy(TokenController.held.gameObject);
             TokenController.DropHeld();
             ReserveController.Adjust();
         });
 
-        // element.Q<Button>("EditToken").RegisterCallback<ClickEvent>((evt) => {
-        //     EditToggle();
-        // });
+        UI.GameInfo.Q<Button>("CloseButton").RegisterCallback<ClickEvent>((evt) => {
+            DisableFullEdit();
+        });
 
         InitAddModal();
 
@@ -51,11 +49,11 @@ public class TokenController : MonoBehaviour
         //         ModeController.ClickMode = ClickMode.Play;
         //     }
         // });
-        UI.Token.Q<SliderInt>("HpSlider").RegisterValueChangedCallback<int>((evt) => {
+        UI.GameInfo.Q<SliderInt>("HpSlider").RegisterValueChangedCallback<int>((evt) => {
             held.GetComponent<HpBar>().CHP = evt.newValue;
         });
 
-        UI.SetBlocking(UI.Token, new string[]{"QuickHP"});
+        UI.SetBlocking(UI.GameInfo, new string[]{"QuickHP", "ModifyPane", "FocusToken"});
 
         InitEditPaneCallbacks();
     }
@@ -63,30 +61,17 @@ public class TokenController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (held) {
-            VisualElement edit = UI.Token.Q("ModifyPane");
-            edit.Q<Label>("HPVal").text = TokenController.held.GetComponent<HpBar>().CHP.ToString();
-            edit.Q<Label>("VigVal").text = TokenController.held.GetComponent<HpBar>().VIG.ToString();
-            edit.Q<Label>("WoundsVal").text = TokenController.held.GetComponent<HpBar>().Wounds.ToString();
-            edit.Q<Label>("ResVal").text = TokenController.held.GetComponent<UnitState>().Resolve.ToString();
-            edit.Q<Label>("GResVal").text = UnitState.GResolve.ToString();
-            edit.Q<Label>("AthVal").text = TokenController.held.GetComponent<UnitState>().Aether.ToString();
-            edit.Q<Label>("VglVal").text = TokenController.held.GetComponent<UnitState>().Vigilance.ToString();
-            edit.Q<Label>("BlsVal").text = TokenController.held.GetComponent<UnitState>().Blessings.ToString();
-        }
     }
 
     public void InitAddModal() {
         UI.System.Q("AddTokenConfirm").RegisterCallback<ClickEvent>((evt) => {
             ReserveController.Adjust();
             CreateNew();
-            GetComponent<ModeController>().DeactivateByName("AddTokenModal");
-            ModeController.ClickMode = ClickMode.Play;
+            DisableAddToken();
         });
 
         UI.System.Q("AddTokenCancel").RegisterCallback<ClickEvent>((evt) => {
-            GetComponent<ModeController>().DeactivateByName("AddTokenModal");
-            ModeController.ClickMode = ClickMode.Play;
+            DisableAddToken();
         });
 
         List<string> avatars = new List<string>{};
@@ -324,7 +309,7 @@ public class TokenController : MonoBehaviour
     }
 
     public static void InitEditPaneCallbacks() {
-        VisualElement edit = UI.Token.Q("ModifyPane");
+        VisualElement edit = UI.GameInfo.Q("ModifyPane");
 
         edit.Q<TextField>("NameEdit").RegisterValueChangedCallback((evt) => {
             TokenController.held.name = evt.newValue;
@@ -467,8 +452,8 @@ public class TokenController : MonoBehaviour
         if (TokenController.held == null) {
             return;
         }
-        VisualElement edit = UI.Token.Q("ModifyPane");
-        VisualElement element = UI.Token.Q("FocusToken");
+        VisualElement edit = UI.GameInfo.Q("ModifyPane");
+        VisualElement element = UI.GameInfo.Q("FocusToken");
 
         // if (!IsEditing) {
         //     element.Q<Button>("EditToken").text = "DONE";
@@ -489,7 +474,7 @@ public class TokenController : MonoBehaviour
     }
 
     public static void GrabValues() {
-        VisualElement edit = UI.Token.Q("ModifyPane");
+        VisualElement edit = UI.GameInfo.Q("ModifyPane");
         edit.Q<TextField>("NameEdit").value = TokenController.held.name;
 
         edit.Q<Toggle>("SlashedToggle").value = TokenController.held.GetComponent<UnitState>().Slashed;
@@ -552,13 +537,14 @@ public class TokenController : MonoBehaviour
     }
 
     public static void ReserveSpotClick(ReserveSpot spot) {
-        if (held != null && !held.InReserve) {
-            spot.PlaceAtReserveSpot(TokenController.held);
+        if (UI.ClicksSuspended) {
+            return;
         }
-        else if (TokenController.held == null) {
-            GameObject.Find("Engine").GetComponent<ModeController>().ActivateElementByName("AddTokenModal");
-            UI.System.Q<TextField>("TokenNameField").value = "Token Name";
-            ModeController.ClickMode = ClickMode.Other;
+        if (held != null && !held.InReserve) {
+            spot.PlaceAtReserveSpot(held);
+        }
+        else if (held == null && spot == ReserveSpot.LastReserveSpot()) {
+            EnableAddToken();
         }
     }
 
@@ -576,21 +562,44 @@ public class TokenController : MonoBehaviour
     }
 
     public static void EnableQuickEdit() {
-        UI.Token.Q("QuickHP").style.display = DisplayStyle.Flex;
+        UI.GameInfo.Q("QuickHP").style.display = DisplayStyle.Flex;
         HpBar hp = held.GetComponent<HpBar>();
-        UI.Token.Q<SliderInt>("HpSlider").highValue = hp.MHP;
-        UI.Token.Q<SliderInt>("HpSlider").value = hp.CHP;
+        UI.GameInfo.Q<Label>("QuickHPName").text = hp.name;
+        UI.GameInfo.Q<SliderInt>("HpSlider").highValue = hp.MHP;
+        UI.GameInfo.Q<SliderInt>("HpSlider").value = hp.CHP;
+        UI.GameInfo.Q<Label>("QuickHPNum").text = hp.CHP.ToString();
+    }
+
+    public static void EnableAddToken() {
+        GameObject.Find("Engine").GetComponent<ModeController>().ActivateElementByName("AddTokenModal");
+        UI.System.Q("ClickBlocker").style.display = DisplayStyle.Flex;
+        UI.System.Q<TextField>("TokenNameField").value = "Token Name";
     }
 
     public static void EnableFocusPane() {
-        UI.Token.Q("FocusToken").style.display = DisplayStyle.Flex;
+        UI.GameInfo.Q("FocusToken").style.display = DisplayStyle.Flex;
+    }
+
+    public static void EnableFullEdit() {
+        UI.GameInfo.Q("ModifyPane").style.display = DisplayStyle.Flex;
+        HpBar.SuppressFloaters = true;
+    }
+
+    public static void DisableAddToken() {
+        GameObject.Find("Engine").GetComponent<ModeController>().DeactivateByName("AddTokenModal");
+        UI.System.Q("ClickBlocker").style.display = DisplayStyle.None;
     }
 
     public static void DisableQuickEdit() {
-        UI.Token.Q("QuickHP").style.display = DisplayStyle.None;
+        UI.GameInfo.Q("QuickHP").style.display = DisplayStyle.None;
     }
 
     public static void DisableFocusPane() {
-        UI.Token.Q("FocusToken").style.display = DisplayStyle.None;
+        UI.GameInfo.Q("FocusToken").style.display = DisplayStyle.None;
+    }
+
+    public static void DisableFullEdit() {
+        UI.GameInfo.Q("ModifyPane").style.display = DisplayStyle.None;
+        HpBar.SuppressFloaters = false;
     }
 }

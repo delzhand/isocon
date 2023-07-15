@@ -44,7 +44,9 @@ public class UnitState : MonoBehaviour
 
     private void updateData() {
         HpBar hp = GetComponent<HpBar>();
-        VisualElement element = UI.Token.Q("FocusToken");
+        UI.GameInfo.Q<Label>("QuickHPNum").text = hp.CHP.ToString();
+
+        VisualElement element = UI.GameInfo.Q("FocusToken");
         element.Q<Label>("CHP").text = hp.CHP.ToString();
         element.Q<Label>("MHP").text = "/" + hp.MHP.ToString();
         element.Q<Label>("VIG").text = hp.VIG > 0 ? "+" + hp.VIG.ToString() : "";
