@@ -572,8 +572,8 @@ public class TokenController : MonoBehaviour
 
     public static void EnableAddToken() {
         GameObject.Find("Engine").GetComponent<ModeController>().ActivateElementByName("AddTokenModal");
-        UI.System.Q("ClickBlocker").style.display = DisplayStyle.Flex;
         UI.System.Q<TextField>("TokenNameField").value = "Token Name";
+        UI.SetHardSuspend(true);
     }
 
     public static void EnableFocusPane() {
@@ -587,7 +587,7 @@ public class TokenController : MonoBehaviour
 
     public static void DisableAddToken() {
         GameObject.Find("Engine").GetComponent<ModeController>().DeactivateByName("AddTokenModal");
-        UI.System.Q("ClickBlocker").style.display = DisplayStyle.None;
+        UI.SetHardSuspend(false);
     }
 
     public static void DisableQuickEdit() {

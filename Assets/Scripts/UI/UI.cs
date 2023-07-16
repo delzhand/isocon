@@ -16,13 +16,14 @@ public class UI : MonoBehaviour
     private static VisualElement systemUI;
 
     private static List<string> suspensions = new List<string>();
+    private static bool hardSuspend = false;
 
     void Start() {
     }
 
     public static bool ClicksSuspended {
         get {
-            return suspensions.Count > 0;
+            return suspensions.Count > 0 || hardSuspend;
         }
     }
 
@@ -87,6 +88,10 @@ public class UI : MonoBehaviour
             sb.Append(s + " / ");
         }
         Debug.Log(sb.ToString());
+    }
+
+    public static void SetHardSuspend(bool val) {
+        hardSuspend = val;
     }
 
     public static void SetHelpText(string message, HelpType type = HelpType.Standard) {

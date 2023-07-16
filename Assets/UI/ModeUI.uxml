@@ -1,7 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Styles/GeneralInterface.uss?fileID=7433441132597879392&amp;guid=49924054ed88c3a4eb7aa25df48cddd3&amp;type=3#GeneralInterface" />
     <Style src="project://database/Assets/UI/Styles/Mode.uss?fileID=7433441132597879392&amp;guid=f9a6edc796b6e4c4b8488aa9fb07f8b9&amp;type=3#Mode" />
-    <ui:VisualElement name="ClickBlocker" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.39); -unity-background-image-tint-color: rgb(38, 36, 33); position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: none;" />
     <ui:VisualElement name="ModeControls" class="modeselect background horizontal-container">
         <ui:Button text="PLAY" display-tooltip-when-elided="true" name="Play" tooltip="Click a block to focus the camera" />
         <ui:Button text="EDIT MAP" display-tooltip-when-elided="true" name="EditMap" tooltip="Click a block to delete it" />
@@ -51,7 +50,7 @@
         <ui:Button text="RESET" display-tooltip-when-elided="true" name="ResetButton" />
         <ui:Button text="EXIT ISOCON" display-tooltip-when-elided="true" name="ExitButton" />
     </ui:VisualElement>
-    <ui:VisualElement name="ModalAnchor" class="background vertical-container active" style="flex-direction: column;">
+    <ui:VisualElement name="ModalAnchor" class="background vertical-container active" style="flex-direction: column; display: flex;">
         <ui:VisualElement name="LoadConfirmModal" class="modal background" style="flex-grow: 1;">
             <ui:Label tabindex="-1" text="Unsaved changes will be lost. Proceed?" display-tooltip-when-elided="true" class="message" style="flex-wrap: wrap;" />
             <ui:VisualElement name="Buttons" class="horizontal-container buttons" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">

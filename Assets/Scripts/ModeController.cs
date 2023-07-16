@@ -22,7 +22,7 @@ public class ModeController : MonoBehaviour
     void Start()
     {        
         setup();
-        UI.SetBlocking(UI.System, new string[]{"ModeControls", "HelpBar", "EditMapFlyout", "RotateCCW", "RotateCW", "CamControls", "AddTokenModal", "ClickBlocker"});
+        UI.SetBlocking(UI.System, new string[]{"ModeControls", "HelpBar", "EditMapFlyout", "RotateCCW", "RotateCW", "CamControls", "AddTokenModal"});
         enterPlayMode(null);
     }
 
@@ -64,7 +64,6 @@ public class ModeController : MonoBehaviour
         if (v.ClassListContains("modal")) {
             v.style.display = DisplayStyle.Flex;
         }
-
     }
 
     public void ActivateElementByName(string name) {

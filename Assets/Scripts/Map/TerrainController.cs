@@ -15,7 +15,7 @@ public class TerrainController : MonoBehaviour
 
     void Start() {
         setup();
-        InitializeTerrain(3, 3, 1);
+        InitializeTerrain(8, 8, 3);
     }
 
     private void setup() {
