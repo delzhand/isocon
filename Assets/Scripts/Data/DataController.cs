@@ -35,6 +35,8 @@ public class DataController : MonoBehaviour
             ("LoadButton", "Load a map from the disk", LoadMap),
             ("ResetButton", "Reset to the base map", ResetMap),
             ("ExitButton", "Exit the program", ExitProgram),
+            ("FilenameConfirm", "Save with this filename", FilenameConfirm),
+            ("FilenameCancel", "Do not save", FilenameCancel),
         };   
 
         foreach((string, string, EventCallback<ClickEvent>) item in uiConfig) {
@@ -47,6 +49,7 @@ public class DataController : MonoBehaviour
         DataController.currentOp = FileOp.Save;
         if (DataController.currentFileName != null && DataController.currentFileName.Length > 0) {
             State.SaveState(DataController.currentFileName);
+            UI.SetHelpText("Map saved", HelpType.Success);
         }
         else {
             GetComponent<ModeController>().ActivateElementByName("FilenameModal");
@@ -77,6 +80,22 @@ public class DataController : MonoBehaviour
                 UnityEditor.EditorApplication.isPlaying = false;
             #endif
         });   
+    }
+
+    public void FilenameConfirm(ClickEvent evt) {    
+        string value = UI.System.Q<TextField>("Filename").value;
+        if (value.Length > 0) {
+            DataController.currentFileName = value;
+            State.SaveState(value);
+            GetComponent<ModeController>().DeactivateByName("FilenameModal");
+        }
+        else {
+            UI.SetHelpText("Filename cannot be empty.", HelpType.Error);
+        }
+    }
+
+    public void FilenameCancel(ClickEvent evt) {    
+        GetComponent<ModeController>().DeactivateByName("FilenameModal");
     }
 
     public void InitializeFileList() {

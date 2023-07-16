@@ -120,8 +120,8 @@ public class TerrainController : MonoBehaviour
             for (int x = 0; x < length; x++) {
                 try {
                     GameObject column = new GameObject();
-                    column.name = x + "," + y;
                     column.tag = "Column";
+                    column.name = x + "," + y;
                     column.transform.parent = map.transform;
                     column.transform.localPosition = new Vector3(x, 0, y);
                     column.transform.localScale = Vector3.one;
@@ -129,13 +129,14 @@ public class TerrainController : MonoBehaviour
 
                     for (int z = 0; z < height; z++) {
                         GameObject block = Instantiate(Resources.Load("Prefabs/Block") as GameObject);
-                        block.name = "block";
                         block.transform.parent = column.transform;
                         block.transform.localPosition = new Vector3(0, z-2, 0);
                         block.transform.localScale = Vector3.one;
                         if (z == 0) {
                             block.GetComponent<Block>().Destroyable = false;
                         }
+                        Block b = block.GetComponent<Block>();
+                        block.name = "block " + b.getX() + "," + b.getY() + "," + b.getZ();
                     }
                 }
                 catch (Exception e) {
@@ -387,6 +388,8 @@ public class TerrainController : MonoBehaviour
             Block b = blocks[i].GetComponent<Block>();
             TextMeshPro tm = blocks[i].transform.Find("Indicator").GetComponent<TextMeshPro>();
             tm.text = b.getAlphaY() + (b.getX()+1);
+            blocks[i].name = "block " + b.getX() + "," + b.getY() + "," + b.getZ();
+
         }         
     }
 

@@ -176,7 +176,7 @@ public class Block : MonoBehaviour
     }
 
     public int getZ() {
-        return (int)Math.Round(this.transform.position.y)+2;
+        return (int)(this.transform.position.y/.5f)+2;
     }
 
     public void SetTerrainInfo() {
