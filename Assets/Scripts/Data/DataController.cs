@@ -72,14 +72,12 @@ public class DataController : MonoBehaviour
     }
 
     private void ExitProgram(ClickEvent evt) {
-        UI.System.Q("ExitButton").RegisterCallback<ClickEvent>((evt) => {
-            #if UNITY_STANDALONE
-                Application.Quit();
-            #endif
-            #if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-            #endif
-        });   
+        #if UNITY_STANDALONE
+            Application.Quit();
+        #endif
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #endif
     }
 
     public void FilenameConfirm(ClickEvent evt) {    

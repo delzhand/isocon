@@ -1,0 +1,314 @@
+.panel {
+  background-color: rgb(121, 113, 95);
+  border-color: rgb(102, 95, 79);
+  border-width: 2px;
+  padding: 2px;
+  margin: 0;
+}
+
+.shape {
+  position: absolute;
+  background-color: #FFF;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-l1 {
+  border-left-width: 4px;
+  border-color: rgb(102, 95, 79);
+  margin-left: 4px;
+}
+
+.menu-button {
+  margin: 0;
+  padding: 4px 8px;
+  border-width: 0;
+  border-bottom-width: 2px;
+  border-color: rgb(121, 121, 121);
+  background-color:rgb(37, 37, 37);
+  color: #FFF;
+  -unity-text-align: lower-left;
+}
+
+.modal-button {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 4px 8px;
+  border-width: 0;
+  border-bottom-width: 2px;
+  border-color: rgb(121, 121, 121);
+  background-color:rgb(37, 37, 37);
+  color: #FFF;
+  -unity-text-align: middle-center;
+
+}
+
+.modal-button:hover,
+.menu-button:hover {
+  border-color: rgb(102, 95, 79);
+  background-color: rgb(52, 47, 36);
+}
+
+.modal-button:active,
+.menu-button.active {
+  background-color: rgb(192, 143, 53);
+  border-color:rgb(146, 109, 40);
+}
+
+.menu-dropdown-group {
+  padding-left: 4px;
+  padding-bottom: 2px;
+}
+
+.menu-dropdown {
+  margin: 0;
+  padding: 0;
+}
+
+.menu-dropdown .unity-popup-field__input {
+  margin: 0;
+  border-width: 0;
+  padding: 2px 4px;
+  background-color: #FFF;
+}
+
+.menu-dropdown .unity-base-popup-field__text {
+  color: #382c1b;
+}
+
+.menu-label {
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 2px;
+  padding-top: 4px;
+  color: #FFF;
+}
+
+.switch {
+  border-color: rgb(121, 121, 121);
+  background-color:rgb(37, 37, 37);
+  border-width: 1px;
+  margin: 0;
+  height: 20px;
+  width: 40px;
+  border-radius: 10px;
+  flex-direction: row;
+}
+
+.switch .slide {
+  position: absolute;
+  background-color: rgb(167, 161, 148);
+  border-color: rgb(114, 109, 98);
+  height: 20px;
+  width: 24px;
+  border-width: 2px;
+  top: -1px;
+  border-radius: 10px;
+  left: -1px;
+  transition-duration: .2s;
+}
+
+.switch.double .slide,
+.switch.active .slide {
+  background-color: rgb(192, 143, 53);
+  border-color:rgb(146, 109, 40);
+}
+
+.switch.double .slide {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.switch.double.active .slide {
+  border-radius: 10px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.switch.active .slide {
+  left: 15px;
+}
+
+.switch .label {
+  color: #FFF;
+  margin: 0;
+  padding: 0;
+  left: 100%;
+  padding-left: 4px;
+}
+
+.switch.double .left {
+  position: absolute;
+  left: auto;
+  right: 100%;
+  padding-right: 4px;
+  padding-left: 0;
+}
+
+.switch.double .right {
+  position: absolute;
+  left: 100%;
+  padding-right: 0;
+  padding-left: 4px;
+}
+
+.cam-label {
+  color: #FFF;
+  font-size: 12px;
+  padding: 0;
+  padding-right: 4px;
+  padding-left: 4px;
+  margin: 0;
+  -unity-text-align: middle-left;
+}
+
+.scale {
+  width: 100px;
+  margin: 0;
+  padding: 0;
+  height: 20px;
+  min-height: 20px;
+}
+
+.scale .unity-base-slider__input {
+  height: 20px;
+  max-height: 20px;
+}
+
+.scale .unity-base-slider__tracker {
+  border-radius: 0;
+  border-color: rgb(121, 121, 121);
+  background-color:rgb(37, 37, 37);
+  border-width: 1px;
+}
+
+.scale .unity-base-slider__dragger {
+  height: 20px;
+  border-radius: 0;
+  margin-top: -10px;
+  background-color: rgb(167, 161, 148);
+  border-color: rgb(114, 109, 98);
+}
+
+.tool-button {
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  font-size: 8px;
+  border-width: 1px;
+  border-color: rgb(121, 121, 121);
+  background-color:rgb(37, 37, 37);
+  white-space: normal;
+  padding: 2px;
+  color: #FFF;
+}
+
+.tool-button:hover {
+  border-color: rgb(102, 95, 79);
+  background-color: rgb(52, 47, 36);
+}
+
+.tool-button.active {
+  background-color: rgb(192, 143, 53);
+  border-color:rgb(146, 109, 40);
+}
+
+.dialog {
+  min-width: 200px;
+}
+
+.dialog .header {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.modal-header {
+  background-color: rgb(40, 104, 146);
+  padding: 4px;
+  margin-bottom: 10px;
+}
+
+.modal-textfield {
+  border-width: 0;
+}
+
+.modal-textfield .unity-text-field__input {
+  border-width: 0;
+  margin: 0;
+  padding: 6px;
+}
+
+.modal-dropdown .unity-popup-field__input {
+  margin: 0;
+  border-width: 0;
+  padding: 2px 4px;
+  background-color: #FFF;
+}
+
+.modal-dropdown .unity-base-popup-field__text {
+  color: #382c1b;
+}
+
+.rotate {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  height: 30px;
+  width: 30px;
+  translate: 0 -15px;
+  border-width: 0;
+}
+
+.rotate:hover {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.rotate.rev {
+  left: auto;
+  right: 10px;
+}
+
+#MainMenu {
+  transition-duration: .2s;
+  left: -130px;
+  top: 60px;
+  min-width: 130px;
+}
+
+#MainMenu.active {
+  left: 10px;
+}
+
+#EditTools {
+  transition-duration: .2s;
+  right: -100px;
+  top: 10px;
+  transition-duration: .2s;
+}
+
+#EditTools.active {
+  right: 50px;
+}
+
+#ModalContainer {
+  opacity: 0;
+  transition-duration: .2s;
+  position: absolute;
+}
+
+#ModalContainer.active {
+  opacity: 1;
+}
+
+#ModalContainer #Modal {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transition-duration: .2s;
+}
+
+#ModalContainer.active #Modal {
+  top: 50%
+}

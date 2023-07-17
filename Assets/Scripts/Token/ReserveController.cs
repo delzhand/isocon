@@ -16,7 +16,8 @@ public class ReserveController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
-        anchorPos.x = Screen.width - 40;
+        anchorPos.x = Screen.width * .9f;
+        anchorPos.y = Screen.height * .1f;
         Vector3 worldPos = GameObject.Find("ReserveCamera").GetComponent<Camera>().ScreenToWorldPoint(anchorPos);
         GameObject.Find("SpotRoot").transform.position = worldPos;
     }

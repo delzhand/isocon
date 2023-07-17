@@ -1,0 +1,123 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Styles/MainStyle2.uss?fileID=7433441132597879392&amp;guid=a0ac1fc332ef11648804d9ebb72c4f28&amp;type=3#MainStyle2" />
+    <ui:VisualElement name="MainMenuToggle" class="panel" style="position: absolute; right: auto; top: 10px; width: 44px; height: 44px; border-left-color: rgb(102, 95, 79); border-top-right-radius: 22px; border-bottom-right-radius: 22px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; left: 10px; border-top-left-radius: 22px; border-bottom-left-radius: 22px;">
+        <ui:VisualElement name="Bar1" class="shape" style="flex-grow: 1; width: 20px; height: 2px; top: 35%; left: 50%; translate: -50% -50%;" />
+        <ui:VisualElement name="Bar2" class="shape" style="flex-grow: 1; width: 20px; height: 2px; top: 50%; left: 50%; translate: -50% -50%;" />
+        <ui:VisualElement name="Bar3" class="shape" style="flex-grow: 1; width: 20px; height: 2px; top: 65%; left: 50%; translate: -50% -50%;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="MainMenu" class="panel active" style="position: absolute;">
+        <ui:Button text="File" display-tooltip-when-elided="true" name="FileButton" class="menu-button" />
+        <ui:VisualElement name="FileMenu" class="menu-l1" style="background-color: rgba(0, 0, 0, 0); flex-direction: column; align-items: stretch; display: none;">
+            <ui:Button text="Open Map..." display-tooltip-when-elided="true" name="OpenMapButton" class="menu-button" />
+            <ui:Button text="Save Map" display-tooltip-when-elided="true" name="SaveMapButton" class="menu-button" />
+            <ui:Button text="Save Map As..." display-tooltip-when-elided="true" name="SaveMapAsButton" class="menu-button" />
+        </ui:VisualElement>
+        <ui:Button text="Config" display-tooltip-when-elided="true" name="ConfigButton" class="menu-button" />
+        <ui:VisualElement name="ConfigMenu" class="menu-l1" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
+            <ui:VisualElement class="menu-dropdown-group" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                <ui:Label tabindex="-1" text="UI Scale" display-tooltip-when-elided="true" class="menu-label" />
+                <ui:DropdownField index="3" choices="70%,80%,90%,100%,110%,120%,130%" class="menu-dropdown" />
+            </ui:VisualElement>
+            <ui:VisualElement class="menu-dropdown-group" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                <ui:Label tabindex="-1" text="ICON Data Ver." display-tooltip-when-elided="true" name="Label" class="menu-label" />
+                <ui:DropdownField index="0" choices="1.5" class="menu-dropdown" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Button text="Help" display-tooltip-when-elided="true" name="HelpButton" class="menu-button" />
+        <ui:Button text="Exit" display-tooltip-when-elided="true" name="ExitButton" class="menu-button" />
+    </ui:VisualElement>
+    <ui:VisualElement name="ModeSwitch" class="switch double" style="position: absolute; left: 50%; bottom: 10px; translate: -50% 0;">
+        <ui:VisualElement class="slide" />
+        <ui:Label tabindex="-1" text="Edit" display-tooltip-when-elided="true" class="label left" />
+        <ui:Label tabindex="-1" text="Play" display-tooltip-when-elided="true" class="label right" />
+    </ui:VisualElement>
+    <ui:VisualElement name="CameraControls" class="panel" style="flex-grow: 1; position: absolute; top: 10px; left: 50%; padding-top: 2px; padding-bottom: 2px; flex-direction: row; border-top-left-radius: 16px; border-bottom-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; translate: -50% 0;">
+        <ui:Label tabindex="-1" text="Zoom" display-tooltip-when-elided="true" class="cam-label" />
+        <ui:Slider picking-mode="Ignore" value="42" high-value="100" name="ZoomScale" class="scale" />
+        <ui:Label tabindex="-1" text="Overhead" display-tooltip-when-elided="true" class="cam-label" />
+        <ui:VisualElement name="OverheadSwitch" class="switch">
+            <ui:VisualElement class="slide" />
+        </ui:VisualElement>
+        <ui:Label tabindex="-1" text="Indicators" display-tooltip-when-elided="true" class="cam-label" />
+        <ui:VisualElement name="IndicatorSwitch" class="switch">
+            <ui:VisualElement class="slide" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:Button display-tooltip-when-elided="true" name="RotateCCW" class="rotate" style="background-image: resource(&apos;Textures/rotateCCW&apos;); background-color: rgba(188, 188, 188, 0);" />
+    <ui:Button display-tooltip-when-elided="true" name="RotateCW" class="rotate rev" style="background-image: resource(&apos;Textures/rotateCW&apos;); background-color: rgba(188, 188, 188, 0);" />
+    <ui:VisualElement name="EditTools" class="panel active" style="position: absolute; width: 100px; flex-direction: row; flex-wrap: wrap; padding-left: 4px; padding-right: 4px; padding-top: 4px; padding-bottom: 4px;">
+        <ui:Button text="Center View" display-tooltip-when-elided="true" name="CenterView" class="toolbox tool-button active" />
+        <ui:Button text="Paint" display-tooltip-when-elided="true" name="Paint" class="toolbox tool-button" />
+        <ui:Button text="Add Block" display-tooltip-when-elided="true" name="AddBlock" class="toolbox tool-button" />
+        <ui:Button text="Remove Block" display-tooltip-when-elided="true" name="RemoveBlock" class="toolbox tool-button" />
+        <ui:Button text="Clone Row" display-tooltip-when-elided="true" name="CloneRow" class="toolbox tool-button" />
+        <ui:Button text="Remove Row" display-tooltip-when-elided="true" name="RemoveRow" class="toolbox tool-button" />
+        <ui:Button text="Clone Column" display-tooltip-when-elided="true" name="CloneCol" class="toolbox tool-button" />
+        <ui:Button text="Remove Column" display-tooltip-when-elided="true" name="RemoveCol" class="toolbox tool-button" />
+        <ui:Button text="Solid" display-tooltip-when-elided="true" name="Solid" class="toolbox tool-button" />
+        <ui:Button text="Slope" display-tooltip-when-elided="true" name="Slope" class="toolbox tool-button" />
+        <ui:Button text="Hidden" display-tooltip-when-elided="true" name="Hidden" class="toolbox tool-button" />
+        <ui:Button text="?" display-tooltip-when-elided="true" class="toolbox tool-button" />
+        <ui:Button text="Clear Marks" display-tooltip-when-elided="true" name="ClearMarks" class="toolbox tool-button" />
+        <ui:Button text="Difficult" display-tooltip-when-elided="true" name="Difficult" class="toolbox tool-button" />
+        <ui:Button text="Pit" display-tooltip-when-elided="true" name="Pit" class="toolbox tool-button" />
+        <ui:Button text="Dangerous" display-tooltip-when-elided="true" name="Dangerous" class="toolbox tool-button" />
+        <ui:Button text="Interactive" display-tooltip-when-elided="true" name="Interactive" class="toolbox tool-button" />
+        <ui:Button text="Impassable" display-tooltip-when-elided="true" name="Impassable" class="toolbox tool-button" />
+    </ui:VisualElement>
+    <ui:VisualElement name="ModalContainer" style="background-color: rgba(0, 0, 0, 0.68); position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex;">
+        <ui:VisualElement name="Modal" class="panel" style="flex-grow: 1; translate: -50% -50%;">
+            <ui:VisualElement name="LoadFileDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
+                <ui:VisualElement name="Header" class="modal-header">
+                    <ui:Label tabindex="-1" text="Select File" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: normal;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Contents" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <ui:ListView focusable="true" style="height: 200px;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Footer" style="border-left-color: rgb(43, 43, 43); border-right-color: rgb(43, 43, 43); border-top-color: rgb(43, 43, 43); border-bottom-color: rgb(43, 43, 43); border-top-width: 2px; padding-top: 10px; margin-top: 10px; flex-direction: row; justify-content: center;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="SaveFileDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
+                <ui:VisualElement name="Header" class="modal-header" style="flex-direction: column;">
+                    <ui:Label tabindex="-1" text="Save" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: normal; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Contents" style="flex-direction: column; flex-grow: 1;">
+                    <ui:TextField picking-mode="Ignore" value="filename" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Footer" style="border-left-color: rgb(43, 43, 43); border-right-color: rgb(43, 43, 43); border-top-color: rgb(43, 43, 43); border-bottom-color: rgb(43, 43, 43); border-top-width: 2px; padding-top: 10px; margin-top: 10px; flex-direction: row; justify-content: center;">
+                    <ui:Button text="Confirm" display-tooltip-when-elided="true" class="modal-button" />
+                    <ui:Button text="Cancel" display-tooltip-when-elided="true" class="modal-button" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="AddTokenDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
+                <ui:VisualElement name="Header" class="modal-header" style="flex-direction: column;">
+                    <ui:Label tabindex="-1" text="Add Token" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: normal; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Contents" style="flex-direction: column; flex-grow: 1;">
+                    <ui:TextField picking-mode="Ignore" value="filename" label="Token Name" class="modal-textfield" />
+                    <ui:DropdownField label="Graphic" index="0" choices="No tokens found" class="modal-dropdown" />
+                    <ui:DropdownField label="Class/Color" index="0" choices="Stalwart,Vagabond,Mendicant,Wright,Heavy,Skirmisher,Leader,Artillery,Legend,Mob" class="modal-dropdown" />
+                    <ui:DropdownField label="Job" index="0" choices="Bastion,Knave,Demon Slayer,Colossus" class="modal-dropdown" />
+                    <ui:TextField picking-mode="Ignore" label="Job" value="Warrior" style="display: none;" />
+                    <ui:Toggle label="Elite" style="display: none;" />
+                    <ui:DropdownField label="HP Multiplier" index="2" choices="x1,x2,x3,x4,x5,x6,x7" class="modal-dropdown" style="display: none;" />
+                    <ui:DropdownField label="Size" index="0" choices="Normal,Large (2), Huge (3)" class="modal-dropdown" style="display: none;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Footer" style="border-left-color: rgb(43, 43, 43); border-right-color: rgb(43, 43, 43); border-top-color: rgb(43, 43, 43); border-bottom-color: rgb(43, 43, 43); border-top-width: 2px; padding-top: 10px; margin-top: 10px; flex-direction: row; justify-content: center;">
+                    <ui:Button text="Confirm" display-tooltip-when-elided="true" class="modal-button" />
+                    <ui:Button text="Cancel" display-tooltip-when-elided="true" class="modal-button" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="InfoDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
+                <ui:VisualElement name="Header" class="modal-header">
+                    <ui:Label tabindex="-1" text="About IsoCON" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: normal;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Contents" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <ui:Label tabindex="-1" text="©Derek Adams 2023&#10;&#10;Licensed under Creative Commons BY-NC-SA&#10;&#10;IsoCON is not an official ICON product; it is a third party work, and is not affiliated with Massif Press.&#10;&#10;ICON is copyright Massif Press." display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px; width: 300px; white-space: normal;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Footer" style="border-left-color: rgb(43, 43, 43); border-right-color: rgb(43, 43, 43); border-top-color: rgb(43, 43, 43); border-bottom-color: rgb(43, 43, 43); border-top-width: 2px; padding-top: 10px; margin-top: 10px; flex-direction: row; justify-content: center;">
+                    <ui:Button text="Close" display-tooltip-when-elided="true" class="modal-button" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
