@@ -65,7 +65,7 @@ public class Block : MonoBehaviour
         GameObject indicator = transform.Find("Indicator").gameObject;
         if (Type == BlockType.Solid || Type == BlockType.Slope) {
             indicator.transform.eulerAngles = new Vector3(90, -90, 0);
-            indicator.SetActive(TerrainController.ShowIndicators);
+            indicator.SetActive(TerrainController.ShowIndicators());
         }
         else {
             indicator.SetActive(false);
@@ -180,19 +180,19 @@ public class Block : MonoBehaviour
     }
 
     public void SetTerrainInfo() {
-        string height = (transform.localPosition.y + 1).ToString();
-        if (Type == BlockType.Slope) {
-            height = transform.localPosition.y + "~" + (transform.localPosition.y + 1);
-        }
-        UI.GameInfo.Q<Label>("Height").text = height;
-        UI.GameInfo.Q<Label>("Coords").text = toAlpha(getY() + 1) + "" + (getX()+1);
-        UI.GameInfo.Q("Effects").Clear();
-        markers.ForEach(marker => {
-            Label l = new Label();
-            l.text = marker.ToString();
-            l.AddToClassList("effect");
-            UI.GameInfo.Q("Effects").Add(l);
-        });
+        // string height = (transform.localPosition.y + 1).ToString();
+        // if (Type == BlockType.Slope) {
+        //     height = transform.localPosition.y + "~" + (transform.localPosition.y + 1);
+        // }
+        // UI.GameInfo.Q<Label>("Height").text = height;
+        // UI.GameInfo.Q<Label>("Coords").text = toAlpha(getY() + 1) + "" + (getX()+1);
+        // UI.GameInfo.Q("Effects").Clear();
+        // markers.ForEach(marker => {
+        //     Label l = new Label();
+        //     l.text = marker.ToString();
+        //     l.AddToClassList("effect");
+        //     UI.GameInfo.Q("Effects").Add(l);
+        // });
     }
 
     private string toAlpha(int x) {

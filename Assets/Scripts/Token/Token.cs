@@ -32,19 +32,19 @@ public class Token : MonoBehaviour
     {
         alignToCamera();
 
-        if (TokenController.IsHeld(this)) {
-            VisualElement edit = UI.GameInfo.Q("ModifyPane");
-            HpBar hp = GetComponent<HpBar>();
-            UnitState us = GetComponent<UnitState>();
-            edit.Q<Label>("HPVal").text = hp.CHP.ToString();
-            edit.Q<Label>("VigVal").text = hp.VIG.ToString();
-            edit.Q<Label>("WoundsVal").text = hp.Wounds.ToString();
-            edit.Q<Label>("ResVal").text = us.Resolve.ToString();
-            edit.Q<Label>("GResVal").text = UnitState.GResolve.ToString();
-            edit.Q<Label>("AthVal").text = us.Aether.ToString();
-            edit.Q<Label>("VglVal").text = us.Vigilance.ToString();
-            edit.Q<Label>("BlsVal").text = us.Blessings.ToString();
-        }
+        // if (TokenController.IsHeld(this)) {
+        //     VisualElement edit = UI.GameInfo.Q("ModifyPane");
+        //     HpBar hp = GetComponent<HpBar>();
+        //     UnitState us = GetComponent<UnitState>();
+        //     edit.Q<Label>("HPVal").text = hp.CHP.ToString();
+        //     edit.Q<Label>("VigVal").text = hp.VIG.ToString();
+        //     edit.Q<Label>("WoundsVal").text = hp.Wounds.ToString();
+        //     edit.Q<Label>("ResVal").text = us.Resolve.ToString();
+        //     edit.Q<Label>("GResVal").text = UnitState.GResolve.ToString();
+        //     edit.Q<Label>("AthVal").text = us.Aether.ToString();
+        //     edit.Q<Label>("VglVal").text = us.Vigilance.ToString();
+        //     edit.Q<Label>("BlsVal").text = us.Blessings.ToString();
+        // }
     }
 
     private void alignToCamera() {

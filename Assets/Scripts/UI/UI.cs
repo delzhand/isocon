@@ -12,7 +12,6 @@ public enum HelpType {
 
 public class UI : MonoBehaviour
 {
-    private static VisualElement gameUI;
     private static VisualElement systemUI;
 
     private static List<string> suspensions = new List<string>();
@@ -27,19 +26,10 @@ public class UI : MonoBehaviour
         }
     }
 
-    public static VisualElement GameInfo {
-        get { 
-            if (gameUI == null) {
-                gameUI = GameObject.Find("WorldCanvas/TokenUI").GetComponent<UIDocument>().rootVisualElement;
-            }
-            return gameUI;
-        }
-    }
-
     public static VisualElement System {
         get {
             if (systemUI == null) {
-                systemUI = GameObject.Find("ModeUI").GetComponent<UIDocument>().rootVisualElement;
+                systemUI = GameObject.Find("SystemUI").GetComponent<UIDocument>().rootVisualElement;
             }
             return systemUI;
         }
@@ -83,11 +73,11 @@ public class UI : MonoBehaviour
 
     private static void printSuspensions(string s2) {
         Debug.Log(s2);
-        StringBuilder sb = new StringBuilder();
-        foreach(string s in suspensions) {
-            sb.Append(s + " / ");
-        }
-        Debug.Log(sb.ToString());
+        // StringBuilder sb = new StringBuilder();
+        // foreach(string s in suspensions) {
+        //     sb.Append(s + " / ");
+        // }
+        // Debug.Log(sb.ToString());
     }
 
     public static void SetHardSuspend(bool val) {
@@ -95,20 +85,21 @@ public class UI : MonoBehaviour
     }
 
     public static void SetHelpText(string message, HelpType type = HelpType.Standard) {
-        VisualElement helpbar = GameObject.Find("UICanvas/ModeUI").GetComponent<UIDocument>().rootVisualElement.Q("HelpBar");
-        Label helptext = GameObject.Find("UICanvas/ModeUI").GetComponent<UIDocument>().rootVisualElement.Q("HelpText") as Label;
-        helptext.text = message;
-        switch(type) {
-            case HelpType.Standard:
-                helpbar.style.backgroundColor = new Color(0, 0, 0, .3f);
-                break;
-            case HelpType.Error:
-                helpbar.style.backgroundColor = new Color(.8f, 0, 0, .3f);
-                break;
-            case HelpType.Success:
-                helpbar.style.backgroundColor = new Color(0, .8f, 0, .3f);
-                break;
-        }
+        // Debug.Log(message);
+        // VisualElement helpbar = GameObject.Find("UICanvas/ModeUI").GetComponent<UIDocument>().rootVisualElement.Q("HelpBar");
+        // Label helptext = GameObject.Find("UICanvas/ModeUI").GetComponent<UIDocument>().rootVisualElement.Q("HelpText") as Label;
+        // helptext.text = message;
+        // switch(type) {
+        //     case HelpType.Standard:
+        //         helpbar.style.backgroundColor = new Color(0, 0, 0, .3f);
+        //         break;
+        //     case HelpType.Error:
+        //         helpbar.style.backgroundColor = new Color(.8f, 0, 0, .3f);
+        //         break;
+        //     case HelpType.Success:
+        //         helpbar.style.backgroundColor = new Color(0, .8f, 0, .3f);
+        //         break;
+        // }
     }
 
     public static void Log(string message) {

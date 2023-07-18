@@ -27,21 +27,33 @@ public class CameraControl : MonoBehaviour
         isLocked = false;
         overhead = false;
         CameraTransform = GameObject.Find("CameraOrigin").transform;
+        registerCallbacks();
+    }
 
-        UI.System.Q("RotateCCW").RegisterCallback<ClickEvent>(rotateLeft);
-        UI.AttachHelp(UI.System, "RotateCCW", "Rotate the battlefield counter-clockwise.");
+    private void registerCallbacks() {
+        UI.SetBlocking(UI.System, new string[]{"RotateCCW", "RotateCW", "CameraControls"});
 
-        UI.System.Q("RotateCW").RegisterCallback<ClickEvent>(rotateRight);
-        UI.AttachHelp(UI.System, "RotateRightButton", "Rotate the battlefield clockwise.");
+        UI.System.Q<Button>("RotateCCW").RegisterCallback<ClickEvent>(rotateLeft);
+        // UI.AttachHelp(UI.System, "RotateCCW", "Rotate the battlefield counter-clockwise.");
 
-        UI.System.Q<Slider>("ZoomSlider").RegisterValueChangedCallback(zoom);
-        UI.AttachHelp(UI.System, "ZoomSlider", "Zoom in or out.");
+        UI.System.Q<Button>("RotateCW").RegisterCallback<ClickEvent>(rotateRight);
+        // UI.AttachHelp(UI.System, "RotateCW", "Rotate the battlefield clockwise.");
 
-        UI.System.Q<Toggle>("OverheadToggle").RegisterValueChangedCallback(toggleOverhead);
-        UI.AttachHelp(UI.System, "OverheadToggle", "Toggle an overhead fixed perspective.");
+        UI.System.Q<Slider>("ZoomScale").RegisterValueChangedCallback(zoom);
+        // UI.AttachHelp(UI.System, "ZoomScale", "Zoom in or out.");
 
-        UI.System.Q<Toggle>("IndicatorToggle").RegisterValueChangedCallback(toggleIndicators);
-        UI.AttachHelp(UI.System, "IndicatorToggle", "Toggle row and column indicators.");
+        UI.System.Q("OverheadSwitch").RegisterCallback<ClickEvent>((evt) => {
+            if (overhead) {
+                disableOverhead();
+            }
+            else {
+                enableOverhead();
+            }
+        });
+        // UI.AttachHelp(UI.System, "OverheadToggle", "Toggle an overhead fixed perspective.");
+
+        // UI.System.Q<Toggle>("IndicatorSwitch").RegisterValueChangedCallback(toggleIndicators);
+        // UI.AttachHelp(UI.System, "IndicatorSwitch", "Toggle row and column indicators.");
     }
 
     // Update is called once per frame
@@ -92,28 +104,26 @@ public class CameraControl : MonoBehaviour
         Camera.main.GetComponent<Camera>().orthographicSize = evt.newValue;
     }
 
-    private void toggleOverhead(ChangeEvent<bool> evt) {
-        if (!isLocked) {
-            if (!overhead) {
-                overhead = true;
-                reserveRotation = GameObject.Find("CameraOrigin").transform.rotation;
-                // reservePosition = GameObject.Find("CameraOrigin").transform.position;
-                initializeTransition(.25f);
-                targetRotation = Quaternion.Euler(0, 0, 30);
-                // targetPosition = TerrainEngine.Center();
-            }
-            else {
-                overhead = false;
-                initializeTransition(.25f);
-                targetRotation = reserveRotation;
-                // targetPosition = reservePosition;
-            }
-        }
+    private void enableOverhead() {
+        overhead = true;
+        reserveRotation = GameObject.Find("CameraOrigin").transform.rotation;
+        initializeTransition(.25f);
+        targetRotation = Quaternion.Euler(0, 0, 30);
+        UI.System.Q("OverheadSwitch").AddToClassList("active");
     }
 
-    private void toggleIndicators(ChangeEvent<bool> evt) {
-        TerrainController.ToggleIndicators(evt.newValue);
+    private void disableOverhead() {
+        overhead = false;
+        initializeTransition(.25f);
+        if (reserveRotation != null) {
+            targetRotation = reserveRotation;
+        }
+        UI.System.Q("OverheadSwitch").RemoveFromClassList("active");
     }
+
+    // private void toggleIndicators(ChangeEvent<bool> evt) {
+    //     TerrainController.ToggleIndicators(evt.newValue);
+    // }
 
     private void initializeTransition(float duration) {
         targetPosition = GameObject.Find("CameraOrigin").transform.position;

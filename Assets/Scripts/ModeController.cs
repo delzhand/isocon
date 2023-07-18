@@ -7,12 +7,11 @@ using UnityEngine.UIElements;
 public enum ClickMode {
     Play,
     Edit,
-    Other
 }
 
 public class ModeController : MonoBehaviour
 {
-    public static ClickMode Mode;
+    public static ClickMode Mode = ClickMode.Play;
 
     public bool ClickSuppress;
 
@@ -21,41 +20,71 @@ public class ModeController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {        
-        setup();
-        UI.SetBlocking(UI.System, new string[]{"ModeControls", "HelpBar", "EditMapFlyout", "RotateCCW", "RotateCW", "CamControls", "AddTokenModal"});
-        enterPlayMode(null);
+        registerCallbacks();
+        playMode();
+        // Mode = ClickMode.Play;
+        // setup();
+        // UI.SetBlocking(UI.System, new string[]{"ModeControls", "HelpBar", "EditMapFlyout", "RotateCCW", "RotateCW", "CamControls", "AddTokenModal"});
+        // enterPlayMode(null);
     }
 
     void Update() {
-        ClickSuppress = UI.ClicksSuspended;
+        // ClickSuppress = UI.ClicksSuspended;
+    }
+
+    private void registerCallbacks() {
+        UI.SetBlocking(UI.System, new string[]{"ModeSwitch"});
+
+        UI.System.Q("ModeSwitch").RegisterCallback<ClickEvent>((evt) => {
+            if (Mode == ClickMode.Play) {
+                editMode();
+            }   
+            else {
+                playMode();
+            }
+        });
+    }
+
+    private void editMode() {
+        Mode = ClickMode.Edit;
+        UI.System.Q("ModeSwitch").RemoveFromClassList("active");
+        UI.System.Q("EditTools").AddToClassList("active");
+        GameObject.Find("ReserveCamera").GetComponent<Camera>().enabled = false;
+    }
+
+    private void playMode() {
+        Mode = ClickMode.Play;
+        UI.System.Q("ModeSwitch").AddToClassList("active");
+        UI.System.Q("EditTools").RemoveFromClassList("active");
+        GameObject.Find("ReserveCamera").GetComponent<Camera>().enabled = true;
     }
 
     private void setup() {
-        List<(string, string, EventCallback<ClickEvent>)> uiConfig = new List<(string, string, EventCallback<ClickEvent>)>{
-            ("Play", "Play ICON", enterPlayMode),
-            ("EditMap", "Change the terrain", enterEditMapMode),
-            ("Config", "Modify system configuration", enterConfigMode),
-            ("File", "Save, load, or exit the program", enterFileMode),
-            ("Info", "View information about the program", enterInfoMode),
-            ("Appearance", "Change the background or tile colors", enterAppearanceMode)
-        };
+        // List<(string, string, EventCallback<ClickEvent>)> uiConfig = new List<(string, string, EventCallback<ClickEvent>)>{
+        //     ("Play", "Play ICON", enterPlayMode),
+        //     ("EditMap", "Change the terrain", enterEditMapMode),
+        //     ("Config", "Modify system configuration", enterConfigMode),
+        //     ("File", "Save, load, or exit the program", enterFileMode),
+        //     ("Info", "View information about the program", enterInfoMode),
+        //     ("Appearance", "Change the background or tile colors", enterAppearanceMode)
+        // };
 
-        foreach((string, string, EventCallback<ClickEvent>) item in uiConfig) {
-            UI.AttachHelp(UI.System, item.Item1, item.Item2);
-            UI.System.Q(item.Item1).RegisterCallback<ClickEvent>(item.Item3);
-        }
+        // foreach((string, string, EventCallback<ClickEvent>) item in uiConfig) {
+        //     UI.AttachHelp(UI.System, item.Item1, item.Item2);
+        //     UI.System.Q(item.Item1).RegisterCallback<ClickEvent>(item.Item3);
+        // }
     }
 
     private void clearState() {
-        foreach (VisualElement v in elements) {
-            DeactivateElement(v);
-        }
-        elements.Clear();
-        Block.DeselectAll();
-        Block.ToggleSpacers(false);
-        UI.GameInfo.style.display = DisplayStyle.None;
-        GameObject.Find("ReserveCamera").GetComponent<Camera>().enabled = false;
-        Mode = ClickMode.Other;
+        // foreach (VisualElement v in elements) {
+        //     DeactivateElement(v);
+        // }
+        // elements.Clear();
+        // Block.DeselectAll();
+        // Block.ToggleSpacers(false);
+        // UI.GameInfo.style.display = DisplayStyle.None;
+        // GameObject.Find("ReserveCamera").GetComponent<Camera>().enabled = false;
+        // Mode = ClickMode.Other;
     }
 
     public void ActivateElement(VisualElement v) {

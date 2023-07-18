@@ -50,11 +50,11 @@ public class HpBar : MonoBehaviour
         floater.Q<VisualElement>("Color").AddToClassList(Color);
         floater.Q<VisualElement>("Elite").style.visibility = Elite ? Visibility.Visible : Visibility.Hidden;
 
-        UI.GameInfo.Add(floater);
+        // UI.GameInfo.Add(floater);
     }
 
     public void DestroyFloater() {
-        UI.GameInfo.Remove(floater);
+        // UI.GameInfo.Remove(floater);
     }
 
     private void updateData() {
@@ -79,21 +79,21 @@ public class HpBar : MonoBehaviour
     }
 
     private void updateScreenPosition() {
-        Vector3 worldPos = transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").position;
-        Vector3 viewportPos = Camera.main.WorldToViewportPoint(worldPos);
-        if (floater.resolvedStyle.width != float.NaN) {
-            Vector2 screenPos = new Vector2(
-                Mathf.RoundToInt((viewportPos.x * UI.GameInfo.resolvedStyle.width)),
-                Mathf.RoundToInt((1f - viewportPos.y) * UI.GameInfo.resolvedStyle.height)
-            );
-            Vector2 centerOffset = new Vector2(
-                -floater.resolvedStyle.width/2f,
-                0
-            );
-            Vector2 pos = screenPos + centerOffset;
-            floater.style.left = pos.x;
-            floater.style.top = pos.y;
-        }
+        // Vector3 worldPos = transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").position;
+        // Vector3 viewportPos = Camera.main.WorldToViewportPoint(worldPos);
+        // if (floater.resolvedStyle.width != float.NaN) {
+        //     Vector2 screenPos = new Vector2(
+        //         Mathf.RoundToInt((viewportPos.x * UI.GameInfo.resolvedStyle.width)),
+        //         Mathf.RoundToInt((1f - viewportPos.y) * UI.GameInfo.resolvedStyle.height)
+        //     );
+        //     Vector2 centerOffset = new Vector2(
+        //         -floater.resolvedStyle.width/2f,
+        //         0
+        //     );
+        //     Vector2 pos = screenPos + centerOffset;
+        //     floater.style.left = pos.x;
+        //     floater.style.top = pos.y;
+        // }
     }
 
 

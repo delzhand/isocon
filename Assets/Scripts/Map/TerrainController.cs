@@ -11,15 +11,25 @@ public class TerrainController : MonoBehaviour
     static GameObject map;
     private List<Label> identifierLabels = new List<Label>();
 
-    public static bool ShowIndicators;
+    private bool indicators = false;
 
     void Start() {
-        setup();
+        registerCallbacks();
+        disableIndicators();
         InitializeTerrain(8, 8, 3);
     }
 
-    private void setup() {
-        UI.System.Q<DropdownField>("EditOperation").RegisterValueChangedCallback(editTerrainSelect);
+    private void registerCallbacks() {
+        UI.System.Q("IndicatorSwitch").RegisterCallback<ClickEvent>((evt) => {
+            if (indicators) {
+                disableIndicators();
+            }
+            else {
+                enableIndicators();
+            }
+        });
+
+        // UI.System.Q<DropdownField>("EditOperation").RegisterValueChangedCallback(editTerrainSelect);
     }
 
     private void editTerrainSelect(ChangeEvent<string> evt) {
@@ -58,57 +68,58 @@ public class TerrainController : MonoBehaviour
     }
 
     public void Edit(Block block) {
-        int editOpIndex = UI.System.Q<RadioButtonGroup>("EditMapDropdown").value;
-        string editOp = UI.System.Q<RadioButtonGroup>("EditMapDropdown").choices.ToArray()[editOpIndex];
-        switch (editOp) {
-            case "ADD HEIGHT":
-                AddBlocks();
-                break;
-            case "REMOVE HEIGHT":
-                RemoveBlocks();
-                break;
-            case "CLONE ROW":
-                CloneRow();
-                break;
-            case "CLONE COLUMN":
-                CloneColumn();
-                break;
-            case "REMOVE ROW":
-                DeleteRow();
-                break;
-            case "REMOVE COLUMN":
-                DeleteColumn();
-                break;
-            case "SET SOLID":
-                ChangeType(BlockType.Solid);
-                break;
-            case "SET/ROTATE SLOPE":
-                ChangeType(BlockType.Slope);
-                break;
-            case "SET EMPTY":
-                ChangeType(BlockType.Spacer);
-                break;
-            case "MARK DIFFICULT":
-                ChangeMarker(BlockMarker.Difficult);
-                break;
-            case "MARK DANGEROUS":
-                ChangeMarker(BlockMarker.Dangerous);
-                break;
-            case "MARK PIT":
-                ChangeMarker(BlockMarker.Pit);
-                break;
-            case "MARK IMPASSABLE":
-                ChangeMarker(BlockMarker.Impassable);
-                break;
-            case "MARK INTERACTIVE":
-                ChangeMarker(BlockMarker.Interactive);
-                break;
-            case "CLEAR MARKS":
-                ChangeMarker(BlockMarker.None);
-                break;
-            case "FOCUS":
-                CameraControl.GoToBlock(block);
-                break;
+        List<string> ops = GetComponent<ToolController>().GetOps();
+        foreach(string op in ops) {
+            switch (op) {
+                case "AddBlock":
+                    AddBlocks();
+                    break;
+                case "RemoveBlock":
+                    RemoveBlocks();
+                    break;
+                case "CloneRow":
+                    CloneRow();
+                    break;
+                case "CloneCol":
+                    CloneColumn();
+                    break;
+                case "RemoveRow":
+                    DeleteRow();
+                    break;
+                case "RemoveCol":
+                    DeleteColumn();
+                    break;
+                case "Solid":
+                    ChangeType(BlockType.Solid);
+                    break;
+                case "Slope":
+                    ChangeType(BlockType.Slope);
+                    break;
+                case "Hidden":
+                    ChangeType(BlockType.Spacer);
+                    break;
+                case "Difficult":
+                    ChangeMarker(BlockMarker.Difficult);
+                    break;
+                case "Dangerous":
+                    ChangeMarker(BlockMarker.Dangerous);
+                    break;
+                case "Pit":
+                    ChangeMarker(BlockMarker.Pit);
+                    break;
+                case "Impassable":
+                    ChangeMarker(BlockMarker.Impassable);
+                    break;
+                case "Interactive":
+                    ChangeMarker(BlockMarker.Interactive);
+                    break;
+                case "ClearMarks":
+                    ChangeMarker(BlockMarker.None);
+                    break;
+                case "CenterView":
+                    CameraControl.GoToBlock(block);
+                    break;
+            }
         }
     }
 
@@ -373,8 +384,19 @@ public class TerrainController : MonoBehaviour
         }
     }
 
-    public static void ToggleIndicators(bool visible) {
-        ShowIndicators = visible;
+    public static bool ShowIndicators() {
+        return GameObject.Find("Engine").GetComponent<TerrainController>().indicators;
+    }
+
+    private void enableIndicators() {
+        indicators = true;
+        UI.System.Q("IndicatorSwitch").AddToClassList("active");
+    }
+
+    private void disableIndicators() {
+        indicators = false;
+        UI.System.Q("IndicatorSwitch").RemoveFromClassList("active");
+
     }
 
     public static void Reorg() {
