@@ -19,14 +19,33 @@
     margin-left: 4px;
 }
 
+.tool-button,
+.modal-button,
+.menu-button {
+    border-width: 0;
+    color: rgb(255, 255, 255);
+    border-color: rgb(102, 95, 79);
+    background-color: rgb(121, 113, 95);
+}
+
+.modal-button:hover,
+.tool-button:hover,
+.menu-button:hover {
+    border-color: rgb(141, 131, 39);
+    background-color: rgb(192, 178, 53);
+}
+
+.tool-button.active,
+.modal-button.active,
+.menu-button.active {
+    border-color: rgb(141, 131, 39);
+    background-color: rgb(192, 178, 53);
+}
+
 .menu-button {
     margin: 0;
     padding: 4px 8px;
-    border-width: 0;
     border-bottom-width: 2px;
-    border-color: rgb(121, 121, 121);
-    background-color: rgb(37, 37, 37);
-    color: rgb(255, 255, 255);
     -unity-text-align: lower-left;
 }
 
@@ -34,32 +53,19 @@
     margin-top: 0;
     margin-bottom: 0;
     padding: 4px 8px;
-    border-width: 0;
     border-bottom-width: 2px;
-    border-color: rgb(121, 121, 121);
-    background-color: rgb(37, 37, 37);
-    color: rgb(255, 255, 255);
     -unity-text-align: middle-center;
 }
 
-.modal-button:hover {
-    border-color: rgb(102, 95, 79);
-    background-color: rgb(52, 47, 36);
-}
-
-.menu-button:hover {
-    border-color: rgb(102, 95, 79);
-    background-color: rgb(52, 47, 36);
-}
-
-.modal-button:active {
-    background-color: rgb(192, 143, 53);
-    border-color: rgb(146, 109, 40);
-}
-
-.menu-button.active {
-    background-color: rgb(192, 143, 53);
-    border-color: rgb(146, 109, 40);
+.tool-button {
+    width: 44px;
+    height: 44px;
+    margin: 0;
+    padding: 0;
+    font-size: 8px;
+    border-width: 1px;
+    white-space: normal;
+    padding: 2px;
 }
 
 .menu-dropdown-group {
@@ -202,30 +208,6 @@
     border-color: rgb(114, 109, 98);
 }
 
-.tool-button {
-    width: 44px;
-    height: 44px;
-    margin: 0;
-    padding: 0;
-    font-size: 8px;
-    border-width: 1px;
-    border-color: rgb(121, 121, 121);
-    background-color: rgb(37, 37, 37);
-    white-space: normal;
-    padding: 2px;
-    color: rgb(255, 255, 255);
-}
-
-.tool-button:hover {
-    border-color: rgb(102, 95, 79);
-    background-color: rgb(52, 47, 36);
-}
-
-.tool-button.active {
-    background-color: rgb(192, 143, 53);
-    border-color: rgb(146, 109, 40);
-}
-
 .dialog {
     min-width: 200px;
 }
@@ -236,7 +218,7 @@
 }
 
 .modal-header {
-    background-color: rgb(40, 104, 146);
+    background-color: rgb(36, 36, 36);
     padding: 4px;
     margin-bottom: 10px;
 }
@@ -251,11 +233,22 @@
     padding: 6px;
 }
 
+.modal-dropdown .unity-base-field__label,
+.modal-textfield .unity-base-field__label {
+    color: #FFF;
+}
+
+.modal-dropdown .unity-base-field:focus .unity-base-field__label,
+.modal-textfield .unity-base-field:active .unity-base-field__label {
+    color: #FFF;
+}
+
 .modal-dropdown .unity-popup-field__input {
     margin: 0;
     border-width: 0;
     padding: 2px 4px;
     background-color: rgb(255, 255, 255);
+    width: 200px;
 }
 
 .modal-dropdown .unity-base-popup-field__text {
@@ -281,6 +274,10 @@
     right: 10px;
 }
 
+.color-edit .unity-text-field__input {
+    margin: 0;
+}
+
 #MainMenu {
     transition-duration: 0.2s;
     left: -130px;
@@ -300,6 +297,17 @@
 
 #EditTools.active {
     right: 50px;
+}
+
+#PaintOptions {
+    position: absolute;
+    right: -200px;
+    top: 10px;
+    transition-duration: .2s;
+}
+
+#PaintOptions.active {
+    right: 160px;
 }
 
 #ModalContainer {

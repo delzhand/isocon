@@ -100,8 +100,8 @@ public class Token : MonoBehaviour
             case HoldState.Held:
                 TokenController.SetHeld(this);
                 TokenController.EnableFocusPane();
-                GetComponentInChildren<MeshRenderer>().material.SetInt("_Selected", 1);
-                GetComponentInChildren<MeshRenderer>().material.SetVector("_Color", new Vector4(2f, 2f, 0, 2f));
+                transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1);
+                transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetVector("_Color", new Vector4(2f, 2f, 0, 2f));
                 break;
             case HoldState.Edit:
                 TokenController.DisableQuickEdit();
@@ -130,7 +130,7 @@ public class Token : MonoBehaviour
         TokenController.DisableFocusPane();
         TokenController.DisableQuickEdit();
         TokenController.DisableFullEdit();
-        GetComponentInChildren<MeshRenderer>().material.SetInt("_Selected", 0);
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
     }
 
 }

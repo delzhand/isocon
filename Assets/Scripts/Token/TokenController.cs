@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -5,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
+using System.Linq;
 
 public class TokenController : MonoBehaviour
 {
@@ -42,11 +44,35 @@ public class TokenController : MonoBehaviour
         // UI.SetBlocking(UI.GameInfo, new string[]{"QuickHP", "ModifyPane", "FocusToken"});
 
         // InitEditPaneCallbacks();
+
+        registerCallbacks();   
     }
 
     // Update is called once per frame
     void Update()
     {
+    }
+
+    public void registerCallbacks() {
+        UI.System.Q("AddTokenConfirmButton").RegisterCallback<ClickEvent>((evt) => {
+            ReserveController.Adjust();
+            CreateNew();
+            DisableAddToken();
+        });
+
+        UI.System.Q("AddTokenCancelButton").RegisterCallback<ClickEvent>((evt) => {
+            DisableAddToken();
+        });
+
+        UI.System.Q<DropdownField>("ClassDropdown").RegisterValueChangedCallback<string>((evt) => {
+            setJobOptions(evt.newValue);
+        });
+    }
+
+    private void setJobOptions(string class_) {
+        List<string> jobs = getJobs(class_);
+        UI.System.Q<DropdownField>("ClassDropdown").choices = getJobs(class_);
+        UI.System.Q<DropdownField>("ClassDropdown").value = jobs[0];
     }
 
     public static void CheckCustomTokens() {
@@ -64,17 +90,44 @@ public class TokenController : MonoBehaviour
         UI.System.Q<DropdownField>("GraphicDropdown").choices = avatars;        
     }
 
+    private List<string> getClasses() {
+        string version = PlayerPrefs.GetString("IconVersion", "1.5");
+        switch (version) {
+            case "1.5":
+                return new string[]{"Stalwart", "Vagabond", "Mendicant", "Wright", "Heavy", "Skirmisher","Leader","Artillery","Legend","Mob"}.ToList();
+        }
+        throw new Exception("Invalid data version");
+    }
+
+    private string getDefaultClass() {
+        string version = PlayerPrefs.GetString("IconVersion", "1.5");
+        switch (version) {
+            case "1.5":
+                return "Stalwart";
+        }
+        throw new Exception("Invalid data version");
+    }
+
+    private List<string> getJobs(string class_) {
+        string version = PlayerPrefs.GetString("IconVersion", "1.5");
+        switch (version) {
+            case "1.5":
+                switch (class_) {
+                    case "Stalwart":
+                        return new string[]{"Bastion","Demon Slayer","Knave","Colossus"}.ToList();
+                    case "Vagabond":
+                        return new string[]{"Shade","Freelancer","Fool","Warden"}.ToList();
+                    case "Mendicant":
+                        return new string[]{"Seer","Chanter","Sealer","Harvester"}.ToList();
+                    case "Wright":
+                        return new string[]{"Enochian","Geomancer","Spellblade","Stormbender"}.ToList();
+                }
+                throw new Exception("Invalid class");
+        }
+        throw new Exception("Invalid data version");
+    }
+
     public void InitAddModal() {
-        // UI.System.Q("AddTokenConfirm").RegisterCallback<ClickEvent>((evt) => {
-        //     ReserveController.Adjust();
-        //     CreateNew();
-        //     DisableAddToken();
-        // });
-
-        // UI.System.Q("AddTokenCancel").RegisterCallback<ClickEvent>((evt) => {
-        //     DisableAddToken();
-        // });
-
         List<string> avatars = new List<string>{};
         DirectoryInfo info = new DirectoryInfo(Application.persistentDataPath + "/tokens/");
         if (info.Exists) {
@@ -87,6 +140,9 @@ public class TokenController : MonoBehaviour
             }        
         }
         UI.System.Q<DropdownField>("AvatarDropdown").choices = avatars;
+
+        UI.System.Q<DropdownField>("ClassDropdown").choices = getClasses();
+        UI.System.Q<DropdownField>("ClassDropdown").value = getDefaultClass();
 
         // UI.System.Q<DropdownField>("TokenTypeDropdown").choices = new List<string>{
         //     "Player",
@@ -147,142 +203,127 @@ public class TokenController : MonoBehaviour
         }
     }
 
-    public static void CreateNew() {
-        DropdownField avatarField = UI.System.Q<DropdownField>("AvatarDropdown");
-        DropdownField tokenTypeField = UI.System.Q<DropdownField>("TokenTypeDropdown");
-        DropdownField jobField = UI.System.Q<DropdownField>("JobClassDropdown");
-        TextField nameField = UI.System.Q<TextField>("TokenNameField");
-        Toggle eliteField = UI.System.Q<Toggle>("EliteCheckbox");
-        IntegerField legendScale = UI.System.Q<IntegerField>("LegendScale");
-        DropdownField sizeField = UI.System.Q<DropdownField>("SizeDropdown");
-        TextField foeJobField = UI.System.Q<TextField>("FoeJob");
-        GameObject newToken = Instantiate(Resources.Load<GameObject>("Prefabs/Token"));
-        newToken.name = nameField.value;
-
-        switch(avatarField.value) {
-            case "Enochian":
-            case "Shade":
-            case "Relict":
-                Texture2D t = Resources.Load<Texture2D>("Textures/Chibis/" + avatarField.value);
-                newToken.transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetTexture("_Image", t);
-                break;
-            case "Object":
-                newToken.transform.Find("Offset/Avatar").gameObject.SetActive(false);
-                newToken.transform.Find("Offset/Object").gameObject.SetActive(true);
+    public static void SetStats(TokenState tstate, bool elite = false, int legendHPx = 1) {
+        string version = PlayerPrefs.GetString("IconVersion", "1.5");
+        switch (version) {
+            case "1.5":
+                switch(tstate.Class_) {
+                    case "Wright":
+                    case "Artillery":
+                        tstate.Color = "blue";
+                        tstate.MaxHP = 32;
+                        tstate.Damage = 8;
+                        tstate.Fray = 3;
+                        tstate.Range = 6;
+                        tstate.Speed = 4;
+                        tstate.Dash = 2;
+                        tstate.Defense = 7;
+                        break;
+                    case "Vagabond":
+                    case "Skirmisher":
+                        tstate.Color = "yellow";
+                        tstate.MaxHP = 28;
+                        tstate.Damage = 10;
+                        tstate.Fray = 2;
+                        tstate.Range = 4;
+                        tstate.Speed = 4;
+                        tstate.Dash = 4;
+                        tstate.Defense = 10;
+                        break;
+                    case "Stalwart":
+                    case "Heavy":
+                        tstate.Color = "red";
+                        tstate.MaxHP = 40;
+                        tstate.Damage = 6;
+                        tstate.Fray = 4;
+                        tstate.Range = 3;
+                        tstate.Speed = 4;
+                        tstate.Dash = 2;
+                        tstate.Defense = 6;
+                        break;
+                    case "Leader":
+                    case "Mendicant":
+                        tstate.Color = "green";
+                        tstate.MaxHP = 40;
+                        tstate.Damage = 6;
+                        tstate.Fray = 3;
+                        tstate.Range = 3;
+                        tstate.Speed = 4;
+                        tstate.Dash = 2;
+                        tstate.Defense = 8;
+                        break;
+                    case "Legend":
+                        tstate.Color = "purple";
+                        tstate.MaxHP = 50 * legendHPx;
+                        tstate.Damage = 8;
+                        tstate.Fray = 3;
+                        tstate.Range = 3;
+                        tstate.Speed = 4;
+                        tstate.Dash = 2;
+                        tstate.Defense = 8;
+                        break;
+                    case "Mob":
+                        tstate.Color = "gray";
+                        tstate.MaxHP = 2;
+                        tstate.Damage = 6;
+                        tstate.Fray = 3;
+                        tstate.Range = 1;
+                        tstate.Speed = 4;
+                        tstate.Dash = 2;
+                        tstate.Defense = 8;
+                        break;
+                    default:
+                        throw new Exception("Invalid class");
+                }
+                if (elite) {
+                    tstate.MaxHP *= 2;
+                }
+                else {
+                    tstate.MaxHP *= legendHPx;
+                }
+                tstate.CurrentHP = tstate.MaxHP;
+                tstate.Vigor = 0;
+                tstate.Wounds = 0;
                 break;
             default:
-                string filename = avatarField.value;
-                filename = filename.Replace("Custom: ", "");
-                newToken.GetComponent<Token>().CustomCutout("file://" + Application.persistentDataPath + "/tokens/" + filename);
-                break;
+                throw new Exception("Invalid data version");
         }
+    }
 
-        string jobclass = jobField.value.Split("-")[0];
-        string job = "";
-        if (jobField.value.Split("-").Length > 1) {
-            job = jobField.value.Split("-")[1];
-        }
+    public static void CreateNew() {
+        TextField nameField = UI.System.Q<TextField>("TokenNameField");
+        DropdownField graphicField = UI.System.Q<DropdownField>("GraphicDropdown");
+        DropdownField classField = UI.System.Q<DropdownField>("ClassDropdown");
+        DropdownField jobField = UI.System.Q<DropdownField>("JobDropdown");
+        
+        // Toggle eliteField = UI.System.Q<Toggle>("EliteCheckbox");
+        // IntegerField legendScale = UI.System.Q<IntegerField>("LegendScale");
+        // DropdownField sizeField = UI.System.Q<DropdownField>("SizeDropdown");
 
-        UnitState unitstate = newToken.AddComponent<UnitState>();
-        unitstate.Job = job;
+        GameObject newToken = Instantiate(Resources.Load<GameObject>("Prefabs/Token"));
+        newToken.name = nameField.value;
+        newToken.GetComponent<Token>().CustomCutout("file://" + Application.persistentDataPath + "/tokens/" + graphicField.value);
 
-        string foeJob = foeJobField.value;
-        if (foeJob.Length > 0) {
-            unitstate.Job = foeJob;
-        }
+        TokenState tokenState = newToken.AddComponent<TokenState>();
+        tokenState.Job = jobField.value;
+        tokenState.Class_ = classField.value;
+        SetStats(tokenState);
 
-        HpBar hpbar = newToken.AddComponent<HpBar>();
-        hpbar.VIG = 0;
-        hpbar.Wounds = 0;
-        switch(jobclass) {
-            case "Wright":
-            case "Artillery":
-                hpbar.Color = "blue";
-                hpbar.MHP = 32;
-                unitstate.Damage = 8;
-                unitstate.Fray = 3;
-                unitstate.Range = 6;
-                unitstate.Speed = 4;
-                unitstate.Dash = 2;
-                unitstate.Defense = 7;
-                break;
-            case "Vagabond":
-            case "Skirmisher":
-                hpbar.Color = "yellow";
-                hpbar.MHP = 28;
-                unitstate.Damage = 10;
-                unitstate.Fray = 2;
-                unitstate.Range = 4;
-                unitstate.Speed = 4;
-                unitstate.Dash = 4;
-                unitstate.Defense = 10;
-                break;
-            case "Stalwart":
-            case "Heavy":
-                hpbar.Color = "red";
-                hpbar.MHP = 40;
-                unitstate.Damage = 6;
-                unitstate.Fray = 4;
-                unitstate.Range = 3;
-                unitstate.Speed = 4;
-                unitstate.Dash = 2;
-                unitstate.Defense = 6;
-                break;
-            case "Leader":
-            case "Mendicant":
-                hpbar.Color = "green";
-                hpbar.MHP = 40;
-                unitstate.Damage = 6;
-                unitstate.Fray = 3;
-                unitstate.Range = 3;
-                unitstate.Speed = 4;
-                unitstate.Dash = 2;
-                unitstate.Defense = 8;
-                break;
-            case "Legend":
-                hpbar.Color = "purple";
-                hpbar.MHP = 50 * legendScale.value;
-                unitstate.Damage = 8;
-                unitstate.Fray = 3;
-                unitstate.Range = 3;
-                unitstate.Speed = 4;
-                unitstate.Dash = 2;
-                unitstate.Defense = 8;
-                break;
-            case "Mob":
-                hpbar.Color = "gray";
-                hpbar.MHP = 2;
-                unitstate.Damage = 6;
-                unitstate.Fray = 3;
-                unitstate.Range = 1;
-                unitstate.Speed = 4;
-                unitstate.Dash = 2;
-                unitstate.Defense = 8;
-                break;
-        }
-        if (eliteField.value) {
-            hpbar.Elite = true;
-            hpbar.MHP *= 2;
-        }
-        hpbar.CHP = hpbar.MHP;
-        unitstate.Color = hpbar.Color;
-        unitstate.Foe = tokenTypeField.value == "Foe";
-
-        if (sizeField.value == "2-Large") {
-            newToken.GetComponent<Token>().Size = 2;
-            newToken.transform.Find("Offset").transform.localPosition += Size2Offset;
-            newToken.transform.Find("Base").transform.localPosition += Size2Offset;
-            newToken.transform.Find("Offset").transform.localScale = new Vector3(2, 2, 2);
-            newToken.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2, 2, 4);
-        }
-        else if (sizeField.value == "3-Enormous") {
-            newToken.GetComponent<Token>().Size = 3;
-            newToken.transform.Find("Offset").transform.localScale = new Vector3(3, 3, 3);
-            newToken.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(3, 3, 4);
-        }
+        // if (sizeField.value == "2-Large") {
+        //     newToken.GetComponent<Token>().Size = 2;
+        //     newToken.transform.Find("Offset").transform.localPosition += Size2Offset;
+        //     newToken.transform.Find("Base").transform.localPosition += Size2Offset;
+        //     newToken.transform.Find("Offset").transform.localScale = new Vector3(2, 2, 2);
+        //     newToken.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2, 2, 4);
+        // }
+        // else if (sizeField.value == "3-Enormous") {
+        //     newToken.GetComponent<Token>().Size = 3;
+        //     newToken.transform.Find("Offset").transform.localScale = new Vector3(3, 3, 3);
+        //     newToken.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(3, 3, 4);
+        // }
 
         Material m = Instantiate(Resources.Load<Material>("Materials/Token/BorderBase"));
-        switch (hpbar.Color) {
+        switch (tokenState.Color) {
             case "red":
                 m.SetColor("_Border", new Color(.93f, .13f, .05f));
                 break;
@@ -541,7 +582,7 @@ public class TokenController : MonoBehaviour
         // UI.GameInfo.Q("QuickHP").style.display = DisplayStyle.Flex;
         // HpBar hp = held.GetComponent<HpBar>();
         // UI.GameInfo.Q<Label>("QuickHPName").text = hp.name;
-        // UI.GameInfo.Q<SliderInt>("HpSlider").highValue = hp.MHP;
+        // UI.GameInfo.Q<SliderInt>("HpSlider").highValue = hp.MaxHP;
         // UI.GameInfo.Q<SliderInt>("HpSlider").value = hp.CHP;
         // UI.GameInfo.Q<Label>("QuickHPNum").text = hp.CHP.ToString();
     }
@@ -563,8 +604,8 @@ public class TokenController : MonoBehaviour
     }
 
     public static void DisableAddToken() {
-        // GameObject.Find("Engine").GetComponent<ModeController>().DeactivateByName("AddTokenModal");
-        // UI.SetHardSuspend(false);
+        GameObject.Find("Engine").GetComponent<MenuController>().Clear();
+        UI.SetHardSuspend(false);
     }
 
     public static void DisableQuickEdit() {

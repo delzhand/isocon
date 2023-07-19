@@ -66,7 +66,7 @@
         <ui:Button text="Pit" display-tooltip-when-elided="true" name="Pit" class="toolbox tool-button" />
         <ui:Button text="Interactive" display-tooltip-when-elided="true" name="Interactive" class="toolbox tool-button" />
     </ui:VisualElement>
-    <ui:VisualElement name="ModalContainer" style="background-color: rgba(0, 0, 0, 0.68); overflow: hidden;">
+    <ui:VisualElement name="ModalContainer" style="background-color: rgba(255, 255, 255, 0.27); overflow: hidden; display: flex;">
         <ui:VisualElement name="Modal" class="panel" style="flex-grow: 1; translate: -50% -50%;">
             <ui:VisualElement name="LoadFileDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
                 <ui:VisualElement name="Header" class="modal-header">
@@ -88,26 +88,26 @@
                     <ui:Button text="Cancel" display-tooltip-when-elided="true" name="SaveFileCancelButton" class="modal-button" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="AddTokenDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
+            <ui:VisualElement name="AddTokenDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
                 <ui:VisualElement name="Header" class="modal-header" style="flex-direction: column;">
                     <ui:Label tabindex="-1" text="Add Token" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: normal; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="Contents" style="flex-direction: column; flex-grow: 1;">
-                    <ui:TextField picking-mode="Ignore" value="filename" label="Token Name" name="TokenNameField" class="modal-textfield" />
+                    <ui:TextField picking-mode="Ignore" value="Tokenname" label="Token Name" name="TokenNameField" class="modal-textfield" />
                     <ui:DropdownField label="Graphic" index="0" choices="No tokens found" name="GraphicDropdown" class="modal-dropdown" />
-                    <ui:DropdownField label="Class/Color" index="0" choices="Stalwart,Vagabond,Mendicant,Wright,Heavy,Skirmisher,Leader,Artillery,Legend,Mob" class="modal-dropdown" />
-                    <ui:DropdownField label="Job" index="0" choices="Bastion,Knave,Demon Slayer,Colossus" class="modal-dropdown" />
+                    <ui:DropdownField label="Class" index="0" choices="Stalwart,Vagabond,Mendicant,Wright,Heavy,Skirmisher,Leader,Artillery,Legend,Mob" name="ClassDropdown" class="modal-dropdown" />
+                    <ui:DropdownField label="Job" index="0" choices="Bastion,Knave,Demon Slayer,Colossus" name="JobDropdown" class="modal-dropdown" style="display: flex;" />
                     <ui:TextField picking-mode="Ignore" label="Job" value="Warrior" style="display: none;" />
-                    <ui:Toggle label="Elite" style="display: none;" />
+                    <ui:Toggle label="Elite" name="EliteToggle" style="display: none;" />
                     <ui:DropdownField label="HP Multiplier" index="2" choices="x1,x2,x3,x4,x5,x6,x7" class="modal-dropdown" style="display: none;" />
                     <ui:DropdownField label="Size" index="0" choices="Normal,Large (2), Huge (3)" class="modal-dropdown" style="display: none;" />
                 </ui:VisualElement>
-                <ui:VisualElement name="Footer" style="border-left-color: rgb(43, 43, 43); border-right-color: rgb(43, 43, 43); border-top-color: rgb(43, 43, 43); border-bottom-color: rgb(43, 43, 43); border-top-width: 2px; padding-top: 10px; margin-top: 10px; flex-direction: row; justify-content: center;">
-                    <ui:Button text="Confirm" display-tooltip-when-elided="true" class="modal-button" />
-                    <ui:Button text="Cancel" display-tooltip-when-elided="true" class="modal-button" />
+                <ui:VisualElement style="border-left-color: rgb(43, 43, 43); border-right-color: rgb(43, 43, 43); border-top-color: rgb(43, 43, 43); border-bottom-color: rgb(43, 43, 43); border-top-width: 2px; padding-top: 10px; margin-top: 10px; flex-direction: row; justify-content: center;">
+                    <ui:Button text="Confirm" display-tooltip-when-elided="true" name="AddTokenConfirmButton" class="modal-button" style="display: flex;" />
+                    <ui:Button text="Cancel" display-tooltip-when-elided="true" name="AddTokenCancelButton" class="modal-button" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="InfoDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
+            <ui:VisualElement name="InfoDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
                 <ui:VisualElement name="Header" class="modal-header">
                     <ui:Label tabindex="-1" text="About IsoCON" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: normal;" />
                 </ui:VisualElement>
@@ -117,6 +117,55 @@
                 <ui:VisualElement name="Footer" style="border-left-color: rgb(43, 43, 43); border-right-color: rgb(43, 43, 43); border-top-color: rgb(43, 43, 43); border-bottom-color: rgb(43, 43, 43); border-top-width: 2px; padding-top: 10px; margin-top: 10px; flex-direction: row; justify-content: center;">
                     <ui:Button text="Close" display-tooltip-when-elided="true" class="modal-button" />
                 </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="ColorPickerDialog" class="dialog" style="background-color: rgba(0, 0, 0, 0); display: none;">
+                <ui:VisualElement name="Header" class="modal-header">
+                    <ui:Label tabindex="-1" text="Color Picker" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: normal;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Contents" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0);">
+                    <ui:VisualElement class="color-edit" style="padding-left: 10px; padding-right: 10px; padding-top: 0; padding-bottom: 0;">
+                        <ui:VisualElement name="ColorPrevieww" style="flex-grow: 1; background-color: rgb(255, 255, 255); height: 70px;" />
+                        <ui:VisualElement style="flex-direction: row; -unity-text-align: middle-left; margin-top: 4px;">
+                            <ui:VisualElement style="width: 18px; height: 18px; background-color: rgb(255, 0, 0); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-top-left-radius: 9px; border-bottom-left-radius: 9px; border-top-right-radius: 9px; border-bottom-right-radius: 9px;" />
+                            <ui:Slider picking-mode="Ignore" value="1" high-value="1" class="scale" style="flex-grow: 1; margin-left: 4px;" />
+                        </ui:VisualElement>
+                        <ui:VisualElement style="flex-direction: row; -unity-text-align: middle-left; margin-top: 4px;">
+                            <ui:VisualElement style="width: 18px; height: 18px; background-color: rgb(0, 255, 0); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-top-left-radius: 9px; border-bottom-left-radius: 9px; border-top-right-radius: 9px; border-bottom-right-radius: 9px;" />
+                            <ui:Slider picking-mode="Ignore" value="1" high-value="1" class="scale" style="flex-grow: 1; margin-left: 4px;" />
+                        </ui:VisualElement>
+                        <ui:VisualElement style="flex-direction: row; -unity-text-align: middle-left; margin-top: 4px;">
+                            <ui:VisualElement style="width: 18px; height: 18px; background-color: rgb(0, 0, 255); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-top-left-radius: 9px; border-bottom-left-radius: 9px; border-top-right-radius: 9px; border-bottom-right-radius: 9px;" />
+                            <ui:Slider picking-mode="Ignore" value="1" high-value="1" class="scale" style="flex-grow: 1; margin-left: 4px;" />
+                        </ui:VisualElement>
+                        <ui:TextField picking-mode="Ignore" value="#FFFFFF" style="margin-left: 0; margin-right: 0; margin-top: 4px; margin-bottom: 0;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="Footer" style="border-left-color: rgb(43, 43, 43); border-right-color: rgb(43, 43, 43); border-top-color: rgb(43, 43, 43); border-bottom-color: rgb(43, 43, 43); border-top-width: 2px; padding-top: 10px; margin-top: 10px; flex-direction: row; justify-content: center;">
+                    <ui:Button text="Close" display-tooltip-when-elided="true" class="modal-button" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="TokenOptions" style="flex-grow: 1; position: absolute; width: 0; height: 0; top: 50%; left: 50%; background-color: rgb(113, 113, 113);">
+        <ui:VisualElement name="Root" style="flex-grow: 1; background-color: rgb(255, 255, 255); width: 4px; height: 4px; position: absolute;" />
+        <ui:VisualElement class="token-option" style="flex-grow: 1; background-color: rgb(255, 255, 255); position: absolute; left: -96px; width: 32px; height: 32px; rotate: 45deg; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; translate: -50% 0;">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgb(20, 93, 200); rotate: -45deg; position: absolute; width: 74px; height: 20px; -unity-text-align: middle-center; color: rgb(255, 255, 255); -unity-font-style: bold; translate: -50% -50%; left: 50%; top: 50%; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;">
+                <ui:Label tabindex="-1" text="MOVE" display-tooltip-when-elided="true" name="Label" style="padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: lower-center;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement class="token-option" style="flex-grow: 1; background-color: rgb(255, 255, 255); position: absolute; left: 96px; width: 32px; height: 32px; rotate: 45deg; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; translate: -50% 0;">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgb(20, 93, 200); rotate: -45deg; position: absolute; width: 74px; height: 20px; -unity-text-align: middle-center; color: rgb(255, 255, 255); -unity-font-style: bold; translate: -50% -50%; left: 50%; top: 50%; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;">
+                <ui:Label tabindex="-1" text="EDIT" display-tooltip-when-elided="true" name="Label" style="padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: lower-center;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement class="token-option" style="flex-grow: 1; background-color: rgb(255, 255, 255); position: absolute; left: 46px; width: 32px; height: 32px; rotate: 45deg; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; translate: -50% 0; top: 50px;">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgb(20, 93, 200); rotate: -45deg; position: absolute; width: 74px; height: 20px; -unity-text-align: middle-center; color: rgb(255, 255, 255); -unity-font-style: bold; translate: -50% -50%; left: 50%; top: 50%; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;">
+                <ui:Label tabindex="-1" text="STATUS" display-tooltip-when-elided="true" style="padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: lower-center;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement class="token-option" style="flex-grow: 1; background-color: rgb(255, 255, 255); position: absolute; left: -46px; width: 32px; height: 32px; rotate: 45deg; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; translate: -50% 0; top: 50px;">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgb(20, 93, 200); rotate: -45deg; position: absolute; width: 74px; height: 20px; -unity-text-align: middle-center; color: rgb(255, 255, 255); -unity-font-style: bold; translate: -50% -50%; left: 50%; top: 50%; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;">
+                <ui:Label tabindex="-1" text="HP" display-tooltip-when-elided="true" style="padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: lower-center;" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
