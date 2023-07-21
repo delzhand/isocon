@@ -5,6 +5,8 @@ using UnityEngine;
 public class ReserveController : MonoBehaviour
 {
     public static int Size;
+    private static Camera rCamera;
+
     private Vector3 anchorPos = new Vector3(0, 65, 4);
 
     // Start is called before the first frame update
@@ -18,8 +20,20 @@ public class ReserveController : MonoBehaviour
     {   
         anchorPos.x = Screen.width * .9f;
         anchorPos.y = Screen.height * .1f;
-        Vector3 worldPos = GameObject.Find("ReserveCamera").GetComponent<Camera>().ScreenToWorldPoint(anchorPos);
+        Vector3 worldPos = Camera.ScreenToWorldPoint(anchorPos);
         GameObject.Find("SpotRoot").transform.position = worldPos;
+    }
+
+    public static Camera Camera {
+        get {
+            if (rCamera == null) {
+                rCamera = GameObject.Find("ReserveCamera").GetComponent<Camera>();
+                return rCamera;
+            }
+            else {
+                return rCamera;
+            }
+        }
     }
 
     public static void Adjust() {

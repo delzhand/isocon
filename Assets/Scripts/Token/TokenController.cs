@@ -8,9 +8,20 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 using System.Linq;
 
+public enum SelectedState {
+    Neutral,
+    MenuOpen,
+    Moving,
+    EditingHP,
+    EditingStatus,
+    EditOther,
+}
+
 public class TokenController : MonoBehaviour
 {
-    private static Token held = null;
+    private static Token selected = null;
+    private static SelectedState selectedState = SelectedState.Neutral;
+
     public static Vector3 Size2Offset = new Vector3(0, 0, -.73f);
 
     // Start is called before the first frame update
@@ -51,6 +62,7 @@ public class TokenController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        updateControlOptions();
     }
 
     public void registerCallbacks() {
@@ -67,6 +79,13 @@ public class TokenController : MonoBehaviour
         UI.System.Q<DropdownField>("ClassDropdown").RegisterValueChangedCallback<string>((evt) => {
             setJobOptions(evt.newValue);
         });
+
+        UI.System.Q("TokenOpMove").RegisterCallback<ClickEvent>((evt) => {
+            selectedState = SelectedState.Moving;
+            selected.SetMoving();
+        });
+
+        UI.SetBlocking(UI.System, new string[]{"TokenOptions"});
     }
 
     private void setJobOptions(string class_) {
@@ -88,6 +107,38 @@ public class TokenController : MonoBehaviour
             }        
         }
         UI.System.Q<DropdownField>("GraphicDropdown").choices = avatars;        
+    }
+
+    private void updateControlOptions() {
+        List<VisualElement> tokenOptions = UI.System.Query(null, "token-option").ToList();
+        for (int i = 0; i < tokenOptions.Count; i++) {
+            if (selected == null) {
+                tokenOptions[i].style.display = DisplayStyle.None;
+            }
+            else {
+                tokenOptions[i].style.display = DisplayStyle.Flex;
+                switch (selectedState) {
+                    case SelectedState.MenuOpen:
+                        if (selected.InReserve) {
+                            tokenOptions[i].style.display = DisplayStyle.Flex;
+                            UI.FollowToken(selected, tokenOptions[i], ReserveController.Camera, new Vector2(0, -45 * i));
+                        }
+                        else {
+                            Vector2 offset = new Vector2(0, 50);
+                            offset.x = ((i - 2) * 70) + 35;
+                            if (i > 0 && i < tokenOptions.Count -1) {
+                                offset.y += 50;
+                            }
+                            UI.FollowToken(selected, tokenOptions[i], Camera.main, offset);
+                            tokenOptions[i].style.display = DisplayStyle.Flex;
+                        }
+                        break;
+                    default:
+                        tokenOptions[i].style.display = DisplayStyle.None;
+                        break;
+                }
+            }
+        }
     }
 
     private List<string> getClasses() {
@@ -521,29 +572,34 @@ public class TokenController : MonoBehaviour
 
     public static void TokenClick(Token token) {
         if (token == null) {
-            held = null;
+            selected = null;
             GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
             for (int i = 0; i < tokens.Length; i++) {
-                tokens[i].GetComponent<Token>().ClearState();
+                tokens[i].GetComponent<Token>().Deselect();
             }
         }
-        else if (token == held) {
-            token.AdvanceState();
+        else if (token == selected) {
+            selected.Deselect();
+            selected = null;
         }
         else {
-            if (held != null) {
-                held.ClearState();
+            if (selected != null) {
+                selected.Deselect();
+                selected = null;
             }
-            token.SetState(HoldState.Held);
+            token.Select();
+            selected = token;
+            selectedState = SelectedState.MenuOpen;
         }
 
     }
 
     public static void BlockClick(Block block) {
-        if (held != null) {
-            held.PlaceAtBlock(block);
+        if (selected != null && selectedState == SelectedState.Moving) {
+            selected.PlaceAtBlock(block);
             ReserveController.Adjust();
-            // DropHeld();  
+            selected.Deselect();
+            selected = null;
         }
         else {
             CameraControl.GoToBlock(block);
@@ -557,21 +613,21 @@ public class TokenController : MonoBehaviour
         if (UI.ClicksSuspended) {
             return;
         }
-        if (held != null && !held.InReserve) {
-            spot.PlaceAtReserveSpot(held);
+        if (selected != null && !selected.InReserve) {
+            spot.PlaceAtReserveSpot(selected);
         }
-        else if (held == null && spot == ReserveSpot.LastReserveSpot()) {
+        else if (selected == null && spot == ReserveSpot.LastReserveSpot()) {
             EnableAddToken();
         }
     }
 
     public static void SetHeld(Token token) {
-        held = token;
+        selected = token;
     }
 
     public static bool IsHeld(Token token)
     {
-        return held == token;
+        return selected == token;
     }
 
     public static void DropHeld() {

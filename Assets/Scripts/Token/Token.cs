@@ -9,18 +9,10 @@ using UnityEngine.Networking;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 
-public enum HoldState {
-    None,
-    Held,
-    QuickHP,
-    Edit,
-}
-
 public class Token : MonoBehaviour
 {
     public bool InReserve = true;
     public int Size = 1;
-    private HoldState state = HoldState.None;
 
     // Start is called before the first frame update
     void Start()
@@ -91,46 +83,20 @@ public class Token : MonoBehaviour
         }
     }
 
-    public void SetState(HoldState h) {
-        state = h;
-        switch (state) {
-            case HoldState.None:
-                ClearState();
-                break;
-            case HoldState.Held:
-                TokenController.SetHeld(this);
-                TokenController.EnableFocusPane();
-                transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1);
-                transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetVector("_Color", new Vector4(2f, 2f, 0, 2f));
-                break;
-            case HoldState.Edit:
-                TokenController.DisableQuickEdit();
-                TokenController.EnableFullEdit();
-                // TokenController.SetHeld(this);
-                // GetComponentInChildren<MeshRenderer>().material.SetInt("_Selected", 1);
-                // GetComponentInChildren<MeshRenderer>().material.SetVector("_Color", new Vector4(2f, 0, 2f, 2f));
-                break;
-            case HoldState.QuickHP:
-                TokenController.EnableQuickEdit();
-                // TokenController.SetHeld(this);
-                // GetComponentInChildren<MeshRenderer>().material.SetInt("_Selected", 1);
-                // GetComponentInChildren<MeshRenderer>().material.SetVector("_Color", new Vector4(0, 2f, 2f, 2f));
-                break;
-        }
+    public void Select() {
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1);
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 0);
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetVector("_Color", new Vector4(2f, 2f, 0, 2f));
     }
 
-    public void AdvanceState() {
-        int stateVal = (int)state;
-        int newStateVal = (stateVal + 1) % Enum.GetValues(typeof(HoldState)).Length;
-        SetState((HoldState)newStateVal);
-    }
-
-    public void ClearState() {
-        state = HoldState.None;
-        TokenController.DisableFocusPane();
-        TokenController.DisableQuickEdit();
-        TokenController.DisableFullEdit();
+    public void Deselect() {
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 0);
     }
 
+    public void SetMoving() {
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 1);
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetVector("_Color", new Vector4(2f, 2f, 2f, 2f));
+    }
 }

@@ -114,4 +114,18 @@ public class UI : MonoBehaviour
     public static float GetScale(string element) {
         return GameObject.Find(element).GetComponent<UIDocument>().panelSettings.scale;
     }
+
+    public static void FollowToken(Token token, VisualElement element, Camera camera, Vector2 offset) {
+        Vector3 worldPos = token.transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").position;
+        Vector3 viewportPos = camera.WorldToViewportPoint(worldPos);
+        if (element.resolvedStyle.width != float.NaN) {
+            Vector2 screenPos = new Vector2(
+                Mathf.RoundToInt((viewportPos.x * UI.System.resolvedStyle.width)),
+                Mathf.RoundToInt((1f - viewportPos.y) * UI.System.resolvedStyle.height)
+            );
+            Vector2 pos = screenPos + offset;
+            element.style.left = pos.x;
+            element.style.top = pos.y;
+        }
+    }
 }
