@@ -14,6 +14,8 @@ public class Token : MonoBehaviour
     public bool InReserve = true;
     public int Size = 1;
 
+    public Texture2D Image;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,20 +25,6 @@ public class Token : MonoBehaviour
     void Update()
     {
         alignToCamera();
-
-        // if (TokenController.IsHeld(this)) {
-        //     VisualElement edit = UI.GameInfo.Q("ModifyPane");
-        //     HpBar hp = GetComponent<HpBar>();
-        //     UnitState us = GetComponent<UnitState>();
-        //     edit.Q<Label>("HPVal").text = hp.CHP.ToString();
-        //     edit.Q<Label>("VigVal").text = hp.VIG.ToString();
-        //     edit.Q<Label>("WoundsVal").text = hp.Wounds.ToString();
-        //     edit.Q<Label>("ResVal").text = us.Resolve.ToString();
-        //     edit.Q<Label>("GResVal").text = UnitState.GResolve.ToString();
-        //     edit.Q<Label>("AthVal").text = us.Aether.ToString();
-        //     edit.Q<Label>("VglVal").text = us.Vigilance.ToString();
-        //     edit.Q<Label>("BlsVal").text = us.Blessings.ToString();
-        // }
     }
 
     private void alignToCamera() {
@@ -66,8 +54,10 @@ public class Token : MonoBehaviour
             else
             {
                 // Get downloaded asset bundle
-                Texture2D texture = DownloadHandlerTexture.GetContent(uwr);
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetTexture("_Image", texture);
+                Image = DownloadHandlerTexture.GetContent(uwr);
+                float aspectRatio = Image.width/(float)Image.height;
+                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetTexture("_Image", Image);
+                transform.Find("Offset/Avatar/Cutout/Cutout Quad").transform.localScale = new Vector3(aspectRatio, 1f, 1f);
             }
         }
     }

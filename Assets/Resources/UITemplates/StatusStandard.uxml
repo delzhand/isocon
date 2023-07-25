@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="StatusStandard" class="status-option" style="background-color: rgba(0, 0, 0, 0); position: absolute; left: 132px; top: 234px; display: flex;">
+        <ui:VisualElement style="background-image: resource(&apos;Textures/gradient 1&apos;); height: 16px; position: absolute; translate: 0 -50%; width: 148px; -unity-background-image-tint-color: rgba(0, 0, 0, 0.59); scale: -1 1;" />
+        <ui:VisualElement class="centered" style="flex-grow: 1; background-color: rgb(255, 255, 255); width: 12px; height: 12px; rotate: 45deg; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; display: flex;" />
+        <ui:Label tabindex="-1" text="STATUS" display-tooltip-when-elided="true" name="StatusName" style="position: absolute; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-top: 0; padding-bottom: 0; -unity-text-align: middle-left; translate: 15px -50%; -unity-font-definition: resource(&apos;Fonts/Classica-Bold SDF&apos;); color: rgb(255, 255, 255); text-shadow: 1px 1px 0 rgb(0, 0, 0); width: 140px; height: 18px; flex-direction: column;">
+            <ui:VisualElement style="background-color: rgb(255, 255, 255); height: 1px; position: absolute; bottom: 0; width: 100%; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-right-width: 1px; border-bottom-width: 1px;" />
+        </ui:Label>
+        <ui:Toggle value="false" focusable="true" name="Active" style="position: absolute; top: -14px; left: 106px;" />
+        <ui:Toggle value="false" name="Ongoing" class="ongoing" style="position: absolute; top: -14px; left: 137px;" />
+    </ui:VisualElement>
+</ui:UXML>

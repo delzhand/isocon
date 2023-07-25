@@ -70,6 +70,22 @@ public class UI : MonoBehaviour
             });
         }
     }
+    // public static void SetBlockingByClass(VisualElement root, string classname) {
+    //     root.Query(null, classname).ForEach(blocking);
+    // }
+
+    // private void blocking(VisualElement element) {
+    //     element.RegisterCallback<MouseEnterEvent>((evt) => {
+    //         if (!suspensions.Contains(element)) {
+    //             suspensions.Add(s);
+    //             // printSuspensions("Enter " + s);
+    //         }
+    //     });            
+    //     element.RegisterCallback<MouseLeaveEvent>((evt) => {
+    //         suspensions.Remove(s);
+    //         // printSuspensions("Leave " + s);
+    //     });
+    // }
 
     private static void printSuspensions(string s2) {
         Debug.Log(s2);
@@ -115,8 +131,11 @@ public class UI : MonoBehaviour
         return GameObject.Find(element).GetComponent<UIDocument>().panelSettings.scale;
     }
 
-    public static void FollowToken(Token token, VisualElement element, Camera camera, Vector2 offset) {
-        Vector3 worldPos = token.transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").position;
+    public static void FollowToken(Token token, VisualElement element, Camera camera, Vector2 offset, bool useAnchor = true) {
+        Vector3 worldPos = token.transform.Find("Offset/Avatar/Cutout/Cutout Quad").position;
+        if (useAnchor) {
+            worldPos = token.transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").position;
+        }
         Vector3 viewportPos = camera.WorldToViewportPoint(worldPos);
         if (element.resolvedStyle.width != float.NaN) {
             Vector2 screenPos = new Vector2(

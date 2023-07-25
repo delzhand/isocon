@@ -34,7 +34,7 @@ public class ReserveSpot : MonoBehaviour
         Token.InReserve = true;
         Token.transform.Find("Base").gameObject.SetActive(false);
         SetTokenPosition();
-        TokenController.DropHeld();
+        TokenController.Deselect();
         ReserveController.Adjust();
     }
 

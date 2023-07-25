@@ -36,7 +36,7 @@ public class UnitState : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (TokenController.IsHeld(GetComponent<Token>())) {
+        if (TokenController.IsSelected(GetComponent<Token>())) {
             // updateScreenPosition();
             updateData();
         }

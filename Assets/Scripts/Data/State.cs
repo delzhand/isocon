@@ -10,7 +10,7 @@ public class State
 {
     public string Version;
     public Palette Palette;
-    public Background Background;
+    public BackgroundGradient Background;
     public string[] Blocks;
 
     public static string FullFilePath(string fileName) {

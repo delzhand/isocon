@@ -1,0 +1,52 @@
+.token-scroll {
+  border-color: rgb(102, 95, 79);
+  border-width: 1px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.token-scroll .unity-scroller--vertical {
+  border-width: 0px;
+  width: 13px;
+  translate: 5px 0px;
+}
+
+.token-scroll .unity-scroller--vertical .unity-scroller__slider {
+  width: 13px;
+  min-width: 13px;
+}
+
+.token-scroll .unity-scroller--vertical .unity-base-slider__tracker {
+  background-color: transparent;
+  border-width: 0;
+}
+
+.token-scroll .unity-scroller--vertical .unity-base-slider__dragger {
+  width: 13px;
+  border-width: 0;
+}
+
+.token-scroll .unity-scroller--vertical .unity-slider__input {
+}
+
+.token-scroll .unity-scroller--vertical   .unity-scroller__slider {
+  margin: 0;
+}
+
+.token-scroll .unity-scroller--vertical   .unity-scroller__low-button {
+  display: none;
+}
+
+.token-scroll .unity-scroller--vertical   .unity-scroller__high-button {
+  display: none;
+}
+
+.token-scroll .unity-label {
+  color: #FFF;
+}
+
+.token-scroll .header {
+  font-size: 18px;
+  background-color: #242424;
+  padding: 4px 8px;
+}

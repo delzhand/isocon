@@ -593,6 +593,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdec3616bf351f043a4eb77f34f0b04c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Distance: 53
+  ArcSize: 92
+  Origin: {x: 0, y: 0}
+  ArcOffset: 136
 --- !u!114 &726269905
 MonoBehaviour:
   m_ObjectHideFlags: 0

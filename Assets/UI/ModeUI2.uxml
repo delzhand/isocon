@@ -1,6 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Styles/MainStyle2.uss?fileID=7433441132597879392&amp;guid=a0ac1fc332ef11648804d9ebb72c4f28&amp;type=3#MainStyle2" />
     <Style src="project://database/Assets/UI/Styles/Overhead.uss?fileID=7433441132597879392&amp;guid=db9f5488cbd5b104699c060ac772337b&amp;type=3#Overhead" />
+    <Style src="project://database/Assets/UI/Styles/SelectedTokenPanel.uss?fileID=7433441132597879392&amp;guid=427ea82f716f91041b22393c19829ada&amp;type=3#SelectedTokenPanel" />
+    <Style src="project://database/Assets/Resources/Controls/slide-toggle/SlideToggle.uss?fileID=7433441132597879392&amp;guid=adce2f9d2f1eabd4f842d3ee9a84166b&amp;type=3#SlideToggle" />
+    <Style src="project://database/Assets/UI/Styles/TokenScroll.uss?fileID=7433441132597879392&amp;guid=c2acdbd4390b1f442a686ee3e6972cce&amp;type=3#TokenScroll" />
     <ui:VisualElement name="MainMenuToggle" class="panel" style="position: absolute; right: auto; top: 10px; width: 30px; height: 30px; border-left-color: rgb(102, 95, 79); border-top-right-radius: 22px; border-bottom-right-radius: 22px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; left: 10px; border-top-left-radius: 22px; border-bottom-left-radius: 22px;">
         <ui:VisualElement name="Bar1" class="shape" style="flex-grow: 1; width: 20px; height: 2px; top: 35%; left: 50%; translate: -50% -50%;" />
         <ui:VisualElement name="Bar2" class="shape" style="flex-grow: 1; width: 20px; height: 2px; top: 50%; left: 50%; translate: -50% -50%;" />
@@ -99,9 +102,9 @@
                     <ui:DropdownField label="Class" index="0" choices="Stalwart,Vagabond,Mendicant,Wright,Heavy,Skirmisher,Leader,Artillery,Legend,Mob" name="ClassDropdown" class="modal-dropdown" />
                     <ui:DropdownField label="Job" index="0" choices="Bastion,Knave,Demon Slayer,Colossus" name="JobDropdown" class="modal-dropdown" style="display: flex;" />
                     <ui:TextField picking-mode="Ignore" label="Job" value="Warrior" style="display: none;" />
-                    <ui:Toggle label="Elite" name="EliteToggle" style="display: none;" />
-                    <ui:DropdownField label="HP Multiplier" index="2" choices="x1,x2,x3,x4,x5,x6,x7" class="modal-dropdown" style="display: none;" />
-                    <ui:DropdownField label="Size" index="0" choices="Normal,Large (2), Huge (3)" class="modal-dropdown" style="display: none;" />
+                    <ui:Toggle label="Elite" name="EliteToggle" class="modal-toggle" style="display: none;" />
+                    <ui:DropdownField label="HP Multiplier" index="2" choices="x1,x2,x3,x4,x5,x6,x7" name="LegendHPDropdown" class="modal-dropdown" style="display: none;" />
+                    <ui:DropdownField label="Size" index="0" choices="Normal,Large (2), Huge (3)" name="SizeDropdown" class="modal-dropdown" style="display: none;" />
                 </ui:VisualElement>
                 <ui:VisualElement style="border-left-color: rgb(43, 43, 43); border-right-color: rgb(43, 43, 43); border-top-color: rgb(43, 43, 43); border-bottom-color: rgb(43, 43, 43); border-top-width: 2px; padding-top: 10px; margin-top: 10px; flex-direction: row; justify-content: center;">
                     <ui:Button text="Confirm" display-tooltip-when-elided="true" name="AddTokenConfirmButton" class="modal-button" style="display: flex;" />
@@ -147,26 +150,177 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="TokenOptions" style="flex-grow: 1; position: absolute; width: 0; height: 0; top: 0; left: 0; background-color: rgb(113, 113, 113);">
-        <ui:VisualElement name="TokenOpMove" class="token-option" style="flex-grow: 1; background-color: rgb(255, 255, 255); position: absolute; left: 0; width: 32px; height: 32px; rotate: 45deg; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; translate: -50% -50%; top: 0; display: none;">
-            <ui:VisualElement style="flex-grow: 1; background-color: rgb(20, 93, 200); rotate: -45deg; position: absolute; width: 74px; height: 20px; -unity-text-align: middle-center; color: rgb(255, 255, 255); -unity-font-style: bold; translate: -50% -50%; left: 50%; top: 50%; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;">
-                <ui:Label tabindex="-1" text="MOVE" display-tooltip-when-elided="true" name="Label" style="padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: lower-center; -unity-font-definition: resource(&apos;Fonts/Classica-Book SDF&apos;);" />
+    <ui:VisualElement name="TokenOptions" style="flex-grow: 1; position: absolute; width: 0; height: 0; top: 0; left: 0; background-color: rgb(113, 113, 113); display: none;">
+        <ui:VisualElement name="TokenOpMove" class="token-option" style="background-color: rgba(0, 0, 0, 0); position: absolute; left: 132px; top: 234px; display: flex;">
+            <ui:VisualElement style="background-image: resource(&apos;Textures/gradient 1&apos;); height: 16px; position: absolute; translate: -148px -50%; width: 148px; -unity-background-image-tint-color: rgba(0, 0, 0, 0.59);" />
+            <ui:VisualElement class="centered" style="flex-grow: 1; background-color: rgb(255, 255, 255); width: 12px; height: 12px; rotate: 45deg; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; display: flex;" />
+            <ui:Label tabindex="-1" text="MOVE" display-tooltip-when-elided="true" style="position: absolute; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-top: 0; padding-bottom: 0; -unity-text-align: middle-right; translate: -150px -50%; -unity-font-definition: resource(&apos;Fonts/Classica-Bold SDF&apos;); color: rgb(255, 255, 255); text-shadow: 1px 1px 0 rgb(0, 0, 0); width: 140px; height: 18px; flex-direction: column;">
+                <ui:VisualElement style="background-color: rgb(255, 255, 255); height: 1px; position: absolute; bottom: 0; width: 100%; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-right-width: 1px; border-bottom-width: 1px;" />
+            </ui:Label>
+        </ui:VisualElement>
+        <ui:VisualElement name="TokenOpAction" class="token-option" style="background-color: rgba(0, 0, 0, 0); position: absolute; left: 132px; top: 234px; display: flex;">
+            <ui:VisualElement style="background-image: resource(&apos;Textures/gradient 1&apos;); height: 16px; position: absolute; translate: -148px -50%; width: 148px; -unity-background-image-tint-color: rgba(0, 0, 0, 0.59);" />
+            <ui:VisualElement class="centered" style="flex-grow: 1; background-color: rgb(255, 255, 255); width: 12px; height: 12px; rotate: 45deg; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; display: flex;" />
+            <ui:Label tabindex="-1" text="ACTIONS" display-tooltip-when-elided="true" style="position: absolute; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-top: 0; padding-bottom: 0; -unity-text-align: middle-right; translate: -150px -50%; -unity-font-definition: resource(&apos;Fonts/Classica-Bold SDF&apos;); color: rgb(255, 255, 255); text-shadow: 1px 1px 0 rgb(0, 0, 0); width: 140px; height: 18px; flex-direction: column;">
+                <ui:VisualElement style="background-color: rgb(255, 255, 255); height: 1px; position: absolute; bottom: 0; width: 100%; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-right-width: 1px; border-bottom-width: 1px;" />
+            </ui:Label>
+        </ui:VisualElement>
+        <ui:VisualElement name="TokenOpEdit" class="token-option" style="background-color: rgba(0, 0, 0, 0); position: absolute; left: 132px; top: 234px; display: flex;">
+            <ui:VisualElement style="background-image: resource(&apos;Textures/gradient 1&apos;); height: 16px; position: absolute; translate: -148px -50%; width: 148px; -unity-background-image-tint-color: rgba(0, 0, 0, 0.59);" />
+            <ui:VisualElement class="centered" style="flex-grow: 1; background-color: rgb(255, 255, 255); width: 12px; height: 12px; rotate: 45deg; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; display: flex;" />
+            <ui:Label tabindex="-1" text="EDIT" display-tooltip-when-elided="true" style="position: absolute; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-top: 0; padding-bottom: 0; -unity-text-align: middle-right; translate: -150px -50%; -unity-font-definition: resource(&apos;Fonts/Classica-Bold SDF&apos;); color: rgb(255, 255, 255); text-shadow: 1px 1px 0 rgb(0, 0, 0); width: 140px; height: 18px; flex-direction: column;">
+                <ui:VisualElement style="background-color: rgb(255, 255, 255); height: 1px; position: absolute; bottom: 0; width: 100%; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-right-width: 1px; border-bottom-width: 1px;" />
+            </ui:Label>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="SelectedTokenPanel" class="panel" style="position: absolute; width: 300px; bottom: 10px;">
+        <ui:VisualElement name="PortraitFrame" style="width: 80px; height: 80px; position: absolute; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(102, 95, 79); border-right-color: rgb(102, 95, 79); border-top-color: rgb(102, 95, 79); border-bottom-color: rgb(102, 95, 79); background-color: rgba(255, 255, 255, 0.11);">
+            <ui:VisualElement name="Portrait" class="centered" style="width: 100%; height: 100%;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Top" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; flex-wrap: wrap; margin-left: 80px;">
+            <ui:VisualElement name="Id" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: space-between; flex-grow: 1;">
+                <ui:Label tabindex="-1" text="Name" display-tooltip-when-elided="true" name="Name" style="color: rgb(255, 255, 255); flex-direction: row; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; align-self: flex-start; padding-left: 4px; padding-right: 4px; padding-top: 4px; padding-bottom: 4px; -unity-font-style: normal;" />
+                <ui:VisualElement name="Tags" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-self: flex-start; flex-direction: row; justify-content: flex-end;">
+                    <ui:Label tabindex="-1" text="Elite" display-tooltip-when-elided="true" name="Elite" class="tag purple" style="-unity-font-style: normal;" />
+                    <ui:Label tabindex="-1" text="Job Name" display-tooltip-when-elided="true" name="Job" class="tag red" style="-unity-font-style: normal; -unity-text-align: upper-right;" />
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="TokenOpEdit" class="token-option" style="flex-grow: 1; background-color: rgb(255, 255, 255); position: absolute; left: 96px; width: 32px; height: 32px; rotate: 45deg; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; translate: -50% -50%; display: none;">
-            <ui:VisualElement style="flex-grow: 1; background-color: rgb(20, 93, 200); rotate: -45deg; position: absolute; width: 74px; height: 20px; -unity-text-align: middle-center; color: rgb(255, 255, 255); -unity-font-style: bold; translate: -50% -50%; left: 50%; top: 50%; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;">
-                <ui:Label tabindex="-1" text="EDIT" display-tooltip-when-elided="true" name="Label" style="padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: lower-center; -unity-font-definition: resource(&apos;Fonts/Classica-Book SDF&apos;);" />
+        <ui:VisualElement name="HpWrapper" style="margin-left: 113px; margin-right: 4px; margin-top: 10px;">
+            <ui:ProgressBar value="15" name="HpBar" high-value="28" />
+            <ui:VisualElement name="Wounds">
+                <ui:VisualElement name="Wound1" class="wound" style="visibility: hidden;">
+                    <ui:Label tabindex="-1" text="X" display-tooltip-when-elided="true" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Wound2" class="wound">
+                    <ui:Label tabindex="-1" text="X" display-tooltip-when-elided="true" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Wound3" class="wound">
+                    <ui:Label tabindex="-1" text="X" display-tooltip-when-elided="true" />
+                </ui:VisualElement>
             </ui:VisualElement>
+            <ui:ProgressBar value="3" name="VigBar" high-value="28" style="height: 5px;" />
+            <ui:VisualElement name="HpOverlay" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                <ui:VisualElement class="outline" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                <ui:VisualElement class="outline inner" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                <ui:VisualElement class="bit top left" />
+                <ui:VisualElement class="bit top center" />
+                <ui:VisualElement class="bit top right" />
+                <ui:VisualElement class="bit left bottom" />
+                <ui:VisualElement class="bit center bottom" />
+                <ui:VisualElement class="bit leftside" />
+                <ui:VisualElement class="bit rightside" />
+                <ui:VisualElement class="bit right bottom" />
+            </ui:VisualElement>
+            <ui:VisualElement name="HpVal" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); top: -1px;">
+                <ui:Label tabindex="-1" text="/28" display-tooltip-when-elided="true" name="MHP" style="-unity-font-style: normal;" />
+                <ui:Label tabindex="-1" text="+3" display-tooltip-when-elided="true" name="VIG" style="-unity-font-style: normal;" />
+                <ui:Label tabindex="-1" text="15" display-tooltip-when-elided="true" name="CHP" style="-unity-font-style: normal;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="HeartIcon">
+                <ui:VisualElement class="part" />
+                <ui:VisualElement class="part two" />
+            </ui:VisualElement>
+            <ui:Label tabindex="-1" text="HP" display-tooltip-when-elided="true" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-font-definition: resource(&apos;Fonts/Classica-Book SDF&apos;); color: rgb(121, 113, 95); -unity-font-style: bold; font-size: 10px; position: absolute; left: -25px; top: 2px;" />
         </ui:VisualElement>
-        <ui:VisualElement name="TokenOpStatus" class="token-option" style="flex-grow: 1; background-color: rgb(255, 255, 255); position: absolute; left: 46px; width: 32px; height: 32px; rotate: 45deg; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; translate: -50% -50%; top: 50px; display: none;">
-            <ui:VisualElement style="flex-grow: 1; background-color: rgb(20, 93, 200); rotate: -45deg; position: absolute; width: 74px; height: 20px; -unity-text-align: middle-center; color: rgb(255, 255, 255); -unity-font-style: bold; translate: -50% -50%; left: 50%; top: 50%; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;">
-                <ui:Label tabindex="-1" text="STATUS" display-tooltip-when-elided="true" style="padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: lower-center; -unity-font-definition: resource(&apos;Fonts/Classica-Book SDF&apos;);" />
+        <ui:VisualElement name="ResolveWrapper" style="display: flex; margin-left: 113px; width: auto; margin-right: 4px; margin-top: 10px;">
+            <ui:ProgressBar value="3" high-value="6" name="PResolveBar" style="height: 10px;" />
+            <ui:ProgressBar value="1" high-value="6" name="GResolveBar" style="height: 10px;" />
+            <ui:VisualElement name="ResolveOverlay">
+                <ui:VisualElement class="outline" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                <ui:VisualElement class="outline inner" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                <ui:VisualElement class="bit" />
+                <ui:VisualElement class="bit one" />
+                <ui:VisualElement class="bit two" />
+                <ui:VisualElement class="bit three" />
+                <ui:VisualElement class="bit four" />
+                <ui:VisualElement class="bit five" />
             </ui:VisualElement>
+            <ui:VisualElement style="position: absolute; left: -27px; background-color: rgb(250, 246, 6); width: 15px; height: 15px; rotate: 45deg; top: -1px;" />
+            <ui:Label tabindex="-1" text="RES" display-tooltip-when-elided="true" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-font-definition: resource(&apos;Fonts/Classica-Book SDF&apos;); color: rgb(121, 113, 95); -unity-font-style: bold; font-size: 10px; position: absolute; left: -29px; top: 0;" />
         </ui:VisualElement>
-        <ui:VisualElement name="TokenOpHP" class="token-option" style="flex-grow: 1; background-color: rgb(255, 255, 255); position: absolute; left: -46px; width: 32px; height: 32px; rotate: 45deg; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; translate: -50% -50%; top: 50px; display: none;">
-            <ui:VisualElement style="flex-grow: 1; background-color: rgb(20, 93, 200); rotate: -45deg; position: absolute; width: 74px; height: 20px; -unity-text-align: middle-center; color: rgb(255, 255, 255); -unity-font-style: bold; translate: -50% -50%; left: 50%; top: 50%; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;">
-                <ui:Label tabindex="-1" text="HP" display-tooltip-when-elided="true" style="padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: lower-center; -unity-font-definition: resource(&apos;Fonts/Classica-Book SDF&apos;);" />
+        <ui:VisualElement name="Statuses" style="flex-grow: 1; border-left-color: rgb(102, 95, 79); border-right-color: rgb(102, 95, 79); border-top-color: rgb(102, 95, 79); border-bottom-color: rgb(102, 95, 79); border-top-width: 1px; margin-top: 7px; flex-direction: row;">
+            <ui:Label tabindex="-1" text="Normal" display-tooltip-when-elided="true" class="status pos" style="flex-direction: row; flex-wrap: wrap; align-self: flex-start;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="EditTokenPanel" class="panel" style="width: 400px; height: 90%; bottom: 10px; flex-direction: column; align-items: stretch;">
+        <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-direction: row; height: 100px; display: flex;">
+            <ui:Button text="All" display-tooltip-when-elided="true" />
+            <ui:Button text="Vitals" display-tooltip-when-elided="true" />
+            <ui:Button text="Class" display-tooltip-when-elided="true" />
+            <ui:Button text="Buffs" display-tooltip-when-elided="true" />
+            <ui:Button text="Debuffs" display-tooltip-when-elided="true" />
+            <ui:Button text="Other" display-tooltip-when-elided="true" />
+        </ui:VisualElement>
+        <ui:ScrollView mouse-wheel-scroll-size="800" class="token-scroll" style="flex-grow: 1;">
+            <ui:VisualElement name="Sample" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
+                <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" class="header" />
+                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: stretch;">
+                    <ui:Slider picking-mode="Ignore" label="HP" value="40" high-value="40" style="flex-grow: 1;" />
+                    <ui:Label tabindex="-1" text="40" display-tooltip-when-elided="true" />
+                </ui:VisualElement>
+                <IsoconUILibrary.NumberNudger value="3" label="Aether" style="flex-direction: row;" />
+                <IsoconUILibrary.SlideToggle label="Counter" />
+                <IsoconUILibrary.DoubleToggle label="Blind" style="flex-direction: row;" />
+                <ui:TextField picking-mode="Ignore" label="Name" value="Gradis" />
+                <ui:DropdownField label="Stance" index="1" choices="None,Dark Knight" />
+                <ui:Button text="Duplicate" display-tooltip-when-elided="true" />
             </ui:VisualElement>
+            <ui:VisualElement name="Vitals" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
+                <ui:Label tabindex="-1" text="Vitals" display-tooltip-when-elided="true" class="header" />
+                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                    <ui:SliderInt picking-mode="Ignore" label="HP" value="40" high-value="40" name="e_CurrentHPSlider" style="flex-grow: 1;" />
+                    <ui:Label tabindex="-1" text="40" display-tooltip-when-elided="true" name="e_CurrentHP" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                    <ui:SliderInt picking-mode="Ignore" label="Vigor" value="0" high-value="40" name="e_VigorSlider" style="flex-grow: 1;" />
+                    <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="e_Vigor" />
+                </ui:VisualElement>
+                <IsoconUILibrary.NumberNudger name="e_Wounds" label="Wounds" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Class" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
+                <ui:Label tabindex="-1" text="Class Features" display-tooltip-when-elided="true" class="header" />
+                <IsoconUILibrary.NumberNudger label="Aether" />
+                <IsoconUILibrary.NumberNudger label="Vigilance" />
+                <ui:Toggle label="Stacked Die" />
+                <ui:DropdownField label="Stance" index="0" choices="None,Endless Battlement,Soul Blade,Riposte,Dark Knight,The Saints,Gentleness,Gravebirth,Odinforce" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Buffs" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
+                <ui:Label tabindex="-1" text="Buffs" display-tooltip-when-elided="true" class="header" />
+                <ui:Toggle label="Counter" />
+                <ui:Toggle label="Defiance" />
+                <ui:Toggle label="Dodge" />
+                <ui:Toggle label="Evasion" />
+                <ui:Toggle label="Flying" />
+                <ui:Toggle label="Phasing" />
+                <ui:Toggle label="Stealth" />
+                <ui:Toggle label="Sturdy" />
+                <ui:Toggle label="Unstoppable" />
+                <ui:Toggle label="Regeneration" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Debuffs" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
+                <ui:Label tabindex="-1" text="Debuffs" display-tooltip-when-elided="true" class="header" />
+                <IsoconUILibrary.DoubleToggle label="Slashed" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
+                <IsoconUILibrary.DoubleToggle label="Blind" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
+                <IsoconUILibrary.DoubleToggle label="Dazed" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
+                <IsoconUILibrary.DoubleToggle label="Pacified" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
+                <IsoconUILibrary.DoubleToggle label="Sealed" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
+                <IsoconUILibrary.DoubleToggle label="Shattered" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
+                <IsoconUILibrary.DoubleToggle label="Stunned" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
+                <IsoconUILibrary.DoubleToggle label="Weakened" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
+                <IsoconUILibrary.DoubleToggle label="Vulnerable" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
+                <ui:TextField picking-mode="Ignore" label="Marked by" />
+                <ui:TextField picking-mode="Ignore" label="Hatred of" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Other" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
+                <ui:Label tabindex="-1" text="Other" display-tooltip-when-elided="true" class="header" />
+                <ui:TextField picking-mode="Ignore" label="Name" value="Token Name" />
+                <ui:Button text="Duplicate" display-tooltip-when-elided="true" />
+                <ui:Button text="Delete" display-tooltip-when-elided="true" />
+            </ui:VisualElement>
+        </ui:ScrollView>
+        <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-direction: row; height: 100px;">
+            <ui:Button text="Done" display-tooltip-when-elided="true" name="TokenEditDone" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

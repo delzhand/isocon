@@ -13,6 +13,37 @@
     padding: 0;
 }
 
+.red {
+    background-color: rgb(238, 34, 12);
+}
+
+.yellow {
+    background-color: rgb(254, 174, 0);
+}
+
+.blue {
+    background-color: rgb(0, 162, 255);
+}
+
+.green {
+    background-color: rgb(97, 216, 54);
+}
+
+.purple {
+    background-color: rgb(202, 85, 239);
+}
+
+.gray {
+    background-color: rgb(146, 146, 146);
+}
+
+.centered {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+}
+
 .menu-l1 {
     border-left-width: 4px;
     border-color: rgb(102, 95, 79);
@@ -290,7 +321,7 @@
 }
 
 #EditTools {
-    right: -100px;
+    right: -102px;
     top: 10px;
     transition-duration: 0.2s;
 }
@@ -328,4 +359,14 @@
     position: absolute;
     top: 50%;
     left: 50%;
+}
+
+#EditTokenPanel {
+    position: absolute;
+    right: -400px;
+    transition-duration: .2s;
+}
+#EditTokenPanel.active {
+    right: 50px;
+
 }

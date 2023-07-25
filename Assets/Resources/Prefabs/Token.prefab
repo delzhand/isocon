@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InReserve: 1
   Size: 1
+  Image: {fileID: 0}
 --- !u!1 &2280768507597381959
 GameObject:
   m_ObjectHideFlags: 0
