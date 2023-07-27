@@ -147,4 +147,11 @@ public class UI : MonoBehaviour
             element.style.top = pos.y;
         }
     }
+
+    public static bool InElement(string elementName) {
+        Vector2 mp = Input.mousePosition;
+        Vector2 min = UI.System.Q(elementName).layout.min;
+        Vector2 max = UI.System.Q(elementName).layout.max;
+        return (mp.x >= min.x && mp.x <= max.x && mp.y >= min.y && mp.y <= max.y);   
+    }
 }

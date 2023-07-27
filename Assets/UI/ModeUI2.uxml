@@ -174,6 +174,7 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="SelectedTokenPanel" class="panel" style="position: absolute; width: 300px; bottom: 10px;">
+        <IsoconUILibrary.SlideToggle label="Edit" name="TokenEditToggle" style="position: absolute; right: 0; top: -30px;" />
         <ui:VisualElement name="PortraitFrame" style="width: 80px; height: 80px; position: absolute; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(102, 95, 79); border-right-color: rgb(102, 95, 79); border-top-color: rgb(102, 95, 79); border-bottom-color: rgb(102, 95, 79); background-color: rgba(255, 255, 255, 0.11);">
             <ui:VisualElement name="Portrait" class="centered" style="width: 100%; height: 100%;" />
         </ui:VisualElement>
@@ -239,12 +240,38 @@
             <ui:VisualElement style="position: absolute; left: -27px; background-color: rgb(250, 246, 6); width: 15px; height: 15px; rotate: 45deg; top: -1px;" />
             <ui:Label tabindex="-1" text="RES" display-tooltip-when-elided="true" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-font-definition: resource(&apos;Fonts/Classica-Book SDF&apos;); color: rgb(121, 113, 95); -unity-font-style: bold; font-size: 10px; position: absolute; left: -29px; top: 0;" />
         </ui:VisualElement>
-        <ui:VisualElement name="Statuses" style="flex-grow: 1; border-left-color: rgb(102, 95, 79); border-right-color: rgb(102, 95, 79); border-top-color: rgb(102, 95, 79); border-bottom-color: rgb(102, 95, 79); border-top-width: 1px; margin-top: 7px; flex-direction: row;">
+        <ui:VisualElement name="Stats" style="border-left-color: rgb(102, 95, 79); border-right-color: rgb(102, 95, 79); border-top-color: rgb(102, 95, 79); border-bottom-color: rgb(102, 95, 79); border-top-width: 1px; margin-top: 7px; flex-direction: row; justify-content: space-between; flex-grow: 1;">
+            <ui:VisualElement class="stat">
+                <ui:Label tabindex="-1" text="10" display-tooltip-when-elided="true" name="s_Defense" class="value" />
+                <ui:Label tabindex="-1" text="DEF" display-tooltip-when-elided="true" class="stat-name" />
+            </ui:VisualElement>
+            <ui:VisualElement class="stat">
+                <ui:Label tabindex="-1" text="D10" display-tooltip-when-elided="true" name="s_Damage" class="value" />
+                <ui:Label tabindex="-1" text="DMG" display-tooltip-when-elided="true" class="stat-name" />
+            </ui:VisualElement>
+            <ui:VisualElement class="stat">
+                <ui:Label tabindex="-1" text="2" display-tooltip-when-elided="true" name="s_Fray" class="value" />
+                <ui:Label tabindex="-1" text="FRAY" display-tooltip-when-elided="true" class="stat-name" />
+            </ui:VisualElement>
+            <ui:VisualElement class="stat">
+                <ui:Label tabindex="-1" text="4" display-tooltip-when-elided="true" name="s_Range" class="value" />
+                <ui:Label tabindex="-1" text="RNG" display-tooltip-when-elided="true" class="stat-name" />
+            </ui:VisualElement>
+            <ui:VisualElement class="stat">
+                <ui:Label tabindex="-1" text="4" display-tooltip-when-elided="true" name="s_Speed" class="value" />
+                <ui:Label tabindex="-1" text="SPD" display-tooltip-when-elided="true" class="stat-name" />
+            </ui:VisualElement>
+            <ui:VisualElement class="stat">
+                <ui:Label tabindex="-1" text="2" display-tooltip-when-elided="true" name="s_Dash" class="value" />
+                <ui:Label tabindex="-1" text="DASH" display-tooltip-when-elided="true" class="stat-name" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="Statuses" style="flex-grow: 1; border-left-color: rgb(102, 95, 79); border-right-color: rgb(102, 95, 79); border-top-color: rgb(102, 95, 79); border-bottom-color: rgb(102, 95, 79); border-top-width: 1px; margin-top: 7px; flex-direction: row; flex-wrap: wrap;">
             <ui:Label tabindex="-1" text="Normal" display-tooltip-when-elided="true" class="status pos" style="flex-direction: row; flex-wrap: wrap; align-self: flex-start;" />
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="EditTokenPanel" class="panel" style="width: 400px; height: 90%; bottom: 10px; flex-direction: column; align-items: stretch;">
-        <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-direction: row; height: 100px; display: flex;">
+        <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-direction: row; height: 100px; display: none;">
             <ui:Button text="All" display-tooltip-when-elided="true" />
             <ui:Button text="Vitals" display-tooltip-when-elided="true" />
             <ui:Button text="Class" display-tooltip-when-elided="true" />
@@ -253,7 +280,7 @@
             <ui:Button text="Other" display-tooltip-when-elided="true" />
         </ui:VisualElement>
         <ui:ScrollView mouse-wheel-scroll-size="800" class="token-scroll" style="flex-grow: 1;">
-            <ui:VisualElement name="Sample" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
+            <ui:VisualElement name="Sample" class="scroll-group" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
                 <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" class="header" />
                 <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: stretch;">
                     <ui:Slider picking-mode="Ignore" label="HP" value="40" high-value="40" style="flex-grow: 1;" />
@@ -266,7 +293,7 @@
                 <ui:DropdownField label="Stance" index="1" choices="None,Dark Knight" />
                 <ui:Button text="Duplicate" display-tooltip-when-elided="true" />
             </ui:VisualElement>
-            <ui:VisualElement name="Vitals" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
+            <ui:VisualElement name="Vitals" class="scroll-group" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
                 <ui:Label tabindex="-1" text="Vitals" display-tooltip-when-elided="true" class="header" />
                 <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
                     <ui:SliderInt picking-mode="Ignore" label="HP" value="40" high-value="40" name="e_CurrentHPSlider" style="flex-grow: 1;" />
@@ -277,49 +304,52 @@
                     <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="e_Vigor" />
                 </ui:VisualElement>
                 <IsoconUILibrary.NumberNudger name="e_Wounds" label="Wounds" />
+                <IsoconUILibrary.NumberNudger name="e_Resolve" label="Personal Resolve" />
+                <IsoconUILibrary.NumberNudger name="e_GResolve" label="Party Resolve" />
             </ui:VisualElement>
-            <ui:VisualElement name="Class" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
+            <ui:VisualElement name="Class" class="scroll-group" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
                 <ui:Label tabindex="-1" text="Class Features" display-tooltip-when-elided="true" class="header" />
-                <IsoconUILibrary.NumberNudger label="Aether" />
-                <IsoconUILibrary.NumberNudger label="Vigilance" />
-                <ui:Toggle label="Stacked Die" />
-                <ui:DropdownField label="Stance" index="0" choices="None,Endless Battlement,Soul Blade,Riposte,Dark Knight,The Saints,Gentleness,Gravebirth,Odinforce" />
+                <IsoconUILibrary.NumberNudger label="Aether" name="e_Aether" />
+                <IsoconUILibrary.NumberNudger label="Vigilance" name="e_Vigilance" />
+                <IsoconUILibrary.NumberNudger name="e_Blessings" label="Blessings" />
+                <ui:Toggle label="Stacked Die" name="e_StackedDie" />
+                <ui:DropdownField label="Stance" index="0" choices="None,Endless Battlement,Soul Blade,Riposte,Dark Knight,The Saints,Gentleness,Gravebirth,Odinforce" name="e_Stance" />
             </ui:VisualElement>
-            <ui:VisualElement name="Buffs" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
+            <ui:VisualElement name="Buffs" class="scroll-group" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
                 <ui:Label tabindex="-1" text="Buffs" display-tooltip-when-elided="true" class="header" />
-                <ui:Toggle label="Counter" />
-                <ui:Toggle label="Defiance" />
-                <ui:Toggle label="Dodge" />
-                <ui:Toggle label="Evasion" />
-                <ui:Toggle label="Flying" />
-                <ui:Toggle label="Phasing" />
-                <ui:Toggle label="Stealth" />
-                <ui:Toggle label="Sturdy" />
-                <ui:Toggle label="Unstoppable" />
-                <ui:Toggle label="Regeneration" />
+                <ui:Toggle label="Counter" name="e_Counter" />
+                <ui:Toggle label="Defiance" name="e_Defiance" />
+                <ui:Toggle label="Dodge" name="e_Dodge" />
+                <ui:Toggle label="Evasion" name="e_Evasion" />
+                <ui:Toggle label="Flying" name="e_Flying" />
+                <ui:Toggle label="Phasing" name="e_Phasing" />
+                <ui:Toggle label="Stealth" name="e_Stealth" />
+                <ui:Toggle label="Sturdy" name="e_Sturdy" />
+                <ui:Toggle label="Unstoppable" name="e_Unstoppable" />
+                <ui:Toggle label="Regeneration" name="e_Regeneration" />
             </ui:VisualElement>
-            <ui:VisualElement name="Debuffs" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
+            <ui:VisualElement name="Debuffs" class="scroll-group" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
                 <ui:Label tabindex="-1" text="Debuffs" display-tooltip-when-elided="true" class="header" />
-                <IsoconUILibrary.DoubleToggle label="Slashed" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
-                <IsoconUILibrary.DoubleToggle label="Blind" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
-                <IsoconUILibrary.DoubleToggle label="Dazed" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
-                <IsoconUILibrary.DoubleToggle label="Pacified" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
-                <IsoconUILibrary.DoubleToggle label="Sealed" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
-                <IsoconUILibrary.DoubleToggle label="Shattered" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
-                <IsoconUILibrary.DoubleToggle label="Stunned" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
-                <IsoconUILibrary.DoubleToggle label="Weakened" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
-                <IsoconUILibrary.DoubleToggle label="Vulnerable" ongoing="false" active="false" value1="false" value2="false" style="flex-direction: row;" />
-                <ui:TextField picking-mode="Ignore" label="Marked by" />
-                <ui:TextField picking-mode="Ignore" label="Hatred of" />
+                <IsoconUILibrary.DoubleToggle label="Blind" ongoing="false" active="false" value1="false" value2="false" name="e_Blind" style="flex-direction: row;" />
+                <IsoconUILibrary.DoubleToggle label="Dazed" ongoing="false" active="false" value1="false" value2="false" name="e_Dazed" style="flex-direction: row;" />
+                <IsoconUILibrary.DoubleToggle label="Pacified" ongoing="false" active="false" value1="false" value2="false" name="e_Pacified" style="flex-direction: row;" />
+                <IsoconUILibrary.DoubleToggle label="Sealed" ongoing="false" active="false" value1="false" value2="false" name="e_Sealed" style="flex-direction: row;" />
+                <IsoconUILibrary.DoubleToggle label="Shattered" ongoing="false" active="false" value1="false" value2="false" name="e_Shattered" style="flex-direction: row;" />
+                <IsoconUILibrary.DoubleToggle label="Slashed" ongoing="false" active="false" value1="false" value2="false" name="e_Slashed" style="flex-direction: row;" />
+                <IsoconUILibrary.DoubleToggle label="Stunned" ongoing="false" active="false" value1="false" value2="false" name="e_Stunned" style="flex-direction: row;" />
+                <IsoconUILibrary.DoubleToggle label="Weakened" ongoing="false" active="false" value1="false" value2="false" name="e_Weakened" style="flex-direction: row;" />
+                <IsoconUILibrary.DoubleToggle label="Vulnerable" ongoing="false" active="false" value1="false" value2="false" name="e_Vulnerable" style="flex-direction: row;" />
+                <ui:TextField picking-mode="Ignore" label="Marked by" name="e_Marked" />
+                <ui:TextField picking-mode="Ignore" label="Hatred of" name="e_Hatred" />
             </ui:VisualElement>
-            <ui:VisualElement name="Other" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
+            <ui:VisualElement name="Other" class="scroll-group" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
                 <ui:Label tabindex="-1" text="Other" display-tooltip-when-elided="true" class="header" />
-                <ui:TextField picking-mode="Ignore" label="Name" value="Token Name" />
-                <ui:Button text="Duplicate" display-tooltip-when-elided="true" />
-                <ui:Button text="Delete" display-tooltip-when-elided="true" />
+                <ui:TextField picking-mode="Ignore" label="Name" value="Token Name" name="e_Name" />
+                <ui:Button text="Duplicate" display-tooltip-when-elided="true" name="e_Duplicate" />
+                <ui:Button text="Delete" display-tooltip-when-elided="true" name="e_Delete" />
             </ui:VisualElement>
         </ui:ScrollView>
-        <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-direction: row; height: 100px;">
+        <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-direction: row; height: 100px; display: none;">
             <ui:Button text="Done" display-tooltip-when-elided="true" name="TokenEditDone" />
         </ui:VisualElement>
     </ui:VisualElement>

@@ -9,17 +9,9 @@ using UnityEngine.UIElements;
 using System.Linq;
 using IsoconUILibrary;
 
-public enum SelectedState {
-    Neutral,
-    MenuOpen,
-    Moving,
-    Editing
-}
-
 public class TokenController : MonoBehaviour
 {
     private static Token selected = null;
-    private static SelectedState selectedState = SelectedState.Neutral;
     public static Vector3 Size2Offset = new Vector3(0, 0, -.73f);
 
     // Start is called before the first frame update
@@ -31,7 +23,6 @@ public class TokenController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        updateControlOptions();
     }
 
     public void registerCallbacks() {
@@ -54,19 +45,13 @@ public class TokenController : MonoBehaviour
             setJobOptions(evt.newValue);
         });
 
-        UI.System.Q("TokenOpMove").RegisterCallback<ClickEvent>((evt) => {
-            selectedState = SelectedState.Moving;
-            selected.SetMoving();
-        });
-
-        UI.System.Q("TokenOpEdit").RegisterCallback<ClickEvent>((evt) => {
-            selectedState = SelectedState.Editing;
-            EnableFullEdit();
-        });
-
-        UI.System.Q("TokenEditDone").RegisterCallback<ClickEvent>((evt) => {
-            DisableFullEdit();
-            Deselect();
+        UI.System.Q("TokenEditToggle").RegisterCallback<ClickEvent>((evt) => {
+            if(UI.System.Q<SlideToggle>("TokenEditToggle").value) {
+                EnableFullEdit();
+            }
+            else {
+                DisableFullEdit();
+            }
         });
 
         registerTokenEditCallbacks();
@@ -88,6 +73,85 @@ public class TokenController : MonoBehaviour
         panel.Q<NumberNudger>("e_Wounds").AddValueChangedCallback((evt) => {
             selected.GetComponent<TokenState>().Wounds = Math.Clamp(evt, 0, 3);
         });
+
+        panel.Q<NumberNudger>("e_Resolve").AddValueChangedCallback((evt) => {
+            selected.GetComponent<TokenState>().Resolve = Math.Clamp(evt, 0, 30);
+        });
+
+        panel.Q<NumberNudger>("e_GResolve").AddValueChangedCallback((evt) => {
+            TokenState.GResolve = Math.Clamp(evt, 0, 30);
+        });
+
+        panel.Q<NumberNudger>("e_Aether").AddValueChangedCallback((evt) => {
+            selected.GetComponent<TokenState>().Aether = Math.Clamp(evt, 0, 30);
+        });
+
+        panel.Q<NumberNudger>("e_Blessings").AddValueChangedCallback((evt) => {
+            selected.GetComponent<TokenState>().Blessings = Math.Clamp(evt, 0, 30);
+        });
+
+        panel.Q<NumberNudger>("e_Vigilance").AddValueChangedCallback((evt) => {
+            selected.GetComponent<TokenState>().Vigilance = Math.Clamp(evt, 0, 30);
+        });
+
+        panel.Q<Toggle>("e_StackedDie").RegisterValueChangedCallback((evt) => {
+            selected.GetComponent<TokenState>().StackedDie = evt.newValue;
+        });
+
+        panel.Q<DropdownField>("e_Stance").RegisterValueChangedCallback((evt) => {
+            selected.GetComponent<TokenState>().Stance = evt.newValue;
+        });
+
+        List<string> toggles = new List<string>(){"Counter", "Defiance", "Dodge", "Evasion", "Flying", "Phasing", "Stealth", "Sturdy", "Unstoppable", "Regeneration"};
+        for(int i = 0; i < toggles.Count; i++) {
+            panel.Q<Toggle>("e_" + toggles[i]).RegisterValueChangedCallback((evt) => {
+                Toggle t = evt.target as Toggle;
+                string status = t.name.Replace("e_", "");
+                TokenState ts = selected.GetComponent<TokenState>();
+                if (evt.newValue) {
+                    ts.Status.Add(status);
+                }
+                else {
+                    ts.Status.Remove(status);
+                }
+            });
+        }
+
+        List<string> doubleToggles = new List<string>(){"Blind", "Dazed", "Pacified", "Sealed", "Shattered", "Slashed", "Stunned", "Weakened", "Vulnerable"};
+        for(int i = 0; i < doubleToggles.Count; i++) {
+            panel.Q<DoubleToggle>("e_" + doubleToggles[i]).AddValueChangedCallback((evt) => {
+                DoubleToggle t = evt.target as DoubleToggle;
+                string status = t.name.Replace("e_", "");
+                TokenState ts = selected.GetComponent<TokenState>();
+                if (evt.newValue.Item1) {
+                    ts.SetStatus(status);
+                }
+                else {
+                    ts.DropStatus(status);
+                }
+                if (evt.newValue.Item2) {
+                    ts.SetStatus(status + "+");
+                }
+                else {
+                    ts.DropStatus(status + "+");
+                }
+            });
+        }
+
+        panel.Q<TextField>("e_Marked").RegisterValueChangedCallback((evt) => {
+            selected.GetComponent<TokenState>().Mark = evt.newValue;
+        });
+
+        panel.Q<TextField>("e_Hatred").RegisterValueChangedCallback((evt) => {
+            selected.GetComponent<TokenState>().Hate = evt.newValue;
+        });
+
+        panel.Q<TextField>("e_Name").RegisterValueChangedCallback((evt) => {
+            selected.name = evt.newValue;
+        });
+
+
+
     }
 
     private void setJobOptions(string class_) {
@@ -136,45 +200,6 @@ public class TokenController : MonoBehaviour
                 return false;
         }
         return true;
-    }
-
-    private void updateControlOptions() {
-        int Distance = 53;
-        int ArcSize = 92;
-        Vector2 Origin = new Vector2(0, 0);
-        float ArcOffset = 136;
-        List<VisualElement> tokenOptions = UI.System.Query(null, "token-option").ToList();
-        if (selected == null) {
-            UI.System.Q("TokenOptions").style.display = DisplayStyle.None;
-        }
-        else {
-            UI.System.Q("TokenOptions").style.display = DisplayStyle.Flex;
-            for (int i = 0; i < tokenOptions.Count; i++) {
-                switch (selectedState) {
-                    case SelectedState.MenuOpen:
-                        Camera c = Camera.main;
-                        if (selected.InReserve) {
-                            c = ReserveController.Camera;
-                        }
-                        UI.FollowToken(selected, tokenOptions[i], c, arcPosition(i, tokenOptions.Count, Distance, Origin, ArcSize, ArcOffset), false);
-                        tokenOptions[i].style.display = DisplayStyle.Flex;
-                        break;
-                    default:
-                        tokenOptions[i].style.display = DisplayStyle.None;
-                        break;
-                }
-            }
-        }
-    }
-
-    private static Vector2 arcPosition(int i, int count, float distance, Vector2 origin, float arcsize, float arcOffset) {
-        float angleStep = arcsize / (count - 1); // Divide 120 degrees into segments for each point
-        float angle = i * angleStep; // Calculate the angle for the current point
-        angle += arcOffset;
-        float radians = Mathf.Deg2Rad * angle; // Convert the angle to radians
-        float xOffset = distance * Mathf.Cos(radians);
-        float yOffset = distance * Mathf.Sin(radians);
-        return origin + new Vector2(xOffset, yOffset); // -yOffset because we want the arc to the lower right
     }
 
     private List<string> getClasses() {
@@ -414,11 +439,9 @@ public class TokenController : MonoBehaviour
     }
 
     public static void BlockClick(Block block) {
-        if (selected != null && selectedState == SelectedState.Moving) {
+        if (selected != null) {
             selected.PlaceAtBlock(block);
             ReserveController.Adjust();
-            selected.Deselect();
-            selected = null;
         }
         else {
             CameraControl.GoToBlock(block);
@@ -448,8 +471,8 @@ public class TokenController : MonoBehaviour
     private static void Select(Token token) {
         token.Select();
         selected = token;
-        selectedState = SelectedState.MenuOpen;
         UI.System.Q("SelectedTokenPanel").AddToClassList("active");
+        SetEditPanelValues();
     }
 
     public static void Deselect() {
@@ -457,8 +480,9 @@ public class TokenController : MonoBehaviour
             selected.Deselect();
             selected = null;
         }
-        selectedState = SelectedState.Neutral;
         UI.System.Q("SelectedTokenPanel").RemoveFromClassList("active");
+        UI.System.Q<SlideToggle>("TokenEditToggle").value = false;
+        DisableFullEdit();
     }
 
     public static void EnableAddToken() {
@@ -473,11 +497,20 @@ public class TokenController : MonoBehaviour
 
     public static void EnableFullEdit() {
         UI.System.Q("EditTokenPanel").AddToClassList("active");
-        UI.System.Q<SliderInt>("e_CurrentHPSlider").value = selected.GetComponent<TokenState>().CurrentHP;
-        UI.System.Q<SliderInt>("e_CurrentHPSlider").highValue = selected.GetComponent<TokenState>().MaxHP;
-        UI.System.Q<SliderInt>("e_VigorSlider").value = selected.GetComponent<TokenState>().Vigor;
-        UI.System.Q<SliderInt>("e_VigorSlider").highValue = selected.GetComponent<TokenState>().MaxHP;
-        UI.System.Q<NumberNudger>("e_Wounds").value = selected.GetComponent<TokenState>().Wounds;
+    }
+
+    private static void SetEditPanelValues() {
+        TokenState t = selected.GetComponent<TokenState>();
+        UI.System.Q<SliderInt>("e_CurrentHPSlider").highValue = t.MaxHP;
+        UI.System.Q<SliderInt>("e_CurrentHPSlider").value = t.CurrentHP;
+        UI.System.Q<SliderInt>("e_VigorSlider").highValue = t.MaxHP;
+        UI.System.Q<SliderInt>("e_VigorSlider").value = t.Vigor;
+        UI.System.Q<NumberNudger>("e_Wounds").value = t.Wounds;
+        UI.System.Q<NumberNudger>("e_Aether").value = t.Aether;
+        UI.System.Q<NumberNudger>("e_Vigilance").value = t.Vigilance;
+        UI.System.Q<Toggle>("e_StackedDie").value = t.StackedDie;
+        UI.System.Q<DropdownField>("e_Stance").value = t.Stance;
+        UI.System.Q<NumberNudger>("e_Blessings").value = t.Blessings;
     }
 
     public static void DisableAddToken() {

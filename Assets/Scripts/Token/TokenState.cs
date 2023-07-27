@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using IsoconUILibrary;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -26,13 +27,14 @@ public class TokenState : MonoBehaviour
     public int Aether;
     public int Vigilance;
     public int Blessings;
+    public bool StackedDie;
+    public string Stance = ""   ;
 
     public bool Elite;
 
     public List<string> Status = new List<string>();
-    public List<string> OngoingStatus;
-    public string Mark;
-    public string Hate;
+    public string Mark = "";
+    public string Hate = "";
 
 
     // Start is called before the first frame update
@@ -169,37 +171,74 @@ public class TokenState : MonoBehaviour
         int statusCount = 0;
         if (CurrentHP == 0) {
             statusCount++;
-            Label label = new Label("Incapacitated");
-            label.AddToClassList("status");
-            label.AddToClassList("neg");
-            panel.Q("Statuses").Add(label);
+            addStatus(panel, "Incapacitated", false);
         }
         else if (CurrentHP * 2 <= MaxHP) {
             statusCount++;
-            Label label = new Label("Bloodied");
-            label.AddToClassList("status");
-            label.AddToClassList("neg");
-            panel.Q("Statuses").Add(label);
+            addStatus(panel, "Bloodied", false);
         }
         for(int i = 0; i < Status.Count; i++) {
             statusCount++;
-            Label label = new Label(Status[i]);
-            label.AddToClassList("status");
-            if (TokenController.IsPositive(Status[i])) {
-                label.AddToClassList("pos");
+            addStatus(panel, Status[i], TokenController.IsPositive(Status[i]));
+        }
+
+        List<(string, int)> counters = new List<(string, int)>();
+        counters.Add(("Aether", Aether));
+        counters.Add(("Blessings", Blessings));
+        counters.Add(("Vigilance", Vigilance));
+        for(int i = 0; i < counters.Count; i++) {
+            if (counters[i].Item2 > 0) {
+                statusCount++;
+                addStatus(panel, counters[i].Item1 + " " + counters[i].Item2, true);
             }
-            else if (TokenController.IsNegative(Status[i])) {
-                label.AddToClassList("neg");
-            }
-            panel.Q("Statuses").Add(label);
+        }
+
+        if (Stance.Length > 0) {
+            statusCount++;
+            addStatus(panel, "Stance " + Stance, true);
+        }
+
+        if (Mark.Length > 0) {
+            statusCount++;
+            addStatus(panel, "Marked by " + Mark, false);
+        }
+
+        if (Hate.Length > 0) {
+            statusCount++;
+            addStatus(panel, "Hatred of " + Hate, false);
         }
 
         if (statusCount == 0) {
-            Label label = new Label("Normal");
-            label.AddToClassList("status");
-            label.AddToClassList("pos");
-            panel.Q("Statuses").Add(label);            
+            addStatus(panel, "Normal", true);
         }
+
+        if (StackedDie) {
+            addStatus(panel, "Stacked Die", true);
+        }
+
+        panel.Q<Label>("s_Defense").text = Defense.ToString();
+        panel.Q<Label>("s_Damage").text = "D" + Damage.ToString();
+        panel.Q<Label>("s_Fray").text = Fray.ToString();
+        panel.Q<Label>("s_Range").text = Range.ToString();
+        panel.Q<Label>("s_Speed").text = Speed.ToString();
+        panel.Q<Label>("s_Dash").text = Dash.ToString();
+    }
+
+    public void SetStatus(string s) {
+        if (!Status.Contains(s)) {
+            Status.Add(s);
+        }
+    }
+
+    public void DropStatus(string s) {
+        Status.Remove(s);
+    }
+
+    private void addStatus(VisualElement v, string statusName, bool pos) {
+        Label label = new Label(statusName);
+        label.AddToClassList("status");
+        label.AddToClassList(pos ? "pos" : "neg");
+        v.Q("Statuses").Add(label);  
     }
 
     private void updateTokenEditPanel() {
@@ -210,6 +249,9 @@ public class TokenState : MonoBehaviour
 
         panel.Q<Label>("e_Vigor").text = Vigor.ToString();
         panel.Q<SliderInt>("e_VigorSlider").highValue = MaxHP;
+
+        panel.Q<NumberNudger>("e_Resolve").value = Resolve;
+        panel.Q<NumberNudger>("e_GResolve").value = GResolve;
     }
 
 }

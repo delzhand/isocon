@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace IsoconUILibrary {
 
-    public class DoubleToggle : VisualElement 
+    public class DoubleToggle : VisualElement
     {
         public new class UxmlFactory : UxmlFactory<DoubleToggle, UxmlTraits> { }
         public new class UxmlTraits : VisualElement.UxmlTraits {
@@ -40,8 +41,10 @@ namespace IsoconUILibrary {
             get => m_Value1;
             set
             {
+                (bool,bool) oldValue = (value1,value2);
                 m_Value1 = value;
                 m_Toggle1.text = value ? "active" : "off";
+                OnValueChanged(oldValue, (value1,value2));
             }
         }
 
@@ -52,8 +55,34 @@ namespace IsoconUILibrary {
             get => m_Value2;
             set
             {
+                (bool,bool) oldValue = (value1,value2);
                 m_Value2 = value;
                 m_Toggle2.text = value ? "ongoing" : "off";
+                OnValueChanged(oldValue, (value1,value2));
+            }
+        }
+
+        private List<Action<ChangeEvent<(bool,bool)>>> valueChangedCallbacks;
+        // private List<Action<(bool,bool)>> valueChangedCallbacks;
+        public void AddValueChangedCallback(Action<ChangeEvent<(bool,bool)>> callback) {
+            if (valueChangedCallbacks == null) {
+                valueChangedCallbacks = new List<Action<ChangeEvent<(bool,bool)>>>();
+            }
+            valueChangedCallbacks.Add(callback);
+        }
+        // public void RemoveValueChangedCallback(Action<(bool,bool)> callback) {
+        //     if (valueChangedCallbacks == null) {
+        //         valueChangedCallbacks = new List<Action<(bool, bool)>>();
+        //     }
+        //     valueChangedCallbacks.Remove(callback);
+        // }
+        private void OnValueChanged((bool,bool) oldValue, (bool,bool) newValue) {
+            if (valueChangedCallbacks != null) {
+                foreach (var callback in valueChangedCallbacks) {
+                    ChangeEvent<(bool,bool)> c = ChangeEvent<(bool,bool)>.GetPooled(oldValue, newValue);
+                    c.target = this;
+                    callback(c);
+                }
             }
         }
 

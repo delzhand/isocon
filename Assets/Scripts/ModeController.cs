@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using IsoconUILibrary;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -48,6 +49,8 @@ public class ModeController : MonoBehaviour
     private void editMode() {
         Mode = ClickMode.Edit;
         UI.System.Q("ModeSwitch").RemoveFromClassList("active");
+        UI.System.Q("SelectedTokenPanel").RemoveFromClassList("active");
+        UI.System.Q("EditTokenPanel").RemoveFromClassList("active");
         UI.System.Q("EditTools").AddToClassList("active");
         GameObject.Find("ReserveCamera").GetComponent<Camera>().enabled = false;
     }
@@ -57,6 +60,7 @@ public class ModeController : MonoBehaviour
         UI.System.Q("ModeSwitch").AddToClassList("active");
         UI.System.Q("EditTools").RemoveFromClassList("active");
         GameObject.Find("ReserveCamera").GetComponent<Camera>().enabled = true;
+        UI.System.Q<SlideToggle>("TokenEditToggle").value = false;
     }
 
     private void setup() {

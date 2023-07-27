@@ -21,6 +21,9 @@ public class ReserveSpot : MonoBehaviour
 
     void OnMouseDown()
     {
+        if (UI.InElement("EditTokenPanel")) {
+            return;
+        }
         if (UI.ClicksSuspended) {
             return;
         }

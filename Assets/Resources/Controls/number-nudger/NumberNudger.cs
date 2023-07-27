@@ -92,6 +92,7 @@ namespace IsoconUILibrary {
         public NumberNudger()
         {
             this.AddToClassList("unity-base-field");
+            this.AddToClassList("number-nudger");
 
             stringLabel = new Label();
             stringLabel.text = "Label";
@@ -100,15 +101,18 @@ namespace IsoconUILibrary {
 
             downButton = new Button();
             downButton.text = "-";
+            downButton.AddToClassList("down");
             downButton.RegisterCallback<ClickEvent>(downClick);
             Add(downButton);
 
             valueLabel = new Label();
             valueLabel.text = value.ToString();
+            valueLabel.AddToClassList("value");
             Add(valueLabel);
 
             upButton = new Button();
             upButton.text = "+";
+            upButton.AddToClassList("up");
             upButton.RegisterCallback<ClickEvent>(upClick);
             Add(upButton);
         }

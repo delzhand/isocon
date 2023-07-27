@@ -50,3 +50,41 @@
   background-color: #242424;
   padding: 4px 8px;
 }
+
+.scroll-group>* {
+  border-bottom-width: 1px;
+  border-color: rgb(102, 95, 79);
+}
+
+.number-nudger .unity-button {
+  border-width: 0px;
+  border-color: rgb(102, 95, 79);
+  background-color: rgb(34, 88, 34);
+  color: #FFF;
+  -unity-font-style: bold;
+  padding: 2px 8px 2px 6px;
+  margin: 0;
+}
+
+.number-nudger .unity-button.up {
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
+.number-nudger .unity-button.down {
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
+  background-color: rgb(104, 41, 41);
+  padding: 2px 6px 2px 10px;
+}
+
+.number-nudger .value {
+  /* border-top-width: 2px; */
+  /* border-bottom-width: 2px; */
+  border-color: rgb(102, 95, 79);
+  margin: 0;
+  padding: 2px;
+  background-color: #242424;
+  -unity-font-style: bold;
+  min-width: 40px;
+  -unity-text-align: middle-center;
+}
