@@ -264,11 +264,13 @@
     padding: 6px;
 }
 
+.modal-toggle .unity-base-field__label,
 .modal-dropdown .unity-base-field__label,
 .modal-textfield .unity-base-field__label {
     color: #FFF;
 }
 
+.modal-toggle .unity-base-field:focus .unity-base-field__label,
 .modal-dropdown .unity-base-field:focus .unity-base-field__label,
 .modal-textfield .unity-base-field:active .unity-base-field__label {
     color: #FFF;

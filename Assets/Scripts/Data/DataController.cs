@@ -28,23 +28,6 @@ public class DataController : MonoBehaviour
         
     }
 
-    private void registerCallbacks() {
-        // List<(string, EventCallback<ClickEvent>)> uiConfig = new List<(string, string, EventCallback<ClickEvent>)>{
-        //     ("SaveMapButton", "Save the current map", SaveMap),
-        //     ("SaveMapAsButton", "Save a copy of the current map", SaveMapCopy),
-        //     ("LoadButton", "Load a map from the disk", LoadMap),
-        //     ("ResetButton", "Reset to the base map", ResetMap),
-        //     ("ExitButton", "Exit the program", ExitProgram),
-        //     ("FilenameConfirm", "Save with this filename", FilenameConfirm),
-        //     ("FilenameCancel", "Do not save", FilenameCancel),
-        // };   
-
-        // foreach((string, string, EventCallback<ClickEvent>) item in uiConfig) {
-        //     UI.AttachHelp(UI.System, item.Item1, item.Item2);
-        //     UI.System.Q(item.Item1).RegisterCallback<ClickEvent>(item.Item3);
-        // }
-    }
-
     public static bool NeedFilename() {
         return DataController.currentFileName == null || DataController.currentFileName.Length == 0;
     }

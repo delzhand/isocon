@@ -80,10 +80,10 @@ public class MenuController : MonoBehaviour
                 break;
             case "SaveMapButton":
                 if (DataController.NeedFilename()) {
-                    DataController.SaveMap();
+                    enableModal("SaveFileDialog");
                 }
                 else {
-                    enableModal("SaveFileDialog");
+                    DataController.SaveMap();
                 }
                 break;
             case "SaveMapAsButton":
@@ -93,7 +93,6 @@ public class MenuController : MonoBehaviour
                 DataController.SaveMap();
                 break;
             case "SaveFileCancelButton":
-                Debug.Log("foo");
                 disableModal();
                 break;
             case "ResetMapButton":

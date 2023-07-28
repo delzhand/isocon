@@ -180,19 +180,20 @@ public class Block : MonoBehaviour
     }
 
     public void SetTerrainInfo() {
-        // string height = (transform.localPosition.y + 1).ToString();
-        // if (Type == BlockType.Slope) {
-        //     height = transform.localPosition.y + "~" + (transform.localPosition.y + 1);
-        // }
-        // UI.GameInfo.Q<Label>("Height").text = height;
-        // UI.GameInfo.Q<Label>("Coords").text = toAlpha(getY() + 1) + "" + (getX()+1);
-        // UI.GameInfo.Q("Effects").Clear();
-        // markers.ForEach(marker => {
-        //     Label l = new Label();
-        //     l.text = marker.ToString();
-        //     l.AddToClassList("effect");
-        //     UI.GameInfo.Q("Effects").Add(l);
-        // });
+        string height = (transform.localPosition.y + 1).ToString();
+        if (Type == BlockType.Slope) {
+            height = transform.localPosition.y + "~" + (transform.localPosition.y + 1);
+        }
+        UI.System.Q<Label>("Height").text = height + "h";
+        UI.System.Q<Label>("Coords").text = toAlpha(getY() + 1) + "" + (getX()+1);
+        UI.System.Q("Coords").style.display = DisplayStyle.Flex;
+        UI.System.Q("Effects").Clear();
+        markers.ForEach(marker => {
+            Label l = new Label();
+            l.text = marker.ToString();
+            l.AddToClassList("effect");
+            UI.System.Q("Effects").Add(l);
+        });
     }
 
     private string toAlpha(int x) {
@@ -213,10 +214,6 @@ public class Block : MonoBehaviour
         return column;    
     }
 
-    public void Activate() {
-        Select();
-    }
-
     public void Select() {
         Selected = true;
         SetMaterials();
@@ -232,10 +229,6 @@ public class Block : MonoBehaviour
         for (int i = 0; i < blocks.Length; i++) {
             blocks[i].GetComponent<Block>().Deselect();
         }
-    }
-
-    public static bool AreAnySelected() {
-        return Block.GetAllSelected().Count > 0;
     }
 
     public static List<GameObject> GetAllSelected() {
@@ -284,13 +277,6 @@ public class Block : MonoBehaviour
                 break;
         }
         SetMaterials();
-    }
-
-    Material GetMaterial(string id, string path) {
-        if (!materials.ContainsKey(id)) {
-            materials.Add(id,  Resources.Load<Material>("Materials/Block/" + path));
-        }
-        return materials[id];
     }
 
     void SetMaterials() {
@@ -346,13 +332,6 @@ public class Block : MonoBehaviour
             if (show && blocks[i].GetComponent<Block>().Type == BlockType.Hidden) {
                 blocks[i].GetComponent<Block>().TypeChange(BlockType.Spacer);
             }
-        }
-    }
-
-    public static void ResetMaterials() {
-        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < blocks.Length; i++) {
-            blocks[i].GetComponent<Block>().SetMaterials();
         }
     }
 
@@ -539,7 +518,7 @@ public class Block : MonoBehaviour
         };
     }
 
-        static int[] getSlopeTopTriangles() {
+    static int[] getSlopeTopTriangles() {
         return new int[] {
             1,0,2,
             1,2,3,

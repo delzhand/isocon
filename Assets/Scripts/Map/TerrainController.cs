@@ -416,6 +416,8 @@ public class TerrainController : MonoBehaviour
     }
 
     private static void HideObscuredBlocks() {
+        int count = 0;
+        int hiding = 0;
         Vector2 size = Size();
         bool[,,] solids = new bool[(int)size.x,(int)size.y,30];
         GameObject[,,] blks = new GameObject[(int)size.x,(int)size.y,30];
@@ -423,6 +425,7 @@ public class TerrainController : MonoBehaviour
         for (int i = 0; i < blocks.Length; i++) {
             Block b = blocks[i].GetComponent<Block>();
             if (b.Type == BlockType.Solid) {
+                count++;
                 solids[b.getX(), b.getY(), b.getZ()] = true;
                 blks[b.getX(), b.getY(), b.getZ()] = b.gameObject;
             }
@@ -440,6 +443,7 @@ public class TerrainController : MonoBehaviour
                     solids[x,y-1,z] && // obscured south
                     solids[x,y+1,z]    //obscured north
                 ) {
+                    hiding++;
                     hideBlock(b);
                 }
                 else {

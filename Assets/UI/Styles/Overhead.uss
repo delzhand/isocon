@@ -96,22 +96,19 @@
 #Overhead #Color {
     position: absolute;
     right: -14px;
-    bottom: -1px;
+    bottom: 0px;
     height: 10px;
     width: 12px;
-    border-radius: 2px;
     background-color: white;
 }
 
 #Overhead #Elite {
     position: absolute;
-    right: -8px;
-    bottom: -1px;
+    right: -12px;
+    bottom: 0px;
     height: 10px;
-    width: 6px;
+    width: 12px;
     border-radius: 0px;
-    border-top-left-radius: 2px;
-    border-bottom-left-radius: 2px;
     background-color: #ca55ef;
 }
 

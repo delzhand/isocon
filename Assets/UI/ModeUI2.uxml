@@ -4,6 +4,7 @@
     <Style src="project://database/Assets/UI/Styles/SelectedTokenPanel.uss?fileID=7433441132597879392&amp;guid=427ea82f716f91041b22393c19829ada&amp;type=3#SelectedTokenPanel" />
     <Style src="project://database/Assets/Resources/Controls/slide-toggle/SlideToggle.uss?fileID=7433441132597879392&amp;guid=adce2f9d2f1eabd4f842d3ee9a84166b&amp;type=3#SlideToggle" />
     <Style src="project://database/Assets/UI/Styles/TokenScroll.uss?fileID=7433441132597879392&amp;guid=c2acdbd4390b1f442a686ee3e6972cce&amp;type=3#TokenScroll" />
+    <Style src="project://database/Assets/UI/Styles/TerrainInfo.uss?fileID=7433441132597879392&amp;guid=a2b0da1c90c97b24b80fe1c9575496f9&amp;type=3#TerrainInfo" />
     <ui:VisualElement name="MainMenuToggle" class="panel" style="position: absolute; right: auto; top: 10px; width: 30px; height: 30px; border-left-color: rgb(102, 95, 79); border-top-right-radius: 22px; border-bottom-right-radius: 22px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; left: 10px; border-top-left-radius: 22px; border-bottom-left-radius: 22px;">
         <ui:VisualElement name="Bar1" class="shape" style="flex-grow: 1; width: 20px; height: 2px; top: 35%; left: 50%; translate: -50% -50%;" />
         <ui:VisualElement name="Bar2" class="shape" style="flex-grow: 1; width: 20px; height: 2px; top: 50%; left: 50%; translate: -50% -50%;" />
@@ -72,12 +73,12 @@
     </ui:VisualElement>
     <ui:VisualElement name="ModalContainer" style="background-color: rgba(0, 0, 0, 0.5); overflow: hidden; display: flex;">
         <ui:VisualElement name="Modal" class="panel" style="flex-grow: 1; translate: -50% -50%;">
-            <ui:VisualElement name="LoadFileDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
+            <ui:VisualElement name="LoadFileDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
                 <ui:VisualElement name="Header" class="modal-header">
                     <ui:Label tabindex="-1" text="Select File" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: normal;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="Contents" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-                    <ui:ListView focusable="true" name="FileSelectListView" style="height: 200px;" />
+                    <ui:ListView focusable="true" name="FileSelectListView" style="height: 200px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; background-color: rgb(255, 255, 255); margin-left: 10px; margin-right: 10px; margin-top: 0; margin-bottom: 10px;" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="SaveFileDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
@@ -92,7 +93,7 @@
                     <ui:Button text="Cancel" display-tooltip-when-elided="true" name="SaveFileCancelButton" class="modal-button" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="AddTokenDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
+            <ui:VisualElement name="AddTokenDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
                 <ui:VisualElement name="Header" class="modal-header" style="flex-direction: column;">
                     <ui:Label tabindex="-1" text="Add Token" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: normal; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
                 </ui:VisualElement>
@@ -353,4 +354,12 @@
             <ui:Button text="Done" display-tooltip-when-elided="true" name="TokenEditDone" />
         </ui:VisualElement>
     </ui:VisualElement>
+    <ui:VisualElement name="TerrainInfo" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; top: 10px; right: 10px; display: none;">
+        <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Height" style="font-size: 40px; -unity-font-definition: resource(&apos;Fonts/Classica-Bold SDF&apos;); -unity-font-style: normal; color: rgb(255, 255, 255); text-shadow: 2px 2px 0 rgb(0, 0, 0); -unity-text-outline-color: rgb(0, 0, 0); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: upper-right;" />
+        <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Coords" style="font-size: 20px; -unity-font-definition: resource(&apos;Fonts/Classica-Bold SDF&apos;); -unity-font-style: normal; color: rgb(255, 255, 255); text-shadow: 2px 2px 0 rgb(0, 0, 0); -unity-text-outline-color: rgb(0, 0, 0); margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 8px; padding-right: 8px; padding-top: 0; padding-bottom: 0; -unity-text-align: upper-center; background-color: rgb(36, 36, 36); left: auto; border-top-left-radius: 12px; border-bottom-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; right: 0; display: none;" />
+        <ui:VisualElement name="Effects" class="effect" style="margin-top: 10px;">
+            <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" class="effect" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 8px; padding-right: 8px; padding-top: 0; padding-bottom: 0; background-color: rgb(94, 94, 94); color: rgb(255, 255, 255); -unity-text-align: middle-center; -unity-slice-left: 0; display: none;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="Toasts" style="flex-grow: 1; background-color: rgb(45, 108, 46); position: absolute; left: 50%; top: 62px; border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-left-color: rgb(72, 72, 72); border-right-color: rgb(72, 72, 72); border-top-color: rgb(72, 72, 72); border-bottom-color: rgb(72, 72, 72); color: rgb(255, 255, 255); -unity-text-align: middle-center; padding-left: 10px; padding-right: 10px; translate: -50% -50%; border-top-left-radius: 18px; border-bottom-left-radius: 18px; border-top-right-radius: 18px; border-bottom-right-radius: 18px; display: none;" />
 </ui:UXML>

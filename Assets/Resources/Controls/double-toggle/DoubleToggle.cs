@@ -63,19 +63,12 @@ namespace IsoconUILibrary {
         }
 
         private List<Action<ChangeEvent<(bool,bool)>>> valueChangedCallbacks;
-        // private List<Action<(bool,bool)>> valueChangedCallbacks;
         public void AddValueChangedCallback(Action<ChangeEvent<(bool,bool)>> callback) {
             if (valueChangedCallbacks == null) {
                 valueChangedCallbacks = new List<Action<ChangeEvent<(bool,bool)>>>();
             }
             valueChangedCallbacks.Add(callback);
         }
-        // public void RemoveValueChangedCallback(Action<(bool,bool)> callback) {
-        //     if (valueChangedCallbacks == null) {
-        //         valueChangedCallbacks = new List<Action<(bool, bool)>>();
-        //     }
-        //     valueChangedCallbacks.Remove(callback);
-        // }
         private void OnValueChanged((bool,bool) oldValue, (bool,bool) newValue) {
             if (valueChangedCallbacks != null) {
                 foreach (var callback in valueChangedCallbacks) {

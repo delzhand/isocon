@@ -5,7 +5,11 @@
     "m_Properties": [],
     "m_Keywords": [],
     "m_Dropdowns": [],
-    "m_CategoryData": [],
+    "m_CategoryData": [
+        {
+            "m_Id": "a9ad5ddb237a4ede961171d724ef323c"
+        }
+    ],
     "m_Nodes": [
         {
             "m_Id": "e5f691e75a304cc6b43795a6636be21d"
@@ -508,6 +512,14 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "a9ad5ddb237a4ede961171d724ef323c",
+    "m_Name": "",
+    "m_ChildObjectList": []
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.ClampNode",
     "m_ObjectId": "adefed3fddc64ec4a05084ad4d41ea84",
     "m_Group": {
@@ -694,8 +706,8 @@
     "m_ShaderOutputName": "Tiling",
     "m_StageCapability": 3,
     "m_Value": {
-        "x": 2.0,
-        "y": 10.0
+        "x": 1.0,
+        "y": 4.0
     },
     "m_DefaultValue": {
         "x": 0.0,

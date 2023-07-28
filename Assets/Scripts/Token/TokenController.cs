@@ -150,7 +150,16 @@ public class TokenController : MonoBehaviour
             selected.name = evt.newValue;
         });
 
+        panel.Q<Button>("e_Duplicate").RegisterCallback<ClickEvent>((evt) => {
+            GameObject clone = GameObject.Instantiate(selected.gameObject);
+            ReserveSpot openReserve = ReserveSpot.LastReserveSpot();
+            openReserve.PlaceAtReserveSpot(clone.GetComponent<Token>());
+        });
 
+        panel.Q<Button>("e_Delete").RegisterCallback<ClickEvent>((evt) => {
+            GameObject.Destroy(selected.gameObject);
+            Deselect();
+        });
 
     }
 
@@ -445,6 +454,7 @@ public class TokenController : MonoBehaviour
         }
         else {
             CameraControl.GoToBlock(block);
+            // UI.System.Q("TerrainInfo").style.display = DisplayStyle.Flex;
             block.SetTerrainInfo();
             Block.DeselectAll();
             block.Select();
