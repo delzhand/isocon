@@ -32,7 +32,7 @@ public class TokenState : MonoBehaviour
 
     public bool Elite;
 
-    public List<string> Status = new List<string>();
+    private List<string> status = new List<string>();
     public string Mark = "";
     public string Hate = "";
 
@@ -177,9 +177,9 @@ public class TokenState : MonoBehaviour
             statusCount++;
             addStatus(panel, "Bloodied", false);
         }
-        for(int i = 0; i < Status.Count; i++) {
+        for(int i = 0; i < status.Count; i++) {
             statusCount++;
-            addStatus(panel, Status[i], TokenController.IsPositive(Status[i]));
+            addStatus(panel, status[i], TokenController.IsPositive(status[i]));
         }
 
         List<(string, int)> counters = new List<(string, int)>();
@@ -225,13 +225,17 @@ public class TokenState : MonoBehaviour
     }
 
     public void SetStatus(string s) {
-        if (!Status.Contains(s)) {
-            Status.Add(s);
+        if (!status.Contains(s)) {
+            status.Add(s);
         }
     }
 
     public void DropStatus(string s) {
-        Status.Remove(s);
+        status.Remove(s);
+    }
+
+    public bool HasStatus(string s) {
+        return status.Contains(s);
     }
 
     private void addStatus(VisualElement v, string statusName, bool pos) {

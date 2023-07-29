@@ -109,10 +109,10 @@ public class TokenController : MonoBehaviour
                 string status = t.name.Replace("e_", "");
                 TokenState ts = selected.GetComponent<TokenState>();
                 if (evt.newValue) {
-                    ts.Status.Add(status);
+                    ts.SetStatus(status);
                 }
                 else {
-                    ts.Status.Remove(status);
+                    ts.DropStatus(status);
                 }
             });
         }
@@ -123,6 +123,7 @@ public class TokenController : MonoBehaviour
                 DoubleToggle t = evt.target as DoubleToggle;
                 string status = t.name.Replace("e_", "");
                 TokenState ts = selected.GetComponent<TokenState>();
+                Debug.Log(ts.name);
                 if (evt.newValue.Item1) {
                     ts.SetStatus(status);
                 }
@@ -521,6 +522,18 @@ public class TokenController : MonoBehaviour
         UI.System.Q<Toggle>("e_StackedDie").value = t.StackedDie;
         UI.System.Q<DropdownField>("e_Stance").value = t.Stance;
         UI.System.Q<NumberNudger>("e_Blessings").value = t.Blessings;
+        
+        List<string> pos = getPositiveStatuses();
+        for (int i = 0; i < pos.Count; i++) {
+            UI.System.Q<Toggle>("e_" + pos[i]).value = t.HasStatus(pos[i]);
+        }
+
+        List<string> neg = getNegativeStatuses();
+        for (int i = 0; i < neg.Count; i++) {
+            UI.System.Q<DoubleToggle>("e_" + neg[i]).value1 = t.HasStatus(neg[i]);
+            UI.System.Q<DoubleToggle>("e_" + neg[i]).value2 = t.HasStatus(neg[i] + "+");
+        }
+
     }
 
     public static void DisableAddToken() {
