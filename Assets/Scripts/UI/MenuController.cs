@@ -34,9 +34,9 @@ public class MenuController : MonoBehaviour
 
         UI.System.Query<Button>(null, "menu-button").ForEach(registerButton);
         UI.System.Query<Button>(null, "modal-button").ForEach(registerButton);
-        // UI.System.Q<Button>("FileButton").RegisterCallback<ClickEvent>((evt) => {
-        //     UI.System.
-        // });
+        
+        UI.System.Q<Label>("DataPath").text = "Custom tokens should be placed in " + Application.persistentDataPath + "/tokens/";
+
     }
 
     public void Clear() {
@@ -78,6 +78,9 @@ public class MenuController : MonoBehaviour
                 GetComponent<DataController>().InitializeFileList();
                 enableModal("LoadFileDialog");
                 break;
+            case "LoadFileCancelButton":
+                disableModal();
+                break;
             case "SaveMapButton":
                 if (DataController.NeedFilename()) {
                     enableModal("SaveFileDialog");
@@ -90,6 +93,7 @@ public class MenuController : MonoBehaviour
                 enableModal("SaveFileDialog");
                 break;
             case "SaveFileConfirmButton":
+                DataController.currentFileName = UI.System.Q<TextField>("FilenameTextfield").value;
                 DataController.SaveMap();
                 break;
             case "SaveFileCancelButton":

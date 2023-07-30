@@ -74,12 +74,15 @@
     </ui:VisualElement>
     <ui:VisualElement name="ModalContainer" style="background-color: rgba(0, 0, 0, 0.5); overflow: hidden; display: flex;">
         <ui:VisualElement name="Modal" class="panel" style="flex-grow: 1; translate: -50% -50%;">
-            <ui:VisualElement name="LoadFileDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
+            <ui:VisualElement name="LoadFileDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
                 <ui:VisualElement name="Header" class="modal-header">
                     <ui:Label tabindex="-1" text="Select File" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: normal;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="Contents" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
                     <ui:ListView focusable="true" name="FileSelectListView" style="height: 200px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; background-color: rgb(255, 255, 255); margin-left: 10px; margin-right: 10px; margin-top: 0; margin-bottom: 10px;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Footer" style="border-left-color: rgb(43, 43, 43); border-right-color: rgb(43, 43, 43); border-top-color: rgb(43, 43, 43); border-bottom-color: rgb(43, 43, 43); border-top-width: 2px; padding-top: 10px; margin-top: 10px; flex-direction: row; justify-content: center;">
+                    <ui:Button text="Cancel" display-tooltip-when-elided="true" name="LoadFileCancelButton" class="modal-button" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="SaveFileDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
@@ -87,19 +90,20 @@
                     <ui:Label tabindex="-1" text="Save" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: normal; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="Contents" style="flex-direction: column; flex-grow: 1;">
-                    <ui:TextField picking-mode="Ignore" value="filename" />
+                    <ui:TextField picking-mode="Ignore" value="filename" name="FilenameTextfield" />
                 </ui:VisualElement>
                 <ui:VisualElement name="Footer" style="border-left-color: rgb(43, 43, 43); border-right-color: rgb(43, 43, 43); border-top-color: rgb(43, 43, 43); border-bottom-color: rgb(43, 43, 43); border-top-width: 2px; padding-top: 10px; margin-top: 10px; flex-direction: row; justify-content: center;">
                     <ui:Button text="Confirm" display-tooltip-when-elided="true" name="SaveFileConfirmButton" class="modal-button" />
                     <ui:Button text="Cancel" display-tooltip-when-elided="true" name="SaveFileCancelButton" class="modal-button" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="AddTokenDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
+            <ui:VisualElement name="AddTokenDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
                 <ui:VisualElement name="Header" class="modal-header" style="flex-direction: column;">
                     <ui:Label tabindex="-1" text="Add Token" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: normal; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="Contents" style="flex-direction: column; flex-grow: 1;">
                     <ui:TextField picking-mode="Ignore" value="Tokenname" label="Token Name" name="TokenNameField" class="modal-textfield" />
+                    <ui:Label tabindex="-1" text="Custom tokens should be placed in " display-tooltip-when-elided="true" name="DataPath" style="color: rgb(255, 255, 255); background-color: rgb(79, 79, 79); -unity-text-align: upper-center; -unity-font-style: italic; font-size: 12px;" />
                     <ui:DropdownField label="Graphic" index="0" choices="No tokens found" name="GraphicDropdown" class="modal-dropdown" />
                     <ui:DropdownField label="Class" index="0" choices="Stalwart,Vagabond,Mendicant,Wright,Heavy,Skirmisher,Leader,Artillery,Legend,Mob" name="ClassDropdown" class="modal-dropdown" />
                     <ui:DropdownField label="Job" index="0" choices="Bastion,Knave,Demon Slayer,Colossus" name="JobDropdown" class="modal-dropdown" style="display: flex;" />

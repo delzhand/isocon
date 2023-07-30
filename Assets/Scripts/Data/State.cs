@@ -22,7 +22,7 @@ public class State
         string json = JsonUtility.ToJson(state);
         string fullFileName = State.FullFilePath(fileName).Replace(".json", "") + ".json";
         File.WriteAllText(fullFileName, json);
-        Toast.Add("Map saved.");
+        Toast.Add("Map saved to " + fullFileName);
     }
 
     public static void LoadState(string fileName) {
@@ -31,6 +31,7 @@ public class State
         State state = JsonUtility.FromJson<State>(json);
         SetSceneFromState(state);
         Toast.Add("Map loaded.");
+        TimedReorgHack.Add();
     }
 
     public static State GetStateFromScene() {

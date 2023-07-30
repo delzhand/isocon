@@ -15,6 +15,9 @@ public class DataController : MonoBehaviour
 {
     public static string currentFileName;
     public static FileOp CurrentOp;
+
+    public string FileName;
+    public string Operation;
     
     // Start is called before the first frame update
     void Start()
@@ -25,7 +28,8 @@ public class DataController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        FileName = currentFileName;
+        Operation = CurrentOp.ToString();
     }
 
     public static bool NeedFilename() {
@@ -35,38 +39,6 @@ public class DataController : MonoBehaviour
     public static void SaveMap() {
         DataController.CurrentOp = FileOp.Save;
         State.SaveState(DataController.currentFileName);
-    }
-
-    private void SaveMapCopy(ClickEvent evt) {
-        DataController.CurrentOp = FileOp.Save;
-        GetComponent<ModeController>().ActivateElementByName("FilenameModal");
-    }
-
-    private void LoadMap(ClickEvent evt) {
-        InitializeFileList();
-        GetComponent<ModeController>().ActivateElementByName("LoadFileModal");
-    }
-
-    private void ResetMap(ClickEvent evt) {
-        DataController.currentFileName = null;
-        TerrainController.ResetTerrain();
-        GetComponent<MenuController>().Clear();
-    }
-
-    public void FilenameConfirm(ClickEvent evt) {    
-        string value = UI.System.Q<TextField>("Filename").value;
-        if (value.Length > 0) {
-            DataController.currentFileName = value;
-            State.SaveState(value);
-            GetComponent<ModeController>().DeactivateByName("FilenameModal");
-        }
-        else {
-            Toast.Add("Filename cannot be empty", ToastType.Error);
-        }
-    }
-
-    public void FilenameCancel(ClickEvent evt) {    
-        GetComponent<ModeController>().DeactivateByName("FilenameModal");
     }
 
     public void InitializeFileList() {
