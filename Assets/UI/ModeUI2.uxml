@@ -103,7 +103,7 @@
                 </ui:VisualElement>
                 <ui:VisualElement name="Contents" style="flex-direction: column; flex-grow: 1;">
                     <ui:TextField picking-mode="Ignore" value="Tokenname" label="Token Name" name="TokenNameField" class="modal-textfield" />
-                    <ui:Label tabindex="-1" text="Custom tokens should be placed in " display-tooltip-when-elided="true" name="DataPath" style="color: rgb(255, 255, 255); background-color: rgb(79, 79, 79); -unity-text-align: upper-center; -unity-font-style: italic; font-size: 12px;" />
+                    <ui:Label tabindex="-1" text="Custom tokens should be placed in " display-tooltip-when-elided="true" name="DataPath" style="color: rgb(255, 255, 255); background-color: rgb(79, 79, 79); -unity-text-align: upper-center; -unity-font-style: normal; font-size: 12px; padding-left: 4px; padding-right: 8px; padding-top: 4px; padding-bottom: 4px; white-space: normal; max-width: 400px;" />
                     <ui:DropdownField label="Graphic" index="0" choices="No tokens found" name="GraphicDropdown" class="modal-dropdown" />
                     <ui:DropdownField label="Class" index="0" choices="Stalwart,Vagabond,Mendicant,Wright,Heavy,Skirmisher,Leader,Artillery,Legend,Mob" name="ClassDropdown" class="modal-dropdown" />
                     <ui:DropdownField label="Job" index="0" choices="Bastion,Knave,Demon Slayer,Colossus" name="JobDropdown" class="modal-dropdown" style="display: flex;" />

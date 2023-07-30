@@ -346,14 +346,14 @@
 #ModalContainer {
     transition-duration: 0.1s;
     position: absolute;
-    top: 50%;
+    top: 0%;
     left: 0;
     width: 100%;
     height: 0;
 }
 
 #ModalContainer.active {
-    top: 0;
+    top: 0%;
     height: 100%;
 }
 
