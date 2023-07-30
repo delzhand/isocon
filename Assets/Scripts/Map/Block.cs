@@ -141,6 +141,9 @@ public class Block : MonoBehaviour
 
     void OnMouseDown()
     {
+        if (UI.InElement("EditTokenPanel")) {
+            return;
+        }
         if (UI.ClicksSuspended) {
             return;
         }
