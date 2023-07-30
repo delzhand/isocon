@@ -5,6 +5,7 @@
     <Style src="project://database/Assets/Resources/Controls/slide-toggle/SlideToggle.uss?fileID=7433441132597879392&amp;guid=adce2f9d2f1eabd4f842d3ee9a84166b&amp;type=3#SlideToggle" />
     <Style src="project://database/Assets/UI/Styles/TokenScroll.uss?fileID=7433441132597879392&amp;guid=c2acdbd4390b1f442a686ee3e6972cce&amp;type=3#TokenScroll" />
     <Style src="project://database/Assets/UI/Styles/TerrainInfo.uss?fileID=7433441132597879392&amp;guid=a2b0da1c90c97b24b80fe1c9575496f9&amp;type=3#TerrainInfo" />
+    <Style src="project://database/Assets/Resources/Controls/double-toggle/DoubleToggle.uss?fileID=7433441132597879392&amp;guid=55e4ef987a0fbeb4e99e74bff794ed4d&amp;type=3#DoubleToggle" />
     <ui:VisualElement name="MainMenuToggle" class="panel" style="position: absolute; right: auto; top: 10px; width: 30px; height: 30px; border-left-color: rgb(102, 95, 79); border-top-right-radius: 22px; border-bottom-right-radius: 22px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; left: 10px; border-top-left-radius: 22px; border-bottom-left-radius: 22px;">
         <ui:VisualElement name="Bar1" class="shape" style="flex-grow: 1; width: 20px; height: 2px; top: 35%; left: 50%; translate: -50% -50%;" />
         <ui:VisualElement name="Bar2" class="shape" style="flex-grow: 1; width: 20px; height: 2px; top: 50%; left: 50%; translate: -50% -50%;" />
@@ -313,7 +314,7 @@
                 <IsoconUILibrary.NumberNudger label="Aether" name="e_Aether" />
                 <IsoconUILibrary.NumberNudger label="Vigilance" name="e_Vigilance" />
                 <IsoconUILibrary.NumberNudger name="e_Blessings" label="Blessings" />
-                <ui:Toggle label="Stacked Die" name="e_StackedDie" />
+                <ui:Toggle label="Stacked Die" name="e_StackedDie" value="false" />
                 <ui:DropdownField label="Stance" index="0" choices="None,Endless Battlement,Soul Blade,Riposte,Dark Knight,The Saints,Gentleness,Gravebirth,Odinforce" name="e_Stance" />
             </ui:VisualElement>
             <ui:VisualElement name="Buffs" class="scroll-group" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">

@@ -30,7 +30,7 @@ public class ModeController : MonoBehaviour
     }
 
     void Update() {
-        // ClickSuppress = UI.ClicksSuspended;
+        ClickSuppress = UI.ClicksSuspended;
     }
 
     private void registerCallbacks() {

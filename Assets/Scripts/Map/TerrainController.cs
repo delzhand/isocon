@@ -233,7 +233,7 @@ public class TerrainController : MonoBehaviour
                 GameObject.DestroyImmediate(block);
             }
             else {
-                UI.SetHelpText("Foundation blocks cannot be deleted (but can be changed to SHAPE_EMPTY)", HelpType.Error);
+                Toast.Add("Foundation blocks cannot be deleted (but can be hidden).", ToastType.Error);
             }
         });
         Reorg();

@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+public enum ToastType {
+    Standard,
+    Error,
+    Success
+}
+
 public class Toast : MonoBehaviour
 {
     public string Message = "";
@@ -29,5 +35,15 @@ public class Toast : MonoBehaviour
             }
             Destroy(this);
         }
+    }
+
+    public static void Add(string message, ToastType type = ToastType.Standard) {
+        Toast t = GameObject.Find("Engine").AddComponent<Toast>();
+        t.Message = message;
+        // switch(type) {
+        //     case ToastType.Error:
+        //         t
+        //         break;
+        // }
     }
 }

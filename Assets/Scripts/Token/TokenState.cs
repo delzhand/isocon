@@ -28,11 +28,11 @@ public class TokenState : MonoBehaviour
     public int Vigilance;
     public int Blessings;
     public bool StackedDie;
-    public string Stance = ""   ;
+    public string Stance = "";
 
     public bool Elite;
 
-    private List<string> status = new List<string>();
+    public List<string> status = new List<string>();
     public string Mark = "";
     public string Hate = "";
 
@@ -111,8 +111,8 @@ public class TokenState : MonoBehaviour
 
         Texture2D image = GetComponent<Token>().Image;
         panel.Q("Portrait").style.backgroundImage = image;
-        float height = 80;
-        float width = 80;
+        float height = 78;
+        float width = 78;
         if (image.width > image.height) {
             height *= (image.height/(float)image.width);
         }

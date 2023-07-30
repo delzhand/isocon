@@ -34,31 +34,45 @@ namespace IsoconUILibrary {
             }
         }
 
-        private Label m_Toggle1;
+        private VisualElement toggle1;
         private bool m_Value1;
         public bool value1
         {
             get => m_Value1;
             set
             {
-                (bool,bool) oldValue = (value1,value2);
-                m_Value1 = value;
-                m_Toggle1.text = value ? "active" : "off";
-                OnValueChanged(oldValue, (value1,value2));
+                if(value1 != value) {
+                    (bool,bool) oldValue = (value1,value2);
+                    m_Value1 = value;
+                    if (value) {
+                        toggle1.AddToClassList("checked");
+                    }
+                    else {
+                        toggle1.RemoveFromClassList("checked");
+                    }
+                    OnValueChanged(oldValue, (value1,value2));
+                }
             }
         }
 
-        private Label m_Toggle2;
+        private VisualElement toggle2;
         private bool m_Value2;
         public bool value2
         {
             get => m_Value2;
             set
             {
-                (bool,bool) oldValue = (value1,value2);
-                m_Value2 = value;
-                m_Toggle2.text = value ? "ongoing" : "off";
-                OnValueChanged(oldValue, (value1,value2));
+                if (value2 != value) {
+                    (bool,bool) oldValue = (value1,value2);
+                    m_Value2 = value;
+                    if (value) {
+                        toggle2.AddToClassList("checked");
+                    }
+                    else {
+                        toggle2.RemoveFromClassList("checked");
+                    }
+                    OnValueChanged(oldValue, (value1,value2));
+                }
             }
         }
 
@@ -79,23 +93,44 @@ namespace IsoconUILibrary {
             }
         }
 
+        public void SetValuesWithoutNotify(bool v1, bool v2) {
+            m_Value1 = v1;
+            m_Value2 = v2;
+        }
+
         public DoubleToggle() {
             this.AddToClassList("unity-base-field");
+            this.AddToClassList("unity-toggle");
+            this.AddToClassList("double-toggle");
 
             m_Label = new Label();
             m_Label.text = "Label";
             m_Label.AddToClassList("unity-base-field__label");
             Add(m_Label);
 
-            m_Toggle1 = new Label();
-            m_Toggle1.text = "Off";
-            m_Toggle1.RegisterCallback<ClickEvent>(Toggle1Click);
-            Add(m_Toggle1);
+            toggle1 = new VisualElement();
+            toggle1.AddToClassList("unity-base-field__input");
+            toggle1.AddToClassList("unity-toggle__input");
+            toggle1.RegisterCallback<ClickEvent>(Toggle1Click);
+            Add(toggle1);
 
-            m_Toggle2 = new Label();
-            m_Toggle2.text = "Off";
-            m_Toggle2.RegisterCallback<ClickEvent>(Toggle2Click);
-            Add(m_Toggle2);
+            Label ongoingLabel = new Label();
+            ongoingLabel.text = "Ongoing";
+            Add(ongoingLabel);
+
+            VisualElement toggle1check = new VisualElement();
+            toggle1check.AddToClassList("unity-toggle__checkmark");
+            toggle1.Add(toggle1check);
+
+            toggle2 = new VisualElement();
+            toggle2.AddToClassList("unity-base-field__input");
+            toggle2.AddToClassList("unity-toggle__input");
+            toggle2.RegisterCallback<ClickEvent>(Toggle2Click);
+            Add(toggle2);
+
+            VisualElement toggle2check = new VisualElement();
+            toggle2check.AddToClassList("unity-toggle__checkmark");
+            toggle2.Add(toggle2check);
         }
 
         public void Toggle1Click(ClickEvent evt) {

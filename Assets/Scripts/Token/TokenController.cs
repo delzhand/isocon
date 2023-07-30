@@ -117,13 +117,12 @@ public class TokenController : MonoBehaviour
             });
         }
 
-        List<string> doubleToggles = new List<string>(){"Blind", "Dazed", "Pacified", "Sealed", "Shattered", "Slashed", "Stunned", "Weakened", "Vulnerable"};
+        List<string> doubleToggles = new List<string>(){"Blind"/*, "Dazed", "Pacified", "Sealed", "Shattered", "Slashed", "Stunned", "Weakened", "Vulnerable"*/};
         for(int i = 0; i < doubleToggles.Count; i++) {
             panel.Q<DoubleToggle>("e_" + doubleToggles[i]).AddValueChangedCallback((evt) => {
                 DoubleToggle t = evt.target as DoubleToggle;
                 string status = t.name.Replace("e_", "");
                 TokenState ts = selected.GetComponent<TokenState>();
-                Debug.Log(ts.name);
                 if (evt.newValue.Item1) {
                     ts.SetStatus(status);
                 }
@@ -275,7 +274,7 @@ public class TokenController : MonoBehaviour
         string version = PlayerPrefs.GetString("IconVersion", "1.5");
         switch (version) {
             case "1.5":
-                return new List<string>{"Slashed", "Blind", "Dazed", "Pacified", "Sealed", "Shattered", "Stunned", "Weakened", "Vulnerable"};
+                return new List<string>{"Blind"/*, "Dazed", "Pacified", "Sealed", "Shattered", "Slashed", "Stunned", "Weakened", "Vulnerable"*/};
         }
         throw new Exception("Invalid data version");
     }
@@ -480,8 +479,8 @@ public class TokenController : MonoBehaviour
     }
 
     private static void Select(Token token) {
-        token.Select();
         selected = token;
+        token.Select();
         UI.System.Q("SelectedTokenPanel").AddToClassList("active");
         SetEditPanelValues();
     }
@@ -530,8 +529,11 @@ public class TokenController : MonoBehaviour
 
         List<string> neg = getNegativeStatuses();
         for (int i = 0; i < neg.Count; i++) {
-            UI.System.Q<DoubleToggle>("e_" + neg[i]).value1 = t.HasStatus(neg[i]);
-            UI.System.Q<DoubleToggle>("e_" + neg[i]).value2 = t.HasStatus(neg[i] + "+");
+            bool active = t.HasStatus(neg[i]);
+            bool ongoing = t.HasStatus(neg[i] + "+");
+            // UI.System.Q<DoubleToggle>("e_" + neg[i]).SetValuesWithoutNotify(active, ongoing);
+            UI.System.Q<DoubleToggle>("e_" + neg[i]).value1 = active;
+            UI.System.Q<DoubleToggle>("e_" + neg[i]).value2 = ongoing;
         }
 
     }

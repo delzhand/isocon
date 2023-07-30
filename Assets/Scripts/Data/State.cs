@@ -22,7 +22,7 @@ public class State
         string json = JsonUtility.ToJson(state);
         string fullFileName = State.FullFilePath(fileName).Replace(".json", "") + ".json";
         File.WriteAllText(fullFileName, json);
-        GameObject.Find("Engine").AddComponent<Toast>().Message = "Map saved.";
+        Toast.Add("Map saved.");
     }
 
     public static void LoadState(string fileName) {
@@ -30,7 +30,7 @@ public class State
         string json = File.ReadAllText(fullFileName);
         State state = JsonUtility.FromJson<State>(json);
         SetSceneFromState(state);
-        GameObject.Find("Engine").AddComponent<Toast>().Message = "Map loaded.";
+        Toast.Add("Map loaded.");
     }
 
     public static State GetStateFromScene() {

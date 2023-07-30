@@ -35,7 +35,6 @@ public class DataController : MonoBehaviour
     public static void SaveMap() {
         DataController.CurrentOp = FileOp.Save;
         State.SaveState(DataController.currentFileName);
-        UI.SetHelpText("Map saved", HelpType.Success);
     }
 
     private void SaveMapCopy(ClickEvent evt) {
@@ -62,7 +61,7 @@ public class DataController : MonoBehaviour
             GetComponent<ModeController>().DeactivateByName("FilenameModal");
         }
         else {
-            UI.SetHelpText("Filename cannot be empty.", HelpType.Error);
+            Toast.Add("Filename cannot be empty", ToastType.Error);
         }
     }
 
