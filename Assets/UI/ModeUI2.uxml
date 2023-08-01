@@ -97,7 +97,7 @@
                     <ui:Button text="Cancel" display-tooltip-when-elided="true" name="SaveFileCancelButton" class="modal-button" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="AddTokenDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
+            <ui:VisualElement name="AddTokenDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
                 <ui:VisualElement name="Header" class="modal-header" style="flex-direction: column;">
                     <ui:Label tabindex="-1" text="Add Token" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: normal; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
                 </ui:VisualElement>

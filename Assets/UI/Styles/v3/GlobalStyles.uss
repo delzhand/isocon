@@ -1,0 +1,82 @@
+.centered {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+}
+
+.parent-centered {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+}
+
+.self-centered {
+    position: absolute;
+    translate: -50% -50%;
+}
+
+.red {
+    background-color: rgb(238, 34, 12);
+}
+
+.yellow {
+    background-color: rgb(254, 174, 0);
+}
+
+.blue {
+    background-color: rgb(0, 162, 255);
+}
+
+.green {
+    background-color: rgb(97, 216, 54);
+}
+
+.purple {
+    background-color: rgb(202, 85, 239);
+}
+
+.gray {
+    background-color: rgb(146, 146, 146);
+}
+
+.panel {
+    background-color: rgba(0, 0, 0, 0.25);
+    color: rgb(255, 255, 255);
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    -unity-font-definition: resource('Fonts/ModernSans-Light SDF');
+    text-shadow: 0 0 1px rgb(0, 0, 0);
+    -unity-font-style: bold;
+    border-radius: 2px;
+}
+
+.panel .hover {
+    background-image: resource('Textures/gradient 3');
+    -unity-background-image-tint-color: rgba(255, 228, 0, 0.39);
+}
+
+.panel-header {
+    -unity-font-style: bold;
+    font-size: 8px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 4px;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 1px;
+    padding-bottom: 0;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-color: rgba(255, 255, 255, 0.28);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 1px;
+    border-left-color: rgba(255, 255, 255, 0.28);
+    border-right-color: rgba(255, 255, 255, 0.28);
+    border-top-color: rgba(255, 255, 255, 0.28);
+}
