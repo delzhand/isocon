@@ -1,0 +1,35 @@
+#HpBar .unity-progress-bar__background {
+    background-color: rgb(123, 59, 59);
+}
+
+#HpBar .unity-progress-bar__progress {
+    background-color: rgb(247, 116, 116);
+}
+
+#VigorBar .unity-progress-bar__background {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+#VigorBar .unity-progress-bar__progress {
+    background-color: rgb(37, 225, 242);
+}
+
+#ResolveBar .unity-progress-bar__background {
+    background-color: rgb(57, 60, 20);
+}
+
+#ResolveBar .unity-progress-bar__progress {
+    background-color: rgb(252, 255, 151);
+}
+
+#PartyResolveBar .unity-progress-bar__background {
+    background-color: transparent;
+}
+
+#PartyResolveBar .unity-progress-bar__progress {
+    background-color: rgb(255, 170, 170);
+}
+
+#EditToken {
+    padding-bottom: 3px; /* 8px default -5 from last element */
+}

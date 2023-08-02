@@ -1,0 +1,99 @@
+.unity-progress-bar {
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    height: 100%;
+    width: 100%;
+    max-height: none;
+    min-height: 0;
+}
+
+.unity-progress-bar__container {
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    height: 100%;
+    width: 100%;
+    max-height: none;
+    min-height: 0;
+}
+
+.unity-progress-bar__background {
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    height: 100%;
+    width: 100%;
+    max-height: none;
+    min-height: 0;
+}
+
+.unity-progress-bar__progress {
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    height: 100%;
+    max-height: none;
+    min-height: 0;
+}
+
+.unity-button {
+    margin: 0;
+    padding: 2px 6px;
+    border-width: 1px;
+    border-radius: 2px;
+    background-color: transparent;
+}
+
+.unity-button:hover {
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
+.unity-base-slider__input {
+    min-width: 100px;
+}
+
+.unity-foldout {
+    margin-bottom: 4px;
+}
+
+.unity-foldout__toggle {
+    margin: 0;
+}
+
+.unity-foldout__text {
+    margin: 0;
+    padding: 0;
+}
+
+.unity-foldout__input {
+    background-color: rgba(0, 0, 0, 0.75);
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 2px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    padding-bottom: 2px;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+
+.unity-foldout__checkmark {
+    -unity-background-image-tint-color: #666;
+}
+
+.unity-foldout__content {
+    margin-left: 0;
+}
+
+.unity-text-field__input {
+    padding: 4px;
+    color: black;
+    text-shadow: none;
+}
