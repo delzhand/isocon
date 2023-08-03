@@ -33,3 +33,7 @@
 #EditToken {
     padding-bottom: 3px; /* 8px default -5 from last element */
 }
+
+#EditToken .unity-scroll-view {
+    max-height: 200px;
+}

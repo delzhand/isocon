@@ -55,6 +55,7 @@
 
 .unity-foldout {
     margin-bottom: 4px;
+    min-width: 280px;
 }
 
 .unity-foldout__toggle {
@@ -83,6 +84,9 @@
     flex-direction: row-reverse;
     justify-content: space-between;
 }
+.unity-foldout__input:focus .unity-foldout__text {
+    color: #FFF;
+}
 
 .unity-foldout__checkmark {
     -unity-background-image-tint-color: #666;
@@ -95,5 +99,57 @@
 .unity-text-field__input {
     padding: 4px;
     color: black;
-    text-shadow: none;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0);
+}
+
+.unity-scroll-view {
+    border-width: 1px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+  
+.unity-scroll-view .unity-scroller--vertical {
+    border-width: 0px;
+    width: 4px;
+    translate: 5px 0px;
+}
+  
+.unity-scroll-view .unity-scroller--vertical .unity-scroller__slider {
+    width: 4px;
+    min-width: 4px;
+}
+  
+.unity-scroll-view .unity-scroller--vertical .unity-base-slider__tracker {
+    background-color: transparent;
+    border-width: 0;
+}
+  
+.unity-scroll-view .unity-scroller--vertical .unity-base-slider__dragger {
+    width: 4px;
+    border-width: 0;
+}
+
+.unity-scroll-view .unity-scroller--vertical .unity-slider__input {
+}
+
+.unity-scroll-view .unity-scroller--vertical   .unity-scroller__slider {
+  margin: 0;
+}
+
+.unity-scroll-view .unity-scroller--vertical   .unity-scroller__low-button {
+  display: none;
+}
+
+.unity-scroll-view .unity-scroller--vertical   .unity-scroller__high-button {
+  display: none;
+}
+
+.unity-scroll-view .unity-label {
+  color: #FFF;
+}
+
+.unity-scroll-view .header {
+  font-size: 18px;
+  background-color: #242424;
+  padding: 4px 8px;
 }
