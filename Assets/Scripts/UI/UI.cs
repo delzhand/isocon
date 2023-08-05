@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Linq;
 
 public class UI : MonoBehaviour
 {
@@ -71,5 +72,36 @@ public class UI : MonoBehaviour
         Vector2 min = UI.System.Q(elementName).layout.min;
         Vector2 max = UI.System.Q(elementName).layout.max;
         return (mp.x >= min.x && mp.x <= max.x && mp.y >= min.y && mp.y <= max.y);   
+    }
+
+    public static void ToggleDisplay(string name, bool shown) {
+        ToggleDisplay(System.Q(name), shown);
+    }
+
+    public static void ToggleDisplay(VisualElement e, bool shown) {
+        if (shown) {
+            e.style.display = DisplayStyle.Flex;
+        }
+        else {
+            e.style.display = DisplayStyle.None;
+        }
+    }
+
+    public static void ToggleHidden(string name) {
+        bool isHidden = System.Q(name).GetClasses().ToArray().Contains<string>("hidden");
+        if (isHidden) {
+            ToggleHidden(name, false);
+        }
+        else {
+            ToggleHidden(name, true);
+        }
+    }
+    public static void ToggleHidden(string name, bool on) {
+        if (on) {
+            System.Q(name).AddToClassList("hidden");
+        }
+        else {
+            System.Q(name).RemoveFromClassList("hidden");
+        }
     }
 }

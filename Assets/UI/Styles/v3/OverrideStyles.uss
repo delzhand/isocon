@@ -37,3 +37,25 @@
 #EditToken .unity-scroll-view {
     max-height: 200px;
 }
+
+#JoinAddress .unity-text-field__input {
+    min-width: 200px;
+}
+
+#ConnectPanel {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    scale: 1 1;
+    transition-duration: .2s;
+}
+
+#ConnectPanel.hidden {
+    left: 100%;
+    top: 0%;
+    scale: 0 0;
+}
+
+#PlayerNameEdit .unity-text-field__input {
+    padding: 2px 6px;
+}

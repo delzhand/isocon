@@ -45,6 +45,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 818cd902f67c38e4ca96d6679495da81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  Name: 
   Role: 1
 --- !u!114 &716691115474973717
 MonoBehaviour:

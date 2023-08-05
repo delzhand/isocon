@@ -17,25 +17,16 @@ public class PlayerController : NetworkBehaviour
     {
         base.OnStartClient();
         Debug.Log("Client joined");
+        // updatePlayerList();
     }
 
-    void Update() {
-        StringBuilder sb = new StringBuilder();
+    public override void OnStopClient() {
+        RpcUpdatePlayerList();
+    }
+
+    [ClientRpc]
+    private void RpcUpdatePlayerList() {        
         foreach(GameObject g in GameObject.FindGameObjectsWithTag("Player")) {
-            sb.AppendLine(g.name + " (" + g.GetComponent<Player>().Role + ")");
         }
-        UI.System.Q<Label>("ConnectionsList").text = sb.ToString();
-    }
-
-    [ClientRpc]
-    public void RpcSetPlayerName(Player player, string newName)
-    {
-        player.name = newName;
-    }
-
-    [ClientRpc]
-    public void RpcSetPlayerRole(Player player, PlayerRole newRole)
-    {
-        player.Role = newRole;
     }
 }

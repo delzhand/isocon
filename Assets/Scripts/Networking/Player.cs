@@ -12,40 +12,62 @@ public enum PlayerRole {
 
 public class Player : NetworkBehaviour
 {
+    [SyncVar]
+    public string Name;
+
+    [SyncVar]
     public PlayerRole Role;
 
-    // Start is called before the first frame update
     void Start()
     {
-        if (GetComponent<NetworkIdentity>().isOwned) {
+        if (isLocalPlayer) {
             if (GameObject.FindGameObjectsWithTag("Player").Length == 1) {
-                CmdSetRole(PlayerRole.GM);
+                Role = PlayerRole.GM;
             }
-
             string newName = PlayerPrefs.GetString("PlayerName", "New Player");
-            CmdSetPlayerName(newName);
             UI.System.Q<TextField>("e_PlayerName").value = newName;
+            Name = newName;
+
             UI.System.Q<TextField>("e_PlayerName").RegisterValueChangedCallback((evt) => {
+                Name = evt.newValue;
                 PlayerPrefs.SetString("PlayerName", evt.newValue);
-                CmdSetPlayerName(evt.newValue);
             });
 
+            CreateElement();
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    private void CreateElement() {
+        // Create basic version
+        VisualElement e = UI.System.Q("PlayerTemplate");
+        e.style.display = DisplayStyle.Flex;
+        if (Role != PlayerRole.GM) {
+            e.Q("GMLabel").style.display = DisplayStyle.None;
+        }
+        e.Q<Label>("PlayerName").text = Name;
 
+        // Send to server
+        CmdAddToPlayerList(e);
+
+        // Set up editing
+        e.Q<Label>("PlayerName").RegisterCallback<ClickEvent>((evt) => {
+            e.Q<TextField>("PlayerNameEdit").value = Name;
+            UI.ToggleDisplay(e.Q("PlayerName"), false);
+            UI.ToggleDisplay(e.Q("PlayerNameEdit"), true);
+        });
+
+        e.Q<TextField>("PlayerNameEdit").RegisterCallback<BlurEvent>((evt) => {
+            Name = e.Q<TextField>("PlayerNameEdit").value;
+        });
     }
 
     [Command]
-    private void CmdSetRole(PlayerRole newRole) {
-        GameObject.Find("PlayerController").GetComponent<PlayerController>().RpcSetPlayerRole(this, newRole);
+    private void CmdAddToPlayerList(VisualElement e) {
+        RpcUpdatePlayerList(e);
     }
 
-    [Command]
-    private void CmdSetPlayerName(string newName) {
-        GameObject.Find("PlayerController").GetComponent<PlayerController>().RpcSetPlayerName(this, newName);
+    [ClientRpc]
+    private void RpcUpdatePlayerList(VisualElement e) {
+        UI.System.Q("PlayersList").Add(e);
     }
 }

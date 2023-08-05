@@ -42,7 +42,7 @@
     padding: 2px 6px;
     border-width: 1px;
     border-radius: 2px;
-    background-color: transparent;
+    background-color: rgba(100, 100, 100, 0.35);
 }
 
 .unity-button:hover {
@@ -100,6 +100,7 @@
     padding: 4px;
     color: black;
     text-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    margin: 0;
 }
 
 .unity-scroll-view {
@@ -152,4 +153,9 @@
   font-size: 18px;
   background-color: #242424;
   padding: 4px 8px;
+}
+
+.unity-text-field__input {
+    border-width: 0;
+    border-radius: 2px;
 }
