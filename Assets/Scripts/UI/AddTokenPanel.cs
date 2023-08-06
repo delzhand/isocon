@@ -10,7 +10,9 @@ public class AddTokenPanel : MonoBehaviour
         UI.System.Q<Button>("AddTokenCreateButton").RegisterCallback<ClickEvent>((evt) => {
             Player p = NetworkClient.localPlayer.GetComponent<Player>();
             string name = UI.System.Q<TextField>("TokenNameField").value;
-            p.CmdRequestAddToken(name);
+            string jclass = UI.System.Q<DropdownField>("ClassDropdown").value;
+            string job = UI.System.Q<DropdownField>("JobDropdown").value;
+            p.CmdRequestAddToken(name, job, jclass);
         });
     }
 }

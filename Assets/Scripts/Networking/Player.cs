@@ -29,10 +29,13 @@ public class Player : NetworkBehaviour
         if (isLocalPlayer) {
             if (GameObject.FindGameObjectsWithTag("Player").Length == 1) {
                 Role = PlayerRole.GM;
-                Host = true;
             }
             Name = PlayerPrefs.GetString("PlayerName", "New Player");
         } 
+
+        if (NetworkServer.active && NetworkClient.active) {
+            Host = true;
+        }
 
         VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/ConnectedPlayer");
         VisualElement instance = template.Instantiate();
@@ -60,10 +63,16 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
-    public void CmdRequestAddToken(string name) {
+    public void CmdRequestAddToken(string name, string job, string jclass) {
         GameObject newToken = Instantiate(Resources.Load("Prefabs/ProtoToken") as GameObject);
-        newToken.transform.parent = GameObject.Find("Tokens").transform;
-        newToken.name = name;
         NetworkServer.Spawn(newToken);
+        ProtoToken p = newToken.GetComponent<ProtoToken>();
+        p.Name = name;
+        p.Job = job;
+        p.JClass = jclass;
+    }
+
+    public static bool IsHost() {
+        return NetworkServer.active && NetworkClient.active;
     }
 }

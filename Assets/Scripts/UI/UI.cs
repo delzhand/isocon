@@ -79,6 +79,11 @@ public class UI : MonoBehaviour
         return (mp.x >= min.x && mp.x <= max.x && mp.y >= min.y && mp.y <= max.y);   
     }
 
+    public static void ToggleDisplay(string name) {
+        bool isShown = (System.Q(name).style.display != DisplayStyle.None);
+        ToggleDisplay(name, !isShown);
+    }
+
     public static void ToggleDisplay(string name, bool shown) {
         ToggleDisplay(System.Q(name), shown);
     }

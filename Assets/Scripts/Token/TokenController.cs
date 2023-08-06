@@ -25,8 +25,9 @@ public class TokenController : MonoBehaviour
     void Update()
     {
         StringBuilder sb = new();
-        foreach(Transform t in GameObject.Find("Tokens").transform) {
-            sb.AppendLine(t.name);
+        foreach(GameObject g in GameObject.FindGameObjectsWithTag("Token")) {
+            ProtoToken pt = g.GetComponent<ProtoToken>();
+            sb.AppendLine(pt.Name + " - " + pt.JClass + " - " + pt.Job);
         }
         UI.System.Q<Label>("TokenList").text = sb.ToString();
     }

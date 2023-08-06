@@ -144,53 +144,59 @@
         <ui:Label tabindex="-1" text="Comeback" display-tooltip-when-elided="true" class="section-header" />
         <ui:Label tabindex="-1" text="A triggered effect that happens when this ability is used while bloodied" display-tooltip-when-elided="true" style="font-size: 14px; max-width: 240px; white-space: normal; -unity-font-style: bold;" />
     </ui:VisualElement>
-    <ui:VisualElement name="Connections" class="panel" style="position: absolute; left: 10px; bottom: 90px; min-height: 0; min-width: 116px; display: flex;">
-        <ui:Label tabindex="-1" text="PLAYERS" display-tooltip-when-elided="true" class="panel-header" />
-        <ui:VisualElement name="PlayerList" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 200px; overflow: hidden;" />
-    </ui:VisualElement>
-    <ui:VisualElement name="ConnectPanel" class="panel" style="translate: -50% -50%;">
-        <ui:Label tabindex="-1" text="CONNECT" display-tooltip-when-elided="true" class="panel-header" />
-        <ui:Button text="x" display-tooltip-when-elided="true" name="ConnectPanelClose" class="close-button" />
-        <ui:VisualElement name="JoinSection" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-            <ui:Button text="Host Session" display-tooltip-when-elided="true" name="HostButton" style="margin-bottom: 0;" />
-            <ui:Label tabindex="-1" text="or" display-tooltip-when-elided="true" style="-unity-text-align: middle-center; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
-            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
-                <ui:TextField picking-mode="Ignore" value="localhost" name="JoinAddress" style="margin-left: 0; margin-right: 4px; margin-top: 0; margin-bottom: 0;" />
-                <ui:Button text="Join Session" display-tooltip-when-elided="true" name="JoinButton" />
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement name="ConnectingSection" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
-            <ui:Label tabindex="-1" text="Connecting to localhost..." display-tooltip-when-elided="true" name="ConnectingMessage" style="-unity-text-align: upper-center;" />
-            <ui:Button text="Cancel" display-tooltip-when-elided="true" name="CancelConnecting" />
-        </ui:VisualElement>
-        <ui:VisualElement name="Connection" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
-            <ui:Label tabindex="-1" text="Not Connected" display-tooltip-when-elided="true" name="ConnectionStatus" style="-unity-text-align: upper-center;" />
-            <ui:Button text="Disconnect" display-tooltip-when-elided="true" name="DisconnectButton" />
-        </ui:VisualElement>
-    </ui:VisualElement>
-    <ui:Button display-tooltip-when-elided="true" name="ConnectionToggle" class="blank" style="position: absolute; top: 10px; right: 10px; background-image: resource(&apos;Textures/network&apos;); width: 28px; height: 28px;" />
-    <ui:VisualElement name="AddTokenForm" class="panel" style="position: absolute; top: 60px; right: 10px; width: 380px;">
-        <ui:Label tabindex="-1" text="CREATE TOKEN" display-tooltip-when-elided="true" class="panel-header" />
-        <ui:VisualElement name="AddTokenDialog" class="dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
-            <ui:VisualElement name="Contents" style="flex-direction: column; flex-grow: 1;">
-                <ui:TextField picking-mode="Ignore" value="Tokenname" label="Token Name" name="TokenNameField" class="modal-textfield" />
-                <ui:Label tabindex="-1" text="Custom tokens should be placed in " display-tooltip-when-elided="true" name="DataPath" style="color: rgb(255, 255, 255); background-color: rgb(79, 79, 79); -unity-text-align: upper-center; -unity-font-style: bold; font-size: 12px; padding-left: 4px; padding-right: 8px; padding-top: 4px; padding-bottom: 4px; white-space: normal; max-width: 400px; margin-left: 0; margin-right: 0; margin-bottom: 2px; margin-top: 2px;" />
-                <ui:DropdownField label="Graphic" index="0" choices="No tokens found" name="GraphicDropdown" class="modal-dropdown" />
-                <ui:DropdownField label="Class" index="0" choices="Stalwart,Vagabond,Mendicant,Wright,Heavy,Skirmisher,Leader,Artillery,Legend,Mob" name="ClassDropdown" class="modal-dropdown" />
-                <ui:DropdownField label="Job" index="0" choices="Bastion,Knave,Demon Slayer,Colossus" name="JobDropdown" class="modal-dropdown" style="display: flex;" />
-                <ui:Toggle label="Elite" name="EliteToggle" class="modal-toggle" style="display: none;" />
-                <ui:DropdownField label="HP Multiplier" index="2" choices="x1,x2,x3,x4,x5,x6,x7" name="LegendHPDropdown" class="modal-dropdown" style="display: none;" />
-                <ui:DropdownField label="Size" index="0" choices="Normal,Large (2), Huge (3)" name="SizeDropdown" class="modal-dropdown" style="display: none;" />
-            </ui:VisualElement>
-            <ui:VisualElement style="border-left-color: rgb(43, 43, 43); border-right-color: rgb(43, 43, 43); border-top-color: rgb(43, 43, 43); border-bottom-color: rgb(43, 43, 43); border-top-width: 2px; padding-top: 10px; margin-top: 10px; flex-direction: row; justify-content: space-around;">
-                <ui:Button text="Create+Save" display-tooltip-when-elided="true" name="AddTokenSaveCreateButton" class="modal-button" style="display: flex;" />
-                <ui:Button text="Create" display-tooltip-when-elided="true" name="AddTokenCreateButton" class="modal-button" style="display: flex;" />
-                <ui:Button text="Cancel" display-tooltip-when-elided="true" name="AddTokenCancelButton" class="modal-button" />
-            </ui:VisualElement>
-        </ui:VisualElement>
-    </ui:VisualElement>
-    <ui:VisualElement name="Tokens" class="panel" style="position: absolute; left: 116px; bottom: 348px; min-height: 0; min-width: 116px; display: flex;">
+    <ui:VisualElement name="Tokens" class="panel" style="position: absolute; left: 116px; bottom: 348px; min-height: 0; min-width: 116px; display: none;">
         <ui:Label tabindex="-1" text="TOKENS" display-tooltip-when-elided="true" class="panel-header" />
         <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="TokenList" />
+    </ui:VisualElement>
+    <ui:VisualElement name="AddTokenForm" class="panel" style="position: absolute; top: 60px; right: 10px; width: 380px; display: none;">
+        <ui:Label tabindex="-1" text="CREATE TOKEN" display-tooltip-when-elided="true" class="panel-header" />
+        <ui:TextField picking-mode="Ignore" value="Tokenname" label="Token Name" name="TokenNameField" class="modal-textfield" />
+        <ui:Label tabindex="-1" text="Custom tokens should be placed in " display-tooltip-when-elided="true" name="DataPath" style="color: rgb(255, 255, 255); background-color: rgb(79, 79, 79); -unity-text-align: upper-center; -unity-font-style: bold; font-size: 12px; padding-left: 4px; padding-right: 8px; padding-top: 4px; padding-bottom: 4px; white-space: normal; max-width: 400px; margin-left: 0; margin-right: 0; margin-bottom: 2px; margin-top: 2px;" />
+        <ui:DropdownField label="Graphic" index="0" choices="No tokens found" name="GraphicDropdown" class="modal-dropdown" />
+        <ui:DropdownField label="Class" index="0" choices="Stalwart,Vagabond,Mendicant,Wright,Heavy,Skirmisher,Leader,Artillery,Legend,Mob" name="ClassDropdown" class="modal-dropdown" />
+        <ui:DropdownField label="Job" index="0" choices="Bastion,Knave,Demon Slayer,Colossus" name="JobDropdown" class="modal-dropdown" style="display: flex;" />
+        <ui:Toggle label="Elite" name="EliteToggle" class="modal-toggle" style="display: none;" />
+        <ui:DropdownField label="HP Multiplier" index="2" choices="x1,x2,x3,x4,x5,x6,x7" name="LegendHPDropdown" class="modal-dropdown" style="display: none;" />
+        <ui:DropdownField label="Size" index="0" choices="Normal,Large (2), Huge (3)" name="SizeDropdown" class="modal-dropdown" style="display: none;" />
+        <ui:VisualElement style="border-left-color: rgb(43, 43, 43); border-right-color: rgb(43, 43, 43); border-top-color: rgb(43, 43, 43); border-bottom-color: rgb(43, 43, 43); border-top-width: 2px; padding-top: 10px; margin-top: 10px; flex-direction: row; justify-content: space-around;">
+            <ui:Button text="Create+Save" display-tooltip-when-elided="true" name="AddTokenSaveCreateButton" class="modal-button" style="display: flex;" />
+            <ui:Button text="Create" display-tooltip-when-elided="true" name="AddTokenCreateButton" class="modal-button" style="display: flex;" />
+            <ui:Button text="Cancel" display-tooltip-when-elided="true" name="AddTokenCancelButton" class="modal-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="Toggles" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; top: 10px; right: 10px;">
+        <ui:Button display-tooltip-when-elided="true" name="ConnectionToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/network&apos;); width: 28px; height: 28px;" />
+        <ui:Button display-tooltip-when-elided="true" name="PlayersToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/players&apos;); width: 28px; height: 28px;" />
+        <ui:Button display-tooltip-when-elided="true" name="SessionToggle" text="SES" class="blank" style="position: relative; background-image: none; width: 28px; height: 28px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: -16px;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="Sidebar" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; right: 40px; top: 10px;">
+        <ui:VisualElement name="ConnectionSidebar" class="panel" style="position: relative;">
+            <ui:Label tabindex="-1" text="CONNECTION" display-tooltip-when-elided="true" class="panel-header" />
+            <ui:VisualElement name="JoinSection" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                <ui:Button text="Host Session" display-tooltip-when-elided="true" name="HostButton" style="margin-bottom: 0;" />
+                <ui:Label tabindex="-1" text="or" display-tooltip-when-elided="true" style="-unity-text-align: middle-center; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
+                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: column;">
+                    <ui:TextField picking-mode="Ignore" value="localhost" name="JoinAddress" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 2px;" />
+                    <ui:Button text="Join Session" display-tooltip-when-elided="true" name="JoinButton" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="ConnectingSection" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
+                <ui:Label tabindex="-1" text="Connecting to localhost..." display-tooltip-when-elided="true" name="ConnectingMessage" style="-unity-text-align: upper-center;" />
+                <ui:Button text="Cancel" display-tooltip-when-elided="true" name="CancelConnecting" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Connection" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
+                <ui:Label tabindex="-1" text="Not Connected" display-tooltip-when-elided="true" name="ConnectionStatus" style="-unity-text-align: upper-center; white-space: normal;" />
+                <ui:Button text="Disconnect" display-tooltip-when-elided="true" name="DisconnectButton" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="PlayersSidebar" class="panel" style="position: relative; left: auto; top: auto;">
+            <ui:Label tabindex="-1" text="PLAYERS" display-tooltip-when-elided="true" class="panel-header" />
+            <ui:VisualElement name="PlayerList" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); overflow: hidden; margin-top: 8px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="SessionSidebar" class="panel" style="position: relative; left: auto; top: auto;">
+            <ui:Label tabindex="-1" text="SESSION" display-tooltip-when-elided="true" class="panel-header" />
+            <ui:DropdownField index="0" choices="default_session" name="SessionField" class="no-margin" />
+            <ui:Button text="Add" display-tooltip-when-elided="true" name="NewSessionButton" style="margin-top: 2px;" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

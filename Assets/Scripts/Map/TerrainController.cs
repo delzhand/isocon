@@ -451,6 +451,7 @@ public class TerrainController : MonoBehaviour
             catch(Exception e) {
                 // Exceptions are fine, it means there's no block because it's out of bounds
                 showBlock(b);
+                Exception nullify = e;// just to get rid of console warnings
             }
         }
     }
