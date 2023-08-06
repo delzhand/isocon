@@ -17,16 +17,26 @@ public class PlayerController : NetworkBehaviour
     {
         base.OnStartClient();
         Debug.Log("Client joined");
-        // updatePlayerList();
+        // RpcUpdatePlayerList();
     }
 
-    public override void OnStopClient() {
-        RpcUpdatePlayerList();
-    }
+    // public override void OnStopClient() {
+    //     RpcUpdatePlayerList();
+    // }
 
-    [ClientRpc]
-    private void RpcUpdatePlayerList() {        
-        foreach(GameObject g in GameObject.FindGameObjectsWithTag("Player")) {
-        }
+    // [ClientRpc]
+    // public void RpcUpdatePlayerList() {    
+    //     Debug.Log("RpcUpdatePlayerList");    
+    //     UI.System.Q("OtherPlayers").Clear();
+    //     foreach(GameObject g in GameObject.FindGameObjectsWithTag("Player")) {
+    //         Player p = g.GetComponent<Player>();
+    //         if (!p.isOwned) {
+    //             UI.System.Q("OtherPlayers").Add(Player.PlayerElement(p));
+    //         }
+    //     }
+    // }
+
+    public static void Disconnect() {
+        UI.System.Q("PlayerList").Clear();
     }
 }

@@ -41,6 +41,7 @@ public class ConnectionHUD : MonoBehaviour
             {
                 manager.StopClient();
             }
+            PlayerController.Disconnect();
         });
 
         UI.System.Q<Button>("ConnectPanelClose").RegisterCallback<ClickEvent>((evt) => {

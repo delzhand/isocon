@@ -14,9 +14,9 @@ public class TerrainController : MonoBehaviour
     private bool indicators = false;
 
     void Start() {
-        registerCallbacks();
-        disableIndicators();
-        InitializeTerrain(8, 8, 3);
+        // registerCallbacks();
+        // disableIndicators();
+        InitializeTerrain(8, 8, 1);
     }
 
     private void registerCallbacks() {
@@ -28,8 +28,6 @@ public class TerrainController : MonoBehaviour
                 enableIndicators();
             }
         });
-
-        // UI.System.Q<DropdownField>("EditOperation").RegisterValueChangedCallback(editTerrainSelect);
     }
 
     private void editTerrainSelect(ChangeEvent<string> evt) {

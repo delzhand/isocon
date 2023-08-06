@@ -8,6 +8,7 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 using System.Linq;
 using IsoconUILibrary;
+using System.Text;
 
 public class TokenController : MonoBehaviour
 {
@@ -17,12 +18,17 @@ public class TokenController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        registerCallbacks();
+        // registerCallbacks();
     }
 
     // Update is called once per frame
     void Update()
     {
+        StringBuilder sb = new();
+        foreach(Transform t in GameObject.Find("Tokens").transform) {
+            sb.AppendLine(t.name);
+        }
+        UI.System.Q<Label>("TokenList").text = sb.ToString();
     }
 
     public void registerCallbacks() {

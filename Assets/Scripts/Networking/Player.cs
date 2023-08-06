@@ -18,56 +18,52 @@ public class Player : NetworkBehaviour
     [SyncVar]
     public PlayerRole Role;
 
+    [SyncVar]
+    public bool Host = false;
+
+    void Awake() {
+    }
+
     void Start()
     {
         if (isLocalPlayer) {
             if (GameObject.FindGameObjectsWithTag("Player").Length == 1) {
                 Role = PlayerRole.GM;
+                Host = true;
             }
-            string newName = PlayerPrefs.GetString("PlayerName", "New Player");
-            UI.System.Q<TextField>("e_PlayerName").value = newName;
-            Name = newName;
+            Name = PlayerPrefs.GetString("PlayerName", "New Player");
+        } 
 
-            UI.System.Q<TextField>("e_PlayerName").RegisterValueChangedCallback((evt) => {
-                Name = evt.newValue;
-                PlayerPrefs.SetString("PlayerName", evt.newValue);
+        VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/ConnectedPlayer");
+        VisualElement instance = template.Instantiate();
+        UI.System.Q("PlayerList").Add(instance);
+        PlayerReference pRef = new GameObject(Name + " Reference").AddComponent<PlayerReference>();
+        pRef.player = this;
+        pRef.visualElement = instance;
+
+        if (isLocalPlayer) {
+            // Set up editing
+            instance.Q<Label>("PlayerName").RegisterCallback<ClickEvent>((evt) => {
+                instance.Q<TextField>("PlayerNameEdit").value = Name;
+                UI.ToggleDisplay(instance.Q("PlayerName"), false);
+                UI.ToggleDisplay(instance.Q("PlayerNameEdit"), true);
             });
 
-            CreateElement();
+            // Change name
+            instance.Q<TextField>("PlayerNameEdit").RegisterCallback<BlurEvent>((evt) => {
+                Name = instance.Q<TextField>("PlayerNameEdit").value;
+                PlayerPrefs.SetString("PlayerName", Name);
+                UI.ToggleDisplay(instance.Q("PlayerName"), true);
+                UI.ToggleDisplay(instance.Q("PlayerNameEdit"), false);
+            });
         }
-    }
-
-    private void CreateElement() {
-        // Create basic version
-        VisualElement e = UI.System.Q("PlayerTemplate");
-        e.style.display = DisplayStyle.Flex;
-        if (Role != PlayerRole.GM) {
-            e.Q("GMLabel").style.display = DisplayStyle.None;
-        }
-        e.Q<Label>("PlayerName").text = Name;
-
-        // Send to server
-        CmdAddToPlayerList(e);
-
-        // Set up editing
-        e.Q<Label>("PlayerName").RegisterCallback<ClickEvent>((evt) => {
-            e.Q<TextField>("PlayerNameEdit").value = Name;
-            UI.ToggleDisplay(e.Q("PlayerName"), false);
-            UI.ToggleDisplay(e.Q("PlayerNameEdit"), true);
-        });
-
-        e.Q<TextField>("PlayerNameEdit").RegisterCallback<BlurEvent>((evt) => {
-            Name = e.Q<TextField>("PlayerNameEdit").value;
-        });
     }
 
     [Command]
-    private void CmdAddToPlayerList(VisualElement e) {
-        RpcUpdatePlayerList(e);
-    }
-
-    [ClientRpc]
-    private void RpcUpdatePlayerList(VisualElement e) {
-        UI.System.Q("PlayersList").Add(e);
+    public void CmdRequestAddToken(string name) {
+        GameObject newToken = Instantiate(Resources.Load("Prefabs/ProtoToken") as GameObject);
+        newToken.transform.parent = GameObject.Find("Tokens").transform;
+        newToken.name = name;
+        NetworkServer.Spawn(newToken);
     }
 }

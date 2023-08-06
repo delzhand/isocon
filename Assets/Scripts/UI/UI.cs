@@ -4,6 +4,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Linq;
+using System;
 
 public class UI : MonoBehaviour
 {
@@ -68,6 +69,10 @@ public class UI : MonoBehaviour
     }
 
     public static bool InElement(string elementName) {
+        VisualElement v = UI.System.Q(elementName);
+        if (v == null) {
+            return false;
+        }
         Vector2 mp = Input.mousePosition;
         Vector2 min = UI.System.Q(elementName).layout.min;
         Vector2 max = UI.System.Q(elementName).layout.max;

@@ -27,7 +27,7 @@ public class CameraControl : MonoBehaviour
         isLocked = false;
         overhead = false;
         CameraTransform = GameObject.Find("CameraOrigin").transform;
-        registerCallbacks();
+        // registerCallbacks();
     }
 
     private void registerCallbacks() {
