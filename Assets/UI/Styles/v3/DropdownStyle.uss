@@ -1,0 +1,8 @@
+.unity-base-dropdown__item .unity-label {
+    color: black;
+    -unity-font-style: bold;
+}
+
+.unity-base-dropdown__item:hover {
+    background-color: orange;
+}

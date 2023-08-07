@@ -10,13 +10,13 @@ public class PlayerController : NetworkBehaviour
     public override void OnStartServer()
     {
         base.OnStartServer();
-        Debug.Log("Server started");
+        // Debug.Log("Server started");
     }
 
     public override void OnStartClient()
     {
         base.OnStartClient();
-        Debug.Log("Client joined");
+        // Debug.Log("Client joined");
         // RpcUpdatePlayerList();
     }
 

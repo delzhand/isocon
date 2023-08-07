@@ -139,7 +139,7 @@ public class TerrainController : MonoBehaviour
                     for (int z = 0; z < height; z++) {
                         GameObject block = Instantiate(Resources.Load("Prefabs/Block") as GameObject);
                         block.transform.parent = column.transform;
-                        block.transform.localPosition = new Vector3(0, z-2, 0);
+                        block.transform.localPosition = new Vector3(0, z, 0);
                         block.transform.localScale = Vector3.one;
                         if (z == 0) {
                             block.GetComponent<Block>().Destroyable = false;
@@ -448,11 +448,13 @@ public class TerrainController : MonoBehaviour
                     showBlock(b);
                 }
             }
+            #pragma warning disable
             catch(Exception e) {
                 // Exceptions are fine, it means there's no block because it's out of bounds
                 showBlock(b);
-                Exception nullify = e;// just to get rid of console warnings
             }
+            #pragma warning restore
+
         }
     }
 

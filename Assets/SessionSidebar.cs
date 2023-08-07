@@ -9,18 +9,16 @@ public class SessionSidebar : MonoBehaviour
 {
     public static string SessionFile;
 
-    private List<string> sessionFiles;
-
     void Awake() {
         UI.System.Q<Button>("SessionToggle").RegisterCallback<ClickEvent>((evt) => {
             UI.ToggleDisplay("SessionSidebar");
         });  
 
-        sessionFiles = GetSessionFiles();
+        List<string> sessionFiles = GetSessionFiles();
         if (sessionFiles.Count == 0) {
             NewSession();
         }
-        if (sessionFiles.Count > 0) {
+        else if (sessionFiles.Count > 0) {
             UI.System.Q<DropdownField>("SessionField").choices = sessionFiles;
             SessionFile = PlayerPrefs.GetString("LastSession", "default");
             if (sessionFiles.Contains(SessionFile)) {
@@ -28,9 +26,13 @@ public class SessionSidebar : MonoBehaviour
             }
         }
 
+        UI.System.Q<DropdownField>("SessionField").RegisterValueChangedCallback<string>((evt) => {
+            SessionFile = evt.newValue;
+            PlayerPrefs.SetString("LastSession", SessionFile);
+        });
 
         UI.System.Q<Button>("NewSessionButton").RegisterCallback<ClickEvent>((evt) => {
-
+            NewSession();
         });
     }
 
@@ -47,6 +49,11 @@ public class SessionSidebar : MonoBehaviour
 
     private List<string> GetSessionFiles() {
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        
+        if (!Directory.Exists(path + "/sessions")) {
+            Directory.CreateDirectory(path + "/sessions");
+        }
+
         List<string> sessionFiles = new List<string>{};
         DirectoryInfo info = new DirectoryInfo(path + "/sessions/");
         if (info.Exists) {
@@ -59,7 +66,8 @@ public class SessionSidebar : MonoBehaviour
     }
 
     private void NewSession() {
-        SessionFile = DateTime.Now.ToString("yyyy’-‘MM’-‘dd");
+        List<string> sessionFiles = GetSessionFiles();
+        SessionFile = DateTime.Now.ToString("yyyy-MM-dd");
         string compositeFilename = SessionFile + ".json";
         if (sessionFiles.Contains(compositeFilename)) {
             int counter = 0;
@@ -68,9 +76,13 @@ public class SessionSidebar : MonoBehaviour
             }
             SessionFile = SessionFile + "_" + counter;
         }
+        SessionFile += ".json";
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
         File.WriteAllText(path + "/sessions/" + SessionFile + ".json", "");
+        sessionFiles = GetSessionFiles();
+        UI.System.Q<DropdownField>("SessionField").choices = sessionFiles;
         UI.System.Q<DropdownField>("SessionField").value = SessionFile;
-        GetSessionFiles();
+        PlayerPrefs.SetString("LastSession", SessionFile);
+
     }
 }

@@ -31,11 +31,10 @@ public class Player : NetworkBehaviour
                 Role = PlayerRole.GM;
             }
             Name = PlayerPrefs.GetString("PlayerName", "New Player");
+            if (NetworkServer.active && NetworkClient.active) {
+                Host = true;
+            }
         } 
-
-        if (NetworkServer.active && NetworkClient.active) {
-            Host = true;
-        }
 
         VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/ConnectedPlayer");
         VisualElement instance = template.Instantiate();
@@ -62,17 +61,27 @@ public class Player : NetworkBehaviour
         }
     }
 
-    [Command]
-    public void CmdRequestAddToken(string name, string job, string jclass) {
-        GameObject newToken = Instantiate(Resources.Load("Prefabs/ProtoToken") as GameObject);
-        NetworkServer.Spawn(newToken);
-        ProtoToken p = newToken.GetComponent<ProtoToken>();
-        p.Name = name;
-        p.Job = job;
-        p.JClass = jclass;
-    }
+    // [Command]
+    // public void CmdRequestAddToken(string name, string job, string jclass) {
+    //     GameObject newToken = Instantiate(Resources.Load("Prefabs/ProtoToken") as GameObject);
+    //     NetworkServer.Spawn(newToken);
+    //     ProtoToken p = newToken.GetComponent<ProtoToken>();
+    //     p.Name = name;
+    //     p.Job = job;
+    //     p.JClass = jclass;
+    // }
 
     public static bool IsHost() {
         return NetworkServer.active && NetworkClient.active;
+    }
+
+    public static bool IsGM() {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach(GameObject g in players) {
+            if (g.GetComponent<Player>().isOwned && g.GetComponent<Player>().Role == PlayerRole.GM) {
+                return true;
+            }
+        }
+        return false;
     }
 }

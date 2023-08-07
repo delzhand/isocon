@@ -43,6 +43,11 @@
     border-width: 1px;
     border-radius: 2px;
     background-color: rgba(100, 100, 100, 0.35);
+    border-color: #646464;
+}
+
+.unity-button:focus {
+    border-color: #646464;
 }
 
 .unity-button:hover {

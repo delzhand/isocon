@@ -4,6 +4,7 @@ using UnityEngine.Rendering.Universal;
 
 public class BlurRenderPass : ScriptableRenderPass
 {
+#pragma warning disable
     private Material material;
     private BlurSettings blurSettings;
 
@@ -75,4 +76,6 @@ public class BlurRenderPass : ScriptableRenderPass
         cmd.ReleaseTemporaryRT(blurTexID);
         base.FrameCleanup(cmd);
     }
+    #pragma warning restore
+
 }
