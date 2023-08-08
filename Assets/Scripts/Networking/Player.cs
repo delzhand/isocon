@@ -58,7 +58,18 @@ public class Player : NetworkBehaviour
                 UI.ToggleDisplay(instance.Q("PlayerName"), true);
                 UI.ToggleDisplay(instance.Q("PlayerNameEdit"), false);
             });
+
+            // Request session data from host
+            CmdRequestSession();
+
         }
+    }
+
+    [Command]
+    public void CmdRequestSession() {
+        State state = State.GetStateFromScene();
+        string json = JsonUtility.ToJson(state);
+        RpcDrawMap(json);
     }
 
     // [Command]
@@ -76,12 +87,28 @@ public class Player : NetworkBehaviour
     }
 
     public static bool IsGM() {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        foreach(GameObject g in players) {
-            if (g.GetComponent<Player>().isOwned && g.GetComponent<Player>().Role == PlayerRole.GM) {
-                return true;
-            }
+        Player p = Self();
+        if (p) {
+            return p.Role == PlayerRole.GM;
         }
         return false;
+    }
+
+    public static Player Self() {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach(GameObject g in players) {
+            if (g.GetComponent<Player>().isOwned) {
+                return g.GetComponent<Player>();
+            }
+        }
+        return null;
+    }
+
+    [ClientRpc]
+    public void RpcDrawMap(string json) {
+        State state = JsonUtility.FromJson<State>(json);
+        State.SetSceneFromState(state);
+        Toast.Add("Map loaded.");
+        TimedReorgHack.Add();
     }
 }

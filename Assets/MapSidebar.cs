@@ -70,9 +70,6 @@ public class MapSidebar : MonoBehaviour
     private void LoadMap() {
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
         string json = File.ReadAllText(path + "/maps/" + MapFile);
-        State state = JsonUtility.FromJson<State>(json);
-        State.SetSceneFromState(state);
-        Toast.Add("Map loaded.");
-        TimedReorgHack.Add();
+        Player.Self().RpcDrawMap(json);
     }
 }
