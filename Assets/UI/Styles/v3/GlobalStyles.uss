@@ -17,7 +17,7 @@
 }
 
 .panel {
-    background-color: rgba(0, 0, 0, 0.75);
+    background-color: rgba(0, 0, 0, .98);
     color: rgb(255, 255, 255);
     padding-left: 8px;
     padding-right: 8px;
