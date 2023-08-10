@@ -159,8 +159,8 @@ public class TokenController : MonoBehaviour
 
         panel.Q<Button>("e_Duplicate").RegisterCallback<ClickEvent>((evt) => {
             GameObject clone = GameObject.Instantiate(selected.gameObject);
-            ReserveSpot openReserve = ReserveSpot.LastReserveSpot();
-            openReserve.PlaceAtReserveSpot(clone.GetComponent<Token>());
+            // ReserveSpot openReserve = ReserveSpot.LastReserveSpot();
+            // openReserve.PlaceAtReserveSpot(clone.GetComponent<Token>());
         });
 
         panel.Q<Button>("e_Delete").RegisterCallback<ClickEvent>((evt) => {
@@ -430,8 +430,8 @@ public class TokenController : MonoBehaviour
         newToken.transform.Find("Base").GetComponent<DecalProjector>().material = m;
         newToken.transform.Find("Base").gameObject.SetActive(false);
 
-        ReserveSpot openReserve = ReserveSpot.LastReserveSpot();
-        openReserve.PlaceAtReserveSpot(newToken.GetComponent<Token>());
+        // ReserveSpot openReserve = ReserveSpot.LastReserveSpot();
+        // openReserve.PlaceAtReserveSpot(newToken.GetComponent<Token>());
     }
 
     public static void TokenClick(Token token) {
@@ -468,17 +468,17 @@ public class TokenController : MonoBehaviour
         }
     }
 
-    public static void ReserveSpotClick(ReserveSpot spot) {
-        if (UI.ClicksSuspended) {
-            return;
-        }
-        if (selected != null && !selected.InReserve) {
-            spot.PlaceAtReserveSpot(selected);
-        }
-        else if (selected == null && spot == ReserveSpot.LastReserveSpot()) {
-            EnableAddToken();
-        }
-    }
+    // public static void ReserveSpotClick(ReserveSpot spot) {
+    //     if (UI.ClicksSuspended) {
+    //         return;
+    //     }
+    //     if (selected != null && !selected.InReserve) {
+    //         spot.PlaceAtReserveSpot(selected);
+    //     }
+    //     else if (selected == null && spot == ReserveSpot.LastReserveSpot()) {
+    //         EnableAddToken();
+    //     }
+    // }
 
     public static bool IsSelected(Token token)
     {

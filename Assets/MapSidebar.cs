@@ -13,14 +13,7 @@ public class MapSidebar : MonoBehaviour
             UI.ToggleDisplay("MapSidebar");
         });  
 
-        List<string> mapFiles = GetMapFiles();
-        if (mapFiles.Count == 0) {
-            UI.ToggleDisplay("LoadMapButton", false);
-            UI.ToggleDisplay("MapField", false);
-        }
-        else {
-            UI.System.Q<DropdownField>("MapField").choices = mapFiles;
-        }
+        Refresh();
 
         UI.System.Q<Button>("LoadMapButton").RegisterCallback<ClickEvent>((evt) => {
             MapFile = UI.System.Q<DropdownField>("MapField").value;
@@ -47,6 +40,17 @@ public class MapSidebar : MonoBehaviour
         else {
             UI.ToggleDisplay("MapToggle", true);
         }        
+    }
+
+    public void Refresh() {
+        List<string> mapFiles = GetMapFiles();
+        if (mapFiles.Count == 0) {
+            UI.ToggleDisplay("LoadMapButton", false);
+            UI.ToggleDisplay("MapField", false);
+        }
+        else {
+            UI.System.Q<DropdownField>("MapField").choices = mapFiles;
+        }
     }
 
     private List<string> GetMapFiles() {

@@ -11,7 +11,8 @@ using UnityEngine.UIElements;
 
 public class Token : MonoBehaviour
 {
-    public bool InReserve = true;
+    // public bool InReserve = true;
+    public bool OnField = false;
     public int Size = 1;
 
     public Texture2D Image;
@@ -28,11 +29,7 @@ public class Token : MonoBehaviour
     }
 
     private void alignToCamera() {
-        if (InReserve) {
-            Transform camera = GameObject.Find("ReserveCamera").transform;
-            transform.Find("Offset").transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 180, 0);
-        }
-        else {
+        if (OnField) {
             Transform camera = GameObject.Find("CameraOrigin").transform;
             transform.Find("Offset").transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 90, 0);
         }
@@ -64,13 +61,8 @@ public class Token : MonoBehaviour
 
     public void PlaceAtBlock(Block block) {
         transform.position = block.transform.position + new Vector3(0, .25f, 0);
-        InReserve = false;
+        OnField = true;
         transform.Find("Base").gameObject.SetActive(true);
-
-        ReserveSpot rs = ReserveSpot.GetReserveSpot(this);
-        if (rs != null) {
-            rs.Token = null;
-        }
     }
 
     public void Select() {

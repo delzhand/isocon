@@ -47,6 +47,7 @@ public class UI : MonoBehaviour
     public static void SetHardSuspend(bool val) {
         hardSuspend = val;
     }
+
     public static void SetScale(string element, float value) {
         GameObject.Find(element).GetComponent<UIDocument>().panelSettings.scale = value;
     }
@@ -80,7 +81,7 @@ public class UI : MonoBehaviour
     }
 
     public static void ToggleDisplay(string name) {
-        bool isShown = (System.Q(name).style.display != DisplayStyle.None);
+        bool isShown = (System.Q(name).resolvedStyle.display != DisplayStyle.None);
         ToggleDisplay(name, !isShown);
     }
 

@@ -19,27 +19,27 @@ public class ReserveSpot : MonoBehaviour
         
     }
 
-    void OnMouseDown()
-    {
-        if (UI.InElement("EditTokenPanel")) {
-            return;
-        }
-        if (UI.ClicksSuspended) {
-            return;
-        }
-        if (ModeController.Mode == ClickMode.Play) {
-            TokenController.ReserveSpotClick(this);
-        }
-    }
+    // void OnMouseDown()
+    // {
+    //     if (UI.InElement("EditTokenPanel")) {
+    //         return;
+    //     }
+    //     if (UI.ClicksSuspended) {
+    //         return;
+    //     }
+    //     if (ModeController.Mode == ClickMode.Play) {
+    //         TokenController.ReserveSpotClick(this);
+    //     }
+    // }
 
-    public void PlaceAtReserveSpot(Token token) {
-        Token = token;
-        Token.InReserve = true;
-        Token.transform.Find("Base").gameObject.SetActive(false);
-        SetTokenPosition();
-        TokenController.Deselect();
-        ReserveController.Adjust();
-    }
+    // public void PlaceAtReserveSpot(Token token) {
+    //     Token = token;
+    //     Token.InReserve = true;
+    //     Token.transform.Find("Base").gameObject.SetActive(false);
+    //     SetTokenPosition();
+    //     TokenController.Deselect();
+    //     ReserveController.Adjust();
+    // }
 
     public void SetTokenPosition() {
         if (Token) {
