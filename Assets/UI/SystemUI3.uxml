@@ -77,7 +77,7 @@
             <ui:Button display-tooltip-when-elided="true" name="ConfigToggle" text="CFG" class="blank" style="position: relative; background-image: none; width: 28px; height: 28px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: -16px;" />
         </ui:VisualElement>
         <ui:VisualElement name="Sidebar" style="margin-right: 10px;">
-            <ui:VisualElement name="ConnectionSidebar" class="panel" style="position: relative; margin-bottom: 0;">
+            <ui:VisualElement name="ConnectionSidebar" class="panel" style="position: relative; margin-bottom: 0; display: none;">
                 <ui:Label tabindex="-1" text="CONNECTION" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:VisualElement name="JoinSection" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
                     <ui:Button text="Host Session" display-tooltip-when-elided="true" name="HostButton" style="margin-bottom: 0;" />
@@ -138,7 +138,7 @@
                 <IsoconUILibrary.SlideToggle label="Indicators" name="IndicatorSwitch" focusable="false" class="no-margin" style="align-self: center;" />
                 <ui:Button display-tooltip-when-elided="true" name="RotateCW" class="rotate rev blank" style="background-image: resource(&apos;Textures/rotateCW&apos;); background-color: rgba(188, 188, 188, 0); width: 24px; height: 24px; align-self: center;" />
             </ui:VisualElement>
-            <ui:VisualElement name="ActiveTokenPanel" class="panel" style="position: absolute; top: auto; left: auto; bottom: 10px; display: flex;">
+            <ui:VisualElement name="ActiveTokenPanel" class="panel" style="position: absolute; top: auto; left: auto; bottom: 10px; display: none;">
                 <ui:Label tabindex="-1" text="ACTIVE UNIT" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-direction: row;">
                     <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); margin-right: 10px;">
@@ -213,7 +213,7 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="SelectedTokenPanel" class="panel" style="position: absolute; top: auto; left: auto; bottom: 10px; display: flex; right: 0;">
+            <ui:VisualElement name="SelectedTokenPanel" class="panel" style="position: absolute; top: auto; left: auto; bottom: 10px; display: none; right: 0;">
                 <ui:Label tabindex="-1" text="SELECTED UNIT" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:VisualElement style="flex-direction: row-reverse;">
                     <ui:VisualElement style="flex-direction: column; margin-left: 10px;">

@@ -144,6 +144,9 @@ public class Block : MonoBehaviour
         if (UI.InElement("EditTokenPanel")) {
             return;
         }
+        if (UI.InElement("unity-content-and-vertical-scroll-container")) {
+            return;
+        }
         if (UI.ClicksSuspended) {
             return;
         }

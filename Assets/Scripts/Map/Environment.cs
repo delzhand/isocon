@@ -12,19 +12,19 @@ public enum Palette {
 }
 
 public enum BackgroundGradient {
+    FANTASIA,
     SUNSHINE,
     NIGHTTIME,
     SEASIDE,
     ARKENDEPTH,
     SANDSTORM,
-    FANTASIA,
     DEEPHEAT,
     CLOUDTOP
 }
 
 public class Environment : MonoBehaviour
 {
-    private static BackgroundGradient background = BackgroundGradient.SUNSHINE;
+    private static BackgroundGradient background = BackgroundGradient.FANTASIA;
     private static Palette palette = Palette.GREENFIELD;
     
     // Start is called before the first frame update

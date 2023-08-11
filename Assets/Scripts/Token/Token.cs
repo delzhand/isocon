@@ -29,10 +29,8 @@ public class Token : MonoBehaviour
     }
 
     private void alignToCamera() {
-        if (OnField) {
-            Transform camera = GameObject.Find("CameraOrigin").transform;
-            transform.Find("Offset").transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 90, 0);
-        }
+        Transform camera = GameObject.Find("CameraOrigin").transform;
+        transform.Find("Offset").transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 90, 0);
     }
 
     public void CustomCutout(string filename) {

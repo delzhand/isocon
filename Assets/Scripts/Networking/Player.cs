@@ -72,6 +72,13 @@ public class Player : NetworkBehaviour
         RpcDrawMap(json);
     }
 
+    [Command]
+    public void CmdRequestNewToken() {
+        GameObject newToken = Instantiate(Resources.Load("Prefabs/Token") as GameObject);
+        NetworkServer.Spawn(newToken);
+        RpcMoveToken(newToken, new Vector3(2, .25f, 3));
+    }
+
     // [Command]
     // public void CmdRequestAddToken(string name, string job, string jclass) {
     //     GameObject newToken = Instantiate(Resources.Load("Prefabs/ProtoToken") as GameObject);
@@ -110,5 +117,10 @@ public class Player : NetworkBehaviour
         State.SetSceneFromState(state);
         Toast.Add("Map loaded.");
         TimedReorgHack.Add();
+    }
+
+    [ClientRpc]
+    public void RpcMoveToken(GameObject g, Vector3 v) {
+        MoveLerp.Create(g, 1, g.transform.position, v);
     }
 }
