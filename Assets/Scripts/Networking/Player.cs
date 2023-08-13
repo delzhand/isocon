@@ -61,7 +61,6 @@ public class Player : NetworkBehaviour
 
             // Request session data from host
             CmdRequestSession();
-
         }
     }
 
@@ -73,10 +72,27 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
-    public void CmdRequestNewToken() {
+    public void CmdRequestImages() {
+
+    }
+
+    [Command]
+    public void CmdSendTextureChunks(string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height)
+    {
+        RpcReceiveTextureChunks(hash, chunkIndex, chunkTotal, chunkColors, width, height);
+    }
+
+    [Command]
+    public void CmdRequestNewToken(string json) {
         GameObject newToken = Instantiate(Resources.Load("Prefabs/Token") as GameObject);
         NetworkServer.Spawn(newToken);
-        RpcMoveToken(newToken, new Vector3(2, .25f, 3));
+        RpcInitializeToken(newToken, json);
+        // RpcMoveToken(newToken, new Vector3(2, .25f, 3));
+    }
+
+    [Command]
+    public void CmdRequestTokenMove(GameObject g, Vector3 v) {
+        RpcMoveToken(g, v);
     }
 
     // [Command]
@@ -122,5 +138,15 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void RpcMoveToken(GameObject g, Vector3 v) {
         MoveLerp.Create(g, 1, g.transform.position, v);
+    }
+
+    [ClientRpc]
+    public void RpcInitializeToken(GameObject g, string json) {
+        GameSystem.Current().InitializeToken(g, json);
+    }
+
+    [ClientRpc]
+    public void RpcReceiveTextureChunks(string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height){
+        TextureSender.Receive(hash, chunkIndex, chunkTotal, chunkColors, width, height);
     }
 }

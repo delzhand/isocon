@@ -11,15 +11,16 @@ using UnityEngine.UIElements;
 
 public class Token : MonoBehaviour
 {
-    // public bool InReserve = true;
     public bool OnField = false;
     public int Size = 1;
-
     public Texture2D Image;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    void Awake() {
+        Debug.Log("awake");
+        if (Image == null) {
+            Debug.Log("find");
+            StartCoroutine(FindRemoteTokenImage());
+        }
     }
 
     // Update is called once per frame
@@ -33,34 +34,42 @@ public class Token : MonoBehaviour
         transform.Find("Offset").transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 90, 0);
     }
 
-    public void CustomCutout(string filename) {
-        StartCoroutine(LoadLocalFileIntoCutout(filename));
+    public void SetImage(Texture2D image) {
+        Image = image;
+        float aspectRatio = Image.width/(float)Image.height;
+        transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetTexture("_Image", Image);
+        transform.Find("Offset/Avatar/Cutout/Cutout Quad").transform.localScale = new Vector3(aspectRatio, 1f, 1f);
     }
 
-    private IEnumerator LoadLocalFileIntoCutout(string filename) {
-        using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(filename))
-        {
-            yield return uwr.SendWebRequest();
+    // public void CustomCutout(string filename) {
+    //     StartCoroutine(LoadLocalFileIntoCutout(filename));
+    // }
 
-            if (uwr.result != UnityWebRequest.Result.Success)
-            {
-                Debug.Log(uwr.error);
-            }
-            else
-            {
-                // Get downloaded asset bundle
-                Image = DownloadHandlerTexture.GetContent(uwr);
-                float aspectRatio = Image.width/(float)Image.height;
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetTexture("_Image", Image);
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").transform.localScale = new Vector3(aspectRatio, 1f, 1f);
-            }
-        }
-    }
+    // private IEnumerator LoadLocalFileIntoCutout(string filename) {
+    //     using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(filename))
+    //     {
+    //         yield return uwr.SendWebRequest();
+
+    //         if (uwr.result != UnityWebRequest.Result.Success)
+    //         {
+    //             Debug.Log(uwr.error);
+    //         }
+    //         else
+    //         {
+    //             // Get downloaded asset bundle
+    //             Image = DownloadHandlerTexture.GetContent(uwr);
+    //             float aspectRatio = Image.width/(float)Image.height;
+    //             transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetTexture("_Image", Image);
+    //             transform.Find("Offset/Avatar/Cutout/Cutout Quad").transform.localScale = new Vector3(aspectRatio, 1f, 1f);
+    //         }
+    //     }
+    // }
 
     public void PlaceAtBlock(Block block) {
-        transform.position = block.transform.position + new Vector3(0, .25f, 0);
-        OnField = true;
-        transform.Find("Base").gameObject.SetActive(true);
+        Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
+        Player.Self().CmdRequestTokenMove(gameObject, v);
+        // OnField = true;
+        // transform.Find("Base").gameObject.SetActive(true);
     }
 
     public void Select() {
@@ -72,5 +81,29 @@ public class Token : MonoBehaviour
     public void Deselect() {
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 0);
+    }
+
+    private IEnumerator FindRemoteTokenImage() {
+        Debug.Log("FindRemoteTokenImage");
+        string imageHash = GameSystem.Current().GetTokenImageHash(gameObject);
+        Debug.Log(imageHash);
+
+        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        string filename = "file://" + path + "/remote-tokens/" + imageHash + ".png";
+        Debug.Log(filename);
+        using UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(filename);
+        yield return uwr.SendWebRequest();
+
+        if (uwr.result != UnityWebRequest.Result.Success)
+        {
+            Toast.Add(uwr.error);
+            Debug.Log(uwr.error);
+        }
+        else
+        {
+            Debug.Log("success");
+            SetImage(DownloadHandlerTexture.GetContent(uwr));
+        }
+
     }
 }

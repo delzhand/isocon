@@ -384,7 +384,7 @@ public class TokenController : MonoBehaviour
 
         GameObject newToken = Instantiate(Resources.Load<GameObject>("Prefabs/Token"));
         newToken.name = nameField.value;
-        newToken.GetComponent<Token>().CustomCutout("file://" + Application.persistentDataPath + "/tokens/" + graphicField.value);
+        // newToken.GetComponent<Token>().CustomCutout("file://" + Application.persistentDataPath + "/tokens/" + graphicField.value);
         newToken.GetComponent<Token>().Deselect();
 
         TokenState tokenState = newToken.AddComponent<TokenState>();
@@ -488,8 +488,8 @@ public class TokenController : MonoBehaviour
     private static void Select(Token token) {
         selected = token;
         token.Select();
-        UI.System.Q("SelectedTokenPanel").AddToClassList("active");
-        SetEditPanelValues();
+        // UI.System.Q("SelectedTokenPanel").AddToClassList("active");
+        // SetEditPanelValues();
     }
 
     public static void Deselect() {

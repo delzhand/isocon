@@ -37,30 +37,30 @@ public class ReserveController : MonoBehaviour
     }
 
     public static void Adjust() {
-        // Delete empty spots
-        GameObject[] spots = GameObject.FindGameObjectsWithTag("Reserve");
-        for (int i = 0; i < spots.Length; i++) {
-            ReserveSpot rs = spots[i].GetComponent<ReserveSpot>();
-            if (rs.Token == null) {
-                GameObject.DestroyImmediate(spots[i]);   
-            }
-        }
+        // // Delete empty spots
+        // GameObject[] spots = GameObject.FindGameObjectsWithTag("Reserve");
+        // for (int i = 0; i < spots.Length; i++) {
+        //     ReserveSpot rs = spots[i].GetComponent<ReserveSpot>();
+        //     if (rs.Token == null) {
+        //         GameObject.DestroyImmediate(spots[i]);   
+        //     }
+        // }
 
-        // Ensure at least one empty spot at the end
-        GameObject newSpot = Instantiate(Resources.Load("Prefabs/ReserveTile") as GameObject);
-        newSpot.transform.parent = GameObject.Find("SpotRoot").transform;
+        // // Ensure at least one empty spot at the end
+        // GameObject newSpot = Instantiate(Resources.Load("Prefabs/ReserveTile") as GameObject);
+        // newSpot.transform.parent = GameObject.Find("SpotRoot").transform;
 
-        // Reposition spots
-        spots = GameObject.FindGameObjectsWithTag("Reserve");
-        for (int i = 0; i < spots.Length; i++) {
-            spots[i].name = "Reserve " + (i+1);
-            Vector3 position = new Vector3(i, .2f, -.5f * (i%2));
-            spots[i].transform.localPosition = position;
-            // Token t = spots[i].GetComponent<ReserveSpot>().Token;
-            // if (t) {
-            //     spots[i].GetComponent<ReserveSpot>().PlaceAtReserveSpot(t);
-            // }
-            spots[i].GetComponent<ReserveSpot>().SetTokenPosition();
-        }
+        // // Reposition spots
+        // spots = GameObject.FindGameObjectsWithTag("Reserve");
+        // for (int i = 0; i < spots.Length; i++) {
+        //     spots[i].name = "Reserve " + (i+1);
+        //     Vector3 position = new Vector3(i, .2f, -.5f * (i%2));
+        //     spots[i].transform.localPosition = position;
+        //     // Token t = spots[i].GetComponent<ReserveSpot>().Token;
+        //     // if (t) {
+        //     //     spots[i].GetComponent<ReserveSpot>().PlaceAtReserveSpot(t);
+        //     // }
+        //     spots[i].GetComponent<ReserveSpot>().SetTokenPosition();
+        // }
     }
 }
