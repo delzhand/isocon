@@ -28,8 +28,22 @@ public class AddTokenPanel : MonoBehaviour
     }
 
     private void CreateToken(ClickEvent evt) {
+        TextField nameField = UI.System.Q<TextField>("TokenNameField");
         DropdownField graphicField = UI.System.Q<DropdownField>("GraphicDropdown");
-        StartCoroutine(LoadLocalFileIntoCutout(graphicField.value));
+        Texture2D graphic = CopyLocalImage(graphicField.value);
+        string json = OnlineTokenDataRaw.ToJson(nameField.value, graphic);
+        if (Player.IsOnline()) {
+            Player.Self().CmdSpawnTokenData(json, null);
+        }
+        else {
+            GameObject tokenObj = new();
+            tokenObj.tag = "OfflineData";
+            tokenObj.transform.position = new Vector3(3, .25f, 3);
+            OfflineTokenData data = tokenObj.AddComponent<OfflineTokenData>();
+            data.Json = json;
+        }
+
+        UI.ToggleDisplay("AddTokenPanel", false);
     }
 
     private void SaveCreateToken(ClickEvent evt) {
@@ -62,31 +76,13 @@ public class AddTokenPanel : MonoBehaviour
         return graphics;
     }
 
-    private IEnumerator LoadLocalFileIntoCutout(string filename) {
+    private Texture2D CopyLocalImage(string filename) {
+        Texture2D graphic = TextureSender.LoadImageFromFile(filename, false);
+        string hash = TextureSender.GetTextureHash(graphic);
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
-        filename = "file://" + path + "/tokens/" + filename;
-        using UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(filename);
-        yield return uwr.SendWebRequest();
-
-        if (uwr.result != UnityWebRequest.Result.Success)
-        {
-            Toast.Add(uwr.error);
-            Debug.Log(uwr.error);
-        }
-        else
-        {
-            // Get downloaded asset bundle
-            Texture2D image = DownloadHandlerTexture.GetContent(uwr);
-            TextureSender.Send(image);
-
-            // Get non-image data
-            string hash = TextureSender.GetTextureHash(image);
-            string tokenJson = GameSystem.Current().GetTokenParams(hash);
-            // Pass along to server
-            Player.Self().CmdRequestNewToken(tokenJson);
-
-            // Hide panel, finishing procedure
-            UI.ToggleDisplay("AddTokenPanel", false);
-        }
+        string remotefilepath = path + "/remote-tokens/" + hash + ".png";
+        byte[] pngData = graphic.EncodeToPNG();
+        File.WriteAllBytes(remotefilepath, pngData);
+        return graphic;
     }
 }

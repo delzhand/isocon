@@ -62,6 +62,61 @@ public class Player : NetworkBehaviour
             // Request session data from host
             CmdRequestSession();
         }
+
+        if (IsHost()) {
+            GameObject[] objs = GameObject.FindGameObjectsWithTag("OfflineData");
+            for (int i = 0; i < objs.Length; i++) {
+                OfflineTokenData otd = objs[i].GetComponent<OfflineTokenData>();
+                CmdSpawnTokenData(otd.Json, otd.TokenObject);
+            }
+        }
+    }
+
+
+
+    public static bool IsHost() {
+        return NetworkServer.active && NetworkClient.active;
+    }
+
+    public static bool IsGM() {
+        Player p = Self();
+        if (p) {
+            return p.Role == PlayerRole.GM;
+        }
+        return false;
+    }
+
+    public static bool IsOnline() {
+        return Self() != null;
+    }
+
+    private void SpawnTokenData() {
+
+    }
+
+    public static Player Self() {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach(GameObject g in players) {
+            if (g.GetComponent<Player>().isOwned) {
+                return g.GetComponent<Player>();
+            }
+        }
+        return null;
+    }
+
+    #region Commands
+
+    [Command]
+    public void CmdSpawnTokenData(string json, GameObject existingToken) {
+        GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/OnlineTokenData"));
+        NetworkServer.Spawn(g);
+        OnlineTokenDataRaw raw = JsonUtility.FromJson<OnlineTokenDataRaw>(json);
+        OnlineTokenData otd = g.GetComponent<OnlineTokenData>();
+        otd.Name = raw.Name;
+        otd.CurrentHP = raw.CurrentHP;
+        otd.MaxHP = raw.MaxHP;
+        otd.GraphicHash = raw.GraphicHash;
+        otd.TokenObject = existingToken;
     }
 
     [Command]
@@ -84,10 +139,9 @@ public class Player : NetworkBehaviour
 
     [Command]
     public void CmdRequestNewToken(string json) {
-        GameObject newToken = Instantiate(Resources.Load("Prefabs/Token") as GameObject);
-        NetworkServer.Spawn(newToken);
-        RpcInitializeToken(newToken, json);
-        // RpcMoveToken(newToken, new Vector3(2, .25f, 3));
+        // GameObject newToken = Instantiate(Resources.Load("Prefabs/Token") as GameObject);
+        // NetworkServer.Spawn(newToken);
+        // RpcInitializeToken(newToken, json);
     }
 
     [Command]
@@ -95,37 +149,9 @@ public class Player : NetworkBehaviour
         RpcMoveToken(g, v);
     }
 
-    // [Command]
-    // public void CmdRequestAddToken(string name, string job, string jclass) {
-    //     GameObject newToken = Instantiate(Resources.Load("Prefabs/ProtoToken") as GameObject);
-    //     NetworkServer.Spawn(newToken);
-    //     ProtoToken p = newToken.GetComponent<ProtoToken>();
-    //     p.Name = name;
-    //     p.Job = job;
-    //     p.JClass = jclass;
-    // }
+    #endregion
 
-    public static bool IsHost() {
-        return NetworkServer.active && NetworkClient.active;
-    }
-
-    public static bool IsGM() {
-        Player p = Self();
-        if (p) {
-            return p.Role == PlayerRole.GM;
-        }
-        return false;
-    }
-
-    public static Player Self() {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        foreach(GameObject g in players) {
-            if (g.GetComponent<Player>().isOwned) {
-                return g.GetComponent<Player>();
-            }
-        }
-        return null;
-    }
+    #region ClientRpcs
 
     [ClientRpc]
     public void RpcDrawMap(string json) {
@@ -140,13 +166,15 @@ public class Player : NetworkBehaviour
         MoveLerp.Create(g, 1, g.transform.position, v);
     }
 
-    [ClientRpc]
-    public void RpcInitializeToken(GameObject g, string json) {
-        GameSystem.Current().InitializeToken(g, json);
-    }
+    // [ClientRpc]
+    // public void RpcInitializeToken(GameObject g, string json) {
+    //     GameSystem.Current().InitializeToken(g, json);
+    // }
 
     [ClientRpc]
     public void RpcReceiveTextureChunks(string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height){
         TextureSender.Receive(hash, chunkIndex, chunkTotal, chunkColors, width, height);
     }
+
+    #endregion
 }

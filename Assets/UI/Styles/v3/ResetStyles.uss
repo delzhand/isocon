@@ -101,6 +101,10 @@
     margin-left: 0;
 }
 
+.unity-text-field:focus .unity-label {
+    color: #FFF;
+}
+
 .unity-text-field__input {
     padding: 4px;
     color: black;

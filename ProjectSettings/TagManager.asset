@@ -8,6 +8,8 @@ TagManager:
   - Column
   - Token
   - Reserve
+  - TokenData
+  - OfflineData
   layers:
   - Default
   - TransparentFX

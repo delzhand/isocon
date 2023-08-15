@@ -52,16 +52,16 @@ public class TextureSender : MonoBehaviour
         }
     }
 
-    public static Texture2D Locate(string hash) {
-        GameObject receiver = GameObject.Find("TextureReceiver") ?? new GameObject("TextureReceiver");
-        TextureSender[] receivers = receiver.GetComponents<TextureSender>();
-        for (int i = 0; i < receivers.Length; i++) {
-            if (receivers[i].Hash == hash && receivers[i].Complete) {
-                return receivers[i].Image;
-            }
-        }
-        return null;
-    }
+    // public static Texture2D Locate(string hash) {
+    //     GameObject receiver = GameObject.Find("TextureReceiver") ?? new GameObject("TextureReceiver");
+    //     TextureSender[] receivers = receiver.GetComponents<TextureSender>();
+    //     for (int i = 0; i < receivers.Length; i++) {
+    //         if (receivers[i].Hash == hash && receivers[i].Complete) {
+    //             return receivers[i].Image;
+    //         }
+    //     }
+    //     return null;
+    // }
 
     private void Receive(int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height) {
         // Store the received chunkColors in a dictionary or list
@@ -121,5 +121,28 @@ public class TextureSender : MonoBehaviour
             sb.Append(hashBytes[i].ToString("x2"));
         }
         return sb.ToString();
+    }
+    
+    public static Texture2D LoadImageFromFile(string imageSource, bool isHash)
+    {
+        Debug.Log(imageSource);
+        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        if (!isHash) {
+            path = path + "/tokens/" + imageSource;
+        }
+        else {
+            path = path + "/remote-tokens/" + imageSource + ".png";
+        }
+        byte[] imageData = File.ReadAllBytes(path);
+        Texture2D texture = new Texture2D(2, 2);
+        if (texture.LoadImage(imageData))
+        {
+            return texture;
+        }
+        else
+        {
+            Debug.LogError("Failed to load image into Texture2D.");
+            return null;
+        }
     }
 }

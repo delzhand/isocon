@@ -310,10 +310,10 @@
     <ui:VisualElement name="Toasts" style="flex-grow: 1; background-color: rgb(45, 108, 46); position: absolute; left: 50%; top: 60px; border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); color: rgb(255, 255, 255); -unity-text-align: middle-center; padding-left: 10px; padding-right: 10px; border-top-left-radius: 18px; border-bottom-left-radius: 18px; border-top-right-radius: 18px; border-bottom-right-radius: 18px; display: none;" />
     <ui:VisualElement name="AddTokenPanel" class="panel centered" style="width: 380px; display: none;">
         <ui:Label tabindex="-1" text="CREATE TOKEN" display-tooltip-when-elided="true" class="panel-header" />
-        <ui:TextField picking-mode="Ignore" value="Tokenname" label="Token Name" name="TokenNameField" focusable="false" class="modal-textfield" />
+        <ui:TextField picking-mode="Ignore" value="Tokenname" label="Token Name" name="TokenNameField" focusable="true" class="modal-textfield" />
         <ui:DropdownField label="Graphic" index="0" choices="No tokens found" name="GraphicDropdown" focusable="false" class="modal-dropdown" />
         <ui:Label tabindex="-1" text="Graphics for tokens should be placed in " display-tooltip-when-elided="true" name="DataPath" style="color: rgb(255, 255, 255); background-color: rgb(79, 79, 79); -unity-text-align: upper-center; -unity-font-style: bold; font-size: 12px; padding-left: 4px; padding-right: 8px; padding-top: 4px; padding-bottom: 4px; white-space: normal; max-width: 400px; margin-left: 0; margin-right: 0; margin-bottom: 2px; margin-top: 2px;" />
-        <ui:VisualElement name="AddTokenSystem" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
+        <ui:VisualElement name="AddTokenSystem" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: none;">
             <ui:DropdownField label="Class" index="-1" name="ClassDropdown" focusable="false" class="modal-dropdown" style="display: flex;" />
             <ui:DropdownField label="Job" index="-1" name="JobDropdown" focusable="false" class="modal-dropdown" style="display: flex;" />
             <ui:Toggle label="Elite" name="EliteToggle" focusable="false" class="modal-toggle" style="display: none;" />

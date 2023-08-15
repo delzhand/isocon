@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class GameSystem : MonoBehaviour, IGameSystem
+public class GameSystem : MonoBehaviour
 {
     public virtual string SystemName()
     {
@@ -23,26 +23,21 @@ public class GameSystem : MonoBehaviour, IGameSystem
     {
     }
 
-    public virtual string GetTokenParams(string imageHash)
+    public GameObject InitializeToken(string name, string imageSource, bool isLocal)
     {
-        TextField nameField = UI.System.Q<TextField>("TokenNameField");
-        GenericTokenParams gtp = new(nameField.value, imageHash);
-        return JsonUtility.ToJson(gtp);
-    }
-
-    public virtual string GetTokenImageHash(GameObject g) {
-        return g.GetComponent<GenericTokenData>().ImageHash;
-    }
-
-    public void InitializeToken(GameObject g, string json)
-    {
-        GenericTokenData gtd = g.AddComponent<GenericTokenData>();
-        GenericTokenParams gtp = JsonUtility.FromJson<GenericTokenParams>(json);
-        gtd.Name = gtp.Name;
+        GameObject tokenDataObject = Instantiate(Resources.Load("Prefabs/GenericTokenData")) as GameObject;
+        GenericTokenData gtd = tokenDataObject.GetComponent<GenericTokenData>();
+        gtd.Name = name;
+        if (isLocal) {
+            gtd.LocalFilename = imageSource;
+        }
+        else {
+            gtd.RemoteHash = imageSource;
+        }
         gtd.MaxHP = 100;
         gtd.CurrentHP = gtd.MaxHP;
-        gtd.ImageHash = gtp.ImageHash;
-        Texture2D image = TextureSender.Locate(gtp.ImageHash);
-        g.GetComponent<Token>().SetImage(image);
+        gtd.Position = new Vector3(3, .25f, 3);
+
+        return tokenDataObject;
     }
 }

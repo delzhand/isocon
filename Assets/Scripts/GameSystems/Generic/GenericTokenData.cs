@@ -5,7 +5,7 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class GenericTokenData : NetworkBehaviour, ITokenData
+public class GenericTokenData : NetworkBehaviour
 {
     [SyncVar]
     public string Name;
@@ -17,24 +17,39 @@ public class GenericTokenData : NetworkBehaviour, ITokenData
     public int MaxHP;
 
     [SyncVar]
-    public string ImageHash;
+    public Vector3 Position;
 
-    public void Setup()
-    {
-    }
+    [SyncVar]
+    public string RemoteHash;
 
-    public void Teardown()
-    {
-    }
+    [SyncVar]
+    public string LocalFilename;
+
+    [SyncVar]
+    public bool NetworkSpawned;
+
+    public GameObject Token;
+
+
+    
+}
+
+public class OfflineGenericTokenData : MonoBehaviour
+{
+    public string Name;
+    public int CurrentHP;
+    public int MaxHP;
+    public Vector3 Position;
+    public string RemoteHash;
+    public string LocalFilename;
+    public bool NetworkSpawned;
 }
 
 [Serializable]
 public class GenericTokenParams {
     public string Name;
-    public string ImageHash;
 
-    public GenericTokenParams(string name, string imageHash) {
+    public GenericTokenParams(string name) {
         Name = name;
-        ImageHash = imageHash;
     }
 }

@@ -7,7 +7,6 @@ interface IGameSystem
     string SystemName();
     void Setup();
     void Teardown();
-    string GetTokenParams(string imageHash);
+    string GetTokenParams();
     void InitializeToken(GameObject g, string json);
-    string GetTokenImageHash(GameObject g);
 }

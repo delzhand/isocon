@@ -16,7 +16,7 @@ public class ConnectionSidebar : MonoBehaviour
         });
         
         UI.System.Q<Button>("HostButton").RegisterCallback<ClickEvent>((evt) => {
-            manager.StartHost();
+            manager.StartHost();    
         });
 
         UI.System.Q<Button>("JoinButton").RegisterCallback<ClickEvent>((evt) => {
