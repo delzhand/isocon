@@ -37,10 +37,10 @@ public class MoveLerp : MonoBehaviour
         }
     }
 
-    public static void Create(GameObject g, float duration, Vector3 origin, Vector3 destination) {
+    public static void Create(GameObject g, float duration, Vector3 destination) {
         MoveLerp ml = g.AddComponent<MoveLerp>();
         ml.Duration = duration;
-        ml.Origin = origin;
+        ml.Origin = g.transform.position;
         ml.Destination = destination;
     }
 }

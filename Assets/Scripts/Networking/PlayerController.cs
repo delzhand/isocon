@@ -17,9 +17,11 @@ public class PlayerController : NetworkBehaviour
         base.OnStartClient();
     }
 
-
-
     public static void Disconnect() {
         UI.System.Q("PlayerList").Clear();
+        GameObject[] objs = GameObject.FindGameObjectsWithTag("Token");
+        for (int i = 0; i < objs.Length; i++) {
+            Destroy(objs[i]);
+        }
     }
 }

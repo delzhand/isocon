@@ -52,13 +52,7 @@ public class Token : MonoBehaviour
 
     public void PlaceAtBlock(Block block) {
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
-        if (Player.IsOnline()) {
-            throw new NotImplementedException(); 
-            // Player.Self().CmdRequestTokenMove(gameObject, v);
-        }
-        else {
-            MoveLerp.Create(offlineDataObject, 1, offlineDataObject.transform.position, v);
-        }
+        Player.MoveToken(this, v);
     }
 
     public void Select() {

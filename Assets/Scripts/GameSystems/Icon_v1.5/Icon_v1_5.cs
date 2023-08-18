@@ -11,6 +11,29 @@ public class Icon_v1_5 : GameSystem
         return "ICON 1.5";
     }
 
+    public override string GetTokenData() {
+        return Icon_v1_5TokenDataRaw.ToJson();
+    }
+
+    public override Texture2D GetGraphic(string json) {
+        Icon_v1_5TokenDataRaw raw = JsonUtility.FromJson<Icon_v1_5TokenDataRaw>(json);
+        return TextureSender.LoadImageFromFile(raw.GraphicHash, true);
+    }
+
+    public override void TokenSetup(GameObject g, string json) {
+        Icon_v1_5TokenDataRaw raw = JsonUtility.FromJson<Icon_v1_5TokenDataRaw>(json);
+        Icon_v1_5TokenData data = g.GetComponent<Icon_v1_5TokenData>();
+        data.Name = raw.Name;
+        data.Job = raw.Job;
+        data.Class = raw.Class;
+        data.CurrentHP = raw.CurrentHP;
+        data.MaxHP = raw.MaxHP;
+        data.GraphicHash = raw.GraphicHash;
+    }
+
+    public override GameObject GetDataPrefab() {
+        return Instantiate(Resources.Load<GameObject>("Prefabs/Icon_v1_5TokenData"));
+    }
     public override void Setup() {
         AddTokenSetup();
         SetJobOptions("Stalwart");
@@ -21,16 +44,16 @@ public class Icon_v1_5 : GameSystem
     }
 
     private void AddTokenSetup() {
+        UI.ToggleDisplay("AddTokenSystem", true);
         VisualElement root = UI.System.Q("AddTokenSystem");
-
         List<string> classes = GetClasses();
         root.Q<DropdownField>("ClassDropdown").choices = classes;
         root.Q<DropdownField>("ClassDropdown").value = classes[0];
-
         root.Q<DropdownField>("ClassDropdown").RegisterValueChangedCallback(SetJobOptions);
     }
 
     private void AddTokenTeardown() {
+        UI.ToggleDisplay("AddTokenSystem", true);
         VisualElement root = UI.System.Q("AddTokenSystem");
         root.Q<DropdownField>("ClassDropdown").UnregisterValueChangedCallback(SetJobOptions);
     }

@@ -497,9 +497,9 @@ public class TokenController : MonoBehaviour
             selected.Deselect();
             selected = null;
         }
-        UI.System.Q("SelectedTokenPanel").RemoveFromClassList("active");
-        UI.System.Q<SlideToggle>("TokenEditToggle").value = false;
-        DisableFullEdit();
+        // UI.System.Q("SelectedTokenPanel").RemoveFromClassList("active");
+        // UI.System.Q<SlideToggle>("TokenEditToggle").value = false;
+        // DisableFullEdit();
     }
 
     public static void EnableAddToken() {

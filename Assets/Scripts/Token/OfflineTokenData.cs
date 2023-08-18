@@ -11,14 +11,16 @@ public class OfflineTokenData : MonoBehaviour
 
     void Start() {
         TokenObject = Instantiate(Resources.Load<GameObject>("Prefabs/Token"));
-        OnlineTokenDataRaw raw = JsonUtility.FromJson<OnlineTokenDataRaw>(Json);
-        Texture2D graphic = TextureSender.LoadImageFromFile(raw.GraphicHash, true);
+        TokenObject.transform.parent = GameObject.Find("Tokens").transform;
+        Texture2D graphic = GameSystem.Current().GetGraphic(Json);
         Token token = TokenObject.GetComponent<Token>();
         token.offlineDataObject = gameObject;
         token.SetImage(graphic);
     }
 
     void Update() {
-        TokenObject.transform.position = transform.position;
+        if (TokenObject) {
+            TokenObject.transform.position = transform.position;
+        }
     }
 }

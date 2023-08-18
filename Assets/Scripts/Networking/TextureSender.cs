@@ -27,7 +27,6 @@ public class TextureSender : MonoBehaviour
             int remainingColors = Mathf.Min(ChunkSize, allColors.Length - startIndex);
             Color[] chunkColors = new Color[remainingColors];
             System.Array.Copy(allColors, startIndex, chunkColors, 0, remainingColors);
-
             Player.Self().CmdSendTextureChunks(hash, i, chunkCount, chunkColors, image.width, image.height);
         }
     }
@@ -51,17 +50,6 @@ public class TextureSender : MonoBehaviour
             match.Receive(chunkIndex, chunkTotal, chunkColors, width, height);
         }
     }
-
-    // public static Texture2D Locate(string hash) {
-    //     GameObject receiver = GameObject.Find("TextureReceiver") ?? new GameObject("TextureReceiver");
-    //     TextureSender[] receivers = receiver.GetComponents<TextureSender>();
-    //     for (int i = 0; i < receivers.Length; i++) {
-    //         if (receivers[i].Hash == hash && receivers[i].Complete) {
-    //             return receivers[i].Image;
-    //         }
-    //     }
-    //     return null;
-    // }
 
     private void Receive(int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height) {
         // Store the received chunkColors in a dictionary or list
@@ -125,7 +113,6 @@ public class TextureSender : MonoBehaviour
     
     public static Texture2D LoadImageFromFile(string imageSource, bool isHash)
     {
-        Debug.Log(imageSource);
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
         if (!isHash) {
             path = path + "/tokens/" + imageSource;
@@ -144,5 +131,15 @@ public class TextureSender : MonoBehaviour
             Debug.LogError("Failed to load image into Texture2D.");
             return null;
         }
+    }
+
+    public static Texture2D CopyLocalImage(string filename) {
+        Texture2D graphic = LoadImageFromFile(filename, false);
+        string hash = GetTextureHash(graphic);
+        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        string remotefilepath = path + "/remote-tokens/" + hash + ".png";
+        byte[] pngData = graphic.EncodeToPNG();
+        File.WriteAllBytes(remotefilepath, pngData);
+        return graphic;
     }
 }

@@ -33,6 +33,16 @@ public class Player : NetworkBehaviour
             Name = PlayerPrefs.GetString("PlayerName", "New Player");
             if (NetworkServer.active && NetworkClient.active) {
                 Host = true;
+
+                // If connecting as host, convert any offline data to online data
+                GameObject[] objs = GameObject.FindGameObjectsWithTag("OfflineData");
+                for (int i = 0; i < objs.Length; i++) {
+                    Vector3 position = objs[i].transform.position;
+                    OfflineTokenData otd = objs[i].GetComponent<OfflineTokenData>();
+                    Destroy(otd.TokenObject);
+                    Player.CreateTokenData(otd.Json, position);
+                }
+
             }
         } 
 
@@ -62,17 +72,7 @@ public class Player : NetworkBehaviour
             // Request session data from host
             CmdRequestSession();
         }
-
-        if (IsHost()) {
-            GameObject[] objs = GameObject.FindGameObjectsWithTag("OfflineData");
-            for (int i = 0; i < objs.Length; i++) {
-                OfflineTokenData otd = objs[i].GetComponent<OfflineTokenData>();
-                CmdSpawnTokenData(otd.Json, otd.TokenObject);
-            }
-        }
     }
-
-
 
     public static bool IsHost() {
         return NetworkServer.active && NetworkClient.active;
@@ -90,10 +90,6 @@ public class Player : NetworkBehaviour
         return Self() != null;
     }
 
-    private void SpawnTokenData() {
-
-    }
-
     public static Player Self() {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         foreach(GameObject g in players) {
@@ -104,55 +100,70 @@ public class Player : NetworkBehaviour
         return null;
     }
 
-    #region Commands
-
-    [Command]
-    public void CmdSpawnTokenData(string json, GameObject existingToken) {
-        GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/OnlineTokenData"));
-        NetworkServer.Spawn(g);
-        OnlineTokenDataRaw raw = JsonUtility.FromJson<OnlineTokenDataRaw>(json);
-        OnlineTokenData otd = g.GetComponent<OnlineTokenData>();
-        otd.Name = raw.Name;
-        otd.CurrentHP = raw.CurrentHP;
-        otd.MaxHP = raw.MaxHP;
-        otd.GraphicHash = raw.GraphicHash;
-        otd.TokenObject = existingToken;
+    #region Create Token
+    public static void CreateTokenData(string json, Vector3 position) {
+        if (Player.IsOnline()) {
+            Player.Self().CmdCreateTokenData(json, position);
+        }
+        else {
+            GameObject tokenObj = new("OfflineData");
+            tokenObj.transform.parent = GameObject.Find("TokenData").transform;
+            tokenObj.tag = "OfflineData";
+            tokenObj.transform.position = position;
+            OfflineTokenData data = tokenObj.AddComponent<OfflineTokenData>();
+            data.Json = json;
+        }
     }
+    [Command]
+    public void CmdCreateTokenData(string json, Vector3 position) {
+        GameObject g = GameSystem.Current().GetDataPrefab();
+        NetworkServer.Spawn(g); 
+        RpcInitTokenData(g, json, position);
+    }
+    [ClientRpc]
+    public void RpcInitTokenData(GameObject g, string json, Vector3 position) {
+        g.transform.parent = GameObject.Find("TokenData").transform;
+        g.transform.position = position;
+        GameSystem.Current().TokenSetup(g, json);
+        // OnlineTokenDataRaw raw = JsonUtility.FromJson<OnlineTokenDataRaw>(json);
+        // OnlineTokenData onlineData = g.GetComponent<OnlineTokenData>();
+        // onlineData.Name = raw.Name;
+        // onlineData.CurrentHP = raw.CurrentHP;
+        // onlineData.MaxHP = raw.MaxHP;
+        // onlineData.GraphicHash = raw.GraphicHash;
+    }
+    #endregion
 
+
+    #region Token Movement
+    public static void MoveToken(Token token, Vector3 v){
+        if (Player.IsOnline()) {
+            Player.Self().CmdMoveToken(token.onlineDataObject, 1, v);
+        }
+        else {
+            MoveLerp.Create(token.offlineDataObject, 1, v);
+        }
+    }
+    [Command]
+    public void CmdMoveToken(GameObject g, float d, Vector3 v) {
+        RpcMoveToken(g, d, v);
+    }
+    [ClientRpc]
+    public void RpcMoveToken(GameObject g, float d, Vector3 v) {
+        DoMoveToken(g, d, v);
+    }
+    private void DoMoveToken(GameObject g, float d, Vector3 v) {
+        MoveLerp.Create(g, d, v);
+    }
+    #endregion
+
+    #region Session Init
     [Command]
     public void CmdRequestSession() {
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
         RpcDrawMap(json);
     }
-
-    [Command]
-    public void CmdRequestImages() {
-
-    }
-
-    [Command]
-    public void CmdSendTextureChunks(string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height)
-    {
-        RpcReceiveTextureChunks(hash, chunkIndex, chunkTotal, chunkColors, width, height);
-    }
-
-    [Command]
-    public void CmdRequestNewToken(string json) {
-        // GameObject newToken = Instantiate(Resources.Load("Prefabs/Token") as GameObject);
-        // NetworkServer.Spawn(newToken);
-        // RpcInitializeToken(newToken, json);
-    }
-
-    [Command]
-    public void CmdRequestTokenMove(GameObject g, Vector3 v) {
-        RpcMoveToken(g, v);
-    }
-
-    #endregion
-
-    #region ClientRpcs
-
     [ClientRpc]
     public void RpcDrawMap(string json) {
         State state = JsonUtility.FromJson<State>(json);
@@ -160,21 +171,17 @@ public class Player : NetworkBehaviour
         Toast.Add("Map loaded.");
         TimedReorgHack.Add();
     }
+    #endregion
 
-    [ClientRpc]
-    public void RpcMoveToken(GameObject g, Vector3 v) {
-        MoveLerp.Create(g, 1, g.transform.position, v);
+    #region Images
+    [Command]
+    public void CmdSendTextureChunks(string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height)
+    {
+        RpcReceiveTextureChunks(hash, chunkIndex, chunkTotal, chunkColors, width, height);
     }
-
-    // [ClientRpc]
-    // public void RpcInitializeToken(GameObject g, string json) {
-    //     GameSystem.Current().InitializeToken(g, json);
-    // }
-
     [ClientRpc]
     public void RpcReceiveTextureChunks(string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height){
         TextureSender.Receive(hash, chunkIndex, chunkTotal, chunkColors, width, height);
     }
-
     #endregion
 }

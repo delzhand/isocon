@@ -28,21 +28,8 @@ public class AddTokenPanel : MonoBehaviour
     }
 
     private void CreateToken(ClickEvent evt) {
-        TextField nameField = UI.System.Q<TextField>("TokenNameField");
-        DropdownField graphicField = UI.System.Q<DropdownField>("GraphicDropdown");
-        Texture2D graphic = CopyLocalImage(graphicField.value);
-        string json = OnlineTokenDataRaw.ToJson(nameField.value, graphic);
-        if (Player.IsOnline()) {
-            Player.Self().CmdSpawnTokenData(json, null);
-        }
-        else {
-            GameObject tokenObj = new();
-            tokenObj.tag = "OfflineData";
-            tokenObj.transform.position = new Vector3(3, .25f, 3);
-            OfflineTokenData data = tokenObj.AddComponent<OfflineTokenData>();
-            data.Json = json;
-        }
-
+        string json = GameSystem.Current().GetTokenData();
+        Player.CreateTokenData(json, new Vector3(3, .25f, 3));
         UI.ToggleDisplay("AddTokenPanel", false);
     }
 
@@ -74,15 +61,5 @@ public class AddTokenPanel : MonoBehaviour
             }        
         }
         return graphics;
-    }
-
-    private Texture2D CopyLocalImage(string filename) {
-        Texture2D graphic = TextureSender.LoadImageFromFile(filename, false);
-        string hash = TextureSender.GetTextureHash(graphic);
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
-        string remotefilepath = path + "/remote-tokens/" + hash + ".png";
-        byte[] pngData = graphic.EncodeToPNG();
-        File.WriteAllBytes(remotefilepath, pngData);
-        return graphic;
     }
 }

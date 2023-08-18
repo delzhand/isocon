@@ -5,31 +5,39 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [System.Serializable]
-public class GenericTokenDataRaw
+public class Icon_v1_5TokenDataRaw
 {
     public string Name;
     public int CurrentHP;
     public int MaxHP;
+    public string Class;
+    public string Job;
     public string GraphicHash;
 
     public static string ToJson() {
-        GenericTokenDataRaw raw = new GenericTokenDataRaw();
+        Icon_v1_5TokenDataRaw raw = new Icon_v1_5TokenDataRaw();
 
         TextField nameField = UI.System.Q<TextField>("TokenNameField");
         raw.Name = nameField.value;
-        
+
         DropdownField graphicField = UI.System.Q<DropdownField>("GraphicDropdown");
         Texture2D graphic = TextureSender.CopyLocalImage(graphicField.value);
         raw.GraphicHash = TextureSender.GetTextureHash(graphic);
-        
-        raw.MaxHP = 100;
+
+        DropdownField classField = UI.System.Q<DropdownField>("ClassDropdown");
+        raw.Class = classField.value;
+
+        DropdownField jobField = UI.System.Q<DropdownField>("JobDropdown");
+        raw.Job = jobField.value;
+
+        raw.MaxHP = 40;
         raw.CurrentHP = raw.MaxHP;
-        
+
         return JsonUtility.ToJson(raw);
     }
 }
 
-public class GenericTokenData : NetworkBehaviour
+public class Icon_v1_5TokenData : NetworkBehaviour
 {
     [SyncVar]
     public string Name;
@@ -39,6 +47,12 @@ public class GenericTokenData : NetworkBehaviour
 
     [SyncVar]
     public int MaxHP;
+
+    [SyncVar]
+    public string Class;
+
+    [SyncVar]
+    public string Job;
 
     [SyncVar]
     public string GraphicHash;
@@ -46,8 +60,9 @@ public class GenericTokenData : NetworkBehaviour
     private bool initialized = false;
 
     public GameObject TokenObject;
-    
-    void Update() {
+
+    void Update()
+    {
         if (!initialized && Name.Length > 0) {
             TokenObject = Instantiate(Resources.Load<GameObject>("Prefabs/Token"));
             TokenObject.transform.parent = GameObject.Find("Tokens").transform;

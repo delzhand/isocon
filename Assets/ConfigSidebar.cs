@@ -24,34 +24,17 @@ public class ConfigSidebar : MonoBehaviour
             SetScale(evt.newValue);
         });
 
-        string system = PlayerPrefs.GetString("System", "ICON 1.5");
-        SetSystem(system);
+        string system = PlayerPrefs.GetString("System", "Generic");
+        GameSystem.Set(system);
         UI.System.Q<DropdownField>("SystemField").value = system; 
         UI.System.Q<DropdownField>("SystemField").RegisterValueChangedCallback<string>((evt) => {
             PlayerPrefs.SetString("System", evt.newValue);
-            SetSystem(evt.newValue);
+            GameSystem.Set(evt.newValue);
         });
     }
 
     private void SetScale(string sValue) {
         float value = float.Parse(sValue.Replace("%", "")) / 100f;
         GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = value;
-    }
-
-    private void SetSystem(string value) {
-        GameSystem.Current().Teardown();
-        GameObject g = GameObject.Find("GameSystem");
-        GameSystem system = g.GetComponent<GameSystem>();
-        DestroyImmediate(system);
-        switch(value) {
-            case "Generic":
-                system = g.AddComponent<GameSystem>();
-                break;
-            case "ICON 1.5":
-                system = g.AddComponent<Icon_v1_5>();
-                break;
-        }
-        Toast.Add(system.SystemName() + " initialized.");
-        GameSystem.Current().Setup();
     }
 }
