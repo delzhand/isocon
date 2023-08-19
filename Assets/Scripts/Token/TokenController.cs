@@ -281,7 +281,7 @@ public class TokenController : MonoBehaviour
         string version = PlayerPrefs.GetString("IconVersion", "1.5");
         switch (version) {
             case "1.5":
-                return new List<string>{"Blind"/*, "Dazed", "Pacified", "Sealed", "Shattered", "Slashed", "Stunned", "Weakened", "Vulnerable"*/};
+                return new List<string>{"Blind", "Dazed", "Pacified", "Sealed", "Shattered", "Slashed", "Stunned", "Weakened", "Vulnerable"};
         }
         throw new Exception("Invalid data version");
     }

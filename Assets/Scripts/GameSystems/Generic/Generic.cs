@@ -21,12 +21,7 @@ public class Generic : GameSystem
     }
 
     public override void TokenSetup(GameObject g, string json) {
-        GenericTokenDataRaw raw = JsonUtility.FromJson<GenericTokenDataRaw>(json);
-        GenericTokenData data = g.GetComponent<GenericTokenData>();
-        data.Name = raw.Name;
-        data.CurrentHP = raw.CurrentHP;
-        data.MaxHP = raw.MaxHP;
-        data.GraphicHash = raw.GraphicHash;
+        g.GetComponent<GenericTokenData>().Initialize(json);
     }
 
     public override GameObject GetDataPrefab() {

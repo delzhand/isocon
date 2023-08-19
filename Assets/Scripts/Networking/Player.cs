@@ -125,12 +125,6 @@ public class Player : NetworkBehaviour
         g.transform.parent = GameObject.Find("TokenData").transform;
         g.transform.position = position;
         GameSystem.Current().TokenSetup(g, json);
-        // OnlineTokenDataRaw raw = JsonUtility.FromJson<OnlineTokenDataRaw>(json);
-        // OnlineTokenData onlineData = g.GetComponent<OnlineTokenData>();
-        // onlineData.Name = raw.Name;
-        // onlineData.CurrentHP = raw.CurrentHP;
-        // onlineData.MaxHP = raw.MaxHP;
-        // onlineData.GraphicHash = raw.GraphicHash;
     }
     #endregion
 
