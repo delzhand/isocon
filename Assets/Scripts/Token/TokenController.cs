@@ -509,7 +509,7 @@ public class TokenController : MonoBehaviour
         UI.System.Q<DropdownField>("SizeDropdown").value = "Normal";
         UI.System.Q<DropdownField>("LegendHPDropdown").value = "x1";
         UI.System.Q<Toggle>("EliteToggle").value = false;
-        UI.SetHardSuspend(true);
+        // UI.SetHardSuspend(true);
     }
 
     public static void EnableFullEdit() {
@@ -547,7 +547,7 @@ public class TokenController : MonoBehaviour
 
     public static void DisableAddToken() {
         GameObject.Find("Engine").GetComponent<MenuController>().Clear();
-        UI.SetHardSuspend(false);
+        // UI.SetHardSuspend(false);
     }
 
     public static void DisableFullEdit() {

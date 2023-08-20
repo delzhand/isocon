@@ -55,7 +55,12 @@ public class Token : MonoBehaviour
         Player.MoveToken(this, v);
     }
 
-    public void Select() {
+    public void Select(bool deselectOthers = false) {
+        if (deselectOthers) {
+            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Token")) {
+                g.GetComponent<Token>().Deselect();
+            }
+        }
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1);
         // transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 1);
         // transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetVector("_Color", new Vector4(2f, 2f, 2f, 2f));

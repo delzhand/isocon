@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
-using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -18,14 +17,20 @@ public class TokenData : NetworkBehaviour
     public VisualElement overhead;
 
     void Update() {
+        BaseUpdate();
+    }
+
+    public virtual void BaseUpdate() {
         if (TokenObject) {
             TokenObject.transform.position = transform.position;
         }
         if (overhead != null) {
             UpdateOverheadScreenPosition();
-            // updateOverheadData();
+            UpdateUIData();
         }
+    }
 
+    public virtual void UpdateUIData() {
     }
 
     public virtual void Initialize(string json) {
@@ -36,6 +41,12 @@ public class TokenData : NetworkBehaviour
         token.SetImage(graphic);
         token.onlineDataObject = gameObject;
 
+        // Create UI elements
+        // CreateUnitBarItem(graphic);
+        // CreateOverhead();
+    }
+
+    private void CreateUnitBarItem(Texture2D graphic) {
         // Create the element in the UI
         VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/UnitTemplate");
         Element = template.Instantiate();
@@ -54,20 +65,21 @@ public class TokenData : NetworkBehaviour
         Element.Q("Portrait").style.width = width;
         Element.Q("Portrait").style.height = height;
 
+        Element.RegisterCallback<ClickEvent>((evt) => {
+            TokenObject.GetComponent<Token>().Select(true);
+        });
+
         // Add it to the UI
         UI.System.Q("UnitBar").Add(Element);
-
-        // Create overhead UI healthbar
-        CreateOverhead();
     }
 
     private void CreateOverhead() {
         VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/Overhead");
         VisualElement instance = template.Instantiate();
         overhead = instance.Q("Overhead");
-        // overhead.Q<VisualElement>("Color").AddToClassList(Color);
-        // overhead.Q<VisualElement>("Elite").style.visibility = Elite ? Visibility.Visible : Visibility.Hidden;
-        UI.System.Add(overhead);
+        overhead.Q<VisualElement>("Color").style.display = DisplayStyle.None;
+        overhead.Q<VisualElement>("Elite").style.display = DisplayStyle.None;
+        UI.System.Q("Worldspace").Add(overhead);
     }
 
     private void DestroyOverhead() {
@@ -77,6 +89,7 @@ public class TokenData : NetworkBehaviour
     }
 
     private void UpdateOverheadScreenPosition() {
+        overhead.style.display = DisplayStyle.Flex;
         UI.FollowToken(TokenObject.GetComponent<Token>(), overhead, Camera.main, Vector2.zero, true);
     }
 }

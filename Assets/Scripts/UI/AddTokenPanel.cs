@@ -27,6 +27,10 @@ public class AddTokenPanel : MonoBehaviour
 
     }
 
+    void Update() {
+        UI.OverDropdown();
+    }
+
     private void CreateToken(ClickEvent evt) {
         string json = GameSystem.Current().GetTokenData();
         Player.CreateTokenData(json, new Vector3(3, .25f, 3));

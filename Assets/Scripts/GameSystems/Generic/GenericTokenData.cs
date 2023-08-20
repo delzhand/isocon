@@ -38,11 +38,11 @@ public class GenericTokenData : TokenData
     [SyncVar]
     public int MaxHP;
 
-    void Update() {
-        if (TokenObject) {
-            TokenObject.transform.position = transform.position;
-        }
+    void Update()
+    {
+        BaseUpdate();
     }
+
 
     public override void Initialize(string json) {
         GenericTokenDataRaw raw = JsonUtility.FromJson<GenericTokenDataRaw>(json);

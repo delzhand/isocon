@@ -5,6 +5,7 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
+using Visibility = UnityEngine.UIElements.Visibility;
 
 [System.Serializable]
 public class Icon_v1_5TokenDataRaw
@@ -32,8 +33,13 @@ public class Icon_v1_5TokenDataRaw
         Toggle eliteField = UI.System.Q<Toggle>("EliteToggle");
         raw.Elite = eliteField.value;
 
-        DropdownField legendHpField = UI.System.Q<DropdownField>("LegendHPDropdown");
-        raw.LegendHP = int.Parse(legendHpField.value.Replace("x", ""));
+        if (raw.Class == "Legend") {
+            DropdownField legendHpField = UI.System.Q<DropdownField>("LegendHPDropdown");
+            raw.LegendHP = int.Parse(legendHpField.value.Replace("x", ""));
+        }
+        else {
+            raw.LegendHP = 1;
+        }
 
         DropdownField sizeField = UI.System.Q<DropdownField>("SizeDropdown");
         raw.Size = sizeField.value switch
@@ -87,10 +93,31 @@ public class Icon_v1_5TokenData : TokenData
 
     void Update()
     {
-        if (TokenObject) {
-            TokenObject.transform.position = transform.position;
+        BaseUpdate();
+    }
+
+    public override void UpdateUIData() {
+        overhead.Q<ProgressBar>("HpBar").value = CurrentHP;
+        overhead.Q<ProgressBar>("HpBar").highValue = MaxHP;
+        overhead.Q<ProgressBar>("VigorBar").value = Vigor;
+        overhead.Q<ProgressBar>("VigorBar").highValue = MaxHP;
+        if (Vigor == 0) {
+            overhead.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Hidden;
+        }
+        else {
+            overhead.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Visible;
+        }
+        for (int i = 1; i <= 3; i++) {
+            if (Wounds >= i) {
+                overhead.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Visible;
+            }
+            else {
+                overhead.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Hidden;
+            }
         }
     }
+
+
 
     public override void Initialize(string json) {
         Icon_v1_5TokenDataRaw raw = JsonUtility.FromJson<Icon_v1_5TokenDataRaw>(json);
@@ -141,6 +168,7 @@ public class Icon_v1_5TokenData : TokenData
     }
 
     private void SetStats(bool elite, int legendHp) {
+        Debug.Log(legendHp);
         switch (Class) {
             case "Wright":
             case "Artillery":

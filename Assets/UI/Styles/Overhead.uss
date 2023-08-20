@@ -16,7 +16,7 @@
 }
 
 #Overhead #HpAndVig {
-    width: 100px;
+    width: 60px;
     height: 10px;
 }
 
