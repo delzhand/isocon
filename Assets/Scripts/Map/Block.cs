@@ -141,21 +141,6 @@ public class Block : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (UI.OverDropdown()) {
-            return;
-        }
-        // if (UI.InElement("Sidebar")) {
-        //     return;
-        // }
-        // if (UI.InElement("BottomBar")) {
-        //     return;
-        // }
-        // if (UI.InElement("EditTokenPanel")) {
-        //     return;
-        // }
-        // if (UI.InElement("unity-content-and-vertical-scroll-container")) {
-        //     return;
-        // }
         if (UI.ClicksSuspended) {
             return;
         }

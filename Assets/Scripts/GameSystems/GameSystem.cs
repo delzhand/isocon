@@ -37,7 +37,7 @@ public class GameSystem : MonoBehaviour
         throw new NotImplementedException();
     }
 
-    public virtual void TokenSetup(GameObject g, string json) {
+    public virtual void TokenDataSetup(GameObject g, string json) {
         throw new NotImplementedException();
     }
 

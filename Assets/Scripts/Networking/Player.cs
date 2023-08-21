@@ -124,7 +124,7 @@ public class Player : NetworkBehaviour
     public void RpcInitTokenData(GameObject g, string json, Vector3 position) {
         g.transform.parent = GameObject.Find("TokenData").transform;
         g.transform.position = position;
-        GameSystem.Current().TokenSetup(g, json);
+        GameSystem.Current().TokenDataSetup(g, json);
     }
     #endregion
 
@@ -132,22 +132,22 @@ public class Player : NetworkBehaviour
     #region Token Movement
     public static void MoveToken(Token token, Vector3 v){
         if (Player.IsOnline()) {
-            Player.Self().CmdMoveToken(token.onlineDataObject, 1, v);
+            Player.Self().CmdMoveToken(token.onlineDataObject, v);
         }
         else {
-            MoveLerp.Create(token.offlineDataObject, 1, v);
+            MoveLerp.Create(token.offlineDataObject, v);
         }
     }
     [Command]
-    public void CmdMoveToken(GameObject g, float d, Vector3 v) {
-        RpcMoveToken(g, d, v);
+    public void CmdMoveToken(GameObject g, Vector3 v) {
+        RpcMoveToken(g, v);
     }
     [ClientRpc]
-    public void RpcMoveToken(GameObject g, float d, Vector3 v) {
-        DoMoveToken(g, d, v);
+    public void RpcMoveToken(GameObject g, Vector3 v) {
+        DoMoveToken(g, v);
     }
-    private void DoMoveToken(GameObject g, float d, Vector3 v) {
-        MoveLerp.Create(g, d, v);
+    private void DoMoveToken(GameObject g, Vector3 v) {
+        MoveLerp.Create(g, v);
     }
     #endregion
 

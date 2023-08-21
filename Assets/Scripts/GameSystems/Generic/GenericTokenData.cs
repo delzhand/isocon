@@ -43,13 +43,18 @@ public class GenericTokenData : TokenData
         BaseUpdate();
     }
 
+    public override void UpdateUIData() {
+        overhead.Q<ProgressBar>("HpBar").value = CurrentHP;
+        overhead.Q<ProgressBar>("HpBar").highValue = MaxHP;
+        overhead.Q<ProgressBar>("VigorBar").style.display = DisplayStyle.None;
+    }
 
-    public override void Initialize(string json) {
+    public override void TokenDataSetup(string json) {
+        base.TokenDataSetup(json);
         GenericTokenDataRaw raw = JsonUtility.FromJson<GenericTokenDataRaw>(json);
         Name = raw.Name;
         CurrentHP = raw.CurrentHP;
         MaxHP = raw.MaxHP;
         GraphicHash = raw.GraphicHash;
-        base.Initialize(json);
     }
 }

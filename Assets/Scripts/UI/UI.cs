@@ -125,27 +125,4 @@ public class UI : MonoBehaviour
             System.Q(name).RemoveFromClassList("hidden");
         }
     }
-
-    public static bool OverDropdown() {
-        List<VisualElement> dropdowns = UI.System.parent.Query(null, "unity-base-dropdown__container-outer").ToList();
-        for (int i = 0; i < dropdowns.Count; i++) {
-            VisualElement v = dropdowns[i];
-            Vector2 mp = Input.mousePosition;
-            Vector2 min = v.layout.min;
-            Vector2 max = v.layout.max;
-            if (mp.x >= min.x && mp.x <= max.x && mp.y >= min.y && mp.y <= max.y) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static void HighlightOver(string name) {
-        UI.System.Q(name).RegisterCallback<MouseEnterEvent>((evt) => {
-            UI.System.Q(name).style.backgroundColor = Color.yellow;
-        });
-        UI.System.Q(name).RegisterCallback<MouseLeaveEvent>((evt) => {
-            UI.System.Q(name).style.backgroundColor = new Color(0, 0, 0, 0);
-        });        
-    }
 }

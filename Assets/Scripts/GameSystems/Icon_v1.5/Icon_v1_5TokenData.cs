@@ -89,7 +89,7 @@ public class Icon_v1_5TokenData : TokenData
     public int Speed;
     public int Dash;
     public int Defense;
-
+    public bool Elite;
 
     void Update()
     {
@@ -117,42 +117,34 @@ public class Icon_v1_5TokenData : TokenData
         }
     }
 
-
-
-    public override void Initialize(string json) {
+    public override void TokenDataSetup(string json) {
+        base.TokenDataSetup(json);
         Icon_v1_5TokenDataRaw raw = JsonUtility.FromJson<Icon_v1_5TokenDataRaw>(json);
-        GraphicHash = raw.GraphicHash;
-        base.Initialize(json); // GraphicHash must be set before this gets called
-
         Name = raw.Name;
-        Job = raw.Job;
+        GraphicHash = raw.GraphicHash;
         Class = raw.Class;
-
+        Job = raw.Job;
+        Elite = raw.Elite;
         SetStats(raw.Elite, raw.LegendHP);
+    }
 
-        if (raw.Size == 2) {
-            TokenObject.GetComponent<Token>().Size = 2;
-            TokenObject.transform.Find("Offset").transform.localPosition += new Vector3(0, 0, -.73f);
-            TokenObject.transform.Find("Base").transform.localPosition += new Vector3(0, 0, -.73f);
-            TokenObject.transform.Find("Offset").transform.localScale = new Vector3(2, 2, 2);
-            TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2, 2, 4);
-        }
-        else if (raw.Size == 3) {
-            TokenObject.GetComponent<Token>().Size = 3;
-            TokenObject.transform.Find("Offset").transform.localScale = new Vector3(3, 3, 3);
-            TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(3, 3, 4);
-        }
+    public override void CreateWorldToken() {
+        base.CreateWorldToken();    
+        Color c = ClassColor();
+        Material m = Instantiate(Resources.Load<Material>("Materials/Token/BorderBase"));
+        m.SetColor("_Border", c);
+        TokenObject.transform.Find("Base").GetComponent<DecalProjector>().material = m;
+    }
 
+    public override void CreateUnitBarItem() {
+        base.CreateUnitBarItem();
         Color c = ClassColor();
         Element.Q("ClassBackground").style.borderTopColor = c;
         Element.Q("ClassBackground").style.borderRightColor = c;
         Element.Q("ClassBackground").style.borderBottomColor = c;
         Element.Q("ClassBackground").style.borderLeftColor = c;
-
-        Material m = Instantiate(Resources.Load<Material>("Materials/Token/BorderBase"));
-        m.SetColor("_Border", c);
-        TokenObject.transform.Find("Base").GetComponent<DecalProjector>().material = m;
     }
+
 
     private Color ClassColor() {
         return Class switch
@@ -168,7 +160,6 @@ public class Icon_v1_5TokenData : TokenData
     }
 
     private void SetStats(bool elite, int legendHp) {
-        Debug.Log(legendHp);
         switch (Class) {
             case "Wright":
             case "Artillery":

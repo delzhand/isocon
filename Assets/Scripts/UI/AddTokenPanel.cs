@@ -24,11 +24,6 @@ public class AddTokenPanel : MonoBehaviour
 
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
         UI.System.Q<Label>("DataPath").text = "Graphics for tokens should be placed in " + path + "/tokens/";
-
-    }
-
-    void Update() {
-        UI.OverDropdown();
     }
 
     private void CreateToken(ClickEvent evt) {

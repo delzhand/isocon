@@ -19,9 +19,9 @@ public class PlayerController : NetworkBehaviour
 
     public static void Disconnect() {
         UI.System.Q("PlayerList").Clear();
-        GameObject[] objs = GameObject.FindGameObjectsWithTag("Token");
+        GameObject[] objs = GameObject.FindGameObjectsWithTag("TokenData");
         for (int i = 0; i < objs.Length; i++) {
-            Destroy(objs[i]);
+            objs[i].GetComponent<TokenData>().Disconnect();
         }
     }
 }
