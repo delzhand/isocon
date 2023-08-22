@@ -20,23 +20,10 @@ public class Token : MonoBehaviour
     public GameObject offlineDataObject;
     public GameObject onlineDataObject;
 
-    void Start() {
-        // ApplyImage();
-    }
-
     void Update()
     {
         alignToCamera();
     }
-
-    // private void ApplyImage() {
-    //     if (RemoteHash.Length > 0) {
-    //         ImageSync.Find().Apply(this, RemoteHash);
-    //     }
-    //     else if (LocalFilename.Length > 0) {
-    //         ImageSync.Find().ApplyLocal(this, LocalFilename);
-    //     }        
-    // }
 
     private void alignToCamera() {
         Transform camera = GameObject.Find("CameraOrigin").transform;
@@ -64,34 +51,12 @@ public class Token : MonoBehaviour
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1);
         // transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 1);
         // transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetVector("_Color", new Vector4(2f, 2f, 2f, 2f));
+        onlineDataObject.GetComponent<TokenData>().Element.Q("Selected").style.display = DisplayStyle.Flex;
     }
 
     public void Deselect() {
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
         // transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 0);
+        onlineDataObject.GetComponent<TokenData>().Element.Q("Selected").style.display = DisplayStyle.None;
     }
-
-    // private IEnumerator FindRemoteTokenImage() {
-    //     Debug.Log("FindRemoteTokenImage");
-    //     string imageHash = GameSystem.Current().GetTokenImageHash(gameObject);
-    //     Debug.Log(imageHash);
-
-    //     string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
-    //     string filename = "file://" + path + "/remote-tokens/" + imageHash + ".png";
-    //     Debug.Log(filename);
-    //     using UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(filename);
-    //     yield return uwr.SendWebRequest();
-
-    //     if (uwr.result != UnityWebRequest.Result.Success)
-    //     {
-    //         Toast.Add(uwr.error);
-    //         Debug.Log(uwr.error);
-    //     }
-    //     else
-    //     {
-    //         Debug.Log("success");
-    //         SetImage(DownloadHandlerTexture.GetContent(uwr));
-    //     }
-
-    // }
 }

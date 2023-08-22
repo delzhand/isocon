@@ -35,7 +35,7 @@ public class TokenData : NetworkBehaviour
     }
 
     public virtual void BaseUpdate() {
-        if (!initialized && NeedsSetup()) {
+        if (!initialized && NeedsSetup() && Json.Length > 0) {
             DoTokenDataSetup();
         }
         if (!initialized && GraphicHash.Length > 0) {
@@ -111,7 +111,8 @@ public class TokenData : NetworkBehaviour
         Element.Q("Portrait").style.height = height;
 
         Element.RegisterCallback<ClickEvent>((evt) => {
-            TokenObject.GetComponent<Token>().Select(true);
+            Token t = TokenObject.GetComponent<Token>();
+            TokenController.TokenClick(t);
         });
 
         // Add it to the UI

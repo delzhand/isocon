@@ -132,14 +132,14 @@ public class MenuController : MonoBehaviour
     }
 
     private void enableModal(string dialog) {
-        TokenState.SuppressOverheads = true;
+        // TokenState.SuppressOverheads = true;
         UI.System.Query(null, "dialog").ForEach(disableDialog);
         UI.System.Q("ModalContainer").AddToClassList("active");
         UI.System.Q(dialog).style.display = DisplayStyle.Flex;
     }
 
     private void disableModal() {
-        TokenState.SuppressOverheads = false;
+        // TokenState.SuppressOverheads = false;
         UI.System.Q("ModalContainer").RemoveFromClassList("active");
     }
 
