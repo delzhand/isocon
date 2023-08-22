@@ -229,7 +229,7 @@
                         <ui:Label tabindex="-1" text="Enochian" display-tooltip-when-elided="true" name="Job" class="blue" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 4px; padding-right: 4px; padding-top: 2px; padding-bottom: 1px; font-size: 12px; -unity-text-align: middle-center; white-space: normal; text-shadow: 0 0 1px rgba(0, 0, 0, 0);" />
                     </ui:VisualElement>
                     <ui:VisualElement style="width: 100px;">
-                        <ui:VisualElement name="Vitals" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); padding-top: 4px;">
+                        <ui:VisualElement name="Vitals" style="background-color: rgba(0, 0, 0, 0); padding-top: 4px;">
                             <ui:VisualElement style="margin-bottom: 2px;">
                                 <ui:VisualElement name="StatTemplate" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: space-between; margin-bottom: 2px;">
                                     <ui:Label tabindex="-1" text="HP" display-tooltip-when-elided="true" style="font-size: 10px; -unity-text-align: middle-left; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; color: rgb(176, 176, 176);" />

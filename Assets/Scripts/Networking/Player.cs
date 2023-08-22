@@ -140,10 +140,6 @@ public class Player : NetworkBehaviour
     }
     [Command]
     public void CmdMoveToken(GameObject g, Vector3 v, bool immediate) {
-        RpcMoveToken(g, v, immediate);
-    }
-    [ClientRpc]
-    public void RpcMoveToken(GameObject g, Vector3 v, bool immediate) {
         DoMoveToken(g, v, immediate);
     }
     private void DoMoveToken(GameObject g, Vector3 v, bool immediate) {
