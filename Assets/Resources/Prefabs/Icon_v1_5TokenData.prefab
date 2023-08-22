@@ -66,9 +66,22 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   Name: 
-  CurrentHP: 0
-  MaxHP: 0
+  GraphicHash: 
+  Json: 
+  TokenObject: {fileID: 0}
+  Graphic: {fileID: 0}
   Class: 
   Job: 
-  GraphicHash: 
-  TokenObject: {fileID: 0}
+  CurrentHP: 0
+  Vigor: 0
+  Wounds: 0
+  Resolve: 0
+  GResolve: 0
+  MaxHP: 0
+  Damage: 0
+  Fray: 0
+  Range: 0
+  Speed: 0
+  Dash: 0
+  Defense: 0
+  Elite: 0

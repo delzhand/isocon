@@ -24,17 +24,18 @@ public class TokenState : MonoBehaviour
     public int Speed;
     public int Dash;
     public int Defense;
+
     public int Aether;
     public int Vigilance;
     public int Blessings;
     public bool StackedDie;
     public string Stance = "";
+    public string Mark = "";
+    public string Hate = "";
 
     public bool Elite;
 
     public List<string> status = new List<string>();
-    public string Mark = "";
-    public string Hate = "";
 
 
     // Start is called before the first frame update

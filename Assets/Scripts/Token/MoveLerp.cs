@@ -34,6 +34,8 @@ public class MoveLerp : MonoBehaviour
         if (Timer <= 0) {
             gameObject.transform.position = Destination;
             Destroy(this);
+            // A simple fix to set the position of tokens in flight when a client connects
+            Player.Self().CmdMoveToken(gameObject, Destination, true);
         }
     }
 

@@ -132,22 +132,27 @@ public class Player : NetworkBehaviour
     #region Token Movement
     public static void MoveToken(Token token, Vector3 v){
         if (Player.IsOnline()) {
-            Player.Self().CmdMoveToken(token.onlineDataObject, v);
+            Player.Self().CmdMoveToken(token.onlineDataObject, v, false);
         }
         else {
             MoveLerp.Create(token.offlineDataObject, v);
         }
     }
     [Command]
-    public void CmdMoveToken(GameObject g, Vector3 v) {
-        RpcMoveToken(g, v);
+    public void CmdMoveToken(GameObject g, Vector3 v, bool immediate) {
+        RpcMoveToken(g, v, immediate);
     }
     [ClientRpc]
-    public void RpcMoveToken(GameObject g, Vector3 v) {
-        DoMoveToken(g, v);
+    public void RpcMoveToken(GameObject g, Vector3 v, bool immediate) {
+        DoMoveToken(g, v, immediate);
     }
-    private void DoMoveToken(GameObject g, Vector3 v) {
-        MoveLerp.Create(g, v);
+    private void DoMoveToken(GameObject g, Vector3 v, bool immediate) {
+        if (immediate) {
+            g.transform.position = v;
+        }
+        else {
+            MoveLerp.Create(g, v);
+        }
     }
     #endregion
 

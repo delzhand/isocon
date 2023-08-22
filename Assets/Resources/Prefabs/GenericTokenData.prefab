@@ -66,7 +66,9 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   Name: 
+  GraphicHash: 
+  Json: 
+  TokenObject: {fileID: 0}
+  Graphic: {fileID: 0}
   CurrentHP: 0
   MaxHP: 0
-  GraphicHash: 
-  TokenObject: {fileID: 0}

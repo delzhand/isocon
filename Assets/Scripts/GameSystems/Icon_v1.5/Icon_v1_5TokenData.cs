@@ -91,9 +91,16 @@ public class Icon_v1_5TokenData : TokenData
     public int Defense;
     public bool Elite;
 
+    void Start() {      
+    }
+
     void Update()
     {
         BaseUpdate();
+    }
+
+    public override bool NeedsSetup() {
+        return MaxHP == 0;
     }
 
     public override void UpdateUIData() {
@@ -119,7 +126,12 @@ public class Icon_v1_5TokenData : TokenData
 
     public override void TokenDataSetup(string json) {
         base.TokenDataSetup(json);
-        Icon_v1_5TokenDataRaw raw = JsonUtility.FromJson<Icon_v1_5TokenDataRaw>(json);
+        DoTokenDataSetup();
+        CurrentHP = MaxHP;
+    }
+
+    public override void DoTokenDataSetup() {
+        Icon_v1_5TokenDataRaw raw = JsonUtility.FromJson<Icon_v1_5TokenDataRaw>(Json);
         Name = raw.Name;
         GraphicHash = raw.GraphicHash;
         Class = raw.Class;
@@ -226,7 +238,6 @@ public class Icon_v1_5TokenData : TokenData
         else {
             MaxHP *= legendHp;
         }
-        CurrentHP = MaxHP;
         Vigor = 0;
         Wounds = 0;
     }

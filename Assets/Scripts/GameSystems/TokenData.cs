@@ -13,7 +13,9 @@ public class TokenData : NetworkBehaviour
     [SyncVar]
     public string GraphicHash;
 
+    [SyncVar]
     public string Json;
+
     public GameObject TokenObject;
     public VisualElement Element;
     public VisualElement overhead;
@@ -33,6 +35,9 @@ public class TokenData : NetworkBehaviour
     }
 
     public virtual void BaseUpdate() {
+        if (!initialized && NeedsSetup()) {
+            DoTokenDataSetup();
+        }
         if (!initialized && GraphicHash.Length > 0) {
             Graphic = TextureSender.LoadImageFromFile(GraphicHash, true);
             CreateWorldToken();
@@ -50,11 +55,18 @@ public class TokenData : NetworkBehaviour
         }
     }
 
+    public virtual bool NeedsSetup() {
+        return false;
+    }
+
     public virtual void UpdateUIData() {
     }
 
     public virtual void TokenDataSetup(string json) {
         Json = json;
+    }
+
+    public virtual void DoTokenDataSetup() {        
     }
 
     public virtual void CreateWorldToken() {

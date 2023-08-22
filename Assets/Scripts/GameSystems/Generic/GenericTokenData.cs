@@ -51,10 +51,15 @@ public class GenericTokenData : TokenData
 
     public override void TokenDataSetup(string json) {
         base.TokenDataSetup(json);
-        GenericTokenDataRaw raw = JsonUtility.FromJson<GenericTokenDataRaw>(json);
+        DoTokenDataSetup();
+    }
+
+    public override void DoTokenDataSetup()
+    {
+        GenericTokenDataRaw raw = JsonUtility.FromJson<GenericTokenDataRaw>(Json);
         Name = raw.Name;
-        CurrentHP = raw.CurrentHP;
         MaxHP = raw.MaxHP;
         GraphicHash = raw.GraphicHash;
+        // CurrentHP = raw.CurrentHP;
     }
 }
