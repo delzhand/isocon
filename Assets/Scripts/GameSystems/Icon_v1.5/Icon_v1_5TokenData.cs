@@ -157,6 +157,127 @@ public class Icon_v1_5TokenData : TokenData
         Element.Q("ClassBackground").style.borderLeftColor = c;
     }
 
+    public void UpdateSelectedTokenPanel() {
+        VisualElement panel = UI.System.Q("SelectedTokenPanel");
+
+        Color c = ClassColor();
+        panel.Q("ClassBackground").style.borderTopColor = c;
+        panel.Q("ClassBackground").style.borderRightColor = c;
+        panel.Q("ClassBackground").style.borderBottomColor = c;
+        panel.Q("ClassBackground").style.borderLeftColor = c;
+
+        panel.Q("Portrait").style.backgroundImage = Graphic;
+        panel.Q("Portrait").style.width = Length.Percent(Graphic.width / (float)Graphic.height * 100);
+
+        panel.Q<Label>("CHP").text = CurrentHP.ToString();
+        panel.Q<Label>("MHP").text = "/" + MaxHP.ToString();
+        panel.Q<Label>("VIG").text = Vigor > 0 ? "+" + Vigor.ToString() : "";
+        panel.Q<Label>("Name").text = Name;
+
+        panel.Q<ProgressBar>("HpBar").value = CurrentHP;
+        panel.Q<ProgressBar>("HpBar").highValue = MaxHP;
+        panel.Q<ProgressBar>("VigorBar").value = Vigor;
+        panel.Q<ProgressBar>("VigorBar").highValue = MaxHP;
+        if (Vigor == 0) {
+            panel.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Hidden;
+        }
+        else {
+            panel.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Visible;
+        }
+        // for (int i = 1; i <= 3; i++) {
+        //     if (Wounds >= i) {
+        //         panel.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Visible;
+        //     }
+        //     else {
+        //         panel.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Hidden;
+        //     }
+        // }
+
+        if (!IsFoe()) {
+            panel.Q<Label>("ResolveNum").text = Resolve.ToString();
+            panel.Q<Label>("PartyResolveNum").text = "+" + GResolve.ToString();
+            panel.Q<ProgressBar>("ResolveBar").value = Resolve + GResolve;
+            panel.Q<ProgressBar>("PartyResolveBar").value = GResolve;            
+            panel.Q("ResolveWrapper").style.display = DisplayStyle.Flex;
+        }
+        else {
+            panel.Q("ResolveWrapper").style.display = DisplayStyle.None;
+        }
+
+        if (Elite) {
+            panel.Q<Label>("Elite").style.visibility = Visibility.Visible;
+        }
+        else {
+            panel.Q<Label>("Elite").style.visibility = Visibility.Hidden;
+        }
+
+        panel.Q<Label>("Job").text = Job;
+        panel.Q<Label>("Job").style.backgroundColor = c;
+
+        // panel.Q("Statuses").Clear();
+        // int statusCount = 0;
+        // if (CurrentHP == 0) {
+        //     statusCount++;
+        //     addStatus(panel, "Incapacitated", false);
+        // }
+        // else if (CurrentHP * 2 <= MaxHP) {
+        //     statusCount++;
+        //     addStatus(panel, "Bloodied", false);
+        // }
+        // for(int i = 0; i < status.Count; i++) {
+        //     statusCount++;
+        //     addStatus(panel, status[i], TokenController.IsPositive(status[i]));
+        // }
+
+        // List<(string, int)> counters = new List<(string, int)>();
+        // counters.Add(("Aether", Aether));
+        // counters.Add(("Blessings", Blessings));
+        // counters.Add(("Vigilance", Vigilance));
+        // for(int i = 0; i < counters.Count; i++) {
+        //     if (counters[i].Item2 > 0) {
+        //         statusCount++;
+        //         addStatus(panel, counters[i].Item1 + " " + counters[i].Item2, true);
+        //     }
+        // }
+
+        // if (Stance.Length > 0) {
+        //     statusCount++;
+        //     addStatus(panel, "Stance " + Stance, true);
+        // }
+
+        // if (Mark.Length > 0) {
+        //     statusCount++;
+        //     addStatus(panel, "Marked by " + Mark, false);
+        // }
+
+        // if (Hate.Length > 0) {
+        //     statusCount++;
+        //     addStatus(panel, "Hatred of " + Hate, false);
+        // }
+
+        // if (statusCount == 0) {
+        //     addStatus(panel, "Normal", true);
+        // }
+
+        // if (StackedDie) {
+        //     addStatus(panel, "Stacked Die", true);
+        // }
+
+        panel.Q<Label>("StatDef").text = Defense.ToString();
+        panel.Q<Label>("StatDmg").text = "D" + Damage.ToString();
+        panel.Q<Label>("StatFray").text = Fray.ToString();
+        panel.Q<Label>("StatRng").text = Range.ToString();
+        panel.Q<Label>("StatSpd").text = Speed.ToString();
+        panel.Q<Label>("StatDash").text = Dash.ToString();        
+    }
+
+    private bool IsFoe() {
+        return Class switch
+        {
+            "Wright" or "Stalwart" or "Mendicant" or "Vagabond" => false,
+            _ => true
+        };
+    }
 
     private Color ClassColor() {
         return Class switch

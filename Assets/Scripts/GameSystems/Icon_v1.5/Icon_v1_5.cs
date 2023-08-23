@@ -37,6 +37,11 @@ public class Icon_v1_5 : GameSystem
         AddTokenTeardown();
     }
 
+    public override void UpdateSelectedTokenPanel(GameObject data)
+    {
+        data.GetComponent<Icon_v1_5TokenData>().UpdateSelectedTokenPanel();
+    }
+
     private void AddTokenSetup() {
         UI.ToggleDisplay("AddTokenSystem", true);
         VisualElement root = UI.System.Q("AddTokenSystem");

@@ -45,6 +45,10 @@ public class GameSystem : MonoBehaviour
         throw new NotImplementedException();
     }
 
+    public virtual void UpdateSelectedTokenPanel(GameObject data) {
+        throw new NotImplementedException();
+    }
+
     public static void Set(string value) {
         GameSystem current = GameSystem.Current();
         if (current) {

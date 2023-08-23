@@ -141,6 +141,9 @@ public class Block : MonoBehaviour
 
     void OnMouseDown()
     {
+        if (!Player.IsOnline()) {
+            return;
+        }
         if (UI.ClicksSuspended) {
             return;
         }

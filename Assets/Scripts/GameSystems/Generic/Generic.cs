@@ -27,4 +27,8 @@ public class Generic : GameSystem
     public override GameObject GetDataPrefab() {
         return Instantiate(Resources.Load<GameObject>("Prefabs/GenericTokenData"));
     }
+
+    public override void UpdateSelectedTokenPanel(GameObject data)
+    {
+    }
 }

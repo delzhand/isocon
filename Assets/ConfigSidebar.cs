@@ -23,14 +23,6 @@ public class ConfigSidebar : MonoBehaviour
             PlayerPrefs.SetString("UIScale", evt.newValue);
             SetScale(evt.newValue);
         });
-
-        string system = PlayerPrefs.GetString("System", "Generic");
-        GameSystem.Set(system);
-        UI.System.Q<DropdownField>("SystemField").value = system; 
-        UI.System.Q<DropdownField>("SystemField").RegisterValueChangedCallback<string>((evt) => {
-            PlayerPrefs.SetString("System", evt.newValue);
-            GameSystem.Set(evt.newValue);
-        });
     }
 
     private void SetScale(string sValue) {

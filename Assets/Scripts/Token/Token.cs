@@ -48,15 +48,15 @@ public class Token : MonoBehaviour
                 g.GetComponent<Token>().Deselect();
             }
         }
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1);
-        // transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 1);
-        // transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetVector("_Color", new Vector4(2f, 2f, 2f, 2f));
-        onlineDataObject.GetComponent<TokenData>().Element.Q("Selected").style.display = DisplayStyle.Flex;
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1); // worldspace token selected material
+        UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().Element.Q("Selected"), true); // selected indicator in unit bar
+        UI.ToggleDisplay("SelectedTokenPanel", true); // selected token panel
+        GameSystem.Current().UpdateSelectedTokenPanel(onlineDataObject);
     }
 
     public void Deselect() {
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
-        // transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 0);
-        onlineDataObject.GetComponent<TokenData>().Element.Q("Selected").style.display = DisplayStyle.None;
+        UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().Element.Q("Selected"), false);
+        UI.ToggleDisplay("SelectedTokenPanel", false);
     }
 }
