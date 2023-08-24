@@ -15,31 +15,36 @@ public class MapSidebar : MonoBehaviour
 
         Refresh();
 
-        UI.System.Q<Button>("LoadMapButton").RegisterCallback<ClickEvent>((evt) => {
-            MapFile = UI.System.Q<DropdownField>("MapField").value;
-            LoadMap();
-            Debug.Log("load map " + MapFile);
-        });
+        // UI.System.Q<Button>("LoadMapButton").RegisterCallback<ClickEvent>((evt) => {
+        //     MapFile = UI.System.Q<DropdownField>("MapField").value;
+        //     LoadMap();
+        //     Toast.Add(MapFile + " loaded.");
+        // });
 
         UI.System.Q<Button>("NewMapButton").RegisterCallback<ClickEvent>((evt) =>  {
-            MapFile = UI.System.Q<TextField>("NewMapField").value;
-            Debug.Log("new map " + MapFile);
+            TerrainController.InitializeTerrain(8, 8, 1);
+            Toast.Add("New map initialized.");
+            UI.ToggleDisplay("MapSidebar", false);
+
+            // MapFile = UI.System.Q<TextField>("NewMapField").value;
+            // Debug.Log("new map " + MapFile);
         });
 
-        UI.System.Q<Button>("SaveMapButton").RegisterCallback<ClickEvent>((evt) => {
-            Debug.Log("save map " + MapFile);
-        });
+        // UI.System.Q<Button>("SaveMapButton").RegisterCallback<ClickEvent>((evt) => {
+        //     Debug.Log("save map " + MapFile);
+        // });
     }
 
     void Update() {
-        if (!Player.IsGM()) {
-            UI.ToggleDisplay("MapToggle", false);
-            UI.ToggleDisplay("MapSidebar", false);
-            return;
-        }
-        else {
-            UI.ToggleDisplay("MapToggle", true);
-        }        
+        // if (!Player.IsGM()) {
+        //     UI.ToggleDisplay("MapToggle", false);
+        //     UI.ToggleDisplay("MapSidebar", false);
+        //     return;
+        // }
+        // else {
+        //     UI.ToggleDisplay("MapToggle", true);
+        //     UI.ToggleDisplay("MapSidebar", true);
+        // }        
     }
 
     public void Refresh() {

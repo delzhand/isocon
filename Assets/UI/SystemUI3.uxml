@@ -4,10 +4,13 @@
     <Style src="project://database/Assets/UI/Styles/v3/GlobalStyles.uss?fileID=7433441132597879392&amp;guid=7121076cb2a24ed45a625b144b837ee6&amp;type=3#GlobalStyles" />
     <Style src="project://database/Assets/UI/Styles/v3/OverrideStyles.uss?fileID=7433441132597879392&amp;guid=15bcfaebbc0c9fd4691b003a9d1cd382&amp;type=3#OverrideStyles" />
     <Style src="project://database/Assets/UI/Styles/Overhead.uss?fileID=7433441132597879392&amp;guid=db9f5488cbd5b104699c060ac772337b&amp;type=3#Overhead" />
-    <ui:VisualElement name="Worldspace" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; left: 0; top: 0; right: 0; bottom: 0;" />
-    <ui:VisualElement name="StartupPanel" class="centered panel" style="margin-bottom: 0; display: flex;">
-        <ui:Label tabindex="-1" text="IsoCON" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; font-size: 60px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 2px;" />
-        <ui:DropdownField index="0" choices="Generic,ICON 1.5" name="SystemField" label="Game System" class="no-margin" style="margin-bottom: 8px; margin-top: 8px;" />
+    <ui:VisualElement name="Worldspace" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; left: 1px; top: 0; right: 0; bottom: 0;" />
+    <ui:VisualElement name="StartupPanel" class="centered panel" style="margin-bottom: 0; display: flex; min-height: 0;">
+        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 0; flex-direction: row; justify-content: center; padding-top: 20px; padding-bottom: 20px;">
+            <ui:Label tabindex="-1" text="Iso" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; font-size: 60px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 8px; padding-top: 6px; padding-bottom: 0;" />
+            <ui:Label tabindex="-1" text="CON" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; font-size: 60px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; color: rgb(0, 0, 0); background-color: rgb(255, 255, 255); padding-left: 8px; padding-right: 8px; padding-top: 6px; padding-bottom: 0;" />
+        </ui:VisualElement>
+        <ui:DropdownField index="0" choices="Generic,ICON 1.5" name="SystemField" label="Game System" focusable="false" class="no-margin" style="margin-bottom: 8px; margin-top: 8px;" />
         <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: space-between; width: 420px;">
             <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); width: 30%;">
                 <ui:Button display-tooltip-when-elided="true" name="SoloModeButton" style="flex-grow: 1;">
@@ -100,11 +103,11 @@
         <ui:VisualElement name="Toggles" style="background-color: rgba(0, 0, 0, 0);">
             <ui:Button display-tooltip-when-elided="true" name="ConnectionToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/network&apos;); width: 28px; height: 28px;" />
             <ui:Button display-tooltip-when-elided="true" name="PlayersToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/players&apos;); width: 28px; height: 28px;" />
-            <ui:Button display-tooltip-when-elided="true" name="SessionToggle" text="SES" class="blank" style="position: relative; background-image: none; width: 28px; height: 28px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: -16px;" />
+            <ui:Button display-tooltip-when-elided="true" name="SessionToggle" text="SES" class="blank" style="position: relative; background-image: none; width: 28px; height: 28px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: -16px; display: none;" />
             <ui:Button display-tooltip-when-elided="true" name="MapToggle" text="MAP" class="blank" style="position: relative; background-image: none; width: 28px; height: 28px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: -16px;" />
             <ui:Button display-tooltip-when-elided="true" name="ConfigToggle" text="CFG" class="blank" style="position: relative; background-image: none; width: 28px; height: 28px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: -16px;" />
         </ui:VisualElement>
-        <ui:VisualElement name="Gamespace" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; position: relative; margin-right: 10px;">
+        <ui:VisualElement name="Gamespace" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; position: relative; margin-right: 0;">
             <ui:VisualElement name="TerrainInfo" style="background-color: rgba(0, 0, 0, 0); display: flex; position: absolute; right: 0; top: 0; padding-right: 0;">
                 <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Height" text="1h" style="font-size: 40px; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); text-shadow: 2px 2px 0 rgb(0, 0, 0); -unity-text-outline-color: rgb(0, 0, 0); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: upper-right;" />
                 <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Coords" text="A0" style="font-size: 20px; -unity-font-style: normal; color: rgb(255, 255, 255); text-shadow: 2px 2px 0 rgb(0, 0, 0); -unity-text-outline-color: rgb(0, 0, 0); margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 8px; padding-right: 8px; padding-top: 0; padding-bottom: 0; -unity-text-align: upper-center; background-color: rgb(36, 36, 36); left: auto; border-top-left-radius: 12px; border-bottom-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; right: 0; display: flex; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;);" />
@@ -296,13 +299,11 @@
                 <ui:DropdownField index="-1" name="SessionField" class="no-margin" />
                 <ui:Button text="New Session" display-tooltip-when-elided="true" name="NewSessionButton" style="margin-top: 2px;" />
             </ui:VisualElement>
-            <ui:VisualElement name="MapSidebar" class="panel" style="position: relative; left: auto; top: auto; display: none;">
+            <ui:VisualElement name="MapSidebar" class="panel" style="position: relative; left: auto; top: auto; display: flex; min-height: auto;">
                 <ui:Label tabindex="-1" text="MAP" display-tooltip-when-elided="true" class="panel-header" />
-                <ui:TextField picking-mode="Ignore" value="new_map.json" name="NewMapField" class="no-margin" />
-                <ui:Button text="New Map" display-tooltip-when-elided="true" name="NewMapButton" style="margin-top: 2px; margin-bottom: 4px;" />
-                <ui:DropdownField index="-1" name="MapField" class="no-margin" />
-                <ui:Button text="Load Map" display-tooltip-when-elided="true" name="LoadMapButton" style="margin-top: 2px;" />
-                <ui:Button text="Save Map" display-tooltip-when-elided="true" name="SaveMapButton" style="margin-top: 2px;" />
+                <ui:Button text="Create New Map" display-tooltip-when-elided="true" name="NewMapButton" style="margin-top: 2px; margin-bottom: 4px; display: flex;" />
+                <ui:Button text="Load Map" display-tooltip-when-elided="true" name="LoadMapButton" style="margin-top: 2px; display: flex;" />
+                <ui:DropdownField index="-1" name="MapField" class="no-margin" style="display: none;" />
             </ui:VisualElement>
             <ui:VisualElement name="ConfigSidebar" class="panel" style="position: relative; left: auto; top: auto; display: none;">
                 <ui:Label tabindex="-1" text="CONFIG" display-tooltip-when-elided="true" class="panel-header" />
@@ -321,7 +322,7 @@
             </ui:VisualElement>
         </ui:ScrollView>
     </ui:VisualElement>
-    <ui:VisualElement name="Toasts" style="flex-grow: 1; background-color: rgb(34, 58, 118); position: absolute; left: auto; top: 10px; border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); color: rgb(255, 255, 255); -unity-text-align: middle-center; padding-left: 10px; padding-right: 10px; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; display: none; right: 10px;" />
+    <ui:VisualElement name="Toasts" style="flex-grow: 1; background-color: rgb(34, 58, 118); position: absolute; left: auto; top: auto; border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); color: rgb(255, 255, 255); -unity-text-align: middle-right; padding-left: 10px; padding-right: 10px; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; display: none; right: 10px; bottom: 10px;" />
     <ui:VisualElement name="AddTokenPanel" class="panel centered" style="width: 380px; display: none;">
         <ui:Label tabindex="-1" text="CREATE TOKEN" display-tooltip-when-elided="true" class="panel-header" />
         <ui:TextField picking-mode="Ignore" value="Tokenname" label="Token Name" name="TokenNameField" focusable="true" class="modal-textfield" />
@@ -335,7 +336,7 @@
             <ui:DropdownField label="Size" index="0" choices="Normal,Large (2), Huge (3)" name="SizeDropdown" focusable="false" class="modal-dropdown" style="display: none;" />
         </ui:VisualElement>
         <ui:VisualElement style="border-left-color: rgb(43, 43, 43); border-right-color: rgb(43, 43, 43); border-top-color: rgb(43, 43, 43); border-bottom-color: rgb(43, 43, 43); border-top-width: 2px; padding-top: 10px; margin-top: 10px; flex-direction: row; justify-content: space-around;">
-            <ui:Button text="Create+Save" display-tooltip-when-elided="true" name="AddTokenSaveCreateButton" class="modal-button" style="display: flex;" />
+            <ui:Button text="Create+Save" display-tooltip-when-elided="true" name="AddTokenSaveCreateButton" class="modal-button" style="display: none;" />
             <ui:Button text="Create" display-tooltip-when-elided="true" name="AddTokenCreateButton" class="modal-button" style="display: flex;" />
             <ui:Button text="Cancel" display-tooltip-when-elided="true" name="AddTokenCancelButton" class="modal-button" />
         </ui:VisualElement>

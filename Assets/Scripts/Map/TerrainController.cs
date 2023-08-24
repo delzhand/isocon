@@ -16,7 +16,7 @@ public class TerrainController : MonoBehaviour
     void Start() {
         // registerCallbacks();
         // disableIndicators();
-        InitializeTerrain(8, 8, 1);
+        // InitializeTerrain(8, 8, 1);
     }
 
     private void registerCallbacks() {
@@ -122,6 +122,10 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void InitializeTerrain(int length, int width, int height) {
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < blocks.Length; i++) {
+            GameObject.Destroy(blocks[i].transform.parent.gameObject);
+        }
         if (map == null) {
             map = GameObject.Find("Terrain");
         }

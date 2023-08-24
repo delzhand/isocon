@@ -48,6 +48,25 @@ public class Environment : MonoBehaviour
         return new Color(r/255f, g/255f, b/255f);
     }
 
+    public static Color FromHex(string hex) {
+        hex = hex.Replace("#", "").ToUpper();
+        if (hex.Length != 6)
+        {
+            Debug.LogError("Invalid hex color format. Please use the format '#RRGGBB'.");
+            return Color.white; // Default to white color
+        }
+
+        string rHex = hex.Substring(0, 2);
+        string gHex = hex.Substring(2, 2);
+        string bHex = hex.Substring(4, 2);
+
+        byte r = byte.Parse(rHex, System.Globalization.NumberStyles.HexNumber);
+        byte g = byte.Parse(gHex, System.Globalization.NumberStyles.HexNumber);
+        byte b = byte.Parse(bHex, System.Globalization.NumberStyles.HexNumber);
+
+        return new Color32(r, g, b, 255);
+    }
+
     public static void SetBackground(BackgroundGradient background) {
         Environment.background = background;
 
@@ -57,7 +76,7 @@ public class Environment : MonoBehaviour
         gradients.Add(BackgroundGradient.SEASIDE, (Environment.FromRGB(38, 113, 156), Environment.FromRGB(234, 215, 129)));
         gradients.Add(BackgroundGradient.SANDSTORM, (Environment.FromRGB(224, 221, 160), Environment.FromRGB(161, 161, 148)));
         gradients.Add(BackgroundGradient.ARKENDEPTH, (Environment.FromRGB(0, 0, 0), Environment.FromRGB(0, 108, 0)));
-        gradients.Add(BackgroundGradient.FANTASIA, (Environment.FromRGB(8, 0, 209), Environment.FromRGB(0, 108, 221)));
+        gradients.Add(BackgroundGradient.FANTASIA, (Environment.FromHex("#474571"), Environment.FromHex("#001022")));
         gradients.Add(BackgroundGradient.DEEPHEAT, (Environment.FromRGB(68, 0, 0), Environment.FromRGB(104, 60, 21)));
 
         MeshRenderer mr = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();

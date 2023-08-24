@@ -69,8 +69,8 @@ public class Player : NetworkBehaviour
                 UI.ToggleDisplay(instance.Q("PlayerNameEdit"), false);
             });
 
-            // Request session data from host
-            CmdRequestSession();
+            // // Request session data from host
+            // CmdRequestSession();
         }
     }
 

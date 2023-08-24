@@ -37,14 +37,7 @@ public class Block : MonoBehaviour
 
     void Awake() {
         if (materials.Count == 0) {
-            materials.Add("side1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideA")));
-            materials.Add("side2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideB")));
-            materials.Add("top1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopA")));
-            materials.Add("top2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopB")));
-            materials.Add("unfocused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
-            materials.Add("focused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
-
-            materials["focused"].SetInt("_Focused", 1);
+            MaterialSetup();
         }
 
         markers = new List<BlockMarker>();
@@ -70,9 +63,17 @@ public class Block : MonoBehaviour
         else {
             indicator.SetActive(false);
         }
-
     }
 
+    public static void MaterialSetup() {
+            materials.Add("side1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideA")));
+            materials.Add("side2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideB")));
+            materials.Add("top1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopA")));
+            materials.Add("top2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopB")));
+            materials.Add("unfocused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+            materials.Add("focused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+            materials["focused"].SetInt("_Focused", 1);
+    }
     public override string ToString(){
         Column c = transform.parent.GetComponent<Column>();
         string[] bits = new string[]{
@@ -163,6 +164,9 @@ public class Block : MonoBehaviour
     }
 
     public static void SetColor(string id, Color color) {
+        if (materials.Count == 0) {
+            MaterialSetup();
+        }
         materials[id].SetColor("_BaseColor", color);
     }
 

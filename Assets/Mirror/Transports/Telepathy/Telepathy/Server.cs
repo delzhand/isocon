@@ -95,7 +95,7 @@ namespace Telepathy
                 //listener.Server.SendTimeout = SendTimeout;
                 //listener.Server.ReceiveTimeout = ReceiveTimeout;
                 listener.Start();
-                Log.Info($"[Telepathy] Starting server on port {port}");
+                // Log.Info($"[Telepathy] Starting server on port {port}");
 
                 // keep accepting new clients
                 while (true)
@@ -183,13 +183,13 @@ namespace Telepathy
             {
                 // UnityEditor causes AbortException if thread is still
                 // running when we press Play again next time. that's okay.
-                Log.Info("[Telepathy] Server thread aborted. That's okay. " + exception);
+                // Log.Info("[Telepathy] Server thread aborted. That's okay. " + exception);
             }
             catch (SocketException exception)
             {
                 // calling StopServer will interrupt this thread with a
                 // 'SocketException: interrupted'. that's okay.
-                Log.Info("[Telepathy] Server Thread stopped. That's okay. " + exception);
+                // Log.Info("[Telepathy] Server Thread stopped. That's okay. " + exception);
             }
             catch (Exception exception)
             {
@@ -215,7 +215,7 @@ namespace Telepathy
             // start the listener thread
             // (on low priority. if main thread is too busy then there is not
             //  much value in accepting even more clients)
-            Log.Info($"[Telepathy] Starting server on port {port}");
+            // Log.Info($"[Telepathy] Starting server on port {port}");
 
             listenerThread = new Thread(() => { Listen(port); });
             listenerThread.IsBackground = true;
@@ -229,7 +229,7 @@ namespace Telepathy
             // only if started
             if (!Active) return;
 
-            Log.Info("[Telepathy] Server: stopping...");
+            // Log.Info("[Telepathy] Server: stopping...");
 
             // stop listening to connections so that no one can connect while we
             // close the client connections
@@ -335,7 +335,7 @@ namespace Telepathy
             {
                 // just close it. send thread will take care of the rest.
                 connection.client.Close();
-                Log.Info("[Telepathy] Server.Disconnect connectionId:" + connectionId);
+                // Log.Info("[Telepathy] Server.Disconnect connectionId:" + connectionId);
                 return true;
             }
             return false;

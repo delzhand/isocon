@@ -72,7 +72,7 @@ namespace Mirror
             // allocate enabled check only once
             enabledCheck = () => enabled;
 
-            Debug.Log("TelepathyTransport initialized!");
+            // Debug.Log("TelepathyTransport initialized!");
         }
 
         public override bool Available()

@@ -41,6 +41,6 @@ public class MoveLerp : MonoBehaviour
         MoveLerp ml = g.AddComponent<MoveLerp>();
         ml.Origin = g.transform.position;
         ml.Destination = destination;
-        ml.Duration = Vector3.Distance(ml.Origin, ml.Destination)/3f;
+        ml.Duration = Mathf.Min(1f, Vector3.Distance(ml.Origin, ml.Destination)/3f);
     }
 }

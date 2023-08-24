@@ -12,7 +12,7 @@ public enum ToastType {
 public class Toast : MonoBehaviour
 {
     public string Message = "";
-    private float duration = 3;
+    private float duration = 5;
     private Label label;
 
     // Start is called before the first frame update
@@ -38,6 +38,7 @@ public class Toast : MonoBehaviour
     }
 
     public static void Add(string message, ToastType type = ToastType.Standard) {
+        Debug.Log(message);
         Toast t = GameObject.Find("Engine").AddComponent<Toast>();
         t.Message = message;
         // switch(type) {

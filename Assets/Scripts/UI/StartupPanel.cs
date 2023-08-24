@@ -19,6 +19,23 @@ public class StartupPanel : MonoBehaviour
             UI.ToggleDisplay("StartupPanel", false);
             UI.ToggleDisplay("Frame", true);
             UI.ToggleDisplay("BottomBar", true);
+            UI.ToggleDisplay("MapSidebar", true);
+        });
+
+        UI.System.Q<Button>("HostModeButton").RegisterCallback<ClickEvent>((evt) => {
+            manager.maxConnections = 8;
+            manager.StartHost();
+            UI.ToggleDisplay("StartupPanel", false);
+            UI.ToggleDisplay("Frame", true);
+            UI.ToggleDisplay("BottomBar", true);
+            UI.ToggleDisplay("MapSidebar", true);
+        });
+
+        UI.System.Q<Button>("ClientModeButton").RegisterCallback<ClickEvent>((evt) => {
+            manager.StartClient();
+            UI.ToggleDisplay("StartupPanel", false);
+            UI.ToggleDisplay("Frame", true);
+            UI.ToggleDisplay("BottomBar", true);
         });
 
         string system = PlayerPrefs.GetString("System", "Generic");

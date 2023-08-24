@@ -16,6 +16,9 @@ public class TokenData : NetworkBehaviour
     [SyncVar]
     public string Json;
 
+    [SyncVar]
+    public bool OnField;
+
     public GameObject TokenObject;
     public VisualElement Element;
     public VisualElement overhead;
@@ -52,6 +55,7 @@ public class TokenData : NetworkBehaviour
         if (overhead != null) {
             UpdateOverheadScreenPosition();
             UpdateUIData();
+            overhead.style.display = (OnField ? DisplayStyle.Flex : DisplayStyle.None);
         }
     }
 
@@ -72,6 +76,8 @@ public class TokenData : NetworkBehaviour
     public virtual void CreateWorldToken() {
         TokenObject = Instantiate(Resources.Load<GameObject>("Prefabs/Token"));
         TokenObject.transform.parent = GameObject.Find("Tokens").transform;
+        RemoveFromField();
+
         Token token = TokenObject.GetComponent<Token>();
         token.SetImage(Graphic);
         token.onlineDataObject = gameObject;
@@ -141,5 +147,10 @@ public class TokenData : NetworkBehaviour
     private void UpdateOverheadScreenPosition() {
         overhead.style.display = DisplayStyle.Flex;
         UI.FollowToken(TokenObject.GetComponent<Token>(), overhead, Camera.main, Vector2.zero, true);
+    }
+
+    private void RemoveFromField(){
+        transform.position = TerrainController.Center() + new Vector3(0, 10, 0);
+        TokenObject.GetComponent<Token>().RemoveFromField();
     }
 }
