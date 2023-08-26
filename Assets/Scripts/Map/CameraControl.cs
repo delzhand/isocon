@@ -31,18 +31,13 @@ public class CameraControl : MonoBehaviour
     }
 
     private void registerCallbacks() {
-        UI.SetBlocking(UI.System, new string[]{"RotateCCW", "RotateCW", "CameraControls"});
+        UI.SetBlocking(UI.System, new string[]{"CameraControls"});
 
         UI.System.Q<Button>("RotateCCW").RegisterCallback<ClickEvent>(rotateLeft);
-        // UI.AttachHelp(UI.System, "RotateCCW", "Rotate the battlefield counter-clockwise.");
-
         UI.System.Q<Button>("RotateCW").RegisterCallback<ClickEvent>(rotateRight);
-        // UI.AttachHelp(UI.System, "RotateCW", "Rotate the battlefield clockwise.");
-
         UI.System.Q<Slider>("ZoomScale").RegisterValueChangedCallback(zoom);
-        // UI.AttachHelp(UI.System, "ZoomScale", "Zoom in or out.");
 
-        UI.System.Q("OverheadSwitch").RegisterCallback<ClickEvent>((evt) => {
+        UI.System.Q<Button>("OverheadButton").RegisterCallback<ClickEvent>((evt) => {
             if (overhead) {
                 disableOverhead();
             }
@@ -50,10 +45,28 @@ public class CameraControl : MonoBehaviour
                 enableOverhead();
             }
         });
-        // UI.AttachHelp(UI.System, "OverheadToggle", "Toggle an overhead fixed perspective.");
 
-        // UI.System.Q<Toggle>("IndicatorSwitch").RegisterValueChangedCallback(toggleIndicators);
-        // UI.AttachHelp(UI.System, "IndicatorSwitch", "Toggle row and column indicators.");
+        UI.System.Q<Button>("IndicatorsButton").RegisterCallback<ClickEvent>((evt) => {
+            bool val = !TerrainController.Indicators;
+            TerrainController.Indicators = val;
+            if (val) {
+                UI.System.Q("IndicatorsButton").AddToClassList("active");
+            }
+            else {
+                UI.System.Q("IndicatorsButton").RemoveFromClassList("active");
+            }
+        });
+
+        UI.System.Q<Button>("EditButton").RegisterCallback<ClickEvent>((evt) => {
+            bool val = !TerrainController.Editing;
+            TerrainController.Editing = val;
+            if (val) {
+                UI.System.Q("EditButton").AddToClassList("active");
+            }
+            else {
+                UI.System.Q("EditButton").RemoveFromClassList("active");
+            }
+        });
     }
 
     // Update is called once per frame
@@ -109,7 +122,7 @@ public class CameraControl : MonoBehaviour
         reserveRotation = GameObject.Find("CameraOrigin").transform.rotation;
         initializeTransition(.25f);
         targetRotation = Quaternion.Euler(0, 0, 30);
-        UI.System.Q("OverheadSwitch").AddToClassList("active");
+        UI.System.Q("OverheadButton").AddToClassList("active");
     }
 
     private void disableOverhead() {
@@ -118,12 +131,8 @@ public class CameraControl : MonoBehaviour
         if (reserveRotation != null) {
             targetRotation = reserveRotation;
         }
-        UI.System.Q("OverheadSwitch").RemoveFromClassList("active");
+        UI.System.Q("OverheadButton").RemoveFromClassList("active");
     }
-
-    // private void toggleIndicators(ChangeEvent<bool> evt) {
-    //     TerrainController.ToggleIndicators(evt.newValue);
-    // }
 
     private void initializeTransition(float duration) {
         targetPosition = GameObject.Find("CameraOrigin").transform.position;

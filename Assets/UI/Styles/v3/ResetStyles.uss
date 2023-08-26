@@ -42,16 +42,17 @@
     padding: 2px 6px;
     border-width: 1px;
     border-radius: 2px;
-    background-color: rgba(100, 100, 100, 0.35);
+    background-color: rgba(100, 100, 100, 0.15);
     border-color: #646464;
 }
 
 .unity-button:focus {
     border-color: #646464;
+    background-color: rgba(100, 100, 100, 0.35);
 }
 
 .unity-button:hover {
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(100, 100, 100, 0.35);
 }
 
 .unity-base-slider__input {

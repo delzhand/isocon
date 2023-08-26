@@ -11,42 +11,32 @@ public class TerrainController : MonoBehaviour
     static GameObject map;
     private List<Label> identifierLabels = new List<Label>();
 
-    private bool indicators = false;
+    public static bool Indicators = false;
+    public static bool Editing = false;
 
-    void Start() {
-        // registerCallbacks();
-        // disableIndicators();
-        // InitializeTerrain(8, 8, 1);
-    }
+    // void Start() {
+    //     // registerCallbacks();
+    //     // disableIndicators();
+    //     // InitializeTerrain(8, 8, 1);
+    // }
 
-    private void registerCallbacks() {
-        UI.System.Q("IndicatorSwitch").RegisterCallback<ClickEvent>((evt) => {
-            if (indicators) {
-                disableIndicators();
-            }
-            else {
-                enableIndicators();
-            }
-        });
-    }
-
-    private void editTerrainSelect(ChangeEvent<string> evt) {
-        resetConditionalElements();
-        switch (evt.newValue) {
-            case "EDIT TERRAIN":
-                showConditionalElement("EditTerrainOptions");
-                break;
-            case "EDIT BLOCK":
-                showConditionalElement("EditBlockOptions");
-                break;
-            case "MARK BLOCK":
-                showConditionalElement("MarkBlockOptions");
-                break;
-            case "APPEARANCE":
-                showConditionalElement("AppearanceOptions");
-                break;
-        }
-    }
+    // private void editTerrainSelect(ChangeEvent<string> evt) {
+    //     resetConditionalElements();
+    //     switch (evt.newValue) {
+    //         case "EDIT TERRAIN":
+    //             showConditionalElement("EditTerrainOptions");
+    //             break;
+    //         case "EDIT BLOCK":
+    //             showConditionalElement("EditBlockOptions");
+    //             break;
+    //         case "MARK BLOCK":
+    //             showConditionalElement("MarkBlockOptions");
+    //             break;
+    //         case "APPEARANCE":
+    //             showConditionalElement("AppearanceOptions");
+    //             break;
+    //     }
+    // }
 
     private void resetConditionalElements() {
         UI.System.Q("EditTerrainOptions").style.display = DisplayStyle.None;
@@ -66,7 +56,7 @@ public class TerrainController : MonoBehaviour
     }
 
     public void Edit(Block block) {
-        List<string> ops = GetComponent<ToolController>().GetOps();
+        List<string> ops = ToolsSidebar.GetOps();
         foreach(string op in ops) {
             switch (op) {
                 case "AddBlock":
@@ -96,23 +86,11 @@ public class TerrainController : MonoBehaviour
                 case "Hidden":
                     ChangeType(BlockType.Spacer);
                     break;
-                case "Difficult":
-                    ChangeMarker(BlockMarker.Difficult);
-                    break;
-                case "Dangerous":
-                    ChangeMarker(BlockMarker.Dangerous);
-                    break;
-                case "Pit":
-                    ChangeMarker(BlockMarker.Pit);
-                    break;
-                case "Impassable":
-                    ChangeMarker(BlockMarker.Impassable);
-                    break;
-                case "Interactive":
-                    ChangeMarker(BlockMarker.Interactive);
+                case "AddMark":
+                    ChangeEffect(ToolsSidebar.MarkerEffect);
                     break;
                 case "ClearMarks":
-                    ChangeMarker(BlockMarker.None);
+                    ChangeEffect("Clear");
                     break;
                 case "CenterView":
                     CameraControl.GoToBlock(block);
@@ -356,11 +334,11 @@ public class TerrainController : MonoBehaviour
         });
     }
 
-    public static void ChangeMarker(BlockMarker marker) {
+    public static void ChangeEffect(string effect) {
         List<GameObject> selected = Block.GetAllSelected();
-        selected.ForEach(block => {
-            block.GetComponent<Block>().MarkerChange(marker);
-        });
+        selected.ForEach((Action<GameObject>)(block => {
+            block.GetComponent<Block>().EffectChange(effect);
+        }));
     }
 
     private static GameObject TopBlock(GameObject column) {
@@ -384,21 +362,6 @@ public class TerrainController : MonoBehaviour
                 blocks[i].transform.localPosition -= new Vector3(0, 1, 0);
             }
         }
-    }
-
-    public static bool ShowIndicators() {
-        return GameObject.Find("Engine").GetComponent<TerrainController>().indicators;
-    }
-
-    private void enableIndicators() {
-        indicators = true;
-        UI.System.Q("IndicatorSwitch").AddToClassList("active");
-    }
-
-    private void disableIndicators() {
-        indicators = false;
-        UI.System.Q("IndicatorSwitch").RemoveFromClassList("active");
-
     }
 
     public static void Reorg() {

@@ -49,3 +49,32 @@
 #AddTokenButton:hover {
     color: orange;
 }
+
+#Effects .effect {
+    margin: 0;
+    margin-bottom: 2px;
+    padding: 2px 2px 2px 6px;
+    background-color: #FFF;
+    -unity-font-style: bold;
+    border-radius: 10px;
+    -unity-font-definition: resource('Fonts/ModernSans-Light SDF');
+    align-self: flex-end;
+    align-items: center;
+    flex-direction: row;
+}
+
+#Effects .effect .unity-label,
+#Effects .effect .unity-button {
+    margin: 0;
+    padding: 0;
+}
+
+#Effects .effect .unity-button {
+    background-color: gray;
+    color: white;
+    border-width: 0;
+    border-radius: 50%;
+    height: 16px;
+    width: 16px;
+    margin-left: 4px;
+}

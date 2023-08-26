@@ -20,9 +20,11 @@ public class Cutout : MonoBehaviour
         if (UI.ClicksSuspended) {
             return;
         }
-        if (ModeController.Mode == ClickMode.Play) {
-            Token t = GetComponentInParent<Token>();
-            TokenController.TokenClick(t);
+        if (TerrainController.Editing) {
+            return;
         }
+
+        Token t = GetComponentInParent<Token>();
+        TokenController.TokenClick(t);
     }
 }

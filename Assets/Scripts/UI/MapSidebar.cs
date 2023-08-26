@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 public class MapSidebar : MonoBehaviour
 {
     public static string MapFile;
+    private static List<string> editOps = new List<string>();
 
     void Awake() {
         UI.System.Q<Button>("MapToggle").RegisterCallback<ClickEvent>((evt) => {
@@ -30,9 +31,11 @@ public class MapSidebar : MonoBehaviour
             // Debug.Log("new map " + MapFile);
         });
 
+
         // UI.System.Q<Button>("SaveMapButton").RegisterCallback<ClickEvent>((evt) => {
         //     Debug.Log("save map " + MapFile);
         // });
+
     }
 
     void Update() {
@@ -81,4 +84,5 @@ public class MapSidebar : MonoBehaviour
         string json = File.ReadAllText(path + "/maps/" + MapFile);
         Player.Self().RpcDrawMap(json);
     }
+
 }

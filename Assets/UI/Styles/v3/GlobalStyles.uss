@@ -105,6 +105,10 @@
     color: #FFF;
 }
 
+.unity-button.active {
+    background-color: blue;
+}
+
 .red {
     background-color: rgb(238, 34, 12);
 }

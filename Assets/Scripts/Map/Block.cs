@@ -13,16 +13,6 @@ public enum BlockType
   Hidden
 }
 
-public enum BlockMarker
-{
-    None,
-    Dangerous,
-    Difficult,
-    Interactive,
-    Impassable,
-    Pit
-}
-
 public class Block : MonoBehaviour
 {
     public bool Selected = false;
@@ -32,7 +22,7 @@ public class Block : MonoBehaviour
     MeshFilter mf;
     MeshRenderer mr;
     GameObject blockUI;
-    List<BlockMarker> markers;
+    List<string> effects;
     static Dictionary<string, Material> materials = new Dictionary<string, Material>();
 
     void Awake() {
@@ -40,7 +30,7 @@ public class Block : MonoBehaviour
             MaterialSetup();
         }
 
-        markers = new List<BlockMarker>();
+        effects = new List<string>();
         mf = GetComponent<MeshFilter>();
         mr = GetComponent<MeshRenderer>();
         TypeChange(Type);
@@ -58,7 +48,7 @@ public class Block : MonoBehaviour
         GameObject indicator = transform.Find("Indicator").gameObject;
         if (Type == BlockType.Solid || Type == BlockType.Slope) {
             indicator.transform.eulerAngles = new Vector3(90, -90, 0);
-            indicator.SetActive(TerrainController.ShowIndicators());
+            indicator.SetActive(TerrainController.Indicators);
         }
         else {
             indicator.SetActive(false);
@@ -83,7 +73,7 @@ public class Block : MonoBehaviour
             transform.localEulerAngles.y.ToString(),
             Type.ToString(),
             Destroyable.ToString(),
-            string.Join(",", markers.ToArray())
+            string.Join(",", effects.ToArray())
         };
         return string.Join("|", bits);
     }  
@@ -105,11 +95,10 @@ public class Block : MonoBehaviour
         BlockType type = (BlockType)Enum.Parse(typeof(BlockType), data[4], true);
         bool destroyable = bool.Parse(data[5]);
         string[] markersArray = data[6].Split(",");
-        List<BlockMarker> markers = new List<BlockMarker>();
+        List<string> markers = new List<string>();
         for(int i = 0; i < markersArray.Length; i++) {
             if (markersArray[i].Length > 0) {
-                BlockMarker bm = (BlockMarker)Enum.Parse(typeof(BlockMarker), markersArray[i], true);
-                markers.Add(bm);
+                markers.Add(markersArray[i]);
             }
         }
 
@@ -135,7 +124,7 @@ public class Block : MonoBehaviour
         block.GetComponent<Block>().Destroyable = destroyable;
         block.GetComponent<Block>().TypeChange(type);
         for (int i = 0; i < markers.Count; i++) {
-            block.GetComponent<Block>().MarkerChange(markers[i]);
+            block.GetComponent<Block>().EffectChange(markers[i]);
         }
         return block;
     }
@@ -145,22 +134,24 @@ public class Block : MonoBehaviour
         if (!Player.IsOnline()) {
             return;
         }
+
         if (UI.ClicksSuspended) {
             return;
         }
-        if (ModeController.Mode == ClickMode.Play) {
-            CameraControl.GoToBlock(this);
-            SetTerrainInfo();
-            // DeselectAll();
-            // Select();
-            TokenController.BlockClick(this);
-        }
-        else if (ModeController.Mode == ClickMode.Edit) {
+
+        if (TerrainController.Editing) {
             Block.DeselectAll();
             Select();
             GameObject.Find("Engine").GetComponent<TerrainController>().Edit(this);
             Block.DeselectAll();
+            return;            
         }
+
+        CameraControl.GoToBlock(this);
+        SetTerrainInfo();
+        // DeselectAll();
+        // Select();
+        TokenController.BlockClick(this);
     }
 
     public static void SetColor(string id, Color color) {
@@ -195,11 +186,15 @@ public class Block : MonoBehaviour
         UI.System.Q<Label>("Coords").text = toAlpha(getY() + 1) + "" + (getX()+1);
         UI.System.Q("Coords").style.display = DisplayStyle.Flex;
         UI.System.Q("Effects").Clear();
-        markers.ForEach(marker => {
-            Label l = new Label();
-            l.text = marker.ToString();
-            l.AddToClassList("effect");
-            UI.System.Q("Effects").Add(l);
+        effects.ForEach(marker => {
+            VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/TileEffect");
+            VisualElement instance = template.Instantiate();
+            instance.Q<Label>("Label").text = marker;
+            instance.Q<Button>("RemoveButton").RegisterCallback<ClickEvent>((evt) => {
+                EffectChange(marker);
+                UI.System.Q("Effects").Remove(instance);
+            });
+            UI.System.Q("Effects").Add(instance);
         });
     }
 
@@ -269,17 +264,17 @@ public class Block : MonoBehaviour
         SetMaterials();
     }
 
-    public void MarkerChange(BlockMarker marker) {
-        switch (marker) {
-            case BlockMarker.None:
-                markers.Clear();
+    public void EffectChange(string effect) {
+        switch (effect) {
+            case "Clear":
+                effects.Clear();
                 break;
             default:
-                if (markers.Contains(marker)) {
-                    markers.Remove(marker);
+                if (effects.Contains(effect)) {
+                    effects.Remove(effect);
                 }
                 else {
-                    markers.Add(marker);
+                    effects.Add(effect);
                 }
                 break;
         }
@@ -306,19 +301,19 @@ public class Block : MonoBehaviour
 
         // Markers
         Material markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));
-        if (markers.Contains(BlockMarker.Impassable)) {
+        if (effects.Contains("Impassable")) {
             markerMaterial.SetInt("_Impassable", 1);
         }
-        if (markers.Contains(BlockMarker.Dangerous)) {
+        if (effects.Contains("Dangerous")) {
             markerMaterial.SetInt("_Dangerous", 1);
         }
-        if (markers.Contains(BlockMarker.Difficult)) {
+        if (effects.Contains("Difficult")) {
             markerMaterial.SetInt("_Difficult", 1);
         }
-        if (markers.Contains(BlockMarker.Interactive)) {
+        if (effects.Contains("Interactive")) {
             markerMaterial.SetInt("_Interactive", 1);
         }
-        if (markers.Contains(BlockMarker.Pit)) {
+        if (effects.Contains("Pit")) {
             markerMaterial.SetInt("_Pit", 1);
         }
         blockMaterials.Add(markerMaterial);
