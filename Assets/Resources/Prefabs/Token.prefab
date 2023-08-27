@@ -46,11 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68569fc3a033ce94b82f611b8c1b80d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnField: 0
   Size: 1
   Image: {fileID: 0}
-  LocalFilename: 
-  RemoteHash: 
+  offlineDataObject: {fileID: 0}
+  onlineDataObject: {fileID: 0}
 --- !u!1 &2280768507597381959
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,7 +218,7 @@ MonoBehaviour:
   m_UVScale: {x: 1, y: 1}
   m_UVBias: {x: 0, y: 0}
   m_DecalLayerMask: 1
-  m_ScaleMode: 0
+  m_ScaleMode: 1
   m_Offset: {x: 0, y: 0, z: 2}
   m_Size: {x: 1, y: 1, z: 4}
   m_FadeFactor: 1

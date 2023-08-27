@@ -13,6 +13,8 @@ public class GenericTokenDataRaw
     public int MaxHP;
     public string GraphicHash;
 
+    public int Size;
+
     public static string ToJson() {
         GenericTokenDataRaw raw = new GenericTokenDataRaw();
 
@@ -26,6 +28,8 @@ public class GenericTokenDataRaw
         raw.MaxHP = 100;
         raw.CurrentHP = raw.MaxHP;
         
+        raw.Size = 1;
+
         return JsonUtility.ToJson(raw);
     }
 }
@@ -37,6 +41,8 @@ public class GenericTokenData : TokenData
 
     [SyncVar]
     public int MaxHP;
+
+    public int Size;
 
     void Update()
     {
@@ -60,6 +66,12 @@ public class GenericTokenData : TokenData
         Name = raw.Name;
         MaxHP = raw.MaxHP;
         GraphicHash = raw.GraphicHash;
+        Size = raw.Size;
         // CurrentHP = raw.CurrentHP;
+    }
+
+    public override int GetSize()
+    {
+        return Size;
     }
 }

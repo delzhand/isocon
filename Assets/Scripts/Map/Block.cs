@@ -197,7 +197,7 @@ public class Block : MonoBehaviour
             UI.System.Q("Effects").Add(instance);
         });
     }
-
+    
     private string toAlpha(int x) {
         const int Base = 26;
         const int Offset = 64; // ASCII offset for uppercase letters

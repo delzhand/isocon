@@ -24,6 +24,7 @@ public class TokenData : NetworkBehaviour
     public VisualElement overhead;
     public Texture2D Graphic;
 
+
     private bool initialized = false;
 
     void Update() {
@@ -51,12 +52,14 @@ public class TokenData : NetworkBehaviour
 
         if (TokenObject) {
             TokenObject.transform.position = transform.position;
+            TokenObject.transform.localScale = OnField ? Vector3.one : Vector3.zero;
         }
         if (overhead != null) {
             UpdateOverheadScreenPosition();
             UpdateUIData();
             overhead.style.display = (OnField ? DisplayStyle.Flex : DisplayStyle.None);
         }
+
     }
 
     public virtual bool NeedsSetup() {
@@ -76,7 +79,7 @@ public class TokenData : NetworkBehaviour
     public virtual void CreateWorldToken() {
         TokenObject = Instantiate(Resources.Load<GameObject>("Prefabs/Token"));
         TokenObject.transform.parent = GameObject.Find("Tokens").transform;
-        RemoveFromField();
+        OnField = false;
 
         Token token = TokenObject.GetComponent<Token>();
         token.SetImage(Graphic);
@@ -147,10 +150,5 @@ public class TokenData : NetworkBehaviour
     private void UpdateOverheadScreenPosition() {
         overhead.style.display = DisplayStyle.Flex;
         UI.FollowToken(TokenObject.GetComponent<Token>(), overhead, Camera.main, Vector2.zero, true);
-    }
-
-    private void RemoveFromField(){
-        transform.position = TerrainController.Center() + new Vector3(0, 10, 0);
-        TokenObject.GetComponent<Token>().RemoveFromField();
     }
 }

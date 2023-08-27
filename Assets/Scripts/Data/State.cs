@@ -4,13 +4,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [Serializable]
 public class State
 {
     public string Version;
-    public Palette Palette;
-    public BackgroundGradient Background;
+    public Palette Palette; // Deprecated
+    public BackgroundGradient Background; // Deprecated
+
+    public string Color1; // Tile tops
+    public string Color2; // Tile sides
+    public string Color3; // Background bottom
+    public string Color4; // Background Top
+
     public string[] Blocks;
 
     public static string FullFilePath(string fileName) {
@@ -20,6 +27,7 @@ public class State
     public static void SaveState(string fileName) {
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
+        Debug.Log(json);
         string fullFileName = State.FullFilePath(fileName).Replace(".json", "") + ".json";
         File.WriteAllText(fullFileName, json);
         Toast.Add("Map saved to " + fullFileName);
@@ -42,10 +50,11 @@ public class State
         }
         State state = new State();
         state.Version = "v1";
-        state.Background = Environment.GetBackground();
-        state.Palette = Environment.GetPalette();
+        state.Color1 = ColorSidebar.ColorToHex(UI.System.Q("Color1").resolvedStyle.backgroundColor);
+        state.Color2 = ColorSidebar.ColorToHex(UI.System.Q("Color2").resolvedStyle.backgroundColor);
+        state.Color3 = ColorSidebar.ColorToHex(UI.System.Q("Color3").resolvedStyle.backgroundColor);
+        state.Color4 = ColorSidebar.ColorToHex(UI.System.Q("Color4").resolvedStyle.backgroundColor);
         state.Blocks = blockStrings.ToArray();
-
         return state;
     }
 
@@ -54,8 +63,8 @@ public class State
         for (int i = 0; i < blocks.Length; i++) {
             GameObject.Destroy(blocks[i]);
         }
-        Environment.SetBackground(state.Background);
-        Environment.SetPalette(state.Palette);
+        Environment.SetTileColors(ColorSidebar.FromHex(state.Color1), ColorSidebar.FromHex(state.Color2));
+        Environment.SetBackgroundColors(ColorSidebar.FromHex(state.Color3), ColorSidebar.FromHex(state.Color4));
         foreach (string s in state.Blocks) {
             Block.FromString(state.Version, s);
         }

@@ -37,14 +37,8 @@ public class Token : MonoBehaviour
         transform.Find("Offset/Avatar/Cutout/Cutout Quad").transform.localScale = new Vector3(aspectRatio, 1f, 1f);
     }
 
-    public void RemoveFromField() {
-        transform.localScale = Vector3.zero;
-        gameObject.SetActive(false);
-    }
-
-    public void PlaceAtBlock(Block block) {
-        transform.localScale = Vector3.one;
-        gameObject.SetActive(true);
+    public void BlockClick(Block block) {
+        onlineDataObject.GetComponent<TokenData>().OnField = true;
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
         Player.MoveToken(this, v);
     }

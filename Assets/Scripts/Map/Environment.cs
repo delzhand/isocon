@@ -79,9 +79,7 @@ public class Environment : MonoBehaviour
         gradients.Add(BackgroundGradient.FANTASIA, (Environment.FromHex("#474571"), Environment.FromHex("#001022")));
         gradients.Add(BackgroundGradient.DEEPHEAT, (Environment.FromRGB(68, 0, 0), Environment.FromRGB(104, 60, 21)));
 
-        MeshRenderer mr = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
-        mr.material.SetColor("_Color1", gradients[background].Item1);
-        mr.material.SetColor("_Color2", gradients[background].Item2);
+        SetBackgroundColors(gradients[background].Item1,  gradients[background].Item2);
     }
 
     public static BackgroundGradient GetBackground() {
@@ -103,10 +101,7 @@ public class Environment : MonoBehaviour
         palettes.Add(Palette.PYROFLOW, (Environment.FromRGB(35, 35, 35), Environment.FromRGB(149, 22, 32)));
         palettes.Add(Palette.ICECASTLE, (Environment.FromRGB(60, 130, 200), Environment.FromRGB(176, 176, 176)));
 
-        Block.SetColor("top1", palettes[palette].Item1);
-        Block.SetColor("top2", DarkenColor(palettes[palette].Item1, .2f));
-        Block.SetColor("side1", palettes[palette].Item2);
-        Block.SetColor("side2", DarkenColor(palettes[palette].Item2, .2f));
+        SetTileColors(palettes[palette].Item1, palettes[palette].Item2);
     }
 
     public static Color DarkenColor(Color originalColor, float percentage)
@@ -114,6 +109,19 @@ public class Environment : MonoBehaviour
         float darkenAmount = Mathf.Clamp01(percentage);
         Color darkenedColor = Color.Lerp(originalColor, Color.black, darkenAmount);
         return darkenedColor;
+    }
+
+    public static void SetTileColors(Color top, Color sides) {
+        Block.SetColor("top1", top);
+        Block.SetColor("top2", DarkenColor(top, .2f));
+        Block.SetColor("side1", sides);
+        Block.SetColor("side2", DarkenColor(sides, .2f));
+    }
+
+    public static void SetBackgroundColors(Color bottom, Color top) {
+        MeshRenderer mr = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
+        mr.material.SetColor("_Color1", bottom);
+        mr.material.SetColor("_Color2", top);
     }
 
 }

@@ -65,6 +65,7 @@ public class CameraControl : MonoBehaviour
             }
             else {
                 UI.System.Q("EditButton").RemoveFromClassList("active");
+                Player.Self().CmdRequestSession();
             }
         });
     }

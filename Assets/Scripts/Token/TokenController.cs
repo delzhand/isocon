@@ -35,8 +35,8 @@ public class TokenController : MonoBehaviour
 
     public static void BlockClick(Block block) {
         if (selected != null) {
-            selected.PlaceAtBlock(block);
-            ReserveController.Adjust();
+            selected.BlockClick(block);
+            // ReserveController.Adjust();
         }
         else {
             CameraControl.GoToBlock(block);

@@ -143,6 +143,9 @@ public class Player : NetworkBehaviour
         DoMoveToken(g, v, immediate);
     }
     private void DoMoveToken(GameObject g, Vector3 v, bool immediate) {
+        g.transform.localScale = Vector3.one;
+        // gameObject.SetActive(true);
+
         if (immediate) {
             g.transform.position = v;
         }
@@ -163,7 +166,7 @@ public class Player : NetworkBehaviour
     public void RpcDrawMap(string json) {
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
-        Toast.Add("Map loaded.");
+        Toast.Add("Map synced.");
         TimedReorgHack.Add();
     }
     #endregion

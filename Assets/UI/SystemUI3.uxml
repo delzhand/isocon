@@ -298,7 +298,7 @@
                 <ui:DropdownField index="-1" name="SessionField" class="no-margin" />
                 <ui:Button text="New Session" display-tooltip-when-elided="true" name="NewSessionButton" style="margin-top: 2px;" />
             </ui:VisualElement>
-            <ui:VisualElement name="MapSidebar" class="panel" style="position: relative; left: auto; top: auto; display: flex; min-height: auto;">
+            <ui:VisualElement name="MapSidebar" class="panel" style="position: relative; left: auto; top: auto; display: none; min-height: auto;">
                 <ui:Label tabindex="-1" text="MAP" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:Button text="Create New Map" display-tooltip-when-elided="true" name="NewMapButton" style="margin-top: 2px; margin-bottom: 4px; display: flex;" />
                 <ui:Button text="Load Map" display-tooltip-when-elided="true" name="LoadMapButton" style="margin-top: 2px; display: flex;" />
@@ -306,26 +306,71 @@
             </ui:VisualElement>
             <ui:VisualElement name="ConfigSidebar" class="panel" style="position: relative; left: auto; top: auto; display: none;">
                 <ui:Label tabindex="-1" text="CONFIG" display-tooltip-when-elided="true" class="panel-header" />
+                <ui:Label tabindex="-1" text="UI Scale" display-tooltip-when-elided="true" />
                 <ui:DropdownField index="3" choices="50%,75%,100%,125%,150%,175%,200%,225%,250%" name="UIScaleField" class="no-margin" />
                 <ui:Label tabindex="-1" text="Data Path" display-tooltip-when-elided="true" />
                 <ui:TextField picking-mode="Ignore" name="DataPathField" class="no-margin" />
             </ui:VisualElement>
-            <ui:VisualElement name="ToolsSidebar" class="panel" style="flex-direction: column; flex-wrap: wrap; min-height: auto; display: flex;">
+            <ui:VisualElement name="ToolsSidebar" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: none;">
                 <ui:Label tabindex="-1" text="EDIT TOOLS" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:Button text="Center View" display-tooltip-when-elided="true" name="CenterView" class="toolbox tool-button" />
-                <ui:Button text="Add Block" display-tooltip-when-elided="true" name="AddBlock" class="toolbox tool-button" />
-                <ui:Button text="Remove Block" display-tooltip-when-elided="true" name="RemoveBlock" class="toolbox tool-button" />
-                <ui:Button text="Clone Row" display-tooltip-when-elided="true" name="CloneRow" class="toolbox tool-button" />
-                <ui:Button text="Remove Row" display-tooltip-when-elided="true" name="RemoveRow" class="toolbox tool-button" />
-                <ui:Button text="Clone Column" display-tooltip-when-elided="true" name="CloneCol" class="toolbox tool-button" />
-                <ui:Button text="Remove Column" display-tooltip-when-elided="true" name="RemoveCol" class="toolbox tool-button" />
-                <ui:Button text="Solid" display-tooltip-when-elided="true" name="Solid" class="toolbox tool-button" />
-                <ui:Button text="Slope" display-tooltip-when-elided="true" name="Slope" class="toolbox tool-button" />
-                <ui:Button text="Hidden" display-tooltip-when-elided="true" name="Hidden" class="toolbox tool-button" />
-                <ui:Button text="Clear Marks" display-tooltip-when-elided="true" name="ClearMarks" class="toolbox tool-button" />
-                <ui:Button text="Add Mark" display-tooltip-when-elided="true" name="AddMark" class="toolbox tool-button" />
-                <ui:DropdownField index="0" choices="Difficult,Dangerous,Pit,Interactive,Impassable,Other" name="MarkField" class="no-margin" style="display: none;" />
-                <ui:TextField picking-mode="Ignore" value="Tile Mark" name="OtherMark" class="no-margin" style="display: none;" />
+                <ui:Foldout text="Terrain" value="false">
+                    <ui:Button text="Add Block" display-tooltip-when-elided="true" name="AddBlock" class="toolbox tool-button" />
+                    <ui:Button text="Remove Block" display-tooltip-when-elided="true" name="RemoveBlock" class="toolbox tool-button" />
+                    <ui:Button text="Clone Row" display-tooltip-when-elided="true" name="CloneRow" class="toolbox tool-button" />
+                    <ui:Button text="Remove Row" display-tooltip-when-elided="true" name="RemoveRow" class="toolbox tool-button" />
+                    <ui:Button text="Clone Column" display-tooltip-when-elided="true" name="CloneCol" class="toolbox tool-button" />
+                    <ui:Button text="Remove Column" display-tooltip-when-elided="true" name="RemoveCol" class="toolbox tool-button" />
+                </ui:Foldout>
+                <ui:Foldout text="Tile Shapes" value="false">
+                    <ui:Button text="Solid" display-tooltip-when-elided="true" name="Solid" class="toolbox tool-button" />
+                    <ui:Button text="Slope" display-tooltip-when-elided="true" name="Slope" class="toolbox tool-button" />
+                    <ui:Button text="Hidden" display-tooltip-when-elided="true" name="Hidden" class="toolbox tool-button" />
+                </ui:Foldout>
+                <ui:Foldout text="Tile Effects" value="false">
+                    <ui:Button text="Clear Effects" display-tooltip-when-elided="true" name="ClearMarks" class="toolbox tool-button" />
+                    <ui:Button text="Set Effect" display-tooltip-when-elided="true" name="AddMark" class="toolbox tool-button" />
+                    <ui:DropdownField index="0" choices="Difficult,Dangerous,Pit,Interactive,Impassable,Custom" name="MarkField" class="no-margin" style="display: flex;" />
+                    <ui:TextField picking-mode="Ignore" value=" Custom Effect" name="OtherMark" class="no-margin" style="display: flex;" />
+                </ui:Foldout>
+                <ui:Foldout text="Colors" value="false" focusable="true">
+                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                        <ui:Label tabindex="-1" text="Tile Tops" display-tooltip-when-elided="true" style="flex-grow: 1;" />
+                        <ui:VisualElement name="Color1" style="background-color: rgb(62, 113, 62); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                        <ui:Label tabindex="-1" text="Tile Sides" display-tooltip-when-elided="true" style="flex-grow: 1;" />
+                        <ui:VisualElement name="Color2" style="background-color: rgb(111, 90, 60); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                        <ui:Label tabindex="-1" text="Background Top" display-tooltip-when-elided="true" style="flex-grow: 1;" />
+                        <ui:VisualElement name="Color3" style="background-color: rgb(71, 69, 113); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                        <ui:Label tabindex="-1" text="Background Bottom" display-tooltip-when-elided="true" style="flex-grow: 1;" />
+                        <ui:VisualElement name="Color4" style="background-color: rgb(0, 16, 34); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
+                    </ui:VisualElement>
+                </ui:Foldout>
+            </ui:VisualElement>
+            <ui:VisualElement name="ColorSidebar" class="panel" style="position: relative; margin-bottom: 0; display: none;">
+                <ui:Label tabindex="-1" text="COLOR EDIT" display-tooltip-when-elided="true" class="panel-header" />
+                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                    <ui:Label tabindex="-1" text="R" display-tooltip-when-elided="true" style="width: 20px;" />
+                    <ui:SliderInt picking-mode="Ignore" value="0" high-value="255" show-input-field="true" name="EditRed" class="no-margin" style="flex-grow: 1;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
+                    <ui:Label tabindex="-1" text="G" display-tooltip-when-elided="true" style="width: 20px;" />
+                    <ui:SliderInt picking-mode="Ignore" value="0" high-value="255" show-input-field="true" name="EditGreen" class="no-margin" style="flex-grow: 1;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
+                    <ui:Label tabindex="-1" text="B" display-tooltip-when-elided="true" style="width: 20px;" />
+                    <ui:SliderInt picking-mode="Ignore" value="0" high-value="255" show-input-field="true" name="EditBlue" class="no-margin" style="flex-grow: 1;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: space-between; margin-top: 4px;">
+                    <ui:Label tabindex="-1" text="Hexadecimal" display-tooltip-when-elided="true" />
+                    <ui:TextField picking-mode="Ignore" value="#000000" name="EditColorHex" class="no-margin" />
+                </ui:VisualElement>
+                <ui:Button text="Done" display-tooltip-when-elided="true" name="CloseColorSidebar" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

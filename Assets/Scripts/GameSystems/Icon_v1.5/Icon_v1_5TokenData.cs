@@ -91,6 +91,8 @@ public class Icon_v1_5TokenData : TokenData
     public int Defense;
     public bool Elite;
 
+    public int Size;
+
     void Start() {      
     }
 
@@ -137,6 +139,7 @@ public class Icon_v1_5TokenData : TokenData
         Class = raw.Class;
         Job = raw.Job;
         Elite = raw.Elite;
+        Size = raw.Size;
         SetStats(raw.Elite, raw.LegendHP);
     }
 
@@ -155,6 +158,11 @@ public class Icon_v1_5TokenData : TokenData
         Element.Q("ClassBackground").style.borderRightColor = c;
         Element.Q("ClassBackground").style.borderBottomColor = c;
         Element.Q("ClassBackground").style.borderLeftColor = c;
+    }
+
+    public override int GetSize()
+    {
+        return Size;
     }
 
     public void UpdateSelectedTokenPanel() {

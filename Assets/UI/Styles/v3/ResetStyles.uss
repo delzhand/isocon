@@ -61,7 +61,7 @@
 
 .unity-foldout {
     margin-bottom: 4px;
-    min-width: 280px;
+    width: 100%;
 }
 
 .unity-foldout__toggle {
@@ -74,7 +74,7 @@
 }
 
 .unity-foldout__input {
-    background-color: rgba(0, 0, 0, 0.75);
+    background-color: rgba(55, 55, 55, 1);
     padding-left: 4px;
     padding-right: 4px;
     padding-top: 2px;
