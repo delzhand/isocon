@@ -1,13 +1,19 @@
+using System.IO;
+using System.Linq;
+using System.Net;
 using Mirror;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class ConnectionSidebar : MonoBehaviour
 {
+    public static string LocalIP;
+
     NetworkManager manager;
 
     void Awake()
     {
+        LocalIP = GetLocalIP();
         manager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
 
         UI.System.Q<TextField>("JoinAddress").RegisterValueChangedCallback<string>((evt) => {
@@ -48,7 +54,8 @@ public class ConnectionSidebar : MonoBehaviour
     void Update() {
         if (NetworkServer.active && NetworkClient.active)
         {
-            UI.System.Q<Label>("ConnectionStatus").text = $"<b>Host</b>: running via {Transport.active}";
+            // UI.System.Q<Label>("ConnectionStatus").text = $"<b>Host</b>: running via {Transport.active}";
+            UI.System.Q<Label>("ConnectionStatus").text = $"<b>Host</b>: running via {Transport.active}<br>Local IP: {LocalIP}";
         }
         else if (NetworkServer.active)
         {
@@ -80,4 +87,10 @@ public class ConnectionSidebar : MonoBehaviour
             UI.ToggleDisplay("ConnectingSection", false);
         }  
     }
+
+    public static string GetLocalIP() {
+        return Dns.GetHostEntry(Dns.GetHostName()).AddressList.First(
+            f => f.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+        .ToString();
+    }  
 }

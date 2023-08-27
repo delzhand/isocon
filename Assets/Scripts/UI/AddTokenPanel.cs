@@ -9,6 +9,9 @@ using UnityEngine.UIElements;
 
 public class AddTokenPanel : MonoBehaviour
 {
+
+    private bool HasGraphics = false;
+
     void Awake() {
         UI.SetBlocking(UI.System, new string[]{"AddTokenPanel"});
 
@@ -22,8 +25,16 @@ public class AddTokenPanel : MonoBehaviour
         UI.System.Q("AddTokenSaveCreateButton").RegisterCallback<ClickEvent>(SaveCreateToken);
         UI.System.Q("AddTokenCancelButton").RegisterCallback<ClickEvent>(ClosePanel);
 
+        UpdatePathHelp();
+    }
+
+    void Update() {
+        UI.ToggleDisplay("AddTokenCreateButton", HasGraphics);
+    }
+
+    public static void UpdatePathHelp() {
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
-        UI.System.Q<Label>("DataPath").text = "Graphics for tokens should be placed in " + path + "/tokens/";
+        UI.System.Q<Label>("DataPath").text = "Graphics for tokens should be placed in " + path + "\tokens";
     }
 
     private void CreateToken(ClickEvent evt) {
@@ -42,12 +53,25 @@ public class AddTokenPanel : MonoBehaviour
 
     private void UpdateGraphicsList() {
         List<string> customGraphics = GetCustomGraphics();
-        UI.System.Q<DropdownField>("GraphicDropdown").choices = customGraphics;
-        UI.System.Q<DropdownField>("GraphicDropdown").value = customGraphics[0];
+        if (customGraphics.Count > 0) {
+            HasGraphics = true;
+            UI.System.Q<DropdownField>("GraphicDropdown").choices = customGraphics;
+            UI.System.Q<DropdownField>("GraphicDropdown").value = customGraphics[0];
+        }
+        else {
+            HasGraphics = false;
+        }
     }
 
     private List<string> GetCustomGraphics() {
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        if (!Directory.Exists(path + "/tokens")) {
+            Directory.CreateDirectory(path + "/tokens");
+        }
+        if (!Directory.Exists(path + "/remote-tokens")) {
+            Directory.CreateDirectory(path + "/remote-tokens");
+        }
+
         List<string> graphics = new() { };
         DirectoryInfo info = new(path + "/tokens/");
         if (info.Exists) {

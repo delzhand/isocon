@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -79,10 +80,10 @@ public class TextureSender : MonoBehaviour
 
             // Save image to disk
             string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
-            byte[] bytes = Image.EncodeToPNG();
             if (!Directory.Exists(path + "/remote-tokens")) {
               Directory.CreateDirectory(path + "/remote-tokens");
             }
+            byte[] bytes = Image.EncodeToPNG();
             File.WriteAllBytes(path + "/remote-tokens/" + Hash + ".png", bytes);
         }        
     }
@@ -113,24 +114,39 @@ public class TextureSender : MonoBehaviour
     
     public static Texture2D LoadImageFromFile(string imageSource, bool isHash)
     {
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
-        if (!isHash) {
-            path = path + "/tokens/" + imageSource;
+        if (isHash) {
+            return HandleRemote(imageSource);
         }
         else {
-            path = path + "/remote-tokens/" + imageSource + ".png";
+            return HandleLocal(imageSource);
+        }
+    }
+
+    private static Texture2D HandleLocal(string filename) {
+        // Load Image
+        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        path = path + "/tokens/" + filename;
+        byte[] imageData = File.ReadAllBytes(path);
+        Texture2D texture = new Texture2D(2, 2);
+        texture.LoadImage(imageData);
+
+        // Share to host
+        Send(texture);
+        
+        return texture;
+    }
+
+    private static Texture2D HandleRemote(string hash) {
+        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        path = path + "/remote-tokens/" + hash + ".png";
+        if (!File.Exists(path)) {
+            // Retrieve from host
+            Player.Self().CmdRequestImage(hash);
         }
         byte[] imageData = File.ReadAllBytes(path);
         Texture2D texture = new Texture2D(2, 2);
-        if (texture.LoadImage(imageData))
-        {
-            return texture;
-        }
-        else
-        {
-            Debug.LogError("Failed to load image into Texture2D.");
-            return null;
-        }
+        texture.LoadImage(imageData);
+        return texture;
     }
 
     public static Texture2D CopyLocalImage(string filename) {

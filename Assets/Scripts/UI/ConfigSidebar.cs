@@ -14,6 +14,7 @@ public class ConfigSidebar : MonoBehaviour
         UI.System.Q<TextField>("DataPathField").value = path;
         UI.System.Q<TextField>("DataPathField").RegisterValueChangedCallback<string>((evt) => {
             PlayerPrefs.SetString("DataFolder", evt.newValue);
+            AddTokenPanel.UpdatePathHelp();
         });
 
         string uiScale = PlayerPrefs.GetString("UIScale", "100%");

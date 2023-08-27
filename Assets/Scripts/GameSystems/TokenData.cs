@@ -44,10 +44,12 @@ public class TokenData : NetworkBehaviour
         }
         if (!initialized && GraphicHash.Length > 0) {
             Graphic = TextureSender.LoadImageFromFile(GraphicHash, true);
-            CreateWorldToken();
-            CreateUnitBarItem();
-            CreateOverhead();
-            initialized = true;
+            if (Graphic) {
+                CreateWorldToken();
+                CreateUnitBarItem();
+                CreateOverhead();
+                initialized = true;
+            }
         }
 
         if (TokenObject) {

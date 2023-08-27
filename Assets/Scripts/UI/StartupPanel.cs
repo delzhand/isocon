@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using Mirror;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -32,10 +34,14 @@ public class StartupPanel : MonoBehaviour
         });
 
         UI.System.Q<Button>("ClientModeButton").RegisterCallback<ClickEvent>((evt) => {
+            Toast.Add("Connecting to " + manager.networkAddress);
             manager.StartClient();
             UI.ToggleDisplay("StartupPanel", false);
             UI.ToggleDisplay("Frame", true);
             UI.ToggleDisplay("BottomBar", true);
+        });
+        UI.System.Q<TextField>("HostAddress").RegisterValueChangedCallback<string>((evt) => {
+            manager.networkAddress = evt.newValue;
         });
 
         string system = PlayerPrefs.GetString("System", "Generic");
@@ -62,4 +68,6 @@ public class StartupPanel : MonoBehaviour
         UI.ToggleDisplay("Frame", false);
         UI.ToggleDisplay("BottomBar", false);
     }
+
+
 }

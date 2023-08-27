@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public enum PlayerRole {
@@ -31,6 +32,7 @@ public class Player : NetworkBehaviour
                 Role = PlayerRole.GM;
             }
             Name = PlayerPrefs.GetString("PlayerName", "New Player");
+
             if (NetworkServer.active && NetworkClient.active) {
                 Host = true;
 
@@ -50,6 +52,7 @@ public class Player : NetworkBehaviour
         VisualElement instance = template.Instantiate();
         UI.System.Q("PlayerList").Add(instance);
         PlayerReference pRef = new GameObject(Name + " Reference").AddComponent<PlayerReference>();
+        Toast.Add(Name + " connected.");
         pRef.player = this;
         pRef.visualElement = instance;
 
@@ -172,6 +175,11 @@ public class Player : NetworkBehaviour
     #endregion
 
     #region Images
+    [Command]
+    public void CmdRequestImage(string hash) {
+        Texture2D graphic = TextureSender.LoadImageFromFile(hash, true);
+        TextureSender.Send(graphic);
+    }
     [Command]
     public void CmdSendTextureChunks(string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height)
     {
