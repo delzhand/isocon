@@ -17,6 +17,12 @@ public class PlayerController : NetworkBehaviour
         base.OnStartClient();
     }
 
+    public override void OnStopServer()
+    {
+        base.OnStopServer();
+        Toast.Add("Host disconnected.");
+    }
+
     public static void Disconnect() {
         Toast.Add("Disconnected.");
         UI.System.Q("PlayerList").Clear();

@@ -142,18 +142,16 @@ public class Player : NetworkBehaviour
         }
     }
     [Command]
-    public void CmdMoveToken(GameObject g, Vector3 v, bool immediate) {
-        DoMoveToken(g, v, immediate);
+    public void CmdMoveToken(GameObject dataObject, Vector3 v, bool immediate) {
+        DoMoveToken(dataObject, v, immediate);
     }
-    private void DoMoveToken(GameObject g, Vector3 v, bool immediate) {
-        g.transform.localScale = Vector3.one;
-        // gameObject.SetActive(true);
-
+    private void DoMoveToken(GameObject dataObject, Vector3 v, bool immediate) {
+        dataObject.transform.localScale = Vector3.one;
         if (immediate) {
-            g.transform.position = v;
+            dataObject.transform.position = v;
         }
         else {
-            MoveLerp.Create(g, v);
+            MoveLerp.Create(dataObject, v);
         }
     }
     #endregion

@@ -99,14 +99,17 @@ public class TerrainController : MonoBehaviour
         }
     }
 
-    public static void InitializeTerrain(int length, int width, int height) {
-        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < blocks.Length; i++) {
-            GameObject.Destroy(blocks[i].transform.parent.gameObject);
+    public static void DestroyAllBlocks() {        
+        foreach (Transform child in GameObject.Find("Terrain").transform) {
+        	GameObject.Destroy(child.gameObject);
         }
+    }
+
+    public static void InitializeTerrain(int length, int width, int height) {
         if (map == null) {
             map = GameObject.Find("Terrain");
         }
+        DestroyAllBlocks();
         for (int y = 0; y < width; y++) {
             for (int x = 0; x < length; x++) {
                 try {

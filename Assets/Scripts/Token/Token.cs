@@ -12,8 +12,6 @@ using UnityEngine.UIElements;
 
 public class Token : MonoBehaviour
 {
-    // private bool OnField = false;
-
     public int Size = 1;
     public Texture2D Image;
 

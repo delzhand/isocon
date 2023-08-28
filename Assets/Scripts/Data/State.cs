@@ -20,22 +20,21 @@ public class State
 
     public string[] Blocks;
 
-    public static string FullFilePath(string fileName) {
-        return Application.persistentDataPath + "/maps/" + fileName;
-    }
-
     public static void SaveState(string fileName) {
+        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        if (fileName.IndexOf(".json") < 0) {
+            fileName += ".json";
+        }
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
-        Debug.Log(json);
-        string fullFileName = State.FullFilePath(fileName).Replace(".json", "") + ".json";
-        File.WriteAllText(fullFileName, json);
-        Toast.Add("Map saved to " + fullFileName);
+        string fullPath = path + "/maps/" + fileName;
+        File.WriteAllText(fullPath, json);
+        Toast.Add("Map saved to " + fullPath);
     }
 
     public static void LoadState(string fileName) {
-        string fullFileName = State.FullFilePath(fileName).Replace(".json", "") + ".json";
-        string json = File.ReadAllText(fullFileName);
+        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        string json = File.ReadAllText(path + "/maps/" + fileName);
         State state = JsonUtility.FromJson<State>(json);
         SetSceneFromState(state);
         Toast.Add("Map loaded.");
@@ -59,15 +58,14 @@ public class State
     }
 
     public static void SetSceneFromState(State state) {
-        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < blocks.Length; i++) {
-            GameObject.Destroy(blocks[i]);
-        }
+        TerrainController.DestroyAllBlocks();
+        Debug.Log(GameObject.FindGameObjectsWithTag("Block").Length);
         Environment.SetTileColors(ColorSidebar.FromHex(state.Color1), ColorSidebar.FromHex(state.Color2));
         Environment.SetBackgroundColors(ColorSidebar.FromHex(state.Color3), ColorSidebar.FromHex(state.Color4));
         foreach (string s in state.Blocks) {
             Block.FromString(state.Version, s);
         }
+        Debug.Log(GameObject.FindGameObjectsWithTag("Block").Length);
         TerrainController.Reorg();
     }
 }

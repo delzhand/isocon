@@ -98,7 +98,7 @@
         <ui:Label tabindex="-1" text="Comeback" display-tooltip-when-elided="true" class="section-header" />
         <ui:Label tabindex="-1" text="A triggered effect that happens when this ability is used while bloodied" display-tooltip-when-elided="true" style="font-size: 14px; max-width: 240px; white-space: normal; -unity-font-style: bold;" />
     </ui:VisualElement>
-    <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: none;">
+    <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: flex;">
         <ui:VisualElement name="Toggles" style="background-color: rgba(0, 0, 0, 0);">
             <ui:Button display-tooltip-when-elided="true" name="ConnectionToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/network&apos;); width: 28px; height: 28px;" />
             <ui:Button display-tooltip-when-elided="true" name="PlayersToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/players&apos;); width: 28px; height: 28px;" />
@@ -298,11 +298,23 @@
                 <ui:DropdownField index="-1" name="SessionField" class="no-margin" />
                 <ui:Button text="New Session" display-tooltip-when-elided="true" name="NewSessionButton" style="margin-top: 2px;" />
             </ui:VisualElement>
-            <ui:VisualElement name="MapSidebar" class="panel" style="position: relative; left: auto; top: auto; display: none; min-height: auto;">
+            <ui:VisualElement name="MapSidebar" class="panel" style="position: relative; left: auto; top: auto; display: flex; min-height: auto;">
                 <ui:Label tabindex="-1" text="MAP" display-tooltip-when-elided="true" class="panel-header" />
-                <ui:Button text="Create New Map" display-tooltip-when-elided="true" name="NewMapButton" style="margin-top: 2px; margin-bottom: 4px; display: flex;" />
-                <ui:Button text="Load Map" display-tooltip-when-elided="true" name="LoadMapButton" style="margin-top: 2px; display: flex;" />
-                <ui:DropdownField index="-1" name="MapField" class="no-margin" style="display: none;" />
+                <ui:VisualElement name="MapDefaultButtons" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <ui:Button text="Create New Map" display-tooltip-when-elided="true" name="NewMapButton" style="margin-top: 2px; margin-bottom: 4px; display: flex;" />
+                    <ui:Button text="Save Map" display-tooltip-when-elided="true" name="SaveMapButton" style="margin-top: 2px; margin-bottom: 4px; display: none;" />
+                    <ui:Button text="Load Map" display-tooltip-when-elided="true" name="LoadMapButton" style="margin-top: 2px; display: flex;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="MapLoading" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <ui:DropdownField index="0" name="MapDropdown" class="no-margin" style="display: flex;" />
+                    <ui:Button text="Cancel" display-tooltip-when-elided="true" name="CancelLoadButton" style="margin-right: 0; margin-top: 4px;" />
+                    <ui:Button text="Confirm" display-tooltip-when-elided="true" name="ConfirmLoadButton" style="margin-right: 0; margin-top: 4px;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="MapSaving" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <ui:TextField picking-mode="Ignore" value="filler text" name="MapNameField" class="no-margin" />
+                    <ui:Button text="Cancel" display-tooltip-when-elided="true" name="CancelSaveButton" style="margin-right: 0; margin-top: 4px;" />
+                    <ui:Button text="Confirm" display-tooltip-when-elided="true" name="ConfirmSaveButton" style="margin-right: 0; margin-top: 4px;" />
+                </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="ConfigSidebar" class="panel" style="position: relative; left: auto; top: auto; display: none;">
                 <ui:Label tabindex="-1" text="CONFIG" display-tooltip-when-elided="true" class="panel-header" />

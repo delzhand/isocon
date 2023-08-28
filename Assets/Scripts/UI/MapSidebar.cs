@@ -6,8 +6,11 @@ using UnityEngine.UIElements;
 
 public class MapSidebar : MonoBehaviour
 {
-    public static string MapFile;
+    public static string MapFile = "";
     private static List<string> editOps = new List<string>();
+
+    private bool isLoading = false;
+    private bool isSaving = false;
 
     void Awake() {
         UI.System.Q<Button>("MapToggle").RegisterCallback<ClickEvent>((evt) => {
@@ -16,48 +19,62 @@ public class MapSidebar : MonoBehaviour
 
         Refresh();
 
-        // UI.System.Q<Button>("LoadMapButton").RegisterCallback<ClickEvent>((evt) => {
-        //     MapFile = UI.System.Q<DropdownField>("MapField").value;
-        //     LoadMap();
-        //     Toast.Add(MapFile + " loaded.");
-        // });
+        UI.System.Q<Button>("LoadMapButton").RegisterCallback<ClickEvent>((evt) => {
+            Refresh();
+            isLoading = true;
+        });
 
         UI.System.Q<Button>("NewMapButton").RegisterCallback<ClickEvent>((evt) =>  {
+            MapFile = "untitled.json";
             TerrainController.InitializeTerrain(8, 8, 1);
             Toast.Add("New map initialized.");
             UI.ToggleDisplay("MapSidebar", false);
+            // Player.Self().CmdRequestSession();
+        });
 
-            // MapFile = UI.System.Q<TextField>("NewMapField").value;
-            // Debug.Log("new map " + MapFile);
+        UI.System.Q<Button>("ConfirmLoadButton").RegisterCallback<ClickEvent>((evt) =>  {
+            MapFile = UI.System.Q<DropdownField>("MapDropdown").value;
+            State.LoadState(MapFile);
+            isLoading = false;
+            UI.ToggleDisplay("MapSidebar", false);
+            // Player.Self().CmdRequestSession();
         });
 
 
-        // UI.System.Q<Button>("SaveMapButton").RegisterCallback<ClickEvent>((evt) => {
-        //     Debug.Log("save map " + MapFile);
-        // });
+        UI.System.Q<Button>("SaveMapButton").RegisterCallback<ClickEvent>((evt) => {
+            isSaving = true;
+            UI.System.Q<TextField>("MapNameField").value = MapFile;
+        });
+
+        UI.System.Q<Button>("ConfirmSaveButton").RegisterCallback<ClickEvent>((evt) => {
+            MapFile = UI.System.Q<TextField>("MapNameField").value;
+            State.SaveState(MapFile);
+            Toast.Add(MapFile + " saved.");
+            isSaving = false;
+        });
+
+        UI.System.Q<Button>("CancelSaveButton").RegisterCallback<ClickEvent>((evt) => {
+            isSaving = false;
+        });
 
     }
 
     void Update() {
-        // if (!Player.IsGM()) {
-        //     UI.ToggleDisplay("MapToggle", false);
-        //     UI.ToggleDisplay("MapSidebar", false);
-        //     return;
-        // }
-        // else {
-        //     UI.ToggleDisplay("MapToggle", true);
-        //     UI.ToggleDisplay("MapSidebar", true);
-        // }        
+        UI.ToggleDisplay("SaveMapButton", MapFile.Length > 0);
+        UI.ToggleDisplay("MapDefaultButtons", !isLoading && !isSaving);
+        UI.ToggleDisplay("MapLoading", isLoading);
+        UI.ToggleDisplay("MapSaving", isSaving);
     }
 
     public void Refresh() {
         List<string> mapFiles = GetMapFiles();
         if (mapFiles.Count == 0) {
             UI.ToggleDisplay("LoadMapButton", false);
-            UI.ToggleDisplay("MapField", false);
+            UI.ToggleDisplay("MapDropdown", false);
         }
         else {
-            UI.System.Q<DropdownField>("MapField").choices = mapFiles;
+            UI.System.Q<DropdownField>("MapDropdown").choices = mapFiles;
+            UI.System.Q<DropdownField>("MapDropdown").value = mapFiles[0];
         }
     }
 
