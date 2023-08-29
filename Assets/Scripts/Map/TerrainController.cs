@@ -110,7 +110,6 @@ public class TerrainController : MonoBehaviour
 
     public static void DestroyAllBlocks() {        
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("Block")) {
-            Debug.Log("destroy " + g.name, g);
             GameObject.Destroy(g);
         }
     }

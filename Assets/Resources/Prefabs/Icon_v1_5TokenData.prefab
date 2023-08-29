@@ -69,6 +69,7 @@ MonoBehaviour:
   Name: 
   GraphicHash: 
   Json: 
+  OnField: 0
   TokenObject: {fileID: 0}
   Graphic: {fileID: 0}
   Class: 
@@ -86,6 +87,7 @@ MonoBehaviour:
   Dash: 0
   Defense: 0
   Elite: 0
+  Size: 0
 --- !u!114 &1685289110476563904
 MonoBehaviour:
   m_ObjectHideFlags: 0

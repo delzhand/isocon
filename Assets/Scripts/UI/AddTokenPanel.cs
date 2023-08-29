@@ -26,6 +26,14 @@ public class AddTokenPanel : MonoBehaviour
         UI.System.Q("AddTokenCancelButton").RegisterCallback<ClickEvent>(ClosePanel);
 
         UpdatePathHelp();
+
+        UI.SetBlocking(UI.System, new string[]{"DebugPanel"});
+        UI.System.Q<Button>("DebugButton").RegisterCallback<ClickEvent>((evt) => {
+            foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
+                g.GetComponent<TokenData>().OnField = true;
+                g.GetComponent<Icon_v1_5TokenData>().CurrentHP -= 1;
+            }
+        });
     }
 
     void Update() {

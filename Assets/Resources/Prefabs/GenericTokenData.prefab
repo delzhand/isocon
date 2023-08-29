@@ -69,10 +69,12 @@ MonoBehaviour:
   Name: 
   GraphicHash: 
   Json: 
+  OnField: 0
   TokenObject: {fileID: 0}
   Graphic: {fileID: 0}
   CurrentHP: 0
   MaxHP: 0
+  Size: 0
 --- !u!114 &-3312540380049564775
 MonoBehaviour:
   m_ObjectHideFlags: 0

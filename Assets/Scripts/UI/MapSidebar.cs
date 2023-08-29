@@ -62,6 +62,13 @@ public class MapSidebar : MonoBehaviour
     }
 
     void Update() {
+        if (!Player.IsGM()) {
+            UI.ToggleDisplay("MapToggle", false);
+            UI.ToggleDisplay("MapSidebar", false);
+        }
+        else {
+            UI.ToggleDisplay("MapToggle", true);
+        }
         UI.ToggleDisplay("SaveMapButton", MapFile.Length > 0);
         UI.ToggleDisplay("MapDefaultButtons", !isLoading && !isSaving);
         UI.ToggleDisplay("MapLoading", isLoading);

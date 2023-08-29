@@ -98,7 +98,10 @@
         <ui:Label tabindex="-1" text="Comeback" display-tooltip-when-elided="true" class="section-header" />
         <ui:Label tabindex="-1" text="A triggered effect that happens when this ability is used while bloodied" display-tooltip-when-elided="true" style="font-size: 14px; max-width: 240px; white-space: normal; -unity-font-style: bold;" />
     </ui:VisualElement>
-    <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: flex;">
+    <ui:VisualElement name="OfflineIndicator" style="background-color: rgb(113, 0, 0); position: relative; width: 100%; height: 30px;">
+        <ui:Label tabindex="-1" text="Offline" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: bold;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: none;">
         <ui:VisualElement name="Toggles" style="background-color: rgba(0, 0, 0, 0);">
             <ui:Button display-tooltip-when-elided="true" name="ConnectionToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/network&apos;); width: 28px; height: 28px;" />
             <ui:Button display-tooltip-when-elided="true" name="PlayersToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/players&apos;); width: 28px; height: 28px;" />
@@ -414,8 +417,9 @@
             <ui:Button text="Cancel" display-tooltip-when-elided="true" name="AddTokenCancelButton" class="modal-button" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement class="panel" style="position: absolute; left: 394px; top: 214px; display: none;">
+    <ui:VisualElement name="DebugPanel" class="panel" style="position: absolute; left: 277px; top: 78px; display: none;">
         <ui:Label tabindex="-1" text="DEBUG" display-tooltip-when-elided="true" class="panel-header" />
         <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="DebugOutput" />
+        <ui:Button text="Debug" display-tooltip-when-elided="true" name="DebugButton" />
     </ui:VisualElement>
 </ui:UXML>

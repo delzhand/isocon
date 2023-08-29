@@ -12,7 +12,6 @@ public class GenericTokenDataRaw
     public int CurrentHP;
     public int MaxHP;
     public string GraphicHash;
-
     public int Size;
 
     public static string ToJson() {

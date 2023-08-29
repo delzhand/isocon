@@ -44,7 +44,6 @@ public class Player : NetworkBehaviour
                     Destroy(otd.TokenObject);
                     Player.CreateTokenData(otd.Json, position);
                 }
-
             }
         } 
 
