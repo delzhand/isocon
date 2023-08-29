@@ -72,8 +72,8 @@ public class Player : NetworkBehaviour
                 UI.ToggleDisplay(instance.Q("PlayerNameEdit"), false);
             });
 
-            // // Request session data from host
-            // CmdRequestSession();
+            // Request session data from host
+            CmdRequestMapSync();
         }
     }
 
@@ -158,17 +158,16 @@ public class Player : NetworkBehaviour
 
     #region Session Init
     [Command]
-    public void CmdRequestSession() {
+    public void CmdRequestMapSync() {
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
-        RpcDrawMap(json);
+        RpcMapSync(json);
     }
     [ClientRpc]
-    public void RpcDrawMap(string json) {
+    public void RpcMapSync(string json) {
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
         Toast.Add("Map synced.");
-        TimedReorgHack.Add();
     }
     #endregion
 

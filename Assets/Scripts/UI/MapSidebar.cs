@@ -29,7 +29,8 @@ public class MapSidebar : MonoBehaviour
             TerrainController.InitializeTerrain(8, 8, 1);
             Toast.Add("New map initialized.");
             UI.ToggleDisplay("MapSidebar", false);
-            // Player.Self().CmdRequestSession();
+            State.SetCurrentJson();
+            Player.Self().CmdRequestMapSync();
         });
 
         UI.System.Q<Button>("ConfirmLoadButton").RegisterCallback<ClickEvent>((evt) =>  {
@@ -37,7 +38,8 @@ public class MapSidebar : MonoBehaviour
             State.LoadState(MapFile);
             isLoading = false;
             UI.ToggleDisplay("MapSidebar", false);
-            // Player.Self().CmdRequestSession();
+            State.SetCurrentJson();
+            Player.Self().CmdRequestMapSync();
         });
 
 
@@ -64,6 +66,8 @@ public class MapSidebar : MonoBehaviour
         UI.ToggleDisplay("MapDefaultButtons", !isLoading && !isSaving);
         UI.ToggleDisplay("MapLoading", isLoading);
         UI.ToggleDisplay("MapSaving", isSaving);
+
+        // UI.System.Q<Label>("DebugOutput").text = GameObject.FindGameObjectsWithTag("Block").Length.ToString();
     }
 
     public void Refresh() {
@@ -99,7 +103,7 @@ public class MapSidebar : MonoBehaviour
     private void LoadMap() {
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
         string json = File.ReadAllText(path + "/maps/" + MapFile);
-        Player.Self().RpcDrawMap(json);
+        Player.Self().RpcMapSync(json);
     }
 
 }

@@ -20,6 +20,8 @@ public class State
 
     public string[] Blocks;
 
+    public static string CurrentStateJson;
+
     public static void SaveState(string fileName) {
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
         if (fileName.IndexOf(".json") < 0) {
@@ -38,7 +40,6 @@ public class State
         State state = JsonUtility.FromJson<State>(json);
         SetSceneFromState(state);
         Toast.Add("Map loaded.");
-        TimedReorgHack.Add();
     }
 
     public static State GetStateFromScene() {
@@ -59,13 +60,15 @@ public class State
 
     public static void SetSceneFromState(State state) {
         TerrainController.DestroyAllBlocks();
-        Debug.Log(GameObject.FindGameObjectsWithTag("Block").Length);
         Environment.SetTileColors(ColorSidebar.FromHex(state.Color1), ColorSidebar.FromHex(state.Color2));
         Environment.SetBackgroundColors(ColorSidebar.FromHex(state.Color3), ColorSidebar.FromHex(state.Color4));
         foreach (string s in state.Blocks) {
             Block.FromString(state.Version, s);
         }
-        Debug.Log(GameObject.FindGameObjectsWithTag("Block").Length);
-        TerrainController.Reorg();
+        TerrainController.ReorgNeeded = true;
+    }
+
+    public static void SetCurrentJson() {
+        CurrentStateJson = JsonUtility.ToJson(State.GetStateFromScene());
     }
 }

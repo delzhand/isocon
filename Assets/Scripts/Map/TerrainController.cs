@@ -14,6 +14,8 @@ public class TerrainController : MonoBehaviour
     public static bool Indicators = false;
     public static bool Editing = false;
 
+    public static bool ReorgNeeded = false;
+
     // void Start() {
     //     // registerCallbacks();
     //     // disableIndicators();
@@ -37,6 +39,13 @@ public class TerrainController : MonoBehaviour
     //             break;
     //     }
     // }
+
+    void LateUpdate() {
+        if (ReorgNeeded) {
+            Reorg();
+            ReorgNeeded = false;
+        }
+    }
 
     private void resetConditionalElements() {
         UI.System.Q("EditTerrainOptions").style.display = DisplayStyle.None;
@@ -100,27 +109,31 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void DestroyAllBlocks() {        
-        foreach (Transform child in GameObject.Find("Terrain").transform) {
-        	GameObject.Destroy(child.gameObject);
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Block")) {
+            Debug.Log("destroy " + g.name, g);
+            GameObject.Destroy(g);
         }
     }
 
     public static void InitializeTerrain(int length, int width, int height) {
+        DestroyAllBlocks();
         if (map == null) {
             map = GameObject.Find("Terrain");
         }
-        DestroyAllBlocks();
         for (int y = 0; y < width; y++) {
             for (int x = 0; x < length; x++) {
                 try {
-                    GameObject column = new GameObject();
-                    column.tag = "Column";
-                    column.name = x + "," + y;
-                    column.transform.parent = map.transform;
-                    column.transform.localPosition = new Vector3(x, 0, y);
-                    column.transform.localScale = Vector3.one;
-                    column.AddComponent<Column>().Set(x, y);
-
+                    string columnName = x + "," + y;
+                    GameObject column = GameObject.Find(columnName);
+                    if (column == null) {
+                        column = new GameObject();
+                        column.tag = "Column";
+                        column.name = columnName;
+                        column.transform.parent = map.transform;
+                        column.transform.localPosition = new Vector3(x, 0, y);
+                        column.transform.localScale = Vector3.one;
+                        column.AddComponent<Column>().Set(x, y);
+                    }
                     for (int z = 0; z < height; z++) {
                         GameObject block = Instantiate(Resources.Load("Prefabs/Block") as GameObject);
                         block.transform.parent = column.transform;
@@ -138,19 +151,12 @@ public class TerrainController : MonoBehaviour
                 }
             }
         }
-        Reorg();
+        ReorgNeeded = true;
     }
 
     public static void ResetTerrain() {
-        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < blocks.Length; i++) {
-            GameObject.Destroy(blocks[i]);
-        }
-        GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
-        for (int i = 0; i < columns.Length; i++) {
-            GameObject.Destroy(columns[i]);
-        }
-        InitializeTerrain(8, 8, 3);
+        // DestroyAllBlocks();
+        // InitializeTerrain(8, 8, 3);
     }
 
     public static Vector3 Center() {
@@ -205,7 +211,7 @@ public class TerrainController : MonoBehaviour
                 newblock.transform.localScale = block.transform.localScale;
             }
         });
-        Reorg();
+        ReorgNeeded = true;
     }
 
     public static void RemoveBlocks() {
@@ -219,7 +225,7 @@ public class TerrainController : MonoBehaviour
                 Toast.Add("Foundation blocks cannot be deleted (but can be hidden).", ToastType.Error);
             }
         });
-        Reorg();
+        ReorgNeeded = true;
     }
 
     public static void RotateBlocks() {
@@ -252,7 +258,7 @@ public class TerrainController : MonoBehaviour
                 }
             }
         });
-        Reorg();
+        ReorgNeeded = true;
     }
 
     public static void DeleteRow() {
@@ -274,7 +280,7 @@ public class TerrainController : MonoBehaviour
                 }
             }
         });
-        Reorg();
+        ReorgNeeded = true;
     }
 
     public static void CloneColumn() {
@@ -300,7 +306,7 @@ public class TerrainController : MonoBehaviour
                 }
             }
         });
-        Reorg();
+        ReorgNeeded = true;
     }
 
     public static void DeleteColumn() {
@@ -322,7 +328,7 @@ public class TerrainController : MonoBehaviour
                 }
             }
         });
-        Reorg();
+        ReorgNeeded = true;
     }
 
     public static void ChangeType(BlockType type) {

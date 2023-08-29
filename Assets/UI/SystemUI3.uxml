@@ -414,4 +414,8 @@
             <ui:Button text="Cancel" display-tooltip-when-elided="true" name="AddTokenCancelButton" class="modal-button" />
         </ui:VisualElement>
     </ui:VisualElement>
+    <ui:VisualElement class="panel" style="position: absolute; left: 394px; top: 214px; display: none;">
+        <ui:Label tabindex="-1" text="DEBUG" display-tooltip-when-elided="true" class="panel-header" />
+        <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="DebugOutput" />
+    </ui:VisualElement>
 </ui:UXML>
