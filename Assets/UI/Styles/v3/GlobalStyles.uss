@@ -36,6 +36,14 @@
     -unity-background-image-tint-color: rgba(255, 228, 0, 0.39);
 }
 
+.unit-menu-item .self-centered {
+    display: none;
+}
+
+.unit-menu-item.hover .self-centered {
+    display: flex;
+}
+
 .panel-header {
     -unity-font-style: bold;
     font-size: 8px;

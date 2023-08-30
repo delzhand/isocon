@@ -10,9 +10,16 @@ using System.Linq;
 using IsoconUILibrary;
 using System.Text;
 
+// public enum SelectedState {
+//     None,
+//     Selected,
+//     Moving,
+// }
+
 public class TokenController : MonoBehaviour
 {
     private static Token selected = null;
+
 
     public static void TokenClick(Token token) {
         if (token == null) {
@@ -50,17 +57,14 @@ public class TokenController : MonoBehaviour
     private static void Select(Token token) {
         selected = token;
         token.Select();
-        // UI.System.Q("SelectedTokenPanel").AddToClassList("active");
-        // SetEditPanelValues();
+        UnitMenu.ShowMenu(token.onlineDataObject.GetComponent<TokenData>());
     }
 
     public static void Deselect() {
         if (selected) {
+            UnitMenu.HideMenu();
             selected.Deselect();
             selected = null;
         }
-        // UI.System.Q("SelectedTokenPanel").RemoveFromClassList("active");
-        // UI.System.Q<SlideToggle>("TokenEditToggle").value = false;
-        // DisableFullEdit();
     }
 }
