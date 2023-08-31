@@ -60,6 +60,7 @@ public class CameraControl : MonoBehaviour
         UI.System.Q<Button>("EditButton").RegisterCallback<ClickEvent>((evt) => {
             bool val = !TerrainController.Editing;
             TerrainController.Editing = val;
+            Block.ToggleSpacers(val);
             if (val) {
                 UI.System.Q("EditButton").AddToClassList("active");
             }
