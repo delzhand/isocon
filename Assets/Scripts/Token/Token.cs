@@ -38,8 +38,18 @@ public class Token : MonoBehaviour
 
     public void BlockClick(Block block) {
         onlineDataObject.GetComponent<TokenData>().OnField = true;
+
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
-        Player.MoveToken(this, v);
+        switch (TokenController.SelectedState) {
+            case SelectedState.Placing:
+            UnitMenu.ClearCurrentActive();
+                Player.MoveToken(this, v);
+                SetNeutral();
+                break;
+            case SelectedState.Moving:
+                Player.MoveToken(this, v);
+                break;
+        }
     }
 
     public void Select(bool deselectOthers = false) {
@@ -52,11 +62,30 @@ public class Token : MonoBehaviour
         UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().Element.Q("Selected"), true); // selected indicator in unit bar
         UI.ToggleDisplay("SelectedTokenPanel", true); // selected token panel
         GameSystem.Current().UpdateSelectedTokenPanel(onlineDataObject);
+        SetNeutral();
     }
 
     public void Deselect() {
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
         UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().Element.Q("Selected"), false);
         UI.ToggleDisplay("SelectedTokenPanel", false);
+    }
+
+    public void SetPlacing() {
+        TokenController.SelectedState = SelectedState.Placing;
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1);
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 0);
+    }
+
+    public void SetMoving() {
+        TokenController.SelectedState = SelectedState.Moving;
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 1);
+    }
+
+    public void SetNeutral() {
+        TokenController.SelectedState = SelectedState.None;
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1);
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 0);
     }
 }

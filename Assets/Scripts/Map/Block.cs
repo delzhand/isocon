@@ -147,10 +147,8 @@ public class Block : MonoBehaviour
             return;            
         }
 
-        CameraControl.GoToBlock(this);
-        SetTerrainInfo();
-        // DeselectAll();
-        // Select();
+        // CameraControl.GoToBlock(this);
+        // SetTerrainInfo();
         TokenController.BlockClick(this);
     }
 

@@ -10,16 +10,17 @@ using System.Linq;
 using IsoconUILibrary;
 using System.Text;
 
-// public enum SelectedState {
-//     None,
-//     Selected,
-//     Moving,
-// }
+public enum SelectedState {
+    None,
+    Selected,
+    Moving,
+    Placing,
+}
 
 public class TokenController : MonoBehaviour
 {
     private static Token selected = null;
-
+    public static SelectedState SelectedState = SelectedState.None;
 
     public static void TokenClick(Token token) {
         if (token == null) {

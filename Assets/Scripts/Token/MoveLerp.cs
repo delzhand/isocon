@@ -38,6 +38,9 @@ public class MoveLerp : MonoBehaviour
     }
 
     public static void Create(GameObject g, Vector3 destination) {
+        if (Vector3.Distance(destination, g.transform.position) < .01f) {
+            return;
+        }
         MoveLerp ml = g.AddComponent<MoveLerp>();
         ml.Origin = g.transform.position;
         ml.Destination = destination;
