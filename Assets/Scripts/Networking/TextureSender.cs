@@ -142,6 +142,7 @@ public class TextureSender : MonoBehaviour
         if (!File.Exists(path)) {
             // Retrieve from host
             Player.Self().CmdRequestImage(hash);
+            return null;
         }
         byte[] imageData = File.ReadAllBytes(path);
         Texture2D texture = new Texture2D(2, 2);
