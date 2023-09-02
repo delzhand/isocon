@@ -52,6 +52,9 @@ public class Icon_v1_5TokenDataRaw
             "Huge (3)" => 3,
             _ => 1,
         };
+        if (!Icon_v1_5TokenData.IsFoe(raw.Class)) {
+            raw.Size = 1;
+        }
 
         DropdownField graphicField = UI.System.Q<DropdownField>("GraphicDropdown");
         Texture2D graphic = TextureSender.CopyLocalImage(graphicField.value);
@@ -203,7 +206,7 @@ public class Icon_v1_5TokenData : TokenData
         //     }
         // }
 
-        if (!IsFoe()) {
+        if (!IsFoe(Class)) {
             panel.Q<Label>("ResolveNum").text = Resolve.ToString();
             panel.Q<Label>("PartyResolveNum").text = "+" + GResolve.ToString();
             panel.Q<ProgressBar>("ResolveBar").value = Resolve + GResolve;
@@ -281,8 +284,8 @@ public class Icon_v1_5TokenData : TokenData
         panel.Q<Label>("StatDash").text = Dash.ToString();        
     }
 
-    private bool IsFoe() {
-        return Class switch
+    public static bool IsFoe(string jclass) {
+        return jclass switch
         {
             "Wright" or "Stalwart" or "Mendicant" or "Vagabond" => false,
             _ => true
