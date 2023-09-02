@@ -39,6 +39,7 @@ public class MapSidebar : MonoBehaviour
             isLoading = false;
             UI.ToggleDisplay("MapSidebar", false);
             State.SetCurrentJson();
+            Block.ToggleSpacers(false);
             Player.Self().CmdRequestMapSync();
         });
 
@@ -62,19 +63,20 @@ public class MapSidebar : MonoBehaviour
     }
 
     void Update() {
-        if (!Player.IsGM()) {
-            UI.ToggleDisplay("MapToggle", false);
-            UI.ToggleDisplay("MapSidebar", false);
-        }
-        else {
-            UI.ToggleDisplay("MapToggle", true);
-        }
         UI.ToggleDisplay("SaveMapButton", MapFile.Length > 0);
         UI.ToggleDisplay("MapDefaultButtons", !isLoading && !isSaving);
         UI.ToggleDisplay("MapLoading", isLoading);
         UI.ToggleDisplay("MapSaving", isSaving);
+    }
 
-        // UI.System.Q<Label>("DebugOutput").text = GameObject.FindGameObjectsWithTag("Block").Length.ToString();
+    public static void GMStart() {
+        UI.ToggleDisplay("MapToggle", true);
+        UI.ToggleDisplay("MapSidebar", true);
+    }
+
+    public static void ClientStart() {
+        UI.ToggleDisplay("MapToggle", false);
+        UI.ToggleDisplay("MapSidebar", false);
     }
 
     public void Refresh() {

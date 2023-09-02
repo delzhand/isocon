@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 public class GameSystem : MonoBehaviour
 {
     public static GameSystem Current() {
-        string system = PlayerPrefs.GetString("System", "Generic");
+        string system = PlayerPrefs.GetString("System", "ICON 1.5");
         switch (system) {
             case "ICON 1.5":
                 return GameObject.Find("GameSystem").GetComponent<Icon_v1_5>();

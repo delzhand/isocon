@@ -68,6 +68,9 @@ public class ColorSidebar : MonoBehaviour
     }
 
     public static Color FromHex(string hex) {
+        if (hex == null) {
+            return Color.white;
+        }
         hex = hex.Replace("#", "").ToUpper();
         if (hex.Length != 6)
         {

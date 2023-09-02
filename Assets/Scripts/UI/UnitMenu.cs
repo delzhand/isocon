@@ -21,6 +21,7 @@ public class UnitMenu : MonoBehaviour
         UI.ToggleDisplay("UnitMenu", Data != null);
         UI.ToggleDisplay("PlaceMenuItem", Data != null && !Data.OnField);
         UI.ToggleDisplay("RemoveMenuItem", Data != null && Data.OnField);
+        UI.ToggleDisplay("MoveMenuItem", Data != null && Data.OnField);
         UI.System.Q<VisualElement>("MoveMenuItem").Q<Label>().text = (TokenController.SelectedState == SelectedState.Moving) ? "Stop Moving" : "Move";
     }
 

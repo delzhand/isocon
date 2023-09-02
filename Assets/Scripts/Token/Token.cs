@@ -37,12 +37,12 @@ public class Token : MonoBehaviour
     }
 
     public void BlockClick(Block block) {
-        onlineDataObject.GetComponent<TokenData>().OnField = true;
-
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
         switch (TokenController.SelectedState) {
             case SelectedState.Placing:
-            UnitMenu.ClearCurrentActive();
+                onlineDataObject.GetComponent<TokenData>().OnField = true;
+                Player.MoveToken(this, v + new Vector3(0, 1f, 0), true);
+                UnitMenu.ClearCurrentActive();
                 Player.MoveToken(this, v);
                 SetNeutral();
                 break;

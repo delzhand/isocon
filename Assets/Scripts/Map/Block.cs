@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -314,6 +315,9 @@ public class Block : MonoBehaviour
         if (effects.Contains("Pit")) {
             markerMaterial.SetInt("_Pit", 1);
         }
+        if (HasOtherEffect()) {
+            markerMaterial.SetInt("_Other", 1);
+        }
         blockMaterials.Add(markerMaterial);
         
         // Selected
@@ -321,6 +325,15 @@ public class Block : MonoBehaviour
 
         // Apply
         mr.SetMaterials(blockMaterials);
+    }
+
+    private bool HasOtherEffect() {
+        for (int i = 0; i < effects.Count; i++) {
+            if (!(new string[]{"Impassable", "Pit", "Dangerous", "Difficult", "Interactive"}.Contains(effects[i]))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void ToggleSpacers(bool show) {

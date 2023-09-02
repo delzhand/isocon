@@ -8,7 +8,6 @@ using TMPro;
 
 public class TerrainController : MonoBehaviour
 {
-    static GameObject map;
     private List<Label> identifierLabels = new List<Label>();
 
     public static bool Indicators = false;
@@ -108,17 +107,17 @@ public class TerrainController : MonoBehaviour
         }
     }
 
-    public static void DestroyAllBlocks() {        
-        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Block")) {
-            GameObject.Destroy(g);
-        }
+    public static void DestroyAllBlocks() {
+        Debug.Log("DestroyAllBlocks");
+        GameObject terrain = GameObject.Find("Terrain");
+        terrain.name = "_Terrain";
+        GameObject.DestroyImmediate(terrain);
+        new GameObject("Terrain").transform.localScale = new Vector3(1, .5f, 1);
     }
 
     public static void InitializeTerrain(int length, int width, int height) {
         DestroyAllBlocks();
-        if (map == null) {
-            map = GameObject.Find("Terrain");
-        }
+        GameObject map = GameObject.Find("Terrain");
         for (int y = 0; y < width; y++) {
             for (int x = 0; x < length; x++) {
                 try {
@@ -129,6 +128,7 @@ public class TerrainController : MonoBehaviour
                         column.tag = "Column";
                         column.name = columnName;
                         column.transform.parent = map.transform;
+                        Debug.Log(map.name);
                         column.transform.localPosition = new Vector3(x, 0, y);
                         column.transform.localScale = Vector3.one;
                         column.AddComponent<Column>().Set(x, y);

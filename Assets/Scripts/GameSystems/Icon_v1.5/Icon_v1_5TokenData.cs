@@ -16,6 +16,7 @@ public class Icon_v1_5TokenDataRaw
     public bool Elite;
     public int LegendHP;
     public int Size;
+    public int ObjectHP;
     public string GraphicHash;
 
     public static string ToJson() {
@@ -32,6 +33,9 @@ public class Icon_v1_5TokenDataRaw
 
         Toggle eliteField = UI.System.Q<Toggle>("EliteToggle");
         raw.Elite = eliteField.value;
+        
+        IntegerField objHPField = UI.System.Q<IntegerField>("ObjectHPField");
+        raw.ObjectHP = objHPField.value;
 
         if (raw.Class == "Legend") {
             DropdownField legendHpField = UI.System.Q<DropdownField>("LegendHPDropdown");
@@ -52,7 +56,6 @@ public class Icon_v1_5TokenDataRaw
         DropdownField graphicField = UI.System.Q<DropdownField>("GraphicDropdown");
         Texture2D graphic = TextureSender.CopyLocalImage(graphicField.value);
         raw.GraphicHash = TextureSender.GetTextureHash(graphic);
-
 
 
         return JsonUtility.ToJson(raw);
@@ -140,7 +143,7 @@ public class Icon_v1_5TokenData : TokenData
         Job = raw.Job;
         Elite = raw.Elite;
         Size = raw.Size;
-        SetStats(raw.Elite, raw.LegendHP);
+        SetStats(raw.Elite, raw.LegendHP, raw.ObjectHP);
     }
 
     public override void CreateWorldToken() {
@@ -175,7 +178,6 @@ public class Icon_v1_5TokenData : TokenData
         panel.Q("ClassBackground").style.borderLeftColor = c;
 
         panel.Q("Portrait").style.backgroundImage = Graphic;
-        panel.Q("Portrait").style.width = Length.Percent(Graphic.width / (float)Graphic.height * 100);
 
         panel.Q<Label>("CHP").text = CurrentHP.ToString();
         panel.Q<Label>("MHP").text = "/" + MaxHP.ToString();
@@ -296,11 +298,12 @@ public class Icon_v1_5TokenData : TokenData
             "Leader" or "Mendicant" => new Color(.38f, .85f, .21f),
             "Legend" => new Color(.79f, .33f, .94f),
             "Mob" => new Color(.57f, .57f, .57f),
+            "Object" => Color.black,
             _ => throw new Exception(),
         };
     }
 
-    private void SetStats(bool elite, int legendHp) {
+    private void SetStats(bool elite, int legendHp, int objHp) {
         switch (Class) {
             case "Wright":
             case "Artillery":
@@ -359,6 +362,15 @@ public class Icon_v1_5TokenData : TokenData
                 Speed = 4;
                 Dash = 2;
                 Defense = 8;
+                break;
+            case "Object":
+                MaxHP = objHp;
+                Damage = 0;
+                Fray = 0;
+                Range = 0;
+                Speed = 0;
+                Dash = 0;
+                Defense = 0;
                 break;
         }
         if (elite) {

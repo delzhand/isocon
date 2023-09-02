@@ -50,10 +50,10 @@ public class State
         }
         State state = new State();
         state.Version = "v1";
-        state.Color1 = ColorSidebar.ColorToHex(UI.System.Q("Color1").resolvedStyle.backgroundColor);
-        state.Color2 = ColorSidebar.ColorToHex(UI.System.Q("Color2").resolvedStyle.backgroundColor);
-        state.Color3 = ColorSidebar.ColorToHex(UI.System.Q("Color3").resolvedStyle.backgroundColor);
-        state.Color4 = ColorSidebar.ColorToHex(UI.System.Q("Color4").resolvedStyle.backgroundColor);
+        state.Color1 = ColorSidebar.ColorToHex(Environment.Color1);
+        state.Color2 = ColorSidebar.ColorToHex(Environment.Color2);
+        state.Color3 = ColorSidebar.ColorToHex(Environment.Color3);
+        state.Color4 = ColorSidebar.ColorToHex(Environment.Color4);
         state.Blocks = blockStrings.ToArray();
         return state;
     }

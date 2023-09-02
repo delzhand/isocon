@@ -63,6 +63,7 @@ public class TokenController : MonoBehaviour
 
     public static void Deselect() {
         if (selected) {
+            selected.SetNeutral();
             UnitMenu.HideMenu();
             selected.Deselect();
             selected = null;

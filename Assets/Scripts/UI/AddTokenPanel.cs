@@ -18,6 +18,7 @@ public class AddTokenPanel : MonoBehaviour
         UI.System.Q<Button>("AddTokenButton").RegisterCallback<ClickEvent>((evt) => {
             UpdateGraphicsList();
             UI.ToggleDisplay("AddTokenPanel");
+            TokenController.Deselect();
         });
 
         UI.System.Q("AddTokenCreateButton").RegisterCallback<ClickEvent>(CreateToken);
@@ -27,13 +28,13 @@ public class AddTokenPanel : MonoBehaviour
 
         UpdatePathHelp();
 
-        UI.SetBlocking(UI.System, new string[]{"DebugPanel"});
-        UI.System.Q<Button>("DebugButton").RegisterCallback<ClickEvent>((evt) => {
-            foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
-                g.GetComponent<TokenData>().OnField = true;
-                g.GetComponent<Icon_v1_5TokenData>().CurrentHP -= 1;
-            }
-        });
+        // UI.SetBlocking(UI.System, new string[]{"DebugPanel"});
+        // UI.System.Q<Button>("DebugButton").RegisterCallback<ClickEvent>((evt) => {
+        //     foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
+        //         g.GetComponent<TokenData>().OnField = true;
+        //         g.GetComponent<Icon_v1_5TokenData>().CurrentHP -= 1;
+        //     }
+        // });
     }
 
     void Update() {
@@ -42,7 +43,9 @@ public class AddTokenPanel : MonoBehaviour
 
     public static void UpdatePathHelp() {
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
-        UI.System.Q<Label>("DataPath").text = "Graphics for tokens should be placed in " + path + "\tokens";
+        path = Path.Combine(path, "tokens");
+        path = path.Replace("\\", "\\\\");
+        UI.System.Q<Label>("DataPath").text = @"Graphics for tokens should be placed in " + path;
     }
 
     private void CreateToken(ClickEvent evt) {

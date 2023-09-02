@@ -124,7 +124,6 @@ public class Player : NetworkBehaviour
     }
     [ClientRpc]
     public void RpcInitTokenData(GameObject g, string json, Vector3 position) {
-        g.transform.parent = GameObject.Find("TokenData").transform;
         g.transform.position = position;
         GameSystem.Current().TokenDataSetup(g, json);
     }
@@ -132,9 +131,9 @@ public class Player : NetworkBehaviour
 
 
     #region Token Movement
-    public static void MoveToken(Token token, Vector3 v){
+    public static void MoveToken(Token token, Vector3 v, bool immediate = false){
         if (Player.IsOnline()) {
-            Player.Self().CmdMoveToken(token.onlineDataObject, v, false);
+            Player.Self().CmdMoveToken(token.onlineDataObject, v, immediate);
         }
         else {
             MoveLerp.Create(token.offlineDataObject, v);
@@ -164,6 +163,9 @@ public class Player : NetworkBehaviour
     }
     [ClientRpc]
     public void RpcMapSync(string json) {
+        if (Player.IsGM()) {
+            return; // GM already has current state
+        }
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
         Toast.Add("Map synced.");

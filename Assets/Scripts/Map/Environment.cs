@@ -27,6 +27,11 @@ public class Environment : MonoBehaviour
     private static BackgroundGradient background = BackgroundGradient.FANTASIA;
     private static Palette palette = Palette.GREENFIELD;
     
+    public static Color Color1;
+    public static Color Color2;
+    public static Color Color3;
+    public static Color Color4;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -112,16 +117,24 @@ public class Environment : MonoBehaviour
     }
 
     public static void SetTileColors(Color top, Color sides) {
+        Color1 = top;
+        Color2 = sides;
         Block.SetColor("top1", top);
         Block.SetColor("top2", DarkenColor(top, .2f));
         Block.SetColor("side1", sides);
         Block.SetColor("side2", DarkenColor(sides, .2f));
+        UI.System.Q("Color1").style.backgroundColor = Color1;
+        UI.System.Q("Color2").style.backgroundColor = Color1;
     }
 
     public static void SetBackgroundColors(Color bottom, Color top) {
+        Color3 = bottom;
+        Color4 = top;
         MeshRenderer mr = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
         mr.material.SetColor("_Color1", bottom);
         mr.material.SetColor("_Color2", top);
+        UI.System.Q("Color3").style.backgroundColor = Color3;
+        UI.System.Q("Color4").style.backgroundColor = Color4;
     }
 
 }

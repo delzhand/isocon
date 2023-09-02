@@ -41,7 +41,7 @@ public class ToolsSidebar : MonoBehaviour
             UI.ToggleDisplay(otherMark, false);
         }    
         MarkerEffect = markField.value;
-        if (markField.value == "Other") {
+        if (markField.value == "Custom") {
             UI.ToggleDisplay(otherMark, true);
             MarkerEffect = otherMark.value;
         }
@@ -73,18 +73,22 @@ public class ToolsSidebar : MonoBehaviour
         UI.System.Q(elementName).style.backgroundColor = c;
         switch(elementName) {
             case "Color1":
+                Environment.Color1 = c;
                 Block.SetColor("top1", c);
                 Block.SetColor("top2", ColorSidebar.DarkenColor(c, .2f));
                 break;
             case "Color2":
+                Environment.Color2 = c;
                 Block.SetColor("side1", c);
                 Block.SetColor("side2", ColorSidebar.DarkenColor(c, .2f));
                 break;
             case "Color3":
+                Environment.Color3 = c;
                 MeshRenderer mra = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
                 mra.material.SetColor("_Color1", c);
                 break;
             case "Color4":
+                Environment.Color4 = c;
                 MeshRenderer mrb = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
                 mrb.material.SetColor("_Color2", c);
                 break;

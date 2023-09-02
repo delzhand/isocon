@@ -66,33 +66,22 @@ public class Icon_v1_5 : GameSystem
         UI.System.Q<DropdownField>("JobDropdown").choices = jobs;
         UI.System.Q<DropdownField>("JobDropdown").value = jobs[0];
 
-        if (IsFoe(jclass)) {
-            UI.System.Q("EliteToggle").style.display = DisplayStyle.Flex;
-            UI.System.Q("SizeDropdown").style.display = DisplayStyle.Flex;
-        }
-        else {
-            UI.System.Q("EliteToggle").style.display = DisplayStyle.None;
-            UI.System.Q("SizeDropdown").style.display = DisplayStyle.None;
-        }
-
-        if (jclass == "Legend") {
-            UI.System.Q("LegendHPDropdown").style.display = DisplayStyle.Flex;
-        }
-        else {
-            UI.System.Q("LegendHPDropdown").style.display = DisplayStyle.None;
-        }
+        UI.ToggleDisplay("EliteToggle", IsFoe(jclass));
+        UI.ToggleDisplay("SizeDropdown", IsFoe(jclass) || jclass == "Object");
+        UI.ToggleDisplay("LegendHPDropdown", jclass == "Legend");
+        UI.ToggleDisplay("ObjectHPField", jclass == "Object");
     }
 
     private static bool IsFoe(string jclass) {
         return jclass switch
         {
-            "Stalwart" or "Wright" or "Mendicant" or "Vagabond" => false,
+            "Stalwart" or "Wright" or "Mendicant" or "Vagabond" or "Object" => false,
             _ => true,
         };
     }
 
     private List<string> GetClasses() {
-        return new string[]{"Stalwart", "Vagabond", "Mendicant", "Wright", "Heavy", "Skirmisher","Leader","Artillery","Legend","Mob"}.ToList();
+        return new string[]{"Stalwart", "Vagabond", "Mendicant", "Wright", "Heavy", "Skirmisher","Leader","Artillery","Legend","Mob","Object"}.ToList();
     }
 
     private List<string> GetJobs(string jclass) {
@@ -108,6 +97,7 @@ public class Icon_v1_5 : GameSystem
             "Artillery" => new string[] { "Blaster", "Seismatist", "Storm Caller", "Rift Dancer", "Disruptor", "Chaos Wright", "Scourer", "Sapper", "Justicar", "Sniper", "Alchemist" }.ToList(),
             "Legend" => new string[] { "Demolisher", "Nocturnal", "Master", "Razer" }.ToList(),
             "Mob" => new string[] { "Mob" }.ToList(),
+            "Object" => new string[] { "Destructible" }.ToList(),
             _ => new string[] { }.ToList(),
         };
     }

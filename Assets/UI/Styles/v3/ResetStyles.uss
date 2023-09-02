@@ -102,10 +102,12 @@
     margin-left: 0;
 }
 
+.unity-integer-field:focus .unity-label,
 .unity-text-field:focus .unity-label {
     color: #FFF;
 }
 
+.unity-integer-field__input,
 .unity-text-field__input {
     padding: 4px;
     color: black;
