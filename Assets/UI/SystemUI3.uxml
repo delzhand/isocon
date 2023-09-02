@@ -5,31 +5,37 @@
     <Style src="project://database/Assets/UI/Styles/v3/OverrideStyles.uss?fileID=7433441132597879392&amp;guid=15bcfaebbc0c9fd4691b003a9d1cd382&amp;type=3#OverrideStyles" />
     <Style src="project://database/Assets/UI/Styles/Overhead.uss?fileID=7433441132597879392&amp;guid=db9f5488cbd5b104699c060ac772337b&amp;type=3#Overhead" />
     <ui:VisualElement name="Worldspace" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; left: 1px; top: 0; right: 0; bottom: 0;" />
-    <ui:VisualElement name="StartupPanel" class="centered" style="margin-bottom: 0; display: none; min-height: 0; width: 420px;">
+    <ui:VisualElement name="StartupPanel" class="centered" style="margin-bottom: 0; display: flex; min-height: 0; width: 557px;">
         <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 0; flex-direction: row; justify-content: center; background-image: resource(&apos;Textures/isocon_logo&apos;); -unity-background-scale-mode: scale-to-fit; margin-bottom: 30px; height: 80px;" />
         <ui:Label tabindex="-1" text="IsoCON is still in beta! This build should be stable but is still missing important features like token persistence and token stat editing. Multiplayer features are P2P and may require the host player to have port forwarding enabled for port 7777. Please send any feedback or bug reports to isocondev@gmail.com." display-tooltip-when-elided="true" name="BetaMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%; white-space: normal;" />
         <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="ConnectingMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%;" />
         <ui:VisualElement name="StartupOptions" class="panel" style="flex-grow: 1;">
             <ui:DropdownField index="0" choices="ICON 1.5" name="SystemField" label="Game System" focusable="false" class="no-margin" style="margin-bottom: 8px;" />
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: space-between; width: 100%;">
-                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); width: 30%;">
+                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); width: 24%;">
                     <ui:Button display-tooltip-when-elided="true" name="SoloModeButton" style="flex-grow: 1;">
                         <ui:Label tabindex="-1" text="SOLO MODE" display-tooltip-when-elided="true" style="font-size: 16px; border-bottom-width: 1px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255);" />
                         <ui:Label tabindex="-1" text="Edit maps offline or screen share" display-tooltip-when-elided="true" style="white-space: normal;" />
                     </ui:Button>
                 </ui:VisualElement>
-                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); width: 30%;">
+                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); width: 24%;">
                     <ui:Button display-tooltip-when-elided="true" name="HostModeButton" style="flex-grow: 1;">
                         <ui:Label tabindex="-1" text="HOST TABLE" display-tooltip-when-elided="true" style="font-size: 16px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px;" />
                         <ui:Label tabindex="-1" text="Start a session for multiple players" display-tooltip-when-elided="true" style="white-space: normal;" />
                     </ui:Button>
                 </ui:VisualElement>
-                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); width: 30%;">
+                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); width: 24%;">
                     <ui:Button display-tooltip-when-elided="true" name="ClientModeButton" style="flex-grow: 1;">
                         <ui:Label tabindex="-1" text="JOIN TABLE" display-tooltip-when-elided="true" style="font-size: 16px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px;" />
                         <ui:Label tabindex="-1" text="Connect to a session" display-tooltip-when-elided="true" style="white-space: normal;" />
                     </ui:Button>
                     <ui:TextField picking-mode="Ignore" value="localhost" name="HostAddress" class="no-margin" style="margin-top: 4px;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); width: 24%;">
+                    <ui:Button display-tooltip-when-elided="true" name="ExitButton" style="flex-grow: 1;">
+                        <ui:Label tabindex="-1" text="EXIT" display-tooltip-when-elided="true" name="Label" style="font-size: 16px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px;" />
+                        <ui:Label tabindex="-1" text="Close IsoCON" display-tooltip-when-elided="true" style="white-space: normal;" />
+                    </ui:Button>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>

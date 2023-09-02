@@ -17,6 +17,11 @@ public class StartupPanel : MonoBehaviour
 
         manager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
 
+        UI.System.Q<Button>("ExitButton").RegisterCallback<ClickEvent>((evt) => {
+            Debug.Log("foo");
+            Application.Quit();            
+        });
+
         UI.System.Q<Button>("SoloModeButton").RegisterCallback<ClickEvent>((evt) => {
             manager.maxConnections = 1;
             manager.StartHost();
