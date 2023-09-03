@@ -27,14 +27,6 @@ public class AddTokenPanel : MonoBehaviour
         UI.System.Q("AddTokenCancelButton").RegisterCallback<ClickEvent>(ClosePanel);
 
         UpdatePathHelp();
-
-        // UI.SetBlocking(UI.System, new string[]{"DebugPanel"});
-        // UI.System.Q<Button>("DebugButton").RegisterCallback<ClickEvent>((evt) => {
-        //     foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
-        //         g.GetComponent<TokenData>().OnField = true;
-        //         g.GetComponent<Icon_v1_5TokenData>().CurrentHP -= 1;
-        //     }
-        // });
     }
 
     void Update() {
@@ -50,7 +42,7 @@ public class AddTokenPanel : MonoBehaviour
 
     private void CreateToken(ClickEvent evt) {
         string json = GameSystem.Current().GetTokenData();
-        Player.CreateTokenData(json, new Vector3(3, .25f, 3));
+        Player.Self().CmdCreateTokenData(json, new Vector3(3, .25f, 3));
         UI.ToggleDisplay("AddTokenPanel", false);
     }
 

@@ -44,7 +44,7 @@ public class Player : NetworkBehaviour
                     Vector3 position = objs[i].transform.position;
                     OfflineTokenData otd = objs[i].GetComponent<OfflineTokenData>();
                     Destroy(otd.TokenObject);
-                    Player.CreateTokenData(otd.Json, position);
+                    Player.Self().CmdCreateTokenData(otd.Json, position);
                 }
             }
             else {
@@ -107,28 +107,39 @@ public class Player : NetworkBehaviour
         return null;
     }
 
+    // #region Player Disconnect
+
+    // [ClientRpc]
+    // public void RpcEndSession() {
+    //     PlayerController.Disconnect();
+    // }
+
+    // #endregion
+
     #region Create Token
-    public static void CreateTokenData(string json, Vector3 position) {
-        if (Player.IsOnline()) {
-            Player.Self().CmdCreateTokenData(json, position);
-        }
-        else {
-            GameObject tokenObj = new("OfflineData");
-            tokenObj.transform.parent = GameObject.Find("TokenData").transform;
-            tokenObj.tag = "OfflineData";
-            tokenObj.transform.position = position;
-            OfflineTokenData data = tokenObj.AddComponent<OfflineTokenData>();
-            data.Json = json;
-        }
-    }
+    // public static void CreateTokenData(string json, Vector3 position) {
+    //     if (Player.IsOnline()) {
+    //         Player.Self().CmdCreateTokenData(json, position);
+    //     }
+    //     else {
+    //         GameObject tokenObj = new("OfflineData");
+    //         tokenObj.transform.parent = GameObject.Find("TokenData").transform;
+    //         tokenObj.tag = "OfflineData";
+    //         tokenObj.transform.position = position;
+    //         OfflineTokenData data = tokenObj.AddComponent<OfflineTokenData>();
+    //         data.Json = json;
+    //     }
+    // }
     [Command]
     public void CmdCreateTokenData(string json, Vector3 position) {
+        FileLogger.Write($"Client {connectionToClient.connectionId} created a token");
         GameObject g = GameSystem.Current().GetDataPrefab();
         NetworkServer.Spawn(g); 
         RpcInitTokenData(g, json, position);
     }
     [ClientRpc]
     public void RpcInitTokenData(GameObject g, string json, Vector3 position) {
+        FileLogger.Write($"A token was initialized");
         g.transform.position = position;
         GameSystem.Current().TokenDataSetup(g, json);
     }
@@ -166,18 +177,21 @@ public class Player : NetworkBehaviour
     #region Session Init
     [Command]
     public void CmdMapSync() {
+        FileLogger.Write("Map sent to all clients");
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
         RpcMapSync(json);
     }
     [Command]
     public void CmdRequestMapSync() {
+        FileLogger.Write($"Client {connectionToClient.connectionId} requested a map sync");
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
         TargetMapSync(connectionToClient, json);
     }
     [TargetRpc]
     public void TargetMapSync(NetworkConnectionToClient target, string json) {
+        FileLogger.Write($"Map received from host by this client");
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
         Block.ToggleSpacers(false);
@@ -189,6 +203,7 @@ public class Player : NetworkBehaviour
         if (Player.IsGM()) {
             return; // GM already has current state
         }
+        FileLogger.Write($"Map received from host by everyone");
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
         Block.ToggleSpacers(false);

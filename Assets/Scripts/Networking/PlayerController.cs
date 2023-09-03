@@ -35,6 +35,7 @@ public class PlayerController : NetworkBehaviour
         for (int i = 0; i < objs.Length; i++) {
             objs[i].GetComponent<TokenData>().Disconnect();
         }
+        TerrainController.DestroyAllBlocks();
         StartupPanel.Disconnect();
     }
 }
