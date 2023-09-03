@@ -30,7 +30,7 @@ public class MapSidebar : MonoBehaviour
             Toast.Add("New map initialized.");
             UI.ToggleDisplay("MapSidebar", false);
             State.SetCurrentJson();
-            Player.Self().CmdRequestMapSync();
+            Player.Self().CmdMapSync();
         });
 
         UI.System.Q<Button>("ConfirmLoadButton").RegisterCallback<ClickEvent>((evt) =>  {

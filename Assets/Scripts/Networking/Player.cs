@@ -135,14 +135,6 @@ public class Player : NetworkBehaviour
     #endregion
 
     #region Token Movement
-    public static void MoveToken(Token token, Vector3 v, bool immediate = false){
-        if (Player.IsOnline()) {
-            Player.Self().CmdMoveToken(token.onlineDataObject, v, immediate);
-        }
-        else {
-            MoveLerp.Create(token.offlineDataObject, v);
-        }
-    }
     [Command]
     public void CmdMoveToken(GameObject dataObject, Vector3 v, bool immediate) {
         DoMoveToken(dataObject, v, immediate);
@@ -155,6 +147,17 @@ public class Player : NetworkBehaviour
         else {
             MoveLerp.Create(dataObject, v);
         }
+    }
+    #endregion
+
+    #region Token Status
+    [Command]
+    public void CmdRequestPlaceToken(GameObject dataObject) {
+
+    }
+    [ClientRpc]
+    public void RpcPlaceToken(GameObject dataObject) {
+        dataObject.GetComponent<TokenData>().OnField = true;
     }
     #endregion
 
@@ -228,27 +231,4 @@ public class Player : NetworkBehaviour
     //     }
     // }
     #endregion
-
-    public static string GetCommaSeparatedKeys<TKey, TValue>(Dictionary<TKey, TValue> dictionary)
-    {
-        if (dictionary == null || dictionary.Count == 0)
-        {
-            return string.Empty; // Return an empty string for an empty dictionary or null input
-        }
-
-        StringBuilder result = new StringBuilder();
-
-        foreach (TKey key in dictionary.Keys)
-        {
-            if (result.Length > 0)
-            {
-                result.Append(","); // Add a comma before each key except the first one
-            }
-
-            result.Append(key);
-        }
-
-        return result.ToString();
-    }
-
 }

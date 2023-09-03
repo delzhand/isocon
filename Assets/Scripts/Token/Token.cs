@@ -40,14 +40,14 @@ public class Token : MonoBehaviour
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
         switch (TokenController.SelectedState) {
             case SelectedState.Placing:
-                onlineDataObject.GetComponent<TokenData>().OnField = true;
-                Player.MoveToken(this, v + new Vector3(0, 1f, 0), true);
+                Player.Self().CmdRequestPlaceToken(onlineDataObject);
+                Player.Self().CmdMoveToken(onlineDataObject, v + new Vector3(0, 1f, 0), true);
+                Player.Self().CmdMoveToken(onlineDataObject, v, false);
                 UnitMenu.ClearCurrentActive();
-                Player.MoveToken(this, v);
                 SetNeutral();
                 break;
             case SelectedState.Moving:
-                Player.MoveToken(this, v);
+                Player.Self().CmdMoveToken(onlineDataObject, v, false);
                 break;
         }
     }

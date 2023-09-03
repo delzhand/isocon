@@ -67,7 +67,7 @@ public class CameraControl : MonoBehaviour
             else {
                 UI.System.Q("EditButton").RemoveFromClassList("active");
                 State.SetCurrentJson();
-                Player.Self().CmdRequestMapSync();
+                Player.Self().CmdMapSync();
             }
         });
     }
