@@ -160,11 +160,25 @@ public class Player : NetworkBehaviour
 
     #region Session Init
     [Command]
-    public void CmdRequestMapSync() {
+    public void CmdMapSync() {
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
         RpcMapSync(json);
     }
+    [Command]
+    public void CmdRequestMapSync() {
+        State state = State.GetStateFromScene();
+        string json = JsonUtility.ToJson(state);
+        TargetMapSync(connectionToClient, json);
+    }
+    [TargetRpc]
+    public void TargetMapSync(NetworkConnectionToClient target, string json) {
+        State state = JsonUtility.FromJson<State>(json);
+        State.SetSceneFromState(state);
+        Block.ToggleSpacers(false);
+        Toast.Add("Map synced.");
+    }
+
     [ClientRpc]
     public void RpcMapSync(string json) {
         if (Player.IsGM()) {
@@ -172,6 +186,7 @@ public class Player : NetworkBehaviour
         }
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
+        Block.ToggleSpacers(false);
         Toast.Add("Map synced.");
     }
     #endregion
@@ -179,10 +194,9 @@ public class Player : NetworkBehaviour
     #region Images
     [Command]
     public void CmdRequestImage(string hash) {
-        NetworkConnection callingClient = connectionToClient;
-        FileLogger.Write($"Client {callingClient.connectionId} requested image {TextureSender.TruncatedHash(hash)}");
+        FileLogger.Write($"Client {connectionToClient.connectionId} requested image {TextureSender.TruncatedHash(hash)}");
         Texture2D graphic = TextureSender.LoadImageFromFile(hash, true);
-        TextureSender.SendToClient(graphic, callingClient.connectionId);
+        TextureSender.SendToClient(graphic, connectionToClient.connectionId);
     }
 
     [Command]

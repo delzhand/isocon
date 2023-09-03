@@ -27,10 +27,10 @@ public class Environment : MonoBehaviour
     private static BackgroundGradient background = BackgroundGradient.FANTASIA;
     private static Palette palette = Palette.GREENFIELD;
     
-    public static Color Color1;
-    public static Color Color2;
-    public static Color Color3;
-    public static Color Color4;
+    public static Color Color1 = ColorSidebar.FromHex("#3E713E");
+    public static Color Color2 = ColorSidebar.FromHex("#6F5A3C");
+    public static Color Color3 = ColorSidebar.FromHex("#474571");
+    public static Color Color4 = ColorSidebar.FromHex("#001022");
 
     // Start is called before the first frame update
     void Start()

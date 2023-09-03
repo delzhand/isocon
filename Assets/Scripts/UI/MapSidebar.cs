@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -40,8 +39,7 @@ public class MapSidebar : MonoBehaviour
             isLoading = false;
             UI.ToggleDisplay("MapSidebar", false);
             State.SetCurrentJson();
-            Block.ToggleSpacers(false);
-            Player.Self().CmdRequestMapSync();
+            Player.Self().CmdMapSync();
         });
 
 
@@ -108,11 +106,4 @@ public class MapSidebar : MonoBehaviour
         }
         return mapFiles;
     }
-
-    private void LoadMap() {
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
-        string json = File.ReadAllText(path + "/maps/" + MapFile);
-        Player.Self().RpcMapSync(json);
-    }
-
 }
