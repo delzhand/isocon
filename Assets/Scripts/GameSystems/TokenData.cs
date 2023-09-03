@@ -24,8 +24,8 @@ public class TokenData : NetworkBehaviour
     public VisualElement overhead;
     public Texture2D Graphic;
 
-
     private bool initialized = false;
+    private float awaitingGraphicSync = 0;
 
     void Update() {
         BaseUpdate();
@@ -42,15 +42,32 @@ public class TokenData : NetworkBehaviour
         if (!initialized && NeedsSetup() && Json.Length > 0) {
             DoTokenDataSetup();
         }
+
+        // Every 5 seconds until the graphic is provided, recheck
+        if (Graphic == null) {
+            if (awaitingGraphicSync > 0) {
+                awaitingGraphicSync -= Time.deltaTime;
+            }
+            else {
+                initialized = false;
+            }
+
+        }
+
+
         if (!initialized && GraphicHash.Length > 0) {
+            initialized = true;
             Graphic = TextureSender.LoadImageFromFile(GraphicHash, true);
             if (Graphic) {
                 CreateWorldToken();
                 CreateUnitBarItem();
                 CreateOverhead();
-                initialized = true;
+            }
+            else {
+                awaitingGraphicSync = 5f;
             }
         }
+
 
         if (TokenObject) {
             TokenObject.transform.position = transform.position;

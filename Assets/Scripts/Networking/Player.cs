@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,6 +35,7 @@ public class Player : NetworkBehaviour
             Name = PlayerPrefs.GetString("PlayerName", "New Player");
 
             if (NetworkServer.active && NetworkClient.active) {
+                FileLogger.Write("Player is host");
                 Host = true;
 
                 // If connecting as host, convert any offline data to online data
@@ -44,6 +46,9 @@ public class Player : NetworkBehaviour
                     Destroy(otd.TokenObject);
                     Player.CreateTokenData(otd.Json, position);
                 }
+            }
+            else {
+                FileLogger.Write("Player is client");
             }
         } 
 
@@ -129,7 +134,6 @@ public class Player : NetworkBehaviour
     }
     #endregion
 
-
     #region Token Movement
     public static void MoveToken(Token token, Vector3 v, bool immediate = false){
         if (Player.IsOnline()) {
@@ -175,17 +179,62 @@ public class Player : NetworkBehaviour
     #region Images
     [Command]
     public void CmdRequestImage(string hash) {
+        NetworkConnection callingClient = connectionToClient;
+        FileLogger.Write($"Client {callingClient.connectionId} requested image {TextureSender.TruncatedHash(hash)}");
         Texture2D graphic = TextureSender.LoadImageFromFile(hash, true);
-        TextureSender.Send(graphic);
+        TextureSender.SendToClient(graphic, callingClient.connectionId);
     }
+
     [Command]
-    public void CmdSendTextureChunks(string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height)
+    public void CmdSendTextureChunk(string hash, int connectionId, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height)
     {
-        RpcReceiveTextureChunks(hash, chunkIndex, chunkTotal, chunkColors, width, height);
+        // Send to host
+        if (connectionId == -1) {
+            TextureSender.Receive(hash, chunkIndex, chunkTotal, chunkColors, width, height);
+        }
+
+        // Send to that connection
+        else {
+            NetworkConnectionToClient targetClient = NetworkServer.connections[connectionId];
+            TargetReceiveTextureChunk(targetClient, hash, chunkIndex, chunkTotal, chunkColors, width, height);
+        }
     }
-    [ClientRpc]
-    public void RpcReceiveTextureChunks(string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height){
+
+    [TargetRpc]
+    public void TargetReceiveTextureChunk(NetworkConnectionToClient target, string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height) {
         TextureSender.Receive(hash, chunkIndex, chunkTotal, chunkColors, width, height);
     }
+
+    // [ClientRpc]
+    // public void RpcReceiveTextureChunk(int connectionId, string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height){
+    //     FileLogger.Write($"Connection IDs: {GetCommaSeparatedKeys(NetworkServer.connections)}");
+    //     NetworkConnection targetClient = NetworkServer.connections[connectionId];
+    //     if (isLocalPlayer && connectionToClient == targetClient) {
+    //         TextureSender.Receive(hash, chunkIndex, chunkTotal, chunkColors, width, height);
+    //     }
+    // }
     #endregion
+
+    public static string GetCommaSeparatedKeys<TKey, TValue>(Dictionary<TKey, TValue> dictionary)
+    {
+        if (dictionary == null || dictionary.Count == 0)
+        {
+            return string.Empty; // Return an empty string for an empty dictionary or null input
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        foreach (TKey key in dictionary.Keys)
+        {
+            if (result.Length > 0)
+            {
+                result.Append(","); // Add a comma before each key except the first one
+            }
+
+            result.Append(key);
+        }
+
+        return result.ToString();
+    }
+
 }

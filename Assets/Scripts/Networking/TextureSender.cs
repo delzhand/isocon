@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using Mirror;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -17,9 +18,20 @@ public class TextureSender : MonoBehaviour
     
     private Dictionary<int, Color[]> receivedChunks = new();
 
-    public static void Send(Texture2D image)
+    private static List<string> openRequests = new();
+
+    public static void SendToHost(Texture2D image)
     {
+        Send(image, -1);
+    }
+
+    public static void SendToClient(Texture2D image, int connectionId) {
+        Send(image, connectionId);
+    }
+
+    private static void Send(Texture2D image, int connectionId) {
         string hash = TextureSender.GetTextureHash(image);
+        FileLogger.Write($"Sending image {TruncatedHash(hash)} to {connectionId}");
         Color[] allColors = image.GetPixels();
         int chunkCount = Mathf.CeilToInt((float)allColors.Length / ChunkSize);
         for (int i = 0; i < chunkCount; i++)
@@ -28,11 +40,18 @@ public class TextureSender : MonoBehaviour
             int remainingColors = Mathf.Min(ChunkSize, allColors.Length - startIndex);
             Color[] chunkColors = new Color[remainingColors];
             System.Array.Copy(allColors, startIndex, chunkColors, 0, remainingColors);
-            Player.Self().CmdSendTextureChunks(hash, i, chunkCount, chunkColors, image.width, image.height);
+            Player.Self().CmdSendTextureChunk(hash, connectionId, i, chunkCount, chunkColors, image.width, image.height);
         }
     }
 
     public static void Receive(string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height) {
+        if (chunkIndex == 0) {
+            FileLogger.Write($"Receiving first chunk of image {TruncatedHash(hash)}");
+        }
+        if (chunkIndex == chunkTotal - 1) {
+            FileLogger.Write($"Receiving last chunk of image {TruncatedHash(hash)}");
+        }
+
         GameObject receiver = GameObject.Find("TextureReceiver") ?? new GameObject("TextureReceiver");
         TextureSender[] receivers = receiver.GetComponents<TextureSender>();
         TextureSender match = null;
@@ -111,6 +130,12 @@ public class TextureSender : MonoBehaviour
         }
         return sb.ToString();
     }
+
+    public static string TruncatedHash(string hash) {
+        string firstThree = hash.Substring(0, 3);
+        string lastThree = hash.Substring(hash.Length - 3);
+        return $"{firstThree}...{lastThree}";
+    }
     
     public static Texture2D LoadImageFromFile(string imageSource, bool isHash)
     {
@@ -123,31 +148,58 @@ public class TextureSender : MonoBehaviour
     }
 
     private static Texture2D HandleLocal(string filename) {
+        FileLogger.Write($"Loading local file {filename}");
+
         // Load Image
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
-        path = path + "/tokens/" + filename;
+        path = $"{path}/tokens/{filename}";
         byte[] imageData = File.ReadAllBytes(path);
         Texture2D texture = new Texture2D(2, 2);
         texture.LoadImage(imageData);
 
-        // Share to host
-        Send(texture);
+        // Copy to remote-images if necessary
+        string hash = GetTextureHash(texture);
+        path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        if (!Directory.Exists($"{path}/remote-tokens")) {
+            Directory.CreateDirectory($"{path}/remote-tokens");
+        }
+        if (!File.Exists($"{path}/remote-tokens/{hash}.png")) {
+            File.WriteAllBytes($"{path}/remote-tokens/{hash}.png", imageData);
+        }
+
+        // If not host, Send to host
+        if (!Player.IsHost()) {
+            SendToHost(texture);
+        }
         
         return texture;
     }
 
     private static Texture2D HandleRemote(string hash) {
+        FileLogger.Write($"Loading remote file {TruncatedHash(hash)}");
+
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
-        path = path + "/remote-tokens/" + hash + ".png";
-        if (!File.Exists(path)) {
-            // Retrieve from host
-            Player.Self().CmdRequestImage(hash);
+        path = $"{path}/remote-tokens/{hash}.png";
+        if (File.Exists(path)) {
+            openRequests.Remove(hash);
+            byte[] imageData = File.ReadAllBytes(path);
+            Texture2D texture = new Texture2D(2, 2);
+            texture.LoadImage(imageData);
+            return texture;
+        }
+
+        // File doesn't exist and was already requested, just try again later
+        if (openRequests.Contains(hash)) {
+            FileLogger.Write($"Image not found at {path}, already requested");
             return null;
         }
-        byte[] imageData = File.ReadAllBytes(path);
-        Texture2D texture = new Texture2D(2, 2);
-        texture.LoadImage(imageData);
-        return texture;
+
+        // Request server to resync items
+        openRequests.Add(hash);
+        FileLogger.Write($"Image not found at {path}, requesting from host");
+        Player.Self().CmdRequestImage(hash);
+        return null;
+
     }
 
     public static Texture2D CopyLocalImage(string filename) {

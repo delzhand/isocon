@@ -10,20 +10,24 @@ public class PlayerController : NetworkBehaviour
     public override void OnStartServer()
     {
         base.OnStartServer();
+        FileLogger.Write("Server started");
     }
 
     public override void OnStartClient()
     {
         base.OnStartClient();
+        FileLogger.Write("Client started");
     }
 
     public override void OnStopServer()
     {
         base.OnStopServer();
         Toast.Add("Host disconnected.");
+        FileLogger.Write("Host disconnected");
     }
 
     public static void Disconnect() {
+        FileLogger.Write("Disconnected");
         Toast.Add("Disconnected.");
         UI.System.Q("PlayerList").Clear();
         UI.ToggleDisplay("SelectedTokenPanel", false);

@@ -15,6 +15,7 @@ public class MapSidebar : MonoBehaviour
     void Awake() {
         UI.System.Q<Button>("MapToggle").RegisterCallback<ClickEvent>((evt) => {
             UI.ToggleDisplay("MapSidebar");
+            Refresh();
         });  
 
         Refresh();
@@ -81,11 +82,10 @@ public class MapSidebar : MonoBehaviour
 
     public void Refresh() {
         List<string> mapFiles = GetMapFiles();
-        if (mapFiles.Count == 0) {
-            UI.ToggleDisplay("LoadMapButton", false);
-            UI.ToggleDisplay("MapDropdown", false);
-        }
-        else {
+        UI.ToggleDisplay("LoadMapButton", mapFiles.Count > 0);
+        UI.ToggleDisplay("MapDropdown", mapFiles.Count > 0 );
+
+        if (mapFiles.Count > 0) {
             UI.System.Q<DropdownField>("MapDropdown").choices = mapFiles;
             UI.System.Q<DropdownField>("MapDropdown").value = mapFiles[0];
         }
