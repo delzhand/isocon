@@ -40,9 +40,7 @@ public class Token : MonoBehaviour
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
         switch (TokenController.SelectedState) {
             case SelectedState.Placing:
-                Player.Self().CmdRequestPlaceToken(onlineDataObject);
-                Player.Self().CmdMoveToken(onlineDataObject, v + new Vector3(0, 1f, 0), true);
-                Player.Self().CmdMoveToken(onlineDataObject, v, false);
+                Player.Self().CmdRequestPlaceToken(onlineDataObject, v);
                 UnitMenu.ClearCurrentActive();
                 SetNeutral();
                 break;

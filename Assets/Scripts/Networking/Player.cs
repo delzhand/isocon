@@ -152,8 +152,10 @@ public class Player : NetworkBehaviour
 
     #region Token Status
     [Command]
-    public void CmdRequestPlaceToken(GameObject dataObject) {
-
+    public void CmdRequestPlaceToken(GameObject dataObject, Vector3 v) {
+        dataObject.GetComponent<TokenData>().OnField = true;
+        DoMoveToken(dataObject, v + new Vector3(0, 1f, 0), true);
+        DoMoveToken(dataObject, v, false);
     }
     [ClientRpc]
     public void RpcPlaceToken(GameObject dataObject) {
