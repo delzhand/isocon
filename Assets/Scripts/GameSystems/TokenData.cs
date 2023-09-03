@@ -64,7 +64,7 @@ public class TokenData : NetworkBehaviour
                 CreateOverhead();
             }
             else {
-                awaitingGraphicSync = 5f;
+                awaitingGraphicSync = 2.5f;
             }
         }
 
