@@ -38,13 +38,13 @@ public class Token : MonoBehaviour
 
     public void BlockClick(Block block) {
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
-        switch (TokenController.SelectedState) {
-            case SelectedState.Placing:
+        switch (UnitMenu.ActiveMenuItem) {
+            case "Placing":
                 Player.Self().CmdRequestPlaceToken(onlineDataObject, v);
-                UnitMenu.ClearCurrentActive();
+                UnitMenu.DonePlacing();
                 SetNeutral();
                 break;
-            case SelectedState.Moving:
+            case "Moving":
                 Player.Self().CmdMoveToken(onlineDataObject, v, false);
                 break;
         }
@@ -70,19 +70,16 @@ public class Token : MonoBehaviour
     }
 
     public void SetPlacing() {
-        TokenController.SelectedState = SelectedState.Placing;
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1);
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 0);
     }
 
     public void SetMoving() {
-        TokenController.SelectedState = SelectedState.Moving;
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 1);
     }
 
     public void SetNeutral() {
-        TokenController.SelectedState = SelectedState.None;
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1);
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 0);
     }

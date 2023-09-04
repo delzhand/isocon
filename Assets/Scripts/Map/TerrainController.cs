@@ -128,7 +128,6 @@ public class TerrainController : MonoBehaviour
                         column.tag = "Column";
                         column.name = columnName;
                         column.transform.parent = map.transform;
-                        Debug.Log(map.name);
                         column.transform.localPosition = new Vector3(x, 0, y);
                         column.transform.localScale = Vector3.one;
                         column.AddComponent<Column>().Set(x, y);

@@ -9,11 +9,14 @@ public class UnitMenu : MonoBehaviour
 {
     public static TokenData Data;
 
+    public static string ActiveMenuItem;
+
     void Start() {
         UI.SetBlocking(UI.System, new string[]{"UnitMenu"});
         MenuItemSetup("PlaceMenuItem", Place);
         MenuItemSetup("RemoveMenuItem", Remove);
         MenuItemSetup("MoveMenuItem", Move);
+        MenuItemSetup("EditMenuItem", Edit);
         MenuItemSetup("DeleteMenuItem", Delete);
     }
 
@@ -22,7 +25,13 @@ public class UnitMenu : MonoBehaviour
         UI.ToggleDisplay("PlaceMenuItem", Data != null && !Data.OnField);
         UI.ToggleDisplay("RemoveMenuItem", Data != null && Data.OnField);
         UI.ToggleDisplay("MoveMenuItem", Data != null && Data.OnField);
-        UI.System.Q<VisualElement>("MoveMenuItem").Q<Label>().text = (TokenController.SelectedState == SelectedState.Moving) ? "Stop Moving" : "Move";
+        UI.ToggleDisplay("Icon1_5EditPanel", ActiveMenuItem == "Edit");
+
+        UI.System.Q<VisualElement>("MoveMenuItem").Q<Label>().text = (ActiveMenuItem == "Moving") ? "Stop Moving" : "Move";
+
+        IResolvedStyle menuStyle = UI.System.Q("UnitMenu").resolvedStyle;
+        UI.System.Q("Icon1_5EditPanel").style.left = menuStyle.left + menuStyle.width + 4;
+        UI.System.Q("Icon1_5EditPanel").style.bottom = 80;
     }
 
     private void MenuItemSetup(string name, Action<ClickEvent> clickHandler) {
@@ -35,20 +44,46 @@ public class UnitMenu : MonoBehaviour
         UI.System.Q(name).RegisterCallback<ClickEvent>((evt) => {
             clickHandler.Invoke(evt);
         });
-
     }
 
     private void Place(ClickEvent evt) {
-        Data.TokenObject.GetComponent<Token>().SetPlacing();
-        UI.System.Q("PlaceMenuItem").AddToClassList("active");
+        ClearCurrentActive();
+        if (ActiveMenuItem != "Placing") {
+            ActiveMenuItem = "Placing";
+            Data.TokenObject.GetComponent<Token>().SetPlacing();
+            UI.System.Q("PlaceMenuItem").AddToClassList("active");
+            return;
+        }
+        else {
+            ActiveMenuItem = "";
+        }
+        Data.TokenObject.GetComponent<Token>().SetNeutral();
     }
 
     private void Move(ClickEvent evt) {
         ClearCurrentActive();
-        if (TokenController.SelectedState != SelectedState.Moving) {
+        if (ActiveMenuItem != "Moving") {
+            ActiveMenuItem = "Moving";
             Data.TokenObject.GetComponent<Token>().SetMoving();
             UI.System.Q("MoveMenuItem").AddToClassList("active");
             return;
+        }
+        else {
+            ActiveMenuItem = "";
+        }
+        Data.TokenObject.GetComponent<Token>().SetNeutral();
+    }
+
+    private void Edit(ClickEvent evt) {
+        ClearCurrentActive();
+        if (ActiveMenuItem != "Edit") {
+            ActiveMenuItem = "Edit";
+            TokenEditPanel.Show(Data);
+            UI.ToggleActiveClass("EditMenuItem", true);
+            return;
+        }
+        else {
+            ActiveMenuItem = "";
         }
         Data.TokenObject.GetComponent<Token>().SetNeutral();
     }
@@ -78,12 +113,18 @@ public class UnitMenu : MonoBehaviour
 
     public static void HideMenu() {
         ClearCurrentActive();
+        ActiveMenuItem = "";
         Data = null;
     }
 
-    public static void ClearCurrentActive() {
+    private static void ClearCurrentActive() {
         UI.System.Query(null, "unit-menu-item").ForEach(item => {
             item.RemoveFromClassList("active");
         });        
+    }
+
+    public static void DonePlacing() {
+        ActiveMenuItem = "";
+        ClearCurrentActive();
     }
 }
