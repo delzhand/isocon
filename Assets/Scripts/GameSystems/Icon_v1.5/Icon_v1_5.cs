@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Linq;
+using System;
 
 public class Icon_v1_5 : GameSystem
 {
@@ -14,6 +15,12 @@ public class Icon_v1_5 : GameSystem
     public override string GetTokenData() {
         return Icon_v1_5TokenDataRaw.ToJson();
     }
+
+    public override void TokenDataChange(TokenData data, string label, int value)
+    {
+        (data as Icon_v1_5TokenData).Change(label, value);
+    }
+
 
     public override Texture2D GetGraphic(string json) {
         Icon_v1_5TokenDataRaw raw = JsonUtility.FromJson<Icon_v1_5TokenDataRaw>(json);

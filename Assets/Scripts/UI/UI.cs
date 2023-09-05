@@ -74,6 +74,7 @@ public class UI : MonoBehaviour
                 Mathf.RoundToInt((1f - viewportPos.y) * UI.System.resolvedStyle.height)
             );
             Vector2 pos = screenPos + offset;
+            element.style.position = Position.Absolute;
             element.style.left = pos.x;
             element.style.top = pos.y;
         }

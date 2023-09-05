@@ -385,4 +385,21 @@ public class Icon_v1_5TokenData : TokenData
         Vigor = 0;
         Wounds = 0;
     }
+
+    public void Change(string label, int value) {
+        switch(label) {
+            case "CurrentHP":
+                CurrentHP += value;
+                if (value < 0) {
+                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"{-value}", ColorSidebar.FromHex("#F77474"));
+                }
+                else if (value > 0) {
+                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"+{value}", ColorSidebar.FromHex("#74F774"));
+                }
+                break;
+            default:
+                FileLogger.Write($"Invalid label '{label}' for int value change");
+                throw new Exception($"Invalid label '{label}' for int value change");
+        }
+    }
 }

@@ -107,29 +107,7 @@ public class Player : NetworkBehaviour
         return null;
     }
 
-    // #region Player Disconnect
-
-    // [ClientRpc]
-    // public void RpcEndSession() {
-    //     PlayerController.Disconnect();
-    // }
-
-    // #endregion
-
     #region Create Token
-    // public static void CreateTokenData(string json, Vector3 position) {
-    //     if (Player.IsOnline()) {
-    //         Player.Self().CmdCreateTokenData(json, position);
-    //     }
-    //     else {
-    //         GameObject tokenObj = new("OfflineData");
-    //         tokenObj.transform.parent = GameObject.Find("TokenData").transform;
-    //         tokenObj.tag = "OfflineData";
-    //         tokenObj.transform.position = position;
-    //         OfflineTokenData data = tokenObj.AddComponent<OfflineTokenData>();
-    //         data.Json = json;
-    //     }
-    // }
     [Command]
     public void CmdCreateTokenData(string json, Vector3 position) {
         FileLogger.Write($"Client {connectionToClient.connectionId} created a token");
@@ -168,9 +146,18 @@ public class Player : NetworkBehaviour
         DoMoveToken(dataObject, v + new Vector3(0, 1f, 0), true);
         DoMoveToken(dataObject, v, false);
     }
+    // [ClientRpc]
+    // public void RpcPlaceToken(GameObject dataObject) {
+    //     dataObject.GetComponent<TokenData>().OnField = true;
+    // }
+
+    [Command]
+    public void CmdRequestTokenDataChange(TokenData data, string label, int value) {
+        RpcTokenDataChange(data, label, value);
+    }
     [ClientRpc]
-    public void RpcPlaceToken(GameObject dataObject) {
-        dataObject.GetComponent<TokenData>().OnField = true;
+    public void RpcTokenDataChange(TokenData data, string label, int value) {
+        GameSystem.Current().TokenDataChange(data, label, value);
     }
     #endregion
 

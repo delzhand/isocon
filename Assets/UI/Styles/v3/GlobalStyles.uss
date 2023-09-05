@@ -146,3 +146,14 @@
 .gray {
     background-color: rgb(146, 146, 146);
 }
+
+.popover {
+    position: absolute;
+    left: 0;
+    top: 0;
+    -unity-font-definition: resource('Fonts/Classica-Bold SDF');
+    text-shadow: 0 0 1px rgb(0, 0, 0);
+    /* font-size: 32px; */
+    text-shadow: 1px 1px 1px rgb(0, 0, 0);
+    
+}
