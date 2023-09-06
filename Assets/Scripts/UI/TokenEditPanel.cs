@@ -16,6 +16,8 @@ public class TokenEditPanel : MonoBehaviour
         HP();
         Vigor();
         Wounds();
+        Resolve();
+        ClassFeatures();
     }
 
     private void HP() {
@@ -50,9 +52,29 @@ public class TokenEditPanel : MonoBehaviour
         });        
     }
     private void Wounds() {
-        UI.System.Q<NumberNudger>("e_Wounds").RegisterValueChangedCallback((evt) => {
-            Debug.Log("foo");
-            Player.Self().CmdRequestTokenDataSetValue(Data, "Wounds", Math.Clamp(evt.newValue, 0, 4));
+        UI.System.Q<NumberNudger>("e_Wounds").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(Data, "Wounds", Math.Clamp(evt, 0, 4));
+        });
+    }
+
+    private void Resolve() {
+        UI.System.Q<NumberNudger>("e_Resolve").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(Data, "Resolve", evt);
+        });
+        // UI.System.Q<NumberNudger>("e_PartyResolve").AddValueChangedCallback((evt) => {
+        //     Player.Self().CmdRequestTokenDataSetValue(Data, "PartyResolve", evt);
+        // });        
+    }
+
+    private void ClassFeatures() {
+        UI.System.Q<NumberNudger>("e_Aether").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(Data, "Aether", evt);
+        });
+        UI.System.Q<NumberNudger>("e_Vigilance").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(Data, "Vigilance", evt);
+        }); 
+        UI.System.Q<NumberNudger>("e_Blessings").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(Data, "Blessings", evt);
         });
     }
 

@@ -97,6 +97,10 @@ public class Icon_v1_5TokenData : TokenData
     public int Defense;
     public bool Elite;
 
+    public int Aether;
+    public int Vigilance;
+    public int Blessings;
+
     public int Size;
 
     void Start() {      
@@ -405,6 +409,26 @@ public class Icon_v1_5TokenData : TokenData
                 originValue = Wounds;
                 Wounds = value;
                 shortLabel = "WND";
+                break;
+            case "Aether":
+                originValue = Aether;
+                Aether = value;
+                shortLabel = "ATH";
+                break;
+            case "Resolve":
+                originValue = Resolve;
+                Resolve = value;
+                shortLabel = "RES";
+                break;
+            case "Vigilance":
+                originValue = Vigilance;
+                Vigilance = value;
+                shortLabel = "VGL";
+                break;
+            case "Blessings":
+                originValue = Blessings;
+                Blessings = value;
+                shortLabel = "BLS";
                 break;
             default:
                 FileLogger.Write($"Invalid label '{label}' for int value change");

@@ -400,8 +400,8 @@
                     <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="e_Vigor" />
                 </ui:VisualElement>
                 <IsoconUILibrary.NumberNudger label="Wounds" name="e_Wounds" />
-                <IsoconUILibrary.NumberNudger label="Resolve" />
-                <IsoconUILibrary.NumberNudger label="Party Resolve" />
+                <IsoconUILibrary.NumberNudger label="Resolve" name="e_Resolve" />
+                <IsoconUILibrary.NumberNudger label="Party Resolve" name="e_PartyResolve" />
             </ui:Foldout>
             <ui:Foldout text="Class Features" value="false">
                 <IsoconUILibrary.NumberNudger label="Aether" name="e_Aether" />
