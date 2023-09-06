@@ -27,9 +27,9 @@ public class PopoverText : MonoBehaviour
         float totalWidth = spacing * (Elements.Count - 1);
         for (int i = 0; i < Elements.Count; i++) {
             float percentage = 1 - Mathf.Clamp((timer + (i/8f))/duration, 0, 1);
-            float height = -20 - (Mathf.Sin(Mathf.PI * percentage) * 20);
+            float height = -(Mathf.Sin(Mathf.PI * percentage) * 20);
             Elements[i].style.fontSize = Mathf.Lerp(2, 32, percentage);
-            Vector2 offset = new Vector2(spacing * i - (totalWidth/2f), height);
+            Vector2 offset = new Vector2(spacing * i - (totalWidth/2f) - height, -24 + height);
             UI.FollowToken(Token, Elements[i], Camera.main, offset, true);
         }
     }

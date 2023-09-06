@@ -152,12 +152,12 @@ public class Player : NetworkBehaviour
     // }
 
     [Command]
-    public void CmdRequestTokenDataChange(TokenData data, string label, int value) {
-        RpcTokenDataChange(data, label, value);
+    public void CmdRequestTokenDataSetValue(TokenData data, string label, int value) {
+        RpcTokenDataSetValue(data, label, value);
     }
     [ClientRpc]
-    public void RpcTokenDataChange(TokenData data, string label, int value) {
-        GameSystem.Current().TokenDataChange(data, label, value);
+    public void RpcTokenDataSetValue(TokenData data, string label, int value) {
+        GameSystem.Current().TokenDataSetValue(data, label, value);
     }
     #endregion
 

@@ -387,19 +387,38 @@ public class Icon_v1_5TokenData : TokenData
     }
 
     public void Change(string label, int value) {
+        FileLogger.Write($"{Name} {label} set to {value}");
+        int originValue;
+        string shortLabel;
         switch(label) {
             case "CurrentHP":
-                CurrentHP += value;
-                if (value < 0) {
-                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"{-value}", ColorSidebar.FromHex("#F77474"));
-                }
-                else if (value > 0) {
-                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"+{value}", ColorSidebar.FromHex("#74F774"));
-                }
+                originValue = CurrentHP;
+                CurrentHP = value;                
+                shortLabel = "HP";
+                break;
+            case "Vigor":
+                originValue = Vigor;
+                Vigor = value;
+                shortLabel = "VIG";
+                break;
+            case "Wounds":
+                originValue = Wounds;
+                Wounds = value;
+                shortLabel = "WND";
                 break;
             default:
                 FileLogger.Write($"Invalid label '{label}' for int value change");
                 throw new Exception($"Invalid label '{label}' for int value change");
         }
+
+        if (originValue == value) {
+            return;
+        }
+        PopoverText.Create(TokenObject.GetComponent<Token>(), $"{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}{shortLabel}", ChangeColor(value, originValue));
+    }
+
+    private Color ChangeColor(int a, int b) {
+        return Color.white;
+        // return ColorSidebar.FromHex(a < b ? "#F77474" : "#74F774");
     }
 }

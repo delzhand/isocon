@@ -38,7 +38,7 @@ public class Toast : MonoBehaviour
     }
 
     public static void Add(string message, ToastType type = ToastType.Standard) {
-        Debug.Log(message);
+        FileLogger.Write(message);
         Toast t = GameObject.Find("Engine").AddComponent<Toast>();
         t.Message = message;
         // switch(type) {

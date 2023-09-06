@@ -16,7 +16,7 @@ public class Icon_v1_5 : GameSystem
         return Icon_v1_5TokenDataRaw.ToJson();
     }
 
-    public override void TokenDataChange(TokenData data, string label, int value)
+    public override void TokenDataSetValue(TokenData data, string label, int value)
     {
         (data as Icon_v1_5TokenData).Change(label, value);
     }

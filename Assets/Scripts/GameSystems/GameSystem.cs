@@ -33,7 +33,7 @@ public class GameSystem : MonoBehaviour
         throw new NotImplementedException();
     }
 
-    public virtual void TokenDataChange(TokenData data, string label, int value)
+    public virtual void TokenDataSetValue(TokenData data, string label, int value)
     {
         throw new NotImplementedException();
     }

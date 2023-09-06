@@ -387,7 +387,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="Icon1_5EditPanel" class="panel" style="position: absolute; left: 0; display: none; bottom: 0;">
+    <ui:VisualElement name="Icon1_5EditPanel" class="panel" style="position: absolute; left: 0; display: flex; bottom: 0;">
         <ui:Label tabindex="-1" text="STATUS" display-tooltip-when-elided="true" class="panel-header" />
         <ui:ScrollView mouse-wheel-scroll-size="800" style="max-height: 310px;">
             <ui:Foldout text="Vitals" value="true">
@@ -396,10 +396,10 @@
                     <ui:Label tabindex="-1" text="40" display-tooltip-when-elided="true" name="e_CurrentHP" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-direction: row;">
-                    <ui:SliderInt picking-mode="Ignore" label="Vigor" value="0" high-value="40" />
-                    <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" />
+                    <ui:SliderInt picking-mode="Ignore" label="Vigor" value="0" high-value="40" name="e_VigorSlider" />
+                    <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="e_Vigor" />
                 </ui:VisualElement>
-                <IsoconUILibrary.NumberNudger label="Wounds" />
+                <IsoconUILibrary.NumberNudger label="Wounds" name="e_Wounds" />
                 <IsoconUILibrary.NumberNudger label="Resolve" />
                 <IsoconUILibrary.NumberNudger label="Party Resolve" />
             </ui:Foldout>
