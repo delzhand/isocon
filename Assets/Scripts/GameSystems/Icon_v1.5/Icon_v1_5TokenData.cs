@@ -176,6 +176,10 @@ public class Icon_v1_5TokenData : TokenData
     }
 
     public void UpdateSelectedTokenPanel() {
+        if (!TokenController.IsSelected(this)) {
+            return;
+        }
+
         VisualElement panel = UI.System.Q("SelectedTokenPanel");
 
         Color c = ClassColor();
@@ -201,14 +205,14 @@ public class Icon_v1_5TokenData : TokenData
         else {
             panel.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Visible;
         }
-        // for (int i = 1; i <= 3; i++) {
-        //     if (Wounds >= i) {
-        //         panel.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Visible;
-        //     }
-        //     else {
-        //         panel.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Hidden;
-        //     }
-        // }
+        for (int i = 1; i <= 4; i++) {
+            if (Wounds >= i) {
+                panel.Q("Wound" + i).style.visibility = Visibility.Visible;
+            }
+            else {
+                panel.Q("Wound" + i).style.visibility = Visibility.Hidden;
+            }
+        }
 
         if (!IsFoe(Class)) {
             panel.Q<Label>("ResolveNum").text = Resolve.ToString();
@@ -285,7 +289,7 @@ public class Icon_v1_5TokenData : TokenData
         panel.Q<Label>("StatFray").text = Fray.ToString();
         panel.Q<Label>("StatRng").text = Range.ToString();
         panel.Q<Label>("StatSpd").text = Speed.ToString();
-        panel.Q<Label>("StatDash").text = Dash.ToString();        
+        panel.Q<Label>("StatDash").text = Dash.ToString();   
     }
 
     public static bool IsFoe(string jclass) {
@@ -399,11 +403,13 @@ public class Icon_v1_5TokenData : TokenData
                 originValue = CurrentHP;
                 CurrentHP = value;                
                 shortLabel = "HP";
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}{shortLabel}", ChangeColor(value, originValue));
                 break;
             case "Vigor":
                 originValue = Vigor;
                 Vigor = value;
                 shortLabel = "VIG";
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}{shortLabel}", ChangeColor(value, originValue));
                 break;
             case "Wounds":
                 originValue = Wounds;
@@ -438,7 +444,9 @@ public class Icon_v1_5TokenData : TokenData
         if (originValue == value) {
             return;
         }
-        PopoverText.Create(TokenObject.GetComponent<Token>(), $"{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}{shortLabel}", ChangeColor(value, originValue));
+        // PopoverText.Create(TokenObject.GetComponent<Token>(), $"{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}{shortLabel}", ChangeColor(value, originValue));
+        TokenEditPanel.SyncValues();
+        UpdateSelectedTokenPanel();
     }
 
     private Color ChangeColor(int a, int b) {

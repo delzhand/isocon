@@ -20,6 +20,10 @@ public class TokenEditPanel : MonoBehaviour
         ClassFeatures();
     }
 
+    void Update() {
+        UI.ToggleDisplay("Icon1_5EditPanel", UnitMenu.ActiveMenuItem == "Edit");
+    }
+
     private void HP() {
         UI.System.Q<SliderInt>("e_CurrentHPSlider").RegisterValueChangedCallback((evt) => {
             UI.System.Q<Label>("e_CurrentHP").text = evt.newValue.ToString();
@@ -78,15 +82,22 @@ public class TokenEditPanel : MonoBehaviour
         });
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        UI.ToggleDisplay("Icon1_5EditPanel", UnitMenu.ActiveMenuItem == "Edit");
-    }
-
     public static void Show(TokenData data) {
         CloseFoldouts();
         Data = data as Icon_v1_5TokenData;
+        SyncValues();
+    }
+
+    public static void SyncValues() {
+        if (Data != null) {
+            UI.System.Q<Label>("e_CurrentHP").text = $"{Data.CurrentHP}";
+            UI.System.Q<SliderInt>("e_CurrentHPSlider").value = Data.CurrentHP;
+            UI.System.Q<SliderInt>("e_CurrentHPSlider").highValue = Data.MaxHP;
+
+            UI.System.Q<Label>("e_Vigor").text = $"{Data.Vigor}";
+            UI.System.Q<SliderInt>("e_VigorSlider").value = Data.Vigor;
+            UI.System.Q<SliderInt>("e_VigorSlider").highValue = Data.MaxHP;
+        }        
     }
 
     private static void CloseFoldouts() {

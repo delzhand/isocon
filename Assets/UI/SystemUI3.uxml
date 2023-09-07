@@ -56,7 +56,7 @@
     <ui:VisualElement name="OfflineIndicator" style="background-color: rgb(113, 0, 0); position: relative; width: 100%; height: 30px;">
         <ui:Label tabindex="-1" text="Offline" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: bold;" />
     </ui:VisualElement>
-    <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: none;">
+    <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: flex;">
         <ui:VisualElement name="Toggles" style="background-color: rgba(0, 0, 0, 0);">
             <ui:Button display-tooltip-when-elided="true" name="ConnectionToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/network&apos;); width: 28px; height: 28px;" />
             <ui:Button display-tooltip-when-elided="true" name="PlayersToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/players&apos;); width: 28px; height: 28px;" />
@@ -154,7 +154,7 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="SelectedTokenPanel" class="panel" style="position: absolute; top: auto; left: auto; bottom: 10px; display: none; right: 0;">
+            <ui:VisualElement name="SelectedTokenPanel" class="panel" style="position: absolute; top: auto; left: auto; bottom: 10px; display: flex; right: 0;">
                 <ui:Label tabindex="-1" text="SELECTED UNIT" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:VisualElement style="flex-direction: row-reverse;">
                     <ui:VisualElement style="flex-direction: column; margin-left: 10px;">
@@ -179,6 +179,12 @@
                                 </ui:VisualElement>
                                 <ui:ProgressBar value="22" high-value="40" name="HpBar" style="margin-top: 0; max-height: 8px;" />
                                 <ui:ProgressBar value="3" high-value="40" name="VigorBar" style="margin-top: 0; max-height: 4px; position: absolute; bottom: 0; translate: 0 -2px;" />
+                                <ui:VisualElement name="Wounds" style="position: absolute; bottom: 0; width: 100%; height: 8px;">
+                                    <ui:Label tabindex="-1" text="x" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Wound1" class="wound one" style="visibility: visible; -unity-text-align: middle-center;" />
+                                    <ui:Label tabindex="-1" text="x" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Wound2" class="wound two" style="visibility: hidden; -unity-text-align: middle-center;" />
+                                    <ui:Label tabindex="-1" text="x" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Wound3" class="wound three" style="visibility: hidden; -unity-text-align: middle-center;" />
+                                    <ui:Label tabindex="-1" text="x" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Wound4" class="wound four" style="visibility: hidden; -unity-text-align: middle-center;" />
+                                </ui:VisualElement>
                             </ui:VisualElement>
                             <ui:VisualElement name="ResolveWrapper" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
                                 <ui:VisualElement name="StatTemplate" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: space-between; margin-bottom: 2px;">
@@ -387,7 +393,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="Icon1_5EditPanel" class="panel" style="position: absolute; left: 0; display: flex; bottom: 0;">
+    <ui:VisualElement name="Icon1_5EditPanel" class="panel" style="position: absolute; left: 0; display: none; bottom: 0;">
         <ui:Label tabindex="-1" text="STATUS" display-tooltip-when-elided="true" class="panel-header" />
         <ui:ScrollView mouse-wheel-scroll-size="800" style="max-height: 310px;">
             <ui:Foldout text="Vitals" value="true">

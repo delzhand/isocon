@@ -61,4 +61,10 @@ public class TokenController : MonoBehaviour
             selected = null;
         }
     }
+
+    public static bool IsSelected(TokenData data) {
+        return data.TokenObject.GetComponent<Token>() == selected;
+    }
+
+    
 }
