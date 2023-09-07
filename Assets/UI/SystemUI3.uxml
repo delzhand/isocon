@@ -56,7 +56,7 @@
     <ui:VisualElement name="OfflineIndicator" style="background-color: rgb(113, 0, 0); position: relative; width: 100%; height: 30px;">
         <ui:Label tabindex="-1" text="Offline" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: bold;" />
     </ui:VisualElement>
-    <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: flex;">
+    <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: none;">
         <ui:VisualElement name="Toggles" style="background-color: rgba(0, 0, 0, 0);">
             <ui:Button display-tooltip-when-elided="true" name="ConnectionToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/network&apos;); width: 28px; height: 28px;" />
             <ui:Button display-tooltip-when-elided="true" name="PlayersToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/players&apos;); width: 28px; height: 28px;" />
@@ -225,10 +225,11 @@
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
-                    <ui:VisualElement style="margin-right: 10px; display: none;">
+                    <ui:VisualElement style="margin-right: 10px; display: flex;">
                         <ui:Label tabindex="-1" text="STATUS" display-tooltip-when-elided="true" style="font-size: 10px; -unity-text-align: middle-left; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; color: rgb(176, 176, 176);" />
-                        <ui:Label tabindex="-1" text="Vigilance +3" display-tooltip-when-elided="true" style="color: rgb(92, 200, 114); font-size: 10px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0;" />
-                        <ui:Label tabindex="-1" text="Shattered" display-tooltip-when-elided="true" style="color: rgb(200, 99, 92); font-size: 10px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0;" />
+                        <ui:Label tabindex="-1" text="Vigilance +3" display-tooltip-when-elided="true" style="color: rgb(92, 200, 114); font-size: 10px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; display: none;" />
+                        <ui:Label tabindex="-1" text="Shattered" display-tooltip-when-elided="true" style="color: rgb(200, 99, 92); font-size: 10px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; display: none;" />
+                        <ui:Label tabindex="-1" text="&lt;#0000FF&gt;Test" display-tooltip-when-elided="true" name="Statuses" parse-escape-sequences="false" style="font-size: 10px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; display: flex;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

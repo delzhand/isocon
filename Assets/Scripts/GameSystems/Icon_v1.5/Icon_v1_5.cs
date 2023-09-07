@@ -21,6 +21,10 @@ public class Icon_v1_5 : GameSystem
         (data as Icon_v1_5TokenData).Change(label, value);
     }
 
+    public override void TokenDataSetValue(TokenData data, string label, string value)
+    {
+        (data as Icon_v1_5TokenData).Change(label, value);
+    }
 
     public override Texture2D GetGraphic(string json) {
         Icon_v1_5TokenDataRaw raw = JsonUtility.FromJson<Icon_v1_5TokenDataRaw>(json);

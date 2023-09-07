@@ -159,6 +159,10 @@ public class Player : NetworkBehaviour
     public void RpcTokenDataSetValue(TokenData data, string label, int value) {
         GameSystem.Current().TokenDataSetValue(data, label, value);
     }
+    [Command]
+    public void CmdRequestTokenDataSetValue(TokenData data, string label, string value) {
+        GameSystem.Current().TokenDataSetValue(data, label, value);
+    }
     #endregion
 
     #region Session Init

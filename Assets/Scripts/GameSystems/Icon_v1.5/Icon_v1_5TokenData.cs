@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using Mirror;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -100,6 +101,8 @@ public class Icon_v1_5TokenData : TokenData
     public int Aether;
     public int Vigilance;
     public int Blessings;
+
+    public List<string> Statuses = new();
 
     public int Size;
 
@@ -449,8 +452,48 @@ public class Icon_v1_5TokenData : TokenData
         UpdateSelectedTokenPanel();
     }
 
+    public void Change(string label, string value) {
+        FileLogger.Write($"{Name} {label} set to {value}");
+        switch(label) {
+            case "Status":
+                string[] split = value.Split('|');
+                if (split[0][0] == '+') {
+                    Statuses.Add(value.Substring(1));
+                }
+                else {
+                    Statuses.Remove(value.Substring(1));
+                }
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"{split[0]}", Color.white);
+                break;
+            default:
+                FileLogger.Write($"Invalid label '{label}' for string value change");
+                throw new Exception($"Invalid label '{label}' for string value change");
+        }
+
+        TokenEditPanel.SyncValues();
+        UpdateSelectedTokenPanel();
+    }
+
+
     private Color ChangeColor(int a, int b) {
         return Color.white;
         // return ColorSidebar.FromHex(a < b ? "#F77474" : "#74F774");
+    }
+
+    public string StatusesToString() {
+        StringBuilder result = new StringBuilder();
+
+        foreach (string item in Statuses)
+        {
+            result.AppendLine(item);
+        }
+
+        return result.ToString();
+    }
+
+    public static List<string> StringToStatuses(string statuses)
+    {
+        string[] lines = statuses.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        return new List<string>(lines);
     }
 }

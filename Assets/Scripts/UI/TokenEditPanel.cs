@@ -80,6 +80,10 @@ public class TokenEditPanel : MonoBehaviour
         UI.System.Q<NumberNudger>("e_Blessings").AddValueChangedCallback((evt) => {
             Player.Self().CmdRequestTokenDataSetValue(Data, "Blessings", evt);
         });
+        UI.System.Q<Toggle>("e_StackedDie").RegisterValueChangedCallback((evt) => {
+            string s = $"{(evt.newValue ? "+" : "-")}Stacked Die|pos";
+            Player.Self().CmdRequestTokenDataSetValue(Data, "Status", s);
+        });
     }
 
     public static void Show(TokenData data) {
@@ -97,6 +101,8 @@ public class TokenEditPanel : MonoBehaviour
             UI.System.Q<Label>("e_Vigor").text = $"{Data.Vigor}";
             UI.System.Q<SliderInt>("e_VigorSlider").value = Data.Vigor;
             UI.System.Q<SliderInt>("e_VigorSlider").highValue = Data.MaxHP;
+
+            UI.System.Q<Toggle>("e_StackedDie").value = Data.StatusesToString().Contains("Stacked Die");
         }        
     }
 
