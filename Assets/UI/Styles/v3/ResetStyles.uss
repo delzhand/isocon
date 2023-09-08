@@ -181,3 +181,8 @@
   background-color: #242424;
   padding: 4px 8px;
 }
+
+.number-nudger .value {
+    width: 20px;
+    -unity-text-align: middle-center;
+}

@@ -102,6 +102,10 @@ public class Icon_v1_5TokenData : TokenData
     public int Vigilance;
     public int Blessings;
 
+    public string Marked;
+    public string Hatred;
+    public string Stance;
+
     public List<string> Statuses = new();
 
     public int Size;
@@ -238,54 +242,49 @@ public class Icon_v1_5TokenData : TokenData
         panel.Q<Label>("Job").text = Job;
         panel.Q<Label>("Job").style.backgroundColor = c;
 
-        // panel.Q("Statuses").Clear();
-        // int statusCount = 0;
-        // if (CurrentHP == 0) {
-        //     statusCount++;
-        //     addStatus(panel, "Incapacitated", false);
-        // }
-        // else if (CurrentHP * 2 <= MaxHP) {
-        //     statusCount++;
-        //     addStatus(panel, "Bloodied", false);
-        // }
-        // for(int i = 0; i < status.Count; i++) {
-        //     statusCount++;
-        //     addStatus(panel, status[i], TokenController.IsPositive(status[i]));
-        // }
+        panel.Q("Statuses").Clear();
+        int statusCount = 0;
+        if (CurrentHP == 0) {
+            statusCount++;
+            addStatus(panel, "Incapacitated", false);
+        }
+        else if (CurrentHP * 2 <= MaxHP) {
+            statusCount++;
+            addStatus(panel, "Bloodied", false);
+        }
+        for(int i = 0; i < Statuses.Count; i++) {
+            statusCount++;
+            string[] split = Statuses[i].Split("|");
+            addStatus(panel, split[0], split[1] == "pos");
+        }
 
-        // List<(string, int)> counters = new List<(string, int)>();
-        // counters.Add(("Aether", Aether));
-        // counters.Add(("Blessings", Blessings));
-        // counters.Add(("Vigilance", Vigilance));
-        // for(int i = 0; i < counters.Count; i++) {
-        //     if (counters[i].Item2 > 0) {
-        //         statusCount++;
-        //         addStatus(panel, counters[i].Item1 + " " + counters[i].Item2, true);
-        //     }
-        // }
+        List<(string, int)> counters = new List<(string, int)>();
+        counters.Add(("Aether", Aether));
+        counters.Add(("Blessings", Blessings));
+        counters.Add(("Vigilance", Vigilance));
+        for(int i = 0; i < counters.Count; i++) {
+            if (counters[i].Item2 > 0) {
+                statusCount++;
+                addStatus(panel, counters[i].Item1 + " " + counters[i].Item2, true);
+            }
+        }
 
-        // if (Stance.Length > 0) {
-        //     statusCount++;
-        //     addStatus(panel, "Stance " + Stance, true);
-        // }
+        if (Stance.Length > 0 && Stance != "None") {
+            statusCount++;
+            addStatus(panel, Stance, true);
+        }
 
-        // if (Mark.Length > 0) {
-        //     statusCount++;
-        //     addStatus(panel, "Marked by " + Mark, false);
-        // }
+        if (Marked.Length > 0) {
+            statusCount++;
+            addStatus(panel, "Marked by " + Marked, false);
+        }
 
-        // if (Hate.Length > 0) {
-        //     statusCount++;
-        //     addStatus(panel, "Hatred of " + Hate, false);
-        // }
+        if (Hatred.Length > 0) {
+            statusCount++;
+            addStatus(panel, "Hatred of " + Hatred, false);
+        }
 
-        // if (statusCount == 0) {
-        //     addStatus(panel, "Normal", true);
-        // }
-
-        // if (StackedDie) {
-        //     addStatus(panel, "Stacked Die", true);
-        // }
+        UI.ToggleDisplay("StatusColumn", statusCount > 0);
 
         panel.Q<Label>("StatDef").text = Defense.ToString();
         panel.Q<Label>("StatDmg").text = "D" + Damage.ToString();
@@ -294,6 +293,14 @@ public class Icon_v1_5TokenData : TokenData
         panel.Q<Label>("StatSpd").text = Speed.ToString();
         panel.Q<Label>("StatDash").text = Dash.ToString();   
     }
+
+    private void addStatus(VisualElement v, string statusName, bool pos) {
+        Label label = new Label(statusName);
+        label.AddToClassList("no-margin");
+        label.style.color = ColorSidebar.FromHex(pos ? "#74F774" : "#F77474");
+        v.Q("Statuses").Add(label);  
+    }
+
 
     public static bool IsFoe(string jclass) {
         return jclass switch
@@ -457,13 +464,22 @@ public class Icon_v1_5TokenData : TokenData
         switch(label) {
             case "Status":
                 string[] split = value.Split('|');
-                if (split[0][0] == '+') {
-                    Statuses.Add(value.Substring(1));
+                if (Statuses.Contains(value)) {
+                    Statuses.Remove(value);
                 }
                 else {
-                    Statuses.Remove(value.Substring(1));
+                    Statuses.Add(value);
+                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"{split[0]}", Color.white);
                 }
-                PopoverText.Create(TokenObject.GetComponent<Token>(), $"{split[0]}", Color.white);
+                break;
+            case "Stance":
+                Stance = value;
+                break;
+            case "Marked":
+                Marked = value;
+                break;
+            case "Hatred":
+                Hatred = value;
                 break;
             default:
                 FileLogger.Write($"Invalid label '{label}' for string value change");

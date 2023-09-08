@@ -56,7 +56,7 @@
     <ui:VisualElement name="OfflineIndicator" style="background-color: rgb(113, 0, 0); position: relative; width: 100%; height: 30px;">
         <ui:Label tabindex="-1" text="Offline" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: bold;" />
     </ui:VisualElement>
-    <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: none;">
+    <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: flex;">
         <ui:VisualElement name="Toggles" style="background-color: rgba(0, 0, 0, 0);">
             <ui:Button display-tooltip-when-elided="true" name="ConnectionToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/network&apos;); width: 28px; height: 28px;" />
             <ui:Button display-tooltip-when-elided="true" name="PlayersToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/players&apos;); width: 28px; height: 28px;" />
@@ -154,7 +154,7 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="SelectedTokenPanel" class="panel" style="position: absolute; top: auto; left: auto; bottom: 10px; display: flex; right: 0;">
+            <ui:VisualElement name="SelectedTokenPanel" class="panel edit-panel" style="position: absolute; top: auto; left: auto; bottom: 10px; display: none; right: 0;">
                 <ui:Label tabindex="-1" text="SELECTED UNIT" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:VisualElement style="flex-direction: row-reverse;">
                     <ui:VisualElement style="flex-direction: column; margin-left: 10px;">
@@ -225,11 +225,9 @@
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
-                    <ui:VisualElement style="margin-right: 10px; display: flex;">
+                    <ui:VisualElement name="StatusColumn" style="margin-right: 10px; display: flex;">
                         <ui:Label tabindex="-1" text="STATUS" display-tooltip-when-elided="true" style="font-size: 10px; -unity-text-align: middle-left; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; color: rgb(176, 176, 176);" />
-                        <ui:Label tabindex="-1" text="Vigilance +3" display-tooltip-when-elided="true" style="color: rgb(92, 200, 114); font-size: 10px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; display: none;" />
-                        <ui:Label tabindex="-1" text="Shattered" display-tooltip-when-elided="true" style="color: rgb(200, 99, 92); font-size: 10px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; display: none;" />
-                        <ui:Label tabindex="-1" text="&lt;#0000FF&gt;Test" display-tooltip-when-elided="true" name="Statuses" parse-escape-sequences="false" style="font-size: 10px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; display: flex;" />
+                        <ui:VisualElement name="Statuses" style="flex-grow: 1;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
@@ -394,10 +392,10 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="Icon1_5EditPanel" class="panel" style="position: absolute; left: 0; display: none; bottom: 0;">
+    <ui:VisualElement name="Icon1_5EditPanel" class="panel edit-panel" style="position: absolute; left: 0; display: flex; bottom: 0;">
         <ui:Label tabindex="-1" text="STATUS" display-tooltip-when-elided="true" class="panel-header" />
         <ui:ScrollView mouse-wheel-scroll-size="800" style="max-height: 310px;">
-            <ui:Foldout text="Vitals" value="true">
+            <ui:Foldout text="Vitals" value="false">
                 <ui:VisualElement style="flex-direction: row;">
                     <ui:SliderInt picking-mode="Ignore" label="HP" value="40" high-value="40" name="e_CurrentHPSlider" />
                     <ui:Label tabindex="-1" text="40" display-tooltip-when-elided="true" name="e_CurrentHP" />
@@ -417,32 +415,30 @@
                 <ui:Toggle label="Stacked Die" name="e_StackedDie" value="false" />
                 <ui:DropdownField label="Stance" index="0" choices="None,Endless Battlement,Soul Blade,Riposte,Dark Knight,The Saints,Gentleness,Gravebirth,Odinforce" name="e_Stance" />
             </ui:Foldout>
-            <ui:Foldout text="Buffs" value="false">
-                <ui:Toggle label="Counter" name="e_Counter" />
-                <ui:Toggle label="Defiance" name="e_Defiance" />
-                <ui:Toggle label="Dodge" name="e_Dodge" />
-                <ui:Toggle label="Evasion" name="e_Evasion" />
-                <ui:Toggle label="Flying" name="e_Flying" />
-                <ui:Toggle label="Phasing" name="e_Phasing" />
-                <ui:Toggle label="Stealth" name="e_Stealth" />
-                <ui:Toggle label="Sturdy" name="e_Sturdy" />
-                <ui:Toggle label="Unstoppable" name="e_Unstoppable" />
-                <ui:Toggle label="Regeneration" name="e_Regeneration" />
+            <ui:Foldout text="Buffs" value="true">
+                <ui:VisualElement style="flex-direction: row;">
+                    <ui:DropdownField index="0" choices="Counter,Defiance,Dodge,Evasion,Evasion+,Flying,Phasing,Stealth,Sturdy,Unstoppable,Regeneration" name="e_BuffDropdown" class="no-margin" style="margin-top: 4px; flex-grow: 1; margin-right: 2px;" />
+                    <ui:Button text="Toggle" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ToggleBuffButton" style="margin-top: 4px;" />
+                </ui:VisualElement>
             </ui:Foldout>
-            <ui:Foldout text="Debuffs" value="false">
-                <IsoconUILibrary.DoubleToggle label="Blind" ongoing="false" active="false" value1="false" value2="false" name="e_Blind" style="flex-direction: row;" />
-                <IsoconUILibrary.DoubleToggle label="Dazed" ongoing="false" active="false" value1="false" value2="false" name="e_Dazed" style="flex-direction: row;" />
-                <IsoconUILibrary.DoubleToggle label="Pacified" ongoing="false" active="false" value1="false" value2="false" name="e_Pacified" style="flex-direction: row;" />
-                <IsoconUILibrary.DoubleToggle label="Sealed" ongoing="false" active="false" value1="false" value2="false" name="e_Sealed" style="flex-direction: row;" />
-                <IsoconUILibrary.DoubleToggle label="Shattered" ongoing="false" active="false" value1="false" value2="false" name="e_Shattered" style="flex-direction: row;" />
-                <IsoconUILibrary.DoubleToggle label="Slashed" ongoing="false" active="false" value1="false" value2="false" name="e_Slashed" style="flex-direction: row;" />
-                <IsoconUILibrary.DoubleToggle label="Stunned" ongoing="false" active="false" value1="false" value2="false" name="e_Stunned" style="flex-direction: row;" />
-                <IsoconUILibrary.DoubleToggle label="Weakened" ongoing="false" active="false" value1="false" value2="false" name="e_Weakened" style="flex-direction: row;" />
-                <IsoconUILibrary.DoubleToggle label="Vulnerable" ongoing="false" active="false" value1="false" value2="false" name="e_Vulnerable" style="flex-direction: row;" />
-                <ui:TextField picking-mode="Ignore" label="Marked by" name="e_Marked" />
-                <ui:TextField picking-mode="Ignore" label="Hatred of" name="e_Hatred" />
+            <ui:Foldout text="Debuffs" style="margin-bottom: 0;">
+                <ui:VisualElement style="flex-direction: row;">
+                    <ui:DropdownField index="0" choices="Blind,Blind+,Dazed,Dazed+,Pacified,Pacified+,Sealed,Sealed+,Shattered,Shattered+,Slashed,Slashed+,Stunned,Stunned+,Weakened,Weakened+,Vulnerable,Vulnerable+" name="e_DebuffDropdown" class="no-margin" style="margin-top: 4px; flex-grow: 1; margin-right: 2px;" />
+                    <ui:Button text="Toggle" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ToggleDebuffButton" style="margin-top: 4px;" />
+                </ui:VisualElement>
+                <ui:TextField picking-mode="Ignore" label="Marked by" name="e_Marked" class="no-margin" style="margin-top: 4px;" />
+                <ui:TextField picking-mode="Ignore" label="Hatred of" name="e_Hatred" class="no-margin" style="margin-top: 4px;" />
             </ui:Foldout>
         </ui:ScrollView>
-        <ui:Button text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SaveTokenEditsButton" />
+    </ui:VisualElement>
+    <ui:VisualElement class="centered popover" style="flex-grow: 1; position: absolute; left: 50%; top: 50%; flex-direction: row; display: none;">
+        <ui:Label tabindex="-1" text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" class="large" />
+        <ui:Label tabindex="-1" text="1" parse-escape-sequences="true" display-tooltip-when-elided="true" class="large" />
+        <ui:Label tabindex="-1" text="4" parse-escape-sequences="true" display-tooltip-when-elided="true" class="large" />
+        <ui:Label tabindex="-1" text="VIG" parse-escape-sequences="true" display-tooltip-when-elided="true" class="small" />
+    </ui:VisualElement>
+    <ui:VisualElement class="popover" style="flex-grow: 1; position: absolute; left: 50%; top: 54%; flex-direction: row; translate: -50% -50%; display: none;">
+        <ui:Label tabindex="-1" text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" class="small" />
+        <ui:Label tabindex="-1" text="STACKED DIE" parse-escape-sequences="true" display-tooltip-when-elided="true" class="small" />
     </ui:VisualElement>
 </ui:UXML>

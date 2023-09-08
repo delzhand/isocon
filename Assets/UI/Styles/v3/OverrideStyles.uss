@@ -131,3 +131,16 @@
 #Wounds .four {
     left: 0;
 }
+
+.edit-panel .unity-base-field .unity-base-field__label {
+    flex-grow: 0;
+    flex-shrink: 1;
+    min-width: 0px;
+    width: 100px;
+}
+
+.edit-panel .unity-text-field .unity-text-field__input {
+    flex-grow: 1;
+    flex-shrink: 0;
+    min-width: 100px;
+}

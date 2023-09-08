@@ -153,7 +153,23 @@
     top: 0;
     -unity-font-definition: resource('Fonts/Classica-Bold SDF');
     text-shadow: 0 0 1px rgb(0, 0, 0);
-    /* font-size: 32px; */
     text-shadow: 1px 1px 1px rgb(0, 0, 0);
-    
+}
+
+.popover .unity-label {
+    margin: 0;
+    padding: 0;
+    height: 32px;
+    -unity-text-align: middle-center;
+    color: white;
+}
+
+.popover .small {
+    font-size: 14px;
+    -unity-text-align: lower-center;
+    padding-bottom: 1px;
+}
+
+.popover .large {
+    font-size: 32px;
 }

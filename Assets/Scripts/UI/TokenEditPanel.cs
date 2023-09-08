@@ -18,6 +18,7 @@ public class TokenEditPanel : MonoBehaviour
         Wounds();
         Resolve();
         ClassFeatures();
+        Status();
     }
 
     void Update() {
@@ -81,9 +82,34 @@ public class TokenEditPanel : MonoBehaviour
             Player.Self().CmdRequestTokenDataSetValue(Data, "Blessings", evt);
         });
         UI.System.Q<Toggle>("e_StackedDie").RegisterValueChangedCallback((evt) => {
-            string s = $"{(evt.newValue ? "+" : "-")}Stacked Die|pos";
-            Player.Self().CmdRequestTokenDataSetValue(Data, "Status", s);
+            Player.Self().CmdRequestTokenDataSetValue(Data, "Status", "Stacked Die|pos");
+        });        
+        UI.System.Q<DropdownField>("e_Stance").RegisterValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(Data, "Stance", evt.newValue);
         });
+    }
+
+    private void Status() {
+        UI.System.Q<Button>("ToggleBuffButton").RegisterCallback<ClickEvent>((evt) => {
+            string status = UI.System.Q<DropdownField>("e_BuffDropdown").value;
+            Player.Self().CmdRequestTokenDataSetValue(Data, "Status", $"{status}|pos");
+        });
+
+        UI.System.Q<Button>("ToggleDebuffButton").RegisterCallback<ClickEvent>((evt) => {
+            string status = UI.System.Q<DropdownField>("e_DebuffDropdown").value;
+            Player.Self().CmdRequestTokenDataSetValue(Data, "Status", $"{status}|neg");
+        });
+
+        UI.System.Q<TextField>("e_Marked").RegisterCallback<BlurEvent>((evt) => {
+            string s = UI.System.Q<TextField>("e_Marked").value;
+            Player.Self().CmdRequestTokenDataSetValue(Data, "Marked", s);
+        });
+
+        UI.System.Q<TextField>("e_Hatred").RegisterCallback<BlurEvent>((evt) => {
+            string s = UI.System.Q<TextField>("e_Hatred").value;
+            Player.Self().CmdRequestTokenDataSetValue(Data, "Hatred", s);
+        });
+
     }
 
     public static void Show(TokenData data) {
@@ -95,14 +121,23 @@ public class TokenEditPanel : MonoBehaviour
     public static void SyncValues() {
         if (Data != null) {
             UI.System.Q<Label>("e_CurrentHP").text = $"{Data.CurrentHP}";
-            UI.System.Q<SliderInt>("e_CurrentHPSlider").value = Data.CurrentHP;
             UI.System.Q<SliderInt>("e_CurrentHPSlider").highValue = Data.MaxHP;
+            UI.System.Q<SliderInt>("e_CurrentHPSlider").value = Data.CurrentHP;
 
             UI.System.Q<Label>("e_Vigor").text = $"{Data.Vigor}";
-            UI.System.Q<SliderInt>("e_VigorSlider").value = Data.Vigor;
             UI.System.Q<SliderInt>("e_VigorSlider").highValue = Data.MaxHP;
+            UI.System.Q<SliderInt>("e_VigorSlider").value = Data.Vigor;
 
-            UI.System.Q<Toggle>("e_StackedDie").value = Data.StatusesToString().Contains("Stacked Die");
+            UI.System.Q<NumberNudger>("e_Wounds").SetValueWithoutNotify(Data.Wounds);
+            UI.System.Q<NumberNudger>("e_Resolve").SetValueWithoutNotify(Data.Resolve);
+            UI.System.Q<NumberNudger>("e_Aether").SetValueWithoutNotify(Data.Aether);
+            UI.System.Q<NumberNudger>("e_Vigilance").SetValueWithoutNotify(Data.Vigilance);
+            UI.System.Q<NumberNudger>("e_Blessings").SetValueWithoutNotify(Data.Blessings);
+
+            UI.System.Q<Toggle>("e_StackedDie").SetValueWithoutNotify(Data.StatusesToString().Contains("Stacked Die"));
+            UI.System.Q<TextField>("e_Marked").SetValueWithoutNotify(Data.Marked);
+            UI.System.Q<TextField>("e_Marked").SetValueWithoutNotify(Data.Hatred);
+            UI.System.Q<DropdownField>("e_Stance").SetValueWithoutNotify(Data.Stance);
         }        
     }
 
