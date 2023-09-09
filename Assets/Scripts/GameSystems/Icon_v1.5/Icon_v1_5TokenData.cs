@@ -410,29 +410,24 @@ public class Icon_v1_5TokenData : TokenData
             case "CurrentHP":
                 originValue = CurrentHP;
                 CurrentHP = value;                
-                shortLabel = "HP";
-                PopoverText.Create(TokenObject.GetComponent<Token>(), $"{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}{shortLabel}", ChangeColor(value, originValue));
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}|_HP", ChangeColor(value, originValue));
                 break;
             case "Vigor":
                 originValue = Vigor;
                 Vigor = value;
-                shortLabel = "VIG";
-                PopoverText.Create(TokenObject.GetComponent<Token>(), $"{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}{shortLabel}", ChangeColor(value, originValue));
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}|_VIG", ChangeColor(value, originValue));
                 break;
             case "Wounds":
                 originValue = Wounds;
                 Wounds = value;
-                shortLabel = "WND";
                 break;
             case "Aether":
                 originValue = Aether;
                 Aether = value;
-                shortLabel = "ATH";
                 break;
             case "Resolve":
                 originValue = Resolve;
                 Resolve = value;
-                shortLabel = "RES";
                 break;
             case "GroupResolve":
                 // Do nothing, we only call this to trigger the redraw
@@ -441,12 +436,10 @@ public class Icon_v1_5TokenData : TokenData
             case "Vigilance":
                 originValue = Vigilance;
                 Vigilance = value;
-                shortLabel = "VGL";
                 break;
             case "Blessings":
                 originValue = Blessings;
                 Blessings = value;
-                shortLabel = "BLS";
                 break;
             default:
                 FileLogger.Write($"Invalid label '{label}' for int value change");
@@ -468,10 +461,11 @@ public class Icon_v1_5TokenData : TokenData
                 string[] split = value.Split('|');
                 if (Statuses.Contains(value)) {
                     Statuses.Remove(value);
+                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"=-|={split[0].ToUpper()}", ColorSidebar.FromHex("#BBBBBB"));
                 }
                 else {
                     Statuses.Add(value);
-                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"{split[0]}", Color.white);
+                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"=+|={split[0].ToUpper()}", Color.white);
                 }
                 break;
             case "Stance":

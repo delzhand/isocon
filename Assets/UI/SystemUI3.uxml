@@ -20,7 +20,7 @@
     <ui:VisualElement name="Worldspace" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; left: 1px; top: 0; right: 0; bottom: 0;" />
     <ui:VisualElement name="StartupPanel" class="centered" style="margin-bottom: 0; display: none; min-height: 0; width: 570px;">
         <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 0; flex-direction: row; justify-content: center; background-image: resource(&apos;Textures/isocon_logo&apos;); -unity-background-scale-mode: scale-to-fit; margin-bottom: 30px; height: 80px;" />
-        <ui:Label tabindex="-1" text="IsoCON is still in beta! This build should be stable but is still missing important features like token persistence and token stat editing. Multiplayer features are P2P and may require the host player to have port forwarding enabled for port 7777. Client and hosts may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com." display-tooltip-when-elided="true" name="BetaMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%; white-space: normal;" />
+        <ui:Label tabindex="-1" text="IsoCON is still in beta! Multiplayer features are P2P and may require the host player to have port forwarding enabled for port 7777. Client and hosts may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com." display-tooltip-when-elided="true" name="BetaMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%; white-space: normal;" />
         <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="ConnectingMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%;" />
         <ui:VisualElement name="StartupOptions" class="panel" style="flex-grow: 1;">
             <ui:DropdownField index="0" choices="ICON 1.5" name="SystemField" label="Game System" focusable="false" class="no-margin" style="margin-bottom: 8px;" />
@@ -350,7 +350,7 @@
             </ui:VisualElement>
         </ui:ScrollView>
     </ui:VisualElement>
-    <ui:Label tabindex="-1" text="v0.6.0" display-tooltip-when-elided="true" name="Version" style="position: absolute; right: 0; bottom: 0; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); font-size: 12px;" />
+    <ui:Label tabindex="-1" text="v0.5.3" display-tooltip-when-elided="true" name="Version" style="position: absolute; right: 0; bottom: 0; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); font-size: 12px;" />
     <ui:VisualElement name="Toasts" style="flex-grow: 1; background-color: rgb(34, 58, 118); position: absolute; left: auto; top: auto; border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); color: rgb(255, 255, 255); -unity-text-align: middle-right; padding-left: 10px; padding-right: 10px; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; display: none; right: 10px; bottom: 10px;" />
     <ui:VisualElement name="AddTokenPanel" class="panel centered" style="width: 380px; display: none;">
         <ui:Label tabindex="-1" text="CREATE TOKEN" display-tooltip-when-elided="true" class="panel-header" />
@@ -436,7 +436,7 @@
         </ui:ScrollView>
     </ui:VisualElement>
     <ui:VisualElement class="centered popover" style="flex-grow: 1; position: absolute; left: 50%; top: 50%; flex-direction: row; display: none;">
-        <ui:Label tabindex="-1" text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" class="large" />
+        <ui:Label tabindex="-1" text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" class="large" style="top: 0;" />
         <ui:Label tabindex="-1" text="1" parse-escape-sequences="true" display-tooltip-when-elided="true" class="large" />
         <ui:Label tabindex="-1" text="4" parse-escape-sequences="true" display-tooltip-when-elided="true" class="large" />
         <ui:Label tabindex="-1" text="VIG" parse-escape-sequences="true" display-tooltip-when-elided="true" class="small" />

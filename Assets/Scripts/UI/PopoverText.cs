@@ -1,52 +1,75 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class PopoverText : MonoBehaviour
 {
-    private static float Offset;
     private Token Token;
-    private string Text;
-    private List<Label> Elements;
+    private VisualElement Element;
     private float timer;
     private static float duration = .15f;
 
-    public float spacing = 22f;
     void Update()
     {
         timer -= Time.deltaTime;
         if (timer < -1.5f) {
-            for (int i = 0; i < Elements.Count; i++) {
-                UI.System.Q("Worldspace").Remove(Elements[i]);
-            }
+            UI.System.Q("Worldspace").Remove(Element);
             GameObject.Destroy(gameObject);
         }
 
-        float totalWidth = spacing * (Elements.Count - 1);
-        for (int i = 0; i < Elements.Count; i++) {
+        for (int i = 0; i < Element.childCount; i++) {
+            VisualElement child = Element.Children().ToArray()[i];
             float percentage = 1 - Mathf.Clamp((timer + (i/8f))/duration, 0, 1);
-            float height = -(Mathf.Sin(Mathf.PI * percentage) * 20);
-            Elements[i].style.fontSize = Mathf.Lerp(2, 32, percentage);
-            Vector2 offset = new Vector2(spacing * i - (totalWidth/2f) - height, -24 + height);
-            UI.FollowToken(Token, Elements[i], Camera.main, offset, true);
+            float distance = Mathf.Sin(Mathf.PI * percentage) * 20;
+            child.style.left = distance * .5f;
+            child.style.bottom = distance;
+            child.style.scale = new Scale(Vector2.Lerp(Vector2.zero, Vector2.one, percentage));
         }
+
+        UI.FollowToken(Token, Element, Camera.main, new Vector2(0, -18), true);
     }
 
     public static void Create(Token token, string text, Color color) {
+        // String is split on |
+        // A leading / means large, sub-split characters
+        // A leading = means medium text
+        // A leading _ means small text
+
         GameObject g = new GameObject($"Popover {text}");
         PopoverText p = g.AddComponent<PopoverText>();
         p.timer = duration;
         p.Token = token;
-        p.Elements = new();
-        foreach (char character in text) {
-            Label element = new Label(character.ToString());
-            element.AddToClassList("centered");
-            element.AddToClassList("popover");
-            element.style.color = color;
-            UI.System.Q("Worldspace").Add(element);
-            p.Elements.Add(element);
+        p.Element = new VisualElement();
+        p.Element.AddToClassList("centered");
+        p.Element.AddToClassList("popover");
+        p.Element.style.color = color;
+        UI.System.Q("Worldspace").Add(p.Element);
+
+        string[] parts = text.Split("|");
+        foreach (string part in parts) {
+            switch (part[0]) {
+                case '_':
+                case '=':
+                    Label partLabel = new();
+                    partLabel.text = part[1..];
+                    partLabel.style.color = color;
+                    p.Element.Add(partLabel);
+                    if (part[0] == '_') partLabel.AddToClassList("small");
+                    if (part[0] == '=') partLabel.AddToClassList("medium");
+                    break; 
+                case '/':
+                    foreach (char c in part[1..]) {
+                        Label cLabel = new();
+                        cLabel.text = $"{c}";
+                        cLabel.style.color = color;
+                        cLabel.AddToClassList("large");
+                        p.Element.Add(cLabel);
+                    }
+                    break;
+            }
         }
     }
 }
