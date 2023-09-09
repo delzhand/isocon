@@ -86,9 +86,6 @@ public class Icon_v1_5TokenData : TokenData
     [SyncVar]
     public int Resolve;
 
-    [SyncVar]
-    public int GResolve;
-
     public int MaxHP;
     public int Damage;
     public int Fray;
@@ -223,9 +220,10 @@ public class Icon_v1_5TokenData : TokenData
 
         if (!IsFoe(Class)) {
             panel.Q<Label>("ResolveNum").text = Resolve.ToString();
-            panel.Q<Label>("PartyResolveNum").text = "+" + GResolve.ToString();
-            panel.Q<ProgressBar>("ResolveBar").value = Resolve + GResolve;
-            panel.Q<ProgressBar>("PartyResolveBar").value = GResolve;            
+            int partyResolve = (GameSystem.Current() as Icon_v1_5).GroupResolve;
+            panel.Q<Label>("PartyResolveNum").text = "+" + partyResolve;
+            panel.Q<ProgressBar>("ResolveBar").value = Resolve + partyResolve;
+            panel.Q<ProgressBar>("PartyResolveBar").value = partyResolve;            
             panel.Q("ResolveWrapper").style.display = DisplayStyle.Flex;
         }
         else {
@@ -435,6 +433,10 @@ public class Icon_v1_5TokenData : TokenData
                 originValue = Resolve;
                 Resolve = value;
                 shortLabel = "RES";
+                break;
+            case "GroupResolve":
+                // Do nothing, we only call this to trigger the redraw
+                originValue = int.MinValue;
                 break;
             case "Vigilance":
                 originValue = Vigilance;

@@ -56,7 +56,7 @@
     <ui:VisualElement name="OfflineIndicator" style="background-color: rgb(113, 0, 0); position: relative; width: 100%; height: 30px;">
         <ui:Label tabindex="-1" text="Offline" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: bold;" />
     </ui:VisualElement>
-    <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: flex;">
+    <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: none;">
         <ui:VisualElement name="Toggles" style="background-color: rgba(0, 0, 0, 0);">
             <ui:Button display-tooltip-when-elided="true" name="ConnectionToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/network&apos;); width: 28px; height: 28px;" />
             <ui:Button display-tooltip-when-elided="true" name="PlayersToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/players&apos;); width: 28px; height: 28px;" />
@@ -64,7 +64,7 @@
             <ui:Button display-tooltip-when-elided="true" name="MapToggle" text="MAP" class="blank" style="position: relative; background-image: none; width: 28px; height: 28px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: -16px;" />
             <ui:Button display-tooltip-when-elided="true" name="ConfigToggle" text="CFG" class="blank" style="position: relative; background-image: none; width: 28px; height: 28px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: -16px;" />
         </ui:VisualElement>
-        <ui:VisualElement name="Gamespace" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; position: relative; margin-right: 0;">
+        <ui:VisualElement name="Gamespace" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; position: relative; margin-right: 0; margin-left: 10px;">
             <ui:VisualElement name="TerrainInfo" style="background-color: rgba(0, 0, 0, 0); display: flex; position: absolute; right: 0; top: 0; padding-right: 0;">
                 <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Height" text="1h" style="font-size: 40px; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); text-shadow: 2px 2px 0 rgb(0, 0, 0); -unity-text-outline-color: rgb(0, 0, 0); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: upper-right;" />
                 <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Coords" text="A0" style="font-size: 20px; -unity-font-style: normal; color: rgb(255, 255, 255); text-shadow: 2px 2px 0 rgb(0, 0, 0); -unity-text-outline-color: rgb(0, 0, 0); margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 8px; padding-right: 8px; padding-top: 0; padding-bottom: 0; -unity-text-align: upper-center; background-color: rgb(36, 36, 36); left: auto; border-top-left-radius: 12px; border-bottom-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; right: 0; display: flex; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); align-self: flex-end;" />
@@ -231,6 +231,10 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
+            <ui:VisualElement name="Icon1_5TurnInfo" style="position: absolute; left: 0; top: 0;">
+                <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="TurnNumber" text="Turn 1" style="font-size: 32px; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); text-shadow: 2px 2px 0 rgb(0, 0, 0); -unity-text-outline-color: rgb(0, 0, 0); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: upper-right;" />
+                <ui:Button text="New Turn" parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewTurnButton" class="panel" style="padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px;" />
+            </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="Sidebar" style="margin-right: 10px; position: absolute; left: 48px; top: auto; display: flex;">
             <ui:VisualElement name="ConnectionSidebar" class="panel" style="position: relative; margin-bottom: 0; display: none;">
@@ -392,7 +396,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="Icon1_5EditPanel" class="panel edit-panel" style="position: absolute; left: 0; display: flex; bottom: 0;">
+    <ui:VisualElement name="Icon1_5EditPanel" class="panel edit-panel" style="position: absolute; left: 0; display: none; bottom: 0;">
         <ui:Label tabindex="-1" text="STATUS" display-tooltip-when-elided="true" class="panel-header" />
         <ui:ScrollView mouse-wheel-scroll-size="800" style="max-height: 310px;">
             <ui:Foldout text="Vitals" value="false">
@@ -432,7 +436,7 @@
         </ui:ScrollView>
     </ui:VisualElement>
     <ui:VisualElement class="centered popover" style="flex-grow: 1; position: absolute; left: 50%; top: 50%; flex-direction: row; display: none;">
-        <ui:Label tabindex="-1" text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" class="large" />
+        <ui:Label tabindex="-1" text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" class="large" />
         <ui:Label tabindex="-1" text="1" parse-escape-sequences="true" display-tooltip-when-elided="true" class="large" />
         <ui:Label tabindex="-1" text="4" parse-escape-sequences="true" display-tooltip-when-elided="true" class="large" />
         <ui:Label tabindex="-1" text="VIG" parse-escape-sequences="true" display-tooltip-when-elided="true" class="small" />

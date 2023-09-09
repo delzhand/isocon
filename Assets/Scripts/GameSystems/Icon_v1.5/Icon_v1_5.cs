@@ -4,9 +4,14 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using System.Linq;
 using System;
+using System.Data.Common;
 
 public class Icon_v1_5 : GameSystem
 {
+    public int TurnNumber = 1;
+    public int GroupResolve = 0;
+
+
     public override string SystemName()
     {
         return "ICON 1.5";
@@ -26,6 +31,23 @@ public class Icon_v1_5 : GameSystem
         (data as Icon_v1_5TokenData).Change(label, value);
     }
 
+    public override void GameDataSetValue(string label, int value) {
+        switch (label) {
+            case "TurnNumber":
+                TurnNumber = value;
+                UI.System.Q<Label>("TurnNumber").text = $"Turn {TurnNumber}";
+                break;
+            case "GroupResolve":
+                GroupResolve = value;
+                Token selected = TokenController.GetSelected();
+                if (selected != null) {
+                    TokenData selectedData = selected.onlineDataObject.GetComponent<TokenData>();
+                    Player.Self().CmdRequestTokenDataSetValue(selectedData, "GroupResolve", GroupResolve);
+                }
+                break;
+        }
+    }
+
     public override Texture2D GetGraphic(string json) {
         Icon_v1_5TokenDataRaw raw = JsonUtility.FromJson<Icon_v1_5TokenDataRaw>(json);
         return TextureSender.LoadImageFromFile(raw.GraphicHash, true);
@@ -42,6 +64,11 @@ public class Icon_v1_5 : GameSystem
     public override void Setup() {
         AddTokenSetup();
         SetJobOptions("Stalwart");
+        UI.ToggleDisplay("Icon1_5TurnInfo", true);
+        UI.System.Q<Button>("NewTurnButton").RegisterCallback<ClickEvent>((evt) => {
+            Player.Self().CmdRequestGameDataSetValue("TurnNumber", TurnNumber+1);
+            Player.Self().CmdRequestGameDataSetValue("GroupResolve", GroupResolve+1);
+        });
     }
 
     public override void Teardown() {

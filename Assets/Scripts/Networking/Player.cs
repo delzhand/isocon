@@ -150,7 +150,14 @@ public class Player : NetworkBehaviour
     // public void RpcPlaceToken(GameObject dataObject) {
     //     dataObject.GetComponent<TokenData>().OnField = true;
     // }
-
+    [Command]
+    public void CmdRequestGameDataSetValue(string label, int value) {
+        RpcGameDataSetValue(label, value);
+    }
+    [ClientRpc]
+    public void RpcGameDataSetValue(string label, int value) {
+        GameSystem.Current().GameDataSetValue(label, value);
+    }
     [Command]
     public void CmdRequestTokenDataSetValue(TokenData data, string label, int value) {
         RpcTokenDataSetValue(data, label, value);

@@ -130,6 +130,7 @@ public class TokenEditPanel : MonoBehaviour
 
             UI.System.Q<NumberNudger>("e_Wounds").SetValueWithoutNotify(Data.Wounds);
             UI.System.Q<NumberNudger>("e_Resolve").SetValueWithoutNotify(Data.Resolve);
+            UI.System.Q<NumberNudger>("e_PartyResolve").SetValueWithoutNotify((GameSystem.Current() as Icon_v1_5).GroupResolve);
             UI.System.Q<NumberNudger>("e_Aether").SetValueWithoutNotify(Data.Aether);
             UI.System.Q<NumberNudger>("e_Vigilance").SetValueWithoutNotify(Data.Vigilance);
             UI.System.Q<NumberNudger>("e_Blessings").SetValueWithoutNotify(Data.Blessings);

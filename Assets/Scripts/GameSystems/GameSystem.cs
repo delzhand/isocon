@@ -42,6 +42,10 @@ public class GameSystem : MonoBehaviour
         throw new NotImplementedException();
     }
 
+    public virtual void GameDataSetValue(string label, int value) {
+        throw new NotImplementedException();
+    }
+
     public virtual Texture2D GetGraphic(string json) {
         throw new NotImplementedException();
     }
