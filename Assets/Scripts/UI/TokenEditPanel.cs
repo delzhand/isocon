@@ -66,9 +66,10 @@ public class TokenEditPanel : MonoBehaviour
         UI.System.Q<NumberNudger>("e_Resolve").AddValueChangedCallback((evt) => {
             Player.Self().CmdRequestTokenDataSetValue(Data, "Resolve", evt);
         });
-        // UI.System.Q<NumberNudger>("e_PartyResolve").AddValueChangedCallback((evt) => {
-        //     Player.Self().CmdRequestTokenDataSetValue(Data, "PartyResolve", evt);
-        // });        
+        UI.System.Q<NumberNudger>("e_PartyResolve").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestGameDataSetValue("PartyResolve", evt);
+            // Player.Self().CmdRequestTokenDataSetValue(Data, "PartyResolve", evt);
+        });        
     }
 
     private void ClassFeatures() {
@@ -130,7 +131,7 @@ public class TokenEditPanel : MonoBehaviour
 
             UI.System.Q<NumberNudger>("e_Wounds").SetValueWithoutNotify(Data.Wounds);
             UI.System.Q<NumberNudger>("e_Resolve").SetValueWithoutNotify(Data.Resolve);
-            UI.System.Q<NumberNudger>("e_PartyResolve").SetValueWithoutNotify((GameSystem.Current() as Icon_v1_5).GroupResolve);
+            UI.System.Q<NumberNudger>("e_PartyResolve").SetValueWithoutNotify((GameSystem.Current() as Icon_v1_5).PartyResolve);
             UI.System.Q<NumberNudger>("e_Aether").SetValueWithoutNotify(Data.Aether);
             UI.System.Q<NumberNudger>("e_Vigilance").SetValueWithoutNotify(Data.Vigilance);
             UI.System.Q<NumberNudger>("e_Blessings").SetValueWithoutNotify(Data.Blessings);

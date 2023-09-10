@@ -220,7 +220,7 @@ public class Icon_v1_5TokenData : TokenData
 
         if (!IsFoe(Class)) {
             panel.Q<Label>("ResolveNum").text = Resolve.ToString();
-            int partyResolve = (GameSystem.Current() as Icon_v1_5).GroupResolve;
+            int partyResolve = (GameSystem.Current() as Icon_v1_5).PartyResolve;
             panel.Q<Label>("PartyResolveNum").text = "+" + partyResolve;
             panel.Q<ProgressBar>("ResolveBar").value = Resolve + partyResolve;
             panel.Q<ProgressBar>("PartyResolveBar").value = partyResolve;            
@@ -405,7 +405,6 @@ public class Icon_v1_5TokenData : TokenData
     public void Change(string label, int value) {
         FileLogger.Write($"{Name} {label} set to {value}");
         int originValue;
-        string shortLabel;
         switch(label) {
             case "CurrentHP":
                 originValue = CurrentHP;
@@ -429,7 +428,7 @@ public class Icon_v1_5TokenData : TokenData
                 originValue = Resolve;
                 Resolve = value;
                 break;
-            case "GroupResolve":
+            case "PartyResolve":
                 // Do nothing, we only call this to trigger the redraw
                 originValue = int.MinValue;
                 break;

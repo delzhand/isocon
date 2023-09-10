@@ -9,7 +9,7 @@ using System.Data.Common;
 public class Icon_v1_5 : GameSystem
 {
     public int TurnNumber = 1;
-    public int GroupResolve = 0;
+    public int PartyResolve = 0;
 
 
     public override string SystemName()
@@ -37,12 +37,12 @@ public class Icon_v1_5 : GameSystem
                 TurnNumber = value;
                 UI.System.Q<Label>("TurnNumber").text = $"Turn {TurnNumber}";
                 break;
-            case "GroupResolve":
-                GroupResolve = value;
+            case "PartyResolve":
+                PartyResolve = value;
                 Token selected = TokenController.GetSelected();
                 if (selected != null) {
                     TokenData selectedData = selected.onlineDataObject.GetComponent<TokenData>();
-                    Player.Self().CmdRequestTokenDataSetValue(selectedData, "GroupResolve", GroupResolve);
+                    Player.Self().CmdRequestTokenDataSetValue(selectedData, "PartyResolve", PartyResolve);
                 }
                 break;
         }
@@ -67,7 +67,7 @@ public class Icon_v1_5 : GameSystem
         UI.ToggleDisplay("Icon1_5TurnInfo", true);
         UI.System.Q<Button>("NewTurnButton").RegisterCallback<ClickEvent>((evt) => {
             Player.Self().CmdRequestGameDataSetValue("TurnNumber", TurnNumber+1);
-            Player.Self().CmdRequestGameDataSetValue("GroupResolve", GroupResolve+1);
+            Player.Self().CmdRequestGameDataSetValue("PartyResolve", PartyResolve+1);
         });
     }
 

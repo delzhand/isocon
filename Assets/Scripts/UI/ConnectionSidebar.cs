@@ -89,6 +89,10 @@ public class ConnectionSidebar : MonoBehaviour
     }
 
     public static string GetLocalIP() {
+        #if UNITY_WEBGL
+            return "";
+        #endif
+
         return Dns.GetHostEntry(Dns.GetHostName()).AddressList.First(
             f => f.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
         .ToString();
