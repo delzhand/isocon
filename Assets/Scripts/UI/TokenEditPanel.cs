@@ -13,6 +13,7 @@ public class TokenEditPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        UI.SetBlocking(UI.System, new string[]{"Icon1_5EditPanel"});
         HP();
         Vigor();
         Wounds();
