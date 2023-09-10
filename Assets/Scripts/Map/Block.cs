@@ -181,7 +181,7 @@ public class Block : MonoBehaviour
         if (Type == BlockType.Slope) {
             height = transform.localPosition.y + "~" + (transform.localPosition.y + 1);
         }
-        UI.System.Q<Label>("Height").text = height + "h";
+        UI.System.Q<Label>("Height").text = $"{height}";
         UI.System.Q<Label>("Coords").text = toAlpha(getY() + 1) + "" + (getX()+1);
         UI.System.Q("Coords").style.display = DisplayStyle.Flex;
         UI.System.Q("Effects").Clear();

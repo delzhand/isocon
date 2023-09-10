@@ -23,9 +23,8 @@
     padding-right: 8px;
     padding-top: 8px;
     padding-bottom: 8px;
-    -unity-font-definition: resource('Fonts/ModernSans-Light SDF');
+    -unity-font-definition: resource('Fonts/NeueRemanSans-Regular SDF');
     text-shadow: 0 0 1px rgb(0, 0, 0);
-    -unity-font-style: bold;
     border-radius: 3px;
     /* border-width: 1px;
     border-color: rgba(255, 255, 255, .55); */
@@ -157,10 +156,11 @@
     position: absolute;
     left: 0;
     top: 0;
-    -unity-font-definition: resource('Fonts/Classica-Bold SDF');
+    -unity-font-definition: resource('Fonts/DAYROM__ SDF');
     text-shadow: 0 0 1px rgb(0, 0, 0);
-    text-shadow: 1px 1px 1px rgb(0, 0, 0);
+    text-shadow: 2px 2px 1px rgb(0, 0, 0);
     flex-direction: row;
+    -unity-font-style: bold;
 }
 
 .popover .unity-label {

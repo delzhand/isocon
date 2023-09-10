@@ -29,7 +29,7 @@ public class PopoverText : MonoBehaviour
             child.style.scale = new Scale(Vector2.Lerp(Vector2.zero, Vector2.one, percentage));
         }
 
-        UI.FollowToken(Token, Element, Camera.main, new Vector2(0, -18), true);
+        UI.FollowToken(Token, Element, Camera.main, new Vector2(0, -22), true);
     }
 
     public static void Create(Token token, string text, Color color) {

@@ -18,9 +18,9 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="Worldspace" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; left: 1px; top: 0; right: 0; bottom: 0;" />
-    <ui:VisualElement name="StartupPanel" class="centered" style="margin-bottom: 0; display: flex; min-height: 0; width: 570px;">
+    <ui:VisualElement name="StartupPanel" class="centered" style="margin-bottom: 0; display: none; min-height: 0; width: 570px;">
         <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 0; flex-direction: row; justify-content: center; background-image: resource(&apos;Textures/isocon_logo&apos;); -unity-background-scale-mode: scale-to-fit; margin-bottom: 30px; height: 80px;" />
-        <ui:Label tabindex="-1" text="IsoCON is still in beta! Multiplayer features are P2P and may require the host player to have port forwarding enabled for port 7777. Client and hosts may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com." display-tooltip-when-elided="true" name="BetaMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%; white-space: normal; -unity-slice-scale: 1px; -unity-background-scale-mode: stretch-to-fill; margin-bottom: 4px;" />
+        <ui:Label tabindex="-1" text="IsoCON is still in beta! Multiplayer features are P2P and may require the host player to have port forwarding enabled for port 7777. Client and hosts may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com." display-tooltip-when-elided="true" name="BetaMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%; white-space: normal; -unity-slice-scale: 1px; -unity-background-scale-mode: stretch-to-fill; margin-bottom: 4px; word-spacing: 0; letter-spacing: 0; -unity-paragraph-spacing: 0;" />
         <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="ConnectingMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%; margin-bottom: 4px;" />
         <ui:VisualElement name="StartupOptions" class="panel" style="flex-grow: 1;">
             <ui:DropdownField index="0" choices="ICON 1.5" name="SystemField" label="Game System" focusable="false" class="no-margin" style="margin-bottom: 8px;" />
@@ -53,9 +53,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="OfflineIndicator" style="background-color: rgb(113, 0, 0); position: relative; width: 100%; height: 30px;">
-        <ui:Label tabindex="-1" text=" " display-tooltip-when-elided="true" style="-unity-text-align: upper-center; color: rgb(255, 255, 255); -unity-font-style: bold;" />
-    </ui:VisualElement>
+    <ui:VisualElement name="OfflineIndicator" style="background-color: rgb(113, 0, 0); position: relative; width: 100%; height: 4px;" />
     <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: none;">
         <ui:VisualElement name="Toggles" style="background-color: rgba(0, 0, 0, 0);">
             <ui:Button display-tooltip-when-elided="true" name="ConnectionToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/network&apos;); width: 28px; height: 28px;" />
@@ -66,13 +64,16 @@
         </ui:VisualElement>
         <ui:VisualElement name="Gamespace" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; position: relative; margin-right: 0; margin-left: 10px;">
             <ui:VisualElement name="TerrainInfo" style="background-color: rgba(0, 0, 0, 0); display: flex; position: absolute; right: 0; top: 0; padding-right: 0;">
-                <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Height" text="1h" style="font-size: 40px; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); text-shadow: 2px 2px 0 rgb(0, 0, 0); -unity-text-outline-color: rgb(0, 0, 0); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: upper-right;" />
-                <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Coords" text="A0" style="font-size: 20px; -unity-font-style: normal; color: rgb(255, 255, 255); text-shadow: 2px 2px 0 rgb(0, 0, 0); -unity-text-outline-color: rgb(0, 0, 0); margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 8px; padding-right: 8px; padding-top: 0; padding-bottom: 0; -unity-text-align: upper-center; background-color: rgb(36, 36, 36); left: auto; border-top-left-radius: 12px; border-bottom-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; right: 0; display: flex; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); align-self: flex-end;" />
+                <ui:VisualElement style="flex-grow: 1; flex-direction: row; -unity-text-align: upper-right; justify-content: flex-end;">
+                    <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Height" text="1" style="font-size: 56px; -unity-font-definition: resource(&apos;Fonts/DAYROM__ SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); text-shadow: 2px 2px 0 rgb(0, 0, 0); -unity-text-outline-color: rgb(0, 0, 0); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
+                    <ui:Label tabindex="-1" display-tooltip-when-elided="true" text="h" style="font-size: 32px; -unity-font-definition: resource(&apos;Fonts/DAYROM__ SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); text-shadow: 2px 2px 0 rgb(0, 0, 0); -unity-text-outline-color: rgb(0, 0, 0); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: middle-right;" />
+                </ui:VisualElement>
+                <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Coords" text="A0" style="font-size: 20px; -unity-font-style: normal; color: rgb(255, 255, 255); text-shadow: 2px 2px 0 rgb(0, 0, 0); -unity-text-outline-color: rgb(0, 0, 0); margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 8px; padding-right: 8px; padding-top: 0; padding-bottom: 0; -unity-text-align: upper-center; background-color: rgb(36, 36, 36); left: auto; border-top-left-radius: 12px; border-bottom-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; right: 0; display: flex; align-self: flex-end; -unity-font-definition: resource(&apos;Fonts/NeueRemanSans-Regular SDF&apos;);" />
                 <ui:VisualElement name="Effects" class="effect" style="margin-top: 10px;" />
             </ui:VisualElement>
             <ui:VisualElement name="CameraControls" class="panel" style="flex-grow: 1; left: 50%; top: 0; position: absolute; translate: -50% 0; flex-direction: row; -unity-text-align: upper-left; display: flex; justify-content: space-between; width: 469px; padding-left: 6px; padding-right: 6px; padding-top: 4px; padding-bottom: 4px; border-top-left-radius: 16px; border-bottom-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px;">
                 <ui:Button display-tooltip-when-elided="true" name="RotateCCW" class="rotate blank" style="background-image: resource(&apos;Textures/rotateCCW&apos;); background-color: rgba(188, 188, 188, 0); width: 24px; height: 24px; right: auto; align-self: center;" />
-                <ui:Label tabindex="-1" text="Zoom" display-tooltip-when-elided="true" class="no-margin" />
+                <ui:Label tabindex="-1" text="Zoom" display-tooltip-when-elided="true" class="no-margin" style="-unity-text-align: middle-left;" />
                 <ui:Slider picking-mode="Ignore" value="4.5" high-value="2.5" name="ZoomScale" low-value="7" focusable="false" class="no-margin" style="align-self: center;" />
                 <ui:Button text="Overhead" display-tooltip-when-elided="true" name="OverheadButton" />
                 <ui:Button text="Indicators" display-tooltip-when-elided="true" name="IndicatorsButton" />
@@ -157,12 +158,12 @@
             <ui:VisualElement name="SelectedTokenPanel" class="panel edit-panel" style="position: absolute; top: auto; left: auto; bottom: 10px; display: none; right: 0;">
                 <ui:Label tabindex="-1" text="SELECTED UNIT" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:VisualElement style="flex-direction: row-reverse;">
-                    <ui:VisualElement style="flex-direction: column; margin-left: 10px;">
+                    <ui:VisualElement style="flex-direction: column; margin-left: 10px; max-width: 90px;">
                         <ui:VisualElement name="PortraitFrame" style="background-color: rgba(0, 0, 0, 0); width: 90px; height: 90px;">
                             <ui:VisualElement name="ClassBackground" class="centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.72); width: 70%; height: 70%; rotate: 45deg; translate: -50% -50%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-left-color: rgb(0, 131, 255); border-right-color: rgb(0, 131, 255); border-top-color: rgb(0, 131, 255); border-bottom-color: rgb(0, 131, 255); border-left-width: 5px; border-right-width: 5px; border-top-width: 5px; border-bottom-width: 5px;" />
                             <ui:VisualElement name="Portrait" class="self-centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: resource(&apos;Textures/Chibis/enochian&apos;); position: absolute; height: 100%; left: 50%; width: 100%; top: 50%; -unity-background-scale-mode: scale-to-fit;" />
                         </ui:VisualElement>
-                        <ui:Label tabindex="-1" text="Gradis" display-tooltip-when-elided="true" name="Name" style="margin-left: 0; margin-right: 0; margin-top: 4px; margin-bottom: 4px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
+                        <ui:Label tabindex="-1" text="Graddes" display-tooltip-when-elided="true" name="Name" style="margin-left: 0; margin-right: 0; margin-top: 4px; margin-bottom: 4px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; white-space: normal;" />
                         <ui:Label tabindex="-1" text="ELITE" display-tooltip-when-elided="true" name="Elite" class="purple" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 4px; padding-right: 4px; padding-top: 2px; padding-bottom: 1px; font-size: 8px; -unity-text-align: middle-center; white-space: normal; text-shadow: 0 0 1px rgba(0, 0, 0, 0);" />
                         <ui:Label tabindex="-1" text="Enochian" display-tooltip-when-elided="true" name="Job" class="blue" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 4px; padding-right: 4px; padding-top: 2px; padding-bottom: 1px; font-size: 12px; -unity-text-align: middle-center; white-space: normal; text-shadow: 0 0 1px rgba(0, 0, 0, 0);" />
                     </ui:VisualElement>
@@ -231,9 +232,9 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="Icon1_5TurnInfo" style="position: absolute; left: 0; top: 0;">
-                <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="TurnNumber" text="Turn 1" style="font-size: 32px; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); text-shadow: 2px 2px 0 rgb(0, 0, 0); -unity-text-outline-color: rgb(0, 0, 0); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: upper-right;" />
-                <ui:Button text="New Turn" parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewTurnButton" class="panel" style="padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px;" />
+            <ui:VisualElement name="Icon1_5TurnInfo" class="panel" style="position: absolute; left: 0; top: 0; flex-direction: row;">
+                <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="TurnNumber" text="Turn 1" style="font-size: 32px; -unity-font-style: bold; color: rgb(255, 255, 255); text-shadow: 2px 2px 0 rgb(0, 0, 0); -unity-text-outline-color: rgb(0, 0, 0); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: middle-right;" />
+                <ui:Button text="New Turn" parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewTurnButton" style="padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px; margin-left: 8px;" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="Sidebar" style="margin-right: 10px; position: absolute; left: 48px; top: auto; display: flex;">
@@ -350,7 +351,7 @@
             </ui:VisualElement>
         </ui:ScrollView>
     </ui:VisualElement>
-    <ui:Label tabindex="-1" text="v0.5.3" display-tooltip-when-elided="true" name="Version" style="position: absolute; right: 0; bottom: 0; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); font-size: 12px;" />
+    <ui:Label tabindex="-1" text="v0.5.4" display-tooltip-when-elided="true" name="Version" style="position: absolute; right: 0; bottom: 0; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); font-size: 12px;" />
     <ui:VisualElement name="Toasts" style="flex-grow: 1; background-color: rgb(34, 58, 118); position: absolute; left: auto; top: auto; border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); color: rgb(255, 255, 255); -unity-text-align: middle-right; padding-left: 10px; padding-right: 10px; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; display: none; right: 10px; bottom: 10px;" />
     <ui:VisualElement name="AddTokenPanel" class="panel centered" style="width: 380px; display: none;">
         <ui:Label tabindex="-1" text="CREATE TOKEN" display-tooltip-when-elided="true" class="panel-header" />
