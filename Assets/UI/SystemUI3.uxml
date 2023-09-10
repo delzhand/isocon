@@ -18,10 +18,10 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="Worldspace" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; left: 1px; top: 0; right: 0; bottom: 0;" />
-    <ui:VisualElement name="StartupPanel" class="centered" style="margin-bottom: 0; display: none; min-height: 0; width: 570px;">
+    <ui:VisualElement name="StartupPanel" class="centered" style="margin-bottom: 0; display: flex; min-height: 0; width: 570px;">
         <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 0; flex-direction: row; justify-content: center; background-image: resource(&apos;Textures/isocon_logo&apos;); -unity-background-scale-mode: scale-to-fit; margin-bottom: 30px; height: 80px;" />
-        <ui:Label tabindex="-1" text="IsoCON is still in beta! Multiplayer features are P2P and may require the host player to have port forwarding enabled for port 7777. Client and hosts may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com." display-tooltip-when-elided="true" name="BetaMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%; white-space: normal;" />
-        <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="ConnectingMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%;" />
+        <ui:Label tabindex="-1" text="IsoCON is still in beta! Multiplayer features are P2P and may require the host player to have port forwarding enabled for port 7777. Client and hosts may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com." display-tooltip-when-elided="true" name="BetaMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%; white-space: normal; -unity-slice-scale: 1px; -unity-background-scale-mode: stretch-to-fill; margin-bottom: 4px;" />
+        <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="ConnectingMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%; margin-bottom: 4px;" />
         <ui:VisualElement name="StartupOptions" class="panel" style="flex-grow: 1;">
             <ui:DropdownField index="0" choices="ICON 1.5" name="SystemField" label="Game System" focusable="false" class="no-margin" style="margin-bottom: 8px;" />
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: space-between; width: 100%;">
@@ -434,15 +434,5 @@
                 <ui:TextField picking-mode="Ignore" label="Hatred of" name="e_Hatred" class="no-margin" style="margin-top: 4px;" />
             </ui:Foldout>
         </ui:ScrollView>
-    </ui:VisualElement>
-    <ui:VisualElement class="centered popover" style="flex-grow: 1; position: absolute; left: 50%; top: 50%; flex-direction: row; display: none;">
-        <ui:Label tabindex="-1" text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" class="large" style="top: 0;" />
-        <ui:Label tabindex="-1" text="1" parse-escape-sequences="true" display-tooltip-when-elided="true" class="large" />
-        <ui:Label tabindex="-1" text="4" parse-escape-sequences="true" display-tooltip-when-elided="true" class="large" />
-        <ui:Label tabindex="-1" text="VIG" parse-escape-sequences="true" display-tooltip-when-elided="true" class="small" />
-    </ui:VisualElement>
-    <ui:VisualElement class="popover" style="flex-grow: 1; position: absolute; left: 50%; top: 54%; flex-direction: row; translate: -50% -50%; display: none;">
-        <ui:Label tabindex="-1" text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" class="small" />
-        <ui:Label tabindex="-1" text="STACKED DIE" parse-escape-sequences="true" display-tooltip-when-elided="true" class="small" />
     </ui:VisualElement>
 </ui:UXML>

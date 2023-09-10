@@ -17,7 +17,7 @@
 }
 
 .panel {
-    background-color: rgba(0, 0, 0, .98);
+    /* background-color: rgba(0, 0, 0, .98); */
     color: rgb(255, 255, 255);
     padding-left: 8px;
     padding-right: 8px;
@@ -27,8 +27,14 @@
     text-shadow: 0 0 1px rgb(0, 0, 0);
     -unity-font-style: bold;
     border-radius: 3px;
-    border-width: 1px;
-    border-color: rgba(255, 255, 255, .55);
+    /* border-width: 1px;
+    border-color: rgba(255, 255, 255, .55); */
+
+    background-image: resource('Textures/9slice');
+    -unity-slice-left: 5;
+    -unity-slice-right: 5;
+    -unity-slice-top: 5;
+    -unity-slice-bottom: 6;
 }
 
 .panel .hover {
