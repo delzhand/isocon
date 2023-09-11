@@ -238,23 +238,23 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="Sidebar" style="margin-right: 10px; position: absolute; left: 48px; top: auto; display: flex;">
-            <ui:VisualElement name="ConnectionSidebar" class="panel" style="position: relative; margin-bottom: 0; display: none;">
+            <ui:VisualElement name="ConnectionSidebar" class="panel" style="position: relative; margin-bottom: 4px; display: none;">
                 <ui:Label tabindex="-1" text="CONNECTION" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:VisualElement name="Connection" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
                     <ui:Label tabindex="-1" text="Not Connected" display-tooltip-when-elided="true" name="ConnectionStatus" style="-unity-text-align: upper-center; white-space: normal;" />
                     <ui:Button text="Disconnect" display-tooltip-when-elided="true" name="DisconnectButton" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="PlayersSidebar" class="panel" style="position: relative; left: auto; top: auto; display: none;">
+            <ui:VisualElement name="PlayersSidebar" class="panel" style="position: relative; left: auto; top: auto; display: none; margin-bottom: 4px;">
                 <ui:Label tabindex="-1" text="PLAYERS" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:VisualElement name="PlayerList" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); overflow: hidden; margin-top: 8px;" />
             </ui:VisualElement>
-            <ui:VisualElement name="SessionSidebar" class="panel" style="position: relative; left: auto; top: auto; display: none;">
+            <ui:VisualElement name="SessionSidebar" class="panel" style="position: relative; left: auto; top: auto; display: none; margin-bottom: 4px;">
                 <ui:Label tabindex="-1" text="SESSION" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:DropdownField index="-1" name="SessionField" class="no-margin" />
                 <ui:Button text="New Session" display-tooltip-when-elided="true" name="NewSessionButton" style="margin-top: 2px;" />
             </ui:VisualElement>
-            <ui:VisualElement name="MapSidebar" class="panel" style="position: relative; left: auto; top: auto; display: none; min-height: auto;">
+            <ui:VisualElement name="MapSidebar" class="panel" style="position: relative; left: auto; top: auto; display: none; min-height: auto; margin-bottom: 4px;">
                 <ui:Label tabindex="-1" text="MAP" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:VisualElement name="MapDefaultButtons" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
                     <ui:Button text="Create New Map" display-tooltip-when-elided="true" name="NewMapButton" style="margin-top: 2px; margin-bottom: 4px; display: flex;" />
@@ -272,14 +272,14 @@
                     <ui:Button text="Confirm" display-tooltip-when-elided="true" name="ConfirmSaveButton" style="margin-right: 0; margin-top: 4px;" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="ConfigSidebar" class="panel" style="position: relative; left: auto; top: auto; display: none;">
+            <ui:VisualElement name="ConfigSidebar" class="panel" style="position: relative; left: auto; top: auto; display: none; margin-bottom: 4px;">
                 <ui:Label tabindex="-1" text="CONFIG" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:Label tabindex="-1" text="UI Scale" display-tooltip-when-elided="true" />
                 <ui:DropdownField index="3" choices="50%,75%,100%,125%,150%,175%,200%,225%,250%" name="UIScaleField" class="no-margin" />
                 <ui:Label tabindex="-1" text="Data Path" display-tooltip-when-elided="true" />
                 <ui:TextField picking-mode="Ignore" name="DataPathField" class="no-margin" />
             </ui:VisualElement>
-            <ui:VisualElement name="ToolsSidebar" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: none;">
+            <ui:VisualElement name="ToolsSidebar" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: none; margin-bottom: 4px;">
                 <ui:Label tabindex="-1" text="EDIT TOOLS" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:Button text="Center View" display-tooltip-when-elided="true" name="CenterView" class="toolbox tool-button" />
                 <ui:Foldout text="Terrain" value="false">
@@ -296,10 +296,10 @@
                     <ui:Button text="Hidden" display-tooltip-when-elided="true" name="Hidden" class="toolbox tool-button" />
                 </ui:Foldout>
                 <ui:Foldout text="Tile Effects" value="false">
-                    <ui:Button text="Clear Effects" display-tooltip-when-elided="true" name="ClearMarks" class="toolbox tool-button" />
-                    <ui:Button text="Set Effect" display-tooltip-when-elided="true" name="AddMark" class="toolbox tool-button" />
-                    <ui:DropdownField index="0" choices="Difficult,Dangerous,Pit,Interactive,Impassable,Custom" name="MarkField" class="no-margin" style="display: flex;" />
-                    <ui:TextField picking-mode="Ignore" value=" Custom Effect" name="OtherMark" class="no-margin" style="display: flex;" />
+                    <ui:Button text="Clear Effects" display-tooltip-when-elided="true" name="ClearMarks" class="toolbox tool-button" style="margin-top: 4px;" />
+                    <ui:Button text="Set Effect" display-tooltip-when-elided="true" name="AddMark" class="toolbox tool-button" style="margin-top: 4px;" />
+                    <ui:DropdownField index="0" choices="Difficult,Dangerous,Pit,Interactive,Impassable,Custom" name="MarkField" class="no-margin" style="display: flex; margin-top: 4px;" />
+                    <ui:TextField picking-mode="Ignore" value=" Custom Effect" name="OtherMark" class="no-margin" style="display: flex; margin-top: 4px;" />
                 </ui:Foldout>
                 <ui:Foldout text="Colors" value="false" focusable="true">
                     <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
@@ -320,7 +320,7 @@
                     </ui:VisualElement>
                 </ui:Foldout>
             </ui:VisualElement>
-            <ui:VisualElement name="ColorSidebar" class="panel" style="position: relative; margin-bottom: 0; display: none;">
+            <ui:VisualElement name="ColorSidebar" class="panel" style="position: relative; margin-bottom: 4px; display: none;">
                 <ui:Label tabindex="-1" text="COLOR EDIT" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
                     <ui:Label tabindex="-1" text="R" display-tooltip-when-elided="true" style="width: 20px;" />
@@ -395,6 +395,10 @@
                 <ui:VisualElement class="self-centered" style="flex-grow: 1; background-color: rgb(255, 255, 255); rotate: 45deg; width: 6px; height: 6px; position: absolute; top: 50%; display: flex;" />
                 <ui:Label tabindex="-1" text="Delete" display-tooltip-when-elided="true" style="padding-left: 10px; padding-right: 10px; padding-top: 2px; padding-bottom: 2px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; display: flex;" />
             </ui:VisualElement>
+            <ui:VisualElement name="EndTurnMenuItem" class="unit-menu-item" style="margin-left: -1px; margin-right: 0; margin-top: 0; margin-bottom: 0; border-left-color: rgba(255, 255, 255, 0.31); border-right-color: rgba(255, 255, 255, 0.31); border-top-color: rgba(255, 255, 255, 0.31); border-bottom-color: rgba(255, 255, 255, 0.31); border-bottom-width: 1px; display: flex;">
+                <ui:VisualElement class="self-centered" style="flex-grow: 1; background-color: rgb(255, 255, 255); rotate: 45deg; width: 6px; height: 6px; position: absolute; top: 50%;" />
+                <ui:Label tabindex="-1" text="End Turn" display-tooltip-when-elided="true" style="padding-left: 10px; padding-right: 10px; padding-top: 2px; padding-bottom: 2px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; display: flex;" />
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="Icon1_5EditPanel" class="panel edit-panel" style="position: absolute; left: 0; display: none; bottom: 0;">
@@ -422,7 +426,7 @@
             </ui:Foldout>
             <ui:Foldout text="Buffs" value="true">
                 <ui:VisualElement style="flex-direction: row;">
-                    <ui:DropdownField index="0" choices="Counter,Defiance,Dodge,Evasion,Evasion+,Flying,Phasing,Stealth,Sturdy,Unstoppable,Regeneration" name="e_BuffDropdown" class="no-margin" style="margin-top: 4px; flex-grow: 1; margin-right: 2px;" />
+                    <ui:DropdownField index="0" choices="Counter,Cover,Defiance,Dodge,Evasion,Evasion+,Flying,Phasing,Stealth,Sturdy,Unstoppable,Regeneration" name="e_BuffDropdown" class="no-margin" style="margin-top: 4px; flex-grow: 1; margin-right: 2px;" />
                     <ui:Button text="Toggle" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ToggleBuffButton" style="margin-top: 4px;" />
                 </ui:VisualElement>
             </ui:Foldout>

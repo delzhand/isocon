@@ -17,6 +17,7 @@ public class UnitMenu : MonoBehaviour
         MenuItemSetup("RemoveMenuItem", Remove);
         MenuItemSetup("MoveMenuItem", Move);
         MenuItemSetup("EditMenuItem", Edit);
+        MenuItemSetup("EndTurnMenuItem", EndTurn);
         MenuItemSetup("DeleteMenuItem", Delete);
     }
 
@@ -25,6 +26,7 @@ public class UnitMenu : MonoBehaviour
         UI.ToggleDisplay("PlaceMenuItem", Data != null && !Data.OnField);
         UI.ToggleDisplay("RemoveMenuItem", Data != null && Data.OnField);
         UI.ToggleDisplay("MoveMenuItem", Data != null && Data.OnField);
+        UI.ToggleDisplay("EndTurnMenuItem", Data != null && !Data.CheckCondition("TurnEnded"));
         UI.ToggleDisplay("Icon1_5EditPanel", ActiveMenuItem == "Edit");
 
         UI.System.Q<VisualElement>("MoveMenuItem").Q<Label>().text = (ActiveMenuItem == "Moving") ? "Stop Moving" : "Move";
@@ -101,6 +103,10 @@ public class UnitMenu : MonoBehaviour
         
         // Destroy(Data);
         // TokenController.Deselect();
+    }
+
+    private void EndTurn(ClickEvent evt) {
+        Player.Self().CmdRequestTokenDataSetValue(Data, "Status", "Turn Ended|neu");
     }
 
     public static void ShowMenu(TokenData data) {

@@ -108,7 +108,6 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void DestroyAllBlocks() {
-        Debug.Log("DestroyAllBlocks");
         GameObject terrain = GameObject.Find("Terrain");
         terrain.name = "_Terrain";
         GameObject.DestroyImmediate(terrain);

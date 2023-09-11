@@ -176,6 +176,10 @@ public class Block : MonoBehaviour
         return (int)(this.transform.position.y/.5f)+2;
     }
 
+    // public Block Find(int x, int y, int z) {
+        
+    // }
+
     public void SetTerrainInfo() {
         string height = (transform.localPosition.y + 1).ToString();
         if (Type == BlockType.Slope) {
@@ -190,8 +194,9 @@ public class Block : MonoBehaviour
             VisualElement instance = template.Instantiate();
             instance.Q<Label>("Label").text = marker;
             instance.Q<Button>("RemoveButton").RegisterCallback<ClickEvent>((evt) => {
-                EffectChange(marker);
-                UI.System.Q("Effects").Remove(instance);
+                // EffectChange(marker);
+                // UI.System.Q("Effects").Remove(instance);
+                Player.Self().CmdRequestMapSetValue(getX(), getY(), getZ(), "Effect", marker);
             });
             UI.System.Q("Effects").Add(instance);
         });

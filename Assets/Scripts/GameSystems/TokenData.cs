@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
@@ -169,5 +170,9 @@ public class TokenData : NetworkBehaviour
     private void UpdateOverheadScreenPosition() {
         overhead.style.display = DisplayStyle.Flex;
         UI.FollowToken(TokenObject.GetComponent<Token>(), overhead, Camera.main, Vector2.zero, true);
+    }
+
+    public virtual bool CheckCondition(string label) {
+        throw new NotImplementedException();
     }
 }

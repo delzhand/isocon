@@ -42,7 +42,6 @@ public class ColorSidebar : MonoBehaviour
     }
 
     public static void SetColor(Color c) {
-        Debug.Log("Set color editor to " + c.ToString());
         EditColor = c;
         SetRGB(c);
         SetHex(c);

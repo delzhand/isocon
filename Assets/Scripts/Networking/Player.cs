@@ -168,7 +168,21 @@ public class Player : NetworkBehaviour
     }
     [Command]
     public void CmdRequestTokenDataSetValue(TokenData data, string label, string value) {
+        RpcTokenDataSetValue(data, label, value);
+    }
+    [ClientRpc]
+    public void RpcTokenDataSetValue(TokenData data, string label, string value) {
         GameSystem.Current().TokenDataSetValue(data, label, value);
+    }    
+    #endregion
+
+    #region MapChange
+    [Command]
+    public void CmdRequestMapSetValue(int x, int y, int z, string label, string value) {
+        // Find block
+            // EffectChange(marker);
+            // UI.System.Q("Effects").Remove(instance);
+        // CmdMapSync
     }
     #endregion
 

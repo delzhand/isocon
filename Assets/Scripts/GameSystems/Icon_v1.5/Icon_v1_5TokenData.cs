@@ -244,16 +244,16 @@ public class Icon_v1_5TokenData : TokenData
         int statusCount = 0;
         if (CurrentHP == 0) {
             statusCount++;
-            addStatus(panel, "Incapacitated", false);
+            addStatus(panel, "Incapacitated", "neg");
         }
         else if (CurrentHP * 2 <= MaxHP) {
             statusCount++;
-            addStatus(panel, "Bloodied", false);
+            addStatus(panel, "Bloodied", "neg");
         }
         for(int i = 0; i < Statuses.Count; i++) {
             statusCount++;
             string[] split = Statuses[i].Split("|");
-            addStatus(panel, split[0], split[1] == "pos");
+            addStatus(panel, split[0], split[1]);
         }
 
         List<(string, int)> counters = new List<(string, int)>();
@@ -263,23 +263,23 @@ public class Icon_v1_5TokenData : TokenData
         for(int i = 0; i < counters.Count; i++) {
             if (counters[i].Item2 > 0) {
                 statusCount++;
-                addStatus(panel, counters[i].Item1 + " " + counters[i].Item2, true);
+                addStatus(panel, counters[i].Item1 + " " + counters[i].Item2, "pos");
             }
         }
 
         if (Stance.Length > 0 && Stance != "None") {
             statusCount++;
-            addStatus(panel, Stance, true);
+            addStatus(panel, Stance, "pos");
         }
 
         if (Marked.Length > 0) {
             statusCount++;
-            addStatus(panel, "Marked by " + Marked, false);
+            addStatus(panel, "Marked by " + Marked, "neg");
         }
 
         if (Hatred.Length > 0) {
             statusCount++;
-            addStatus(panel, "Hatred of " + Hatred, false);
+            addStatus(panel, "Hatred of " + Hatred, "neg");
         }
 
         UI.ToggleDisplay("StatusColumn", statusCount > 0);
@@ -292,10 +292,17 @@ public class Icon_v1_5TokenData : TokenData
         panel.Q<Label>("StatDash").text = Dash.ToString();   
     }
 
-    private void addStatus(VisualElement v, string statusName, bool pos) {
+    private void addStatus(VisualElement v, string statusName, string colorShorthand) {
+        Color c = Color.white;
+        if (colorShorthand == "pos") {
+            c = ColorSidebar.FromHex("#74f774");
+        }
+        else if (colorShorthand == "neg") {
+            c = ColorSidebar.FromHex("#f77474");
+        }
         Label label = new Label(statusName);
         label.AddToClassList("no-margin");
-        label.style.color = ColorSidebar.FromHex(pos ? "#74F774" : "#F77474");
+        label.style.color = c;
         v.Q("Statuses").Add(label);  
     }
 
@@ -461,11 +468,18 @@ public class Icon_v1_5TokenData : TokenData
                 if (Statuses.Contains(value)) {
                     Statuses.Remove(value);
                     PopoverText.Create(TokenObject.GetComponent<Token>(), $"=-|={split[0].ToUpper()}", ColorSidebar.FromHex("#BBBBBB"));
+                    if (value.Contains("Turn Ended")) {
+                        Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = Color.white;
+                    }
                 }
                 else {
                     Statuses.Add(value);
                     PopoverText.Create(TokenObject.GetComponent<Token>(), $"=+|={split[0].ToUpper()}", Color.white);
+                    if (value.Contains("Turn Ended")) {
+                        Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = ColorSidebar.FromHex("#505050");
+                    }
                 }
+
                 break;
             case "Stance":
                 Stance = value;
@@ -507,4 +521,12 @@ public class Icon_v1_5TokenData : TokenData
         string[] lines = statuses.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
         return new List<string>(lines);
     }
+
+    public override bool CheckCondition(string label) {
+        switch (label) {
+            case "TurnEnded":
+                return Statuses.Contains("Turn Ended|neu");
+        }
+        throw new Exception($"TokenData Condition '{label}' unsupported.");
+    }    
 }

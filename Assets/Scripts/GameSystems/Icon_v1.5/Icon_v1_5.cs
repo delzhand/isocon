@@ -36,6 +36,12 @@ public class Icon_v1_5 : GameSystem
             case "TurnNumber":
                 TurnNumber = value;
                 UI.System.Q<Label>("TurnNumber").text = $"Turn {TurnNumber}";
+                foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
+                    Icon_v1_5TokenData data = g.GetComponent<Icon_v1_5TokenData>();
+                    if (data.CheckCondition("TurnEnded")) {
+                        data.Change("Status", "Turn Ended|neu");
+                    }
+                }
                 break;
             case "PartyResolve":
                 PartyResolve = value;
