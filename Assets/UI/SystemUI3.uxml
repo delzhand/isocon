@@ -18,49 +18,49 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="Worldspace" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; left: 1px; top: 0; right: 0; bottom: 0;" />
-    <ui:VisualElement name="StartupPanel" class="centered" style="margin-bottom: 0; display: none; min-height: 0; width: 570px;">
+    <ui:VisualElement name="StartupPanel" class="centered" style="margin-bottom: 0; display: flex; min-height: 0; width: 570px;">
         <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 0; flex-direction: row; justify-content: center; background-image: resource(&apos;Textures/isocon_logo&apos;); -unity-background-scale-mode: scale-to-fit; margin-bottom: 30px; height: 80px;" />
         <ui:Label tabindex="-1" text="IsoCON is still in beta! Multiplayer features are P2P and may require the host player to have port forwarding enabled for port 7777. Client and hosts may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com." display-tooltip-when-elided="true" name="BetaMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%; white-space: normal; -unity-slice-scale: 1px; -unity-background-scale-mode: stretch-to-fill; margin-bottom: 4px; word-spacing: 0; letter-spacing: 0; -unity-paragraph-spacing: 0;" />
         <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="ConnectingMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%; margin-bottom: 4px;" />
         <ui:VisualElement name="StartupOptions" class="panel" style="flex-grow: 1;">
             <ui:DropdownField index="0" choices="ICON 1.5" name="SystemField" label="Game System" focusable="false" class="no-margin" style="margin-bottom: 8px;" />
-            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: space-between; width: 100%;">
-                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); width: 24%;">
-                    <ui:Button display-tooltip-when-elided="true" name="SoloModeButton" style="flex-grow: 1;">
-                        <ui:Label tabindex="-1" text="SOLO MODE" display-tooltip-when-elided="true" style="font-size: 16px; border-bottom-width: 1px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255);" />
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: column; justify-content: space-between; width: 100%;">
+                <ui:VisualElement>
+                    <ui:Button display-tooltip-when-elided="true" name="SoloModeButton" style="flex-grow: 1; flex-direction: row;">
+                        <ui:Label tabindex="-1" text="SOLO MODE" display-tooltip-when-elided="true" style="font-size: 16px;" />
                         <ui:Label tabindex="-1" text="Edit maps offline or screen share" display-tooltip-when-elided="true" style="white-space: normal;" />
                     </ui:Button>
                 </ui:VisualElement>
-                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); width: 24%;">
-                    <ui:Button display-tooltip-when-elided="true" name="HostModeButton" style="flex-grow: 1;">
-                        <ui:Label tabindex="-1" text="HOST TABLE" display-tooltip-when-elided="true" style="font-size: 16px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px; white-space: normal;" />
+                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); margin-top: 8px;">
+                    <ui:Button display-tooltip-when-elided="true" name="HostModeButton" style="flex-grow: 1; flex-direction: row;">
+                        <ui:Label tabindex="-1" text="HOST TABLE" display-tooltip-when-elided="true" style="font-size: 16px; white-space: normal;" />
                         <ui:Label tabindex="-1" text="Start a session for multiple players" display-tooltip-when-elided="true" style="white-space: normal;" />
                     </ui:Button>
                 </ui:VisualElement>
-                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); width: 24%;">
-                    <ui:Button display-tooltip-when-elided="true" name="ClientModeButton" style="flex-grow: 1;">
-                        <ui:Label tabindex="-1" text="JOIN TABLE" display-tooltip-when-elided="true" style="font-size: 16px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px; white-space: normal;" />
+                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); margin-top: 8px; flex-direction: row;">
+                    <ui:Button display-tooltip-when-elided="true" name="ClientModeButton" style="flex-grow: 1; flex-direction: row;">
+                        <ui:Label tabindex="-1" text="JOIN TABLE" display-tooltip-when-elided="true" style="font-size: 16px; white-space: normal;" />
                         <ui:Label tabindex="-1" text="Connect to a session" display-tooltip-when-elided="true" style="white-space: normal;" />
                     </ui:Button>
-                    <ui:TextField picking-mode="Ignore" value="localhost" name="HostAddress" class="no-margin" style="margin-top: 4px;" />
+                    <ui:TextField picking-mode="Ignore" value="localhost" name="HostAddress" class="no-margin" style="margin-top: 0; width: 120px; margin-left: 4px;" />
                 </ui:VisualElement>
-                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); width: 24%;">
-                    <ui:Button display-tooltip-when-elided="true" name="ExitButton" style="flex-grow: 1;">
-                        <ui:Label tabindex="-1" text="EXIT" display-tooltip-when-elided="true" name="Label" style="font-size: 16px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px;" />
+                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); margin-top: 8px;">
+                    <ui:Button display-tooltip-when-elided="true" name="ExitButton" style="flex-grow: 1; flex-direction: row;">
+                        <ui:Label tabindex="-1" text="EXIT" display-tooltip-when-elided="true" name="Label" style="font-size: 16px;" />
                         <ui:Label tabindex="-1" text="Close IsoCON" display-tooltip-when-elided="true" style="white-space: normal;" />
                     </ui:Button>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="OfflineIndicator" style="background-color: rgb(113, 0, 0); position: relative; width: 100%; height: 4px;" />
+    <ui:VisualElement name="OfflineIndicator" style="background-color: rgb(255, 255, 255); position: relative; width: 100%; height: 4px;" />
     <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: none;">
         <ui:VisualElement name="Toggles" style="background-color: rgba(0, 0, 0, 0);">
             <ui:Button display-tooltip-when-elided="true" name="ConnectionToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/network&apos;); width: 28px; height: 28px;" />
             <ui:Button display-tooltip-when-elided="true" name="PlayersToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/players&apos;); width: 28px; height: 28px;" />
             <ui:Button display-tooltip-when-elided="true" name="SessionToggle" text="SES" class="blank" style="position: relative; background-image: none; width: 28px; height: 28px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: -16px; display: none;" />
-            <ui:Button display-tooltip-when-elided="true" name="MapToggle" text="MAP" class="blank" style="position: relative; background-image: none; width: 28px; height: 28px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: -16px;" />
-            <ui:Button display-tooltip-when-elided="true" name="ConfigToggle" text="CFG" class="blank" style="position: relative; background-image: none; width: 28px; height: 28px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: -16px;" />
+            <ui:Button display-tooltip-when-elided="true" name="MapToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/folder&apos;); width: 28px; height: 28px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: -16px;" />
+            <ui:Button display-tooltip-when-elided="true" name="ConfigToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/config&apos;); width: 28px; height: 28px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: -16px;" />
         </ui:VisualElement>
         <ui:VisualElement name="Gamespace" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; position: relative; margin-right: 0; margin-left: 10px;">
             <ui:VisualElement name="TerrainInfo" style="background-color: rgba(0, 0, 0, 0); display: flex; position: absolute; right: 0; top: 0; padding-right: 0;">
@@ -283,17 +283,17 @@
                 <ui:Label tabindex="-1" text="EDIT TOOLS" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:Button text="Center View" display-tooltip-when-elided="true" name="CenterView" class="toolbox tool-button" />
                 <ui:Foldout text="Terrain" value="false">
-                    <ui:Button text="Add Block" display-tooltip-when-elided="true" name="AddBlock" class="toolbox tool-button" />
-                    <ui:Button text="Remove Block" display-tooltip-when-elided="true" name="RemoveBlock" class="toolbox tool-button" />
-                    <ui:Button text="Clone Row" display-tooltip-when-elided="true" name="CloneRow" class="toolbox tool-button" />
-                    <ui:Button text="Remove Row" display-tooltip-when-elided="true" name="RemoveRow" class="toolbox tool-button" />
-                    <ui:Button text="Clone Column" display-tooltip-when-elided="true" name="CloneCol" class="toolbox tool-button" />
-                    <ui:Button text="Remove Column" display-tooltip-when-elided="true" name="RemoveCol" class="toolbox tool-button" />
+                    <ui:Button text="Add Block" display-tooltip-when-elided="true" name="AddBlock" class="toolbox tool-button" style="margin-top: 4px;" />
+                    <ui:Button text="Remove Block" display-tooltip-when-elided="true" name="RemoveBlock" class="toolbox tool-button" style="margin-top: 4px;" />
+                    <ui:Button text="Clone Row" display-tooltip-when-elided="true" name="CloneRow" class="toolbox tool-button" style="margin-top: 4px;" />
+                    <ui:Button text="Remove Row" display-tooltip-when-elided="true" name="RemoveRow" class="toolbox tool-button" style="margin-top: 4px;" />
+                    <ui:Button text="Clone Column" display-tooltip-when-elided="true" name="CloneCol" class="toolbox tool-button" style="margin-top: 4px;" />
+                    <ui:Button text="Remove Column" display-tooltip-when-elided="true" name="RemoveCol" class="toolbox tool-button" style="margin-top: 4px;" />
                 </ui:Foldout>
                 <ui:Foldout text="Tile Shapes" value="false">
-                    <ui:Button text="Solid" display-tooltip-when-elided="true" name="Solid" class="toolbox tool-button" />
-                    <ui:Button text="Slope" display-tooltip-when-elided="true" name="Slope" class="toolbox tool-button" />
-                    <ui:Button text="Hidden" display-tooltip-when-elided="true" name="Hidden" class="toolbox tool-button" />
+                    <ui:Button text="Solid" display-tooltip-when-elided="true" name="Solid" class="toolbox tool-button" style="margin-top: 4px;" />
+                    <ui:Button text="Slope" display-tooltip-when-elided="true" name="Slope" class="toolbox tool-button" style="margin-top: 4px;" />
+                    <ui:Button text="Hidden" display-tooltip-when-elided="true" name="Hidden" class="toolbox tool-button" style="margin-top: 4px;" />
                 </ui:Foldout>
                 <ui:Foldout text="Tile Effects" value="false">
                     <ui:Button text="Clear Effects" display-tooltip-when-elided="true" name="ClearMarks" class="toolbox tool-button" style="margin-top: 4px;" />
@@ -301,20 +301,20 @@
                     <ui:DropdownField index="0" choices="Difficult,Dangerous,Pit,Interactive,Impassable,Custom" name="MarkField" class="no-margin" style="display: flex; margin-top: 4px;" />
                     <ui:TextField picking-mode="Ignore" value=" Custom Effect" name="OtherMark" class="no-margin" style="display: flex; margin-top: 4px;" />
                 </ui:Foldout>
-                <ui:Foldout text="Colors" value="false" focusable="true">
-                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                <ui:Foldout text="Colors" value="false" focusable="true" style="margin-bottom: 0;">
+                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
                         <ui:Label tabindex="-1" text="Tile Tops" display-tooltip-when-elided="true" style="flex-grow: 1;" />
                         <ui:VisualElement name="Color1" style="background-color: rgb(62, 113, 62); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
                     </ui:VisualElement>
-                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
                         <ui:Label tabindex="-1" text="Tile Sides" display-tooltip-when-elided="true" style="flex-grow: 1;" />
                         <ui:VisualElement name="Color2" style="background-color: rgb(111, 90, 60); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
                     </ui:VisualElement>
-                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
                         <ui:Label tabindex="-1" text="Background Top" display-tooltip-when-elided="true" style="flex-grow: 1;" />
                         <ui:VisualElement name="Color3" style="background-color: rgb(71, 69, 113); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
                     </ui:VisualElement>
-                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
                         <ui:Label tabindex="-1" text="Background Bottom" display-tooltip-when-elided="true" style="flex-grow: 1;" />
                         <ui:VisualElement name="Color4" style="background-color: rgb(0, 16, 34); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
                     </ui:VisualElement>
@@ -351,7 +351,7 @@
             </ui:VisualElement>
         </ui:ScrollView>
     </ui:VisualElement>
-    <ui:Label tabindex="-1" text="v0.5.4" display-tooltip-when-elided="true" name="Version" style="position: absolute; right: 0; bottom: 0; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); font-size: 12px;" />
+    <ui:Label tabindex="-1" text="v0.5.5" display-tooltip-when-elided="true" name="Version" style="position: absolute; right: 0; bottom: 0; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); font-size: 12px;" />
     <ui:VisualElement name="Toasts" style="flex-grow: 1; background-color: rgb(34, 58, 118); position: absolute; left: auto; top: auto; border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); color: rgb(255, 255, 255); -unity-text-align: middle-right; padding-left: 10px; padding-right: 10px; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; display: none; right: 10px; bottom: 10px;" />
     <ui:VisualElement name="AddTokenPanel" class="panel centered" style="width: 380px; display: none;">
         <ui:Label tabindex="-1" text="CREATE TOKEN" display-tooltip-when-elided="true" class="panel-header" />

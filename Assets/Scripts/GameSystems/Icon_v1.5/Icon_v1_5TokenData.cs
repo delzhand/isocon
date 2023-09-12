@@ -417,6 +417,7 @@ public class Icon_v1_5TokenData : TokenData
                 originValue = CurrentHP;
                 CurrentHP = value;                
                 PopoverText.Create(TokenObject.GetComponent<Token>(), $"/{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}|_HP", ChangeColor(value, originValue));
+                TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
                 break;
             case "Vigor":
                 originValue = Vigor;
