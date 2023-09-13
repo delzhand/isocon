@@ -387,6 +387,10 @@
                 <ui:VisualElement class="self-centered" style="flex-grow: 1; background-color: rgb(255, 255, 255); rotate: 45deg; width: 6px; height: 6px; position: absolute; top: 50%;" />
                 <ui:Label tabindex="-1" text="Move" display-tooltip-when-elided="true" style="padding-left: 10px; padding-right: 10px; padding-top: 2px; padding-bottom: 2px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
             </ui:VisualElement>
+            <ui:VisualElement name="AlterHPMenuItem" class="unit-menu-item" style="margin-left: -1px; margin-right: 0; margin-top: 0; margin-bottom: 0; border-left-color: rgba(255, 255, 255, 0.31); border-right-color: rgba(255, 255, 255, 0.31); border-top-color: rgba(255, 255, 255, 0.31); border-bottom-color: rgba(255, 255, 255, 0.31); border-bottom-width: 1px; display: flex;">
+                <ui:VisualElement class="self-centered" style="flex-grow: 1; background-color: rgb(255, 255, 255); rotate: 45deg; width: 6px; height: 6px; position: absolute; top: 50%;" />
+                <ui:Label tabindex="-1" text="Manage HP" display-tooltip-when-elided="true" style="padding-left: 10px; padding-right: 10px; padding-top: 2px; padding-bottom: 2px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; display: flex;" />
+            </ui:VisualElement>
             <ui:VisualElement name="EditMenuItem" class="unit-menu-item" style="margin-left: -1px; margin-right: 0; margin-top: 0; margin-bottom: 0; border-left-color: rgba(255, 255, 255, 0.31); border-right-color: rgba(255, 255, 255, 0.31); border-top-color: rgba(255, 255, 255, 0.31); border-bottom-color: rgba(255, 255, 255, 0.31); border-bottom-width: 1px; display: flex;">
                 <ui:VisualElement class="self-centered" style="flex-grow: 1; background-color: rgb(255, 255, 255); rotate: 45deg; width: 6px; height: 6px; position: absolute; top: 50%;" />
                 <ui:Label tabindex="-1" text="Edit" display-tooltip-when-elided="true" style="padding-left: 10px; padding-right: 10px; padding-top: 2px; padding-bottom: 2px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; display: flex;" />
@@ -439,5 +443,27 @@
                 <ui:TextField picking-mode="Ignore" label="Hatred of" name="e_Hatred" class="no-margin" style="margin-top: 4px;" />
             </ui:Foldout>
         </ui:ScrollView>
+    </ui:VisualElement>
+    <ui:VisualElement name="Icon1_5LifeEdit" class="panel" style="flex-grow: 1; position: absolute; top: auto; left: 258px; flex-direction: column; bottom: 80px; display: none;">
+        <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
+            <ui:VisualElement style="flex-grow: 1; align-items: center;">
+                <ui:Label tabindex="-1" text="VIG" parse-escape-sequences="true" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" name="v_CurrentVig" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: middle-left;" />
+                <ui:IntegerField value="0" name="v_VigDiff" class="no-margin" style="-unity-text-align: middle-center;" />
+                <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" name="v_NewVig" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; align-items: center;">
+                <ui:Label tabindex="-1" text="HP" parse-escape-sequences="true" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" name="v_CurrentHp" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: middle-left;" />
+                <ui:IntegerField value="0" name="v_HpDiff" class="no-margin" style="-unity-text-align: middle-center;" />
+                <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" name="v_NewHp" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; align-items: center;">
+                <ui:Label tabindex="-1" text="(0)" parse-escape-sequences="true" display-tooltip-when-elided="true" name="v_CurrentBulk" style="margin-top: 24px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: middle-left;" />
+                <ui:Label tabindex="-1" text="(0)" parse-escape-sequences="true" display-tooltip-when-elided="true" name="v_BulkDiff" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                <ui:Label tabindex="-1" text="(0)" parse-escape-sequences="true" display-tooltip-when-elided="true" name="v_NewBulk" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 6px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Button text="Apply" parse-escape-sequences="true" display-tooltip-when-elided="true" name="v_ApplyButton" />
     </ui:VisualElement>
 </ui:UXML>

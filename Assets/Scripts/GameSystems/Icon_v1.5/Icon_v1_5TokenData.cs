@@ -458,6 +458,7 @@ public class Icon_v1_5TokenData : TokenData
         }
         // PopoverText.Create(TokenObject.GetComponent<Token>(), $"{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}{shortLabel}", ChangeColor(value, originValue));
         TokenEditPanel.SyncValues();
+        LifeEditPanel.SyncValues();
         UpdateSelectedTokenPanel();
     }
 

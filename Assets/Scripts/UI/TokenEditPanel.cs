@@ -115,6 +115,7 @@ public class TokenEditPanel : MonoBehaviour
     }
 
     public static void Show(TokenData data) {
+        SetPosition();
         CloseFoldouts();
         Data = data as Icon_v1_5TokenData;
         SyncValues();
@@ -148,5 +149,11 @@ public class TokenEditPanel : MonoBehaviour
         UI.System.Q("Icon1_5EditPanel").Query(null, "unity-foldout").ForEach(item => {
             (item as Foldout).value = false;
         });        
+    }
+
+    private static void SetPosition() {
+        IResolvedStyle menuStyle = UI.System.Q("UnitMenu").resolvedStyle;
+        UI.System.Q("Icon1_5EditPanel").style.left = menuStyle.left + menuStyle.width + 4;
+        UI.System.Q("Icon1_5EditPanel").style.bottom = 80;
     }
 }

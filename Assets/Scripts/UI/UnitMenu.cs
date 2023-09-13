@@ -19,6 +19,7 @@ public class UnitMenu : MonoBehaviour
         MenuItemSetup("EditMenuItem", Edit);
         MenuItemSetup("EndTurnMenuItem", EndTurn);
         MenuItemSetup("DeleteMenuItem", Delete);
+        MenuItemSetup("AlterHPMenuItem", AlterHp);
     }
 
     void Update() {
@@ -30,10 +31,6 @@ public class UnitMenu : MonoBehaviour
         UI.ToggleDisplay("Icon1_5EditPanel", ActiveMenuItem == "Edit");
 
         UI.System.Q<VisualElement>("MoveMenuItem").Q<Label>().text = (ActiveMenuItem == "Moving") ? "Stop Moving" : "Move";
-
-        IResolvedStyle menuStyle = UI.System.Q("UnitMenu").resolvedStyle;
-        UI.System.Q("Icon1_5EditPanel").style.left = menuStyle.left + menuStyle.width + 4;
-        UI.System.Q("Icon1_5EditPanel").style.bottom = 80;
     }
 
     private void MenuItemSetup(string name, Action<ClickEvent> clickHandler) {
@@ -82,6 +79,21 @@ public class UnitMenu : MonoBehaviour
             ActiveMenuItem = "Edit";
             TokenEditPanel.Show(Data);
             UI.ToggleActiveClass("EditMenuItem", true);
+            return;
+        }
+        else {
+            ActiveMenuItem = "";
+        }
+        Data.TokenObject.GetComponent<Token>().SetNeutral();
+    }
+
+    private void AlterHp(ClickEvent evt) {
+        ClearCurrentActive();
+        if (ActiveMenuItem != "AlterHP") {
+            ActiveMenuItem = "AlterHP";
+            Debug.Log(ActiveMenuItem);
+            LifeEditPanel.Show(Data);
+            UI.ToggleActiveClass("AlterHPMenuItem", true);
             return;
         }
         else {
