@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Mirror;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
 public enum PlayerRole {
     GM,
@@ -183,6 +186,29 @@ public class Player : NetworkBehaviour
             // EffectChange(marker);
             // UI.System.Q("Effects").Remove(instance);
         // CmdMapSync
+    }
+    #endregion
+
+    #region Dice Rolls
+    [Command]
+    public void CmdRequestDiceRoll(DiceRoll[] rolls) {
+        for (int i = 0; i < rolls.Length; i++) {
+            rolls[i].Rolled = 1 + Random.Range(0, rolls[i].Die);
+        }
+        RpcDiceRoll(rolls);
+    }
+    [ClientRpc]
+    public void RpcDiceRoll(DiceRoll[] rolls) {
+        int sum = 0;
+        int highest = int.MinValue;
+        int lowest = int.MaxValue;
+        for (int i = 0; i < rolls.Length; i++) {
+            sum += rolls[i].Rolled;
+            highest = Math.Max(highest, rolls[i].Rolled);
+            lowest = Math.Min(lowest, rolls[i].Rolled);
+            Debug.Log($"{rolls[i].Rolled}/{rolls[i].Die}");
+        }
+        Debug.Log($"Σ{sum} ▲{highest} ▼{lowest} μ{Math.Floor(sum/(float)rolls.Length)}");
     }
     #endregion
 

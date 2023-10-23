@@ -47,10 +47,30 @@ public class DiceSidebar : MonoBehaviour
         });
 
         UI.System.Q<Button>("RollButton").RegisterCallback<ClickEvent>((evt) =>  {
-            Debug.Log("Roll");
+            List<DiceRoll> rolls = new();
             for (int i = 0; i < d20count; i++) {
-
+                rolls.Add(new DiceRoll(20));
             }
+            for (int i = 0; i < d12count; i++) {
+                rolls.Add(new DiceRoll(12));
+            }
+            for (int i = 0; i < d100count; i++) {
+                rolls.Add(new DiceRoll(100));
+            }
+            for (int i = 0; i < d10count; i++) {
+                rolls.Add(new DiceRoll(10));
+            }
+            for (int i = 0; i < d8count; i++) {
+                rolls.Add(new DiceRoll(8));
+            }
+            for (int i = 0; i < d6count; i++) {
+                rolls.Add(new DiceRoll(6));
+            }
+            for (int i = 0; i < d4count; i++) {
+                rolls.Add(new DiceRoll(4));
+            }
+            Player.Self().CmdRequestDiceRoll(rolls.ToArray());
+            reset();
         });
 
         UI.System.Q<Button>("DiceResetButton").RegisterCallback<ClickEvent>((evt) =>  {
