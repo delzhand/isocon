@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -14,6 +15,8 @@ public class DiceSidebar : MonoBehaviour
     public int d4count = 0;
 
     void Awake() {
+        UI.ToggleDisplay("DiceSidebar", false);
+
         UI.System.Q<Button>("DiceToggle").RegisterCallback<ClickEvent>((evt) => {
             UI.ToggleDisplay("DiceSidebar");
         });
@@ -69,7 +72,7 @@ public class DiceSidebar : MonoBehaviour
             for (int i = 0; i < d4count; i++) {
                 rolls.Add(new DiceRoll(4));
             }
-            Player.Self().CmdRequestDiceRoll(rolls.ToArray());
+            Player.Self().CmdRequestDiceRoll(Player.Self().Name, rolls.ToArray());
             reset();
         });
 

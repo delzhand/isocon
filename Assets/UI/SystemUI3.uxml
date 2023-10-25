@@ -343,7 +343,7 @@
                 </ui:VisualElement>
                 <ui:Button text="Done" display-tooltip-when-elided="true" name="CloseColorSidebar" />
             </ui:VisualElement>
-            <ui:VisualElement name="DiceSidebar" class="panel" style="position: relative; left: auto; top: auto; display: none; margin-bottom: 4px;">
+            <ui:VisualElement name="DiceSidebar" class="panel" style="position: relative; left: auto; top: auto; display: flex; margin-bottom: 4px;">
                 <ui:Label tabindex="-1" text="DICE ROLLER" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:VisualElement name="DiceSelection" style="background-color: rgba(0, 0, 0, 0); overflow: hidden; margin-top: 0; flex-direction: row; flex-wrap: wrap; display: flex;">
                     <ui:VisualElement name="d20" style="flex-grow: 1; background-image: resource(&apos;Textures/die_20&apos;); width: 33%; height: 40px; margin-bottom: 15px; -unity-background-scale-mode: scale-to-fit;">

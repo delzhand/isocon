@@ -191,14 +191,14 @@ public class Player : NetworkBehaviour
 
     #region Dice Rolls
     [Command]
-    public void CmdRequestDiceRoll(DiceRoll[] rolls) {
+    public void CmdRequestDiceRoll(string playerName, DiceRoll[] rolls) {
         for (int i = 0; i < rolls.Length; i++) {
             rolls[i].Rolled = 1 + Random.Range(0, rolls[i].Die);
         }
-        RpcDiceRoll(rolls);
+        RpcDiceRoll(playerName, rolls);
     }
     [ClientRpc]
-    public void RpcDiceRoll(DiceRoll[] rolls) {
+    public void RpcDiceRoll(string playerName, DiceRoll[] rolls) {
         int sum = 0;
         int highest = int.MinValue;
         int lowest = int.MaxValue;
@@ -208,7 +208,7 @@ public class Player : NetworkBehaviour
             lowest = Math.Min(lowest, rolls[i].Rolled);
             Debug.Log($"{rolls[i].Rolled}/{rolls[i].Die}");
         }
-        Debug.Log($"Σ{sum} ▲{highest} ▼{lowest} μ{Math.Floor(sum/(float)rolls.Length)}");
+        Debug.Log($"{playerName}: Σ{sum} ▲{highest} ▼{lowest} μ{Math.Floor(sum/(float)rolls.Length)}");
     }
     #endregion
 
