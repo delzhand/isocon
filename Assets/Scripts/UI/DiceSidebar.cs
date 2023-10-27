@@ -72,7 +72,8 @@ public class DiceSidebar : MonoBehaviour
             for (int i = 0; i < d4count; i++) {
                 rolls.Add(new DiceRoll(4));
             }
-            Player.Self().CmdRequestDiceRoll(Player.Self().Name, rolls.ToArray());
+            DiceTray tray = new DiceTray(Player.Self().Name, rolls.ToArray());
+            Player.Self().CmdRequestDiceRoll(tray);
             reset();
         });
 

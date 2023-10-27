@@ -191,24 +191,25 @@ public class Player : NetworkBehaviour
 
     #region Dice Rolls
     [Command]
-    public void CmdRequestDiceRoll(string playerName, DiceRoll[] rolls) {
-        for (int i = 0; i < rolls.Length; i++) {
-            rolls[i].Rolled = 1 + Random.Range(0, rolls[i].Die);
+    public void CmdRequestDiceRoll(DiceTray tray) {
+        for (int i = 0; i < tray.rolls.Length; i++) {
+            tray.rolls[i].Rolled = 1 + Random.Range(0, tray.rolls[i].Die);
         }
-        RpcDiceRoll(playerName, rolls);
+        RpcDiceRoll(tray);
     }
     [ClientRpc]
-    public void RpcDiceRoll(string playerName, DiceRoll[] rolls) {
-        int sum = 0;
-        int highest = int.MinValue;
-        int lowest = int.MaxValue;
-        for (int i = 0; i < rolls.Length; i++) {
-            sum += rolls[i].Rolled;
-            highest = Math.Max(highest, rolls[i].Rolled);
-            lowest = Math.Min(lowest, rolls[i].Rolled);
-            Debug.Log($"{rolls[i].Rolled}/{rolls[i].Die}");
-        }
-        Debug.Log($"{playerName}: Σ{sum} ▲{highest} ▼{lowest} μ{Math.Floor(sum/(float)rolls.Length)}");
+    public void RpcDiceRoll(DiceTray tray) {
+        // int sum = 0;
+        // int highest = int.MinValue;
+        // int lowest = int.MaxValue;
+        // for (int i = 0; i < tray.rolls.Length; i++) {
+        //     sum += tray.rolls[i].Rolled;
+        //     highest = Math.Max(highest, tray.rolls[i].Rolled);
+        //     lowest = Math.Min(lowest, tray.rolls[i].Rolled);
+        //     Debug.Log($"{tray.rolls[i].Rolled}/{tray.rolls[i].Die}");
+        // }
+        // Debug.Log($"{tray.playerName}: Σ{sum} ▲{highest} ▼{lowest} μ{Math.Floor(sum/(float)tray.rolls.Length)}");
+        DiceOutcome.Create(tray);
     }
     #endregion
 
