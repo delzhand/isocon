@@ -62,7 +62,7 @@
             <ui:Button display-tooltip-when-elided="true" name="MapToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/folder&apos;); width: 28px; height: 28px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: -16px;" />
             <ui:Button display-tooltip-when-elided="true" name="ConfigToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/config&apos;); width: 28px; height: 28px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: -16px;" />
             <ui:Button display-tooltip-when-elided="true" name="DiceToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/die_icon&apos;); width: 28px; height: 28px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: -16px;">
-                <ui:VisualElement name="NewItems" style="flex-grow: 1; position: absolute; background-color: rgb(0, 84, 152); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; width: 8px; height: 8px; top: 0; right: 0; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;" />
+                <ui:VisualElement name="NewItems" style="flex-grow: 1; position: absolute; background-color: rgb(0, 84, 152); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; width: 8px; height: 8px; top: 0; right: 0; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; display: none;" />
             </ui:Button>
         </ui:VisualElement>
         <ui:VisualElement name="Gamespace" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; position: relative; margin-right: 0; margin-left: 10px;">
@@ -343,7 +343,7 @@
                 </ui:VisualElement>
                 <ui:Button text="Done" display-tooltip-when-elided="true" name="CloseColorSidebar" />
             </ui:VisualElement>
-            <ui:VisualElement name="DiceSidebar" class="panel" style="position: relative; left: auto; top: auto; display: flex; margin-bottom: 4px; padding-bottom: 4px;">
+            <ui:VisualElement name="DiceSidebar" class="panel" style="position: relative; left: auto; top: auto; display: none; margin-bottom: 4px; padding-bottom: 4px;">
                 <ui:Label tabindex="-1" text="DICE ROLLER" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:VisualElement name="DiceSelection" style="background-color: rgba(0, 0, 0, 0); overflow: hidden; margin-top: 0; flex-direction: row; flex-wrap: wrap; display: flex;">
                     <ui:VisualElement name="d20" style="flex-grow: 1; background-image: resource(&apos;Textures/die_20&apos;); width: 33%; height: 40px; margin-bottom: 15px; -unity-background-scale-mode: scale-to-fit;">
