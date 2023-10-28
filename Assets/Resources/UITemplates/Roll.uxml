@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="Roll">
+        <ui:Label tabindex="-1" text="8" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Value" style="align-self: center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+        <ui:Label tabindex="-1" text="20" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Die" style="align-self: center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 6px;" />
+    </ui:VisualElement>
+</ui:UXML>

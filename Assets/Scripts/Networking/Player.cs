@@ -199,16 +199,6 @@ public class Player : NetworkBehaviour
     }
     [ClientRpc]
     public void RpcDiceRoll(DiceTray tray) {
-        // int sum = 0;
-        // int highest = int.MinValue;
-        // int lowest = int.MaxValue;
-        // for (int i = 0; i < tray.rolls.Length; i++) {
-        //     sum += tray.rolls[i].Rolled;
-        //     highest = Math.Max(highest, tray.rolls[i].Rolled);
-        //     lowest = Math.Min(lowest, tray.rolls[i].Rolled);
-        //     Debug.Log($"{tray.rolls[i].Rolled}/{tray.rolls[i].Die}");
-        // }
-        // Debug.Log($"{tray.playerName}: Σ{sum} ▲{highest} ▼{lowest} μ{Math.Floor(sum/(float)tray.rolls.Length)}");
         DiceOutcome.Create(tray);
     }
     #endregion

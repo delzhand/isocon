@@ -144,3 +144,15 @@
     flex-shrink: 0;
     min-width: 100px;
 }
+
+#DiceLog {
+    max-height: 200px;
+}
+
+#DiceLog .unity-scroll-view__content-container {
+    flex-direction: column-reverse;
+}
+
+#DiceResult {
+    /* flex-basis: 100%; */
+}
