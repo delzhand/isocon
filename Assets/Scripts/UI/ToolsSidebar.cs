@@ -58,6 +58,8 @@ public class ToolsSidebar : MonoBehaviour
         RegisterColorChangeCallback("Color2");
         RegisterColorChangeCallback("Color3");
         RegisterColorChangeCallback("Color4");
+        RegisterColorChangeCallback("Color5");
+        RegisterColorChangeCallback("Color6");
     }
 
     private void RegisterColorChangeCallback(string elementName) {
@@ -91,6 +93,12 @@ public class ToolsSidebar : MonoBehaviour
                 Environment.Color4 = c;
                 MeshRenderer mrb = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
                 mrb.material.SetColor("_Color2", c);
+                break;
+            case "Color5":
+                Environment.Color5 = c;
+                break;
+            case "Color6":
+                Environment. Color6 = c;
                 break;
         }
     }

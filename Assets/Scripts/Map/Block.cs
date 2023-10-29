@@ -26,6 +26,12 @@ public class Block : MonoBehaviour
     List<string> effects;
     static Dictionary<string, Material> materials = new Dictionary<string, Material>();
 
+    private bool Painted = false;
+    private Color PaintColorTop;
+    private Color PaintColorSide;
+    private Material PaintMaterialTop;
+    private Material PaintMaterialSide;
+
     void Awake() {
         if (materials.Count == 0) {
             MaterialSetup();
@@ -285,23 +291,54 @@ public class Block : MonoBehaviour
         SetMaterials();
     }
 
+    public void Paint(Color top, Color sides) {
+        PaintColorSide = sides;
+        PaintColorTop = top;
+        Painted = true;
+        SetMaterials();
+    }
+
+    public void Depaint() {
+        Painted = false;
+        SetMaterials();
+    }
+
+    public Color[] SamplePaint() {
+        return new Color[]{PaintColorTop, PaintColorSide};
+    }
+
     void SetMaterials() {
         List<Material> blockMaterials = new List<Material>();
         MeshRenderer mr = GetComponent<MeshRenderer>();
 
-        // Checkerboard
-        bool altSides = false;
-        bool altTop = false;
-        if (transform.parent != null) {
-            // Checkerboard
-            float x = transform.parent.GetComponent<Column>().X;
-            float y = transform.parent.GetComponent<Column>().Y;
-            float z = transform.localPosition.y;
-            altSides = ((x + y + z) % 2 == 0);
-            altTop = ((x + y) % 2 == 0);
+        if (Painted) {
+            if (PaintMaterialSide == null) {
+                PaintMaterialSide = Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideA"));
+            }
+            if (PaintMaterialTop == null) {
+                PaintMaterialTop = Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopA"));
+            }
+            PaintMaterialSide.color = PaintColorSide;
+            PaintMaterialTop.color = PaintColorTop;
+            blockMaterials.Add(PaintMaterialSide);
+            blockMaterials.Add(PaintMaterialTop);
         }
-        blockMaterials.Add(materials["side" + (altSides ? "1" : "2")]);
-        blockMaterials.Add(materials["top" + (altSides ? "1" : "2")]);
+        else {
+            // Checkerboard
+            bool altSides = false;
+            bool altTop = false;
+            if (transform.parent != null) {
+                // Checkerboard
+                float x = transform.parent.GetComponent<Column>().X;
+                float y = transform.parent.GetComponent<Column>().Y;
+                float z = transform.localPosition.y;
+                altSides = ((x + y + z) % 2 == 0);
+                altTop = ((x + y) % 2 == 0);
+            }
+            blockMaterials.Add(materials["side" + (altSides ? "1" : "2")]);
+            blockMaterials.Add(materials["top" + (altSides ? "1" : "2")]);
+        }
+
 
         // Markers
         Material markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));

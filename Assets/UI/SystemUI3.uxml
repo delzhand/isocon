@@ -282,7 +282,7 @@
                 <ui:Label tabindex="-1" text="Data Path" display-tooltip-when-elided="true" />
                 <ui:TextField picking-mode="Ignore" name="DataPathField" class="no-margin" />
             </ui:VisualElement>
-            <ui:VisualElement name="ToolsSidebar" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: none; margin-bottom: 4px;">
+            <ui:VisualElement name="ToolsSidebar" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: flex; margin-bottom: 4px;">
                 <ui:Label tabindex="-1" text="EDIT TOOLS" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:Button text="Center View" display-tooltip-when-elided="true" name="CenterView" class="toolbox tool-button" />
                 <ui:Foldout text="Terrain" value="false">
@@ -304,7 +304,7 @@
                     <ui:DropdownField index="0" choices="Difficult,Dangerous,Pit,Interactive,Impassable,Custom" name="MarkField" class="no-margin" style="display: flex; margin-top: 4px;" />
                     <ui:TextField picking-mode="Ignore" value=" Custom Effect" name="OtherMark" class="no-margin" style="display: flex; margin-top: 4px;" />
                 </ui:Foldout>
-                <ui:Foldout text="Colors" value="false" focusable="true" style="margin-bottom: 0;">
+                <ui:Foldout text="Colors" value="true" focusable="true" style="margin-bottom: 0;">
                     <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
                         <ui:Label tabindex="-1" text="Tile Tops" display-tooltip-when-elided="true" style="flex-grow: 1;" />
                         <ui:VisualElement name="Color1" style="background-color: rgb(62, 113, 62); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
@@ -320,6 +320,17 @@
                     <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
                         <ui:Label tabindex="-1" text="Background Bottom" display-tooltip-when-elided="true" style="flex-grow: 1;" />
                         <ui:VisualElement name="Color4" style="background-color: rgb(0, 16, 34); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
+                    </ui:VisualElement>
+                    <ui:Button text="Paint Block" display-tooltip-when-elided="true" name="Paintbrush" class="toolbox tool-button" style="margin-top: 4px;" />
+                    <ui:Button text="Unpaint Block" display-tooltip-when-elided="true" name="Unpaint" class="toolbox tool-button" style="margin-top: 4px;" />
+                    <ui:Button text="Sample Painted Block" display-tooltip-when-elided="true" name="Eyedropper" class="toolbox tool-button" style="margin-top: 4px;" />
+                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
+                        <ui:Label tabindex="-1" text="Paintbrush Top" display-tooltip-when-elided="true" style="flex-grow: 1;" />
+                        <ui:VisualElement name="Color5" style="background-color: rgb(0, 0, 0); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
+                        <ui:Label tabindex="-1" text="Paintbrush Bottom" display-tooltip-when-elided="true" style="flex-grow: 1;" />
+                        <ui:VisualElement name="Color6" style="background-color: rgb(0, 0, 0); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
                     </ui:VisualElement>
                 </ui:Foldout>
             </ui:VisualElement>

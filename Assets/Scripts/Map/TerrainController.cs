@@ -103,6 +103,12 @@ public class TerrainController : MonoBehaviour
                 case "CenterView":
                     CameraControl.GoToBlock(block);
                     break;
+                case "Paintbrush":
+                    PaintBlocks();
+                    break;
+                case "Eyedropper":
+                    Eyedropper();
+                    break;
             }
         }
     }
@@ -229,6 +235,31 @@ public class TerrainController : MonoBehaviour
         List<GameObject> selected = Block.GetAllSelected();
         selected.ForEach(block => {
             block.transform.Rotate(0, 90f, 0);
+        });
+    }
+
+    public static void PaintBlocks() {
+        List<GameObject> selected = Block.GetAllSelected();
+        selected.ForEach(block => {
+            block.GetComponent<Block>().Paint(Environment.Color5, Environment.Color6);
+        });
+    }
+
+    public static void DepaintBlocks() {
+        List<GameObject> selected = Block.GetAllSelected();
+        selected.ForEach(block => {
+            block.GetComponent<Block>().Depaint();
+        });
+    }
+
+    public static void Eyedropper() {
+        List<GameObject> selected = Block.GetAllSelected();
+        selected.ForEach(block => {
+            Color[] colors = block.GetComponent<Block>().SamplePaint();
+            Environment.Color5 = colors[0];
+            Environment.Color6 = colors[1];
+            UI.System.Q("Color5").style.backgroundColor = colors[0];
+            UI.System.Q("Color6").style.backgroundColor = colors[1];
         });
     }
 

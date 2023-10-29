@@ -31,6 +31,8 @@ public class Environment : MonoBehaviour
     public static Color Color2 = ColorSidebar.FromHex("#6F5A3C");
     public static Color Color3 = ColorSidebar.FromHex("#474571");
     public static Color Color4 = ColorSidebar.FromHex("#001022");
+    public static Color Color5 = ColorSidebar.FromHex("#000000");
+    public static Color Color6 = ColorSidebar.FromHex("#000000");
 
     // Start is called before the first frame update
     void Start()
