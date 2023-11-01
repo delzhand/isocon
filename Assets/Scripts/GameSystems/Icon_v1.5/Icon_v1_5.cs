@@ -87,8 +87,8 @@ public class Icon_v1_5 : GameSystem
     }
 
     private void AddTokenSetup() {
-        UI.ToggleDisplay("AddTokenSystem", true);
-        VisualElement root = UI.System.Q("AddTokenSystem");
+        VisualElement root = UI.System.Q("AddTokenSystem").Q("Icon_v1_5");
+        UI.ToggleDisplay(root, true);
         List<string> classes = GetClasses();
         root.Q<DropdownField>("ClassDropdown").choices = classes;
         root.Q<DropdownField>("ClassDropdown").value = classes[0];
@@ -96,7 +96,9 @@ public class Icon_v1_5 : GameSystem
     }
 
     private void AddTokenTeardown() {
-        UI.ToggleDisplay("AddTokenSystem", false);
+        foreach(VisualElement child in UI.System.Q("AddTokenSystem").Children()) {
+            UI.ToggleDisplay(child, false);
+        }
         VisualElement root = UI.System.Q("AddTokenSystem");
         root.Q<DropdownField>("ClassDropdown").UnregisterValueChangedCallback(SetJobOptions);
     }

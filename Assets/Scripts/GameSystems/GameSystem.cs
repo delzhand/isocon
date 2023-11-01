@@ -11,6 +11,8 @@ public class GameSystem : MonoBehaviour
         switch (system) {
             case "ICON 1.5":
                 return GameObject.Find("GameSystem").GetComponent<Icon_v1_5>();
+            case "Maleghast 666":
+                return GameObject.Find("GameSystem").GetComponent<Maleghast>();
         }
         return GameObject.Find("GameSystem").GetComponent<Generic>();
     }
@@ -77,8 +79,12 @@ public class GameSystem : MonoBehaviour
             case "ICON 1.5":
                 system = g.AddComponent<Icon_v1_5>();
                 break;
+            case "Maleghast 666":
+                system = g.AddComponent<Maleghast>();
+                break;
         }
         Toast.Add(system.SystemName() + " initialized.");
+        system.Teardown();
         system.Setup();
     }
 

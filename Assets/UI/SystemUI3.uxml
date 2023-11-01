@@ -23,7 +23,7 @@
         <ui:Label tabindex="-1" text="IsoCON is still in beta! Multiplayer features are P2P and may require the host player to have port forwarding enabled for port 7777. Client and hosts may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com." display-tooltip-when-elided="true" name="BetaMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%; white-space: normal; -unity-slice-scale: 1px; -unity-background-scale-mode: stretch-to-fill; margin-bottom: 4px; word-spacing: 0; letter-spacing: 0; -unity-paragraph-spacing: 0;" />
         <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="ConnectingMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%; margin-bottom: 4px;" />
         <ui:VisualElement name="StartupOptions" class="panel" style="flex-grow: 1;">
-            <ui:DropdownField index="0" choices="ICON 1.5" name="SystemField" label="Game System" focusable="false" class="no-margin" style="margin-bottom: 8px;" />
+            <ui:DropdownField index="0" choices="ICON 1.5,Maleghast 666" name="SystemField" label="Game System" focusable="false" class="no-margin" style="margin-bottom: 8px;" />
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: column; justify-content: space-between; width: 100%;">
                 <ui:VisualElement>
                     <ui:Button display-tooltip-when-elided="true" name="SoloModeButton" style="flex-grow: 1; flex-direction: row;">
@@ -54,7 +54,7 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="OfflineIndicator" style="background-color: rgb(255, 255, 255); position: relative; width: 100%; height: 4px;" />
-    <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: flex;">
+    <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: none;">
         <ui:VisualElement name="Toggles" style="background-color: rgba(0, 0, 0, 0);">
             <ui:Button display-tooltip-when-elided="true" name="ConnectionToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/network&apos;); width: 28px; height: 28px;" />
             <ui:Button display-tooltip-when-elided="true" name="PlayersToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/players&apos;); width: 28px; height: 28px;" />
@@ -282,7 +282,7 @@
                 <ui:Label tabindex="-1" text="Data Path" display-tooltip-when-elided="true" />
                 <ui:TextField picking-mode="Ignore" name="DataPathField" class="no-margin" />
             </ui:VisualElement>
-            <ui:VisualElement name="ToolsSidebar" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: flex; margin-bottom: 4px;">
+            <ui:VisualElement name="ToolsSidebar" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: none; margin-bottom: 4px;">
                 <ui:Label tabindex="-1" text="EDIT TOOLS" display-tooltip-when-elided="true" class="panel-header" />
                 <ui:Button text="Center View" display-tooltip-when-elided="true" name="CenterView" class="toolbox tool-button" />
                 <ui:Foldout text="Terrain" value="false">
@@ -304,7 +304,7 @@
                     <ui:DropdownField index="0" choices="Difficult,Dangerous,Pit,Interactive,Impassable,Custom" name="MarkField" class="no-margin" style="display: flex; margin-top: 4px;" />
                     <ui:TextField picking-mode="Ignore" value=" Custom Effect" name="OtherMark" class="no-margin" style="display: flex; margin-top: 4px;" />
                 </ui:Foldout>
-                <ui:Foldout text="Colors" value="true" focusable="true" style="margin-bottom: 0;">
+                <ui:Foldout text="Base Colors" value="false" focusable="true" style="margin-bottom: 0;">
                     <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
                         <ui:Label tabindex="-1" text="Tile Tops" display-tooltip-when-elided="true" style="flex-grow: 1;" />
                         <ui:VisualElement name="Color1" style="background-color: rgb(62, 113, 62); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
@@ -321,6 +321,8 @@
                         <ui:Label tabindex="-1" text="Background Bottom" display-tooltip-when-elided="true" style="flex-grow: 1;" />
                         <ui:VisualElement name="Color4" style="background-color: rgb(0, 16, 34); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
                     </ui:VisualElement>
+                </ui:Foldout>
+                <ui:Foldout text="Painting" value="false" focusable="true" style="margin-bottom: 0; margin-top: 4px;">
                     <ui:Button text="Paint Block" display-tooltip-when-elided="true" name="Paintbrush" class="toolbox tool-button" style="margin-top: 4px;" />
                     <ui:Button text="Unpaint Block" display-tooltip-when-elided="true" name="Unpaint" class="toolbox tool-button" style="margin-top: 4px;" />
                     <ui:Button text="Sample Painted Block" display-tooltip-when-elided="true" name="Eyedropper" class="toolbox tool-button" style="margin-top: 4px;" />
@@ -417,12 +419,18 @@
         <ui:DropdownField label="Graphic" index="0" choices="No tokens found" name="GraphicDropdown" focusable="false" class="modal-dropdown" />
         <ui:Label tabindex="-1" text="Graphics for tokens should be placed in " display-tooltip-when-elided="true" name="DataPath" enable-rich-text="false" style="color: rgb(255, 255, 255); background-color: rgb(79, 79, 79); -unity-text-align: upper-center; -unity-font-style: bold; font-size: 12px; padding-left: 4px; padding-right: 8px; padding-top: 4px; padding-bottom: 4px; white-space: normal; max-width: 400px; margin-left: 0; margin-right: 0; margin-bottom: 2px; margin-top: 2px;" />
         <ui:VisualElement name="AddTokenSystem" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); display: flex;">
-            <ui:DropdownField label="Class" index="-1" name="ClassDropdown" focusable="false" class="modal-dropdown" style="display: flex;" />
-            <ui:DropdownField label="Job" index="-1" name="JobDropdown" focusable="false" class="modal-dropdown" style="display: flex;" />
-            <ui:Toggle label="Elite" name="EliteToggle" focusable="false" class="modal-toggle" style="display: none;" />
-            <ui:IntegerField label="Object HP" value="10" name="ObjectHPField" style="display: none;" />
-            <ui:DropdownField label="HP Multiplier" index="2" choices="x1,x2,x3,x4,x5,x6,x7" name="LegendHPDropdown" focusable="false" class="modal-dropdown" style="display: none;" />
-            <ui:DropdownField label="Size" index="0" choices="Normal,Large (2), Huge (3)" name="SizeDropdown" focusable="false" class="modal-dropdown" style="display: none;" />
+            <ui:VisualElement name="Maleghast" style="flex-grow: 1; display: none;">
+                <ui:DropdownField label="House" index="0" name="HouseDropdown" focusable="false" choices="C.A.R.C.A.S.S.,Goregrinders,Gargamox,Deadsouls,Abhorrers,Igorri" class="modal-dropdown" style="display: flex;" />
+                <ui:DropdownField label="Type" index="-1" name="TypeDropdown" focusable="false" class="modal-dropdown" style="display: flex;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Icon_v1_5" style="flex-grow: 1;">
+                <ui:DropdownField label="Class" index="0" name="ClassDropdown" focusable="false" choices="Stalwart,Vagabond,Mendicant,Wright,Heavy,Skirmisher,Leader,Artillery,Legend,Mob,Object" class="modal-dropdown" style="display: flex;" />
+                <ui:DropdownField label="Job" index="-1" name="JobDropdown" focusable="false" class="modal-dropdown" style="display: flex;" />
+                <ui:Toggle label="Elite" name="EliteToggle" focusable="false" class="modal-toggle" style="display: none;" />
+                <ui:IntegerField label="Object HP" value="10" name="ObjectHPField" style="display: none;" />
+                <ui:DropdownField label="HP Multiplier" index="2" choices="x1,x2,x3,x4,x5,x6,x7" name="LegendHPDropdown" focusable="false" class="modal-dropdown" style="display: none;" />
+                <ui:DropdownField label="Size" index="0" choices="Normal,Large (2), Huge (3)" name="SizeDropdown" focusable="false" class="modal-dropdown" style="display: none;" />
+            </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement style="border-left-color: rgb(43, 43, 43); border-right-color: rgb(43, 43, 43); border-top-color: rgb(43, 43, 43); border-bottom-color: rgb(43, 43, 43); border-top-width: 2px; padding-top: 10px; margin-top: 10px; flex-direction: row; justify-content: space-around;">
             <ui:Button text="Create+Save" display-tooltip-when-elided="true" name="AddTokenSaveCreateButton" class="modal-button" style="display: none;" />
