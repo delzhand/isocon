@@ -24,7 +24,7 @@ public class MaleghastTokenDataRaw
         raw.Name = nameField.value;
 
         DropdownField houseField = UI.System.Q<DropdownField>("HouseDropdown");
-        raw.UnitType = houseField.value;
+        raw.House = houseField.value;
 
         DropdownField unitTypeField = UI.System.Q<DropdownField>("TypeDropdown");
         raw.UnitType = unitTypeField.value;
@@ -34,7 +34,7 @@ public class MaleghastTokenDataRaw
         raw.GraphicHash = TextureSender.GetTextureHash(graphic);
 
         raw.Size = 1;
-        if (raw.UnitType == "Tyrant") {
+        if (raw.UnitType.Contains("Tyrant")) {
             raw.Size = 2;
         }
 
@@ -76,6 +76,8 @@ public class MaleghastTokenData : TokenData
     public int Vulnerability;
     public int Slow;
     public int Speed;
+
+    public bool TurnEnded;
 
     void Update()
     {
@@ -133,7 +135,7 @@ public class MaleghastTokenData : TokenData
     private Color ClassColor() {
         return House switch
         {
-            "C.A.R.C.A.S.S" => Environment.FromHex("#f20dae"),
+            "C.A.R.C.A.S.S." => Environment.FromHex("#f20dae"),
             "Goregrinders" => Environment.FromHex("#ff7829"),
             "Gargamox" => Environment.FromHex("#29ff3d"),
             "Deadsouls" => Environment.FromHex("#90ffef"),
@@ -179,5 +181,13 @@ public class MaleghastTokenData : TokenData
 
     public void UpdateSelectedTokenPanel() {
     }
+
+    public override bool CheckCondition(string label) {
+        switch (label) {
+            case "TurnEnded":
+                return TurnEnded;
+        }
+        throw new Exception($"TokenData Condition '{label}' unsupported.");
+    } 
 
 }
