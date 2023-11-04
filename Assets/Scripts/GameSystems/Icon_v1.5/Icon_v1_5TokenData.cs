@@ -140,8 +140,8 @@ public class Icon_v1_5TokenData : TokenData
         }
     }
 
-    public override void TokenDataSetup(string json) {
-        base.TokenDataSetup(json);
+    public override void TokenDataSetup(string json, string id) {
+        base.TokenDataSetup(json, id);
         DoTokenDataSetup();
         CurrentHP = MaxHP;
     }
@@ -284,12 +284,14 @@ public class Icon_v1_5TokenData : TokenData
 
         UI.ToggleDisplay("StatusColumn", statusCount > 0);
 
-        panel.Q<Label>("StatDef").text = Defense.ToString();
-        panel.Q<Label>("StatDmg").text = "D" + Damage.ToString();
-        panel.Q<Label>("StatFray").text = Fray.ToString();
-        panel.Q<Label>("StatRng").text = Range.ToString();
-        panel.Q<Label>("StatSpd").text = Speed.ToString();
-        panel.Q<Label>("StatDash").text = Dash.ToString();   
+        VisualElement stats = panel.Q("IconV1_5Stats");
+
+        stats.Q<Label>("StatDef").text = Defense.ToString();
+        stats.Q<Label>("StatDmg").text = "D" + Damage.ToString();
+        stats.Q<Label>("StatFray").text = Fray.ToString();
+        stats.Q<Label>("StatRng").text = Range.ToString();
+        stats.Q<Label>("StatSpd").text = Speed.ToString();
+        stats.Q<Label>("StatDash").text = Dash.ToString();   
     }
 
     private void addStatus(VisualElement v, string statusName, string colorShorthand) {

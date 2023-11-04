@@ -52,7 +52,7 @@ public class GameSystem : MonoBehaviour
         throw new NotImplementedException();
     }
 
-    public virtual void TokenDataSetup(GameObject g, string json) {
+    public virtual void TokenDataSetup(GameObject g, string json, string id) {
         throw new NotImplementedException();
     }
 
@@ -62,6 +62,14 @@ public class GameSystem : MonoBehaviour
 
     public virtual void UpdateSelectedTokenPanel(GameObject data) {
         throw new NotImplementedException();
+    }
+
+    public virtual string GetEditPanelName() {
+        throw new NotImplementedException();
+    }
+
+    public virtual void SyncEditValues(TokenData data) {
+        throw new NotImplementedException();        
     }
 
     public static void Set(string value) {

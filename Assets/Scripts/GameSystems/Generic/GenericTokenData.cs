@@ -54,8 +54,8 @@ public class GenericTokenData : TokenData
         overhead.Q<ProgressBar>("VigorBar").style.display = DisplayStyle.None;
     }
 
-    public override void TokenDataSetup(string json) {
-        base.TokenDataSetup(json);
+    public override void TokenDataSetup(string json, string id) {
+        base.TokenDataSetup(json, id);
         DoTokenDataSetup();
     }
 

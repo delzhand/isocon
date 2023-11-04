@@ -20,8 +20,8 @@ public class Generic : GameSystem
         return TextureSender.LoadImageFromFile(raw.GraphicHash, true);
     }
 
-    public override void TokenDataSetup(GameObject g, string json) {
-        g.GetComponent<GenericTokenData>().TokenDataSetup(json);
+    public override void TokenDataSetup(GameObject g, string json, string id) {
+        g.GetComponent<GenericTokenData>().TokenDataSetup(json, id);
     }
 
     public override GameObject GetDataPrefab() {

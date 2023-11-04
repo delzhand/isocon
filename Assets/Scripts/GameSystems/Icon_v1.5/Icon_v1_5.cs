@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 using System.Linq;
 using System;
 using System.Data.Common;
+using IsoconUILibrary;
 
 public class Icon_v1_5 : GameSystem
 {
@@ -59,8 +60,8 @@ public class Icon_v1_5 : GameSystem
         return TextureSender.LoadImageFromFile(raw.GraphicHash, true);
     }
 
-    public override void TokenDataSetup(GameObject g, string json) {
-        g.GetComponent<Icon_v1_5TokenData>().TokenDataSetup(json);
+    public override void TokenDataSetup(GameObject g, string json, string id) {
+        g.GetComponent<Icon_v1_5TokenData>().TokenDataSetup(json, id);
     }
 
     public override GameObject GetDataPrefab() {
@@ -71,6 +72,8 @@ public class Icon_v1_5 : GameSystem
         AddTokenSetup();
         SetJobOptions("Stalwart");
         UI.ToggleDisplay("Icon1_5TurnInfo", true);
+        UI.ToggleDisplay("AlterHPMenuItem", true);
+        UI.ToggleDisplay(UI.System.Q("IconV1_5Stats"), true);
         UI.System.Q<Button>("NewTurnButton").RegisterCallback<ClickEvent>((evt) => {
             Player.Self().CmdRequestGameDataSetValue("TurnNumber", TurnNumber+1);
             Player.Self().CmdRequestGameDataSetValue("PartyResolve", PartyResolve+1);
@@ -79,11 +82,43 @@ public class Icon_v1_5 : GameSystem
 
     public override void Teardown() {
         AddTokenTeardown();
+        UI.ToggleDisplay(UI.System.Q("Icon1_5EditPanel"), false);
+        UI.ToggleDisplay(UI.System.Q("IconV1_5Stats"), false);
+        UI.ToggleDisplay("AlterHPMenuItem", false);
+    }
+
+    public override void SyncEditValues(TokenData data)
+    {
+        Icon_v1_5TokenData Data = data as Icon_v1_5TokenData;
+        UI.System.Q<Label>("e_CurrentHP").text = $"{Data.CurrentHP}";
+        UI.System.Q<SliderInt>("e_CurrentHPSlider").highValue = Data.MaxHP;
+        UI.System.Q<SliderInt>("e_CurrentHPSlider").value = Data.CurrentHP;
+
+        UI.System.Q<Label>("e_Vigor").text = $"{Data.Vigor}";
+        UI.System.Q<SliderInt>("e_VigorSlider").highValue = Data.MaxHP;
+        UI.System.Q<SliderInt>("e_VigorSlider").value = Data.Vigor;
+
+        UI.System.Q<NumberNudger>("e_Wounds").SetValueWithoutNotify(Data.Wounds);
+        UI.System.Q<NumberNudger>("e_Resolve").SetValueWithoutNotify(Data.Resolve);
+        UI.System.Q<NumberNudger>("e_PartyResolve").SetValueWithoutNotify((GameSystem.Current() as Icon_v1_5).PartyResolve);
+        UI.System.Q<NumberNudger>("e_Aether").SetValueWithoutNotify(Data.Aether);
+        UI.System.Q<NumberNudger>("e_Vigilance").SetValueWithoutNotify(Data.Vigilance);
+        UI.System.Q<NumberNudger>("e_Blessings").SetValueWithoutNotify(Data.Blessings);
+
+        UI.System.Q<Toggle>("e_StackedDie").SetValueWithoutNotify(Data.StatusesToString().Contains("Stacked Die"));
+        UI.System.Q<TextField>("e_Marked").SetValueWithoutNotify(Data.Marked);
+        UI.System.Q<TextField>("e_Marked").SetValueWithoutNotify(Data.Hatred);
+        UI.System.Q<DropdownField>("e_Stance").SetValueWithoutNotify(Data.Stance);
     }
 
     public override void UpdateSelectedTokenPanel(GameObject data)
     {
         data.GetComponent<Icon_v1_5TokenData>().UpdateSelectedTokenPanel();
+    }
+
+    public override string GetEditPanelName()
+    {
+        return "Icon1_5EditPanel";
     }
 
     private void AddTokenSetup() {

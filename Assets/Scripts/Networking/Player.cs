@@ -116,15 +116,29 @@ public class Player : NetworkBehaviour
         FileLogger.Write($"Client {connectionToClient.connectionId} created a token");
         GameObject g = GameSystem.Current().GetDataPrefab();
         NetworkServer.Spawn(g); 
-        RpcInitTokenData(g, json, position);
+        RpcInitTokenData(g, json, Guid.NewGuid().ToString(), position);
     }
     [ClientRpc]
-    public void RpcInitTokenData(GameObject g, string json, Vector3 position) {
+    public void RpcInitTokenData(GameObject g, string json, string id, Vector3 position) {
         FileLogger.Write($"A token was initialized");
         g.transform.position = position;
-        GameSystem.Current().TokenDataSetup(g, json);
+        GameSystem.Current().TokenDataSetup(g, json, id);
     }
     #endregion
+
+    #region Delete Token
+    [Command]
+    public void CmdRequestDeleteToken(TokenData data) {
+        FileLogger.Write($"Client {connectionToClient.connectionId} requested to delete token {data.Name}");
+        RpcDeleteToken(data);
+    }
+    [ClientRpc]
+    public void RpcDeleteToken(TokenData data) {
+        FileLogger.Write($"Token {data.Name} was deleted");
+        TokenData.DeleteById(data.Id);
+        Toast.Add($"{data.Name} deleted.");
+    }
+    #endregion 
 
     #region Token Movement
     [Command]

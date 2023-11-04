@@ -28,7 +28,7 @@ public class UnitMenu : MonoBehaviour
         UI.ToggleDisplay("RemoveMenuItem", Data != null && Data.OnField);
         UI.ToggleDisplay("MoveMenuItem", Data != null && Data.OnField);
         UI.ToggleDisplay("EndTurnMenuItem", Data != null && !Data.CheckCondition("TurnEnded"));
-        UI.ToggleDisplay("Icon1_5EditPanel", ActiveMenuItem == "Edit");
+        UI.ToggleDisplay(GameSystem.Current().GetEditPanelName(), ActiveMenuItem == "Edit");
 
         UI.System.Q<VisualElement>("MoveMenuItem").Q<Label>().text = (ActiveMenuItem == "Moving") ? "Stop Moving" : "Move";
     }
@@ -109,12 +109,7 @@ public class UnitMenu : MonoBehaviour
     }
 
     private void Delete(ClickEvent evt) {
-        // UI.System.Q("UnitBar").Remove(Data.Element);
-        // UI.System.Q("Worldspace").Remove(Data.overhead);
-        // Destroy(Data.TokenObject);
-        
-        // Destroy(Data);
-        // TokenController.Deselect();
+        Player.Self().CmdRequestDeleteToken(Data);
     }
 
     private void EndTurn(ClickEvent evt) {

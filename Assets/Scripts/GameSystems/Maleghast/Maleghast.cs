@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using IsoconUILibrary;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -48,8 +49,8 @@ public class Maleghast : GameSystem
         return TextureSender.LoadImageFromFile(raw.GraphicHash, true);
     }
 
-    public override void TokenDataSetup(GameObject g, string json) {
-        g.GetComponent<MaleghastTokenData>().TokenDataSetup(json);
+    public override void TokenDataSetup(GameObject g, string json, string id) {
+        g.GetComponent<MaleghastTokenData>().TokenDataSetup(json, id);
     }
 
     public override GameObject GetDataPrefab() {
@@ -60,6 +61,8 @@ public class Maleghast : GameSystem
         AddTokenSetup();
         SetTypeOptions("C.A.R.C.A.S.S.");
         UI.ToggleDisplay("Icon1_5TurnInfo", true);
+        UI.ToggleDisplay(UI.System.Q("MaleghastStats"), true);
+        UI.ToggleDisplay(UI.System.Q("MaleghastEditPanel"), true);
         UI.System.Q<Button>("NewTurnButton").RegisterCallback<ClickEvent>((evt) => {
             Player.Self().CmdRequestGameDataSetValue("TurnNumber", TurnNumber+1);
         });
@@ -67,11 +70,29 @@ public class Maleghast : GameSystem
 
     public override void Teardown() {
         AddTokenTeardown();
+        UI.ToggleDisplay(UI.System.Q("MaleghastStats"), false);
+        UI.ToggleDisplay(UI.System.Q("MaleghastEditPanel"), false);
+    }
+
+    public override void SyncEditValues(TokenData data)
+    {
+        MaleghastTokenData Data = data as MaleghastTokenData;
+        VisualElement root = UI.System.Q("MaleghastEditPanel");
+        root.Q<NumberNudger>("e_HP").SetValueWithoutNotify(Data.CurrentHP);
+        root.Q<NumberNudger>("e_Soul").SetValueWithoutNotify(Data.Soul);
+        root.Q<NumberNudger>("e_Strength").SetValueWithoutNotify(Data.Strength);
+        root.Q<NumberNudger>("e_Speed").SetValueWithoutNotify(Data.Speed);
+        root.Q<NumberNudger>("e_Vit").SetValueWithoutNotify(Data.Vitality);
+        root.Q<Toggle>("e_Loaded").SetValueWithoutNotify(Data.Loaded);
     }
 
     public override void UpdateSelectedTokenPanel(GameObject data)
     {
         data.GetComponent<MaleghastTokenData>().UpdateSelectedTokenPanel();
+    }
+
+    public override string GetEditPanelName() {
+        return "MaleghastEditPanel";
     }
 
     private void AddTokenSetup() {
@@ -101,7 +122,7 @@ public class Maleghast : GameSystem
     private List<string> GetTypes(string house) {
         return house switch
         {
-            "C.A.R.C.A.S.S." => new string[] {"Gunwight/Thrall", "Enforcer/Scion", "Ammo Goblin/Freak", "Barrelform/Hunter", "AEGIS Weapon/Tyrant", "Operator/Necromancer"}.ToList(),
+            "C.A.R.C.A.S.S." => new string[] {"Gunwight/Thrall", "Enforcer/Scion", "Ammo Goblin/Freak", "Barrelform/Hunter", "Aegis Weapon/Tyrant", "Operator/Necromancer"}.ToList(),
             "Goregrinders" => new string[] {"Warhead/Thrall", "Carnifex/Scion", "Painghoul/Freak", "Painwheel/Horror", "Berserker/Tyrant", "Warlord/Necromancer"}.ToList(),
             "Gargamox" => new string[] {"Scum/Thrall", "Rotten/Scion", "Leech/Freak", "Host/Hunter", "Slime/Horror", "Plaguelord/Necromancer"}.ToList(),
             "Deadsouls" => new string[] {"Sacrifice/Thrall", "Chosen/Scion", "Vizigheist/Horror", "Banshee/Hunter", "Bound Devil/Tyrant"}.ToList(),

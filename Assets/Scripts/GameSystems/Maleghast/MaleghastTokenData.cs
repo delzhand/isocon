@@ -72,11 +72,9 @@ public class MaleghastTokenData : TokenData
     public string Traits;
 
     public int Strength;
-    public int Weak;
     public int Vitality;
-    public int Vulnerability;
-    public int Slow;
     public int Speed;
+    public bool Loaded = true;
 
     public bool TurnEnded;
 
@@ -99,8 +97,8 @@ public class MaleghastTokenData : TokenData
         }
     }
 
-    public override void TokenDataSetup(string json) {
-        base.TokenDataSetup(json);
+    public override void TokenDataSetup(string json, string id) {
+        base.TokenDataSetup(json, id);
         DoTokenDataSetup();
         CurrentHP = MaxHP;
     }
@@ -171,6 +169,19 @@ public class MaleghastTokenData : TokenData
     public void Change(string label, string value) {
         FileLogger.Write($"{Name} {label} set to {value}");
         switch(label) {
+            case "Status":
+                // cut out some conditions because this is only used for Turn Ended in maleghast
+                if (TurnEnded) {
+                    TurnEnded = false;
+                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"=TURN RESET", Color.white);
+                    Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = Color.white;
+                }
+                else {
+                    TurnEnded = true;
+                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"=TURN ENDED", Color.white);
+                    Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = ColorSidebar.FromHex("#505050");
+                }
+                break;
             default:
                 FileLogger.Write($"Invalid label '{label}' for string value change");
                 throw new Exception($"Invalid label '{label}' for string value change");
@@ -542,17 +553,68 @@ public class MaleghastTokenData : TokenData
         }
 
 
-        panel.Q<Label>("Job").text = UnitType;
+        panel.Q<Label>("Job").text = UnitType.Replace("/", "\n");
         panel.Q<Label>("Job").style.backgroundColor = c;
 
         panel.Q("Statuses").Clear();
         int statusCount = 0;
+        if (CurrentHP == 0) {
+            statusCount++;
+            addStatus(panel, "Corpse", "neg");
+        }
+        if (Strength >= 1) {
+            statusCount++;
+            addStatus(panel, $"Strength {Strength}", "pos");
+        }
+        else if (Strength <= -1) {
+            statusCount++;
+            addStatus(panel, $"Weak {-Strength}", "neg");
+        }
+        if (Speed >= 1) {
+            statusCount++;
+            addStatus(panel, $"Speed {Speed}", "pos");
+        }
+        else if (Speed <= -1) {
+            statusCount++;
+            addStatus(panel, $"Slow {-Speed}", "neg");
+        }
+        if (Vitality >= 1) {
+            statusCount++;
+            addStatus(panel, $"Vitality {Vitality}", "pos");
+        }
+        else if (Vitality <= -1) {
+            statusCount++;
+            addStatus(panel, $"Vulnerable {-Vitality}", "neg");
+        }
+
+        if (!Loaded) {
+            statusCount++;
+            addStatus(panel, "Reload", "neg");
+        }
+
+        // if armor
+
         UI.ToggleDisplay("StatusColumn", statusCount > 0);
 
+        VisualElement stats = panel.Q("MaleghastStats");
 
-        panel.Q<Label>("StatDef").text = Defense.ToString();
-        panel.Q<Label>("StatRng").text = Move.ToString();
+        stats.Q<Label>("StatDef").text = Defense.ToString();
+        stats.Q<Label>("StatMove").text = Move.ToString();
+        stats.Q<Label>("StatArm").text = Armor.Length > 0 ? Armor : "None";
+    }
 
+    private void addStatus(VisualElement v, string statusName, string colorShorthand) {
+        Color c = Color.white;
+        if (colorShorthand == "pos") {
+            c = ColorSidebar.FromHex("#74f774");
+        }
+        else if (colorShorthand == "neg") {
+            c = ColorSidebar.FromHex("#f77474");
+        }
+        Label label = new Label(statusName);
+        label.AddToClassList("no-margin");
+        label.style.color = c;
+        v.Q("Statuses").Add(label);  
     }
 
     public override bool CheckCondition(string label) {

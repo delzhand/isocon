@@ -8,6 +8,8 @@ using UnityEngine.UIElements;
 
 public class TokenData : NetworkBehaviour
 {
+    public string Id;
+
     [SyncVar]
     public string Name;
 
@@ -89,8 +91,9 @@ public class TokenData : NetworkBehaviour
     public virtual void UpdateUIData() {
     }
 
-    public virtual void TokenDataSetup(string json) {
+    public virtual void TokenDataSetup(string json, string id) {
         Json = json;
+        Id = id;
     }
 
     public virtual void DoTokenDataSetup() {        
@@ -174,5 +177,22 @@ public class TokenData : NetworkBehaviour
 
     public virtual bool CheckCondition(string label) {
         throw new NotImplementedException();
+    }
+
+    public static void DeleteById(string id) {
+        foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
+            TokenData t = g.GetComponent<TokenData>();
+            if (t.Id == id) {
+                UI.System.Q("UnitBar").Remove(t.Element);
+                UI.System.Q("Worldspace").Remove(t.overhead);
+                Destroy(t.TokenObject);
+                Destroy(t);
+                Destroy(g);
+                TokenController.Deselect();
+
+
+            }
+        }
+
     }
 }

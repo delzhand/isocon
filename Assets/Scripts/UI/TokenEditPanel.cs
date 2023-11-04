@@ -13,7 +13,7 @@ public class TokenEditPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UI.SetBlocking(UI.System, new string[]{"Icon1_5EditPanel"});
+        UI.SetBlocking(UI.System, new string[]{"EditPanel"});
         HP();
         Vigor();
         Wounds();
@@ -23,7 +23,7 @@ public class TokenEditPanel : MonoBehaviour
     }
 
     void Update() {
-        UI.ToggleDisplay("Icon1_5EditPanel", UnitMenu.ActiveMenuItem == "Edit");
+        UI.ToggleDisplay("EditPanel", UnitMenu.ActiveMenuItem == "Edit");
     }
 
     private void HP() {
@@ -123,37 +123,19 @@ public class TokenEditPanel : MonoBehaviour
 
     public static void SyncValues() {
         if (Data != null) {
-            UI.System.Q<Label>("e_CurrentHP").text = $"{Data.CurrentHP}";
-            UI.System.Q<SliderInt>("e_CurrentHPSlider").highValue = Data.MaxHP;
-            UI.System.Q<SliderInt>("e_CurrentHPSlider").value = Data.CurrentHP;
-
-            UI.System.Q<Label>("e_Vigor").text = $"{Data.Vigor}";
-            UI.System.Q<SliderInt>("e_VigorSlider").highValue = Data.MaxHP;
-            UI.System.Q<SliderInt>("e_VigorSlider").value = Data.Vigor;
-
-            UI.System.Q<NumberNudger>("e_Wounds").SetValueWithoutNotify(Data.Wounds);
-            UI.System.Q<NumberNudger>("e_Resolve").SetValueWithoutNotify(Data.Resolve);
-            UI.System.Q<NumberNudger>("e_PartyResolve").SetValueWithoutNotify((GameSystem.Current() as Icon_v1_5).PartyResolve);
-            UI.System.Q<NumberNudger>("e_Aether").SetValueWithoutNotify(Data.Aether);
-            UI.System.Q<NumberNudger>("e_Vigilance").SetValueWithoutNotify(Data.Vigilance);
-            UI.System.Q<NumberNudger>("e_Blessings").SetValueWithoutNotify(Data.Blessings);
-
-            UI.System.Q<Toggle>("e_StackedDie").SetValueWithoutNotify(Data.StatusesToString().Contains("Stacked Die"));
-            UI.System.Q<TextField>("e_Marked").SetValueWithoutNotify(Data.Marked);
-            UI.System.Q<TextField>("e_Marked").SetValueWithoutNotify(Data.Hatred);
-            UI.System.Q<DropdownField>("e_Stance").SetValueWithoutNotify(Data.Stance);
+            GameSystem.Current().SyncEditValues(Data);
         }        
     }
 
     private static void CloseFoldouts() {
-        UI.System.Q("Icon1_5EditPanel").Query(null, "unity-foldout").ForEach(item => {
+        UI.System.Q("EditPanel").Query(null, "unity-foldout").ForEach(item => {
             (item as Foldout).value = false;
         });        
     }
 
     private static void SetPosition() {
         IResolvedStyle menuStyle = UI.System.Q("UnitMenu").resolvedStyle;
-        UI.System.Q("Icon1_5EditPanel").style.left = menuStyle.left + menuStyle.width + 4;
-        UI.System.Q("Icon1_5EditPanel").style.bottom = 80;
+        UI.System.Q("EditPanel").style.left = menuStyle.left + menuStyle.width + 4;
+        UI.System.Q("EditPanel").style.bottom = 80;
     }
 }
