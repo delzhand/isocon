@@ -59,6 +59,7 @@ public class Maleghast : GameSystem
 
     public override void Setup() {
         AddTokenSetup();
+        EditTokenSetup();
         SetTypeOptions("C.A.R.C.A.S.S.");
         UI.ToggleDisplay("Icon1_5TurnInfo", true);
         UI.ToggleDisplay(UI.System.Q("MaleghastStats"), true);
@@ -72,6 +73,30 @@ public class Maleghast : GameSystem
         AddTokenTeardown();
         UI.ToggleDisplay(UI.System.Q("MaleghastStats"), false);
         UI.ToggleDisplay(UI.System.Q("MaleghastEditPanel"), false);
+    }
+
+    private void EditTokenSetup() {
+
+        VisualElement panel = UI.System.Q("MaleghastEditPanel");
+
+        panel.Q<NumberNudger>("e_HP").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "CurrentHP", evt);
+        });
+        panel.Q<NumberNudger>("e_Strength").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Strength", evt);
+        });
+        panel.Q<NumberNudger>("e_Vit").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Vitality", evt);
+        });
+        panel.Q<NumberNudger>("e_Speed").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Speed", evt);
+        });
+        panel.Q<NumberNudger>("e_Soul").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Soul", evt);
+        });
+        panel.Q<Toggle>("e_Loaded").RegisterValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Loaded", evt.newValue ? 1 : 0);
+        });
     }
 
     public override void SyncEditValues(TokenData data)

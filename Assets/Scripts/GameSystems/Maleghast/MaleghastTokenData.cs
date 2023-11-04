@@ -152,6 +152,43 @@ public class MaleghastTokenData : TokenData
         FileLogger.Write($"{Name} {label} set to {value}");
         int originValue;
         switch(label) {
+            case "CurrentHP":
+                originValue = CurrentHP;
+                CurrentHP = value;                
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}|_HP", ChangeColor(value, originValue));
+                TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
+                break;
+            case "Strength":
+                originValue = Strength;
+                Strength = value;
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}|_STR", ChangeColor(value, originValue));
+                break;
+            case "Vitality":
+                originValue = Vitality;
+                Vitality = value;
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}|_VIT", ChangeColor(value, originValue));
+                break;
+            case "Speed":
+                originValue = Speed;
+                Speed = value;
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}|_SPD", ChangeColor(value, originValue));
+                break;
+            case "Loaded":
+                originValue = Loaded ? 1 : 0;
+                if (value == 1) {
+                    Loaded = true;
+                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"=RELOADED", ChangeColor(1, 0));
+                }
+                else {
+                    Loaded = false;
+                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"=UNLOADED", ChangeColor(0, 1));
+                }
+                break;
+            case "Soul":
+                originValue = Soul;
+                Soul = value;
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}|_SOUL", ChangeColor(value, originValue));
+                break;
             default:
                 FileLogger.Write($"Invalid label '{label}' for int value change");
                 throw new Exception($"Invalid label '{label}' for int value change");
@@ -189,6 +226,11 @@ public class MaleghastTokenData : TokenData
 
         TokenEditPanel.SyncValues();
         UpdateSelectedTokenPanel();
+    }
+
+    private Color ChangeColor(int a, int b) {
+        // return Color.white;
+        return ColorSidebar.FromHex(a < b ? "#F77474" : "#74F774");
     }
 
     private void SetStats(string unitType) {

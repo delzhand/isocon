@@ -70,6 +70,7 @@ public class Icon_v1_5 : GameSystem
 
     public override void Setup() {
         AddTokenSetup();
+        EditTokenSetup();
         SetJobOptions("Stalwart");
         UI.ToggleDisplay("Icon1_5TurnInfo", true);
         UI.ToggleDisplay("AlterHPMenuItem", true);
@@ -136,6 +137,99 @@ public class Icon_v1_5 : GameSystem
         }
         VisualElement root = UI.System.Q("AddTokenSystem");
         root.Q<DropdownField>("ClassDropdown").UnregisterValueChangedCallback(SetJobOptions);
+    }
+
+    private void EditTokenSetup() {
+
+        VisualElement panel = UI.System.Q("Icon1_5EditPanel");
+        
+        #region HP
+        panel.Q<SliderInt>("e_CurrentHPSlider").RegisterValueChangedCallback((evt) => {
+            panel.Q<Label>("e_CurrentHP").text = evt.newValue.ToString();
+        });
+        panel.Q<SliderInt>("e_CurrentHPSlider").RegisterCallback<MouseEnterEvent>((evt) => {
+            TokenEditPanel.HPOld = panel.Q<SliderInt>("e_CurrentHPSlider").value;
+        });
+        panel.Q<SliderInt>("e_CurrentHPSlider").RegisterCallback<MouseLeaveEvent>((evt) => {
+            int HPNew = panel.Q<SliderInt>("e_CurrentHPSlider").value;
+            int HPDiff = -(TokenEditPanel.HPOld - HPNew);
+            if (HPDiff != 0) {
+                Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "CurrentHP", HPNew);
+            }
+        });
+        #endregion
+
+        #region Vigor
+        panel.Q<SliderInt>("e_VigorSlider").RegisterValueChangedCallback((evt) => {
+            panel.Q<Label>("e_Vigor").text = evt.newValue.ToString();
+        });
+        panel.Q<SliderInt>("e_VigorSlider").RegisterCallback<MouseEnterEvent>((evt) => {
+            TokenEditPanel.HPOld = panel.Q<SliderInt>("e_VigorSlider").value;
+        });
+        panel.Q<SliderInt>("e_VigorSlider").RegisterCallback<MouseLeaveEvent>((evt) => {
+            int HPNew = panel.Q<SliderInt>("e_VigorSlider").value;
+            int HPDiff = -(TokenEditPanel.HPOld - HPNew);
+            if (HPDiff != 0) {
+                Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Vigor", HPNew);
+            }
+        });        
+        #endregion
+
+        #region Wounds
+        panel.Q<NumberNudger>("e_Wounds").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Wounds", Math.Clamp(evt, 0, 4));
+        });
+        #endregion
+
+        #region Resolve
+        panel.Q<NumberNudger>("e_Resolve").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Resolve", evt);
+        });
+        panel.Q<NumberNudger>("e_PartyResolve").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestGameDataSetValue("PartyResolve", evt);
+            // Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "PartyResolve", evt);
+        });        
+        #endregion
+
+        #region ClassFeatures
+        panel.Q<NumberNudger>("e_Aether").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Aether", evt);
+        });
+        panel.Q<NumberNudger>("e_Vigilance").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Vigilance", evt);
+        }); 
+        panel.Q<NumberNudger>("e_Blessings").AddValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Blessings", evt);
+        });
+        panel.Q<Toggle>("e_StackedDie").RegisterValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Status", "Stacked Die|pos");
+        });        
+        panel.Q<DropdownField>("e_Stance").RegisterValueChangedCallback((evt) => {
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Stance", evt.newValue);
+        });
+        #endregion
+
+        #region Status
+        panel.Q<Button>("ToggleBuffButton").RegisterCallback<ClickEvent>((evt) => {
+            string status = panel.Q<DropdownField>("e_BuffDropdown").value;
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Status", $"{status}|pos");
+        });
+
+        panel.Q<Button>("ToggleDebuffButton").RegisterCallback<ClickEvent>((evt) => {
+            string status = panel.Q<DropdownField>("e_DebuffDropdown").value;
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Status", $"{status}|neg");
+        });
+
+        panel.Q<TextField>("e_Marked").RegisterCallback<BlurEvent>((evt) => {
+            string s = panel.Q<TextField>("e_Marked").value;
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Marked", s);
+        });
+
+        panel.Q<TextField>("e_Hatred").RegisterCallback<BlurEvent>((evt) => {
+            string s = panel.Q<TextField>("e_Hatred").value;
+            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Hatred", s);
+        });
+        #endregion
     }
 
     private void SetJobOptions(ChangeEvent<string> evt) {

@@ -43,7 +43,7 @@ public class StartupPanel : MonoBehaviour
             manager.networkAddress = evt.newValue;
         });
 
-        string system = PlayerPrefs.GetString("System", "Generic");
+        string system = PlayerPrefs.GetString("System", "ICON 1.5");
         GameSystem.Set(system);
         UI.System.Q<DropdownField>("SystemField").value = system; 
         UI.System.Q<DropdownField>("SystemField").RegisterValueChangedCallback<string>((evt) => {
