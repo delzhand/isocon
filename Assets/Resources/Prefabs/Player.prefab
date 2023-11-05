@@ -50,6 +50,7 @@ MonoBehaviour:
   syncInterval: 0
   Name: 
   Role: 1
+  Host: 0
 --- !u!114 &716691115474973717
 MonoBehaviour:
   m_ObjectHideFlags: 0

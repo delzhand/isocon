@@ -100,6 +100,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  Id: 
   Name: 
   GraphicHash: 
   Json: 
@@ -115,12 +116,12 @@ MonoBehaviour:
   Move: 0
   Defense: 0
   Size: 0
-  Ability1: 
-  Ability2: 
-  Ability3: 
+  ActAbilities: 
+  SoulAbilities: 
+  Upgrades: 
+  Traits: 
   Strength: 0
-  Weak: 0
   Vitality: 0
-  Vulnerability: 0
-  Slow: 0
   Speed: 0
+  Loaded: 1
+  TurnEnded: 0

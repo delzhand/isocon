@@ -66,6 +66,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  Id: 
   Name: 
   GraphicHash: 
   Json: 

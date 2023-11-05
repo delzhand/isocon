@@ -5,14 +5,64 @@ using System.Net;
 using Mirror;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Unity.Services.RemoteConfig;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
+using System.Threading.Tasks;
 
 public class StartupPanel : MonoBehaviour
 {
+    public struct AppAttributes {
+        public string LatestVersion;
+    }
+    string version = "0.5.9";
+    string latestVersion = "0.5.9";
 
     NetworkManager manager;
 
+    async Task InitializeRemoteConfigAsync() {
+        await UnityServices.InitializeAsync();
+        if (!AuthenticationService.Instance.IsSignedIn)
+        {
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
+    }
+
+    async Task AsyncAwake () {
+        if (Utilities.CheckForInternetConnection()) 
+        {
+            await InitializeRemoteConfigAsync();
+        }    
+        RemoteConfigService.Instance.FetchCompleted += ApplyRemoteConfig;
+        await RemoteConfigService.Instance.FetchConfigsAsync(new AppAttributes(), new AppAttributes());
+    }
+
+    void ApplyRemoteConfig (ConfigResponse configResponse) {
+        switch (configResponse.requestOrigin) {
+            case ConfigOrigin.Default:
+                Debug.Log ("No settings loaded this session and no local cache file exists; using default values.");
+                break;
+            case ConfigOrigin.Cached:
+                Debug.Log ("No settings loaded this session; using cached values from a previous session.");
+                break;
+            case ConfigOrigin.Remote:
+                Debug.Log ("New settings loaded this session; update values accordingly.");
+                break;
+        }
+        latestVersion = RemoteConfigService.Instance.appConfig.GetString("LatestVersion");
+        if (version != latestVersion) {
+            UI.System.Q<Label>("Version").text = $"v{version} (new version available)";
+        }
+    }
+
+
+    
+
     void Awake()
     {
+        AsyncAwake();
+        UI.System.Q<Label>("Version").text = $"v{version}";
+
         UI.ToggleDisplay("StartupPanel", true);
 
         manager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();

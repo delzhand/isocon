@@ -66,6 +66,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  Id: 
   Name: 
   GraphicHash: 
   Json: 
@@ -78,7 +79,6 @@ MonoBehaviour:
   Vigor: 0
   Wounds: 0
   Resolve: 0
-  GResolve: 0
   MaxHP: 0
   Damage: 0
   Fray: 0
@@ -87,6 +87,13 @@ MonoBehaviour:
   Dash: 0
   Defense: 0
   Elite: 0
+  Aether: 0
+  Vigilance: 0
+  Blessings: 0
+  Marked: 
+  Hatred: 
+  Stance: 
+  Statuses: []
   Size: 0
 --- !u!114 &1685289110476563904
 MonoBehaviour:
