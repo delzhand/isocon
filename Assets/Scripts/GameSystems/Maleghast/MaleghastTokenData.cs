@@ -217,6 +217,7 @@ public class MaleghastTokenData : TokenData
                     TurnEnded = true;
                     PopoverText.Create(TokenObject.GetComponent<Token>(), $"=TURN ENDED", Color.white);
                     Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = ColorSidebar.FromHex("#505050");
+                    Element.BringToFront();
                 }
                 break;
             default:

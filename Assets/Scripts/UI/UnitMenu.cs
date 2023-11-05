@@ -114,6 +114,7 @@ public class UnitMenu : MonoBehaviour
 
     private void EndTurn(ClickEvent evt) {
         Player.Self().CmdRequestTokenDataSetValue(Data, "Status", "Turn Ended|neu");
+        TokenController.Deselect();
     }
 
     public static void ShowMenu(TokenData data) {
