@@ -51,7 +51,7 @@ public class StartupPanel : MonoBehaviour
         }
         latestVersion = RemoteConfigService.Instance.appConfig.GetString("LatestVersion");
         if (version != latestVersion) {
-            UI.System.Q<Label>("Version").text = $"v{version} (new version available)";
+            UI.System.Q<Label>("Version").text = $"v{version} (version {latestVersion} available)";
         }
     }
 
