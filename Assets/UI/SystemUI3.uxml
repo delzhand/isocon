@@ -23,7 +23,7 @@
         <ui:Label tabindex="-1" text="IsoCON is still in beta! Multiplayer features are P2P and may require the host player to have port forwarding enabled for port 7777. Client and hosts may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com." display-tooltip-when-elided="true" name="BetaMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%; white-space: normal; -unity-slice-scale: 1px; -unity-background-scale-mode: stretch-to-fill; margin-bottom: 4px; word-spacing: 0; letter-spacing: 0; -unity-paragraph-spacing: 0;" />
         <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="ConnectingMessage" class="no-margin panel" style="-unity-text-align: upper-center; width: 100%; margin-bottom: 4px;" />
         <ui:VisualElement name="StartupOptions" class="panel" style="flex-grow: 1;">
-            <ui:DropdownField index="0" choices="ICON 1.5,Maleghast 666,Generic" name="SystemField" label="Game System" focusable="false" class="no-margin" style="margin-bottom: 8px;" />
+            <ui:DropdownField index="0" choices="ICON 1.5,Maleghast,Generic" name="SystemField" label="Game System" focusable="false" class="no-margin" style="margin-bottom: 8px;" />
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: column; justify-content: space-between; width: 100%;">
                 <ui:VisualElement>
                     <ui:Button display-tooltip-when-elided="true" name="SoloModeButton" style="flex-grow: 1; flex-direction: row;">

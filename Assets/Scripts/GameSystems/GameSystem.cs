@@ -12,6 +12,7 @@ public class GameSystem : MonoBehaviour
             case "ICON 1.5":
                 return GameObject.Find("GameSystem").GetComponent<Icon_v1_5>();
             case "Maleghast 666":
+            case "Maleghast":
                 return GameObject.Find("GameSystem").GetComponent<Maleghast>();
         }
         return GameObject.Find("GameSystem").GetComponent<Generic>();
@@ -88,6 +89,7 @@ public class GameSystem : MonoBehaviour
                 system = g.AddComponent<Icon_v1_5>();
                 break;
             case "Maleghast 666":
+            case "Maleghast":
                 system = g.AddComponent<Maleghast>();
                 break;
         }
