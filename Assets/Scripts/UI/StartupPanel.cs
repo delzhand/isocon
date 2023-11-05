@@ -17,6 +17,7 @@ public class StartupPanel : MonoBehaviour
     }
     string version = "0.5.9";
     string latestVersion = "0.5.9";
+    string latestMessage = "Could not retrieve startup messages.";
 
     NetworkManager manager;
 
@@ -53,6 +54,9 @@ public class StartupPanel : MonoBehaviour
         if (version != latestVersion) {
             UI.System.Q<Label>("Version").text = $"v{version} (version {latestVersion} available)";
         }
+
+        latestMessage = RemoteConfigService.Instance.appConfig.GetString("LatestMessage");
+        UI.System.Q<Label>("BetaMessage").text = $"{latestMessage}";
     }
 
 
