@@ -11,7 +11,7 @@ public class Maleghast : GameSystem
 
     public override string SystemName()
     {
-        return "Maleghast 666";
+        return "Maleghast";
     }
 
     public override string GetTokenData()
@@ -150,7 +150,7 @@ public class Maleghast : GameSystem
             "C.A.R.C.A.S.S." => new string[] {"Gunwight/Thrall", "Enforcer/Scion", "Ammo Goblin/Freak", "Barrelform/Hunter", "EGIS Weapon/Tyrant", "Operator/Necromancer"}.ToList(),
             "Goregrinders" => new string[] {"Warhead/Thrall", "Carnifex/Scion", "Painghoul/Freak", "Painwheel/Horror", "Berserker/Tyrant", "Warlord/Necromancer"}.ToList(),
             "Gargamox" => new string[] {"Scum/Thrall", "Rotten/Scion", "Leech/Freak", "Host/Hunter", "Slime/Horror", "Plaguelord/Necromancer"}.ToList(),
-            "Deadsouls" => new string[] {"Sacrifice/Thrall", "Chosen/Scion", "Vizigheist/Horror", "Banshee/Hunter", "Bound Devil/Tyrant"}.ToList(),
+            "Deadsouls" => new string[] {"Sacrifice/Thrall", "Chosen/Scion", "Vizigheist/Horror", "Banshee/Hunter", "Bound Devil/Tyrant", "Dark Priest/Necromancer"}.ToList(),
             "Abhorrers" => new string[] {"Penitent/Scion", "Zealot/Horror", "Antipriest/Freak", "Inquisitor/Hunter", "Holy Body/Tyrant", "Exorcist/Necromancer"}.ToList(),
             "Igorri" => new string[] {"Stitch/Thrall", "Chop Doc/Freak", "Lycan/Horror", "Strigoi/Hunter", "Homonculus/Tyrant", "Chirurgeon/Necromancer"}.ToList(),
             _ => new string[] { }.ToList(),
