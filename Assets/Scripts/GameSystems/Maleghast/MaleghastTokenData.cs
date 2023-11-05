@@ -248,7 +248,7 @@ public class MaleghastTokenData : TokenData
                 Move = 3;
                 MaxHP = 4;
                 Defense = 3;
-                Armor = "ARMOR";
+                Armor = "PHYS";
                 Traits = "Formation";
                 ActAbilities = "Skull Crack,Flashbang,Shieldwall";
                 Upgrades = "Shield Charge,Bulwark,Bone Dust Napalm";
@@ -271,11 +271,11 @@ public class MaleghastTokenData : TokenData
                 ActAbilities = "Snipe,Transform To Gun,Deathmark";
                 Upgrades = "Claw Pitons,Extended Barrel,Caliber Up";
                 break;
-            case "Aegis Weapon/Tyrant":
+            case "EGIS Weapon/Tyrant":
                 Move = 3;
                 MaxHP = 6;
-                Defense = 4;
-                Armor = "ARMOR";
+                Defense = 2;
+                Armor = "PHYS";
                 Traits = "Formation,Siege Shield,Tyrant";
                 ActAbilities = "Juggernaut,Mortar,Catechism Devil Cannon";
                 Upgrades = "Fortify,Heavy Caliber Cannon,Gunner Pivot";
@@ -284,7 +284,7 @@ public class MaleghastTokenData : TokenData
                 Move = 4;
                 MaxHP = 8;
                 Defense = 4;
-                Armor = "ARMOR";
+                Armor = "PHYS";
                 Traits = "Formation,Hot Clip";
                 ActAbilities = "Akimbo";
                 SoulAbilities = "Reload Slide,Bullet Time";
@@ -314,7 +314,7 @@ public class MaleghastTokenData : TokenData
                 Armor = "";
                 Traits = "Blood Rage";
                 ActAbilities = "Pain Frenzy,Cauterize,Meat Hook";
-                Upgrades = "Stim Hook,Frenzy Hook,Adrenalize";
+                Upgrades = "Stim Haze,Frenzy Hook,Adrenalize";
                 break;
             case "Painwheel/Horror":
                 Move = 5;
@@ -347,7 +347,7 @@ public class MaleghastTokenData : TokenData
                 Move = 3;
                 MaxHP = 1;
                 Defense = 4;
-                Armor = "ARMOR";
+                Armor = "PHYS";
                 Traits = "Toxic Revenge,Thrall";
                 ActAbilities = "Pseudopod,Shamble";
                 Upgrades = "Bloat,Tentacle Whip,Aftermath";
@@ -356,7 +356,7 @@ public class MaleghastTokenData : TokenData
                 Move = 4;
                 MaxHP = 4;
                 Defense = 3;
-                Armor = "ARMOR";
+                Armor = "PHYS";
                 Traits = "Plaguebearer";
                 ActAbilities = "Pustulate,Vomitous Mass,Rotblade";
                 Upgrades = "Catalyze,Invigorating Viscera,Smog Shroud";
@@ -365,8 +365,8 @@ public class MaleghastTokenData : TokenData
                 Move = 4;
                 MaxHP = 4;
                 Defense = 4;
-                Armor = "";
-                Traits = "";
+                Armor = "MAG";
+                Traits = "Deathwash";
                 ActAbilities = "Suppurate,Evolve Strain,Swell with Corruption";
                 Upgrades = "Massive Swell,Spreading Strain,Acid Blood";
                 break;
@@ -406,20 +406,20 @@ public class MaleghastTokenData : TokenData
                 ActAbilities= "Beckon,Shudder";
                 Upgrades = "Squirm,Dead Grasp,Impending Death";
                 break;
-            case "Chosen/Freak":
+            case "Chosen/Scion":
                 Move = 4;
                 MaxHP = 3;
                 Defense = 5;
-                Armor = "WARD";
+                Armor = "MAG";
                 Traits = "Slither";
                 ActAbilities = "Tombraiser,Kidnap,Serpent's Kiss";
-                Upgrades = "Ivory Monument,Leap,Foul Monuments";
+                Upgrades = "Ivory Serpent,Leap,Foul Monuments";
                 break;
             case "Vizigheist/Horror":
                 Move = 4;
                 MaxHP = 3;
                 Defense = 5;
-                Armor = "WARD";
+                Armor = "MAG";
                 Traits = "Teleport";
                 ActAbilities = "Horrendous Shriek,Urgal Blade";
                 Upgrades = "Terrorize,Soul Frost,Condemn";
@@ -428,7 +428,7 @@ public class MaleghastTokenData : TokenData
                 Move = 3;
                 MaxHP = 3;
                 Defense = 5;
-                Armor = "WARD";
+                Armor = "MAG";
                 Traits = "Soul Sight";
                 ActAbilities = "Bale Scream,Tombstone";
                 Upgrades = "Doom Bell,Freeze Soul,Siren";
@@ -436,8 +436,8 @@ public class MaleghastTokenData : TokenData
             case "Bound Devil/Tyrant":
                 Move = 3;
                 MaxHP = 6;
-                Defense = 3;
-                Armor = "WARD";
+                Defense = 2;
+                Armor = "MAG";
                 Traits = "Flight,Tyrant";
                 ActAbilities= "Omnipresence,Beckon Lamb,Limb From Limb";
                 Upgrades = "To The Slaughter,Death Toll,Strong Pact";
@@ -446,7 +446,7 @@ public class MaleghastTokenData : TokenData
                 Move = 4;
                 MaxHP = 8;
                 Defense = 4;
-                Armor = "WARD";
+                Armor = "MAG";
                 Traits = "Dread Presence";
                 ActAbilities = "Doom Blade";
                 SoulAbilities = "Cyclopean Monolith,Soulfeed";
@@ -463,7 +463,7 @@ public class MaleghastTokenData : TokenData
             case "Zealot/Horror":
                 Move = 4;
                 MaxHP = 4;
-                Defense = 4;
+                Defense = 3;
                 Armor = "";
                 Traits = "Miracle, Zealotry";
                 ActAbilities = "Smite, Whirling Chain";
@@ -471,9 +471,9 @@ public class MaleghastTokenData : TokenData
                 break;
             case "Antipriest/Freak":
                 Move = 3;
-                MaxHP = 2;
+                MaxHP = 4;
                 Defense = 4;
-                Armor = "WARD";
+                Armor = "MAG";
                 Traits = "Miracle";
                 ActAbilities = "Gentleness, Delay Judgement, Blessed Censer";
                 Upgrades = "Cleansing Prayer, Consecrate, Boiling Censer";
@@ -481,20 +481,21 @@ public class MaleghastTokenData : TokenData
             case "Inquisitor/Hunter":
                 Move = 3;
                 MaxHP = 4;
-                Defense = 4;
+                Defense = 3;
                 Armor = "";
                 Traits = "Miracle";
                 ActAbilities = "Winch, Requiesce en Pace";
                 Upgrades = "Focus, Heart Destroyer, Explosive Bolts";
                 break;
             case "Holy Body/Tyrant":
-                Move = 4;
+                Move = 3;
                 MaxHP = 3;
                 Defense = 2;
                 Armor = "SUPER";
                 Traits = "Flight, Miraculous Flesh, Tyrant";
                 ActAbilities = "Bolides, Indignation, Ablutions";
                 Upgrades = "Scathe, Holy Font, Witness";
+                Vitality = 4;
                 break;
             case "Exorcist/Necromancer":
                 Move = 4;
@@ -510,7 +511,7 @@ public class MaleghastTokenData : TokenData
                 MaxHP = 2;
                 Defense = 4;
                 Armor = "";
-                Traits = "Fall To Shambles";
+                Traits = "Fall To Shambles,Thrall";
                 ActAbilities = "Unstable Mutation,Twisting Strike";
                 Upgrades = "Genestealer, Spread Mutate, Warping Mutate";
                 break;
@@ -518,7 +519,7 @@ public class MaleghastTokenData : TokenData
                 Move = 4;
                 MaxHP = 4;
                 Defense = 4;
-                Armor = "WARD";
+                Armor = "MAG";
                 Traits = "Leftovers";
                 ActAbilities = "Inject Mutagen, Purge, Marriage";
                 Upgrades = "Absorb, Scour Flesh, Conjoin";
@@ -544,7 +545,7 @@ public class MaleghastTokenData : TokenData
             case "Homonculus/Tyrant":
                 Move = 4;
                 MaxHP = 6;
-                Defense = 2;
+                Defense = 3;
                 Armor = "";
                 Traits = "Warpflesh,Tyrant";
                 ActAbilities = "Scult Flesh, Absorb, Flesh Whip";
@@ -553,8 +554,8 @@ public class MaleghastTokenData : TokenData
             case "Chiurgeon/Necromancer":
                 Move = 4;
                 MaxHP = 10;
-                Defense = 4;
-                Armor = "WARD";
+                Defense = 3;
+                Armor = "MAG";
                 Traits = "Polyglot";
                 ActAbilities = "Experimental Surgery, Wild Mutation, Sample Genome";
                 Upgrades = "";

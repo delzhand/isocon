@@ -425,7 +425,7 @@
             </ui:VisualElement>
         </ui:ScrollView>
     </ui:VisualElement>
-    <ui:Label tabindex="-1" text="v0.5.6" display-tooltip-when-elided="true" name="Version" style="position: absolute; right: 0; bottom: 0; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); font-size: 12px;" />
+    <ui:Label tabindex="-1" text="v0.5.7" display-tooltip-when-elided="true" name="Version" style="position: absolute; right: 0; bottom: 0; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); font-size: 12px;" />
     <ui:VisualElement name="Toasts" style="flex-grow: 1; background-color: rgb(34, 58, 118); position: absolute; left: auto; top: auto; border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); color: rgb(255, 255, 255); -unity-text-align: middle-right; padding-left: 10px; padding-right: 10px; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; display: none; right: 10px; bottom: 10px;" />
     <ui:VisualElement name="AddTokenPanel" class="panel centered" style="width: 380px; display: none;">
         <ui:Label tabindex="-1" text="CREATE TOKEN" display-tooltip-when-elided="true" class="panel-header" />
