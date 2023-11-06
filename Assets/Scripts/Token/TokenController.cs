@@ -39,9 +39,6 @@ public class TokenController : MonoBehaviour
             // ReserveController.Adjust();
         }
         else {
-            CameraControl.GoToBlock(block);
-            // UI.System.Q("TerrainInfo").style.display = DisplayStyle.Flex;
-            block.SetTerrainInfo();
             Block.DeselectAll();
             block.Select();
         }

@@ -12,20 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"ab7aff5b-c6fb-4a3f-847d-8bc189a23b2b\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"a0a1d6ba-b729-424c-8b9e-7c26c3ea48ff\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"0.5.9\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"a002a93e-fb93-43b7-85be-b4aae70569cb\"\r\n    },\r\n    \"rs\":
-    {\r\n      \"key\": \"StartupMessage\",\r\n      \"type\": \"string\",\r\n     
+    \"entityId\": \"79f3f01b-48dc-4e63-a47b-dff3ab31c634\"\r\n    },\r\n    \"rs\":
+    {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
     }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"ab7aff5b-c6fb-4a3f-847d-8bc189a23b2b\"\r\n   
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"a0a1d6ba-b729-424c-8b9e-7c26c3ea48ff\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"0.5.9\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"a002a93e-fb93-43b7-85be-b4aae70569cb\"\r\n    },\r\n    \"rs\":
-    {\r\n      \"key\": \"StartupMessage\",\r\n      \"type\": \"string\",\r\n     
+    \"entityId\": \"79f3f01b-48dc-4e63-a47b-dff3ab31c634\"\r\n    },\r\n    \"rs\":
+    {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   

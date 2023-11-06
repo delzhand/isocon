@@ -30,7 +30,7 @@
                 <ui:VisualElement>
                     <ui:Button display-tooltip-when-elided="true" name="SoloModeButton" style="flex-grow: 1; flex-direction: row;">
                         <ui:Label tabindex="-1" text="SOLO MODE" display-tooltip-when-elided="true" style="font-size: 16px;" />
-                        <ui:Label tabindex="-1" text="Edit maps offline or screen share" display-tooltip-when-elided="true" style="white-space: normal;" />
+                        <ui:Label tabindex="-1" text="Edit maps offline or screen share" display-tooltip-when-elided="true" style="white-space: normal; -unity-font-style: normal;" />
                     </ui:Button>
                 </ui:VisualElement>
                 <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); margin-top: 8px;">
@@ -55,7 +55,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="OfflineIndicator" style="background-color: rgb(255, 255, 255); position: relative; width: 100%; height: 4px;" />
+    <ui:VisualElement name="OfflineIndicator" style="background-color: rgb(255, 255, 255); position: relative; width: 100%; height: 4px; display: flex;" />
     <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: none;">
         <ui:VisualElement name="Toggles" style="background-color: rgba(0, 0, 0, 0);">
             <ui:Button display-tooltip-when-elided="true" name="ConnectionToggle" class="blank" style="position: relative; background-image: resource(&apos;Textures/network&apos;); width: 28px; height: 28px;" />

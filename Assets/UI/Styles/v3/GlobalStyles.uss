@@ -20,16 +20,16 @@
     color: rgb(255, 255, 255);
     padding-left: 8px;
     padding-right: 8px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    -unity-font-definition: resource('Fonts/NeueRemanSans-Regular SDF');
+    padding-top: 6px;
+    padding-bottom: 10px;
+    -unity-font-definition: resource('Fonts/MusticaPro-SemiBold SDF');
     text-shadow: 0 0 1px rgb(0, 0, 0);
     border-radius: 3px;
     background-image: resource('Textures/9slice');
-    -unity-slice-left: 5;
-    -unity-slice-right: 5;
-    -unity-slice-top: 5;
-    -unity-slice-bottom: 6;
+    -unity-slice-left: 10;
+    -unity-slice-right: 10;
+    -unity-slice-top: 10;
+    -unity-slice-bottom: 12;
 }
 
 .panel .hover {

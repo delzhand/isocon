@@ -40,7 +40,7 @@
 
 .unity-button {
     margin: 0;
-    padding: 2px 6px;
+    padding: 0px 6px 2px;
     border-width: 1px;
     border-radius: 2px;
     background-color: rgba(100, 100, 100, 0.15);

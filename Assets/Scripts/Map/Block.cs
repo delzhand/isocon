@@ -17,6 +17,7 @@ public enum BlockType
 public class Block : MonoBehaviour
 {
     public bool Selected = false;
+    public bool Focused = false;
     public BlockType Type = BlockType.Solid;
     public bool Destroyable = true;
     Mesh m;
@@ -60,6 +61,10 @@ public class Block : MonoBehaviour
         else {
             indicator.SetActive(false);
         }
+
+        if (Focused && ClickController.FocusedBlock != this) {
+            Unfocus();
+        }
     }
 
     public static void MaterialSetup() {
@@ -68,8 +73,16 @@ public class Block : MonoBehaviour
             materials.Add("top1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopA")));
             materials.Add("top2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopB")));
             materials.Add("unfocused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+
             materials.Add("focused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
             materials["focused"].SetInt("_Focused", 1);
+
+            materials.Add("selected", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+            materials["selected"].SetInt("_Selected", 1);
+
+            materials.Add("selectfocused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+            materials["selectfocused"].SetInt("_Selected", 1);
+            materials["selectfocused"].SetInt("_Focused", 1);
     }
     public override string ToString(){
         Column c = transform.parent.GetComponent<Column>();
@@ -136,8 +149,7 @@ public class Block : MonoBehaviour
         return block;
     }
 
-    void OnMouseDown()
-    {
+    public void HandleClicks(int button) {
         if (!Player.IsOnline()) {
             return;
         }
@@ -146,18 +158,47 @@ public class Block : MonoBehaviour
             return;
         }
 
-        if (TerrainController.Editing) {
-            Block.DeselectAll();
-            Select();
-            GameObject.Find("Engine").GetComponent<TerrainController>().Edit(this);
-            Block.DeselectAll();
-            return;            
+        // Left Click
+        if (button == 0) {
+            if (TerrainController.Editing) {
+                Block.DeselectAll();
+                Select();
+                GameObject.Find("Engine").GetComponent<TerrainController>().Edit(this);
+                Block.DeselectAll();
+            }
+            else {
+                TokenController.BlockClick(this);
+            }
         }
 
-        // CameraControl.GoToBlock(this);
-        // SetTerrainInfo();
-        TokenController.BlockClick(this);
+        // Right Click
+        else if (button == 1) {
+            CameraControl.GoToBlock(this);
+        }
     }
+
+    // void OnMouseDown()
+    // {
+    //     if (!Player.IsOnline()) {
+    //         return;
+    //     }
+
+    //     if (UI.ClicksSuspended) {
+    //         return;
+    //     }
+
+    //     if (TerrainController.Editing) {
+    //         Block.DeselectAll();
+    //         Select();
+    //         GameObject.Find("Engine").GetComponent<TerrainController>().Edit(this);
+    //         Block.DeselectAll();
+    //         return;            
+    //     }
+
+    //     // CameraControl.GoToBlock(this);
+    //     // SetTerrainInfo();
+    //     TokenController.BlockClick(this);
+    // }
 
     public static void SetColor(string id, Color color) {
         if (materials.Count == 0) {
@@ -233,6 +274,17 @@ public class Block : MonoBehaviour
 
     public void Deselect() {
         this.Selected = false;
+        SetMaterials();
+    }
+
+    public void Focus() {
+        Focused = true;
+        SetMaterials();
+        SetTerrainInfo();
+    }
+
+    public void Unfocus() {
+        Focused = false;
         SetMaterials();
     }
 
@@ -362,8 +414,18 @@ public class Block : MonoBehaviour
         }
         blockMaterials.Add(markerMaterial);
         
-        // Selected
-        blockMaterials.Add(materials[Selected ? "focused" : "unfocused"]);
+        // Selected/Focused
+        string fmat = "unfocused";
+        if (Selected && !Focused) {
+            fmat = "selected";
+        }
+        else if (!Selected && Focused) {
+            fmat = "focused";
+        }
+        else if (Selected && Focused) {
+            fmat = "selectfocused";
+        }
+        blockMaterials.Add(materials[fmat]);
 
         // Apply
         mr.SetMaterials(blockMaterials);
