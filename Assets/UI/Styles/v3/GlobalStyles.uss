@@ -42,6 +42,18 @@
     -unity-background-image-tint-color: rgba(0, 251, 255, 0.39);
 }
 
+.panel2 {
+    color: rgb(255, 255, 255);
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    -unity-font-definition: resource('Fonts/MusticaPro-SemiBold SDF');
+    text-shadow: 0 0 1px rgb(0, 0, 0);
+    border-radius: 6px;
+    background-color: rgba(0, 0, 0, .5);
+}
+
 .unit-menu-item .self-centered {
     display: none;
 }

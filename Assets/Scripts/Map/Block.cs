@@ -230,7 +230,7 @@ public class Block : MonoBehaviour
     public void SetTerrainInfo() {
         string height = (transform.localPosition.y + 1).ToString();
         if (Type == BlockType.Slope) {
-            height = transform.localPosition.y + "~" + (transform.localPosition.y + 1);
+            height = transform.localPosition.y + "/" + (transform.localPosition.y + 1);
         }
         UI.System.Q<Label>("Height").text = $"{height}";
         UI.System.Q<Label>("Coords").text = toAlpha(getY() + 1) + "" + (getX()+1);
@@ -280,7 +280,6 @@ public class Block : MonoBehaviour
     public void Focus() {
         Focused = true;
         SetMaterials();
-        SetTerrainInfo();
     }
 
     public void Unfocus() {

@@ -9,14 +9,25 @@ using Unity.Services.RemoteConfig;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using System.Threading.Tasks;
+using System.Net.Http;
+using System;
 
 public class StartupPanel : MonoBehaviour
 {
+    
+    [Serializable]
+    private class IpifyResponse
+    {
+        public string ip;
+    }
+
+    private static readonly string IpifyApiUrl = "https://api.ipify.org/?format=json";
+
     public struct AppAttributes {
         public string LatestVersion;
     }
-    string version = "0.5.9";
-    string latestVersion = "0.5.9";
+    string version = "0.6.0";
+    string latestVersion = "0.6.0";
     string latestMessage = "Could not retrieve startup messages.";
 
     NetworkManager manager;
@@ -36,6 +47,36 @@ public class StartupPanel : MonoBehaviour
         }    
         RemoteConfigService.Instance.FetchCompleted += ApplyRemoteConfig;
         await RemoteConfigService.Instance.FetchConfigsAsync(new AppAttributes(), new AppAttributes());
+
+        try
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync(IpifyApiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string json = await response.Content.ReadAsStringAsync();
+                    Debug.Log(json);
+
+                    // Parse the JSON response to get the IP address
+                    IpifyResponse ipifyResponse = JsonUtility.FromJson<IpifyResponse>(json);
+                    Debug.Log(ipifyResponse);
+                    string ipAddress = ipifyResponse.ip;
+                    Debug.Log(ipAddress);
+                }
+                else
+                {
+                    // Handle the error or log it
+                    Debug.Log($"Error: {response.StatusCode}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Debug.Log($"Exception: {ex.Message}");
+        }
     }
 
     void ApplyRemoteConfig (ConfigResponse configResponse) {

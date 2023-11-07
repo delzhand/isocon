@@ -220,7 +220,7 @@ MonoBehaviour:
   m_DecalLayerMask: 1
   m_ScaleMode: 1
   m_Offset: {x: 0, y: 0, z: 2}
-  m_Size: {x: 1, y: 1, z: 4}
+  m_Size: {x: 0.7, y: 0.7, z: 4}
   m_FadeFactor: 1
 --- !u!1001 &2174893363689088739
 PrefabInstance:

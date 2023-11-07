@@ -39,7 +39,7 @@ public class TokenController : MonoBehaviour
             // ReserveController.Adjust();
         }
         else {
-            Block.DeselectAll();
+            // Block.DeselectAll();
             block.Select();
         }
     }
