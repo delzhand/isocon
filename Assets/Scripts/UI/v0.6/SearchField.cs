@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Frame : MonoBehaviour
+public class SearchField : MonoBehaviour
 {
+    // Start is called before the first frame update
     void Start()
     {
-        UI.ToggleDisplay("Frame", false);
-        UI.SetBlocking(UI.System, new string[]{"BottomBar"});
+        
     }
 
+    // Update is called once per frame
     void Update()
     {
         

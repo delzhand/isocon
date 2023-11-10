@@ -66,6 +66,7 @@ public class GameSystem : MonoBehaviour
     }
 
     public virtual string GetEditPanelName() {
+        return null;
         throw new NotImplementedException();
     }
 

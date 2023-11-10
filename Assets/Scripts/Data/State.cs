@@ -50,18 +50,18 @@ public class State
         }
         State state = new State();
         state.Version = "v1";
-        state.Color1 = ColorSidebar.ColorToHex(Environment.Color1);
-        state.Color2 = ColorSidebar.ColorToHex(Environment.Color2);
-        state.Color3 = ColorSidebar.ColorToHex(Environment.Color3);
-        state.Color4 = ColorSidebar.ColorToHex(Environment.Color4);
+        state.Color1 = ColorUtility.ColorToHex(Environment.Color1);
+        state.Color2 = ColorUtility.ColorToHex(Environment.Color2);
+        state.Color3 = ColorUtility.ColorToHex(Environment.Color3);
+        state.Color4 = ColorUtility.ColorToHex(Environment.Color4);
         state.Blocks = blockStrings.ToArray();
         return state;
     }
 
     public static void SetSceneFromState(State state) {
         TerrainController.DestroyAllBlocks();
-        Environment.SetTileColors(ColorSidebar.FromHex(state.Color1), ColorSidebar.FromHex(state.Color2));
-        Environment.SetBackgroundColors(ColorSidebar.FromHex(state.Color3), ColorSidebar.FromHex(state.Color4));
+        Environment.SetTileColors(ColorUtility.ColorFromHex(state.Color1), ColorUtility.ColorFromHex(state.Color2));
+        Environment.SetBackgroundColors(ColorUtility.ColorFromHex(state.Color3), ColorUtility.ColorFromHex(state.Color4));
         foreach (string s in state.Blocks) {
             Block.FromString(state.Version, s);
         }

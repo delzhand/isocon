@@ -77,12 +77,12 @@ public class ToolsSidebar : MonoBehaviour
             case "Color1":
                 Environment.Color1 = c;
                 Block.SetColor("top1", c);
-                Block.SetColor("top2", ColorSidebar.DarkenColor(c, .2f));
+                Block.SetColor("top2", ColorUtility.DarkenColor(c, .2f));
                 break;
             case "Color2":
                 Environment.Color2 = c;
                 Block.SetColor("side1", c);
-                Block.SetColor("side2", ColorSidebar.DarkenColor(c, .2f));
+                Block.SetColor("side2", ColorUtility.DarkenColor(c, .2f));
                 break;
             case "Color3":
                 Environment.Color3 = c;

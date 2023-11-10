@@ -297,10 +297,10 @@ public class Icon_v1_5TokenData : TokenData
     private void addStatus(VisualElement v, string statusName, string colorShorthand) {
         Color c = Color.white;
         if (colorShorthand == "pos") {
-            c = ColorSidebar.FromHex("#74f774");
+            c = ColorUtility.ColorFromHex("#74f774");
         }
         else if (colorShorthand == "neg") {
-            c = ColorSidebar.FromHex("#f77474");
+            c = ColorUtility.ColorFromHex("#f77474");
         }
         Label label = new Label(statusName);
         label.AddToClassList("no-margin");
@@ -471,7 +471,7 @@ public class Icon_v1_5TokenData : TokenData
                 string[] split = value.Split('|');
                 if (Statuses.Contains(value)) {
                     Statuses.Remove(value);
-                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"=-|={split[0].ToUpper()}", ColorSidebar.FromHex("#BBBBBB"));
+                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"=-|={split[0].ToUpper()}", ColorUtility.ColorFromHex("#BBBBBB"));
                     if (value.Contains("Turn Ended")) {
                         Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = Color.white;
                     }
@@ -480,7 +480,7 @@ public class Icon_v1_5TokenData : TokenData
                     Statuses.Add(value);
                     PopoverText.Create(TokenObject.GetComponent<Token>(), $"=+|={split[0].ToUpper()}", Color.white);
                     if (value.Contains("Turn Ended")) {
-                        Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = ColorSidebar.FromHex("#505050");
+                        Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = ColorUtility.ColorFromHex("#505050");
                     }
                 }
 
@@ -506,7 +506,7 @@ public class Icon_v1_5TokenData : TokenData
 
     private Color ChangeColor(int a, int b) {
         return Color.white;
-        // return ColorSidebar.FromHex(a < b ? "#F77474" : "#74F774");
+        // return ColorUtility.ColorFromHex(a < b ? "#F77474" : "#74F774");
     }
 
     public string StatusesToString() {

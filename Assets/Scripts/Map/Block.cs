@@ -16,6 +16,8 @@ public enum BlockType
 
 public class Block : MonoBehaviour
 {
+    public static Block LastFocused;
+
     public bool Selected = false;
     public bool Focused = false;
     public BlockType Type = BlockType.Solid;
@@ -62,7 +64,7 @@ public class Block : MonoBehaviour
             indicator.SetActive(false);
         }
 
-        if (Focused && ClickController.FocusedBlock != this) {
+        if (Focused && this != LastFocused) {
             Unfocus();
         }
     }
@@ -84,6 +86,7 @@ public class Block : MonoBehaviour
             materials["selectfocused"].SetInt("_Selected", 1);
             materials["selectfocused"].SetInt("_Focused", 1);
     }
+
     public override string ToString(){
         Column c = transform.parent.GetComponent<Column>();
         string[] bits = new string[]{
@@ -167,7 +170,7 @@ public class Block : MonoBehaviour
                 Block.DeselectAll();
             }
             else {
-                TokenController.BlockClick(this);
+                Select();
             }
         }
 
@@ -223,30 +226,81 @@ public class Block : MonoBehaviour
         return (int)(this.transform.position.y/.5f)+2;
     }
 
-    // public Block Find(int x, int y, int z) {
-        
-    // }
-
-    public void SetTerrainInfo() {
-        string height = (transform.localPosition.y + 1).ToString();
-        if (Type == BlockType.Slope) {
-            height = transform.localPosition.y + "/" + (transform.localPosition.y + 1);
+    public static Block[] GetSelected() {
+        List<Block> selected = new();
+        GameObject[] gos = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < gos.Length; i++) {
+            Block block = gos[i].GetComponent<Block>();
+            if (block.Selected) {
+                selected.Add(block);
+            }
         }
-        UI.System.Q<Label>("Height").text = $"{height}";
-        UI.System.Q<Label>("Coords").text = toAlpha(getY() + 1) + "" + (getX()+1);
-        UI.System.Q("Coords").style.display = DisplayStyle.Flex;
-        UI.System.Q("Effects").Clear();
-        effects.ForEach(marker => {
-            VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/TileEffect");
-            VisualElement instance = template.Instantiate();
-            instance.Q<Label>("Label").text = marker;
-            instance.Q<Button>("RemoveButton").RegisterCallback<ClickEvent>((evt) => {
-                // EffectChange(marker);
-                // UI.System.Q("Effects").Remove(instance);
-                Player.Self().CmdRequestMapSetValue(getX(), getY(), getZ(), "Effect", marker);
-            });
-            UI.System.Q("Effects").Add(instance);
-        });
+        return selected.ToArray();
+    }
+
+    public static void SetTerrainInfo() {
+        VisualElement root = UI.System.Q("TerrainInfo");
+        UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), false);
+        UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), false);
+        UI.ToggleDisplay(root, false);
+
+        Block[] selected = GetSelected();
+        Block focused = LastFocused;
+        Block block = null;
+
+        Color color = Color.white;
+        if (selected.Length > 0) {
+            color = Color.yellow;
+            UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), true);
+            UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), true);
+        }
+ 
+        UI.ToggleDisplay(root, true);
+
+        string height;
+        string coords;
+
+        if (selected.Length > 1) {
+            height = "*";
+            coords = "*";
+        }
+        else {
+            if (selected.Length == 1) {
+                block = selected[0];
+            }
+            else if (focused) {
+                block = focused;
+            }
+            height = (block.transform.localPosition.y + 1).ToString();
+            if (block.Type == BlockType.Slope) {
+                height = height + ".5";
+            }
+            coords = block.toAlpha(block.getY() + 1) + "" + (block.getX()+1);
+
+        }
+
+        root.Q<Label>("Height").text = $"{height}";
+        root.Q<Label>("Height").style.color = color;
+        root.Q<Label>("Coords").text = coords;
+        root.Q<Label>("Coords").style.color = color;
+
+
+        // root.Q("Effects").Clear();
+        // if (block) {
+        //     block.effects.ForEach(marker => {
+        //         VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/TileEffect");
+        //         VisualElement instance = template.Instantiate();
+        //         instance.Q<Label>("Label").text = marker;
+        //         instance.Q<Button>("RemoveButton").RegisterCallback<ClickEvent>((evt) => {
+        //             // EffectChange(marker);
+        //             // UI.System.Q("Effects").Remove(instance);
+        //             Player.Self().CmdRequestMapSetValue(block.getX(), block.getY(), block.getZ(), "Effect", marker);
+        //         });
+        //         root.Q("Effects").Add(instance);
+        //     });
+
+        // }
+
     }
     
     private string toAlpha(int x) {
@@ -268,18 +322,26 @@ public class Block : MonoBehaviour
     }
 
     public void Select() {
-        Selected = true;
+        if (Selected) {
+            Selected = false;
+        }
+        else {
+            Selected = true;
+        }
         SetMaterials();
+        SetTerrainInfo();
     }
 
     public void Deselect() {
-        this.Selected = false;
+        Selected = false;
         SetMaterials();
     }
 
     public void Focus() {
+        LastFocused = this;
         Focused = true;
         SetMaterials();
+        SetTerrainInfo();
     }
 
     public void Unfocus() {

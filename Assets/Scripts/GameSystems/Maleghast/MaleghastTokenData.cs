@@ -216,7 +216,7 @@ public class MaleghastTokenData : TokenData
                 else {
                     TurnEnded = true;
                     PopoverText.Create(TokenObject.GetComponent<Token>(), $"=TURN ENDED", Color.white);
-                    Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = ColorSidebar.FromHex("#505050");
+                    Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = ColorUtility.ColorFromHex("#505050");
                     Element.BringToFront();
                 }
                 break;
@@ -231,7 +231,7 @@ public class MaleghastTokenData : TokenData
 
     private Color ChangeColor(int a, int b) {
         // return Color.white;
-        return ColorSidebar.FromHex(a < b ? "#F77474" : "#74F774");
+        return ColorUtility.ColorFromHex(a < b ? "#F77474" : "#74F774");
     }
 
     private void SetStats(string unitType) {
@@ -650,10 +650,10 @@ public class MaleghastTokenData : TokenData
     private void addStatus(VisualElement v, string statusName, string colorShorthand) {
         Color c = Color.white;
         if (colorShorthand == "pos") {
-            c = ColorSidebar.FromHex("#74f774");
+            c = ColorUtility.ColorFromHex("#74f774");
         }
         else if (colorShorthand == "neg") {
-            c = ColorSidebar.FromHex("#f77474");
+            c = ColorUtility.ColorFromHex("#f77474");
         }
         Label label = new Label(statusName);
         label.AddToClassList("no-margin");

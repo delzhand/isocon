@@ -7,13 +7,13 @@ using UnityEngine.UIElements;
 
 public class DiceSidebar : MonoBehaviour
 {
-    public int d20count = 0;
-    public int d12count = 0;
-    public int d100count = 0;
-    public int d10count = 0;
-    public int d8count = 0;
-    public int d6count = 0;
-    public int d4count = 0;
+    private int d20count = 0;
+    private int d12count = 0;
+    private int d100count = 0;
+    private int d10count = 0;
+    private int d8count = 0;
+    private int d6count = 0;
+    private int d4count = 0;
 
     public static bool newItems = false;
 

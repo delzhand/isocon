@@ -28,7 +28,10 @@ public class UnitMenu : MonoBehaviour
         UI.ToggleDisplay("RemoveMenuItem", Data != null && Data.OnField);
         UI.ToggleDisplay("MoveMenuItem", Data != null && Data.OnField);
         UI.ToggleDisplay("EndTurnMenuItem", Data != null && !Data.CheckCondition("TurnEnded"));
-        UI.ToggleDisplay(GameSystem.Current().GetEditPanelName(), ActiveMenuItem == "Edit");
+        GameSystem system = GameSystem.Current();
+        if (system && system.GetEditPanelName() != null) {
+            UI.ToggleDisplay(GameSystem.Current().GetEditPanelName(), ActiveMenuItem == "Edit");
+        }
 
         UI.System.Q<VisualElement>("MoveMenuItem").Q<Label>().text = (ActiveMenuItem == "Moving") ? "Stop Moving" : "Move";
     }

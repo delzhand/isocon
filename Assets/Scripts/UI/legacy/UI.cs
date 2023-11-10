@@ -128,11 +128,15 @@ public class UI : MonoBehaviour
     }
 
     public static void ToggleActiveClass(string name, bool active) {
+        ToggleActiveClass(UI.System.Q(name), active);
+    }
+
+    public static void ToggleActiveClass(VisualElement e, bool active) {
         if (active) {
-            UI.System.Q(name).AddToClassList("active");
+            e.AddToClassList("active");
         }
         else {
-            UI.System.Q(name).RemoveFromClassList("active");
+            e.RemoveFromClassList("active");
         }
     }
 }

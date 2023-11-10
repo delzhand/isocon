@@ -21,7 +21,7 @@ public class ColorSidebar : MonoBehaviour
 
         UI.System.Q<TextField>("EditColorHex").RegisterValueChangedCallback<string>((evt) => {
             try {
-                Color c = FromHex(evt.newValue);
+                Color c = ColorUtility.ColorFromHex(evt.newValue);
                 SetRGB(c);
                 onColorChange?.Invoke(c);
             }
@@ -54,37 +54,7 @@ public class ColorSidebar : MonoBehaviour
     }
 
     private static void SetHex(Color c) {
-        UI.System.Q<TextField>("EditColorHex").value = ColorToHex(c);
-    }
-
-    public static string ColorToHex(Color color)
-    {
-        int r = Mathf.RoundToInt(color.r * 255);
-        int g = Mathf.RoundToInt(color.g * 255);
-        int b = Mathf.RoundToInt(color.b * 255);
-
-        return $"#{r:X2}{g:X2}{b:X2}";
-    }
-
-    public static Color FromHex(string hex) {
-        if (hex == null) {
-            return Color.white;
-        }
-        hex = hex.Replace("#", "").ToUpper();
-        if (hex.Length != 6)
-        {
-            throw new Exception("Invalid hex color format. Please use the format '#RRGGBB'.");
-        }
-
-        string rHex = hex.Substring(0, 2);
-        string gHex = hex.Substring(2, 2);
-        string bHex = hex.Substring(4, 2);
-
-        byte r = byte.Parse(rHex, System.Globalization.NumberStyles.HexNumber);
-        byte g = byte.Parse(gHex, System.Globalization.NumberStyles.HexNumber);
-        byte b = byte.Parse(bHex, System.Globalization.NumberStyles.HexNumber);
-
-        return new Color32(r, g, b, 255);
+        UI.System.Q<TextField>("EditColorHex").value = ColorUtility.ColorToHex(c);
     }
 
     public static Color FromSliders() {
@@ -99,10 +69,5 @@ public class ColorSidebar : MonoBehaviour
         onColorChange = null;
     }
 
-    public static Color DarkenColor(Color originalColor, float percentage)
-    {
-        float darkenAmount = Mathf.Clamp01(percentage);
-        Color darkenedColor = Color.Lerp(originalColor, Color.black, darkenAmount);
-        return darkenedColor;
-    }
+
 }

@@ -156,3 +156,14 @@
 #DiceResult {
     /* flex-basis: 100%; */
 }
+
+#SearchResults .unity-label {
+    color: black;
+    margin: 0;
+    padding: 2px 4px;
+}
+
+#SearchResults .unity-label.selected {
+    color: #FFF;
+    background-color: orange;
+}
