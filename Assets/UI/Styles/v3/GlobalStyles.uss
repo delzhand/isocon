@@ -139,6 +139,10 @@
     background-color: blue;
 }
 
+.unity-button.preferred {
+    border-color: orange;
+}
+
 .red {
     background-color: rgb(238, 34, 12);
 }

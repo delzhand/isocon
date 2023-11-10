@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:TextField picking-mode="Ignore" name="SearchInput" label="Filename" class="no-margin" style="min-width: 400px; margin-bottom: 0; overflow: visible;">
+        <ui:ScrollView name="SearchResults" class="search-results" style="min-width: 0; min-height: 0; max-height: 200px; background-color: rgb(255, 255, 255); margin-top: 0; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; display: none; position: absolute; margin-bottom: 0; right: 0; top: 32px; width: 244px;" />
+    </ui:TextField>
+</ui:UXML>
