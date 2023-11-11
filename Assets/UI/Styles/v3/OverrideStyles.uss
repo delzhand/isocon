@@ -167,3 +167,7 @@
     color: #FFF;
     background-color: orange;
 }
+
+#GeneralModal #Buttons .unity-button {
+    margin-left: 4px;
+}

@@ -75,7 +75,7 @@
 }
 
 .unity-foldout__input {
-    background-color: rgb(55, 55, 55);
+    background-color: rgb(31, 31, 31);
     padding-left: 4px;
     padding-right: 4px;
     padding-top: 2px;

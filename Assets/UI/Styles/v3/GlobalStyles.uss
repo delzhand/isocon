@@ -120,6 +120,10 @@
     margin: 0;
 }
 
+.element-spacing {
+    margin-bottom: 2px;
+}
+
 .close-button {
     background-color: transparent;
     border-width: 0;

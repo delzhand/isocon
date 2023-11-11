@@ -41,6 +41,10 @@ public class UI : MonoBehaviour
         }
     }
 
+    public static void SetBlocking(VisualElement root, string blockingElement) {
+        SetBlocking(root, new string[]{blockingElement});
+    }
+
     public static void SetBlocking(VisualElement root, string[] blockingElements) {
         foreach(string s in blockingElements) {
             root.Q(s).RegisterCallback<MouseEnterEvent>((evt) => {
