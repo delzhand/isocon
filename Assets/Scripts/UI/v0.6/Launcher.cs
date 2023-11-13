@@ -170,7 +170,7 @@ public class Launcher : MonoBehaviour
                     GameSystem.Set(UI.System.Q<DropdownField>("SystemSelect").value);
                     _manager.maxConnections = 1;
                     _manager.StartHost();
-                    GetComponent<Tabletop>().ConnectAsHost();
+                    GetComponent<Tabletop>().ConnectAsSolo();
                     break;
                 case "host":
                     GameSystem.Set(UI.System.Q<DropdownField>("SystemSelect").value);

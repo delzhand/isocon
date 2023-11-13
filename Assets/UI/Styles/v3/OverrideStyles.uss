@@ -157,6 +157,10 @@
     /* flex-basis: 100%; */
 }
 
+#SearchResults {
+    width: 244px;
+}
+
 #SearchResults .unity-label {
     color: black;
     margin: 0;
@@ -168,6 +172,18 @@
     background-color: orange;
 }
 
+.no-title #SearchInput {
+    min-width: 0px;
+}
+
+.no-title #SearchResults {
+    width: 100%;
+}
+
 #GeneralModal #Buttons .unity-button {
     margin-left: 4px;
+}
+
+#GeneralModal .unity-text-field__input {
+    min-width: 244px;
 }

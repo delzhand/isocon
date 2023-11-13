@@ -12,25 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"a0a1d6ba-b729-424c-8b9e-7c26c3ea48ff\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"0883e9bb-e53d-47ea-b5c9-49695d8fb323\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
-    \"value\": \"0.5.9\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"79f3f01b-48dc-4e63-a47b-dff3ab31c634\"\r\n    },\r\n    \"rs\":
-    {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
-    \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
-    the host player to have port forwarding enabled for port 7777. Client and hosts
-    may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"a0a1d6ba-b729-424c-8b9e-7c26c3ea48ff\"\r\n   
+    \"value\": \"0.6.0\"\r\n    }\r\n  }\r\n]"
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"0883e9bb-e53d-47ea-b5c9-49695d8fb323\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
-    \"value\": \"0.5.9\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"79f3f01b-48dc-4e63-a47b-dff3ab31c634\"\r\n    },\r\n    \"rs\":
-    {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
-    \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
-    the host player to have port forwarding enabled for port 7777. Client and hosts
-    may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  }\r\n]"
+    \"value\": \"0.6.0\"\r\n    }\r\n  }\r\n]"
   _environments: "[\r\n  {\r\n    \"projectId\": \"84cc6114-4488-4698-9103-7c2948671b2e\",\r\n   
     \"name\": \"production\",\r\n    \"id\": \"b3e19d49-e656-4b78-b133-15a1b7d39d66\",\r\n   
     \"isDefault\": true,\r\n    \"createdAt\": \"2023-11-05T13:57:15Z\",\r\n    \"updatedAt\":
-    \"2023-11-05T13:57:15Z\"\r\n  }\r\n]"
+    \"2023-11-05T13:57:15Z\"\r\n  },\r\n  {\r\n    \"projectId\": \"84cc6114-4488-4698-9103-7c2948671b2e\",\r\n   
+    \"name\": \"development\",\r\n    \"id\": \"680473bc-aaa0-4aa6-aaf3-82a995a056d6\",\r\n   
+    \"isDefault\": false,\r\n    \"createdAt\": \"2023-11-13T01:02:13Z\",\r\n   
+    \"updatedAt\": \"2023-11-13T01:02:13Z\"\r\n  }\r\n]"

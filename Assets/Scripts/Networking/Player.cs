@@ -5,6 +5,7 @@ using System.Text;
 using Mirror;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.TerrainUtils;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
@@ -195,11 +196,19 @@ public class Player : NetworkBehaviour
 
     #region MapChange
     [Command]
-    public void CmdRequestMapSetValue(int x, int y, int z, string label, string value) {
-        // Find block
-            // EffectChange(marker);
-            // UI.System.Q("Effects").Remove(instance);
-        // CmdMapSync
+    public void CmdRequestMapSetValue(string[] blocks, string label, string value) {
+        RpcMapSetValue(blocks, label, value);
+    }
+    [ClientRpc]
+    public void RpcMapSetValue(string[] blocks, string label, string value) {
+        if (label == "Effect") {
+            Toast.Add($"Effect {value} applied to {blocks.Length} blocks.");
+            for (int i = 0; i < blocks.Length; i++) {
+                Block target = GameObject.Find(blocks[i]).GetComponent<Block>();
+                target.EffectChange(value);
+            }
+        }
+        Block.SetTerrainInfo();
     }
     #endregion
 

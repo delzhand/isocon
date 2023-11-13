@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -163,10 +161,11 @@ public class Block : MonoBehaviour
 
         // Left Click
         if (button == 0) {
-            if (TerrainController.Editing) {
+            if (MapEdit.Editing) {
                 Block.DeselectAll();
                 Select();
-                GameObject.Find("Engine").GetComponent<TerrainController>().Edit(this);
+                TerrainController.Edit(this);
+                Select();
                 Block.DeselectAll();
             }
             else {
@@ -242,6 +241,8 @@ public class Block : MonoBehaviour
         VisualElement root = UI.System.Q("TerrainInfo");
         UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), false);
         UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), false);
+        UI.ToggleDisplay(root.Q("AddEffect"), false);
+
         UI.ToggleDisplay(root, false);
 
         Block[] selected = GetSelected();
@@ -249,7 +250,7 @@ public class Block : MonoBehaviour
         Block block = null;
 
         Color color = Color.white;
-        if (selected.Length > 0) {
+        if (selected.Length > 0 && !MapEdit.Editing) {
             color = Color.yellow;
             UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), true);
             UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), true);
@@ -259,6 +260,7 @@ public class Block : MonoBehaviour
 
         string height;
         string coords;
+        bool singleSelected = false;
 
         if (selected.Length > 1) {
             height = "*";
@@ -267,6 +269,7 @@ public class Block : MonoBehaviour
         else {
             if (selected.Length == 1) {
                 block = selected[0];
+                singleSelected = true;
             }
             else if (focused) {
                 block = focused;
@@ -285,21 +288,28 @@ public class Block : MonoBehaviour
         root.Q<Label>("Coords").style.color = color;
 
 
-        // root.Q("Effects").Clear();
-        // if (block) {
-        //     block.effects.ForEach(marker => {
-        //         VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/TileEffect");
-        //         VisualElement instance = template.Instantiate();
-        //         instance.Q<Label>("Label").text = marker;
-        //         instance.Q<Button>("RemoveButton").RegisterCallback<ClickEvent>((evt) => {
-        //             // EffectChange(marker);
-        //             // UI.System.Q("Effects").Remove(instance);
-        //             Player.Self().CmdRequestMapSetValue(block.getX(), block.getY(), block.getZ(), "Effect", marker);
-        //         });
-        //         root.Q("Effects").Add(instance);
-        //     });
+        root.Q("CurrentEffects").Clear();
+        if (block) {
+            block.effects.ForEach(marker => {
+                VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/TerrainEffect");
+                VisualElement instance = template.Instantiate();
+                instance.Q<Label>("Label").text = marker.ToUpper();
+                VisualElement remove = instance.Q("Remove");
+                if (!singleSelected) {
+                    UI.ToggleDisplay(remove, false);
+                }
+                else {
+                    remove.RegisterCallback<ClickEvent>((evt) => {
+                        Player.Self().CmdRequestMapSetValue(new string[]{block.name}, "Effect", marker);
+                    });
+                }
+                root.Q("CurrentEffects").Add(instance);
+            });
 
-        // }
+        }
+        if (selected.Length > 0) {
+            UI.ToggleDisplay(root.Q("AddEffect"), true);
+        }
 
     }
     
@@ -455,22 +465,22 @@ public class Block : MonoBehaviour
 
         // Markers
         Material markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));
-        if (effects.Contains("Impassable")) {
+        if (GameSystem.Current().HasEffect("Blocked", effects)) {
             markerMaterial.SetInt("_Impassable", 1);
         }
-        if (effects.Contains("Dangerous")) {
+        if (GameSystem.Current().HasEffect("Spiky", effects)) {
             markerMaterial.SetInt("_Dangerous", 1);
         }
-        if (effects.Contains("Difficult")) {
+        if (GameSystem.Current().HasEffect("Wavy", effects)) {
             markerMaterial.SetInt("_Difficult", 1);
         }
-        if (effects.Contains("Interactive")) {
+        if (GameSystem.Current().HasEffect("Hand", effects)) {
             markerMaterial.SetInt("_Interactive", 1);
         }
-        if (effects.Contains("Pit")) {
+        if (GameSystem.Current().HasEffect("Hole", effects)) {
             markerMaterial.SetInt("_Pit", 1);
         }
-        if (HasOtherEffect()) {
+        if (GameSystem.Current().HasCustomEffect(effects)) {
             markerMaterial.SetInt("_Other", 1);
         }
         blockMaterials.Add(markerMaterial);
@@ -490,15 +500,6 @@ public class Block : MonoBehaviour
 
         // Apply
         mr.SetMaterials(blockMaterials);
-    }
-
-    private bool HasOtherEffect() {
-        for (int i = 0; i < effects.Count; i++) {
-            if (!(new string[]{"Impassable", "Pit", "Dangerous", "Difficult", "Interactive"}.Contains(effects[i]))) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public static void ToggleSpacers(bool show) {

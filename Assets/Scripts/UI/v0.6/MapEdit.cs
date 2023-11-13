@@ -7,22 +7,28 @@ using UnityEngine.UIElements;
 
 public class MapEdit
 {
+    private static bool MapDirty = false;
     public static bool Editing = false;
     private static string CurrentFile = "";
+    private static List<string> EditOps = new List<string>();
 
     public static void Setup()
     {
         UI.System.Q("FloatingControls").Q("EditMap").RegisterCallback<ClickEvent>(ToggleEditMode);
 
         VisualElement root = UI.System.Q("ToolsPanel");
+        UI.SetBlocking(UI.System, "ToolsPanel");
         UI.ToggleDisplay(root, false);
         root.Q<Button>("Open").RegisterCallback<ClickEvent>(OpenOpenModal);
         root.Q<Button>("Save").RegisterCallback<ClickEvent>(OpenSaveModal);
+        root.Query<Button>(null, "tool-button").ForEach(RegisterButton);
+        root.Query<Foldout>(null, "unity-foldout").ForEach(RegisterFoldout);
     }
 
     private static void ToggleEditMode(ClickEvent evt) {
         Editing = !Editing;
         UI.ToggleDisplay("ToolsPanel", Editing);
+        Block.DeselectAll();
     }
 
     private static void OpenSaveModal(ClickEvent evt) {
@@ -54,7 +60,7 @@ public class MapEdit
 
     private static void OpenOpenModal(ClickEvent evt) {
 
-        VisualElement searchField = SearchField.Create(GetAllMapFiles());
+        VisualElement searchField = SearchField.Create(GetAllMapFiles(), "Filename");
         searchField.name = "SearchField";
 
         Button confirm = new Button();
@@ -71,12 +77,27 @@ public class MapEdit
         Modal.AddButton(confirm);
         Modal.AddButton(cancel);
     }
+    
     private static void CloseModal(ClickEvent evt) {
         Modal.Close();
     }
 
     private static void ConfirmMapOpen(ClickEvent evt) {
         string value = Modal.Find().Q("SearchField").Q<TextField>("SearchInput").value;
+        if (!MapDirty) {
+            State.LoadState(value);
+            Modal.Close();
+        }
+        else {
+            Modal.DoubleConfirm("Confirm Open", "You have unsaved changes. Discard?", OpenFile);
+        }
+    }
+
+    private static void OpenFile() {
+        string filename = Modal.Find().Q<TextField>("Filename").value;
+        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        string fullPath = path + "/maps/" + filename;
+        State.LoadState(fullPath);
     }
 
     private static void ConfirmMapSave(ClickEvent evt) {
@@ -146,5 +167,43 @@ public class MapEdit
         }
 
         return mapFiles.ToArray();
+    }
+
+    private static void RegisterButton(Button button) {
+        button.clickable.clickedWithEventInfo += ButtonClick;
+    }
+
+    private static void ButtonClick(EventBase obj) {
+        VisualElement root = UI.System.Q("ToolsPanel");
+        root.Query<Button>(null, "tool-button").ForEach(DisableButton);
+        Button button = (Button)obj.target;
+        button.AddToClassList("active");
+        EditOps.Clear();
+        EditOps.Add(button.name);
+    }
+
+    private static void DisableButton(Button button) {
+        button.RemoveFromClassList("active");
+    }
+
+    public static List<string> GetOps() {
+        return EditOps;
+    }
+
+    private static void RegisterFoldout(Foldout foldout) {
+        foldout.RegisterCallback<ClickEvent>((evt) => {
+            if (foldout.value) {
+                VisualElement root = UI.System.Q("ToolsPanel");
+                root.Query<Foldout>(null, "unity-foldout").ForEach((otherFoldout) => {
+                    if (otherFoldout != foldout) {
+                        otherFoldout.value = false;
+                    }
+                });
+            }
+        });
+    }
+
+    public static string GetMarkerEffect() {
+         return UI.System.Q("ToolsPanel").Q("EffectSearch").Q<TextField>("SearchInput").value;
     }
 }

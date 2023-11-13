@@ -1,8 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class GameSystem : MonoBehaviour
 {
@@ -72,6 +71,18 @@ public class GameSystem : MonoBehaviour
 
     public virtual void SyncEditValues(TokenData data) {
         throw new NotImplementedException();        
+    }
+
+    public virtual string[] GetEffectList() {
+        throw new NotImplementedException();
+    }
+
+    public virtual bool HasEffect(string search, List<string> effects) {
+        throw new NotImplementedException();
+    }
+
+    public virtual bool HasCustomEffect(List<string> effects) {
+        throw new NotImplementedException();
     }
 
     public static void Set(string value) {

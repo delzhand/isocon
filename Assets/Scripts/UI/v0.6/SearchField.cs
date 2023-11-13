@@ -5,12 +5,17 @@ using UnityEngine.UIElements;
 
 public class SearchField
 {
-    public static VisualElement Create(string[] options) {
+    public static VisualElement Create(string[] options, string title) {
 
         VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/SearchInput");
         VisualElement element = template.Instantiate();
         
+        if (title.Length == 0) {
+            element.AddToClassList("no-title");
+        }
+
         TextField input = element.Q<TextField>("SearchInput");
+        input.label = title;
         VisualElement results = element.Q("SearchResults");
 
         for (int i = 0; i < options.Length; i++) {

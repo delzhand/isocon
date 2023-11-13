@@ -63,8 +63,8 @@ public class TerrainController : MonoBehaviour
         return s[i];
     }
 
-    public void Edit(Block block) {
-        List<string> ops = ToolsSidebar.GetOps();
+    public static void Edit(Block block) {
+        List<string> ops = MapEdit.GetOps();
         foreach(string op in ops) {
             switch (op) {
                 case "AddBlock":
@@ -95,7 +95,7 @@ public class TerrainController : MonoBehaviour
                     ChangeType(BlockType.Spacer);
                     break;
                 case "AddMark":
-                    ChangeEffect(ToolsSidebar.MarkerEffect);
+                    ChangeEffect(MapEdit.GetMarkerEffect());
                     break;
                 case "ClearMarks":
                     ChangeEffect("Clear");

@@ -5,27 +5,26 @@
     <Style src="project://database/Assets/UI/Styles/v3/OverrideStyles.uss?fileID=7433441132597879392&amp;guid=15bcfaebbc0c9fd4691b003a9d1cd382&amp;type=3#OverrideStyles" />
     <Style src="project://database/Assets/UI/Styles/Overhead.uss?fileID=7433441132597879392&amp;guid=db9f5488cbd5b104699c060ac772337b&amp;type=3#Overhead" />
     <ui:VisualElement name="Worldspace" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; left: 0; top: 0; right: 0; bottom: 0;" />
-    <ui:VisualElement name="Launcher" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0;">
-        <ui:VisualElement name="StartupPanel" class="centered" style="margin-bottom: 0; display: none; min-height: 0; width: 570px;">
+    <ui:VisualElement name="Launcher" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: none;">
+        <ui:VisualElement name="StartupPanel" class="centered" style="margin-bottom: 0; display: flex; min-height: 0; width: 570px;">
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 0; flex-direction: row; justify-content: center; background-image: resource(&apos;Textures/isocon_logo&apos;); -unity-background-scale-mode: scale-to-fit; margin-bottom: 30px; height: 80px;">
                 <ui:Label tabindex="-1" text="BETA" parse-escape-sequences="true" display-tooltip-when-elided="true" style="position: absolute; top: -17px; right: -29px; background-color: rgb(255, 139, 0); -unity-font-style: bold; font-size: 16px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; color: rgb(255, 255, 255);" />
             </ui:VisualElement>
             <ui:VisualElement name="StartupOptions" class="panel" style="flex-grow: 1; width: 70%; align-self: center;">
                 <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: column; justify-content: space-between; width: 100%;">
-                    <ui:VisualElement>
-                        <ui:Button display-tooltip-when-elided="true" name="SoloModeButton" style="flex-grow: 1; flex-direction: row;">
+                    <ui:VisualElement style="flex-direction: row; justify-content: space-between;">
+                        <ui:Button display-tooltip-when-elided="true" name="SoloModeButton" style="flex-direction: column; width: 32%; align-items: center;">
+                            <ui:VisualElement style="background-image: resource(&apos;Textures/solo_mode&apos;); -unity-background-scale-mode: scale-to-fit; height: 34px; width: 30px; margin-right: 0;" />
                             <ui:Label tabindex="-1" text="SOLO MODE" display-tooltip-when-elided="true" style="font-size: 16px;" />
                             <ui:Label tabindex="-1" text="Edit maps offline or screen share" display-tooltip-when-elided="true" style="white-space: normal; -unity-font-style: normal;" />
                         </ui:Button>
-                    </ui:VisualElement>
-                    <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); margin-top: 8px;">
-                        <ui:Button display-tooltip-when-elided="true" name="HostModeButton" style="flex-grow: 1; flex-direction: row;">
+                        <ui:Button display-tooltip-when-elided="true" name="HostModeButton" style="flex-direction: column; width: 32%; align-items: center;">
+                            <ui:VisualElement style="background-image: resource(&apos;Textures/host_mode&apos;); -unity-background-scale-mode: scale-to-fit; width: 30px; height: 34px; margin-right: 0;" />
                             <ui:Label tabindex="-1" text="HOST TABLE" display-tooltip-when-elided="true" style="font-size: 16px; white-space: normal;" />
                             <ui:Label tabindex="-1" text="Start a session for multiple players" display-tooltip-when-elided="true" style="white-space: normal;" />
                         </ui:Button>
-                    </ui:VisualElement>
-                    <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); margin-top: 8px; flex-direction: row;">
-                        <ui:Button display-tooltip-when-elided="true" name="ClientModeButton" style="flex-grow: 1; flex-direction: row;">
+                        <ui:Button display-tooltip-when-elided="true" name="ClientModeButton" style="flex-direction: column; width: 32%; align-items: center;">
+                            <ui:VisualElement style="background-image: resource(&apos;Textures/client_mode&apos;); -unity-background-scale-mode: scale-to-fit; width: 30px; height: 34px; margin-right: 0;" />
                             <ui:Label tabindex="-1" text="JOIN TABLE" display-tooltip-when-elided="true" style="font-size: 16px; white-space: normal;" />
                             <ui:Label tabindex="-1" text="Connect to a session" display-tooltip-when-elided="true" style="white-space: normal;" />
                         </ui:Button>
@@ -46,7 +45,7 @@
                     <ui:IntegerField label="Max Players" value="4" name="PlayerCount" class="no-margin" style="margin-bottom: 4px;" />
                     <ui:TextField picking-mode="Ignore" label="Host IP" value="Username" name="HostIP" class="no-margin" style="margin-bottom: 4px;" />
                     <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: center; margin-top: 8px;">
-                        <ui:Button text="Confirm" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Confirm" style="margin-right: 4px;" />
+                        <ui:Button text="Confirm" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Confirm" class="preferred" style="margin-right: 4px;" />
                         <ui:Button text="Cancel" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Cancel" />
                     </ui:VisualElement>
                 </ui:VisualElement>
@@ -67,7 +66,7 @@
                 </ui:Button>
             </ui:VisualElement>
             <ui:VisualElement name="Gamespace" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; position: relative; margin-right: 0;">
-                <ui:VisualElement name="TerrainInfo" style="background-color: rgba(0, 0, 0, 0); display: none; position: absolute; right: 0; top: 0; padding-right: 0; align-items: auto;">
+                <ui:VisualElement name="TerrainInfo" style="background-color: rgba(0, 0, 0, 0); display: flex; position: absolute; right: 0; top: 0; padding-right: 0; align-items: auto;">
                     <ui:VisualElement name="Elev" class="panel2" style="flex-direction: row; justify-content: flex-end; padding-right: 60px; right: -60px; padding-left: 10px; margin-bottom: 4px; overflow: hidden;">
                         <ui:Label tabindex="-1" display-tooltip-when-elided="true" text="ELEV" style="font-size: 14px; -unity-font-style: bold; color: rgb(255, 255, 255); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 8px; margin-top: 0; margin-bottom: 1px; -unity-text-align: lower-right;" />
                         <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Height" text="1" style="font-size: 32px; color: rgb(255, 255, 255); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: -8px; margin-bottom: -5px; -unity-font-style: normal; -unity-text-align: lower-right;" />
@@ -78,7 +77,12 @@
                         <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Coords" text="A0" style="font-size: 32px; color: rgb(255, 255, 255); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: -8px; margin-bottom: -5px; -unity-font-style: normal; -unity-text-align: lower-right;" />
                         <ui:VisualElement name="SelectedMarker" style="flex-grow: 1; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background-color: rgb(255, 247, 0); display: none;" />
                     </ui:VisualElement>
-                    <ui:VisualElement name="Effects" class="effect" />
+                    <ui:VisualElement name="Effects" class="effect" style="align-items: flex-end;">
+                        <ui:VisualElement name="CurrentEffects" style="flex-grow: 1;" />
+                        <ui:VisualElement name="AddEffect" class="panel2" style="flex-direction: row; justify-content: flex-end; padding-right: 60px; right: -60px; padding-left: 10px; margin-bottom: 4px; overflow: hidden; display: none;">
+                            <ui:Label tabindex="-1" display-tooltip-when-elided="true" text="⊕ ADD EFFECT" name="Add" style="font-size: 12px; -unity-font-style: bold; color: rgb(255, 255, 255); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 1px; -unity-text-align: middle-right;" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="CameraControls" class="panel" style="flex-grow: 1; left: 50%; top: 0; position: absolute; translate: -50% 0; flex-direction: row; -unity-text-align: upper-left; display: none; justify-content: space-between; width: 469px; padding-left: 6px; padding-right: 6px; padding-top: 4px; padding-bottom: 4px; border-top-left-radius: 16px; border-bottom-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px;">
                     <ui:Button display-tooltip-when-elided="true" name="RotateCCW" class="rotate blank" style="background-image: resource(&apos;Textures/rotateCCW&apos;); background-color: rgba(188, 188, 188, 0); width: 24px; height: 24px; right: auto; align-self: center;" />
@@ -262,64 +266,72 @@
                 <ui:VisualElement name="FloatingControls" style="flex-grow: 1; position: absolute; left: 50%; translate: -50% 0; top: 10px; flex-direction: row; margin-left: -8px;">
                     <ui:VisualElement style="flex-grow: 1; width: 30px; height: 30px; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/camera&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 8px;" />
                     <ui:VisualElement name="EditMap" style="flex-grow: 1; width: 30px; height: 30px; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/pencil&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 8px;" />
+                    <ui:VisualElement name="Connection" style="flex-grow: 1; width: 30px; height: 30px; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/network&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 8px;">
+                        <ui:VisualElement name="Panel" class="panel" style="flex-grow: 1; position: absolute; translate: -50% 0; top: 36px; left: 50%; width: 350px; display: none;">
+                            <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Message" text="Your IP is &lt;IP&gt;" style="flex-wrap: wrap; white-space: normal; -unity-text-align: upper-center;" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="ToolsPanel" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: none; margin-bottom: 4px; width: 240px;">
                     <ui:Label tabindex="-1" text="EDIT TOOLS" display-tooltip-when-elided="true" class="panel-header" />
-                    <ui:Foldout text="Terrain" value="false">
-                        <ui:Button text="Add Block" display-tooltip-when-elided="true" name="AddBlock" class="toolbox tool-button" style="margin-top: 4px;" />
-                        <ui:Button text="Remove Block" display-tooltip-when-elided="true" name="RemoveBlock" class="toolbox tool-button" style="margin-top: 4px;" />
-                        <ui:Button text="Clone Row" display-tooltip-when-elided="true" name="CloneRow" class="toolbox tool-button" style="margin-top: 4px;" />
-                        <ui:Button text="Remove Row" display-tooltip-when-elided="true" name="RemoveRow" class="toolbox tool-button" style="margin-top: 4px;" />
-                        <ui:Button text="Clone Column" display-tooltip-when-elided="true" name="CloneCol" class="toolbox tool-button" style="margin-top: 4px;" />
-                        <ui:Button text="Remove Column" display-tooltip-when-elided="true" name="RemoveCol" class="toolbox tool-button" style="margin-top: 4px;" />
-                    </ui:Foldout>
-                    <ui:Foldout text="Tile Shapes" value="false">
-                        <ui:Button text="Solid" display-tooltip-when-elided="true" name="Solid" class="toolbox tool-button" style="margin-top: 4px;" />
-                        <ui:Button text="Slope" display-tooltip-when-elided="true" name="Slope" class="toolbox tool-button" style="margin-top: 4px;" />
-                        <ui:Button text="Hidden" display-tooltip-when-elided="true" name="Hidden" class="toolbox tool-button" style="margin-top: 4px;" />
-                    </ui:Foldout>
-                    <ui:Foldout text="Tile Effects" value="false">
-                        <ui:Button text="Clear Effects" display-tooltip-when-elided="true" name="ClearMarks" class="toolbox tool-button" style="margin-top: 4px;" />
-                        <ui:Button text="Set Effect" display-tooltip-when-elided="true" name="AddMark" class="toolbox tool-button" style="margin-top: 4px;" />
-                        <ui:DropdownField index="0" choices="Difficult,Dangerous,Pit,Interactive,Impassable,Custom" name="MarkField" class="no-margin" style="display: flex; margin-top: 4px;" />
-                        <ui:TextField picking-mode="Ignore" value=" Custom Effect" name="OtherMark" class="no-margin" style="display: flex; margin-top: 4px;" />
-                    </ui:Foldout>
-                    <ui:Foldout text="Base Colors" value="false" focusable="true" style="margin-bottom: 0;">
-                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
-                            <ui:Label tabindex="-1" text="Tile Tops" display-tooltip-when-elided="true" style="flex-grow: 1;" />
-                            <ui:VisualElement name="Color1" style="background-color: rgb(62, 113, 62); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
-                        </ui:VisualElement>
-                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
-                            <ui:Label tabindex="-1" text="Tile Sides" display-tooltip-when-elided="true" style="flex-grow: 1;" />
-                            <ui:VisualElement name="Color2" style="background-color: rgb(111, 90, 60); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
-                        </ui:VisualElement>
-                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
-                            <ui:Label tabindex="-1" text="Background Top" display-tooltip-when-elided="true" style="flex-grow: 1;" />
-                            <ui:VisualElement name="Color3" style="background-color: rgb(71, 69, 113); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
-                        </ui:VisualElement>
-                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
-                            <ui:Label tabindex="-1" text="Background Bottom" display-tooltip-when-elided="true" style="flex-grow: 1;" />
-                            <ui:VisualElement name="Color4" style="background-color: rgb(0, 16, 34); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
-                        </ui:VisualElement>
-                    </ui:Foldout>
-                    <ui:Foldout text="Painting" value="false" focusable="true" style="margin-bottom: 0; margin-top: 4px;">
-                        <ui:Button text="Paint Block" display-tooltip-when-elided="true" name="Paintbrush" class="toolbox tool-button" style="margin-top: 4px;" />
-                        <ui:Button text="Unpaint Block" display-tooltip-when-elided="true" name="Unpaint" class="toolbox tool-button" style="margin-top: 4px;" />
-                        <ui:Button text="Sample Painted Block" display-tooltip-when-elided="true" name="Eyedropper" class="toolbox tool-button" style="margin-top: 4px;" />
-                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
-                            <ui:Label tabindex="-1" text="Paintbrush Top" display-tooltip-when-elided="true" style="flex-grow: 1;" />
-                            <ui:VisualElement name="Color5" style="background-color: rgb(0, 0, 0); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
-                        </ui:VisualElement>
-                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
-                            <ui:Label tabindex="-1" text="Paintbrush Bottom" display-tooltip-when-elided="true" style="flex-grow: 1;" />
-                            <ui:VisualElement name="Color6" style="background-color: rgb(0, 0, 0); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
-                        </ui:VisualElement>
-                    </ui:Foldout>
-                    <ui:Foldout text="Data" value="false" style="margin-top: 4px; margin-bottom: 0;">
-                        <ui:Button text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Save" style="margin-top: 4px;" />
-                        <ui:Button text="Open" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Open" style="margin-top: 4px;" />
-                        <ui:Button text="Reset" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Reset" style="margin-top: 4px;" />
-                    </ui:Foldout>
+                    <ui:VisualElement style="flex-grow: 1; flex-direction: column-reverse;">
+                        <ui:Foldout text="Data" value="false" style="margin-top: 4px; margin-bottom: 0;">
+                            <ui:Button text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Save" style="margin-top: 4px;" />
+                            <ui:Button text="Open" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Open" style="margin-top: 4px;" />
+                            <ui:Button text="Reset" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Reset" style="margin-top: 4px;" />
+                        </ui:Foldout>
+                        <ui:Foldout text="Painting" value="false" focusable="true" style="margin-bottom: 0; margin-top: 4px;">
+                            <ui:Button text="Paint Block" display-tooltip-when-elided="true" name="Paintbrush" class="toolbox tool-button" style="margin-top: 4px;" />
+                            <ui:Button text="Unpaint Block" display-tooltip-when-elided="true" name="Unpaint" class="toolbox tool-button" style="margin-top: 4px;" />
+                            <ui:Button text="Sample Painted Block" display-tooltip-when-elided="true" name="Eyedropper" class="toolbox tool-button" style="margin-top: 4px;" />
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
+                                <ui:Label tabindex="-1" text="Paintbrush Top" display-tooltip-when-elided="true" style="flex-grow: 1;" />
+                                <ui:VisualElement name="Color5" style="background-color: rgb(0, 0, 0); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
+                            </ui:VisualElement>
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
+                                <ui:Label tabindex="-1" text="Paintbrush Bottom" display-tooltip-when-elided="true" style="flex-grow: 1;" />
+                                <ui:VisualElement name="Color6" style="background-color: rgb(0, 0, 0); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
+                            </ui:VisualElement>
+                        </ui:Foldout>
+                        <ui:Foldout text="Base Colors" value="false" focusable="true" style="margin-bottom: 0;">
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
+                                <ui:Label tabindex="-1" text="Tile Tops" display-tooltip-when-elided="true" style="flex-grow: 1;" />
+                                <ui:VisualElement name="Color1" style="background-color: rgb(62, 113, 62); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
+                            </ui:VisualElement>
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
+                                <ui:Label tabindex="-1" text="Tile Sides" display-tooltip-when-elided="true" style="flex-grow: 1;" />
+                                <ui:VisualElement name="Color2" style="background-color: rgb(111, 90, 60); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
+                            </ui:VisualElement>
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
+                                <ui:Label tabindex="-1" text="Background Top" display-tooltip-when-elided="true" style="flex-grow: 1;" />
+                                <ui:VisualElement name="Color3" style="background-color: rgb(71, 69, 113); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
+                            </ui:VisualElement>
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
+                                <ui:Label tabindex="-1" text="Background Bottom" display-tooltip-when-elided="true" style="flex-grow: 1;" />
+                                <ui:VisualElement name="Color4" style="background-color: rgb(0, 16, 34); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
+                            </ui:VisualElement>
+                        </ui:Foldout>
+                        <ui:Foldout text="Tile Effects" value="false">
+                            <ui:Button text="Clear Effects" display-tooltip-when-elided="true" name="ClearMarks" class="toolbox tool-button" style="margin-top: 4px;" />
+                            <ui:Button text="Set Effect" display-tooltip-when-elided="true" name="AddMark" class="toolbox tool-button" style="margin-top: 4px;" />
+                            <ui:DropdownField index="0" choices="Difficult,Dangerous,Pit,Interactive,Impassable,Custom" name="MarkField" class="no-margin" style="display: none; margin-top: 4px;" />
+                            <ui:TextField picking-mode="Ignore" value=" Custom Effect" name="OtherMark" class="no-margin" style="display: none; margin-top: 4px;" />
+                            <ui:VisualElement name="EffectSearch" style="flex-grow: 1;" />
+                        </ui:Foldout>
+                        <ui:Foldout text="Tile Shapes" value="false">
+                            <ui:Button text="Solid" display-tooltip-when-elided="true" name="Solid" class="toolbox tool-button" style="margin-top: 4px;" />
+                            <ui:Button text="Slope" display-tooltip-when-elided="true" name="Slope" class="toolbox tool-button" style="margin-top: 4px;" />
+                            <ui:Button text="Hidden" display-tooltip-when-elided="true" name="Hidden" class="toolbox tool-button" style="margin-top: 4px;" />
+                        </ui:Foldout>
+                        <ui:Foldout text="Terrain" value="false">
+                            <ui:Button text="Add Block" display-tooltip-when-elided="true" name="AddBlock" class="toolbox tool-button" style="margin-top: 4px;" />
+                            <ui:Button text="Remove Block" display-tooltip-when-elided="true" name="RemoveBlock" class="toolbox tool-button" style="margin-top: 4px;" />
+                            <ui:Button text="Clone Row" display-tooltip-when-elided="true" name="CloneRow" class="toolbox tool-button" style="margin-top: 4px;" />
+                            <ui:Button text="Remove Row" display-tooltip-when-elided="true" name="RemoveRow" class="toolbox tool-button" style="margin-top: 4px;" />
+                            <ui:Button text="Clone Column" display-tooltip-when-elided="true" name="CloneCol" class="toolbox tool-button" style="margin-top: 4px;" />
+                            <ui:Button text="Remove Column" display-tooltip-when-elided="true" name="RemoveCol" class="toolbox tool-button" style="margin-top: 4px;" />
+                        </ui:Foldout>
+                    </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="MapFilePanel" class="panel" style="position: relative; left: auto; top: auto; display: none; min-height: auto; margin-bottom: 4px; width: 240px;">
                     <ui:Label tabindex="-1" text="MAP" display-tooltip-when-elided="true" class="panel-header" />
@@ -679,7 +691,6 @@
     <ui:VisualElement name="Backdrop" style="flex-grow: 1; position: absolute; left: auto; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.86); display: none;" />
     <ui:VisualElement name="GeneralModal" class="modal panel" style="position: absolute; left: 50%; top: 50%; background-image: resource(&apos;Textures/9slice_modal&apos;); -unity-slice-left: 28; -unity-slice-top: 103; -unity-slice-right: 34; -unity-slice-bottom: 30; translate: -50% -50%; display: none;">
         <ui:Label tabindex="-1" text="Load Map" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="-unity-text-align: upper-center; margin-top: 0; margin-right: 0; margin-bottom: 4px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
-        <ui:Button text="✖" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Close" style="position: absolute; top: 6px; right: 9px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; background-color: rgba(100, 100, 100, 0); border-left-color: rgba(100, 100, 100, 0); border-right-color: rgba(100, 100, 100, 0); border-top-color: rgba(100, 100, 100, 0); border-bottom-color: rgba(100, 100, 100, 0);" />
         <ui:VisualElement name="Wrapper" style="flex-grow: 1; background-color: rgb(57, 52, 51); min-width: 0; min-height: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; flex-direction: column-reverse;">
             <ui:VisualElement name="Buttons" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; margin-top: 24px; background-color: rgba(0, 0, 0, 0.67); padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;" />
             <ui:VisualElement name="Contents" style="flex-grow: 1;" />

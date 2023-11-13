@@ -15,6 +15,19 @@ public class Generic : GameSystem
         return GenericTokenDataRaw.ToJson();
     }
 
+    public override void Setup()
+    {
+        // Search field for tile effects
+        VisualElement root = UI.System.Q("ToolsPanel");
+        VisualElement searchField = SearchField.Create(GameSystem.Current().GetEffectList(), "");
+        searchField.name = "EffectSearchField";
+        searchField.style.marginTop = 2;
+        root.Q("EffectSearch").Add(searchField);
+
+        // Set up play mode tile effects modal
+        UI.System.Q("TerrainInfo").Q("AddEffect").Q("Add").RegisterCallback<ClickEvent>(AddTerrainEffect.OpenModal);
+    }
+
     public override Texture2D GetGraphic(string json) {
         GenericTokenDataRaw raw = JsonUtility.FromJson<GenericTokenDataRaw>(json);
         return TextureSender.LoadImageFromFile(raw.GraphicHash, true);
@@ -31,4 +44,24 @@ public class Generic : GameSystem
     public override void UpdateSelectedTokenPanel(GameObject data)
     {
     }
+
+    public override string[] GetEffectList()
+    {
+        return new string[]{"Wavy", "Spiky", "Hand", "Hole", "Blocked", "Corners"};
+    }
+
+    public override bool HasEffect(string search, List<string> effects) {
+        return effects.Contains(search);
+    }
+
+    public override bool HasCustomEffect(List<string> effects)
+    {
+        return effects.Count > 0 && 
+            !HasEffect("Wavy", effects) &&
+            !HasEffect("Spiky", effects) &&
+            !HasEffect("Hand", effects) &&
+            !HasEffect("Hole", effects) &&
+            !HasEffect("Blocked", effects);
+    }
+
 }
