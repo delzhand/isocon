@@ -56,29 +56,29 @@ public class Player : NetworkBehaviour
             }
         } 
 
-        VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/ConnectedPlayer");
-        VisualElement instance = template.Instantiate();
-        UI.System.Q("PlayerList").Add(instance);
-        PlayerReference pRef = new GameObject(Name + " Reference").AddComponent<PlayerReference>();
+        // VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/ConnectedPlayer");
+        // VisualElement instance = template.Instantiate();
+        // UI.System.Q("PlayerList").Add(instance);
+        // PlayerReference pRef = new GameObject(Name + " Reference").AddComponent<PlayerReference>();
         Toast.Add(Name + " connected.");
-        pRef.player = this;
-        pRef.visualElement = instance;
+        // pRef.player = this;
+        // pRef.visualElement = instance;
 
         if (isLocalPlayer) {
-            // Set up editing
-            instance.Q<Label>("PlayerName").RegisterCallback<ClickEvent>((evt) => {
-                instance.Q<TextField>("PlayerNameEdit").value = Name;
-                UI.ToggleDisplay(instance.Q("PlayerName"), false);
-                UI.ToggleDisplay(instance.Q("PlayerNameEdit"), true);
-            });
+            // // Set up editing
+            // instance.Q<Label>("PlayerName").RegisterCallback<ClickEvent>((evt) => {
+            //     instance.Q<TextField>("PlayerNameEdit").value = Name;
+            //     UI.ToggleDisplay(instance.Q("PlayerName"), false);
+            //     UI.ToggleDisplay(instance.Q("PlayerNameEdit"), true);
+            // });
 
-            // Change name
-            instance.Q<TextField>("PlayerNameEdit").RegisterCallback<BlurEvent>((evt) => {
-                Name = instance.Q<TextField>("PlayerNameEdit").value;
-                PlayerPrefs.SetString("PlayerName", Name);
-                UI.ToggleDisplay(instance.Q("PlayerName"), true);
-                UI.ToggleDisplay(instance.Q("PlayerNameEdit"), false);
-            });
+            // // Change name
+            // instance.Q<TextField>("PlayerNameEdit").RegisterCallback<BlurEvent>((evt) => {
+            //     Name = instance.Q<TextField>("PlayerNameEdit").value;
+            //     PlayerPrefs.SetString("PlayerName", Name);
+            //     UI.ToggleDisplay(instance.Q("PlayerName"), true);
+            //     UI.ToggleDisplay(instance.Q("PlayerNameEdit"), false);
+            // });
 
             // Request session data from host
             CmdRequestMapSync();

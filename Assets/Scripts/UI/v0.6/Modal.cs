@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -36,6 +37,7 @@ public class Modal
     public static void AddContents(VisualElement e) {
         VisualElement modal = Find();
         modal.Q("Contents").Add(e);
+        e.SendToBack();
     }
 
     public static void AddButton(VisualElement e) {

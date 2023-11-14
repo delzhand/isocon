@@ -43,6 +43,7 @@ public class Generic : GameSystem
 
     public override void UpdateSelectedTokenPanel(GameObject data)
     {
+        data.GetComponent<GenericTokenData>().UpdateSelectedTokenPanel();
     }
 
     public override string[] GetEffectList()
@@ -62,6 +63,27 @@ public class Generic : GameSystem
             !HasEffect("Hand", effects) &&
             !HasEffect("Hole", effects) &&
             !HasEffect("Blocked", effects);
+    }
+
+    public override void AddTokenModal()
+    {
+        TextField nameField = new TextField("Token Name");
+        nameField.name = "NameField";
+        nameField.AddToClassList("no-margin");
+        Modal.AddContents(nameField);
+
+        IntegerField hpField = new IntegerField("HP");
+        hpField.name = "HPField";
+        hpField.value = 100;
+        hpField.AddToClassList("no-margin");
+        Modal.AddContents(hpField);
+
+        DropdownField sizeField = new DropdownField("Size");
+        sizeField.choices = new List<string>(){"1x1", "2x2", "3x3"};
+        sizeField.value = "1x1";
+        sizeField.name = "SizeField";
+        sizeField.AddToClassList("no-margin");
+        Modal.AddContents(sizeField);
     }
 
 }

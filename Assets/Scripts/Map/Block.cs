@@ -18,6 +18,8 @@ public class Block : MonoBehaviour
 
     public bool Selected = false;
     public bool Focused = false;
+    public bool Highlighted = false;
+
     public BlockType Type = BlockType.Solid;
     public bool Destroyable = true;
     Mesh m;
@@ -32,6 +34,8 @@ public class Block : MonoBehaviour
     private Color PaintColorSide;
     private Material PaintMaterialTop;
     private Material PaintMaterialSide;
+
+    public bool ResetMaterials = false;
 
     void Awake() {
         if (materials.Count == 0) {
@@ -53,6 +57,12 @@ public class Block : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Strictly for editor usage
+        if (ResetMaterials) {
+            ResetMaterials = false;
+            SetMaterials();
+        }
+
         GameObject indicator = transform.Find("Indicator").gameObject;
         if (Type == BlockType.Solid || Type == BlockType.Slope) {
             indicator.transform.eulerAngles = new Vector3(90, -90, 0);
@@ -73,6 +83,7 @@ public class Block : MonoBehaviour
             materials.Add("top1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopA")));
             materials.Add("top2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopB")));
             materials.Add("unfocused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+            materials.Add("highlighted", Instantiate(Resources.Load<Material>("Materials/Block/Highlighted")));
 
             materials.Add("focused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
             materials["focused"].SetInt("_Focused", 1);
@@ -462,6 +473,11 @@ public class Block : MonoBehaviour
             blockMaterials.Add(materials["top" + (altSides ? "1" : "2")]);
         }
 
+        // Overwrite checkerboard/paint if highlighted
+        if (Highlighted) {
+            blockMaterials.RemoveAt(blockMaterials.Count-1);
+            blockMaterials.Add(materials["highlighted"]);
+        }
 
         // Markers
         Material markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));

@@ -30,6 +30,10 @@ public class GameSystem : MonoBehaviour
         throw new NotImplementedException();
     }
 
+    public virtual void AddTokenModal() {
+        throw new NotImplementedException();
+    }
+
     public virtual string GetTokenData()
     {
         throw new NotImplementedException();
@@ -65,7 +69,6 @@ public class GameSystem : MonoBehaviour
     }
 
     public virtual string GetEditPanelName() {
-        return null;
         throw new NotImplementedException();
     }
 

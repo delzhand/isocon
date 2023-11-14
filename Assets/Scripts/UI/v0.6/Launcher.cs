@@ -23,7 +23,6 @@ public class Launcher : MonoBehaviour
         _manager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
 
         UI.ToggleDisplay("StartupPanel", true);
-        UI.ToggleDisplay("ConnectionConfig", false);
         UI.ToggleDisplay("Launcher", true);
 
         SetVersionText();

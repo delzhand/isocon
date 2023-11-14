@@ -101,7 +101,12 @@ public class UI : MonoBehaviour
     }
 
     public static void ToggleDisplay(string name, bool shown) {
-        ToggleDisplay(System.Q(name), shown);
+        try {
+            ToggleDisplay(System.Q(name), shown);
+        }
+        catch (Exception e) {
+            throw new Exception($"Could not find element {name}");
+        }
     }
 
     public static void ToggleDisplay(VisualElement e, bool shown) {

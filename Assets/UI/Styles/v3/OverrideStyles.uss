@@ -187,3 +187,7 @@
 #GeneralModal .unity-text-field__input {
     min-width: 244px;
 }
+
+#GeneralModal #Contents>* {
+    margin-bottom: 4px;
+}

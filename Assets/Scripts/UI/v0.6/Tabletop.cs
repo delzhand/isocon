@@ -11,6 +11,7 @@ public class Tabletop : MonoBehaviour
         Modal.Setup();
         MapEdit.Setup();
         ConnectionSetup();
+        BottomBarSetup();
     }
 
 
@@ -46,6 +47,12 @@ public class Tabletop : MonoBehaviour
         
         UI.System.Q("FloatingControls").Q("Connection").RegisterCallback<MouseLeaveEvent>((evt) =>  {
             UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Connection").Q("Panel"), false);
+        });
+    }
+
+    private void BottomBarSetup() {
+        UI.System.Q("BottomBar").Q("AddToken").RegisterCallback<ClickEvent>((evt) => {
+            AddToken.OpenModal(evt);
         });
     }
 

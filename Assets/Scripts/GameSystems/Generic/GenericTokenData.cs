@@ -15,19 +15,24 @@ public class GenericTokenDataRaw
     public int Size;
 
     public static string ToJson() {
+        VisualElement modal = Modal.Find();
+
         GenericTokenDataRaw raw = new GenericTokenDataRaw();
 
-        TextField nameField = UI.System.Q<TextField>("TokenNameField");
-        raw.Name = nameField.value;
-        
-        DropdownField graphicField = UI.System.Q<DropdownField>("GraphicDropdown");
-        Texture2D graphic = TextureSender.CopyLocalImage(graphicField.value);
+        raw.Name = modal.Q<TextField>("NameField").value;
+        Texture2D graphic = TextureSender.CopyLocalImage(modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
         raw.GraphicHash = TextureSender.GetTextureHash(graphic);
         
-        raw.MaxHP = 100;
-        raw.CurrentHP = raw.MaxHP;
+        raw.MaxHP = modal.Q<IntegerField>("HPField").value;
         
         raw.Size = 1;
+        string sizeValue = modal.Q<DropdownField>("SizeField").value;
+        if (sizeValue == "2x2") {
+            raw.Size = 2;
+        }
+        else if (sizeValue == "3x3") {
+            raw.Size = 3;
+        }
 
         return JsonUtility.ToJson(raw);
     }
@@ -72,5 +77,15 @@ public class GenericTokenData : TokenData
     public override int GetSize()
     {
         return Size;
+    }
+
+    public void UpdateSelectedTokenPanel() {
+        if (!TokenController.IsSelected(this)) {
+            return;
+        }
+
+        VisualElement panel = UI.System.Q("SelectedTokenPanel");
+        panel.Q("Portrait").style.backgroundImage = Graphic;
+        panel.Q<Label>("Name").text = Name;
     }
 }

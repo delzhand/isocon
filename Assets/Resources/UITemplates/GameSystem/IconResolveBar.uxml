@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="IconResolveBar" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+        <ui:VisualElement name="StatTemplate" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: space-between; margin-bottom: 2px;">
+            <ui:Label tabindex="-1" text="RESOLVE" display-tooltip-when-elided="true" style="font-size: 10px; -unity-text-align: middle-left; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; color: rgb(176, 176, 176);" />
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row-reverse;">
+                <ui:Label tabindex="-1" text="+1" display-tooltip-when-elided="true" name="PartyResolveNum" style="position: relative; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-text-align: upper-right; color: rgb(255, 170, 170);" />
+                <ui:Label tabindex="-1" text="1" display-tooltip-when-elided="true" name="ResolveNum" style="position: relative; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-text-align: upper-right;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:ProgressBar value="2" high-value="6" name="ResolveBar" style="margin-top: 0; max-height: 8px;" />
+        <ui:ProgressBar value="1" high-value="6" name="PartyResolveBar" style="margin-top: 0; max-height: 8px; position: absolute; bottom: 0;" />
+    </ui:VisualElement>
+</ui:UXML>
