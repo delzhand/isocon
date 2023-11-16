@@ -46,7 +46,7 @@ public class LifeEditPanel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UI.ToggleDisplay("Icon1_5LifeEdit", UnitMenu.ActiveMenuItem == "AlterHP");
+        // UI.ToggleDisplay("Icon1_5LifeEdit", TokenMenu.ActiveMenuItem == "AlterHP");
     }
 
     public static void Show(TokenData data) {

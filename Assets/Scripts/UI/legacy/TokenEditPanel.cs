@@ -17,7 +17,7 @@ public class TokenEditPanel : MonoBehaviour
     }
 
     void Update() {
-        UI.ToggleDisplay("EditPanel", UnitMenu.ActiveMenuItem == "Edit");
+        // UI.ToggleDisplay("EditPanel", TokenMenu.ActiveMenuItem == "Edit");
     }
 
     public static void Show(TokenData data) {

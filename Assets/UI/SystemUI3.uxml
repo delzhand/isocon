@@ -61,15 +61,6 @@
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="CameraControls" class="panel" style="flex-grow: 1; left: 50%; top: 0; position: absolute; translate: -50% 0; flex-direction: row; -unity-text-align: upper-left; display: none; justify-content: space-between; width: 469px; padding-left: 6px; padding-right: 6px; padding-top: 4px; padding-bottom: 4px; border-top-left-radius: 16px; border-bottom-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px;">
-                    <ui:Button display-tooltip-when-elided="true" name="RotateCCW" class="rotate blank" style="background-image: resource(&apos;Textures/rotateCCW&apos;); background-color: rgba(188, 188, 188, 0); width: 24px; height: 24px; right: auto; align-self: center;" />
-                    <ui:Label tabindex="-1" text="Zoom" display-tooltip-when-elided="true" class="no-margin" style="-unity-text-align: middle-left;" />
-                    <ui:Slider picking-mode="Ignore" value="4.5" high-value="2.5" name="ZoomScale" low-value="7" focusable="false" class="no-margin" style="align-self: center;" />
-                    <ui:Button text="Overhead" display-tooltip-when-elided="true" name="OverheadButton" />
-                    <ui:Button text="Indicators" display-tooltip-when-elided="true" name="IndicatorsButton" />
-                    <ui:Button text="Edit" display-tooltip-when-elided="true" name="EditButton" style="display: flex;" />
-                    <ui:Button display-tooltip-when-elided="true" name="RotateCW" class="rotate rev blank" style="background-image: resource(&apos;Textures/rotateCW&apos;); background-color: rgba(188, 188, 188, 0); width: 24px; height: 24px; align-self: center;" />
-                </ui:VisualElement>
                 <ui:VisualElement name="SelectedTokenPanel" class="panel edit-panel" style="position: absolute; top: auto; left: auto; bottom: 10px; display: none; right: 0;">
                     <ui:Label tabindex="-1" text="SELECTED UNIT" display-tooltip-when-elided="true" class="panel-header" />
                     <ui:VisualElement style="flex-direction: row-reverse; min-width: auto; min-height: auto;">
@@ -91,7 +82,11 @@
                     <ui:Button text="New Turn" parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewTurnButton" style="padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px; margin-left: 8px;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="FloatingControls" style="flex-grow: 1; position: absolute; left: 50%; translate: -50% 0; top: 10px; flex-direction: row; margin-left: -8px;">
-                    <ui:VisualElement style="flex-grow: 1; width: 30px; height: 30px; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/camera&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 8px;" />
+                    <ui:VisualElement style="flex-grow: 1; flex-direction: row; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 17px; border-top-right-radius: 17px; border-bottom-right-radius: 17px; border-bottom-left-radius: 17px; min-height: 0; min-width: 0;">
+                        <ui:VisualElement name="RotateCCW" style="flex-grow: 1; width: 30px; height: 20px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/rotateCCW&apos;); -unity-background-scale-mode: scale-to-fit; margin-top: 5px; margin-bottom: 5px;" />
+                        <ui:VisualElement style="flex-grow: 1; width: 30px; height: 30px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/camera&apos;); -unity-background-scale-mode: scale-to-fit;" />
+                        <ui:VisualElement name="RotateCW" style="flex-grow: 1; width: 30px; height: 20px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/rotateCW&apos;); -unity-background-scale-mode: scale-to-fit; margin-top: 5px; margin-bottom: 5px;" />
+                    </ui:VisualElement>
                     <ui:VisualElement name="EditMap" style="flex-grow: 1; width: 30px; height: 30px; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/pencil&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 8px;" />
                     <ui:VisualElement name="Connection" style="flex-grow: 1; width: 30px; height: 30px; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/network&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 8px;">
                         <ui:VisualElement name="Panel" class="panel" style="flex-grow: 1; position: absolute; translate: -50% 0; top: 36px; left: 50%; width: 350px; display: none;">
@@ -183,7 +178,7 @@
                     </ui:VisualElement>
                     <ui:Button text="Done" display-tooltip-when-elided="true" name="CloseColorSidebar" />
                 </ui:VisualElement>
-                <ui:VisualElement name="UnitMenu" class="panel" style="position: absolute; left: 0; display: flex; top: 0;">
+                <ui:VisualElement name="UnitMenu" class="panel" style="position: absolute; left: 0; display: none; top: 0;">
                     <ui:Label tabindex="-1" text="UNIT MENU" display-tooltip-when-elided="true" class="panel-header" />
                     <ui:VisualElement name="MenuContainer" style="flex-grow: 1; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; margin-top: 0; overflow: hidden;">
                         <ui:VisualElement name="PlaceMenuItem" class="unit-menu-item" style="margin-left: -1px; margin-right: 0; margin-top: 0; margin-bottom: 0; border-left-color: rgba(255, 255, 255, 0.31); border-right-color: rgba(255, 255, 255, 0.31); border-top-color: rgba(255, 255, 255, 0.31); border-bottom-color: rgba(255, 255, 255, 0.31); border-bottom-width: 1px;">

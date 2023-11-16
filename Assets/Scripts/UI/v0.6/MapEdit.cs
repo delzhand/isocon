@@ -8,7 +8,6 @@ using UnityEngine.UIElements;
 public class MapEdit
 {
     private static bool MapDirty = false;
-    public static bool Editing = false;
     private static string CurrentFile = "";
     private static List<string> EditOps = new List<string>();
 
@@ -26,9 +25,17 @@ public class MapEdit
     }
 
     private static void ToggleEditMode(ClickEvent evt) {
-        Editing = !Editing;
-        UI.ToggleDisplay("ToolsPanel", Editing);
-        Block.DeselectAll();
+        if (Cursor.Mode != ClickMode.Editing) {
+            UI.ToggleDisplay("ToolsPanel", true);
+            Block.DeselectAll();
+            Cursor.Mode = ClickMode.Editing;
+        }
+        else {
+            Cursor.Mode = ClickMode.Default;
+            UI.ToggleDisplay("ToolsPanel", false);
+            State.SetCurrentJson();
+            Player.Self().CmdMapSync();
+        }
     }
 
     private static void OpenSaveModal(ClickEvent evt) {

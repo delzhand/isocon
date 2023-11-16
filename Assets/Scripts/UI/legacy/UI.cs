@@ -105,6 +105,7 @@ public class UI : MonoBehaviour
             ToggleDisplay(System.Q(name), shown);
         }
         catch (Exception e) {
+            Debug.Log(e.Message);
             throw new Exception($"Could not find element {name}");
         }
     }

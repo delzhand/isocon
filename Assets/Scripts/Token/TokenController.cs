@@ -33,27 +33,25 @@ public class TokenController : MonoBehaviour
         }
     }
 
-    public static void BlockClick(Block block) {
-        if (selected != null) {
-            selected.BlockClick(block);
-            // ReserveController.Adjust();
-        }
-        else {
-            // Block.DeselectAll();
-            block.Select();
-        }
-    }
+    // public static void BlockClick(Block block) {
+    //     if (selected != null) {
+    //         selected.BlockClick(block);
+    //     }
+    //     else {
+    //         block.Select();
+    //     }
+    // }
 
     private static void Select(Token token) {
         selected = token;
         token.Select();
-        UnitMenu.ShowMenu(token.onlineDataObject.GetComponent<TokenData>());
+        TokenMenu.ShowMenu(token.onlineDataObject.GetComponent<TokenData>());
     }
 
     public static void Deselect() {
         if (selected) {
             selected.SetNeutral();
-            UnitMenu.HideMenu();
+            TokenMenu.HideMenu();
             selected.Deselect();
             selected = null;
         }

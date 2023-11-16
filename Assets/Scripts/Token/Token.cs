@@ -36,18 +36,30 @@ public class Token : MonoBehaviour
         transform.Find("Offset/Avatar/Cutout/Cutout Quad").transform.localScale = new Vector3(aspectRatio, 1f, 1f);
     }
 
-    public void BlockClick(Block block) {
+    // public void BlockClick(Block block) {
+    //     Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
+    //     switch (TokenMenu.ActiveMenuItem) {
+    //         case "Placing":
+    //             Player.Self().CmdRequestPlaceToken(onlineDataObject, v);
+    //             TokenMenu.DonePlacing();
+    //             SetNeutral();
+    //             break;
+    //         case "Moving":
+    //             Player.Self().CmdMoveToken(onlineDataObject, v, false);
+    //             break;
+    //     }
+    // }
+
+    public void Place(Block block) {
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
-        switch (UnitMenu.ActiveMenuItem) {
-            case "Placing":
-                Player.Self().CmdRequestPlaceToken(onlineDataObject, v);
-                UnitMenu.DonePlacing();
-                SetNeutral();
-                break;
-            case "Moving":
-                Player.Self().CmdMoveToken(onlineDataObject, v, false);
-                break;
-        }
+        Player.Self().CmdRequestPlaceToken(onlineDataObject, v);
+        TokenMenu.DonePlacing();
+        SetNeutral();
+    }
+
+    public void Move(Block block) {
+        Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
+        Player.Self().CmdMoveToken(onlineDataObject, v, false);
     }
 
     public void Select(bool deselectOthers = false) {

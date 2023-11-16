@@ -2,8 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ClickMode {
+    Editing,
+    Default,
+    Placing,
+    Moving
+}
+
 public class Cursor : MonoBehaviour
 {  
+
+
+    public static ClickMode Mode = ClickMode.Default;
+
     void Start()
     {
         
@@ -20,18 +31,42 @@ public class Cursor : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 100f)) {
             if (hit.collider.gameObject) {
                 Block FocusedBlock = hit.collider.GetComponent<Block>();
-                if (FocusedBlock) {
-                    if (!FocusedBlock.Focused) {
-                        FocusedBlock.Focus();
-                    }
-                    if (Input.GetMouseButtonDown(1)) {
-                        FocusedBlock.HandleClicks(1);
-                    }
-                    if (Input.GetMouseButtonDown(0)) {
-                        FocusedBlock.HandleClicks(0);
-                    }
+                switch (Mode) {
+                    case ClickMode.Default:
+                    case ClickMode.Editing:
+                        if (FocusedBlock) {
+                            if (!FocusedBlock.Focused) {
+                                FocusedBlock.Focus();
+                            }
+                            BlockClicks(FocusedBlock);
+                        }
+                        break;
+                    case ClickMode.Moving:
+                    case ClickMode.Placing:
+                        Block.DehighlightAll();
+                        HighlightSizeArea(FocusedBlock);
+                        BlockClicks(FocusedBlock);
+                        break;
                 }
             }
         }
+    }
+
+    private void HighlightSizeArea(Block block) {
+        block.Highlight();
+        int size = TokenController.GetSelected().Size;
+        Block[] neighbors = TerrainController.FindNeighbors(block, size);
+        for(int i = 0; i < neighbors.Length; i++) {
+            neighbors[i].Highlight();
+        }
+    }
+
+    private void BlockClicks(Block block) {
+        if (Input.GetMouseButtonDown(1)) {
+            block.HandleClicks(1);
+        }
+        if (Input.GetMouseButtonDown(0)) {
+            block.HandleClicks(0);
+        }        
     }
 }

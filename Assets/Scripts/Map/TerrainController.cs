@@ -379,17 +379,25 @@ public class TerrainController : MonoBehaviour
     }
 
     private static GameObject TopBlock(GameObject column) {
-        Block[] blocks = column.GetComponentsInChildren<Block>();
-        GameObject top = null;
-        float highest = float.MinValue;
-        for (int i = 0; i < blocks.Length; i++)
-        {
-            float height = blocks[i].transform.localPosition.y;
-            if (height > highest) {
-                top = blocks[i].gameObject;
+        try {
+            GameObject top = null;
+            Block[] blocks = column.GetComponentsInChildren<Block>();
+            float highest = float.MinValue;
+            for (int i = 0; i < blocks.Length; i++)
+            {
+                float height = blocks[i].transform.localPosition.y;
+                if (height > highest) {
+                    top = blocks[i].gameObject;
+                }
             }
+            return top;
         }
-        return top;
+        #pragma warning disable
+        catch(Exception e) {
+            // Exceptions are fine, it means there's no block because it's out of bounds
+            return null;
+        }
+        #pragma warning restore
     }
 
     private static void GravityDrop(GameObject column, float threshold) {
@@ -399,6 +407,33 @@ public class TerrainController : MonoBehaviour
                 blocks[i].transform.localPosition -= new Vector3(0, 1, 0);
             }
         }
+    }
+
+    
+    public static Block[] FindNeighbors(Block origin, int radius) {
+        int[,] offsets = {
+            {-1, -1}, {-1, 0}, {0, -1},
+            {-1, 1},           {0, 1},
+            {1, -1},  {1, 0},  {1, 1}
+        };
+        List<Block> neighbors = new();
+        int j = 0;
+        if (radius == 2) {
+            j = 3;
+        }
+        else if (radius == 3) {
+            j = 8;
+        }
+        for (int i = 0; i < j; i++) {
+            int x = origin.getX() + offsets[i, 0];
+            int y = origin.getY() + offsets[i, 1];
+            GameObject col = GameObject.Find($"{x},{y}");
+            GameObject topBlockObj = TopBlock(col);
+            if (topBlockObj) {
+                neighbors.Add(topBlockObj.GetComponent<Block>());
+            }
+        }
+        return neighbors.ToArray();
     }
 
     public static void Reorg() {

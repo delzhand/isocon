@@ -172,15 +172,25 @@ public class Block : MonoBehaviour
 
         // Left Click
         if (button == 0) {
-            if (MapEdit.Editing) {
-                Block.DeselectAll();
-                Select();
-                TerrainController.Edit(this);
-                Select();
-                Block.DeselectAll();
-            }
-            else {
-                Select();
+            switch (Cursor.Mode) {
+                case ClickMode.Editing:
+                    Block.DeselectAll();
+                    Select();
+                    TerrainController.Edit(this);
+                    Select();
+                    Block.DeselectAll();
+                    break;
+                case ClickMode.Default:
+                    Select();
+                    break;
+                case ClickMode.Placing:
+                    TokenController.GetSelected().Place(this);
+                    Cursor.Mode = ClickMode.Default;
+                    break;
+                case ClickMode.Moving:
+                    TokenController.GetSelected().Move(this);
+                    Cursor.Mode = ClickMode.Default;
+                    break;
             }
         }
 
@@ -261,7 +271,7 @@ public class Block : MonoBehaviour
         Block block = null;
 
         Color color = Color.white;
-        if (selected.Length > 0 && !MapEdit.Editing) {
+        if (selected.Length > 0 && Cursor.Mode != ClickMode.Editing) {
             color = Color.yellow;
             UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), true);
             UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), true);
@@ -370,11 +380,35 @@ public class Block : MonoBehaviour
         SetMaterials();
     }
 
+    public void Highlight() {
+        Highlighted = true;
+        SetMaterials();
+    }
+
+    public void Dehighlight() {
+        Highlighted = false;
+        SetMaterials();
+    }
+
+    public static void DehighlightAll() {
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < blocks.Length; i++) {
+            blocks[i].GetComponent<Block>().Dehighlight();
+        }
+    }
+
     public static void DeselectAll() {
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
         for (int i = 0; i < blocks.Length; i++) {
             blocks[i].GetComponent<Block>().Deselect();
         }
+    }
+
+    public static void UnfocusAll() {
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < blocks.Length; i++) {
+            blocks[i].GetComponent<Block>().Unfocus();
+        }        
     }
 
     public static List<GameObject> GetAllSelected() {

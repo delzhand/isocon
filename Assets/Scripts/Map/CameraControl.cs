@@ -7,99 +7,96 @@ public class CameraControl : MonoBehaviour
 {
     public static Transform CameraTransform;
 
-    private float lerpTimer;
-    private float lerpDuration;
+    private static float LerpTimer;
+    private static float LerpDuration;
 
-    private Quaternion originalRotation;
-    private Quaternion targetRotation;
-    private Quaternion reserveRotation;
+    private static Quaternion OriginalRotation;
+    private static Quaternion TargetRotation;
+    private static Quaternion ReserveRotation;
 
-    private Vector3 originPosition;
-    private Vector3 targetPosition;
-    private Vector3 reservePosition;
+    private static Vector3 OriginPosition;
+    private static Vector3 TargetPosition;
+    private static Vector3 ReservePosition;
 
-    private bool isLocked;
-    private bool overhead;
+    private static bool IsLocked;
+    private static bool Overhead;
 
-    // Start is called before the first frame update
     void Start()
     {
-        isLocked = false;
-        overhead = false;
+        IsLocked = false;
+        Overhead = false;
         CameraTransform = GameObject.Find("CameraOrigin").transform;
         registerCallbacks();
     }
 
-    private void registerCallbacks() {
-        UI.SetBlocking(UI.System, new string[]{"CameraControls"});
+    private static void registerCallbacks() {
+        UI.System.Q("RotateCCW").RegisterCallback<ClickEvent>(rotateLeft);
+        UI.System.Q("RotateCW").RegisterCallback<ClickEvent>(rotateRight);
+        // UI.System.Q<Slider>("ZoomScale").RegisterValueChangedCallback(zoom);
 
-        UI.System.Q<Button>("RotateCCW").RegisterCallback<ClickEvent>(rotateLeft);
-        UI.System.Q<Button>("RotateCW").RegisterCallback<ClickEvent>(rotateRight);
-        UI.System.Q<Slider>("ZoomScale").RegisterValueChangedCallback(zoom);
+        // UI.System.Q<Button>("OverheadButton").RegisterCallback<ClickEvent>((evt) => {
+        //     if (Overhead) {
+        //         disableOverhead();
+        //     }
+        //     else {
+        //         enableOverhead();
+        //     }
+        // });
 
-        UI.System.Q<Button>("OverheadButton").RegisterCallback<ClickEvent>((evt) => {
-            if (overhead) {
-                disableOverhead();
-            }
-            else {
-                enableOverhead();
-            }
-        });
+        // UI.System.Q<Button>("IndicatorsButton").RegisterCallback<ClickEvent>((evt) => {
+        //     bool val = !TerrainController.Indicators;
+        //     TerrainController.Indicators = val;
+        //     if (val) {
+        //         UI.System.Q("IndicatorsButton").AddToClassList("active");
+        //     }
+        //     else {
+        //         UI.System.Q("IndicatorsButton").RemoveFromClassList("active");
+        //     }
+        // });
 
-        UI.System.Q<Button>("IndicatorsButton").RegisterCallback<ClickEvent>((evt) => {
-            bool val = !TerrainController.Indicators;
-            TerrainController.Indicators = val;
-            if (val) {
-                UI.System.Q("IndicatorsButton").AddToClassList("active");
-            }
-            else {
-                UI.System.Q("IndicatorsButton").RemoveFromClassList("active");
-            }
-        });
-
-        UI.System.Q<Button>("EditButton").RegisterCallback<ClickEvent>((evt) => {
-            bool val = !TerrainController.Editing;
-            TerrainController.Editing = val;
-            Block.ToggleSpacers(val);
-            if (val) {
-                UI.System.Q("EditButton").AddToClassList("active");
-            }
-            else {
-                UI.System.Q("EditButton").RemoveFromClassList("active");
-                State.SetCurrentJson();
-                Player.Self().CmdMapSync();
-            }
-        });
+        // UI.System.Q<Button>("EditButton").RegisterCallback<ClickEvent>((evt) => {
+        //     bool val = !TerrainController.Editing;
+        //     TerrainController.Editing = val;
+        //     Block.ToggleSpacers(val);
+        //     if (val) {
+        //         UI.System.Q("EditButton").AddToClassList("active");
+        //     }
+        //     else {
+        //         UI.System.Q("EditButton").RemoveFromClassList("active");
+        //         State.SetCurrentJson();
+        //         Player.Self().CmdMapSync();
+        //     }
+        // });
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isLocked) {
-            if (lerpTimer <= lerpDuration) {
-                lerpTimer += Time.deltaTime;
-                float percent = Mathf.Clamp(lerpTimer / lerpDuration, 0, 1);
-                CameraTransform.rotation = Quaternion.Lerp(originalRotation, targetRotation, percent);
-                CameraTransform.position = Vector3.Lerp(originPosition, targetPosition, percent);
+        if (IsLocked) {
+            if (LerpTimer <= LerpDuration) {
+                LerpTimer += Time.deltaTime;
+                float percent = Mathf.Clamp(LerpTimer / LerpDuration, 0, 1);
+                CameraTransform.rotation = Quaternion.Lerp(OriginalRotation, TargetRotation, percent);
+                CameraTransform.position = Vector3.Lerp(OriginPosition, TargetPosition, percent);
             }
-            if (lerpTimer > lerpDuration) {
-                isLocked = false;
+            if (LerpTimer > LerpDuration) {
+                IsLocked = false;
             }
         }
     }
 
-    private void rotateLeft(ClickEvent evt) {
+    private static void rotateLeft(ClickEvent evt) {
         rotate(90);
     }
 
-    private void rotateRight(ClickEvent evt) {
+    private static void rotateRight(ClickEvent evt) {
         rotate(-90);
     }
 
-    private void rotate(float value) {
-        if (!isLocked && !overhead) {
+    private static void rotate(float value) {
+        if (!IsLocked && !Overhead) {
             initializeTransition(.25f);
-            targetRotation = originalRotation * Quaternion.Euler(0, value, 0);
+            TargetRotation = OriginalRotation * Quaternion.Euler(0, value, 0);
         }
     }
 
@@ -110,41 +107,41 @@ public class CameraControl : MonoBehaviour
     }
 
     public void Translate(Vector3 value) {
-        if (!isLocked /*&& !overhead */) {
+        if (!IsLocked /*&& !overhead */) {
             initializeTransition(.25f);
-            targetPosition = value;
+            TargetPosition = value;
         }
     }
 
-    private void zoom(ChangeEvent<float> evt) {
+    private static void zoom(ChangeEvent<float> evt) {
         Camera.main.GetComponent<Camera>().orthographicSize = evt.newValue;
     }
 
-    private void enableOverhead() {
-        overhead = true;
-        reserveRotation = GameObject.Find("CameraOrigin").transform.rotation;
+    private static void enableOverhead() {
+        Overhead = true;
+        ReserveRotation = GameObject.Find("CameraOrigin").transform.rotation;
         initializeTransition(.25f);
-        targetRotation = Quaternion.Euler(0, 0, 30);
+        TargetRotation = Quaternion.Euler(0, 0, 30);
         UI.System.Q("OverheadButton").AddToClassList("active");
     }
 
-    private void disableOverhead() {
-        overhead = false;
+    private static void disableOverhead() {
+        Overhead = false;
         initializeTransition(.25f);
-        if (reserveRotation != null) {
-            targetRotation = reserveRotation;
+        if (ReserveRotation != null) {
+            TargetRotation = ReserveRotation;
         }
         UI.System.Q("OverheadButton").RemoveFromClassList("active");
     }
 
-    private void initializeTransition(float duration) {
-        targetPosition = GameObject.Find("CameraOrigin").transform.position;
-        originPosition = targetPosition;
-        targetRotation = GameObject.Find("CameraOrigin").transform.rotation;
-        originalRotation = targetRotation;
-        lerpTimer = 0;
-        lerpDuration = duration;
-        isLocked = true;
+    private static void initializeTransition(float duration) {
+        TargetPosition = GameObject.Find("CameraOrigin").transform.position;
+        OriginPosition = TargetPosition;
+        TargetRotation = GameObject.Find("CameraOrigin").transform.rotation;
+        OriginalRotation = TargetRotation;
+        LerpTimer = 0;
+        LerpDuration = duration;
+        IsLocked = true;
     }
 
 }
