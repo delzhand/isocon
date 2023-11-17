@@ -202,7 +202,6 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void RpcMapSetValue(string[] blocks, string label, string value) {
         if (label == "Effect") {
-            Toast.Add($"Effect {value} applied to {blocks.Length} blocks.");
             for (int i = 0; i < blocks.Length; i++) {
                 Block target = GameObject.Find(blocks[i]).GetComponent<Block>();
                 target.EffectChange(value);

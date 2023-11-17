@@ -189,7 +189,6 @@ public class Block : MonoBehaviour
                     break;
                 case ClickMode.Moving:
                     TokenController.GetSelected().Move(this);
-                    Cursor.Mode = ClickMode.Default;
                     break;
             }
         }
@@ -272,7 +271,7 @@ public class Block : MonoBehaviour
 
         Color color = Color.white;
         if (selected.Length > 0 && Cursor.Mode != ClickMode.Editing) {
-            color = Color.yellow;
+            color = ColorUtility.ColorFromHex("9C7A19");
             UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), true);
             UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), true);
         }

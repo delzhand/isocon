@@ -25,7 +25,7 @@ public class Generic : GameSystem
         root.Q("EffectSearch").Add(searchField);
 
         // Set up play mode tile effects modal
-        UI.System.Q("TerrainInfo").Q("AddEffect").Q("Add").RegisterCallback<ClickEvent>(AddTerrainEffect.OpenModal);
+        UI.System.Q("TerrainInfo").Q("AddEffect").RegisterCallback<ClickEvent>(AddTerrainEffect.OpenModal);
     }
 
     public override Texture2D GetGraphic(string json) {

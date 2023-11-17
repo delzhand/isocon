@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 public class TokenMenu
@@ -14,10 +11,10 @@ public class TokenMenu
         MenuItemSetup("PlaceMenuItem", Place);
         MenuItemSetup("RemoveMenuItem", Remove);
         MenuItemSetup("MoveMenuItem", Move);
-        MenuItemSetup("EditMenuItem", Edit);
+        // MenuItemSetup("EditMenuItem", Edit);
         MenuItemSetup("EndTurnMenuItem", EndTurn);
         MenuItemSetup("DeleteMenuItem", Delete);
-        MenuItemSetup("AlterHPMenuItem", AlterHp);
+        // MenuItemSetup("AlterHPMenuItem", AlterHp);
     }
 
     private static void MenuItemSetup(string name, Action<ClickEvent> clickHandler) {
@@ -45,6 +42,7 @@ public class TokenMenu
         }
         else {
             ActiveMenuItem = "";
+            Cursor.Mode = ClickMode.Default;
         }
         Data.TokenObject.GetComponent<Token>().SetNeutral();
     }
@@ -62,38 +60,40 @@ public class TokenMenu
         }
         else {
             ActiveMenuItem = "";
+            Cursor.Mode = ClickMode.Default;
         }
         Data.TokenObject.GetComponent<Token>().SetNeutral();
     }
+    
+    // private static void Edit(ClickEvent evt) {
+    //     ClearCurrentActive();
+    //     if (ActiveMenuItem != "Edit") {
+    //         ActiveMenuItem = "Edit";
+    //         TokenEditPanel.Show(Data);
+    //         UI.ToggleActiveClass("EditMenuItem", true);
+    //         return;
+    //     }
+    //     else {
+    //         ActiveMenuItem = "";
+    //         Cursor.Mode = ClickMode.Default;
+    //     }
+    //     Data.TokenObject.GetComponent<Token>().SetNeutral();
+    // }
 
-    private static void Edit(ClickEvent evt) {
-        ClearCurrentActive();
-        if (ActiveMenuItem != "Edit") {
-            ActiveMenuItem = "Edit";
-            TokenEditPanel.Show(Data);
-            UI.ToggleActiveClass("EditMenuItem", true);
-            return;
-        }
-        else {
-            ActiveMenuItem = "";
-        }
-        Data.TokenObject.GetComponent<Token>().SetNeutral();
-    }
-
-    private static void AlterHp(ClickEvent evt) {
-        ClearCurrentActive();
-        if (ActiveMenuItem != "AlterHP") {
-            ActiveMenuItem = "AlterHP";
-            Debug.Log(ActiveMenuItem);
-            LifeEditPanel.Show(Data);
-            UI.ToggleActiveClass("AlterHPMenuItem", true);
-            return;
-        }
-        else {
-            ActiveMenuItem = "";
-        }
-        Data.TokenObject.GetComponent<Token>().SetNeutral();
-    }
+    // private static void AlterHp(ClickEvent evt) {
+    //     ClearCurrentActive();
+    //     if (ActiveMenuItem != "AlterHP") {
+    //         ActiveMenuItem = "AlterHP";
+    //         Debug.Log(ActiveMenuItem);
+    //         LifeEditPanel.Show(Data);
+    //         UI.ToggleActiveClass("AlterHPMenuItem", true);
+    //         return;
+    //     }
+    //     else {
+    //         ActiveMenuItem = "";
+    //     }
+    //     Data.TokenObject.GetComponent<Token>().SetNeutral();
+    // }
 
     private static void Remove(ClickEvent evt) {
         ClearCurrentActive();
@@ -111,6 +111,8 @@ public class TokenMenu
     }
 
     public static void ShowMenu(TokenData data) {
+        Block.DeselectAll();
+        Block.DehighlightAll();
         ClearCurrentActive();
         Data = data;
         Data.TokenObject.GetComponent<Token>().SetNeutral();
@@ -118,6 +120,7 @@ public class TokenMenu
     }
 
     public static void HideMenu() {
+        Block.DehighlightAll();
         ClearCurrentActive();
         ActiveMenuItem = "";
         Data = null;
@@ -133,5 +136,6 @@ public class TokenMenu
     public static void DonePlacing() {
         ActiveMenuItem = "";
         ClearCurrentActive();
+        Block.DehighlightAll();
     }
 }

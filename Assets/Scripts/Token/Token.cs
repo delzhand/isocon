@@ -58,8 +58,40 @@ public class Token : MonoBehaviour
     }
 
     public void Move(Block block) {
+        // Find other tokens on this block
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
-        Player.Self().CmdMoveToken(onlineDataObject, v, false);
+        List<Token> sharing = TokensNearby(v);
+        if (sharing.Count == 0) {
+            // Nobody else at tile
+            transform.Find("Base").transform.localPosition = Vector3.zero;
+            transform.Find("Offset").transform.localPosition = Vector3.zero;
+            Player.Self().CmdMoveToken(onlineDataObject, v, false);
+        }
+        else {
+            sharing.Add(this);
+            float[,] offsets = {
+                {-.33f, 0}, {.33f, 0},
+                {0, -.33f}, {0, .33f}
+            };
+            for (int i = 0; i < sharing.Count; i++) {
+                sharing[i].transform.Find("Base").transform.localPosition = new Vector3(offsets[i, 0], 0, offsets[i, 1]);
+                sharing[i].transform.Find("Offset").transform.localPosition = new Vector3(offsets[i, 0], 0, offsets[i, 1]);
+            }
+            Player.Self().CmdMoveToken(onlineDataObject, v, false);
+        }
+    }
+
+    private static List<Token> TokensNearby(Vector3 v) {
+        List<Token> sharing = new();
+        GameObject[] tokenObjects = GameObject.FindGameObjectsWithTag("Token");
+        for(int i = 0; i < tokenObjects.Length; i++) {
+            Token t = tokenObjects[i].GetComponent<Token>();
+            float distance = Vector3.Distance(t.transform.localPosition, v);
+            if (distance < .1f) {
+                sharing.Add(t);
+            }
+        }
+        return sharing;
     }
 
     public void Select(bool deselectOthers = false) {

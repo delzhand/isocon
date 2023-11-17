@@ -53,6 +53,12 @@ public class Cursor : MonoBehaviour
     }
 
     private void HighlightSizeArea(Block block) {
+        if (block == null) {
+            return;
+        }
+        if (TokenController.GetSelected() == null) {
+            return;
+        }
         block.Highlight();
         int size = TokenController.GetSelected().Size;
         Block[] neighbors = TerrainController.FindNeighbors(block, size);
@@ -62,6 +68,9 @@ public class Cursor : MonoBehaviour
     }
 
     private void BlockClicks(Block block) {
+        if (block == null) {
+            return;
+        }
         if (Input.GetMouseButtonDown(1)) {
             block.HandleClicks(1);
         }
