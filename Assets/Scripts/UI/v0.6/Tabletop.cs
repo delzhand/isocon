@@ -19,6 +19,7 @@ public class Tabletop : MonoBehaviour
     void Update()
     {
         UI.ToggleDisplay("Tabletop", NetworkClient.isConnected);
+        TileShare.Offsets();
     }
 
     public void ConnectAsClient() {

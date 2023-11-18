@@ -82,6 +82,7 @@ public class Generic : GameSystem
         sizeField.choices = new List<string>(){"1x1", "2x2", "3x3"};
         sizeField.value = "1x1";
         sizeField.name = "SizeField";
+        sizeField.focusable = false;
         sizeField.AddToClassList("no-margin");
         Modal.AddContents(sizeField);
     }

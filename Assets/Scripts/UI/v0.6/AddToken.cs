@@ -30,6 +30,7 @@ public class AddToken
 
     private static void ConfirmAddToken(ClickEvent evt) {
         string json = GameSystem.Current().GetTokenData();
+        Debug.Log(json);
         Player.Self().CmdCreateTokenData(json, new Vector3(3, .25f, 3));
         Modal.Close();
     }

@@ -111,8 +111,8 @@ public class TokenData : NetworkBehaviour
         int size = GetSize();
         if (size == 2) {
             TokenObject.GetComponent<Token>().Size = 2;
-            TokenObject.transform.Find("Offset").transform.localPosition += new Vector3(0, 0, -.73f);
-            TokenObject.transform.Find("Base").transform.localPosition += new Vector3(0, 0, -.73f);
+            // TokenObject.transform.Find("Offset").transform.localPosition += new Vector3(0, 0, -.73f);
+            // TokenObject.transform.Find("Base").transform.localPosition += new Vector3(0, 0, -.73f);
             TokenObject.transform.Find("Offset").transform.localScale = new Vector3(2, 2, 2);
             TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2, 2, 4);
         }
