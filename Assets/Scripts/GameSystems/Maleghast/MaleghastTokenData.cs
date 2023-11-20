@@ -552,7 +552,7 @@ public class MaleghastTokenData : TokenData
                 ActAbilities = "Scult Flesh, Absorb, Flesh Whip";
                 Upgrades = "Ball of Limbs, Meld, Form Carapace";
                 break;
-            case "Chiurgeon/Necromancer":
+            case "Chirurgeon/Necromancer":
                 Move = 4;
                 MaxHP = 10;
                 Defense = 3;

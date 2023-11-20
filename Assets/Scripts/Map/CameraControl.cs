@@ -32,7 +32,8 @@ public class CameraControl : MonoBehaviour
     private static void registerCallbacks() {
         UI.System.Q("RotateCCW").RegisterCallback<ClickEvent>(rotateLeft);
         UI.System.Q("RotateCW").RegisterCallback<ClickEvent>(rotateRight);
-        // UI.System.Q<Slider>("ZoomScale").RegisterValueChangedCallback(zoom);
+        UI.System.Q<Slider>("ZoomScale").RegisterValueChangedCallback(zoom);
+        UI.System.Q<Slider>("TiltAngle").RegisterValueChangedCallback(tilt);
 
         // UI.System.Q<Button>("OverheadButton").RegisterCallback<ClickEvent>((evt) => {
         //     if (Overhead) {
@@ -117,9 +118,15 @@ public class CameraControl : MonoBehaviour
         Camera.main.GetComponent<Camera>().orthographicSize = evt.newValue;
     }
 
+    private static void tilt(ChangeEvent<float> evt) {
+        // Quaternion rotation = CameraTransform.rotation;
+        Vector3 rotation = CameraTransform.eulerAngles;
+        CameraTransform.rotation = Quaternion.Euler(rotation.x, rotation.y, evt.newValue);
+    }
+
     private static void enableOverhead() {
         Overhead = true;
-        ReserveRotation = GameObject.Find("CameraOrigin").transform.rotation;
+        ReserveRotation = CameraTransform.rotation;
         initializeTransition(.25f);
         TargetRotation = Quaternion.Euler(0, 0, 30);
         UI.System.Q("OverheadButton").AddToClassList("active");
@@ -135,9 +142,9 @@ public class CameraControl : MonoBehaviour
     }
 
     private static void initializeTransition(float duration) {
-        TargetPosition = GameObject.Find("CameraOrigin").transform.position;
+        TargetPosition = CameraTransform.position;
         OriginPosition = TargetPosition;
-        TargetRotation = GameObject.Find("CameraOrigin").transform.rotation;
+        TargetRotation = CameraTransform.rotation;
         OriginalRotation = TargetRotation;
         LerpTimer = 0;
         LerpDuration = duration;
