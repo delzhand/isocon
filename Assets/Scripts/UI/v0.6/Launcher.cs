@@ -37,7 +37,13 @@ public class Launcher : MonoBehaviour
             json = "{\"Name\":\"Sae\",\"CurrentHP\":0,\"MaxHP\":100,\"GraphicHash\":\"7451fc67cb845c64f81d0918baeaf5829d7821790cf98b388b364d18a893e2fe\",\"Size\":1}";
             Player.Self().CmdCreateTokenData(json, new Vector3(3, .25f, 3));
         
-            Toast.Add("Debug function executed");
+            Toast.Add("Debug function 1 executed");
+        });
+
+        UI.System.Q("Debug2").RegisterCallback<ClickEvent>((evt) => {
+            AuraManager am = GameObject.FindGameObjectWithTag("Token").AddComponent<AuraManager>();
+            am.AddAura("Rampart", 2);
+            Toast.Add("Debug function 2 executed");
         });
     }
 

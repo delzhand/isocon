@@ -50,7 +50,9 @@ public class AddToken
         string[] files = Directory.GetFiles(basePath + relativePath);
         foreach (string file in files)
         {
-            fileList.Add(relativePath + "/" + Path.GetFileName(file));
+            if (file.EndsWith(".png")) {
+                fileList.Add(relativePath + "/" + Path.GetFileName(file));
+            }
         }
 
         string[] directories = Directory.GetDirectories(basePath + relativePath);
