@@ -101,8 +101,8 @@ public class Block : MonoBehaviour
         string PaintColorTopHex = "#000000";
         string PaintColorSideHex = "#000000";
         if (Painted) {
-            PaintColorTopHex = ColorSidebar.ColorToHex(PaintColorTop);
-            PaintColorSideHex = ColorSidebar.ColorToHex(PaintColorSide);
+            PaintColorTopHex = ColorUtility.ColorToHex(PaintColorTop);
+            PaintColorSideHex = ColorUtility.ColorToHex(PaintColorSide);
         }
         string[] bits = new string[]{
             c.X.ToString(),
@@ -174,8 +174,8 @@ public class Block : MonoBehaviour
             block.GetComponent<Block>().EffectChange(markers[i]);
         }
         if (painted) {
-            Color top = ColorSidebar.FromHex(data[8]);
-            Color sides = ColorSidebar.FromHex(data[9]);
+            Color top = ColorUtility.ColorFromHex(data[8]);
+            Color sides = ColorUtility.ColorFromHex(data[9]);
             block.GetComponent<Block>().Paint(top, sides);
         }
         return block;
