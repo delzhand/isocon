@@ -98,6 +98,12 @@ public class Block : MonoBehaviour
 
     public override string ToString(){
         Column c = transform.parent.GetComponent<Column>();
+        string PaintColorTopHex = "#000000";
+        string PaintColorSideHex = "#000000";
+        if (Painted) {
+            PaintColorTopHex = ColorSidebar.ColorToHex(PaintColorTop);
+            PaintColorSideHex = ColorSidebar.ColorToHex(PaintColorSide);
+        }
         string[] bits = new string[]{
             c.X.ToString(),
             c.Y.ToString(),
@@ -105,7 +111,10 @@ public class Block : MonoBehaviour
             transform.localEulerAngles.y.ToString(),
             Type.ToString(),
             Destroyable.ToString(),
-            string.Join(",", effects.ToArray())
+            string.Join(",", effects.ToArray()),
+            Painted.ToString(),
+            PaintColorTopHex,
+            PaintColorSideHex
         };
         return string.Join("|", bits);
     }  
@@ -133,6 +142,12 @@ public class Block : MonoBehaviour
                 markers.Add(markersArray[i]);
             }
         }
+        // Default to false here to not break older saves
+        bool painted = false;
+        if (data.Length > 7) {
+            painted = bool.Parse(data[7]);
+        }
+
 
         GameObject map = GameObject.Find("Terrain");
         GameObject column = GameObject.Find(x+","+y);
@@ -157,6 +172,11 @@ public class Block : MonoBehaviour
         block.GetComponent<Block>().TypeChange(type);
         for (int i = 0; i < markers.Count; i++) {
             block.GetComponent<Block>().EffectChange(markers[i]);
+        }
+        if (painted) {
+            Color top = ColorSidebar.FromHex(data[8]);
+            Color sides = ColorSidebar.FromHex(data[9]);
+            block.GetComponent<Block>().Paint(top, sides);
         }
         return block;
     }
