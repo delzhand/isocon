@@ -33,7 +33,9 @@ public class CameraControl : MonoBehaviour
         UI.System.Q("RotateCCW").RegisterCallback<ClickEvent>(rotateLeft);
         UI.System.Q("RotateCW").RegisterCallback<ClickEvent>(rotateRight);
         UI.System.Q<Slider>("ZoomScale").RegisterValueChangedCallback(zoom);
-        UI.System.Q<Slider>("TiltAngle").RegisterValueChangedCallback(tilt);
+        // UI.System.Q<Slider>("TiltAngle").RegisterValueChangedCallback(tilt);
+        UI.System.Q("Tilt").Q("TiltUp").RegisterCallback<ClickEvent>(tiltUp);
+        UI.System.Q("Tilt").Q("TiltDown").RegisterCallback<ClickEvent>(tiltDown);
 
         // UI.System.Q<Button>("OverheadButton").RegisterCallback<ClickEvent>((evt) => {
         //     if (Overhead) {
@@ -118,10 +120,19 @@ public class CameraControl : MonoBehaviour
         Camera.main.GetComponent<Camera>().orthographicSize = evt.newValue;
     }
 
-    private static void tilt(ChangeEvent<float> evt) {
-        // Quaternion rotation = CameraTransform.rotation;
-        Vector3 rotation = CameraTransform.eulerAngles;
-        CameraTransform.rotation = Quaternion.Euler(rotation.x, rotation.y, evt.newValue);
+    private static void tiltUp(ClickEvent evt) {
+        tilt(-5);
+    }
+
+    private static void tiltDown(ClickEvent evt) {
+        tilt(5);
+    }
+
+    private static void tilt(float value) {
+        if (!IsLocked && !Overhead) {
+            initializeTransition(0f);
+            TargetRotation = OriginalRotation * Quaternion.Euler(0, 0, value);
+        }
     }
 
     private static void enableOverhead() {
