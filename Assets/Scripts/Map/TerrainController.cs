@@ -106,6 +106,9 @@ public class TerrainController : MonoBehaviour
                 case "Paintbrush":
                     PaintBlocks();
                     break;
+                case "Unpaint":
+                    DepaintBlocks();
+                    break;
                 case "Eyedropper":
                     Eyedropper();
                     break;
