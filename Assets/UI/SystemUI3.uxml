@@ -338,9 +338,9 @@
                         <ui:VisualElement name="Color4" style="background-color: rgb(0, 16, 34); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
                     </ui:VisualElement>
                 </ui:Foldout>
-                <ui:Foldout text="Painting" value="false" focusable="true" style="margin-bottom: 0; margin-top: 4px;">
+                <ui:Foldout text="Painting" value="true" focusable="true" style="margin-bottom: 0; margin-top: 4px;">
                     <ui:Button text="Paint Block" display-tooltip-when-elided="true" name="Paintbrush" class="toolbox tool-button" style="margin-top: 4px;" />
-                    <ui:Button text="Unpaint Block" display-tooltip-when-elided="true" name="Unpaint" class="toolbox tool-button" style="margin-top: 4px;" />
+                    <ui:Button text="Unpaint Block" display-tooltip-when-elided="true" name="Unpaint" class="toolbox tool-button" style="margin-top: 4px; display: flex;" />
                     <ui:Button text="Sample Painted Block" display-tooltip-when-elided="true" name="Eyedropper" class="toolbox tool-button" style="margin-top: 4px;" />
                     <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
                         <ui:Label tabindex="-1" text="Paintbrush Top" display-tooltip-when-elided="true" style="flex-grow: 1;" />
