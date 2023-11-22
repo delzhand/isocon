@@ -92,7 +92,7 @@ public class MapEdit
     private static void ConfirmMapOpen(ClickEvent evt) {
         string value = Modal.Find().Q("SearchField").Q<TextField>("SearchInput").value;
         if (!MapDirty) {
-            State.LoadState(value);
+            OpenFile();
             Modal.Close();
         }
         else {
@@ -101,10 +101,10 @@ public class MapEdit
     }
 
     private static void OpenFile() {
-        string filename = Modal.Find().Q<TextField>("Filename").value;
+        string filename = Modal.Find().Q("SearchField").Q<TextField>("SearchInput").value;
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
         string fullPath = path + "/maps/" + filename;
-        State.LoadState(fullPath);
+        MapSaver.StegLoad(fullPath);
     }
 
     private static void ConfirmMapSave(ClickEvent evt) {
@@ -131,7 +131,7 @@ public class MapEdit
         string filename = Modal.Find().Q<TextField>("Filename").value;
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
         string fullPath = path + "/maps/" + filename;
-        Toast.Add($"File written to {fullPath.Replace("\\", "/")}");
+        MapSaver.StegSave(fullPath);
     }
 
     private static bool FileExists(string filename) {
