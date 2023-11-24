@@ -16,11 +16,14 @@ public class AddObject
         blockEffects.AddToClassList("no-margin");
         blockEffects.focusable = false;
 
-        SliderInt height = new SliderInt();
+        DropdownField height = new DropdownField();
         height.name = "ObjectHeight";
         height.label = "Height";
-        height.lowValue = 0;
-        height.highValue = 3;
+        height.choices = new List<string>();
+        for (int i = 0; i <= 3; i++) {
+            height.choices.Add(i.ToString());
+        }
+        height.focusable = false;
         height.AddToClassList("no-margin");
 
         Button confirm = new Button();
