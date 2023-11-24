@@ -15,6 +15,7 @@ public enum BlockType
 public class Block : MonoBehaviour
 {
     public static Block LastFocused;
+    private static Dictionary<string, Material> materials = new Dictionary<string, Material>();
 
     public bool Selected = false;
     public bool Focused = false;
@@ -22,20 +23,12 @@ public class Block : MonoBehaviour
 
     public BlockType Type = BlockType.Solid;
     public bool Destroyable = true;
-    Mesh m;
-    MeshFilter mf;
-    MeshRenderer mr;
-    GameObject blockUI;
-    List<string> effects;
-    static Dictionary<string, Material> materials = new Dictionary<string, Material>();
-
+    private List<string> effects;
     private bool Painted = false;
     private Color PaintColorTop;
     private Color PaintColorSide;
     private Material PaintMaterialTop;
     private Material PaintMaterialSide;
-
-    public bool ResetMaterials = false;
 
     void Awake() {
         if (materials.Count == 0) {
@@ -43,8 +36,6 @@ public class Block : MonoBehaviour
         }
 
         effects = new List<string>();
-        mf = GetComponent<MeshFilter>();
-        mr = GetComponent<MeshRenderer>();
         TypeChange(Type);
     }
 
@@ -57,12 +48,6 @@ public class Block : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Strictly for editor usage
-        if (ResetMaterials) {
-            ResetMaterials = false;
-            SetMaterials();
-        }
-
         GameObject indicator = transform.Find("Indicator").gameObject;
         if (Type == BlockType.Solid || Type == BlockType.Slope) {
             indicator.transform.eulerAngles = new Vector3(90, -90, 0);
@@ -78,22 +63,23 @@ public class Block : MonoBehaviour
     }
 
     public static void MaterialSetup() {
-            materials.Add("side1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideA")));
-            materials.Add("side2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideB")));
-            materials.Add("top1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopA")));
-            materials.Add("top2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopB")));
-            materials.Add("unfocused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
-            materials.Add("highlighted", Instantiate(Resources.Load<Material>("Materials/Block/Highlighted")));
+        materials.Add("side1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideA")));
+        materials.Add("side2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideB")));
+        materials.Add("top1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopA")));
+        materials.Add("top2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopB")));
 
-            materials.Add("focused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
-            materials["focused"].SetInt("_Focused", 1);
+        materials.Add("highlighted", Instantiate(Resources.Load<Material>("Materials/Block/Highlighted")));
 
-            materials.Add("selected", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
-            materials["selected"].SetInt("_Selected", 1);
+        materials.Add("unfocused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+        materials.Add("focused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+        materials["focused"].SetInt("_Focused", 1);
 
-            materials.Add("selectfocused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
-            materials["selectfocused"].SetInt("_Selected", 1);
-            materials["selectfocused"].SetInt("_Focused", 1);
+        materials.Add("selectfocused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+        materials["selectfocused"].SetInt("_Selected", 1);
+        materials["selectfocused"].SetInt("_Focused", 1);
+
+        materials.Add("selected", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+        materials["selected"].SetInt("_Selected", 1);
     }
 
     public override string ToString(){
@@ -148,7 +134,6 @@ public class Block : MonoBehaviour
             painted = bool.Parse(data[7]);
         }
 
-
         GameObject map = GameObject.Find("Terrain");
         GameObject column = GameObject.Find(x+","+y);
         if (column == null) {
@@ -160,7 +145,6 @@ public class Block : MonoBehaviour
             column.transform.localScale = Vector3.one;
             column.AddComponent<Column>().Set(x, y);
         }
-
 
         GameObject block = Instantiate(Resources.Load("Prefabs/Block") as GameObject);
         block.name = "block-" + x + "," + z + "," + y;
@@ -181,66 +165,31 @@ public class Block : MonoBehaviour
         return block;
     }
 
-    public void HandleClicks(int button) {
-        if (!Player.IsOnline()) {
-            return;
-        }
-
-        if (UI.ClicksSuspended) {
-            return;
-        }
-
-        // Left Click
-        if (button == 0) {
-            switch (Cursor.Mode) {
-                case ClickMode.Editing:
-                    Block.DeselectAll();
-                    Select();
-                    TerrainController.Edit(this);
-                    Select();
-                    Block.DeselectAll();
-                    break;
-                case ClickMode.Default:
-                    Select();
-                    break;
-                case ClickMode.Placing:
-                    TokenController.GetSelected().Place(this);
-                    Cursor.Mode = ClickMode.Default;
-                    break;
-                case ClickMode.Moving:
-                    TokenController.GetSelected().Move(this);
-                    break;
-            }
-        }
-
-        // Right Click
-        else if (button == 1) {
-            CameraControl.GoToBlock(this);
+    public void LeftClick() {
+        switch (Cursor.Mode) {
+            case ClickMode.Editing:
+                Block.DeselectAll();
+                Select();
+                TerrainController.Edit(this);
+                Select();
+                Block.DeselectAll();
+                break;
+            case ClickMode.Default:
+                Select();
+                break;
+            case ClickMode.Placing:
+                TokenController.GetSelected().Place(this);
+                Cursor.Mode = ClickMode.Default;
+                break;
+            case ClickMode.Moving:
+                TokenController.GetSelected().Move(this);
+                break;
         }
     }
 
-    // void OnMouseDown()
-    // {
-    //     if (!Player.IsOnline()) {
-    //         return;
-    //     }
-
-    //     if (UI.ClicksSuspended) {
-    //         return;
-    //     }
-
-    //     if (TerrainController.Editing) {
-    //         Block.DeselectAll();
-    //         Select();
-    //         GameObject.Find("Engine").GetComponent<TerrainController>().Edit(this);
-    //         Block.DeselectAll();
-    //         return;            
-    //     }
-
-    //     // CameraControl.GoToBlock(this);
-    //     // SetTerrainInfo();
-    //     TokenController.BlockClick(this);
-    // }
+    public void RightClick() {
+        CameraControl.GoToBlock(this);
+    }
 
     public static void SetColor(string id, Color color) {
         if (materials.Count == 0) {
@@ -253,16 +202,16 @@ public class Block : MonoBehaviour
         return this.transform.parent.GetComponent<Column>().X;
     }
 
-    public string getAlphaY() {
-        return toAlpha(getY()+1);
-    }
-
     public int getY() {
         return this.transform.parent.GetComponent<Column>().Y;
     }
 
     public int getZ() {
         return (int)(this.transform.position.y/.5f)+2;
+    }
+
+    public List<string> GetEffects() {
+        return effects;
     }
 
     public static Block[] GetSelected() {
@@ -277,83 +226,9 @@ public class Block : MonoBehaviour
         return selected.ToArray();
     }
 
-    public static void SetTerrainInfo() {
-        VisualElement root = UI.System.Q("TerrainInfo");
-        UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), false);
-        UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), false);
-        UI.ToggleDisplay(root.Q("AddEffect"), false);
 
-        UI.ToggleDisplay(root, false);
-
-        Block[] selected = GetSelected();
-        Block focused = LastFocused;
-        Block block = null;
-
-        Color color = Color.white;
-        if (selected.Length > 0 && Cursor.Mode != ClickMode.Editing) {
-            color = ColorUtility.ColorFromHex("9C7A19");
-            UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), true);
-            UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), true);
-        }
- 
-        UI.ToggleDisplay(root, true);
-
-        string height;
-        string coords;
-        bool singleSelected = false;
-
-        if (selected.Length > 1) {
-            height = "*";
-            coords = "*";
-        }
-        else {
-            if (selected.Length == 1) {
-                block = selected[0];
-                singleSelected = true;
-            }
-            else if (focused) {
-                block = focused;
-            }
-            height = (block.transform.localPosition.y + 1).ToString();
-            if (block.Type == BlockType.Slope) {
-                height = height + ".5";
-            }
-            coords = block.toAlpha(block.getY() + 1) + "" + (block.getX()+1);
-
-        }
-
-        root.Q<Label>("Height").text = $"{height}";
-        root.Q<Label>("Height").style.color = color;
-        root.Q<Label>("Coords").text = coords;
-        root.Q<Label>("Coords").style.color = color;
-
-
-        root.Q("CurrentEffects").Clear();
-        if (block) {
-            block.effects.ForEach(marker => {
-                VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/TerrainEffect");
-                VisualElement instance = template.Instantiate();
-                instance.Q<Label>("Label").text = marker.ToUpper();
-                VisualElement remove = instance.Q("Remove");
-                if (!singleSelected) {
-                    UI.ToggleDisplay(remove, false);
-                }
-                else {
-                    remove.RegisterCallback<ClickEvent>((evt) => {
-                        Player.Self().CmdRequestMapSetValue(new string[]{block.name}, "Effect", marker);
-                    });
-                }
-                root.Q("CurrentEffects").Add(instance);
-            });
-
-        }
-        if (selected.Length > 0) {
-            UI.ToggleDisplay(root.Q("AddEffect"), true);
-        }
-
-    }
     
-    private string toAlpha(int x) {
+    public static string GetAlpha(int x) {
         const int Base = 26;
         const int Offset = 64; // ASCII offset for uppercase letters
 
@@ -379,7 +254,7 @@ public class Block : MonoBehaviour
             Selected = true;
         }
         SetMaterials();
-        SetTerrainInfo();
+        TerrainController.SetInfo();
     }
 
     public void Deselect() {
@@ -391,7 +266,7 @@ public class Block : MonoBehaviour
         LastFocused = this;
         Focused = true;
         SetMaterials();
-        SetTerrainInfo();
+        TerrainController.SetInfo();
     }
 
     public void Unfocus() {
@@ -443,6 +318,7 @@ public class Block : MonoBehaviour
 
     public void TypeChange(BlockType blocktype) {
         Type = blocktype;
+        Mesh m = null;
         switch (Type) {
             case BlockType.Solid:
                 m = generateCubeMesh(1f);
@@ -457,7 +333,7 @@ public class Block : MonoBehaviour
                 m = generateCubeMesh(0f);
                 break;
         }
-        mf.mesh = m;
+        GetComponent<MeshFilter>().mesh = m;
         SetMaterials();
     }
 

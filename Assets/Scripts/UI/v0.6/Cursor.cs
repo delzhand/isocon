@@ -15,14 +15,13 @@ public class Cursor : MonoBehaviour
 
     public static ClickMode Mode = ClickMode.Default;
 
-    void Start()
-    {
-        
-    }
-
     void Update()
     {
         if (UI.ClicksSuspended) {
+            return;
+        }
+
+        if (!Player.IsOnline()) {
             return;
         }
 
@@ -72,10 +71,10 @@ public class Cursor : MonoBehaviour
             return;
         }
         if (Input.GetMouseButtonDown(1)) {
-            block.HandleClicks(1);
+            block.LeftClick();
         }
         if (Input.GetMouseButtonDown(0)) {
-            block.HandleClicks(0);
+            block.RightClick();
         }        
     }
 }

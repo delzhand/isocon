@@ -161,8 +161,8 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void ResetTerrain() {
-        // DestroyAllBlocks();
-        // InitializeTerrain(8, 8, 3);
+        DestroyAllBlocks();
+        InitializeTerrain(8, 8, 1);
     }
 
     public static Vector3 Center() {
@@ -193,8 +193,8 @@ public class TerrainController : MonoBehaviour
 
     }
 
-    public static Vector2 Size() {
-        Vector2 size = Vector2.zero;
+    public static Vector2Int Size() {
+        Vector2Int size = Vector2Int.zero;
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
         for (int i = 0; i < blocks.Length; i++) {
             size.x = Mathf.Max(size.x, blocks[i].GetComponent<Block>().getX()+1);
@@ -412,6 +412,79 @@ public class TerrainController : MonoBehaviour
         }
     }
 
+    public static void SetInfo() {
+        VisualElement root = UI.System.Q("TerrainInfo");
+        UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), false);
+        UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), false);
+        UI.ToggleDisplay(root.Q("AddEffect"), false);
+
+        UI.ToggleDisplay(root, false);
+
+        Block[] selected = Block.GetSelected();
+        Block focused = Block.LastFocused;
+        Block block = null;
+
+        Color color = Color.white;
+        if (selected.Length > 0 && Cursor.Mode != ClickMode.Editing) {
+            color = ColorUtility.ColorFromHex("9C7A19");
+            UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), true);
+            UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), true);
+        }
+ 
+        UI.ToggleDisplay(root, true);
+
+        string height;
+        string coords;
+        bool singleSelected = false;
+
+        if (selected.Length > 1) {
+            height = "*";
+            coords = "*";
+        }
+        else {
+            if (selected.Length == 1) {
+                block = selected[0];
+                singleSelected = true;
+            }
+            else if (focused) {
+                block = focused;
+            }
+            height = (block.transform.localPosition.y + 1).ToString();
+            if (block.Type == BlockType.Slope) {
+                height = height + ".5";
+            }
+            coords = Block.GetAlpha(block.getY() + 1) + "" + (block.getX()+1);
+        }
+
+        root.Q<Label>("Height").text = $"{height}";
+        root.Q<Label>("Height").style.color = color;
+        root.Q<Label>("Coords").text = coords;
+        root.Q<Label>("Coords").style.color = color;
+
+        root.Q("CurrentEffects").Clear();
+        if (block) {
+            block.GetEffects().ForEach(marker => {
+                VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/TerrainEffect");
+                VisualElement instance = template.Instantiate();
+                instance.Q<Label>("Label").text = marker.ToUpper();
+                VisualElement remove = instance.Q("Remove");
+                if (!singleSelected) {
+                    UI.ToggleDisplay(remove, false);
+                }
+                else {
+                    remove.RegisterCallback<ClickEvent>((evt) => {
+                        Player.Self().CmdRequestMapSetValue(new string[]{block.name}, "Effect", marker);
+                    });
+                }
+                root.Q("CurrentEffects").Add(instance);
+            });
+
+        }
+        if (selected.Length > 0) {
+            UI.ToggleDisplay(root.Q("AddEffect"), true);
+        }
+
+    }
     
     public static Block[] FindNeighbors(Block origin, int radius) {
         int[,] offsets = {
@@ -449,7 +522,7 @@ public class TerrainController : MonoBehaviour
         for (int i = 0; i < blocks.Length; i++) {
             Block b = blocks[i].GetComponent<Block>();
             TextMeshPro tm = blocks[i].transform.Find("Indicator").GetComponent<TextMeshPro>();
-            tm.text = b.getAlphaY() + (b.getX()+1);
+            tm.text = Block.GetAlpha(b.getY()) + (b.getX()+1);
             blocks[i].name = "block " + b.getX() + "," + b.getY() + "," + b.getZ();
 
         }         
