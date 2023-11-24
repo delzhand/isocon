@@ -52,9 +52,30 @@ public class Tabletop : MonoBehaviour
     }
 
     private void FloatingControlsSetup() {
+        VisualElement root = UI.System.Q("FloatingControls");
         UI.SetBlocking(UI.System, "FloatingControls");
-        UI.System.Q("FloatingControls").Q("EditMap").RegisterCallback<ClickEvent>(MapEdit.ToggleEditMode);
-        UI.System.Q("FloatingControls").Q("Config").RegisterCallback<ClickEvent>(Config.OpenModal);
+        UI.HoverSetup(root.Q("EditMap"));
+        UI.HoverSetup(root.Q("Config"));
+        UI.HoverSetup(root.Q("RotateCCW"));
+        UI.HoverSetup(root.Q("RotateCW"));
+        UI.HoverSetup(root.Q("TiltUp"));
+        UI.HoverSetup(root.Q("TiltDown"));
+        UI.HoverSetup(root.Q("Connection"));
+        UI.HoverSetup(root.Q("FixedView"));
+        UI.HoverSetup(root.Q("Indicators"));
+
+        root.Q("EditMap").RegisterCallback<ClickEvent>(MapEdit.ToggleEditMode);
+        root.Q("Config").RegisterCallback<ClickEvent>(Config.OpenModal);
+        root.Q("Indicators").RegisterCallback<ClickEvent>((evt) => {
+            bool val = !TerrainController.Indicators;
+            TerrainController.Indicators = val;
+            if (val) {
+                root.Q("Indicators").AddToClassList("active");
+            }
+            else {
+                root.Q("Indicators").RemoveFromClassList("active");
+            }
+        });
     }
 
     private void BottomBarSetup() {

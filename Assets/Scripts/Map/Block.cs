@@ -84,8 +84,8 @@ public class Block : MonoBehaviour
 
     public override string ToString(){
         Column c = transform.parent.GetComponent<Column>();
-        string PaintColorTopHex = "#000000";
-        string PaintColorSideHex = "#000000";
+        string PaintColorTopHex = "";
+        string PaintColorSideHex = "";
         if (Painted) {
             PaintColorTopHex = ColorUtility.ColorToHex(PaintColorTop);
             PaintColorSideHex = ColorUtility.ColorToHex(PaintColorSide);

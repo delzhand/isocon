@@ -27,12 +27,14 @@ public class MapEdit
             UI.ToggleDisplay("ToolsPanel", true);
             Block.DeselectAll();
             Cursor.Mode = ClickMode.Editing;
+            UI.ToggleActiveClass(UI.System.Q("FloatingControls").Q("EditMap"), true);
         }
         else {
             Cursor.Mode = ClickMode.Default;
             UI.ToggleDisplay("ToolsPanel", false);
             State.SetCurrentJson();
             Player.Self().CmdMapSync();
+            UI.ToggleActiveClass(UI.System.Q("FloatingControls").Q("EditMap"), false);
         }
     }
 
@@ -102,7 +104,13 @@ public class MapEdit
         string filename = Modal.Find().Q("SearchField").Q<TextField>("SearchInput").value;
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
         string fullPath = path + "/maps/" + filename;
-        MapSaver.StegLoad(fullPath);
+        CurrentFile = filename.Replace(".png", "").Replace(".json", "");
+        if (fullPath.EndsWith(".png")) {
+            MapSaver.StegLoad(fullPath);
+        }
+        else {
+            MapSaver.LegacyLoad(fullPath);
+        }
     }
 
     private static void ConfirmMapSave(ClickEvent evt) {
@@ -111,8 +119,11 @@ public class MapEdit
             Toast.Add("Not a valid filename.", ToastType.Error);
         }
         else {
-            if (!value.EndsWith(".json")) {
-                value += ".json";
+            if (value.EndsWith(".json")) {
+                value = value.Replace(".json", "");
+            }
+            if (!value.EndsWith(".png")) {
+                value += ".png";
                 Modal.Find().Q<TextField>("Filename").value = value;
             }
             if (FileExists(value)) {

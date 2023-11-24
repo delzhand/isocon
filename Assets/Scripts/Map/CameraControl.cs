@@ -33,43 +33,17 @@ public class CameraControl : MonoBehaviour
         UI.System.Q("RotateCCW").RegisterCallback<ClickEvent>(rotateLeft);
         UI.System.Q("RotateCW").RegisterCallback<ClickEvent>(rotateRight);
         UI.System.Q<Slider>("ZoomScale").RegisterValueChangedCallback(zoom);
-        // UI.System.Q<Slider>("TiltAngle").RegisterValueChangedCallback(tilt);
         UI.System.Q("Tilt").Q("TiltUp").RegisterCallback<ClickEvent>(tiltUp);
         UI.System.Q("Tilt").Q("TiltDown").RegisterCallback<ClickEvent>(tiltDown);
 
-        // UI.System.Q<Button>("OverheadButton").RegisterCallback<ClickEvent>((evt) => {
-        //     if (Overhead) {
-        //         disableOverhead();
-        //     }
-        //     else {
-        //         enableOverhead();
-        //     }
-        // });
-
-        // UI.System.Q<Button>("IndicatorsButton").RegisterCallback<ClickEvent>((evt) => {
-        //     bool val = !TerrainController.Indicators;
-        //     TerrainController.Indicators = val;
-        //     if (val) {
-        //         UI.System.Q("IndicatorsButton").AddToClassList("active");
-        //     }
-        //     else {
-        //         UI.System.Q("IndicatorsButton").RemoveFromClassList("active");
-        //     }
-        // });
-
-        // UI.System.Q<Button>("EditButton").RegisterCallback<ClickEvent>((evt) => {
-        //     bool val = !TerrainController.Editing;
-        //     TerrainController.Editing = val;
-        //     Block.ToggleSpacers(val);
-        //     if (val) {
-        //         UI.System.Q("EditButton").AddToClassList("active");
-        //     }
-        //     else {
-        //         UI.System.Q("EditButton").RemoveFromClassList("active");
-        //         State.SetCurrentJson();
-        //         Player.Self().CmdMapSync();
-        //     }
-        // });
+        UI.System.Q("FixedView").RegisterCallback<ClickEvent>((evt) => {
+            if (Overhead) {
+                disableOverhead();
+            }
+            else {
+                enableOverhead();
+            }
+        });
     }
 
     // Update is called once per frame
@@ -140,7 +114,9 @@ public class CameraControl : MonoBehaviour
         ReserveRotation = CameraTransform.rotation;
         initializeTransition(.25f);
         TargetRotation = Quaternion.Euler(0, 0, 30);
-        UI.System.Q("OverheadButton").AddToClassList("active");
+        UI.System.Q("FixedView").AddToClassList("active");
+        UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Rotate"), false);
+        UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Tilt"), false);
     }
 
     private static void disableOverhead() {
@@ -149,7 +125,9 @@ public class CameraControl : MonoBehaviour
         if (ReserveRotation != null) {
             TargetRotation = ReserveRotation;
         }
-        UI.System.Q("OverheadButton").RemoveFromClassList("active");
+        UI.System.Q("FixedView").RemoveFromClassList("active");
+        UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Rotate"), true);
+        UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Tilt"), true);
     }
 
     private static void initializeTransition(float duration) {

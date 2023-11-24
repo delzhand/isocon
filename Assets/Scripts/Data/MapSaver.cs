@@ -11,9 +11,16 @@ public class MapSaver
         Texture2D texture = new Texture2D(2, 2);
         texture.LoadImage(imageData);
         string json = Decode(texture);
-        Debug.Log(json);
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
+        Toast.Add("Map loaded.");
+    }
+
+    public static void LegacyLoad(string fullPath) {
+        string json = File.ReadAllText(fullPath);
+        State state = JsonUtility.FromJson<State>(json);
+        State.SetSceneFromState(state);
+        Toast.Add("Map loaded.");
     }
 
     public static void StegSave(string fullPath) {

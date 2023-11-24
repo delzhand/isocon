@@ -191,3 +191,11 @@
 #GeneralModal #Contents>* {
     margin-bottom: 4px;
 }
+
+#FloatingControls .hover {
+    -unity-background-image-tint-color: #9C7A19;
+}
+
+#FloatingControls .active {
+    -unity-background-image-tint-color: #19829c;
+}

@@ -149,4 +149,13 @@ public class UI : MonoBehaviour
             e.RemoveFromClassList("active");
         }
     }
+
+    public static void HoverSetup(VisualElement e) {
+        e.RegisterCallback<MouseEnterEvent>((evt) => {
+            e.AddToClassList("hover");
+        });
+        e.RegisterCallback<MouseLeaveEvent>((evt) => {
+            e.RemoveFromClassList("hover");
+        });
+    }
 }
