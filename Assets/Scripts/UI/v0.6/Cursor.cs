@@ -70,10 +70,10 @@ public class Cursor : MonoBehaviour
         if (block == null) {
             return;
         }
-        if (Input.GetMouseButtonDown(1)) {
+        if (Input.GetMouseButtonDown(0)) {
             block.LeftClick();
         }
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetMouseButtonDown(1)) {
             block.RightClick();
         }        
     }

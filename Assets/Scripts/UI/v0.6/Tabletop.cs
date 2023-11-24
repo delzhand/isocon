@@ -53,6 +53,8 @@ public class Tabletop : MonoBehaviour
 
     private void FloatingControlsSetup() {
         UI.SetBlocking(UI.System, "FloatingControls");
+        UI.System.Q("FloatingControls").Q("EditMap").RegisterCallback<ClickEvent>(MapEdit.ToggleEditMode);
+        UI.System.Q("FloatingControls").Q("Config").RegisterCallback<ClickEvent>(Config.OpenModal);
     }
 
     private void BottomBarSetup() {

@@ -417,6 +417,7 @@ public class TerrainController : MonoBehaviour
         UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), false);
         UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), false);
         UI.ToggleDisplay(root.Q("AddEffect"), false);
+        UI.ToggleDisplay(root.Q("AddObject"), false);
 
         UI.ToggleDisplay(root, false);
 
@@ -445,6 +446,7 @@ public class TerrainController : MonoBehaviour
             if (selected.Length == 1) {
                 block = selected[0];
                 singleSelected = true;
+                UI.ToggleDisplay(root.Q("AddObject"), true);
             }
             else if (focused) {
                 block = focused;

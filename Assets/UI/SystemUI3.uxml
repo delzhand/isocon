@@ -60,6 +60,10 @@
                             <ui:Label tabindex="-1" display-tooltip-when-elided="true" text="⊕" style="font-size: 12px; -unity-font-style: bold; color: rgb(156, 122, 25); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 1px; -unity-text-align: middle-right;" />
                             <ui:Label tabindex="-1" display-tooltip-when-elided="true" text=" ADD EFFECT" style="font-size: 12px; -unity-font-style: bold; color: rgb(255, 255, 255); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 1px; -unity-text-align: middle-right;" />
                         </ui:VisualElement>
+                        <ui:VisualElement name="AddObject" class="panel2" style="flex-direction: row; justify-content: flex-end; padding-right: 60px; right: -60px; padding-left: 10px; margin-bottom: 4px; overflow: hidden; display: none;">
+                            <ui:Label tabindex="-1" display-tooltip-when-elided="true" text="⊕" style="font-size: 12px; -unity-font-style: bold; color: rgb(156, 122, 25); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 1px; -unity-text-align: middle-right;" />
+                            <ui:Label tabindex="-1" display-tooltip-when-elided="true" text=" CREATE OBJECT" style="font-size: 12px; -unity-font-style: bold; color: rgb(255, 255, 255); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 1px; -unity-text-align: middle-right;" />
+                        </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="SelectedTokenPanel" class="panel edit-panel" style="position: absolute; top: auto; left: auto; bottom: 10px; display: none; right: 0;">
@@ -103,6 +107,7 @@
                             <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Message" text="Your IP is &lt;IP&gt;" style="flex-wrap: wrap; white-space: normal; -unity-text-align: upper-center;" />
                         </ui:VisualElement>
                     </ui:VisualElement>
+                    <ui:VisualElement name="Config" style="flex-grow: 1; width: 30px; height: 30px; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/config&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 8px;" />
                     <ui:VisualElement name="Debug" style="flex-grow: 1; width: 30px; height: 30px; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/qmark&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 8px;">
                         <ui:VisualElement name="Panel" class="panel" style="flex-grow: 1; position: absolute; translate: -50% 0; top: 36px; left: 50%; width: 350px; display: none;">
                             <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Message" text="Your IP is &lt;IP&gt;" style="flex-wrap: wrap; white-space: normal; -unity-text-align: upper-center;" />

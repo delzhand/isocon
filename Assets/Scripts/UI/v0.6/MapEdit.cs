@@ -13,8 +13,6 @@ public class MapEdit
 
     public static void Setup()
     {
-        UI.System.Q("FloatingControls").Q("EditMap").RegisterCallback<ClickEvent>(ToggleEditMode);
-
         VisualElement root = UI.System.Q("ToolsPanel");
         UI.SetBlocking(UI.System, "ToolsPanel");
         UI.ToggleDisplay(root, false);
@@ -24,7 +22,7 @@ public class MapEdit
         root.Query<Foldout>(null, "unity-foldout").ForEach(RegisterFoldout);
     }
 
-    private static void ToggleEditMode(ClickEvent evt) {
+    public static void ToggleEditMode(ClickEvent evt) {
         if (Cursor.Mode != ClickMode.Editing) {
             UI.ToggleDisplay("ToolsPanel", true);
             Block.DeselectAll();
