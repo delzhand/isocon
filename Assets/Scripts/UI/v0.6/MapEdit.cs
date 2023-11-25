@@ -20,22 +20,39 @@ public class MapEdit
         root.Q<Button>("Save").RegisterCallback<ClickEvent>(OpenSaveModal);
         root.Query<Button>(null, "tool-button").ForEach(RegisterButton);
         root.Query<Foldout>(null, "unity-foldout").ForEach(RegisterFoldout);
+
+        ColorEdit.Setup();
+        RegisterColorChangeCallback("Color1");
+        RegisterColorChangeCallback("Color2");
+        RegisterColorChangeCallback("Color3");
+        RegisterColorChangeCallback("Color4");
+        RegisterColorChangeCallback("Color5");
+        RegisterColorChangeCallback("Color6");
+
     }
 
     public static void ToggleEditMode(ClickEvent evt) {
         if (Cursor.Mode != ClickMode.Editing) {
-            UI.ToggleDisplay("ToolsPanel", true);
-            Block.DeselectAll();
-            Cursor.Mode = ClickMode.Editing;
-            UI.ToggleActiveClass(UI.System.Q("FloatingControls").Q("EditMap"), true);
+            StartEditing();
         }
         else {
-            Cursor.Mode = ClickMode.Default;
-            UI.ToggleDisplay("ToolsPanel", false);
-            State.SetCurrentJson();
-            Player.Self().CmdMapSync();
-            UI.ToggleActiveClass(UI.System.Q("FloatingControls").Q("EditMap"), false);
+            EndEditing();
         }
+    }
+
+    private static void StartEditing() {
+        UI.ToggleDisplay("ToolsPanel", true);
+        Block.DeselectAll();
+        Cursor.Mode = ClickMode.Editing;
+        UI.ToggleActiveClass(UI.System.Q("FloatingControls").Q("EditMap"), true);
+    }
+
+    private static void EndEditing() {
+        Cursor.Mode = ClickMode.Default;
+        UI.ToggleDisplay("ToolsPanel", false);
+        State.SetCurrentJson();
+        Player.Self().CmdMapSync();
+        UI.ToggleActiveClass(UI.System.Q("FloatingControls").Q("EditMap"), false);
     }
 
     private static void OpenSaveModal(ClickEvent evt) {
@@ -221,5 +238,46 @@ public class MapEdit
 
     public static string GetMarkerEffect() {
          return UI.System.Q("ToolsPanel").Q("EffectSearch").Q<TextField>("SearchInput").value;
+    }
+
+    private static void RegisterColorChangeCallback(string elementName) {
+        UI.System.Q(elementName).RegisterCallback<ClickEvent>((evt) => {
+            UI.ToggleDisplay("ColorPanel", true);
+            ColorEdit.ClearColorChangeListeners();
+            ColorEdit.SetColor(UI.System.Q(elementName).resolvedStyle.backgroundColor);
+            ColorEdit.onColorChange += (c) => HandleColorChange(elementName, c);
+        });
+    }
+
+    private static void HandleColorChange(string elementName, Color c) {
+        UI.System.Q(elementName).style.backgroundColor = c;
+        switch(elementName) {
+            case "Color1":
+                Environment.Color1 = c;
+                Block.SetColor("top1", c);
+                Block.SetColor("top2", ColorUtility.DarkenColor(c, .2f));
+                break;
+            case "Color2":
+                Environment.Color2 = c;
+                Block.SetColor("side1", c);
+                Block.SetColor("side2", ColorUtility.DarkenColor(c, .2f));
+                break;
+            case "Color3":
+                Environment.Color3 = c;
+                MeshRenderer mra = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
+                mra.material.SetColor("_Color1", c);
+                break;
+            case "Color4":
+                Environment.Color4 = c;
+                MeshRenderer mrb = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
+                mrb.material.SetColor("_Color2", c);
+                break;
+            case "Color5":
+                Environment.Color5 = c;
+                break;
+            case "Color6":
+                Environment. Color6 = c;
+                break;
+        }
     }
 }

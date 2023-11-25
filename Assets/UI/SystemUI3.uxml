@@ -5,7 +5,7 @@
     <Style src="project://database/Assets/UI/Styles/v3/OverrideStyles.uss?fileID=7433441132597879392&amp;guid=15bcfaebbc0c9fd4691b003a9d1cd382&amp;type=3#OverrideStyles" />
     <Style src="project://database/Assets/UI/Styles/Overhead.uss?fileID=7433441132597879392&amp;guid=db9f5488cbd5b104699c060ac772337b&amp;type=3#Overhead" />
     <ui:VisualElement name="Worldspace" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; left: 0; top: 0; right: 0; bottom: 0;" />
-    <ui:VisualElement name="Launcher" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex;">
+    <ui:VisualElement name="Launcher" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: none;">
         <ui:VisualElement name="StartupPanel" class="centered" style="margin-bottom: 0; display: flex; min-height: 0; width: 460px; justify-content: center;">
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 0; flex-direction: row; justify-content: center; background-image: resource(&apos;Textures/isocon_logo&apos;); -unity-background-scale-mode: scale-to-fit; margin-bottom: 56px; height: 110px;">
                 <ui:Label tabindex="-1" text="BETA" parse-escape-sequences="true" display-tooltip-when-elided="true" style="position: absolute; top: -17px; right: -69px; background-color: rgb(156, 122, 25); -unity-font-style: bold; font-size: 16px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; color: rgb(255, 255, 255);" />
@@ -182,9 +182,6 @@
                         </ui:Foldout>
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="MapFilePanel" class="panel" style="position: relative; left: auto; top: auto; display: none; min-height: auto; margin-bottom: 4px; width: 240px;">
-                    <ui:Label tabindex="-1" text="MAP" display-tooltip-when-elided="true" class="panel-header" />
-                </ui:VisualElement>
                 <ui:VisualElement name="ColorPanel" class="panel" style="position: relative; margin-bottom: 4px; display: none; width: 240px;">
                     <ui:Label tabindex="-1" text="COLOR EDIT" display-tooltip-when-elided="true" class="panel-header" />
                     <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
@@ -203,7 +200,7 @@
                         <ui:Label tabindex="-1" text="Hexadecimal" display-tooltip-when-elided="true" />
                         <ui:TextField picking-mode="Ignore" value="#000000" name="EditColorHex" class="no-margin" />
                     </ui:VisualElement>
-                    <ui:Button text="Done" display-tooltip-when-elided="true" name="CloseColorSidebar" />
+                    <ui:Button text="Done" display-tooltip-when-elided="true" name="Close" />
                 </ui:VisualElement>
                 <ui:VisualElement name="UnitMenu" class="panel" style="position: absolute; left: 0; display: none; top: 0;">
                     <ui:Label tabindex="-1" text="UNIT MENU" display-tooltip-when-elided="true" class="panel-header" />
