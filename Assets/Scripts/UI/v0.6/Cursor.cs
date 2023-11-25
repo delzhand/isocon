@@ -49,6 +49,9 @@ public class Cursor : MonoBehaviour
                 }
             }
         }
+        else {
+            Block.UnfocusAll();
+        }
     }
 
     private void HighlightSizeArea(Block block) {
