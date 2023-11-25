@@ -7,7 +7,6 @@ using UnityEngine.UIElements;
 
 public class MapEdit
 {
-    private static bool MapDirty = false;
     private static string CurrentFile = "";
     private static List<string> EditOps = new List<string>();
 
@@ -18,6 +17,7 @@ public class MapEdit
         UI.ToggleDisplay(root, false);
         root.Q<Button>("Open").RegisterCallback<ClickEvent>(OpenOpenModal);
         root.Q<Button>("Save").RegisterCallback<ClickEvent>(OpenSaveModal);
+        root.Q<Button>("Reset").RegisterCallback<ClickEvent>(ResetConfirm);
         root.Query<Button>(null, "tool-button").ForEach(RegisterButton);
         root.Query<Foldout>(null, "unity-foldout").ForEach(RegisterFoldout);
 
@@ -54,6 +54,22 @@ public class MapEdit
         Player.Self().CmdMapSync();
         UI.ToggleActiveClass(UI.System.Q("FloatingControls").Q("EditMap"), false);
     }
+
+    private static void ResetConfirm(ClickEvent evt) {
+        if (!TerrainController.MapDirty) {
+            ResetMap();
+        }
+        else {
+            Modal.DoubleConfirm("Confirm Reset", "You have unsaved changes. Discard?", ResetMap);
+        }
+    }
+
+    private static void ResetMap() {
+        CurrentFile = "";
+        TerrainController.ResetTerrain();
+        Toast.Add("Map reset.");
+    }
+
 
     private static void OpenSaveModal(ClickEvent evt) {
         Modal.Reset("Save Map");
@@ -108,7 +124,7 @@ public class MapEdit
 
     private static void ConfirmMapOpen(ClickEvent evt) {
         string value = Modal.Find().Q("SearchField").Q<TextField>("SearchInput").value;
-        if (!MapDirty) {
+        if (!TerrainController.MapDirty) {
             OpenFile();
             Modal.Close();
         }

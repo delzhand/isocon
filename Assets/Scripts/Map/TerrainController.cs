@@ -15,6 +15,8 @@ public class TerrainController : MonoBehaviour
 
     public static bool ReorgNeeded = false;
 
+    public static bool MapDirty = false;
+
     // void Start() {
     //     // registerCallbacks();
     //     // disableIndicators();
@@ -64,6 +66,7 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void Edit(Block block) {
+        MapDirty = true;
         List<string> ops = MapEdit.GetOps();
         foreach(string op in ops) {
             switch (op) {
@@ -163,6 +166,7 @@ public class TerrainController : MonoBehaviour
     public static void ResetTerrain() {
         DestroyAllBlocks();
         InitializeTerrain(8, 8, 1);
+        MapDirty = false;
     }
 
     public static Vector3 Center() {

@@ -66,6 +66,7 @@ public class State
             Block.FromString(state.Version, s);
         }
         TerrainController.ReorgNeeded = true;
+        TerrainController.MapDirty = false;
     }
 
     public static void SetCurrentJson() {
