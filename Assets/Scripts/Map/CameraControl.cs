@@ -14,6 +14,9 @@ public class CameraControl : MonoBehaviour
     private static Quaternion TargetRotation;
     private static Quaternion ReserveRotation;
 
+    private static float yRotation = 315;
+    private static float zRotation = 0; // -20 to 20
+
     private static Vector3 OriginPosition;
     private static Vector3 TargetPosition;
     private static Vector3 ReservePosition;
@@ -60,6 +63,16 @@ public class CameraControl : MonoBehaviour
                 IsLocked = false;
             }
         }
+
+        if (!UI.ClicksSuspended && Player.IsOnline()) {
+            float scroll = Input.GetAxis("Mouse ScrollWheel");
+            if (scroll != 0) {
+                float z = UI.System.Q<Slider>("ZoomScale").value;
+                z += scroll;
+                Camera.main.GetComponent<Camera>().orthographicSize = z;
+                UI.System.Q<Slider>("ZoomScale").value = z;
+            }
+        }
     }
 
     private static void rotateLeft(ClickEvent evt) {
@@ -73,7 +86,17 @@ public class CameraControl : MonoBehaviour
     private static void rotate(float value) {
         if (!IsLocked && !Overhead) {
             initializeTransition(.25f);
-            TargetRotation = OriginalRotation * Quaternion.Euler(0, value, 0);
+            yRotation += value;
+            // TargetRotation = OriginalRotation * Quaternion.Euler(0, value, 0);
+
+            Quaternion qy = Quaternion.Euler(0f, yRotation, 0f);
+            Quaternion qz = Quaternion.Euler(0f, 0f, zRotation);
+            
+            Quaternion q = Quaternion.identity;
+            q *= qy;
+            q *= qz;
+
+            TargetRotation = q;
         }
     }
 
@@ -104,8 +127,18 @@ public class CameraControl : MonoBehaviour
 
     private static void tilt(float value) {
         if (!IsLocked && !Overhead) {
-            initializeTransition(0f);
-            TargetRotation = OriginalRotation * Quaternion.Euler(0, 0, value);
+            initializeTransition(.25f);
+            zRotation += value;
+            zRotation = Mathf.Clamp(zRotation, -20, 20);
+
+            Quaternion qy = Quaternion.Euler(0f, yRotation, 0f);
+            Quaternion qz = Quaternion.Euler(0f, 0f, zRotation);
+            
+            Quaternion q = Quaternion.identity;
+            q *= qy;
+            q *= qz;
+
+            TargetRotation = q;
         }
     }
 

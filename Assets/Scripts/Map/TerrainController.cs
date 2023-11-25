@@ -524,7 +524,7 @@ public class TerrainController : MonoBehaviour
         for (int i = 0; i < blocks.Length; i++) {
             Block b = blocks[i].GetComponent<Block>();
             TextMeshPro tm = blocks[i].transform.Find("Indicator").GetComponent<TextMeshPro>();
-            tm.text = Block.GetAlpha(b.getY()) + (b.getX()+1);
+            tm.text = Block.GetAlpha(b.getY() + 1) + (b.getX() + 1);
             blocks[i].name = "block " + b.getX() + "," + b.getY() + "," + b.getZ();
 
         }         
