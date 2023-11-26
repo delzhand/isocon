@@ -231,18 +231,22 @@ public class Player : NetworkBehaviour
         FileLogger.Write("Map sent to all clients");
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
-        RpcMapSync(json);
+        byte[] compressedJson = Compression.CompressString(json);
+        Debug.Log($"Original data size: {Encoding.UTF8.GetBytes(json).Length}, compressed data size: {compressedJson.Length}");
+        RpcMapSync(compressedJson);
     }
     [Command]
     public void CmdRequestMapSync() {
         FileLogger.Write($"Client {connectionToClient.connectionId} requested a map sync");
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
-        TargetMapSync(connectionToClient, json);
+        byte[] compressedJson = Compression.CompressString(json);
+        TargetMapSync(connectionToClient, compressedJson);
     }
     [TargetRpc]
-    public void TargetMapSync(NetworkConnectionToClient target, string json) {
+    public void TargetMapSync(NetworkConnectionToClient target, byte[] bytes) {
         FileLogger.Write($"Map received from host by this client");
+        string json = Compression.DecompressString(bytes);
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
         Block.ToggleSpacers(false);
@@ -250,10 +254,11 @@ public class Player : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void RpcMapSync(string json) {
+    public void RpcMapSync(byte[] bytes) {
         if (Player.IsGM()) {
             return; // GM already has current state
         }
+        string json = Compression.DecompressString(bytes);
         FileLogger.Write($"Map received from host by everyone");
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
