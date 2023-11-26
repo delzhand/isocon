@@ -115,21 +115,18 @@ public class Launcher : MonoBehaviour
 
         // Solo mode selected
         UI.System.Q<Button>("SoloModeButton").RegisterCallback<ClickEvent>((evt) => {
-            UI.ToggleDisplay("StartupOptions", false);
             _connectMode = "solo";
             OpenConfigModal(evt);
         });
 
         // Host mode selected
         UI.System.Q<Button>("HostModeButton").RegisterCallback<ClickEvent>((evt) => {
-            UI.ToggleDisplay("StartupOptions", false);
             _connectMode = "host";
             OpenConfigModal(evt);
         });
 
         // Client mode selected
         UI.System.Q<Button>("ClientModeButton").RegisterCallback<ClickEvent>((evt) => {
-            UI.ToggleDisplay("StartupOptions", false);
             _connectMode = "client";
             OpenConfigModal(evt);
         });      
