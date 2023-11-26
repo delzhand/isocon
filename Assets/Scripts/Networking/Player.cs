@@ -221,7 +221,7 @@ public class Player : NetworkBehaviour
     }
     [ClientRpc]
     public void RpcDiceRoll(DiceTray tray) {
-        DiceSidebar.AddOutcome(tray);
+        DiceRoller.AddOutcome(tray);
     }
     #endregion
 

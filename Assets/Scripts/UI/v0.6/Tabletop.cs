@@ -11,6 +11,7 @@ public class Tabletop : MonoBehaviour
         Modal.Setup();
         MapEdit.Setup();
         TokenMenu.Setup();
+        DiceRoller.Setup();
         ConnectionSetup();
         BottomBarSetup();
         FloatingControlsSetup();
@@ -63,7 +64,9 @@ public class Tabletop : MonoBehaviour
         UI.HoverSetup(root.Q("Connection"));
         UI.HoverSetup(root.Q("FixedView"));
         UI.HoverSetup(root.Q("Indicators"));
+        UI.HoverSetup(root.Q("Dice"));
 
+        root.Q("Dice").RegisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
         root.Q("EditMap").RegisterCallback<ClickEvent>(MapEdit.ToggleEditMode);
         root.Q("Config").RegisterCallback<ClickEvent>(Config.OpenModal);
         root.Q("Indicators").RegisterCallback<ClickEvent>((evt) => {
