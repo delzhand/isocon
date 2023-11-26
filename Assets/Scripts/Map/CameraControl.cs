@@ -36,8 +36,10 @@ public class CameraControl : MonoBehaviour
         UI.System.Q("RotateCCW").RegisterCallback<ClickEvent>(rotateLeft);
         UI.System.Q("RotateCW").RegisterCallback<ClickEvent>(rotateRight);
         UI.System.Q<Slider>("ZoomScale").RegisterValueChangedCallback(zoom);
-        UI.System.Q("Tilt").Q("TiltUp").RegisterCallback<ClickEvent>(tiltUp);
-        UI.System.Q("Tilt").Q("TiltDown").RegisterCallback<ClickEvent>(tiltDown);
+        // UI.System.Q("Tilt").Q("TiltUp").RegisterCallback<ClickEvent>(tiltUp);
+        // UI.System.Q("Tilt").Q("TiltDown").RegisterCallback<ClickEvent>(tiltDown);
+
+        UI.System.Q<Slider>("TiltSlider").RegisterValueChangedCallback(tilt);
 
         UI.System.Q("FixedView").RegisterCallback<ClickEvent>((evt) => {
             if (Overhead) {
@@ -117,30 +119,42 @@ public class CameraControl : MonoBehaviour
         Camera.main.GetComponent<Camera>().orthographicSize = evt.newValue;
     }
 
-    private static void tiltUp(ClickEvent evt) {
-        tilt(-5);
+    private static void tilt(ChangeEvent<float> evt) {
+        zRotation = evt.newValue;
+
+        Quaternion qy = Quaternion.Euler(0f, yRotation, 0f);
+        Quaternion qz = Quaternion.Euler(0f, 0f, zRotation);
+
+        Quaternion q = Quaternion.identity;
+        q *= qy;
+        q *= qz;
+        CameraTransform.rotation = q;
     }
 
-    private static void tiltDown(ClickEvent evt) {
-        tilt(5);
-    }
+    // private static void tiltUp(ClickEvent evt) {
+    //     tilt(-5);
+    // }
 
-    private static void tilt(float value) {
-        if (!IsLocked && !Overhead) {
-            initializeTransition(.25f);
-            zRotation += value;
-            zRotation = Mathf.Clamp(zRotation, -20, 20);
+    // private static void tiltDown(ClickEvent evt) {
+    //     tilt(5);
+    // }
 
-            Quaternion qy = Quaternion.Euler(0f, yRotation, 0f);
-            Quaternion qz = Quaternion.Euler(0f, 0f, zRotation);
+    // private static void tilt(float value) {
+    //     if (!IsLocked && !Overhead) {
+    //         initializeTransition(.25f);
+    //         zRotation += value;
+    //         zRotation = Mathf.Clamp(zRotation, -20, 20);
+
+    //         Quaternion qy = Quaternion.Euler(0f, yRotation, 0f);
+    //         Quaternion qz = Quaternion.Euler(0f, 0f, zRotation);
             
-            Quaternion q = Quaternion.identity;
-            q *= qy;
-            q *= qz;
+    //         Quaternion q = Quaternion.identity;
+    //         q *= qy;
+    //         q *= qz;
 
-            TargetRotation = q;
-        }
-    }
+    //         TargetRotation = q;
+    //     }
+    // }
 
     private static void enableOverhead() {
         Overhead = true;

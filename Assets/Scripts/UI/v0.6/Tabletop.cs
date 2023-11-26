@@ -59,8 +59,6 @@ public class Tabletop : MonoBehaviour
         UI.HoverSetup(root.Q("Config"));
         UI.HoverSetup(root.Q("RotateCCW"));
         UI.HoverSetup(root.Q("RotateCW"));
-        UI.HoverSetup(root.Q("TiltUp"));
-        UI.HoverSetup(root.Q("TiltDown"));
         UI.HoverSetup(root.Q("Connection"));
         UI.HoverSetup(root.Q("FixedView"));
         UI.HoverSetup(root.Q("Indicators"));
