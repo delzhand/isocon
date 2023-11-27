@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ClickMode {
+public enum CursorMode {
     Editing,
     Default,
     Placing,
@@ -13,7 +13,9 @@ public class Cursor : MonoBehaviour
 {  
 
 
-    public static ClickMode Mode = ClickMode.Default;
+    public static CursorMode Mode = CursorMode.Default;
+    private static Ray ray;
+    private static RaycastHit hit;
 
     void Update()
     {
@@ -25,44 +27,72 @@ public class Cursor : MonoBehaviour
             return;
         }
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, 100f)) {
-            if (hit.collider.gameObject) {
-                Block FocusedBlock = hit.collider.GetComponent<Block>();
-                switch (Mode) {
-                    case ClickMode.Default:
-                    case ClickMode.Editing:
-                        if (FocusedBlock) {
-                            if (!FocusedBlock.Focused) {
-                                FocusedBlock.Focus();
-                            }
-                            BlockClicks(FocusedBlock);
-                        }
-                        break;
-                    case ClickMode.Moving:
-                    case ClickMode.Placing:
-                        Block.DehighlightAll();
-                        HighlightSizeArea(FocusedBlock);
-                        BlockClicks(FocusedBlock);
-                        break;
-                }
-            }
+            BlockHitCheck(hit);
+            TokenHitCheck(hit);
         }
         else {
             Block.UnfocusAll();
+            Token.UnfocusAll();
+        }
+    }
+
+    private void BlockHitCheck(RaycastHit hit) {
+        if (!hit.collider.gameObject) {
+            return;
+        }
+
+        Block b = hit.collider.GetComponent<Block>();
+        if (!b) {
+            return;
+        }
+
+        switch (Mode) {
+            case CursorMode.Default:
+            case CursorMode.Editing:
+                if (!b.Focused) {
+                    b.Focus();
+                }
+                BlockClicks(b);
+                break;
+            case CursorMode.Moving:
+            case CursorMode.Placing:
+                Block.DehighlightAll();
+                HighlightSizeArea(b);
+                BlockClicks(b);
+                break;
+        }
+    }
+
+    private void TokenHitCheck(RaycastHit hit) {
+        if (!hit.collider.gameObject) {
+            return;
+        }
+
+        Cutout c = hit.collider.GetComponent<Cutout>();
+        if (!c) {
+            return;
+        }
+
+        Token t = c.GetToken();
+        switch (Mode) {
+            case CursorMode.Default:
+                if (!t.Focused) {
+                    t.Focus();
+                }
+                TokenClicks(t);
+                break;
+            case CursorMode.Moving:
+            case CursorMode.Placing:
+                TokenClicks(t);
+                break;
         }
     }
 
     private void HighlightSizeArea(Block block) {
-        if (block == null) {
-            return;
-        }
-        if (TokenController.GetSelected() == null) {
-            return;
-        }
         block.Highlight();
-        int size = TokenController.GetSelected().Size;
+        int size = Token.GetSelected().Size;
         Block[] neighbors = TerrainController.FindNeighbors(block, size);
         for(int i = 0; i < neighbors.Length; i++) {
             neighbors[i].Highlight();
@@ -78,6 +108,18 @@ public class Cursor : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(1)) {
             block.RightClick();
-        }        
+        }
+    }
+
+    private void TokenClicks(Token token) {
+        if (token == null) {
+            return;
+        }
+        if (Input.GetMouseButtonDown(0)) {
+            token.LeftClick();
+        }
+        if (Input.GetMouseButtonDown(1)) {
+            token.RightClick();
+        }
     }
 }

@@ -39,7 +39,7 @@ public class Config
         confirm.RegisterCallback<ClickEvent>(CloseModal);
         confirm.AddToClassList("preferred");
 
-        Modal.Reset("Open Map");
+        Modal.Reset("Configuration");
         Modal.AddContents(dataPathField);
         Modal.AddContents(uiScaleField);
         Modal.AddButton(confirm);

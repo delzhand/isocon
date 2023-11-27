@@ -111,10 +111,10 @@ public class Maleghast : GameSystem
         root.Q<Toggle>("e_Loaded").SetValueWithoutNotify(Data.Loaded);
     }
 
-    public override void UpdateSelectedTokenPanel(GameObject data)
-    {
-        data.GetComponent<MaleghastTokenData>().UpdateSelectedTokenPanel();
-    }
+    // public override void UpdateTokenPanel(GameObject data)
+    // {
+    //     data.GetComponent<MaleghastTokenData>().UpdateSelectedTokenPanel();
+    // }
 
     public override string GetEditPanelName() {
         return "MaleghastEditPanel";

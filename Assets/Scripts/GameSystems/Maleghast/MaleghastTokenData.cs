@@ -567,9 +567,9 @@ public class MaleghastTokenData : TokenData
     }
 
     public void UpdateSelectedTokenPanel() {
-        if (!TokenController.IsSelected(this)) {
+        // if (!TokenController.IsSelected(this)) {
             return;
-        }
+        // }
 
         VisualElement panel = UI.System.Q("SelectedTokenPanel");
 

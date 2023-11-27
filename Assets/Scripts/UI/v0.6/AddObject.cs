@@ -35,7 +35,7 @@ public class AddObject
         cancel.text = "Cancel";
         cancel.RegisterCallback<ClickEvent>(CloseModal);
 
-        Modal.Reset("Open Map");
+        Modal.Reset("Add Object");
         Modal.AddContents(imageSearchField);
         Modal.AddContents(height);
         Modal.AddContents(blockEffects);

@@ -33,26 +33,26 @@ public class Icon_v1_5 : GameSystem
     }
 
     public override void GameDataSetValue(string label, int value) {
-        switch (label) {
-            case "TurnNumber":
-                TurnNumber = value;
-                UI.System.Q<Label>("TurnNumber").text = $"Turn {TurnNumber}";
-                foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
-                    Icon_v1_5TokenData data = g.GetComponent<Icon_v1_5TokenData>();
-                    if (data.CheckCondition("TurnEnded")) {
-                        data.Change("Status", "Turn Ended|neu");
-                    }
-                }
-                break;
-            case "PartyResolve":
-                PartyResolve = value;
-                Token selected = TokenController.GetSelected();
-                if (selected != null) {
-                    TokenData selectedData = selected.onlineDataObject.GetComponent<TokenData>();
-                    Player.Self().CmdRequestTokenDataSetValue(selectedData, "PartyResolve", PartyResolve);
-                }
-                break;
-        }
+        // switch (label) {
+        //     case "TurnNumber":
+        //         TurnNumber = value;
+        //         UI.System.Q<Label>("TurnNumber").text = $"Turn {TurnNumber}";
+        //         foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
+        //             Icon_v1_5TokenData data = g.GetComponent<Icon_v1_5TokenData>();
+        //             if (data.CheckCondition("TurnEnded")) {
+        //                 data.Change("Status", "Turn Ended|neu");
+        //             }
+        //         }
+        //         break;
+        //     case "PartyResolve":
+        //         PartyResolve = value;
+        //         Token selected = TokenController.GetSelected();
+        //         if (selected != null) {
+        //             TokenData selectedData = selected.onlineDataObject.GetComponent<TokenData>();
+        //             Player.Self().CmdRequestTokenDataSetValue(selectedData, "PartyResolve", PartyResolve);
+        //         }
+        //         break;
+        // }
     }
 
     public override Texture2D GetGraphic(string json) {
@@ -112,9 +112,9 @@ public class Icon_v1_5 : GameSystem
         UI.System.Q<DropdownField>("e_Stance").SetValueWithoutNotify(Data.Stance);
     }
 
-    public override void UpdateSelectedTokenPanel(GameObject data)
+    public override void UpdateTokenPanel(GameObject data, string elementName)
     {
-        data.GetComponent<Icon_v1_5TokenData>().UpdateSelectedTokenPanel();
+        // data.GetComponent<Icon_v1_5TokenData>().UpdateSelectedTokenPanel();
     }
 
     public override string GetEditPanelName()

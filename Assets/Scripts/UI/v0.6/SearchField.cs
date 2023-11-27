@@ -6,9 +6,7 @@ using UnityEngine.UIElements;
 public class SearchField
 {
     public static VisualElement Create(string[] options, string title) {
-
-        VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/SearchInput");
-        VisualElement element = template.Instantiate();
+        VisualElement element = UI.CreateFromTemplate("UITemplates/SearchInput");
         
         if (title.Length == 0) {
             element.AddToClassList("no-title");

@@ -136,22 +136,20 @@ public class Launcher : MonoBehaviour
         Modal.Reset("Configure Solo Mode");
 
         string name = PlayerPrefs.GetString("PlayerName", "New Player");
-        TextField nameField = new TextField("Player Name");
-        nameField.value = name;
-        nameField.RegisterValueChangedCallback<string>((evt) => {
+        Modal.AddTextField("PlayerName", "Player Name", name, (evt) => {
             PlayerPrefs.SetString("PlayerName", evt.newValue);
         });
-        Modal.AddContents(nameField);
 
         if (_connectMode == "solo" || _connectMode == "host") {
             string system = PlayerPrefs.GetString("System", "Generic");
-            DropdownField systemField = new DropdownField("Game System");
-            systemField.choices = new string[]{"Generic", "ICON 1.5", "Maleghast"}.ToList<string>();
-            systemField.value = system; 
-            systemField.RegisterValueChangedCallback<string>((evt) => {
+            Modal.AddDropdownField("GameSystem", "Game System", system, new string[]{"Generic", "ICON 1.5", "Maleghast"}, (evt) => {
                 PlayerPrefs.SetString("System", evt.newValue);
-            });            
-            Modal.AddContents(systemField);
+            });
+
+            string gridType = PlayerPrefs.GetString("Grid", "Square");
+            Modal.AddDropdownField("GridType", "Grid Type", gridType, new string[]{"Square"}, (evt) => {
+                PlayerPrefs.SetString("Grid", evt.newValue);
+            });
         }
 
         if (_connectMode == "host") {
@@ -187,6 +185,9 @@ public class Launcher : MonoBehaviour
     }
 
     private void ConfirmConfig(ClickEvent evt) {
+        string gridType = PlayerPrefs.GetString("Grid", "Square");
+        TerrainController.GridType = gridType;
+
         switch (_connectMode) {
             case "solo":
                 GameSystem.Set(PlayerPrefs.GetString("System", "Generic"));

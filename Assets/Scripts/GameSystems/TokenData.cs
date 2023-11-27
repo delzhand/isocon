@@ -143,8 +143,7 @@ public class TokenData : NetworkBehaviour
         Element.Q("Portrait").style.height = height;
 
         Element.RegisterCallback<ClickEvent>((evt) => {
-            Token t = TokenObject.GetComponent<Token>();
-            TokenController.TokenClick(t);
+            TokenObject.GetComponent<Token>().LeftClick();
         });
 
         // Add it to the UI
@@ -188,9 +187,7 @@ public class TokenData : NetworkBehaviour
                 Destroy(t.TokenObject);
                 Destroy(t);
                 Destroy(g);
-                TokenController.Deselect();
-
-
+                // TokenController.Deselect();
             }
         }
 

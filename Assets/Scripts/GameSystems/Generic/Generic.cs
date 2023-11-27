@@ -15,6 +15,26 @@ public class Generic : GameSystem
         return GenericTokenDataRaw.ToJson();
     }
 
+    public override MenuItem[] GetTokenMenuItems(TokenData data)
+    {
+        List<MenuItem> items = new();
+        if (!data.OnField) {
+            items.Add(new MenuItem("Place", "Place", Test));
+        }
+        else {
+            items.Add(new MenuItem("Remove", "Remove", Test));
+            items.Add(new MenuItem("Move", "Move", Test));
+        }
+
+        items.Add(new MenuItem("Delete", "Delete", Test));
+
+        return items.ToArray();
+    }
+
+    public void Test(ClickEvent evt) {
+
+    }
+
     public override void Setup()
     {
         // Search field for tile effects
@@ -42,9 +62,12 @@ public class Generic : GameSystem
         return Instantiate(Resources.Load<GameObject>("Prefabs/GenericTokenData"));
     }
 
-    public override void UpdateSelectedTokenPanel(GameObject data)
+    public override void UpdateTokenPanel(GameObject data, string elementName)
     {
-        data.GetComponent<GenericTokenData>().UpdateSelectedTokenPanel();
+        if (data == null) {
+            return;
+        }
+        data.GetComponent<GenericTokenData>().UpdateTokenPanel(elementName);
     }
 
     public override string[] GetEffectList()

@@ -18,7 +18,7 @@ public class AddTokenPanel : MonoBehaviour
         UI.System.Q<Button>("AddTokenButton").RegisterCallback<ClickEvent>((evt) => {
             UpdateGraphicsList();
             UI.ToggleDisplay("AddTokenPanel");
-            TokenController.Deselect();
+            // TokenController.Deselect();
         });
 
         UI.System.Q("AddTokenCreateButton").RegisterCallback<ClickEvent>(CreateToken);

@@ -10,7 +10,8 @@ public class Tabletop : MonoBehaviour
     {
         Modal.Setup();
         MapEdit.Setup();
-        TokenMenu.Setup();
+        // TokenMenu.Setup();
+        SelectionMenu.Setup();
         DiceRoller.Setup();
         ConnectionSetup();
         BottomBarSetup();
@@ -21,6 +22,10 @@ public class Tabletop : MonoBehaviour
     {
         UI.ToggleDisplay("Tabletop", NetworkClient.isConnected);
         TileShare.Offsets();
+        
+        GameSystem.Current().UpdateTokenPanel(Token.GetSelectedData(), "SelectedTokenPanel");
+        GameSystem.Current().UpdateTokenPanel(Token.GetFocusedData(), "FocusedTokenPanel");
+
     }
 
     public void ConnectAsClient() {

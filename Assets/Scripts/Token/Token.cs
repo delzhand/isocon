@@ -22,10 +22,20 @@ public class Token : MonoBehaviour
     public float ShareOffsetX;
     public float ShareOffsetY;
 
+    public Token LastFocused;
+
+    public bool Selected = false;
+    public bool Focused = false;
+
     void Update()
     {
         alignToCamera();
         Offset();
+
+        if (Focused && this != LastFocused) {
+            Unfocus();
+        }
+
     }
 
     private void alignToCamera() {
@@ -55,74 +65,104 @@ public class Token : MonoBehaviour
         transform.Find("Offset/Avatar/Cutout/Cutout Quad").transform.localScale = new Vector3(aspectRatio, 1f, 1f);
     }
 
-    // public void BlockClick(Block block) {
-    //     Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
-    //     switch (TokenMenu.ActiveMenuItem) {
-    //         case "Placing":
-    //             Player.Self().CmdRequestPlaceToken(onlineDataObject, v);
-    //             TokenMenu.DonePlacing();
-    //             SetNeutral();
-    //             break;
-    //         case "Moving":
-    //             Player.Self().CmdMoveToken(onlineDataObject, v, false);
-    //             break;
-    //     }
-    // }
+    public void LeftClick() {
+        if (Selected) {
+            Deselect();
+        }
+        else {
+            Select();
+            // TokenMenu.ShowMenu(this.GetComponent<TokenData>());
+        }
+    }
+
+    public void RightClick() {
+
+    }
 
     public void Place(Block block) {
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
         Player.Self().CmdRequestPlaceToken(onlineDataObject, v);
-        TokenMenu.DonePlacing();
+        // TokenMenu.DonePlacing();
         SetNeutral();
     }
 
     public void Move(Block block) {
-        // // Find other tokens on this block
-        // Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
-        // List<Token> sharing = TokensNearby(v);
-        // Debug.Log(sharing.Count);
-        // if (sharing.Count == 0) {
-        //     // Nobody else at tile
-        //     shareOffsetX = 0;
-        //     shareOffsetY = 0;
-        //     transform.Find("Base").transform.localPosition = Vector3.zero;
-        //     transform.Find("Offset").transform.localPosition = Vector3.zero;
-        //     Player.Self().CmdMoveToken(onlineDataObject, v, false);
-        // }
-        // else {
-        //     sharing.Add(this);
-        //     float[,] offsets = {
-        //         {-.33f, 0}, {.33f, 0},
-        //         {0, -.33f}, {0, .33f}
-        //     };
-        //     for (int i = 0; i < sharing.Count; i++) {
-        //         sharing[i].shareOffsetX = offsets[i, 0];
-        //         sharing[i].shareOffsetY = offsets[i, 1];
-        //     }
-        //     Player.Self().CmdMoveToken(onlineDataObject, v, false);
-        // }
-
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
         Player.Self().CmdMoveToken(onlineDataObject, v, false);
     }
 
-    public void Select(bool deselectOthers = false) {
-        if (deselectOthers) {
-            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Token")) {
-                g.GetComponent<Token>().Deselect();
-            }
-        }
+    public void Select() {
+        DeselectAll();
+        Selected = true;
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1); // worldspace token selected material
         UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().Element.Q("Selected"), true); // selected indicator in unit bar
         UI.ToggleDisplay("SelectedTokenPanel", true); // selected token panel
-        GameSystem.Current().UpdateSelectedTokenPanel(onlineDataObject);
         SetNeutral();
     }
 
     public void Deselect() {
+        Selected = false;
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
         UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().Element.Q("Selected"), false);
         UI.ToggleDisplay("SelectedTokenPanel", false);
+    }
+
+    public static void DeselectAll() {
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Token")) {
+            g.GetComponent<Token>().Deselect();
+        }
+    }
+
+    public static Token GetSelected() {
+        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
+        for (int i = 0; i < tokens.Length; i++) {
+            if (tokens[i].GetComponent<Token>().Selected) {
+                return tokens[i].GetComponent<Token>();
+            }
+        }
+        return null;
+    }
+
+    public static GameObject GetSelectedData() {
+        Token selected = GetSelected();
+        if (selected != null && selected.onlineDataObject != null) {
+            return selected.onlineDataObject;
+        }
+        return null;
+    }
+
+    public void Focus() {
+        UnfocusAll();
+        Focused = true;
+    }
+
+    public void Unfocus() {
+        Focused = false;
+    }
+
+    public static Token GetFocused() {
+        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
+        for (int i = 0; i < tokens.Length; i++) {
+            if (tokens[i].GetComponent<Token>().Focused) {
+                return tokens[i].GetComponent<Token>();
+            }
+        }
+        return null;
+    }
+
+    public static GameObject GetFocusedData() {
+        Token focused = GetFocused();
+        if (focused != null && focused.onlineDataObject != null) {
+            return focused.onlineDataObject;
+        }
+        return null;
+    }
+
+    public static void UnfocusAll() {
+        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
+        for (int i = 0; i < tokens.Length; i++) {
+            tokens[i].GetComponent<Token>().Unfocus();
+        }        
     }
 
     public void SetPlacing() {
@@ -143,4 +183,5 @@ public class Token : MonoBehaviour
     public void SetDefeated(bool defeated) {
         transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetInt("_Dead", defeated ? 1 : 0);
     }
+    
 }

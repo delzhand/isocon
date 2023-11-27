@@ -158,4 +158,10 @@ public class UI : MonoBehaviour
             e.RemoveFromClassList("hover");
         });
     }
+
+    public static VisualElement CreateFromTemplate(string name) {
+        VisualTreeAsset template = Resources.Load<VisualTreeAsset>(name);
+        VisualElement element = template.Instantiate();
+        return element;
+    }
 }

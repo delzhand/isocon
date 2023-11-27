@@ -1,30 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Cutout : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    void OnMouseDown() {
-        if (UI.ClicksSuspended) {
-            return;
+    public Token GetToken() {
+        Transform t = transform;
+        while (t.parent != null)
+        {
+            if (t.parent.tag == tag)
+            {
+                return t.GetComponent<Token>();
+            }
+            t = t.parent.transform;
         }
-        if (TerrainController.Editing) {
-            return;
-        }
-
-        Token t = GetComponentInParent<Token>();
-        TokenController.TokenClick(t);
+        throw new Exception("Could not find parent token.");
     }
 }

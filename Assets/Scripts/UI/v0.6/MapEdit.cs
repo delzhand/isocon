@@ -32,7 +32,7 @@ public class MapEdit
     }
 
     public static void ToggleEditMode(ClickEvent evt) {
-        if (Cursor.Mode != ClickMode.Editing) {
+        if (Cursor.Mode != CursorMode.Editing) {
             StartEditing();
         }
         else {
@@ -43,16 +43,18 @@ public class MapEdit
     private static void StartEditing() {
         UI.ToggleDisplay("ToolsPanel", true);
         Block.DeselectAll();
-        Cursor.Mode = ClickMode.Editing;
+        Cursor.Mode = CursorMode.Editing;
         UI.ToggleActiveClass(UI.System.Q("FloatingControls").Q("EditMap"), true);
+        UI.ToggleDisplay("BottomBar", false);
     }
 
     private static void EndEditing() {
-        Cursor.Mode = ClickMode.Default;
+        Cursor.Mode = CursorMode.Default;
         UI.ToggleDisplay("ToolsPanel", false);
         State.SetCurrentJson();
         Player.Self().CmdMapSync();
         UI.ToggleActiveClass(UI.System.Q("FloatingControls").Q("EditMap"), false);
+        UI.ToggleDisplay("BottomBar", true);
     }
 
     private static void ResetConfirm(ClickEvent evt) {

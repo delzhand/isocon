@@ -19,7 +19,7 @@ public class AddTerrainEffect
         cancel.text = "Cancel";
         cancel.RegisterCallback<ClickEvent>(CloseModal);
 
-        Modal.Reset("Open Map");
+        Modal.Reset("Add Terrain Effect");
         Modal.AddContents(searchField);
         Modal.AddButton(confirm);
         Modal.AddButton(cancel);

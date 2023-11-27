@@ -180,9 +180,9 @@ public class Icon_v1_5TokenData : TokenData
     }
 
     public void UpdateSelectedTokenPanel() {
-        if (!TokenController.IsSelected(this)) {
+        // if (!TokenController.IsSelected(this)) {
             return;
-        }
+        // }
 
         VisualElement panel = UI.System.Q("SelectedTokenPanel");
 

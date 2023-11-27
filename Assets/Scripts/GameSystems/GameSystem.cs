@@ -39,6 +39,10 @@ public class GameSystem : MonoBehaviour
         throw new NotImplementedException();
     }
 
+    public virtual MenuItem[] GetTokenMenuItems(TokenData data) {
+        throw new NotImplementedException();
+    }
+
     public virtual void TokenDataSetValue(TokenData data, string label, int value)
     {
         throw new NotImplementedException();
@@ -64,7 +68,7 @@ public class GameSystem : MonoBehaviour
         throw new NotImplementedException();
     }
 
-    public virtual void UpdateSelectedTokenPanel(GameObject data) {
+    public virtual void UpdateTokenPanel(GameObject data, string elementName) {
         throw new NotImplementedException();
     }
 

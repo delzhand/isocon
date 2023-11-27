@@ -79,12 +79,8 @@ public class GenericTokenData : TokenData
         return Size;
     }
 
-    public void UpdateSelectedTokenPanel() {
-        if (!TokenController.IsSelected(this)) {
-            return;
-        }
-
-        VisualElement panel = UI.System.Q("SelectedTokenPanel");
+    public void UpdateTokenPanel(string elementName) {
+        VisualElement panel = UI.System.Q(elementName);
         panel.Q("Portrait").style.backgroundImage = Graphic;
         panel.Q<Label>("Name").text = Name;
     }

@@ -8,6 +8,8 @@ using TMPro;
 
 public class TerrainController : MonoBehaviour
 {
+    public static string GridType = "Square";
+    
     private List<Label> identifierLabels = new List<Label>();
 
     public static bool Indicators = false;
@@ -140,6 +142,9 @@ public class TerrainController : MonoBehaviour
                         column.name = columnName;
                         column.transform.parent = map.transform;
                         column.transform.localPosition = new Vector3(x, 0, y);
+                        if (GridType == "Hex") {
+                            column.transform.localPosition = new Vector3(x * 0.866f, 0, y * 1.5f);
+                        }
                         column.transform.localScale = Vector3.one;
                         column.AddComponent<Column>().Set(x, y);
                     }
@@ -430,7 +435,7 @@ public class TerrainController : MonoBehaviour
         Block block = null;
 
         Color color = Color.white;
-        if (selected.Length > 0 && Cursor.Mode != ClickMode.Editing) {
+        if (selected.Length > 0 && Cursor.Mode != CursorMode.Editing) {
             color = ColorUtility.ColorFromHex("#9C7A19");
             UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), true);
             UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), true);
