@@ -33,6 +33,11 @@ public class SelectionMenu
         menu.Q("Contents").Clear();
     }
 
+    public static void Hide() {
+        VisualElement menu = Find();
+        UI.ToggleDisplay(menu, false);
+    }
+
     public static void AddItem(string name, string label, Action<ClickEvent> clickHandler) {
         VisualElement menu = Find();
         VisualElement element = UI.CreateFromTemplate("UITemplates/MenuItem");

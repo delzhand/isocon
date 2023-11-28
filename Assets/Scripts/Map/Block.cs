@@ -175,11 +175,10 @@ public class Block : MonoBehaviour
                 Select();
                 break;
             case CursorMode.Placing:
-                Token.GetSelected().Place(this);
-                Cursor.Mode = CursorMode.Default;
+                TokenMenu.DoPlace(this);
                 break;
             case CursorMode.Moving:
-                Token.GetSelected().Move(this);
+                TokenMenu.DoMove(this);
                 break;
         }
     }

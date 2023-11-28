@@ -71,7 +71,7 @@ public class GenericTokenData : TokenData
         MaxHP = raw.MaxHP;
         GraphicHash = raw.GraphicHash;
         Size = raw.Size;
-        // CurrentHP = raw.CurrentHP;
+        CurrentHP = MaxHP;
     }
 
     public override int GetSize()

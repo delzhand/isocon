@@ -48,7 +48,7 @@ public class Player : NetworkBehaviour
                     Vector3 position = objs[i].transform.position;
                     OfflineTokenData otd = objs[i].GetComponent<OfflineTokenData>();
                     Destroy(otd.TokenObject);
-                    Player.Self().CmdCreateTokenData(otd.Json, position);
+                    Player.Self().CmdCreateTokenData(otd.Json);
                 }
             }
             else {
@@ -113,16 +113,16 @@ public class Player : NetworkBehaviour
 
     #region Create Token
     [Command]
-    public void CmdCreateTokenData(string json, Vector3 position) {
+    public void CmdCreateTokenData(string json) {
         FileLogger.Write($"Client {connectionToClient.connectionId} created a token");
         GameObject g = GameSystem.Current().GetDataPrefab();
         NetworkServer.Spawn(g); 
-        RpcInitTokenData(g, json, Guid.NewGuid().ToString(), position);
+        RpcInitTokenData(g, json, Guid.NewGuid().ToString());
     }
     [ClientRpc]
-    public void RpcInitTokenData(GameObject g, string json, string id, Vector3 position) {
+    public void RpcInitTokenData(GameObject g, string json, string id) {
         FileLogger.Write($"A token was initialized");
-        g.transform.position = position;
+        g.transform.position = new Vector3(-100, 0, -100);
         GameSystem.Current().TokenDataSetup(g, json, id);
     }
     #endregion

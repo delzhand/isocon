@@ -31,11 +31,11 @@ public class Launcher : MonoBehaviour
         // Debug
         UI.System.Q("Debug").RegisterCallback<ClickEvent>((evt) => {
             string json = "{\"Name\":\"Ada\",\"CurrentHP\":0,\"MaxHP\":100,\"GraphicHash\":\"df6ee698a739576676d5f99c113a61fecdd1f2a66cc3fd7fc1b8ac21f3ba4067\",\"Size\":1}";
-            Player.Self().CmdCreateTokenData(json, new Vector3(3, .25f, 3));
+            Player.Self().CmdCreateTokenData(json);
             json = "{\"Name\":\"Graddes\",\"CurrentHP\":0,\"MaxHP\":100,\"GraphicHash\":\"82d39a85a409a2f54c4799049869001e216495926ae028bb531ec6cbce100b6b\",\"Size\":2}";
-            Player.Self().CmdCreateTokenData(json, new Vector3(3, .25f, 3));
+            Player.Self().CmdCreateTokenData(json);
             json = "{\"Name\":\"Sae\",\"CurrentHP\":0,\"MaxHP\":100,\"GraphicHash\":\"7451fc67cb845c64f81d0918baeaf5829d7821790cf98b388b364d18a893e2fe\",\"Size\":1}";
-            Player.Self().CmdCreateTokenData(json, new Vector3(3, .25f, 3));
+            Player.Self().CmdCreateTokenData(json);
         
             Toast.Add("Debug function 1 executed");
         });

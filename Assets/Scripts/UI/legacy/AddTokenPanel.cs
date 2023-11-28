@@ -42,7 +42,7 @@ public class AddTokenPanel : MonoBehaviour
 
     private void CreateToken(ClickEvent evt) {
         string json = GameSystem.Current().GetTokenData();
-        Player.Self().CmdCreateTokenData(json, new Vector3(3, .25f, 3));
+        Player.Self().CmdCreateTokenData(json);
         UI.ToggleDisplay("AddTokenPanel", false);
     }
 

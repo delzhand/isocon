@@ -3,13 +3,10 @@ using UnityEngine.UIElements;
 
 public class TokenMenu
 {
-    // public static TokenData Data;
-    // private static string ActiveMenuItem;
-
-    public static void ShowMenu(TokenData data) {
+    public static void ShowMenu() {
         Block.DeselectAll();
         Block.DehighlightAll();
-        
+        TokenData data = Token.GetSelected().onlineDataObject.GetComponent<TokenData>();
         MenuItem[] items = GameSystem.Current().GetTokenMenuItems(data);
         SelectionMenu.Reset("Token Menu");
         foreach (MenuItem m in items) {
@@ -17,45 +14,39 @@ public class TokenMenu
         }
     }
 
-    // public static void Setup() {
-    //     UI.SetBlocking(UI.System, new string[]{"UnitMenu"});
-    //     MenuItemSetup("PlaceMenuItem", Place);
-    //     MenuItemSetup("RemoveMenuItem", Remove);
-    //     MenuItemSetup("MoveMenuItem", Move);
-    //     // MenuItemSetup("EditMenuItem", Edit);
-    //     MenuItemSetup("EndTurnMenuItem", EndTurn);
-    //     MenuItemSetup("DeleteMenuItem", Delete);
-    //     // MenuItemSetup("AlterHPMenuItem", AlterHp);
-    // }
+    public static void StartPlace(ClickEvent evt) {
+        Block.DeselectAll();
+        Block.UnfocusAll();
+        Cursor.Mode = CursorMode.Placing;
+        Token.GetSelected().SetPlacing();
+        SelectionMenu.Find().Q("Place").AddToClassList("active");
+    }
 
-    // private static void MenuItemSetup(string name, Action<ClickEvent> clickHandler) {
-    //     UI.System.Q(name).RegisterCallback<MouseEnterEvent>((evt) => {
-    //         UI.System.Q(name).AddToClassList("hover");
-    //     });
-    //     UI.System.Q(name).RegisterCallback<MouseLeaveEvent>((evt) => {
-    //         UI.System.Q(name).RemoveFromClassList("hover");
-    //     });
-    //     UI.System.Q(name).RegisterCallback<ClickEvent>((evt) => {
-    //         clickHandler.Invoke(evt);
-    //     });
-    // }
+    public static void DoPlace(Block b) {
+        Token.GetSelected().Place(b);
+        EndPlace();
+    }
 
-    private static void Place(ClickEvent evt) {
-        // ClearCurrentActive();
-        // if (ActiveMenuItem != "Placing") {
-        //     ActiveMenuItem = "Placing";
-            Block.DeselectAll();
-            Block.UnfocusAll();
-            Cursor.Mode = CursorMode.Placing;
-            // Data.TokenObject.GetComponent<Token>().SetPlacing();
-            // UI.System.Q("PlaceMenuItem").AddToClassList("active");
-            // return;
-        // }
-        // else {
-        //     ActiveMenuItem = "";
-        //     Cursor.Mode = ClickMode.Default;
-        // }
-        // Data.TokenObject.GetComponent<Token>().SetNeutral();
+    public static void EndPlace() {
+        Block.DehighlightAll();
+        ShowMenu();
+    }
+
+    public static void StartMove(ClickEvent evt) {
+        Block.DeselectAll();
+        Block.UnfocusAll();
+        Cursor.Mode = CursorMode.Moving;
+        Token.GetSelected().SetMoving();
+        SelectionMenu.Find().Q("Move").AddToClassList("active");
+    }
+
+    public static void DoMove(Block b) {
+        Token.GetSelected().Move(b);
+    }
+
+    public static void EndMoving() {
+        Block.DehighlightAll();
+        ShowMenu();
     }
 
     // private static void Move(ClickEvent evt) {

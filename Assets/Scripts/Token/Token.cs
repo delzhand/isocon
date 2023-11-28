@@ -71,7 +71,6 @@ public class Token : MonoBehaviour
         }
         else {
             Select();
-            // TokenMenu.ShowMenu(this.GetComponent<TokenData>());
         }
     }
 
@@ -82,7 +81,7 @@ public class Token : MonoBehaviour
     public void Place(Block block) {
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
         Player.Self().CmdRequestPlaceToken(onlineDataObject, v);
-        // TokenMenu.DonePlacing();
+        Cursor.Mode = CursorMode.Default;
         SetNeutral();
     }
 
@@ -98,6 +97,7 @@ public class Token : MonoBehaviour
         UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().Element.Q("Selected"), true); // selected indicator in unit bar
         UI.ToggleDisplay("SelectedTokenPanel", true); // selected token panel
         SetNeutral();
+        TokenMenu.ShowMenu();
     }
 
     public void Deselect() {
@@ -105,6 +105,8 @@ public class Token : MonoBehaviour
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
         UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().Element.Q("Selected"), false);
         UI.ToggleDisplay("SelectedTokenPanel", false);
+        SelectionMenu.Hide();
+        Cursor.Mode = CursorMode.Default;
     }
 
     public static void DeselectAll() {
@@ -132,7 +134,7 @@ public class Token : MonoBehaviour
     }
 
     public void Focus() {
-        UnfocusAll();
+        LastFocused = this;
         Focused = true;
     }
 
@@ -144,6 +146,7 @@ public class Token : MonoBehaviour
         GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
         for (int i = 0; i < tokens.Length; i++) {
             if (tokens[i].GetComponent<Token>().Focused) {
+
                 return tokens[i].GetComponent<Token>();
             }
         }

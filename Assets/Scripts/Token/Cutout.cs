@@ -9,9 +9,9 @@ public class Cutout : MonoBehaviour
         Transform t = transform;
         while (t.parent != null)
         {
-            if (t.parent.tag == tag)
+            if (t.parent.tag == "Token")
             {
-                return t.GetComponent<Token>();
+                return t.parent.GetComponent<Token>();
             }
             t = t.parent.transform;
         }

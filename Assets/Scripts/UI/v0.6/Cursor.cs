@@ -40,11 +40,13 @@ public class Cursor : MonoBehaviour
 
     private void BlockHitCheck(RaycastHit hit) {
         if (!hit.collider.gameObject) {
+            Block.UnfocusAll();
             return;
         }
 
         Block b = hit.collider.GetComponent<Block>();
         if (!b) {
+            Block.UnfocusAll();
             return;
         }
 
@@ -67,11 +69,13 @@ public class Cursor : MonoBehaviour
 
     private void TokenHitCheck(RaycastHit hit) {
         if (!hit.collider.gameObject) {
+            Token.UnfocusAll();
             return;
         }
 
         Cutout c = hit.collider.GetComponent<Cutout>();
         if (!c) {
+            Token.UnfocusAll();
             return;
         }
 

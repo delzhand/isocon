@@ -22,9 +22,11 @@ public class Tabletop : MonoBehaviour
     {
         UI.ToggleDisplay("Tabletop", NetworkClient.isConnected);
         TileShare.Offsets();
-        
-        GameSystem.Current().UpdateTokenPanel(Token.GetSelectedData(), "SelectedTokenPanel");
-        GameSystem.Current().UpdateTokenPanel(Token.GetFocusedData(), "FocusedTokenPanel");
+
+        if (GameSystem.Current()) {
+            GameSystem.Current().UpdateTokenPanel(Token.GetSelectedData(), "SelectedTokenPanel");
+            GameSystem.Current().UpdateTokenPanel(Token.GetFocusedData(), "FocusedTokenPanel");
+        }
 
     }
 

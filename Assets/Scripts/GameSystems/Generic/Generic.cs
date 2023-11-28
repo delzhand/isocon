@@ -19,11 +19,11 @@ public class Generic : GameSystem
     {
         List<MenuItem> items = new();
         if (!data.OnField) {
-            items.Add(new MenuItem("Place", "Place", Test));
+            items.Add(new MenuItem("Place", "Place", TokenMenu.StartPlace));
         }
         else {
             items.Add(new MenuItem("Remove", "Remove", Test));
-            items.Add(new MenuItem("Move", "Move", Test));
+            items.Add(new MenuItem("Move", "Move", TokenMenu.StartMove));
         }
 
         items.Add(new MenuItem("Delete", "Delete", Test));
@@ -65,8 +65,10 @@ public class Generic : GameSystem
     public override void UpdateTokenPanel(GameObject data, string elementName)
     {
         if (data == null) {
+            UI.ToggleDisplay(elementName, false);
             return;
         }
+        UI.ToggleDisplay(elementName, true);
         data.GetComponent<GenericTokenData>().UpdateTokenPanel(elementName);
     }
 
