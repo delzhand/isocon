@@ -18,6 +18,8 @@ public struct MenuItem {
 
 public class SelectionMenu
 {
+    private static string ActiveItem;
+
     public static void Setup() {
         UI.SetBlocking(UI.System, "SelectionMenu");
     }
@@ -48,5 +50,19 @@ public class SelectionMenu
         });
         UI.HoverSetup(element);
         menu.Q("Contents").Add(element);
+    }
+
+    public static void ActivateItem(string name) {
+        ActiveItem = name;
+        SelectionMenu.Find().Q(ActiveItem).AddToClassList("active");
+    }
+
+    public static void DeactivateItem() {
+        SelectionMenu.Find().Q(ActiveItem).RemoveFromClassList("active");
+        ActiveItem = "";
+    }
+
+    public static bool IsActive(string name) {
+        return ActiveItem == name;
     }
 }

@@ -28,6 +28,7 @@ public class Block : MonoBehaviour
     private Color PaintColorSide;
     private Material PaintMaterialTop;
     private Material PaintMaterialSide;
+    private Material markerMaterial;
 
     void Awake() {
         if (materials.Count == 0) {
@@ -222,6 +223,17 @@ public class Block : MonoBehaviour
         return selected.ToArray();
     }
 
+    public static Block[] GetFocused() {
+        List<Block> focused = new();
+        GameObject[] gos = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < gos.Length; i++) {
+            Block block = gos[i].GetComponent<Block>();
+            if (block.Focused) {
+                focused.Add(block);
+            }
+        }
+        return focused.ToArray();
+    }
 
     
     public static string GetAlpha(int x) {
@@ -288,17 +300,15 @@ public class Block : MonoBehaviour
     }
 
     public static void DeselectAll() {
-        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < blocks.Length; i++) {
-            blocks[i].GetComponent<Block>().Deselect();
+        foreach (Block b in GetSelected()) {
+            b.Deselect();
         }
     }
 
     public static void UnfocusAll() {
-        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < blocks.Length; i++) {
-            blocks[i].GetComponent<Block>().Unfocus();
-        }        
+        foreach (Block b in GetFocused()) {
+            b.Unfocus();
+        }
     }
 
     public static List<GameObject> GetAllSelected() {
@@ -405,7 +415,9 @@ public class Block : MonoBehaviour
         }
 
         // Markers
-        Material markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));
+        if (markerMaterial == null) {
+            markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));
+        }
         if (GameSystem.Current().HasEffect("Blocked", effects)) {
             markerMaterial.SetInt("_Impassable", 1);
         }

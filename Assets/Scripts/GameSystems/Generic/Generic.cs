@@ -19,11 +19,11 @@ public class Generic : GameSystem
     {
         List<MenuItem> items = new();
         if (!data.OnField) {
-            items.Add(new MenuItem("Place", "Place", TokenMenu.StartPlace));
+            items.Add(new MenuItem("Place", "Place", TokenMenu.ClickPlace));
         }
         else {
             items.Add(new MenuItem("Remove", "Remove", Test));
-            items.Add(new MenuItem("Move", "Move", TokenMenu.StartMove));
+            items.Add(new MenuItem("Move", "Move", TokenMenu.ClickMove));
         }
 
         items.Add(new MenuItem("Delete", "Delete", Test));

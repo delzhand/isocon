@@ -14,7 +14,11 @@ public class TokenMenu
         }
     }
 
-    public static void StartPlace(ClickEvent evt) {
+    public static void ClickPlace(ClickEvent evt) {
+        if (SelectionMenu.IsActive("Place")) {
+            EndCursorMode();
+            return;
+        }
         Block.DeselectAll();
         Block.UnfocusAll();
         Cursor.Mode = CursorMode.Placing;
@@ -24,15 +28,14 @@ public class TokenMenu
 
     public static void DoPlace(Block b) {
         Token.GetSelected().Place(b);
-        EndPlace();
+        EndCursorMode();
     }
 
-    public static void EndPlace() {
-        Block.DehighlightAll();
-        ShowMenu();
-    }
-
-    public static void StartMove(ClickEvent evt) {
+    public static void ClickMove(ClickEvent evt) {
+        if (SelectionMenu.IsActive("Move")) {
+            EndCursorMode();
+            return;
+        }
         Block.DeselectAll();
         Block.UnfocusAll();
         Cursor.Mode = CursorMode.Moving;
@@ -44,28 +47,12 @@ public class TokenMenu
         Token.GetSelected().Move(b);
     }
 
-    public static void EndMoving() {
+    public static void EndCursorMode() {
         Block.DehighlightAll();
+        Token.GetSelected().SetNeutral();
+        SelectionMenu.DeactivateItem();
         ShowMenu();
     }
-
-    // private static void Move(ClickEvent evt) {
-    //     ClearCurrentActive();
-    //     if (ActiveMenuItem != "Moving") {
-    //         ActiveMenuItem = "Moving";
-    //         Block.DeselectAll();
-    //         Block.UnfocusAll();
-    //         Cursor.Mode = ClickMode.Moving;
-    //         Data.TokenObject.GetComponent<Token>().SetMoving();
-    //         UI.System.Q("MoveMenuItem").AddToClassList("active");
-    //         return;
-    //     }
-    //     else {
-    //         ActiveMenuItem = "";
-    //         Cursor.Mode = ClickMode.Default;
-    //     }
-    //     Data.TokenObject.GetComponent<Token>().SetNeutral();
-    // }
     
     // private static void Edit(ClickEvent evt) {
     //     ClearCurrentActive();

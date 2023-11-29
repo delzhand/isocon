@@ -66,6 +66,13 @@ public class Token : MonoBehaviour
     }
 
     public void LeftClick() {
+        switch (Cursor.Mode) {
+            case CursorMode.Placing:
+            case CursorMode.Moving:
+                TokenMenu.EndCursorMode();
+                break;
+        }
+
         if (Selected) {
             Deselect();
         }
@@ -110,8 +117,9 @@ public class Token : MonoBehaviour
     }
 
     public static void DeselectAll() {
-        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Token")) {
-            g.GetComponent<Token>().Deselect();
+        Token t = GetSelected();
+        if (t) {
+            t.Deselect();
         }
     }
 
@@ -162,10 +170,10 @@ public class Token : MonoBehaviour
     }
 
     public static void UnfocusAll() {
-        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
-        for (int i = 0; i < tokens.Length; i++) {
-            tokens[i].GetComponent<Token>().Unfocus();
-        }        
+        Token t = GetFocused();
+        if (t) {
+            t.Unfocus();
+        }
     }
 
     public void SetPlacing() {
