@@ -6,13 +6,10 @@ using UnityEngine.Animations;
 using UnityEngine.UIElements;
 
 [System.Serializable]
-public class GenericTokenDataRaw
+public class GenericTokenDataRaw: TokenDataRaw
 {
-    public string Name;
     public int CurrentHP;
     public int MaxHP;
-    public string GraphicHash;
-    public int Size;
 
     public static string ToJson() {
         VisualElement modal = Modal.Find();
@@ -62,6 +59,7 @@ public class GenericTokenData : TokenData
     public override void TokenDataSetup(string json, string id) {
         base.TokenDataSetup(json, id);
         DoTokenDataSetup();
+        CurrentHP = MaxHP;
     }
 
     public override void DoTokenDataSetup()
@@ -71,7 +69,6 @@ public class GenericTokenData : TokenData
         MaxHP = raw.MaxHP;
         GraphicHash = raw.GraphicHash;
         Size = raw.Size;
-        CurrentHP = MaxHP;
     }
 
     public override int GetSize()

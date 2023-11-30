@@ -6,6 +6,13 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 
+[System.Serializable]
+public class TokenDataRaw {
+    public string Name;
+    public string GraphicHash;
+    public int Size;
+}
+
 public class TokenData : NetworkBehaviour
 {
     public string Id;
@@ -166,12 +173,6 @@ public class TokenData : NetworkBehaviour
         return 1;
     }
 
-    private void DestroyOverhead() {
-        if (overhead != null) {
-            UI.System.Remove(overhead);
-        }
-    }
-
     private void UpdateOverheadScreenPosition() {
         overhead.style.display = DisplayStyle.Flex;
         UI.FollowToken(TokenObject.GetComponent<Token>(), overhead, Camera.main, Vector2.zero, true);
@@ -194,5 +195,11 @@ public class TokenData : NetworkBehaviour
             }
         }
 
+    }
+
+    public virtual void Change(string label, int value) {
+    }
+
+    public virtual void Change(string label, string value) {
     }
 }

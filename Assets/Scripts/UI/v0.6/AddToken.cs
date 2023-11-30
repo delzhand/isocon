@@ -29,7 +29,7 @@ public class AddToken
     }   
 
     private static void ConfirmAddToken(ClickEvent evt) {
-        string json = GameSystem.Current().GetTokenData();
+        string json = GameSystem.Current().GetTokenDataRawJson();
         Debug.Log(json);
         Player.Self().CmdCreateTokenData(json);
         Modal.Close();

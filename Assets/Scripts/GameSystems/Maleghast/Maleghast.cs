@@ -14,7 +14,7 @@ public class Maleghast : GameSystem
         return "Maleghast";
     }
 
-    public override string GetTokenData()
+    public override string GetTokenDataRawJson()
     {
         return MaleghastTokenDataRaw.ToJson();
     }

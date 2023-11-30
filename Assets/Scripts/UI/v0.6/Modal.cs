@@ -78,23 +78,27 @@ public class Modal
         UI.ToggleDisplay(dcModal, false);
     }
 
-    public static void AddTextField(string name, string label, string defaultValue, EventCallback<ChangeEvent<string>> onChange) {
+    public static void AddTextField(string name, string label, string defaultValue, EventCallback<ChangeEvent<string>> onChange = null) {
         TextField field = new TextField(label);
         field.value = defaultValue;
      
         field.name = name;
-        field.RegisterValueChangedCallback<string>(onChange);
+        if (onChange != null) {
+            field.RegisterValueChangedCallback<string>(onChange);
+        }
         field.AddToClassList("no-margin");
         Modal.AddContents(field);
     }
 
-    public static void AddDropdownField(string name, string label, string defaultValue, string[] options, EventCallback<ChangeEvent<string>> onChange) {
+    public static void AddDropdownField(string name, string label, string defaultValue, string[] options, EventCallback<ChangeEvent<string>> onChange = null) {
         DropdownField field = new DropdownField(label);
         field.choices = options.ToList<string>();
         field.value = defaultValue; 
 
         field.name = name;
-        field.RegisterValueChangedCallback<string>(onChange);            
+        if (onChange != null) {
+            field.RegisterValueChangedCallback<string>(onChange);            
+        }
         field.AddToClassList("no-margin");
         field.focusable = false;
         Modal.AddContents(field);

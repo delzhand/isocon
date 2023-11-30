@@ -11,28 +11,8 @@ public class Generic : GameSystem
         return "Generic System";
     }
 
-    public override string GetTokenData() {
+    public override string GetTokenDataRawJson() {
         return GenericTokenDataRaw.ToJson();
-    }
-
-    public override MenuItem[] GetTokenMenuItems(TokenData data)
-    {
-        List<MenuItem> items = new();
-        return items.ToArray();
-    }
-
-    public override void Setup()
-    {
-        // Search field for tile effects
-        VisualElement root = UI.System.Q("ToolsPanel");
-        VisualElement searchField = SearchField.Create(GameSystem.Current().GetEffectList(), "");
-        searchField.name = "EffectSearchField";
-        searchField.style.marginTop = 2;
-        root.Q("EffectSearch").Add(searchField);
-
-        // Set up play mode tile effects modal
-        UI.System.Q("TerrainInfo").Q("AddEffect").RegisterCallback<ClickEvent>(AddTerrainEffect.OpenModal);
-        UI.System.Q("TerrainInfo").Q("AddObject").RegisterCallback<ClickEvent>(AddObject.OpenModal);        
     }
 
     public override Texture2D GetGraphic(string json) {
@@ -63,10 +43,6 @@ public class Generic : GameSystem
         return new string[]{"Wavy", "Spiky", "Hand", "Hole", "Blocked", "Corners"};
     }
 
-    public override bool HasEffect(string search, List<string> effects) {
-        return effects.Contains(search);
-    }
-
     public override bool HasCustomEffect(List<string> effects)
     {
         return effects.Count > 0 && 
@@ -79,16 +55,7 @@ public class Generic : GameSystem
 
     public override void AddTokenModal()
     {
-        TextField nameField = new TextField("Token Name");
-        nameField.name = "NameField";
-        nameField.AddToClassList("no-margin");
-        Modal.AddContents(nameField);
-
-        IntegerField hpField = new IntegerField("HP");
-        hpField.name = "HPField";
-        hpField.value = 100;
-        hpField.AddToClassList("no-margin");
-        Modal.AddContents(hpField);
+        base.AddTokenModal();
 
         DropdownField sizeField = new DropdownField("Size");
         sizeField.choices = new List<string>(){"1x1", "2x2", "3x3"};
@@ -97,6 +64,12 @@ public class Generic : GameSystem
         sizeField.focusable = false;
         sizeField.AddToClassList("no-margin");
         Modal.AddContents(sizeField);
+        
+        IntegerField hpField = new IntegerField("HP");
+        hpField.name = "HPField";
+        hpField.value = 100;
+        hpField.AddToClassList("no-margin");
+        Modal.AddContents(hpField);
     }
 
 }

@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GameSystem : MonoBehaviour
 {
     public static GameSystem Current() {
-        string system = PlayerPrefs.GetString("System", "ICON 1.5");
+        string system = PlayerPrefs.GetString("System", "Generic");
         switch (system) {
             case "ICON 1.5":
                 return GameObject.Find("GameSystem").GetComponent<Icon_v1_5>();
-            case "Maleghast 666":
             case "Maleghast":
                 return GameObject.Find("GameSystem").GetComponent<Maleghast>();
         }
@@ -19,10 +19,26 @@ public class GameSystem : MonoBehaviour
 
     public virtual void Setup()
     {
+        // Search field for tile effects
+        VisualElement root = UI.System.Q("ToolsPanel");
+        VisualElement searchField = SearchField.Create(GameSystem.Current().GetEffectList(), "");
+        searchField.name = "EffectSearchField";
+        searchField.style.marginTop = 2;
+        root.Q("EffectSearch").Add(searchField);
+
+        // Setting up play mode tile effects modal has to wait until the gamesystem is created
+        UI.System.Q("TerrainInfo").Q("AddEffect").RegisterCallback<ClickEvent>(AddTerrainEffect.OpenModal);
+        UI.System.Q("TerrainInfo").Q("AddObject").RegisterCallback<ClickEvent>(AddObject.OpenModal);        
     }
 
     public virtual void Teardown()
     {
+        VisualElement root = UI.System.Q("ToolsPanel");
+        root.Q("EffectSearch").Clear();
+
+        UI.System.Q("TerrainInfo").Q("AddEffect").UnregisterCallback<ClickEvent>(AddTerrainEffect.OpenModal);
+        UI.System.Q("TerrainInfo").Q("AddObject").UnregisterCallback<ClickEvent>(AddObject.OpenModal);
+
     }
 
     public virtual string SystemName()
@@ -31,25 +47,29 @@ public class GameSystem : MonoBehaviour
     }
 
     public virtual void AddTokenModal() {
-        throw new NotImplementedException();
+        TextField nameField = new TextField("Token Name");
+        nameField.name = "NameField";
+        nameField.AddToClassList("no-margin");
+        Modal.AddContents(nameField);
     }
 
-    public virtual string GetTokenData()
+    public virtual string GetTokenDataRawJson()
     {
         throw new NotImplementedException();
     }
 
     public virtual MenuItem[] GetTokenMenuItems(TokenData data) {
-        throw new NotImplementedException();
+        List<MenuItem> items = new();
+        return items.ToArray();
     }
 
     public virtual void TokenDataSetValue(TokenData data, string label, int value)
     {
-        throw new NotImplementedException();
+        data.Change(label, value);
     }
 
     public virtual void TokenDataSetValue(TokenData data, string label, string value) {
-        throw new NotImplementedException();
+        data.Change(label, value);
     }
 
     public virtual void GameDataSetValue(string label, int value) {
@@ -85,7 +105,7 @@ public class GameSystem : MonoBehaviour
     }
 
     public virtual bool HasEffect(string search, List<string> effects) {
-        throw new NotImplementedException();
+        return effects.Contains(search);
     }
 
     public virtual bool HasCustomEffect(List<string> effects) {

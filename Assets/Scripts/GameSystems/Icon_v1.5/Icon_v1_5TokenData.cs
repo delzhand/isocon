@@ -9,16 +9,13 @@ using UnityEngine.UIElements;
 using Visibility = UnityEngine.UIElements.Visibility;
 
 [System.Serializable]
-public class Icon_v1_5TokenDataRaw
+public class Icon_v1_5TokenDataRaw: TokenDataRaw
 {
-    public string Name;
     public string Class;
     public string Job;
     public bool Elite;
     public int LegendHP;
-    public int Size;
     public int ObjectHP;
-    public string GraphicHash;
 
     public static string ToJson() {
         Icon_v1_5TokenDataRaw raw = new Icon_v1_5TokenDataRaw();
@@ -119,26 +116,37 @@ public class Icon_v1_5TokenData : TokenData
         return MaxHP == 0;
     }
 
-    public override void UpdateUIData() {
-        overhead.Q<ProgressBar>("HpBar").value = CurrentHP;
-        overhead.Q<ProgressBar>("HpBar").highValue = MaxHP;
-        overhead.Q<ProgressBar>("VigorBar").value = Vigor;
-        overhead.Q<ProgressBar>("VigorBar").highValue = MaxHP;
-        if (Vigor == 0) {
-            overhead.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Hidden;
-        }
-        else {
-            overhead.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Visible;
-        }
-        for (int i = 1; i <= 3; i++) {
-            if (Wounds >= i) {
-                overhead.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Visible;
-            }
-            else {
-                overhead.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Hidden;
-            }
-        }
+    public void UpdateTokenPanel(string elementName) {
+        VisualElement panel = UI.System.Q(elementName);
+        panel.Q("Portrait").style.backgroundImage = Graphic;
+        panel.Q<Label>("Name").text = Name;
+        Color c = ClassColor();
+        panel.Q("ClassBackground").style.borderTopColor = c;
+        panel.Q("ClassBackground").style.borderRightColor = c;
+        panel.Q("ClassBackground").style.borderBottomColor = c;
+        panel.Q("ClassBackground").style.borderLeftColor = c;
     }
+
+    // public override void UpdateUIData() {
+    //     overhead.Q<ProgressBar>("HpBar").value = CurrentHP;
+    //     overhead.Q<ProgressBar>("HpBar").highValue = MaxHP;
+    //     overhead.Q<ProgressBar>("VigorBar").value = Vigor;
+    //     overhead.Q<ProgressBar>("VigorBar").highValue = MaxHP;
+    //     if (Vigor == 0) {
+    //         overhead.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Hidden;
+    //     }
+    //     else {
+    //         overhead.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Visible;
+    //     }
+    //     for (int i = 1; i <= 3; i++) {
+    //         if (Wounds >= i) {
+    //             overhead.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Visible;
+    //         }
+    //         else {
+    //             overhead.Q<VisualElement>("Wound" + i).style.visibility = Visibility.Hidden;
+    //         }
+    //     }
+    // }
 
     public override void TokenDataSetup(string json, string id) {
         base.TokenDataSetup(json, id);
@@ -180,118 +188,120 @@ public class Icon_v1_5TokenData : TokenData
     }
 
     public void UpdateSelectedTokenPanel() {
+        return;
+        
         // if (!TokenController.IsSelected(this)) {
-            return;
+        //     return;
         // }
 
-        VisualElement panel = UI.System.Q("SelectedTokenPanel");
+        // VisualElement panel = UI.System.Q("SelectedTokenPanel");
 
-        Color c = ClassColor();
-        panel.Q("ClassBackground").style.borderTopColor = c;
-        panel.Q("ClassBackground").style.borderRightColor = c;
-        panel.Q("ClassBackground").style.borderBottomColor = c;
-        panel.Q("ClassBackground").style.borderLeftColor = c;
+        // Color c = ClassColor();
+        // panel.Q("ClassBackground").style.borderTopColor = c;
+        // panel.Q("ClassBackground").style.borderRightColor = c;
+        // panel.Q("ClassBackground").style.borderBottomColor = c;
+        // panel.Q("ClassBackground").style.borderLeftColor = c;
 
-        panel.Q("Portrait").style.backgroundImage = Graphic;
+        // panel.Q("Portrait").style.backgroundImage = Graphic;
 
-        panel.Q<Label>("CHP").text = CurrentHP.ToString();
-        panel.Q<Label>("MHP").text = "/" + MaxHP.ToString();
-        panel.Q<Label>("VIG").text = Vigor > 0 ? "+" + Vigor.ToString() : "";
-        panel.Q<Label>("Name").text = Name;
+        // panel.Q<Label>("CHP").text = CurrentHP.ToString();
+        // panel.Q<Label>("MHP").text = "/" + MaxHP.ToString();
+        // panel.Q<Label>("VIG").text = Vigor > 0 ? "+" + Vigor.ToString() : "";
+        // panel.Q<Label>("Name").text = Name;
 
-        panel.Q<ProgressBar>("HpBar").value = CurrentHP;
-        panel.Q<ProgressBar>("HpBar").highValue = MaxHP;
-        panel.Q<ProgressBar>("VigorBar").value = Vigor;
-        panel.Q<ProgressBar>("VigorBar").highValue = MaxHP;
-        if (Vigor == 0) {
-            panel.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Hidden;
-        }
-        else {
-            panel.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Visible;
-        }
-        for (int i = 1; i <= 4; i++) {
-            if (Wounds >= i) {
-                panel.Q("Wound" + i).style.visibility = Visibility.Visible;
-            }
-            else {
-                panel.Q("Wound" + i).style.visibility = Visibility.Hidden;
-            }
-        }
+        // panel.Q<ProgressBar>("HpBar").value = CurrentHP;
+        // panel.Q<ProgressBar>("HpBar").highValue = MaxHP;
+        // panel.Q<ProgressBar>("VigorBar").value = Vigor;
+        // panel.Q<ProgressBar>("VigorBar").highValue = MaxHP;
+        // if (Vigor == 0) {
+        //     panel.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Hidden;
+        // }
+        // else {
+        //     panel.Q<ProgressBar>("VigorBar").style.visibility = Visibility.Visible;
+        // }
+        // for (int i = 1; i <= 4; i++) {
+        //     if (Wounds >= i) {
+        //         panel.Q("Wound" + i).style.visibility = Visibility.Visible;
+        //     }
+        //     else {
+        //         panel.Q("Wound" + i).style.visibility = Visibility.Hidden;
+        //     }
+        // }
 
-        if (!IsFoe(Class)) {
-            panel.Q<Label>("ResolveNum").text = Resolve.ToString();
-            int partyResolve = (GameSystem.Current() as Icon_v1_5).PartyResolve;
-            panel.Q<Label>("PartyResolveNum").text = "+" + partyResolve;
-            panel.Q<ProgressBar>("ResolveBar").value = Resolve + partyResolve;
-            panel.Q<ProgressBar>("PartyResolveBar").value = partyResolve;            
-            panel.Q("ResolveWrapper").style.display = DisplayStyle.Flex;
-        }
-        else {
-            panel.Q("ResolveWrapper").style.display = DisplayStyle.None;
-        }
+        // if (!IsFoe(Class)) {
+        //     panel.Q<Label>("ResolveNum").text = Resolve.ToString();
+        //     int partyResolve = (GameSystem.Current() as Icon_v1_5).PartyResolve;
+        //     panel.Q<Label>("PartyResolveNum").text = "+" + partyResolve;
+        //     panel.Q<ProgressBar>("ResolveBar").value = Resolve + partyResolve;
+        //     panel.Q<ProgressBar>("PartyResolveBar").value = partyResolve;            
+        //     panel.Q("ResolveWrapper").style.display = DisplayStyle.Flex;
+        // }
+        // else {
+        //     panel.Q("ResolveWrapper").style.display = DisplayStyle.None;
+        // }
 
-        if (Elite) {
-            panel.Q<Label>("Elite").style.visibility = Visibility.Visible;
-        }
-        else {
-            panel.Q<Label>("Elite").style.visibility = Visibility.Hidden;
-        }
+        // if (Elite) {
+        //     panel.Q<Label>("Elite").style.visibility = Visibility.Visible;
+        // }
+        // else {
+        //     panel.Q<Label>("Elite").style.visibility = Visibility.Hidden;
+        // }
 
-        panel.Q<Label>("Job").text = Job;
-        panel.Q<Label>("Job").style.backgroundColor = c;
+        // panel.Q<Label>("Job").text = Job;
+        // panel.Q<Label>("Job").style.backgroundColor = c;
 
-        panel.Q("Statuses").Clear();
-        int statusCount = 0;
-        if (CurrentHP == 0) {
-            statusCount++;
-            addStatus(panel, "Incapacitated", "neg");
-        }
-        else if (CurrentHP * 2 <= MaxHP) {
-            statusCount++;
-            addStatus(panel, "Bloodied", "neg");
-        }
-        for(int i = 0; i < Statuses.Count; i++) {
-            statusCount++;
-            string[] split = Statuses[i].Split("|");
-            addStatus(panel, split[0], split[1]);
-        }
+        // panel.Q("Statuses").Clear();
+        // int statusCount = 0;
+        // if (CurrentHP == 0) {
+        //     statusCount++;
+        //     addStatus(panel, "Incapacitated", "neg");
+        // }
+        // else if (CurrentHP * 2 <= MaxHP) {
+        //     statusCount++;
+        //     addStatus(panel, "Bloodied", "neg");
+        // }
+        // for(int i = 0; i < Statuses.Count; i++) {
+        //     statusCount++;
+        //     string[] split = Statuses[i].Split("|");
+        //     addStatus(panel, split[0], split[1]);
+        // }
 
-        List<(string, int)> counters = new List<(string, int)>();
-        counters.Add(("Aether", Aether));
-        counters.Add(("Blessings", Blessings));
-        counters.Add(("Vigilance", Vigilance));
-        for(int i = 0; i < counters.Count; i++) {
-            if (counters[i].Item2 > 0) {
-                statusCount++;
-                addStatus(panel, counters[i].Item1 + " " + counters[i].Item2, "pos");
-            }
-        }
+        // List<(string, int)> counters = new List<(string, int)>();
+        // counters.Add(("Aether", Aether));
+        // counters.Add(("Blessings", Blessings));
+        // counters.Add(("Vigilance", Vigilance));
+        // for(int i = 0; i < counters.Count; i++) {
+        //     if (counters[i].Item2 > 0) {
+        //         statusCount++;
+        //         addStatus(panel, counters[i].Item1 + " " + counters[i].Item2, "pos");
+        //     }
+        // }
 
-        if (Stance.Length > 0 && Stance != "None") {
-            statusCount++;
-            addStatus(panel, Stance, "pos");
-        }
+        // if (Stance.Length > 0 && Stance != "None") {
+        //     statusCount++;
+        //     addStatus(panel, Stance, "pos");
+        // }
 
-        if (Marked.Length > 0) {
-            statusCount++;
-            addStatus(panel, "Marked by " + Marked, "neg");
-        }
+        // if (Marked.Length > 0) {
+        //     statusCount++;
+        //     addStatus(panel, "Marked by " + Marked, "neg");
+        // }
 
-        if (Hatred.Length > 0) {
-            statusCount++;
-            addStatus(panel, "Hatred of " + Hatred, "neg");
-        }
+        // if (Hatred.Length > 0) {
+        //     statusCount++;
+        //     addStatus(panel, "Hatred of " + Hatred, "neg");
+        // }
 
-        UI.ToggleDisplay("StatusColumn", statusCount > 0);
+        // UI.ToggleDisplay("StatusColumn", statusCount > 0);
 
-        VisualElement stats = panel.Q("IconV1_5Stats");
+        // VisualElement stats = panel.Q("IconV1_5Stats");
 
-        stats.Q<Label>("StatDef").text = Defense.ToString();
-        stats.Q<Label>("StatDmg").text = "D" + Damage.ToString();
-        stats.Q<Label>("StatFray").text = Fray.ToString();
-        stats.Q<Label>("StatRng").text = Range.ToString();
-        stats.Q<Label>("StatSpd").text = Speed.ToString();
-        stats.Q<Label>("StatDash").text = Dash.ToString();   
+        // stats.Q<Label>("StatDef").text = Defense.ToString();
+        // stats.Q<Label>("StatDmg").text = "D" + Damage.ToString();
+        // stats.Q<Label>("StatFray").text = Fray.ToString();
+        // stats.Q<Label>("StatRng").text = Range.ToString();
+        // stats.Q<Label>("StatSpd").text = Speed.ToString();
+        // stats.Q<Label>("StatDash").text = Dash.ToString();   
     }
 
     private void addStatus(VisualElement v, string statusName, string colorShorthand) {
@@ -411,7 +421,7 @@ public class Icon_v1_5TokenData : TokenData
         Wounds = 0;
     }
 
-    public void Change(string label, int value) {
+    public override void Change(string label, int value) {
         FileLogger.Write($"{Name} {label} set to {value}");
         int originValue;
         switch(label) {
@@ -464,7 +474,7 @@ public class Icon_v1_5TokenData : TokenData
         UpdateSelectedTokenPanel();
     }
 
-    public void Change(string label, string value) {
+    public override void Change(string label, string value) {
         FileLogger.Write($"{Name} {label} set to {value}");
         switch(label) {
             case "Status":
