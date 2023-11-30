@@ -15,8 +15,8 @@ public class StartupPanel : MonoBehaviour
     public struct AppAttributes {
         public string LatestVersion;
     }
-    string version = "0.5.10";
-    string latestVersion = "0.5.10";
+    string version = "0.5.11";
+    string latestVersion = "0.5.11";
     string latestMessage = "Could not retrieve startup messages.";
 
     NetworkManager manager;
