@@ -34,19 +34,23 @@ public class Cursor : MonoBehaviour
         }
         else {
             Block.UnfocusAll();
+            Block.DehighlightAll();
             Token.UnfocusAll();
+            TerrainController.SetInfo();
         }
     }
 
     private void BlockHitCheck(RaycastHit hit) {
         if (!hit.collider.gameObject) {
             Block.UnfocusAll();
+            Block.DehighlightAll();
             return;
         }
 
         Block b = hit.collider.GetComponent<Block>();
         if (!b) {
             Block.UnfocusAll();
+            Block.DehighlightAll();
             return;
         }
 

@@ -232,7 +232,7 @@ public class Player : NetworkBehaviour
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
         byte[] compressedJson = Compression.CompressString(json);
-        Debug.Log($"Original data size: {Encoding.UTF8.GetBytes(json).Length}, compressed data size: {compressedJson.Length}");
+        // Debug.Log($"Original data size: {Encoding.UTF8.GetBytes(json).Length}, compressed data size: {compressedJson.Length}");
         RpcMapSync(compressedJson);
     }
     [Command]

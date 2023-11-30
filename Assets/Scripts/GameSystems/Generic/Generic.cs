@@ -18,21 +18,7 @@ public class Generic : GameSystem
     public override MenuItem[] GetTokenMenuItems(TokenData data)
     {
         List<MenuItem> items = new();
-        if (!data.OnField) {
-            items.Add(new MenuItem("Place", "Place", TokenMenu.ClickPlace));
-        }
-        else {
-            items.Add(new MenuItem("Remove", "Remove", Test));
-            items.Add(new MenuItem("Move", "Move", TokenMenu.ClickMove));
-        }
-
-        items.Add(new MenuItem("Delete", "Delete", Test));
-
         return items.ToArray();
-    }
-
-    public void Test(ClickEvent evt) {
-
     }
 
     public override void Setup()

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 public class TokenMenu
@@ -7,11 +9,29 @@ public class TokenMenu
         Block.DeselectAll();
         Block.DehighlightAll();
         TokenData data = Token.GetSelected().onlineDataObject.GetComponent<TokenData>();
-        MenuItem[] items = GameSystem.Current().GetTokenMenuItems(data);
         SelectionMenu.Reset("Token Menu");
-        foreach (MenuItem m in items) {
+        MenuItem[] defaultItems = GetTokenMenuItems(data);
+        foreach (MenuItem m in defaultItems) {
             SelectionMenu.AddItem(m.Name, m.Label, m.OnClick);
         }
+        MenuItem[] systemItems = GameSystem.Current().GetTokenMenuItems(data);
+        foreach (MenuItem m in systemItems) {
+            SelectionMenu.AddItem(m.Name, m.Label, m.OnClick);
+        }
+    }
+
+    public static MenuItem[] GetTokenMenuItems(TokenData data)
+    {
+        List<MenuItem> items = new();
+        if (!data.OnField) {
+            items.Add(new MenuItem("Place", "Place", ClickPlace));
+        }
+        else {
+            items.Add(new MenuItem("Remove", "Remove", ClickRemove));
+            items.Add(new MenuItem("Move", "Move", ClickMove));
+        }
+        items.Add(new MenuItem("Delete", "Delete", ClickDelete));
+        return items.ToArray();
     }
 
     public static void ClickPlace(ClickEvent evt) {
@@ -23,7 +43,7 @@ public class TokenMenu
         Block.UnfocusAll();
         Cursor.Mode = CursorMode.Placing;
         Token.GetSelected().SetPlacing();
-        SelectionMenu.Find().Q("Place").AddToClassList("active");
+        SelectionMenu.ActivateItem("Place");
     }
 
     public static void DoPlace(Block b) {
@@ -40,7 +60,7 @@ public class TokenMenu
         Block.UnfocusAll();
         Cursor.Mode = CursorMode.Moving;
         Token.GetSelected().SetMoving();
-        SelectionMenu.Find().Q("Move").AddToClassList("active");
+        SelectionMenu.ActivateItem("Move");
     }
 
     public static void DoMove(Block b) {
@@ -53,69 +73,16 @@ public class TokenMenu
         SelectionMenu.DeactivateItem();
         ShowMenu();
     }
-    
-    // private static void Edit(ClickEvent evt) {
-    //     ClearCurrentActive();
-    //     if (ActiveMenuItem != "Edit") {
-    //         ActiveMenuItem = "Edit";
-    //         TokenEditPanel.Show(Data);
-    //         UI.ToggleActiveClass("EditMenuItem", true);
-    //         return;
-    //     }
-    //     else {
-    //         ActiveMenuItem = "";
-    //         Cursor.Mode = ClickMode.Default;
-    //     }
-    //     Data.TokenObject.GetComponent<Token>().SetNeutral();
-    // }
 
-    // private static void AlterHp(ClickEvent evt) {
-    //     ClearCurrentActive();
-    //     if (ActiveMenuItem != "AlterHP") {
-    //         ActiveMenuItem = "AlterHP";
-    //         Debug.Log(ActiveMenuItem);
-    //         LifeEditPanel.Show(Data);
-    //         UI.ToggleActiveClass("AlterHPMenuItem", true);
-    //         return;
-    //     }
-    //     else {
-    //         ActiveMenuItem = "";
-    //     }
-    //     Data.TokenObject.GetComponent<Token>().SetNeutral();
-    // }
+    public static void ClickRemove(ClickEvent evt) {
+        Token.GetSelected().onlineDataObject.GetComponent<TokenData>().OnField = false;
+        Token.GetSelected().SetNeutral();
+        ShowMenu();
+    }
 
-    // private static void Remove(ClickEvent evt) {
-    //     ClearCurrentActive();
-    //     Data.OnField = false;
-    //     Data.TokenObject.GetComponent<Token>().SetNeutral();
-    // }
-
-    // private static void Delete(ClickEvent evt) {
-    //     Player.Self().CmdRequestDeleteToken(Data);
-    // }
-
-    // private static void EndTurn(ClickEvent evt) {
-    //     Player.Self().CmdRequestTokenDataSetValue(Data, "Status", "Turn Ended|neu");
-    //     TokenController.Deselect();
-    // }
-
-    // public static void HideMenu() {
-    //     Block.DehighlightAll();
-    //     ClearCurrentActive();
-    //     ActiveMenuItem = "";
-    //     Data = null;
-    //     UI.ToggleDisplay("UnitMenu", false);
-    // }
-
-    // private static void ClearCurrentActive() {
-    //     UI.System.Query(null, "unit-menu-item").ForEach(item => {
-    //         item.RemoveFromClassList("active");
-    //     });        
-    // }
-
-    // public static void DonePlacing() {
-    //     ActiveMenuItem = "";
-    //     ClearCurrentActive();
-    //     Block.DehighlightAll();
-    // }
+    public static void ClickDelete(ClickEvent evt) {
+        TokenData data = Token.GetSelected().onlineDataObject.GetComponent<TokenData>();
+        Token.DeselectAll();
+        Player.Self().CmdRequestDeleteToken(data);
+    }
 }

@@ -109,17 +109,20 @@ public class TokenData : NetworkBehaviour
         token.onlineDataObject = gameObject;
 
         int size = GetSize();
+        if (size == 1) {
+            TokenObject.GetComponent<Token>().Size = 1;
+            TokenObject.transform.Find("Offset").transform.localScale = new Vector3(1, 1, 1);
+            TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(.7f, .7f, 4);
+        }
         if (size == 2) {
             TokenObject.GetComponent<Token>().Size = 2;
-            // TokenObject.transform.Find("Offset").transform.localPosition += new Vector3(0, 0, -.73f);
-            // TokenObject.transform.Find("Base").transform.localPosition += new Vector3(0, 0, -.73f);
             TokenObject.transform.Find("Offset").transform.localScale = new Vector3(2, 2, 2);
-            TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2, 2, 4);
+            TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2*.7f, 2*.7f, 4);
         }
         else if (size == 3) {
             TokenObject.GetComponent<Token>().Size = 3;
             TokenObject.transform.Find("Offset").transform.localScale = new Vector3(3, 3, 3);
-            TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(3, 3, 4);
+            TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(3*.7f, 3*.7f, 4);
         }        
     }
 

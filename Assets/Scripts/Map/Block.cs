@@ -29,6 +29,7 @@ public class Block : MonoBehaviour
     private Material PaintMaterialTop;
     private Material PaintMaterialSide;
     private Material markerMaterial;
+    private bool MaterialReset = true;
 
     void Awake() {
         if (materials.Count == 0) {
@@ -41,7 +42,6 @@ public class Block : MonoBehaviour
 
     void Start()
     {
-        SetMaterials();
     }
 
     void Update()
@@ -57,6 +57,11 @@ public class Block : MonoBehaviour
 
         if (Focused && this != LastFocused) {
             Unfocus();
+        }
+
+        if (MaterialReset) {
+            MaterialReset = false;
+            SetMaterials();
         }
     }
 
@@ -261,35 +266,36 @@ public class Block : MonoBehaviour
         else {
             Selected = true;
         }
-        SetMaterials();
+        MaterialReset = true;
         TerrainController.SetInfo();
     }
 
     public void Deselect() {
         Selected = false;
-        SetMaterials();
+        MaterialReset = true;
     }
 
     public void Focus() {
         LastFocused = this;
         Focused = true;
-        SetMaterials();
+        MaterialReset = true;
         TerrainController.SetInfo();
     }
 
     public void Unfocus() {
         Focused = false;
-        SetMaterials();
+        LastFocused = null;
+        MaterialReset = true;
     }
 
     public void Highlight() {
         Highlighted = true;
-        SetMaterials();
+        MaterialReset = true;
     }
 
     public void Dehighlight() {
         Highlighted = false;
-        SetMaterials();
+        MaterialReset = true;
     }
 
     public static void DehighlightAll() {
@@ -309,6 +315,10 @@ public class Block : MonoBehaviour
         foreach (Block b in GetFocused()) {
             b.Unfocus();
         }
+    }
+
+    public static void ClearAllStates() {
+        
     }
 
     public static List<GameObject> GetAllSelected() {
@@ -340,7 +350,7 @@ public class Block : MonoBehaviour
                 break;
         }
         GetComponent<MeshFilter>().mesh = m;
-        SetMaterials();
+        MaterialReset = true;
     }
 
     public void EffectChange(string effect) {
@@ -357,19 +367,19 @@ public class Block : MonoBehaviour
                 }
                 break;
         }
-        SetMaterials();
+        MaterialReset = true;
     }
 
     public void Paint(Color top, Color sides) {
         PaintColorSide = sides;
         PaintColorTop = top;
         Painted = true;
-        SetMaterials();
+        MaterialReset = true;
     }
 
     public void Depaint() {
         Painted = false;
-        SetMaterials();
+        MaterialReset = true;
     }
 
     public Color[] SamplePaint() {
@@ -418,21 +428,27 @@ public class Block : MonoBehaviour
         if (markerMaterial == null) {
             markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));
         }
+        markerMaterial.SetInt("_Impassable", 0);
         if (GameSystem.Current().HasEffect("Blocked", effects)) {
             markerMaterial.SetInt("_Impassable", 1);
         }
+        markerMaterial.SetInt("_Dangerous", 0);
         if (GameSystem.Current().HasEffect("Spiky", effects)) {
             markerMaterial.SetInt("_Dangerous", 1);
         }
+        markerMaterial.SetInt("_Difficult", 0);
         if (GameSystem.Current().HasEffect("Wavy", effects)) {
             markerMaterial.SetInt("_Difficult", 1);
         }
+        markerMaterial.SetInt("_Interactive", 0);
         if (GameSystem.Current().HasEffect("Hand", effects)) {
             markerMaterial.SetInt("_Interactive", 1);
         }
+        markerMaterial.SetInt("_Pit", 0);
         if (GameSystem.Current().HasEffect("Hole", effects)) {
             markerMaterial.SetInt("_Pit", 1);
         }
+        markerMaterial.SetInt("_Other", 0);
         if (GameSystem.Current().HasCustomEffect(effects)) {
             markerMaterial.SetInt("_Other", 1);
         }

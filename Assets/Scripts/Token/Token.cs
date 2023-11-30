@@ -100,7 +100,7 @@ public class Token : MonoBehaviour
     public void Select() {
         DeselectAll();
         Selected = true;
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1); // worldspace token selected material
+        transform.Find("Offset/Select").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1); // worldspace token selected material
         UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().Element.Q("Selected"), true); // selected indicator in unit bar
         UI.ToggleDisplay("SelectedTokenPanel", true); // selected token panel
         SetNeutral();
@@ -109,7 +109,7 @@ public class Token : MonoBehaviour
 
     public void Deselect() {
         Selected = false;
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
+        transform.Find("Offset/Select").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
         UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().Element.Q("Selected"), false);
         UI.ToggleDisplay("SelectedTokenPanel", false);
         SelectionMenu.Hide();
@@ -144,10 +144,12 @@ public class Token : MonoBehaviour
     public void Focus() {
         LastFocused = this;
         Focused = true;
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1); // worldspace token selected material
     }
 
     public void Unfocus() {
         Focused = false;
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0); // worldspace token selected material
     }
 
     public static Token GetFocused() {

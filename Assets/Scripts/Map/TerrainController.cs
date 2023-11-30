@@ -423,6 +423,8 @@ public class TerrainController : MonoBehaviour
 
     public static void SetInfo() {
         VisualElement root = UI.System.Q("TerrainInfo");
+        UI.ToggleDisplay(root.Q("Elev"), false);
+        UI.ToggleDisplay(root.Q("Pos"), false);
         UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), false);
         UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), false);
         UI.ToggleDisplay(root.Q("AddEffect"), false);
@@ -433,6 +435,14 @@ public class TerrainController : MonoBehaviour
         Block[] selected = Block.GetSelected();
         Block focused = Block.LastFocused;
         Block block = null;
+
+        if (selected.Length == 0 && focused == null) {
+            return;
+        }
+        else {
+            UI.ToggleDisplay(root.Q("Elev"), true);
+            UI.ToggleDisplay(root.Q("Pos"), true);
+        }
 
         Color color = Color.white;
         if (selected.Length > 0 && Cursor.Mode != CursorMode.Editing) {
