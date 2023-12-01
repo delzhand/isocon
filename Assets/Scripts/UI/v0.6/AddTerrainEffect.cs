@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -29,11 +30,11 @@ public class AddTerrainEffect
         string value = Modal.Find().Q("SearchField").Q<TextField>("SearchInput").value;
         Modal.Close();
         
-        List<GameObject> selectedBlocks = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         List<string> blockNames = new();
-        for (int i = 0; i < selectedBlocks.Count; i++) {
-            blockNames.Add(selectedBlocks[i].name);
-        }
+        selected.ForEach(block => {
+            blockNames.Add(block.name);
+        });
         Player.Self().CmdRequestMapSetValue(blockNames.ToArray(), "Effect", value);
     }
 

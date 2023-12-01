@@ -79,7 +79,7 @@ public class Modal
     }
 
     public static void AddTextField(string name, string label, string defaultValue, EventCallback<ChangeEvent<string>> onChange = null) {
-        TextField field = new TextField(label);
+        TextField field = new(label);
         field.value = defaultValue;
      
         field.name = name;
@@ -91,7 +91,7 @@ public class Modal
     }
 
     public static void AddDropdownField(string name, string label, string defaultValue, string[] options, EventCallback<ChangeEvent<string>> onChange = null) {
-        DropdownField field = new DropdownField(label);
+        DropdownField field = new(label);
         field.choices = options.ToList<string>();
         field.value = defaultValue; 
 
@@ -102,5 +102,36 @@ public class Modal
         field.AddToClassList("no-margin");
         field.focusable = false;
         Modal.AddContents(field);
+    }
+
+    public static void AddToggleField(string name, string label, bool defaultValue, EventCallback<ChangeEvent<bool>> onChange = null){
+        Toggle field = new(label);
+        field.value = defaultValue;
+        
+        field.name = name;
+        if (onChange != null) {
+            field.RegisterValueChangedCallback<bool>(onChange);            
+        }
+        field.AddToClassList("no-margin");
+        field.focusable = false;
+        Modal.AddContents(field);    
+    }
+
+    public static void AddIntField(string name, string label, int defaultValue, EventCallback<ChangeEvent<int>> onChange = null){
+        IntegerField field = new(label);
+        field.value = defaultValue;
+        
+        field.name = name;
+        if (onChange != null) {
+            field.RegisterValueChangedCallback<int>(onChange);            
+        }
+        field.AddToClassList("no-margin");
+        Modal.AddContents(field);    
+    }
+
+    public static void AddSearchField(string name, string label, string defaultValue, string[] options) {
+        VisualElement searchField = SearchField.Create(options, label);
+        searchField.name = name;
+        Modal.AddContents(searchField);
     }
 }

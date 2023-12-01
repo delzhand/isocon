@@ -6,6 +6,8 @@ using UnityEngine.UIElements;
 
 public class GameSystem : MonoBehaviour
 {
+    public static string DataJson = "{}";
+
     public static GameSystem Current() {
         string system = PlayerPrefs.GetString("System", "Generic");
         switch (system) {

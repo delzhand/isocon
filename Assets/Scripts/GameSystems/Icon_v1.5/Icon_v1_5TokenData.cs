@@ -18,45 +18,61 @@ public class Icon_v1_5TokenDataRaw: TokenDataRaw
     public int ObjectHP;
 
     public static string ToJson() {
+        VisualElement modal = Modal.Find();
+
         Icon_v1_5TokenDataRaw raw = new Icon_v1_5TokenDataRaw();
 
-        TextField nameField = UI.System.Q<TextField>("TokenNameField");
-        raw.Name = nameField.value;
+        raw.Name = modal.Q<TextField>("NameField").value;
+        Texture2D graphic = TextureSender.CopyLocalImage(modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
+        raw.GraphicHash = TextureSender.GetTextureHash(graphic);
 
-        DropdownField classField = UI.System.Q<DropdownField>("ClassDropdown");
-        raw.Class = classField.value;
-
-        DropdownField jobField = UI.System.Q<DropdownField>("JobDropdown");
-        raw.Job = jobField.value;
-
-        Toggle eliteField = UI.System.Q<Toggle>("EliteToggle");
-        raw.Elite = eliteField.value;
+        string type = modal.Q<DropdownField>("Type").value;
+        string playerJob = SearchField.GetValue(modal.Q("PlayerJob"));
         
-        IntegerField objHPField = UI.System.Q<IntegerField>("ObjectHPField");
-        raw.ObjectHP = objHPField.value;
-
-        if (raw.Class == "Legend") {
-            DropdownField legendHpField = UI.System.Q<DropdownField>("LegendHPDropdown");
-            raw.LegendHP = int.Parse(legendHpField.value.Replace("x", ""));
-        }
-        else {
+        if (type == "Player") {
+            raw.Class = playerJob.Split("/")[0];
+            raw.Job = playerJob.Split("/")[1];
+            raw.Elite = false;
+            raw.ObjectHP = 0;
             raw.LegendHP = 1;
-        }
-
-        DropdownField sizeField = UI.System.Q<DropdownField>("SizeDropdown");
-        raw.Size = sizeField.value switch
-        {
-            "Large (2)" => 2,
-            "Huge (3)" => 3,
-            _ => 1,
-        };
-        if (!Icon_v1_5TokenData.IsFoe(raw.Class)) {
             raw.Size = 1;
         }
 
-        DropdownField graphicField = UI.System.Q<DropdownField>("GraphicDropdown");
-        Texture2D graphic = TextureSender.CopyLocalImage(graphicField.value);
-        raw.GraphicHash = TextureSender.GetTextureHash(graphic);
+
+        // DropdownField classField = UI.System.Q<DropdownField>("ClassDropdown");
+        // raw.Class = classField.value;
+
+        // DropdownField jobField = UI.System.Q<DropdownField>("JobDropdown");
+        // raw.Job = jobField.value;
+
+        // Toggle eliteField = UI.System.Q<Toggle>("EliteToggle");
+        // raw.Elite = eliteField.value;
+        
+        // IntegerField objHPField = UI.System.Q<IntegerField>("ObjectHPField");
+        // raw.ObjectHP = objHPField.value;
+
+        // if (raw.Class == "Legend") {
+        //     DropdownField legendHpField = UI.System.Q<DropdownField>("LegendHPDropdown");
+        //     raw.LegendHP = int.Parse(legendHpField.value.Replace("x", ""));
+        // }
+        // else {
+        //     raw.LegendHP = 1;
+        // }
+
+        // DropdownField sizeField = UI.System.Q<DropdownField>("SizeDropdown");
+        // raw.Size = sizeField.value switch
+        // {
+        //     "Large (2)" => 2,
+        //     "Huge (3)" => 3,
+        //     _ => 1,
+        // };
+        // if (!Icon_v1_5TokenData.IsFoe(raw.Class)) {
+        //     raw.Size = 1;
+        // }
+
+        // DropdownField graphicField = UI.System.Q<DropdownField>("GraphicDropdown");
+        // Texture2D graphic = TextureSender.CopyLocalImage(graphicField.value);
+        // raw.GraphicHash = TextureSender.GetTextureHash(graphic);
 
 
         return JsonUtility.ToJson(raw);

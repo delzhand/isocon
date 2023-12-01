@@ -213,7 +213,7 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void AddBlocks() {        
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         List<Column> markedCols = new List<Column>();
         selected.ForEach(block => {
             Column column = block.transform.parent.GetComponent<Column>();
@@ -230,11 +230,11 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void RemoveBlocks() {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block =>  {
-            if (block.GetComponent<Block>().Destroyable) {
+            if (block.Destroyable) {
                 GravityDrop(block.transform.parent.gameObject, block.transform.localPosition.y);
-                GameObject.DestroyImmediate(block);
+                GameObject.DestroyImmediate(block.gameObject);
             }
             else {
                 Toast.Add("Foundation blocks cannot be deleted (but can be hidden).", ToastType.Error);
@@ -244,30 +244,30 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void RotateBlocks() {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
             block.transform.Rotate(0, 90f, 0);
         });
     }
 
     public static void PaintBlocks() {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            block.GetComponent<Block>().Paint(Environment.Color5, Environment.Color6);
+            block.Paint(Environment.Color5, Environment.Color6);
         });
     }
 
     public static void DepaintBlocks() {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            block.GetComponent<Block>().Depaint();
+            block.Depaint();
         });
     }
 
     public static void Eyedropper() {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            Color[] colors = block.GetComponent<Block>().SamplePaint();
+            Color[] colors = block.SamplePaint();
             Environment.Color5 = colors[0];
             Environment.Color6 = colors[1];
             UI.System.Q("Color5").style.backgroundColor = colors[0];
@@ -276,7 +276,7 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void CloneRow() {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         selected.ForEach(selectedBlock => {
             for (int i = 0; i < columns.Length; i++) {
@@ -302,7 +302,7 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void DeleteRow() {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         selected.ForEach(selectedBlock => {
             int selectedX = selectedBlock.transform.parent.GetComponent<Column>().X;
@@ -324,7 +324,7 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void CloneColumn() {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         selected.ForEach(selectedBlock => {
             for (int i = 0; i < columns.Length; i++) {
@@ -350,7 +350,7 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void DeleteColumn() {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         selected.ForEach(selectedBlock => {
             int selectedY = selectedBlock.transform.parent.GetComponent<Column>().Y;
@@ -372,9 +372,9 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void ChangeType(BlockType type) {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            block.GetComponent<Block>().TypeChange(type);
+            block.TypeChange(type);
             if (type == BlockType.Slope) {
                 block.transform.Rotate(0, 90f, 0);
                 // counter-rotate indicator
@@ -384,10 +384,10 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void ChangeEffect(string effect) {
-        List<GameObject> selected = Block.GetAllSelected();
-        selected.ForEach((Action<GameObject>)(block => {
-            block.GetComponent<Block>().EffectChange(effect);
-        }));
+        List<Block> selected = Block.GetSelected().ToList();
+        selected.ForEach(block => {
+            block.EffectChange(effect);
+        });
     }
 
     private static GameObject TopBlock(GameObject column) {

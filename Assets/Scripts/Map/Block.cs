@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum BlockType
 {
@@ -216,31 +218,6 @@ public class Block : MonoBehaviour
         return effects;
     }
 
-    public static Block[] GetSelected() {
-        List<Block> selected = new();
-        GameObject[] gos = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < gos.Length; i++) {
-            Block block = gos[i].GetComponent<Block>();
-            if (block.Selected) {
-                selected.Add(block);
-            }
-        }
-        return selected.ToArray();
-    }
-
-    public static Block[] GetFocused() {
-        List<Block> focused = new();
-        GameObject[] gos = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < gos.Length; i++) {
-            Block block = gos[i].GetComponent<Block>();
-            if (block.Focused) {
-                focused.Add(block);
-            }
-        }
-        return focused.ToArray();
-    }
-
-    
     public static string GetAlpha(int x) {
         const int Base = 26;
         const int Offset = 64; // ASCII offset for uppercase letters
@@ -257,79 +234,6 @@ public class Block : MonoBehaviour
         }
         
         return column;    
-    }
-
-    public void Select() {
-        if (Selected) {
-            Selected = false;
-        }
-        else {
-            Selected = true;
-        }
-        MaterialReset = true;
-        TerrainController.SetInfo();
-    }
-
-    public void Deselect() {
-        Selected = false;
-        MaterialReset = true;
-    }
-
-    public void Focus() {
-        LastFocused = this;
-        Focused = true;
-        MaterialReset = true;
-        TerrainController.SetInfo();
-    }
-
-    public void Unfocus() {
-        Focused = false;
-        LastFocused = null;
-        MaterialReset = true;
-    }
-
-    public void Highlight() {
-        Highlighted = true;
-        MaterialReset = true;
-    }
-
-    public void Dehighlight() {
-        Highlighted = false;
-        MaterialReset = true;
-    }
-
-    public static void DehighlightAll() {
-        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < blocks.Length; i++) {
-            blocks[i].GetComponent<Block>().Dehighlight();
-        }
-    }
-
-    public static void DeselectAll() {
-        foreach (Block b in GetSelected()) {
-            b.Deselect();
-        }
-    }
-
-    public static void UnfocusAll() {
-        foreach (Block b in GetFocused()) {
-            b.Unfocus();
-        }
-    }
-
-    public static void ClearAllStates() {
-        
-    }
-
-    public static List<GameObject> GetAllSelected() {
-        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
-        List<GameObject> selected = new List<GameObject>();
-        for (int i = 0; i < blocks.Length; i++) {
-            if (blocks[i].GetComponent<Block>().Selected) {
-                selected.Add(blocks[i]);
-            }
-        }
-        return selected;
     }
 
     public void TypeChange(BlockType blocktype) {
@@ -483,4 +387,103 @@ public class Block : MonoBehaviour
         }
     }
 
+    #region Select
+    public void Select() {
+        if (Selected) {
+            Selected = false;
+        }
+        else {
+            Selected = true;
+        }
+        MaterialReset = true;
+        TerrainController.SetInfo();
+    }
+
+    public void Deselect() {
+        Selected = false;
+        MaterialReset = true;
+    }
+
+    public static Block[] GetSelected() {
+        List<Block> selected = new();
+        GameObject[] gos = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < gos.Length; i++) {
+            Block block = gos[i].GetComponent<Block>();
+            if (block.Selected) {
+                selected.Add(block);
+            }
+        }
+        return selected.ToArray();
+    }
+
+    public static void DeselectAll() {
+        foreach (Block b in GetSelected()) {
+            b.Deselect();
+        }
+    }
+    #endregion
+
+    #region Focus
+    public void Focus() {
+        LastFocused = this;
+        Focused = true;
+        MaterialReset = true;
+        TerrainController.SetInfo();
+    }
+
+    public void Unfocus() {
+        Focused = false;
+        LastFocused = null;
+        MaterialReset = true;
+    }
+
+    public static Block[] GetFocused() {
+        List<Block> focused = new();
+        GameObject[] gos = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < gos.Length; i++) {
+            Block block = gos[i].GetComponent<Block>();
+            if (block.Focused) {
+                focused.Add(block);
+            }
+        }
+        return focused.ToArray();
+    }
+
+
+    public static void UnfocusAll() {
+        foreach (Block b in GetFocused()) {
+            b.Unfocus();
+        }
+    }
+    #endregion
+    
+    #region Highlight
+    public void Highlight() {
+        Highlighted = true;
+        MaterialReset = true;
+    }
+
+    public void Dehighlight() {
+        Highlighted = false;
+        MaterialReset = true;
+    }
+
+    public static Block[] GetHighlighted() {
+        List<Block> highlighted = new();
+        GameObject[] gos = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < gos.Length; i++) {
+            Block block = gos[i].GetComponent<Block>();
+            if (block.Highlighted) {
+                highlighted.Add(block);
+            }
+        }
+        return highlighted.ToArray();
+    }
+
+    public static void DehighlightAll() {
+        foreach (Block b in GetHighlighted()) {
+            b.Dehighlight();
+        }
+    }
+    #endregion
 }

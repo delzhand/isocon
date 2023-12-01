@@ -35,12 +35,12 @@
     height: 100%;
     max-height: none;
     min-height: 0;
-    transition-duration: .5s;
+    transition-duration: 0.5s;
 }
 
 .unity-button {
     margin: 0;
-    padding: 0px 6px 2px;
+    padding: 0 6px 2px;
     border-width: 1px;
     border-radius: 2px;
     background-color: rgba(100, 100, 100, 0.15);

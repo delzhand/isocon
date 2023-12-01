@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum CursorMode {
     Editing,
@@ -36,12 +38,14 @@ public class Cursor : MonoBehaviour
             Block.UnfocusAll();
             Block.DehighlightAll();
             Token.UnfocusAll();
-            TerrainController.SetInfo();
+            if (Block.GetSelected().Length == 0) {
+                TerrainController.SetInfo();
+            }
         }
     }
 
     private void BlockHitCheck(RaycastHit hit) {
-        if (!hit.collider.gameObject) {
+        if (!hit.collider || !hit.collider.gameObject) {
             Block.UnfocusAll();
             Block.DehighlightAll();
             return;
@@ -72,7 +76,7 @@ public class Cursor : MonoBehaviour
     }
 
     private void TokenHitCheck(RaycastHit hit) {
-        if (!hit.collider.gameObject) {
+        if (!hit.collider || !hit.collider.gameObject) {
             Token.UnfocusAll();
             return;
         }

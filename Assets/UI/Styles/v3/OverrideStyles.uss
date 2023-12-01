@@ -31,7 +31,7 @@
 }
 
 #EditToken {
-    padding-bottom: 3px; /* 8px default -5 from last element */
+    padding-bottom: 3px;
 }
 
 #EditToken .unity-scroll-view {
@@ -54,7 +54,7 @@
     margin: 0;
     margin-bottom: 2px;
     padding: 2px 2px 2px 6px;
-    background-color: #FFF;
+    background-color: rgb(255, 255, 255);
     -unity-font-style: bold;
     border-radius: 10px;
     -unity-font-definition: resource('Fonts/ModernSans-Light SDF');
@@ -63,7 +63,11 @@
     flex-direction: row;
 }
 
-#Effects .effect .unity-label,
+#Effects .effect .unity-label {
+    margin: 0;
+    padding: 0;
+}
+
 #Effects .effect .unity-button {
     margin: 0;
     padding: 0;
@@ -135,7 +139,7 @@
 .edit-panel .unity-base-field .unity-base-field__label {
     flex-grow: 0;
     flex-shrink: 1;
-    min-width: 0px;
+    min-width: 0;
     width: 100px;
 }
 
@@ -154,7 +158,6 @@
 }
 
 #DiceResult {
-    /* flex-basis: 100%; */
 }
 
 #SearchResults {
@@ -168,12 +171,12 @@
 }
 
 #SearchResults .unity-label.selected {
-    color: #FFF;
+    color: rgb(255, 255, 255);
     background-color: orange;
 }
 
 .no-title #SearchInput {
-    min-width: 0px;
+    min-width: 0;
 }
 
 .no-title #SearchResults {
@@ -188,14 +191,14 @@
     min-width: 244px;
 }
 
-#GeneralModal #Contents>* {
+#GeneralModal #Contents > * {
     margin-bottom: 4px;
 }
 
 #FloatingControls .hover {
-    -unity-background-image-tint-color: #9C7A19;
+    -unity-background-image-tint-color: rgb(156, 122, 25);
 }
 
 #FloatingControls .active {
-    -unity-background-image-tint-color: #19829c;
+    -unity-background-image-tint-color: rgb(25, 130, 156);
 }

@@ -6,6 +6,8 @@ using Unity.Services.Authentication;
 using Unity.Services.Core;
 using System.Threading.Tasks;
 using System.Linq;
+using Newtonsoft.Json.Linq;
+using SimpleJSON;
 
 public class Launcher : MonoBehaviour
 {
@@ -104,6 +106,7 @@ public class Launcher : MonoBehaviour
                 break;
         }
         _latestVersion = RemoteConfigService.Instance.appConfig.GetString("LatestVersion");
+        GameSystem.DataJson = RemoteConfigService.Instance.appConfig.GetJson("GameSystem");
     }
 
     private void SetCallbacks() {

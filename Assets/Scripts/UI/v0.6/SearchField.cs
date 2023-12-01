@@ -44,6 +44,10 @@ public class SearchField
         return element;
     }
 
+    public static string GetValue(VisualElement v) {
+        return v.Q<TextField>("SearchInput").value;
+    }
+
     private static void FilterElements(VisualElement root) {
         string input = root.Q<TextField>("SearchInput").value.ToLower();
         foreach (Label label in root.Q("SearchResults").Children()) {

@@ -12,24 +12,84 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"90684922-ba8c-47f9-a08c-bdf57978106e\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"1d36a436-1f52-49be-98b3-5d4981160e12\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
-    \"value\": \"0.5.9\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"b203987a-0f39-456d-a73c-5521102b22d9\"\r\n    },\r\n    \"rs\":
+    \"value\": \"0.5.11\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
+    \"entityId\": \"7f157fe4-dde0-420d-9672-85b5b096f2a8\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"90684922-ba8c-47f9-a08c-bdf57978106e\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"ff2ba604-f94f-42eb-9a33-ced9395b5dad\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
+    \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
+    \"Stats\": {\r\n            \"Blue\": {\r\n              \"MaxHP\": 32,\r\n             
+    \"Damage\": 8,\r\n              \"Fray\": 3,\r\n              \"Range\": 6,\r\n             
+    \"Speed\": 4,\r\n              \"Dash\": 2,\r\n              \"Defense\": 7\r\n           
+    },\r\n            \"Yellow\": {\r\n              \"MaxHP\": 28,\r\n             
+    \"Damage\": 10,\r\n              \"Fray\": 2,\r\n              \"Range\": 4,\r\n             
+    \"Speed\": 4,\r\n              \"Dash\": 4,\r\n              \"Defense\": 10\r\n           
+    },\r\n            \"Red\": {\r\n              \"MaxHP\": 40,\r\n             
+    \"Damage\": 6,\r\n              \"Fray\": 4,\r\n              \"Range\": 3,\r\n             
+    \"Speed\": 4,\r\n              \"Dash\": 2,\r\n              \"Defense\": 6\r\n           
+    },\r\n            \"Green\": {\r\n              \"MaxHP\": 40,\r\n             
+    \"Damage\": 6,\r\n              \"Fray\": 3,\r\n              \"Range\": 3,\r\n             
+    \"Speed\": 4,\r\n              \"Dash\": 2,\r\n              \"Defense\": 8\r\n           
+    },\r\n            \"Legend\": {\r\n              \"MaxHP\": 50,\r\n             
+    \"Damage\": 8,\r\n              \"Fray\": 3,\r\n              \"Range\": 3,\r\n             
+    \"Speed\": 4,\r\n              \"Dash\": 2,\r\n              \"Defense\": 8\r\n           
+    },\r\n            \"Mob\": {\r\n              \"MaxHP\": 2,\r\n             
+    \"Damage\": 6,\r\n              \"Fray\": 3,\r\n              \"Range\": 1,\r\n             
+    \"Speed\": 4,\r\n              \"Dash\": 2,\r\n              \"Defense\": 8\r\n           
+    }\r\n          },\r\n          \"PlayerJobs\": [\r\n            \"Stalwart/Bastion\",\r\n           
+    \"Stalwart/Demon Slayer\",\r\n            \"Stalwart/Colossus\",\r\n           
+    \"Stalwart/Knave\",\r\n            \"Vagabond/Fool\",\r\n            \"Vagabond/Freelancer\",\r\n           
+    \"Vagabond/Shade\",\r\n            \"Vagabond/Warden\",\r\n            \"Mendicant/Chanter\",\r\n           
+    \"Mendicant/Harvester\",\r\n            \"Mendicant/Sealer\",\r\n           
+    \"Mendicant/Seer\",\r\n            \"Wright/Enochian\",\r\n            \"Wright/Geomancer\",\r\n           
+    \"Wright/Spellblade\",\r\n            \"Wright/Stormbender\"\r\n          ],\r\n         
+    \"FoeClasses\": [\r\n            \"Heavy\",\r\n            \"Artillery\",\r\n           
+    \"Skirmisher\",\r\n            \"Leader\",\r\n            \"Mob\",\r\n           
+    \"Legend\"\r\n          ]\r\n        }\r\n      }\r\n    }\r\n  }\r\n]"
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"1d36a436-1f52-49be-98b3-5d4981160e12\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
-    \"value\": \"0.5.9\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"b203987a-0f39-456d-a73c-5521102b22d9\"\r\n    },\r\n    \"rs\":
+    \"value\": \"0.5.11\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
+    \"entityId\": \"7f157fe4-dde0-420d-9672-85b5b096f2a8\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  }\r\n]"
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"ff2ba604-f94f-42eb-9a33-ced9395b5dad\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
+    \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
+    \"Stats\": {\r\n            \"Blue\": {\r\n              \"MaxHP\": 32,\r\n             
+    \"Damage\": 8,\r\n              \"Fray\": 3,\r\n              \"Range\": 6,\r\n             
+    \"Speed\": 4,\r\n              \"Dash\": 2,\r\n              \"Defense\": 7\r\n           
+    },\r\n            \"Yellow\": {\r\n              \"MaxHP\": 28,\r\n             
+    \"Damage\": 10,\r\n              \"Fray\": 2,\r\n              \"Range\": 4,\r\n             
+    \"Speed\": 4,\r\n              \"Dash\": 4,\r\n              \"Defense\": 10\r\n           
+    },\r\n            \"Red\": {\r\n              \"MaxHP\": 40,\r\n             
+    \"Damage\": 6,\r\n              \"Fray\": 4,\r\n              \"Range\": 3,\r\n             
+    \"Speed\": 4,\r\n              \"Dash\": 2,\r\n              \"Defense\": 6\r\n           
+    },\r\n            \"Green\": {\r\n              \"MaxHP\": 40,\r\n             
+    \"Damage\": 6,\r\n              \"Fray\": 3,\r\n              \"Range\": 3,\r\n             
+    \"Speed\": 4,\r\n              \"Dash\": 2,\r\n              \"Defense\": 8\r\n           
+    },\r\n            \"Legend\": {\r\n              \"MaxHP\": 50,\r\n             
+    \"Damage\": 8,\r\n              \"Fray\": 3,\r\n              \"Range\": 3,\r\n             
+    \"Speed\": 4,\r\n              \"Dash\": 2,\r\n              \"Defense\": 8\r\n           
+    },\r\n            \"Mob\": {\r\n              \"MaxHP\": 2,\r\n             
+    \"Damage\": 6,\r\n              \"Fray\": 3,\r\n              \"Range\": 1,\r\n             
+    \"Speed\": 4,\r\n              \"Dash\": 2,\r\n              \"Defense\": 8\r\n           
+    }\r\n          },\r\n          \"PlayerJobs\": [\r\n            \"Stalwart/Bastion\",\r\n           
+    \"Stalwart/Demon Slayer\",\r\n            \"Stalwart/Colossus\",\r\n           
+    \"Stalwart/Knave\",\r\n            \"Vagabond/Fool\",\r\n            \"Vagabond/Freelancer\",\r\n           
+    \"Vagabond/Shade\",\r\n            \"Vagabond/Warden\",\r\n            \"Mendicant/Chanter\",\r\n           
+    \"Mendicant/Harvester\",\r\n            \"Mendicant/Sealer\",\r\n           
+    \"Mendicant/Seer\",\r\n            \"Wright/Enochian\",\r\n            \"Wright/Geomancer\",\r\n           
+    \"Wright/Spellblade\",\r\n            \"Wright/Stormbender\"\r\n          ],\r\n         
+    \"FoeClasses\": [\r\n            \"Heavy\",\r\n            \"Artillery\",\r\n           
+    \"Skirmisher\",\r\n            \"Leader\",\r\n            \"Mob\",\r\n           
+    \"Legend\"\r\n          ]\r\n        }\r\n      }\r\n    }\r\n  }\r\n]"
   _environments: "[\r\n  {\r\n    \"projectId\": \"84cc6114-4488-4698-9103-7c2948671b2e\",\r\n   
     \"name\": \"production\",\r\n    \"id\": \"b3e19d49-e656-4b78-b133-15a1b7d39d66\",\r\n   
     \"isDefault\": true,\r\n    \"createdAt\": \"2023-11-05T13:57:15Z\",\r\n    \"updatedAt\":
