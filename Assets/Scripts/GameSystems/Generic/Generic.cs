@@ -56,20 +56,8 @@ public class Generic : GameSystem
     public override void AddTokenModal()
     {
         base.AddTokenModal();
-
-        DropdownField sizeField = new DropdownField("Size");
-        sizeField.choices = new List<string>(){"1x1", "2x2", "3x3"};
-        sizeField.value = "1x1";
-        sizeField.name = "SizeField";
-        sizeField.focusable = false;
-        sizeField.AddToClassList("no-margin");
-        Modal.AddContents(sizeField);
-        
-        IntegerField hpField = new IntegerField("HP");
-        hpField.name = "HPField";
-        hpField.value = 100;
-        hpField.AddToClassList("no-margin");
-        Modal.AddContents(hpField);
+        Modal.AddDropdownField("SizeField", "Size", "1x1", new string[]{"1x1", "2x2", "3x3"});
+        Modal.AddIntField("HPField", "HP", 1);
     }
 
 }

@@ -34,7 +34,7 @@ public class Modal
         UI.ToggleDisplay("Backdrop", true);
     }
 
-    public static void AddContents(VisualElement e) {
+    private static void AddContents(VisualElement e) {
         VisualElement modal = Find();
         modal.Q("Contents").Add(e);
         e.SendToBack();

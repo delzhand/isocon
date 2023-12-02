@@ -56,31 +56,9 @@ public class Player : NetworkBehaviour
             }
         } 
 
-        // VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/ConnectedPlayer");
-        // VisualElement instance = template.Instantiate();
-        // UI.System.Q("PlayerList").Add(instance);
-        // PlayerReference pRef = new GameObject(Name + " Reference").AddComponent<PlayerReference>();
         Toast.Add(Name + " connected.");
-        // pRef.player = this;
-        // pRef.visualElement = instance;
 
         if (isLocalPlayer) {
-            // // Set up editing
-            // instance.Q<Label>("PlayerName").RegisterCallback<ClickEvent>((evt) => {
-            //     instance.Q<TextField>("PlayerNameEdit").value = Name;
-            //     UI.ToggleDisplay(instance.Q("PlayerName"), false);
-            //     UI.ToggleDisplay(instance.Q("PlayerNameEdit"), true);
-            // });
-
-            // // Change name
-            // instance.Q<TextField>("PlayerNameEdit").RegisterCallback<BlurEvent>((evt) => {
-            //     Name = instance.Q<TextField>("PlayerNameEdit").value;
-            //     PlayerPrefs.SetString("PlayerName", Name);
-            //     UI.ToggleDisplay(instance.Q("PlayerName"), true);
-            //     UI.ToggleDisplay(instance.Q("PlayerNameEdit"), false);
-            // });
-
-            // Request session data from host
             CmdRequestMapSync();
         }
     }
@@ -164,33 +142,21 @@ public class Player : NetworkBehaviour
         DoMoveToken(dataObject, v + new Vector3(0, 1f, 0), true);
         DoMoveToken(dataObject, v, false);
     }
-    // [ClientRpc]
-    // public void RpcPlaceToken(GameObject dataObject) {
-    //     dataObject.GetComponent<TokenData>().OnField = true;
-    // }
     [Command]
-    public void CmdRequestGameDataSetValue(string label, int value) {
-        RpcGameDataSetValue(label, value);
+    public void CmdRequestGameDataSetValue(string value) {
+        RpcGameDataSetValue(value);
     }
     [ClientRpc]
-    public void RpcGameDataSetValue(string label, int value) {
-        GameSystem.Current().GameDataSetValue(label, value);
+    public void RpcGameDataSetValue(string value) {
+        GameSystem.Current().GameDataSetValue(value);
     }
     [Command]
-    public void CmdRequestTokenDataSetValue(TokenData data, string label, int value) {
-        RpcTokenDataSetValue(data, label, value);
+    public void CmdRequestTokenDataSetValue(TokenData data, string value) {
+        RpcTokenDataSetValue(data, value);
     }
     [ClientRpc]
-    public void RpcTokenDataSetValue(TokenData data, string label, int value) {
-        GameSystem.Current().TokenDataSetValue(data, label, value);
-    }
-    [Command]
-    public void CmdRequestTokenDataSetValue(TokenData data, string label, string value) {
-        RpcTokenDataSetValue(data, label, value);
-    }
-    [ClientRpc]
-    public void RpcTokenDataSetValue(TokenData data, string label, string value) {
-        GameSystem.Current().TokenDataSetValue(data, label, value);
+    public void RpcTokenDataSetValue(TokenData data, string value) {
+        GameSystem.Current().TokenDataSetValue(data, value);
     }    
     #endregion
 
@@ -207,7 +173,6 @@ public class Player : NetworkBehaviour
                 target.EffectChange(value);
             }
         }
-        TerrainController.SetInfo();
     }
     #endregion
 

@@ -38,13 +38,17 @@ public class Launcher : MonoBehaviour
             Player.Self().CmdCreateTokenData(json);
             json = "{\"Name\":\"Sae\",\"CurrentHP\":0,\"MaxHP\":100,\"GraphicHash\":\"7451fc67cb845c64f81d0918baeaf5829d7821790cf98b388b364d18a893e2fe\",\"Size\":1}";
             Player.Self().CmdCreateTokenData(json);
-        
+
             Toast.Add("Debug function 1 executed");
         });
 
         UI.System.Q("Debug2").RegisterCallback<ClickEvent>((evt) => {
-            AuraManager am = GameObject.FindGameObjectWithTag("Token").AddComponent<AuraManager>();
-            am.AddAura("Rampart", 2);
+            // AuraManager am = GameObject.FindGameObjectWithTag("Token").AddComponent<AuraManager>();
+            // am.AddAura("Rampart", 2);
+
+            Player.Self().CmdRequestTokenDataSetValue(Token.GetSelectedData().GetComponent<TokenData>(), "GainHP|1000");
+            // Player.Self().CmdRequestTokenDataSetValue(Token.GetSelectedData().GetComponent<TokenData>(), "GainVIG|1000");
+
             Toast.Add("Debug function 2 executed");
         });
     }
@@ -157,22 +161,16 @@ public class Launcher : MonoBehaviour
 
         if (_connectMode == "host") {
             int maxPlayers = PlayerPrefs.GetInt("PlayerCount", 4);
-            IntegerField playerCount = new IntegerField("Player Count");
-            playerCount.value = maxPlayers;
-            playerCount.RegisterValueChangedCallback<int>((evt) => {
+            Modal.AddIntField("PlayerCount", "Max Player Count", maxPlayers, (evt) => {
                 PlayerPrefs.SetInt("PlayerCount", evt.newValue);
             });
-            Modal.AddContents(playerCount);
         }
 
         if (_connectMode == "client") {
             string hostIP = PlayerPrefs.GetString("HostIP", "");
-            TextField hostIPField = new TextField("Host IP");
-            hostIPField.value = hostIP;
-            hostIPField.RegisterValueChangedCallback<string>((evt) => {
+            Modal.AddTextField("HostIP", "Host IP", hostIP, (evt) => {
                 PlayerPrefs.SetString("HostIP", evt.newValue);
-            });  
-            Modal.AddContents(hostIPField);          
+            });
         }
 
         Button confirm = new Button();

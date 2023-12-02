@@ -9,9 +9,7 @@ public class AddToken
     public static void OpenModal(ClickEvent evt) {
         Modal.Reset("Add Token");
 
-        VisualElement imageSearchField = SearchField.Create(GetImageOptions(), "Add Token");
-        imageSearchField.name = "ImageSearchField";
-        Modal.AddContents(imageSearchField);
+        Modal.AddSearchField("ImageSearchField", "Add Token", "", GetImageOptions());
 
         GameSystem.Current().AddTokenModal();
 

@@ -7,24 +7,12 @@ public class AddObject
 {
     public static void OpenModal(ClickEvent evt) {
 
-        VisualElement imageSearchField = SearchField.Create(AddToken.GetImageOptions(), "Add Object");
-        imageSearchField.name = "ImageSearchField";
+        Modal.Reset("Add Object");
+        Modal.AddSearchField("ImageSearchField", "Add Object", "", AddToken.GetImageOptions());
 
-        Toggle blockEffects = new Toggle();
-        blockEffects.name = "BlockEffects";
-        blockEffects.label = "Block Terrain Effects";
-        blockEffects.AddToClassList("no-margin");
-        blockEffects.focusable = false;
+        Modal.AddToggleField("SuppressTileEffects", "Suppress Tile Effects", false);
 
-        DropdownField height = new DropdownField();
-        height.name = "ObjectHeight";
-        height.label = "Height";
-        height.choices = new List<string>();
-        for (int i = 0; i <= 3; i++) {
-            height.choices.Add(i.ToString());
-        }
-        height.focusable = false;
-        height.AddToClassList("no-margin");
+        Modal.AddDropdownField("ObjectHeight", "Height", "1", new string[]{"1", "2", "3", "4", "5"});
 
         Button confirm = new Button();
         confirm.text = "Confirm";
@@ -35,10 +23,6 @@ public class AddObject
         cancel.text = "Cancel";
         cancel.RegisterCallback<ClickEvent>(CloseModal);
 
-        Modal.Reset("Add Object");
-        Modal.AddContents(imageSearchField);
-        Modal.AddContents(height);
-        Modal.AddContents(blockEffects);
         Modal.AddButton(confirm);
         Modal.AddButton(cancel);
     }

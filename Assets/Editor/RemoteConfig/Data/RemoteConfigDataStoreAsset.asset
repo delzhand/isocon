@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"1d36a436-1f52-49be-98b3-5d4981160e12\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"9403f077-757b-4865-9430-d5d245762a70\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"0.5.11\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"7f157fe4-dde0-420d-9672-85b5b096f2a8\"\r\n    },\r\n    \"rs\":
+    \"entityId\": \"373235fd-28ca-429d-99c5-febed9ad8d88\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"ff2ba604-f94f-42eb-9a33-ced9395b5dad\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"c0d9e1f5-ec51-4532-83c7-31a178039e42\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
     \"Stats\": {\r\n            \"Blue\": {\r\n              \"MaxHP\": 32,\r\n             
@@ -35,10 +35,10 @@ MonoBehaviour:
     },\r\n            \"Green\": {\r\n              \"MaxHP\": 40,\r\n             
     \"Damage\": 6,\r\n              \"Fray\": 3,\r\n              \"Range\": 3,\r\n             
     \"Speed\": 4,\r\n              \"Dash\": 2,\r\n              \"Defense\": 8\r\n           
-    },\r\n            \"Legend\": {\r\n              \"MaxHP\": 50,\r\n             
+    },\r\n            \"Purple\": {\r\n              \"MaxHP\": 50,\r\n             
     \"Damage\": 8,\r\n              \"Fray\": 3,\r\n              \"Range\": 3,\r\n             
     \"Speed\": 4,\r\n              \"Dash\": 2,\r\n              \"Defense\": 8\r\n           
-    },\r\n            \"Mob\": {\r\n              \"MaxHP\": 2,\r\n             
+    },\r\n            \"Gray\": {\r\n              \"MaxHP\": 2,\r\n             
     \"Damage\": 6,\r\n              \"Fray\": 3,\r\n              \"Range\": 1,\r\n             
     \"Speed\": 4,\r\n              \"Dash\": 2,\r\n              \"Defense\": 8\r\n           
     }\r\n          },\r\n          \"PlayerJobs\": [\r\n            \"Stalwart/Bastion\",\r\n           
@@ -51,15 +51,15 @@ MonoBehaviour:
     \"FoeClasses\": [\r\n            \"Heavy\",\r\n            \"Artillery\",\r\n           
     \"Skirmisher\",\r\n            \"Leader\",\r\n            \"Mob\",\r\n           
     \"Legend\"\r\n          ]\r\n        }\r\n      }\r\n    }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"1d36a436-1f52-49be-98b3-5d4981160e12\"\r\n   
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"9403f077-757b-4865-9430-d5d245762a70\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"0.5.11\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"7f157fe4-dde0-420d-9672-85b5b096f2a8\"\r\n    },\r\n    \"rs\":
+    \"entityId\": \"373235fd-28ca-429d-99c5-febed9ad8d88\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"ff2ba604-f94f-42eb-9a33-ced9395b5dad\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"c0d9e1f5-ec51-4532-83c7-31a178039e42\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
     \"Stats\": {\r\n            \"Blue\": {\r\n              \"MaxHP\": 32,\r\n             
@@ -74,10 +74,10 @@ MonoBehaviour:
     },\r\n            \"Green\": {\r\n              \"MaxHP\": 40,\r\n             
     \"Damage\": 6,\r\n              \"Fray\": 3,\r\n              \"Range\": 3,\r\n             
     \"Speed\": 4,\r\n              \"Dash\": 2,\r\n              \"Defense\": 8\r\n           
-    },\r\n            \"Legend\": {\r\n              \"MaxHP\": 50,\r\n             
+    },\r\n            \"Purple\": {\r\n              \"MaxHP\": 50,\r\n             
     \"Damage\": 8,\r\n              \"Fray\": 3,\r\n              \"Range\": 3,\r\n             
     \"Speed\": 4,\r\n              \"Dash\": 2,\r\n              \"Defense\": 8\r\n           
-    },\r\n            \"Mob\": {\r\n              \"MaxHP\": 2,\r\n             
+    },\r\n            \"Gray\": {\r\n              \"MaxHP\": 2,\r\n             
     \"Damage\": 6,\r\n              \"Fray\": 3,\r\n              \"Range\": 1,\r\n             
     \"Speed\": 4,\r\n              \"Dash\": 2,\r\n              \"Defense\": 8\r\n           
     }\r\n          },\r\n          \"PlayerJobs\": [\r\n            \"Stalwart/Bastion\",\r\n           

@@ -22,26 +22,17 @@ public class Icon_v1_5 : GameSystem
         return Icon_v1_5TokenDataRaw.ToJson();
     }
 
-    public override void GameDataSetValue(string label, int value) {
-        switch (label) {
-            case "TurnNumber":
-                // TurnNumber = value;
-                // UI.System.Q<Label>("TurnNumber").text = $"Turn {TurnNumber}";
-                // foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
-                //     Icon_v1_5TokenData data = g.GetComponent<Icon_v1_5TokenData>();
-                //     if (data.CheckCondition("TurnEnded")) {
-                //         data.Change("Status", "Turn Ended|neu");
-                //     }
-                // }
-                break;
-            case "PartyResolve":
-                // PartyResolve = value;
-                // Token selected = Token.GetSelected();
-                // if (selected != null) {
-                //     TokenData selectedData = selected.onlineDataObject.GetComponent<TokenData>();
-                //     Player.Self().CmdRequestTokenDataSetValue(selectedData, "PartyResolve", PartyResolve);
-                // }
-                break;
+    public override void GameDataSetValue(string value) {
+        if (value == "IncrementTurn") {
+            TurnNumber++;
+            // Todo: update UI turn number
+            foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
+                Icon_v1_5TokenData data = g.GetComponent<Icon_v1_5TokenData>();
+                data.Change("RemoveStatus|TurnEnded");
+            }
+        }
+        else if (value == "IncrementPartyResolve") {
+            PartyResolve++;
         }
     }
 
@@ -121,6 +112,8 @@ public class Icon_v1_5 : GameSystem
 
         Modal.AddDropdownField("FoeClass", "Class", foeClasses[0], foeClasses.ToArray(), (evt) => AddTokenModalEvaluateConditions());
 
+        Modal.AddTextField("FoeJob", "Job", "");
+
         Modal.AddToggleField("Elite", "Elite", false);
 
         Modal.AddDropdownField("LegendHP", "Legend HP Multiplier", "x4", new string[]{"x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8"});
@@ -137,13 +130,15 @@ public class Icon_v1_5 : GameSystem
 
         bool playerJob = modal.Q<DropdownField>("Type").value == "Player";
         bool foeClass = modal.Q<DropdownField>("Type").value == "Foe";
-        bool elite = foeClass && !(new string[]{"Legend", "Mob"}.ToList().Contains(modal.Q<DropdownField>("FoeClass").value));
+        bool foeJob = modal.Q<DropdownField>("Type").value == "Foe";
+        bool elite = foeClass && !StringUtility.InList(modal.Q<DropdownField>("FoeClass").value, "Legend", "Mob");
         bool legendHP = foeClass && modal.Q<DropdownField>("FoeClass").value == "Legend";
         bool size = foeClass;
         bool objectHP = modal.Q<DropdownField>("Type").value == "Object";
 
         UI.ToggleDisplay(Modal.Find().Q("PlayerJob"), playerJob);
         UI.ToggleDisplay(Modal.Find().Q("FoeClass"), foeClass);
+        UI.ToggleDisplay(Modal.Find().Q("FoeJob"), foeJob);
         UI.ToggleDisplay(Modal.Find().Q("Elite"), elite);
         UI.ToggleDisplay(Modal.Find().Q("LegendHP"), legendHP);
         UI.ToggleDisplay(Modal.Find().Q("Size"), size);

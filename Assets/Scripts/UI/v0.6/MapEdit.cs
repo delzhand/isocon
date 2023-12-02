@@ -43,6 +43,8 @@ public class MapEdit
     private static void StartEditing() {
         UI.ToggleDisplay("ToolsPanel", true);
         Block.DeselectAll();
+        Token.DeselectAll();
+        Token.UnfocusAll();
         Cursor.Mode = CursorMode.Editing;
         UI.ToggleActiveClass(UI.System.Q("FloatingControls").Q("EditMap"), true);
         UI.ToggleDisplay("BottomBar", false);
@@ -51,6 +53,7 @@ public class MapEdit
     private static void EndEditing() {
         Cursor.Mode = CursorMode.Default;
         UI.ToggleDisplay("ToolsPanel", false);
+        UI.ToggleDisplay("ColorPanel", false);
         State.SetCurrentJson();
         Player.Self().CmdMapSync();
         UI.ToggleActiveClass(UI.System.Q("FloatingControls").Q("EditMap"), false);
@@ -101,9 +104,9 @@ public class MapEdit
     }
 
     private static void OpenOpenModal(ClickEvent evt) {
+        Modal.Reset("Open Map");
 
-        VisualElement searchField = SearchField.Create(GetAllMapFiles(), "Filename");
-        searchField.name = "SearchField";
+        Modal.AddSearchField("SearchField", "Filename", "", GetAllMapFiles());
 
         Button confirm = new Button();
         confirm.text = "Confirm";
@@ -114,8 +117,6 @@ public class MapEdit
         cancel.text = "Cancel";
         cancel.RegisterCallback<ClickEvent>(CloseModal);
 
-        Modal.Reset("Open Map");
-        Modal.AddContents(searchField);
         Modal.AddButton(confirm);
         Modal.AddButton(cancel);
     }

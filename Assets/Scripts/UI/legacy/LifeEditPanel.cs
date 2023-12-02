@@ -29,15 +29,15 @@ public class LifeEditPanel : MonoBehaviour
             int hpDiff = UI.System.Q<IntegerField>("v_HpDiff").value;
             int vigDiff = UI.System.Q<IntegerField>("v_VigDiff").value;
             if (vigDiff != 0) {
-                Player.Self().CmdRequestTokenDataSetValue(Data, "Vigor", Data.Vigor - vigDiff);
+                // Player.Self().CmdRequestTokenDataSetValue(Data, "Vigor", Data.Vigor - vigDiff);
             }
             if (hpDiff != 0) {
                 if (vigDiff != 0) {
                     // To avoid overlapping popups, find a way to delay this by 2s
-                    Player.Self().CmdRequestTokenDataSetValue(Data, "CurrentHP", Data.CurrentHP - hpDiff);
+                    // Player.Self().CmdRequestTokenDataSetValue(Data, "CurrentHP", Data.CurrentHP - hpDiff);
                 }
                 else {
-                    Player.Self().CmdRequestTokenDataSetValue(Data, "CurrentHP", Data.CurrentHP - hpDiff);
+                    // Player.Self().CmdRequestTokenDataSetValue(Data, "CurrentHP", Data.CurrentHP - hpDiff);
                 }
             }
         });

@@ -42,7 +42,6 @@ public class TokenMenu
         Block.DeselectAll();
         Block.UnfocusAll();
         Cursor.Mode = CursorMode.Placing;
-        Token.GetSelected().SetPlacing();
         SelectionMenu.ActivateItem("Place");
     }
 
@@ -59,7 +58,6 @@ public class TokenMenu
         Block.DeselectAll();
         Block.UnfocusAll();
         Cursor.Mode = CursorMode.Moving;
-        Token.GetSelected().SetMoving();
         SelectionMenu.ActivateItem("Move");
     }
 
@@ -69,14 +67,13 @@ public class TokenMenu
 
     public static void EndCursorMode() {
         Block.DehighlightAll();
-        Token.GetSelected().SetNeutral();
         SelectionMenu.DeactivateItem();
         ShowMenu();
     }
 
     public static void ClickRemove(ClickEvent evt) {
         Token.GetSelected().onlineDataObject.GetComponent<TokenData>().OnField = false;
-        Token.GetSelected().SetNeutral();
+        Token.GetSelected().UpdateVisualEffect();
         ShowMenu();
     }
 

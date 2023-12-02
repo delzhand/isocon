@@ -18,6 +18,8 @@ public class Cursor : MonoBehaviour
     public static CursorMode Mode = CursorMode.Default;
     private static Ray ray;
     private static RaycastHit hit;
+    private bool firstBlockHit = false;
+    private bool firstTokenHit = false;
 
     void Update()
     {
@@ -30,60 +32,91 @@ public class Cursor : MonoBehaviour
         }
 
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, 100f)) {
-            BlockHitCheck(hit);
-            TokenHitCheck(hit);
+
+        RaycastHit[] hits = Physics.RaycastAll(ray, 100f); // use an array so we can hit the block behind a token
+        if (hits.Length > 0) {
+            firstBlockHit = false;
+            firstTokenHit = false;
+            foreach (RaycastHit hit in hits) {    
+                BlockHitCheck(hit);
+                TokenHitCheck(hit);
+            }
         }
-        else {
+
+        if (!firstBlockHit) {
             Block.UnfocusAll();
             Block.DehighlightAll();
-            Token.UnfocusAll();
             if (Block.GetSelected().Length == 0) {
                 TerrainController.SetInfo();
             }
         }
+
+        if (!firstTokenHit) {
+            Token.UnfocusAll();
+        }
+
+        if (Block.GetSelected().Length == 0) {
+            TerrainController.SetInfo();
+        }
+
+
+        // else {
+        //     Block.UnfocusAll();
+        //     Block.DehighlightAll();
+        //     Token.UnfocusAll();
+        //     if (Block.GetSelected().Length == 0) {
+        //         TerrainController.SetInfo();
+        //     }
+        // }
     }
 
     private void BlockHitCheck(RaycastHit hit) {
+        if (firstBlockHit) {
+            // Ignore blocks past the first one on the ray
+            return;
+        }
+
         if (!hit.collider || !hit.collider.gameObject) {
-            Block.UnfocusAll();
-            Block.DehighlightAll();
+            // Block.UnfocusAll();
+            // Block.DehighlightAll();
             return;
         }
 
         Block b = hit.collider.GetComponent<Block>();
         if (!b) {
-            Block.UnfocusAll();
-            Block.DehighlightAll();
+            // Block.UnfocusAll();
+            // Block.DehighlightAll();
             return;
         }
 
+
         switch (Mode) {
-            case CursorMode.Default:
-            case CursorMode.Editing:
-                if (!b.Focused) {
-                    b.Focus();
-                }
-                BlockClicks(b);
-                break;
             case CursorMode.Moving:
             case CursorMode.Placing:
                 Block.DehighlightAll();
                 HighlightSizeArea(b);
-                BlockClicks(b);
                 break;
         }
+
+        if (!b.Focused) {
+            b.Focus();
+        }
+        BlockClicks(b);
+
+        firstBlockHit = true;
     }
 
     private void TokenHitCheck(RaycastHit hit) {
         if (!hit.collider || !hit.collider.gameObject) {
-            Token.UnfocusAll();
+            // Token.UnfocusAll();
             return;
         }
 
+
         Cutout c = hit.collider.GetComponent<Cutout>();
         if (!c) {
-            Token.UnfocusAll();
+            // if the hit was a block, don't do this
+            // Token.UnfocusAll();
             return;
         }
 
@@ -100,6 +133,8 @@ public class Cursor : MonoBehaviour
                 TokenClicks(t);
                 break;
         }
+
+        firstTokenHit = true;
     }
 
     private void HighlightSizeArea(Block block) {

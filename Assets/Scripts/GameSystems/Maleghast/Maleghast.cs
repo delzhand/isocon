@@ -19,28 +19,19 @@ public class Maleghast : GameSystem
         return MaleghastTokenDataRaw.ToJson();
     }
 
-    public override void TokenDataSetValue(TokenData data, string label, int value)
+    public override void TokenDataSetValue(TokenData data, string value)
     {
-        (data as MaleghastTokenData).Change(label, value);
+        (data as MaleghastTokenData).Change(value);
     }
 
-    public override void TokenDataSetValue(TokenData data, string label, string value)
-    {
-        (data as MaleghastTokenData).Change(label, value);
-    }
-
-    public override void GameDataSetValue(string label, int value) {
-        switch (label) {
-            case "TurnNumber":
-                TurnNumber = value;
-                UI.System.Q<Label>("TurnNumber").text = $"Turn {TurnNumber}";
-                foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
-                    MaleghastTokenData data = g.GetComponent<MaleghastTokenData>();
-                    if (data.CheckCondition("TurnEnded")) {
-                        data.Change("Status", "Turn Ended|neu");
-                    }
-                }
-                break;
+    public override void GameDataSetValue(string value) {
+        if (value == "IncrementTurn") {
+            TurnNumber++;
+            // Todo: update UI turn number
+            foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
+                Icon_v1_5TokenData data = g.GetComponent<Icon_v1_5TokenData>();
+                data.Change("RemoveStatus|TurnEnded");
+            }
         }
     }
 
@@ -65,7 +56,7 @@ public class Maleghast : GameSystem
         UI.ToggleDisplay(UI.System.Q("MaleghastStats"), true);
         UI.ToggleDisplay(UI.System.Q("MaleghastEditPanel"), true);
         UI.System.Q<Button>("NewTurnButton").RegisterCallback<ClickEvent>((evt) => {
-            Player.Self().CmdRequestGameDataSetValue("TurnNumber", TurnNumber+1);
+            Player.Self().CmdRequestGameDataSetValue("IncrementTurn");
         });
     }
 
@@ -79,24 +70,24 @@ public class Maleghast : GameSystem
 
         VisualElement panel = UI.System.Q("MaleghastEditPanel");
 
-        panel.Q<NumberNudger>("e_HP").AddValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "CurrentHP", evt);
-        });
-        panel.Q<NumberNudger>("e_Strength").AddValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Strength", evt);
-        });
-        panel.Q<NumberNudger>("e_Vit").AddValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Vitality", evt);
-        });
-        panel.Q<NumberNudger>("e_Speed").AddValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Speed", evt);
-        });
-        panel.Q<NumberNudger>("e_Soul").AddValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Soul", evt);
-        });
-        panel.Q<Toggle>("e_Loaded").RegisterValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Loaded", evt.newValue ? 1 : 0);
-        });
+        // panel.Q<NumberNudger>("e_HP").AddValueChangedCallback((evt) => {
+        //     Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "CurrentHP", evt);
+        // });
+        // panel.Q<NumberNudger>("e_Strength").AddValueChangedCallback((evt) => {
+        //     Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Strength", evt);
+        // });
+        // panel.Q<NumberNudger>("e_Vit").AddValueChangedCallback((evt) => {
+        //     Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Vitality", evt);
+        // });
+        // panel.Q<NumberNudger>("e_Speed").AddValueChangedCallback((evt) => {
+        //     Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Speed", evt);
+        // });
+        // panel.Q<NumberNudger>("e_Soul").AddValueChangedCallback((evt) => {
+        //     Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Soul", evt);
+        // });
+        // panel.Q<Toggle>("e_Loaded").RegisterValueChangedCallback((evt) => {
+        //     Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Loaded", evt.newValue ? 1 : 0);
+        // });
     }
 
     public override void SyncEditValues(TokenData data)

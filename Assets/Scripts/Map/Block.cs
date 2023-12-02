@@ -461,6 +461,7 @@ public class Block : MonoBehaviour
     public void Highlight() {
         Highlighted = true;
         MaterialReset = true;
+        TerrainController.SetInfo();
     }
 
     public void Dehighlight() {

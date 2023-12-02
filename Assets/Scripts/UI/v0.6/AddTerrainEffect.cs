@@ -8,8 +8,9 @@ public class AddTerrainEffect
 {
     public static void OpenModal(ClickEvent evt) {
 
-        VisualElement searchField = SearchField.Create(GameSystem.Current().GetEffectList(), "Add Terrain Effect");
-        searchField.name = "SearchField";
+        Modal.Reset("Add Terrain Effect");
+
+        Modal.AddSearchField("SearchField", "Add Terrain Effect", "", GameSystem.Current().GetEffectList());
 
         Button confirm = new Button();
         confirm.text = "Confirm";
@@ -20,8 +21,6 @@ public class AddTerrainEffect
         cancel.text = "Cancel";
         cancel.RegisterCallback<ClickEvent>(CloseModal);
 
-        Modal.Reset("Add Terrain Effect");
-        Modal.AddContents(searchField);
         Modal.AddButton(confirm);
         Modal.AddButton(cancel);
     }

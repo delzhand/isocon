@@ -49,10 +49,7 @@ public class GameSystem : MonoBehaviour
     }
 
     public virtual void AddTokenModal() {
-        TextField nameField = new TextField("Token Name");
-        nameField.name = "NameField";
-        nameField.AddToClassList("no-margin");
-        Modal.AddContents(nameField);
+        Modal.AddTextField("NameField", "Token Name", "");
     }
 
     public virtual string GetTokenDataRawJson()
@@ -65,16 +62,11 @@ public class GameSystem : MonoBehaviour
         return items.ToArray();
     }
 
-    public virtual void TokenDataSetValue(TokenData data, string label, int value)
-    {
-        data.Change(label, value);
+    public virtual void TokenDataSetValue(TokenData data, string value) {
+        data.Change(value);
     }
 
-    public virtual void TokenDataSetValue(TokenData data, string label, string value) {
-        data.Change(label, value);
-    }
-
-    public virtual void GameDataSetValue(string label, int value) {
+    public virtual void GameDataSetValue(string value) {
         throw new NotImplementedException();
     }
 

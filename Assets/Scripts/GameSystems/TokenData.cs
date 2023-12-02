@@ -161,11 +161,9 @@ public class TokenData : NetworkBehaviour
     }
 
     public virtual void CreateOverhead() {
-        VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/Overhead");
+        VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/GameSystem/SimpleOverhead");
         VisualElement instance = template.Instantiate();
         overhead = instance.Q("Overhead");
-        overhead.Q<VisualElement>("Color").style.display = DisplayStyle.None;
-        overhead.Q<VisualElement>("Elite").style.display = DisplayStyle.None;
         UI.System.Q("Worldspace").Add(overhead);
     }
 
@@ -197,9 +195,6 @@ public class TokenData : NetworkBehaviour
 
     }
 
-    public virtual void Change(string label, int value) {
-    }
-
-    public virtual void Change(string label, string value) {
+    public virtual void Change(string value) {
     }
 }

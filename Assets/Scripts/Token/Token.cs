@@ -30,6 +30,7 @@ public class Token : MonoBehaviour
     void Update()
     {
         alignToCamera();
+        UpdateVisualEffect();
         Offset();
 
         if (Focused && this != LastFocused) {
@@ -89,7 +90,6 @@ public class Token : MonoBehaviour
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
         Player.Self().CmdRequestPlaceToken(onlineDataObject, v);
         Cursor.Mode = CursorMode.Default;
-        SetNeutral();
     }
 
     public void Move(Block block) {
@@ -98,18 +98,16 @@ public class Token : MonoBehaviour
     }
 
     public void Select() {
+        UnfocusAll();
         DeselectAll();
         Selected = true;
-        transform.Find("Offset/Select").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1); // worldspace token selected material
         UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().Element.Q("Selected"), true); // selected indicator in unit bar
         UI.ToggleDisplay("SelectedTokenPanel", true); // selected token panel
-        SetNeutral();
         TokenMenu.ShowMenu();
     }
 
     public void Deselect() {
         Selected = false;
-        transform.Find("Offset/Select").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
         UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().Element.Q("Selected"), false);
         UI.ToggleDisplay("SelectedTokenPanel", false);
         SelectionMenu.Hide();
@@ -144,12 +142,10 @@ public class Token : MonoBehaviour
     public void Focus() {
         LastFocused = this;
         Focused = true;
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1); // worldspace token selected material
     }
 
     public void Unfocus() {
         Focused = false;
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0); // worldspace token selected material
     }
 
     public static Token GetFocused() {
@@ -178,20 +174,44 @@ public class Token : MonoBehaviour
         }
     }
 
-    public void SetPlacing() {
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1);
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 0);
+    public void UpdateVisualEffect() {
+        if (Selected && Cursor.Mode == CursorMode.Moving) {
+            SetVisualArrows();
+        }
+        else if (Selected) {
+            SetVisualSquareYellow();
+        }
+        else if (Focused) {
+            SetVisualSquareBlue();
+        }
+        else {
+            SetVisualNone();
+        }
     }
 
-    public void SetMoving() {
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 1);
+    private void SetVisualArrows() {
+        SetVisual(false, true, false, false);
     }
 
-    public void SetNeutral() {
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1);
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 0);
+    private void SetVisualSquareYellow() {
+        SetVisual(true, false, false, false);
     }
+
+    private void SetVisualSquareBlue() {
+        SetVisual(false, false, true, false);
+    }
+
+    private void SetVisualNone() {
+        SetVisual(false, false, false, false);
+    }
+
+    private void SetVisual(bool yellowSquare, bool yellowArrows, bool blueSquare, bool blueArrows) {
+        transform.Find("Offset/Select").GetComponent<MeshRenderer>().material.SetInt("_Selected", yellowSquare ? 1:0);
+        transform.Find("Offset/Select").GetComponent<MeshRenderer>().material.SetInt("_Moving", yellowArrows ? 1:0);
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", blueSquare ? 1:0);
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", blueArrows ? 1:0);
+    }
+
 
     public void SetDefeated(bool defeated) {
         transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetInt("_Dead", defeated ? 1 : 0);
