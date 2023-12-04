@@ -15,6 +15,7 @@ public enum BlockType
 public class Block : MonoBehaviour
 {
     private static Dictionary<string, Material> materials = new Dictionary<string, Material>();
+    private static Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
 
     public static Block LastFocused;
 
@@ -28,6 +29,7 @@ public class Block : MonoBehaviour
     private bool Painted = false;
     private Color PaintColorTop;
     private Color PaintColorSide;
+    private string PaintTexture = "None";
     private Material PaintMaterialTop;
     private Material PaintMaterialSide;
     private Material markerMaterial;
@@ -85,6 +87,9 @@ public class Block : MonoBehaviour
 
         materials.Add("selected", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
         materials["selected"].SetInt("_Selected", 1);
+
+        textures.Add("Stone", Resources.Load<Texture2D>("Textures/stone"));
+        textures.Add("Liquid", Resources.Load<Texture2D>("Textures/liquid"));
     }
 
     public override string ToString(){
@@ -105,7 +110,8 @@ public class Block : MonoBehaviour
             string.Join(",", effects.ToArray()),
             Painted.ToString(),
             PaintColorTopHex,
-            PaintColorSideHex
+            PaintColorSideHex,
+            PaintTexture
         };
         return string.Join("|", bits);
     }  
@@ -165,7 +171,11 @@ public class Block : MonoBehaviour
         if (painted) {
             Color top = ColorUtility.ColorFromHex(data[8]);
             Color sides = ColorUtility.ColorFromHex(data[9]);
-            block.GetComponent<Block>().Paint(top, sides);
+            string texture = "None";
+            if (data.Length >= 11) {
+                texture = data[10];
+            }
+            block.GetComponent<Block>().Paint(top, sides, texture);
         }
         return block;
     }
@@ -274,9 +284,10 @@ public class Block : MonoBehaviour
         MaterialReset = true;
     }
 
-    public void Paint(Color top, Color sides) {
+    public void Paint(Color top, Color sides, string texture) {
         PaintColorSide = sides;
         PaintColorTop = top;
+        PaintTexture = texture;
         Painted = true;
         MaterialReset = true;
     }
@@ -296,13 +307,21 @@ public class Block : MonoBehaviour
 
         if (Painted) {
             if (PaintMaterialSide == null) {
-                PaintMaterialSide = Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideA"));
+                PaintMaterialSide = Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideC"));
             }
             if (PaintMaterialTop == null) {
-                PaintMaterialTop = Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopA"));
+                PaintMaterialTop = Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopC"));
             }
             PaintMaterialSide.color = PaintColorSide;
             PaintMaterialTop.color = PaintColorTop;
+            if (PaintTexture != "None") {
+                PaintMaterialTop.SetTexture("_Image", textures[PaintTexture]);
+                PaintMaterialSide.SetTexture("_Image", textures[PaintTexture]);
+            }
+            else {
+                PaintMaterialTop.SetTexture("_Image", null);
+                PaintMaterialSide.SetTexture("_Image", null);
+            }
             blockMaterials.Add(PaintMaterialSide);
             blockMaterials.Add(PaintMaterialTop);
         }

@@ -105,20 +105,9 @@ public class MapEdit
 
     private static void OpenOpenModal(ClickEvent evt) {
         Modal.Reset("Open Map");
-
         Modal.AddSearchField("SearchField", "Filename", "", GetAllMapFiles());
-
-        Button confirm = new Button();
-        confirm.text = "Confirm";
-        confirm.RegisterCallback<ClickEvent>(ConfirmMapOpen);
-        confirm.AddToClassList("preferred");
-
-        Button cancel = new Button();
-        cancel.text = "Cancel";
-        cancel.RegisterCallback<ClickEvent>(CloseModal);
-
-        Modal.AddButton(confirm);
-        Modal.AddButton(cancel);
+        Modal.AddPreferredButton("Confirm", ConfirmMapOpen);
+        Modal.AddButton("Cancel", CloseModal);
     }
     
     private static void CloseModal(ClickEvent evt) {

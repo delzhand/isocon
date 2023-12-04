@@ -88,7 +88,7 @@ public class MaleghastTokenData : TokenData
         return MaxHP == 0;
     }
 
-    public override void UpdateUIData() {
+    public override void UpdateOverheadValues() {
         overhead.Q<ProgressBar>("HpBar").value = CurrentHP;
         overhead.Q<ProgressBar>("HpBar").highValue = MaxHP;
         UI.ToggleDisplay(overhead.Q<ProgressBar>("VigorBar"), false);
@@ -200,7 +200,6 @@ public class MaleghastTokenData : TokenData
         // PopoverText.Create(TokenObject.GetComponent<Token>(), $"{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}{shortLabel}", ChangeColor(value, originValue));
         TokenEditPanel.SyncValues();
         LifeEditPanel.SyncValues();
-        UpdateSelectedTokenPanel();
     }
 
     public void Change(string label, string value) {
@@ -226,7 +225,6 @@ public class MaleghastTokenData : TokenData
         }
 
         TokenEditPanel.SyncValues();
-        UpdateSelectedTokenPanel();
     }
 
     private Color ChangeColor(int a, int b) {
@@ -566,29 +564,29 @@ public class MaleghastTokenData : TokenData
         }
     }
 
-    public void UpdateSelectedTokenPanel() {
+    public override void UpdateTokenPanel(string elementName) {
     }
 
-    private void addStatus(VisualElement v, string statusName, string colorShorthand) {
-        Color c = Color.white;
-        if (colorShorthand == "pos") {
-            c = ColorUtility.ColorFromHex("#74f774");
-        }
-        else if (colorShorthand == "neg") {
-            c = ColorUtility.ColorFromHex("#f77474");
-        }
-        Label label = new Label(statusName);
-        label.AddToClassList("no-margin");
-        label.style.color = c;
-        v.Q("Statuses").Add(label);  
-    }
+    // private void addStatus(VisualElement v, string statusName, string colorShorthand) {
+    //     Color c = Color.white;
+    //     if (colorShorthand == "pos") {
+    //         c = ColorUtility.ColorFromHex("#74f774");
+    //     }
+    //     else if (colorShorthand == "neg") {
+    //         c = ColorUtility.ColorFromHex("#f77474");
+    //     }
+    //     Label label = new Label(statusName);
+    //     label.AddToClassList("no-margin");
+    //     label.style.color = c;
+    //     v.Q("Statuses").Add(label);  
+    // }
 
-    public override bool CheckCondition(string label) {
-        switch (label) {
-            case "TurnEnded":
-                return TurnEnded;
-        }
-        throw new Exception($"TokenData Condition '{label}' unsupported.");
-    } 
+    // public override bool CheckCondition(string label) {
+    //     switch (label) {
+    //         case "TurnEnded":
+    //             return TurnEnded;
+    //     }
+    //     throw new Exception($"TokenData Condition '{label}' unsupported.");
+    // } 
 
 }

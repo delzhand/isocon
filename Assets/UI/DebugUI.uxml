@@ -1,9 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/ui.uss?fileID=7433441132597879392&amp;guid=49924054ed88c3a4eb7aa25df48cddd3&amp;type=3#ui" />
-    <ui:VisualElement name="Container" class="modeselect" style="position: absolute; bottom: 0; left: 0; top: 0; justify-content: space-between; width: 100%; flex-direction: row; background-color: rgba(102, 102, 102, 0); padding-left: 4px; padding-right: 4px; padding-top: 4px; padding-bottom: 4px; height: 100%; right: 0; font-size: 26px;">
-        <ui:VisualElement name="DebugPane" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.48); position: absolute; right: 0; top: 80px; width: auto; color: rgb(255, 255, 255); padding-left: 4px; padding-right: 4px; padding-top: 4px; padding-bottom: 4px;">
-            <ui:Label tabindex="-1" text="Debug Output" display-tooltip-when-elided="true" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
-            <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Output" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
-        </ui:VisualElement>
-    </ui:VisualElement>
-</ui:UXML>

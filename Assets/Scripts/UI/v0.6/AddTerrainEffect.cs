@@ -7,22 +7,10 @@ using UnityEngine.UIElements;
 public class AddTerrainEffect
 {
     public static void OpenModal(ClickEvent evt) {
-
         Modal.Reset("Add Terrain Effect");
-
         Modal.AddSearchField("SearchField", "Add Terrain Effect", "", GameSystem.Current().GetEffectList());
-
-        Button confirm = new Button();
-        confirm.text = "Confirm";
-        confirm.RegisterCallback<ClickEvent>(ConfirmAddEffect);
-        confirm.AddToClassList("preferred");
-
-        Button cancel = new Button();
-        cancel.text = "Cancel";
-        cancel.RegisterCallback<ClickEvent>(CloseModal);
-
-        Modal.AddButton(confirm);
-        Modal.AddButton(cancel);
+        Modal.AddPreferredButton("Confirm", ConfirmAddEffect);
+        Modal.AddButton("Cancel", CloseModal);
     }
 
     private static void ConfirmAddEffect(ClickEvent evt) {

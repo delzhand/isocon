@@ -85,7 +85,7 @@ public class TokenData : NetworkBehaviour
         }
         if (overhead != null) {
             UpdateOverheadScreenPosition();
-            UpdateUIData();
+            UpdateOverheadValues();
             overhead.style.display = (OnField ? DisplayStyle.Flex : DisplayStyle.None);
         }
 
@@ -95,7 +95,13 @@ public class TokenData : NetworkBehaviour
         return false;
     }
 
-    public virtual void UpdateUIData() {
+    public virtual void UpdateTokenPanel(string elementName) {
+        VisualElement panel = UI.System.Q(elementName);
+        panel.Q("Portrait").style.backgroundImage = Graphic;
+        panel.Q<Label>("Name").text = Name;
+    }
+
+    public virtual void UpdateOverheadValues() {
     }
 
     public virtual void TokenDataSetup(string json, string id) {

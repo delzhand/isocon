@@ -23,38 +23,12 @@ public class Config
             float value = float.Parse(evt.newValue.Replace("%", "")) / 100f;
             GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = value;
         });
-
-        Modal.AddTextField("Console", "Console", "");
-
-        Button execute = new Button();
-        execute.text = "Execute Console Command";
-        execute.RegisterCallback<ClickEvent>(ConsoleExecute);
-        Modal.AddButton(execute);
-
-        Button confirm = new Button();
-        confirm.text = "Confirm";
-        confirm.RegisterCallback<ClickEvent>(CloseModal);
-        confirm.AddToClassList("preferred");
-
-        Modal.AddButton(confirm);
+        
+        Modal.AddPreferredButton("Confirm", CloseModal);
     }
 
     private static void CloseModal(ClickEvent evt) {
         Modal.Close();
-    }
-
-    private static void ConsoleExecute(ClickEvent evt) {
-        string command = Modal.Find().Q<TextField>("Console").value;
-        if (command == "Ada") {
-            string json = "{\"Name\":\"Ada\",\"GraphicHash\":\"df6ee698a739576676d5f99c113a61fecdd1f2a66cc3fd7fc1b8ac21f3ba4067\",\"Size\":1,\"Class\":\"Stalwart\",\"Job\":\"Bastion\",\"Elite\":false,\"HPMultiplier\":1}";
-            Player.Self().CmdCreateTokenData(json);
-        }
-        if (command.StartsWith("SelectedToken|")) {
-            command = command.Replace("SelectedToken|", "");
-            TokenData data = Token.GetSelectedData().GetComponent<TokenData>();
-            Player.Self().CmdRequestTokenDataSetValue(data, command);
-            Toast.Add("Console command executed on selected token.");
-        }
     }
 
 }

@@ -50,7 +50,7 @@ public class GenericTokenData : TokenData
         BaseUpdate();
     }
 
-    public override void UpdateUIData() {
+    public override void UpdateOverheadValues() {
         overhead.Q<ProgressBar>("HpBar").value = CurrentHP;
         overhead.Q<ProgressBar>("HpBar").highValue = MaxHP;
         overhead.Q<ProgressBar>("VigorBar").style.display = DisplayStyle.None;
@@ -74,11 +74,5 @@ public class GenericTokenData : TokenData
     public override int GetSize()
     {
         return Size;
-    }
-
-    public void UpdateTokenPanel(string elementName) {
-        VisualElement panel = UI.System.Q(elementName);
-        panel.Q("Portrait").style.backgroundImage = Graphic;
-        panel.Q<Label>("Name").text = Name;
     }
 }

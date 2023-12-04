@@ -24,7 +24,7 @@ public enum BackgroundGradient {
 
 public class Environment : MonoBehaviour
 {
-    private static BackgroundGradient background = BackgroundGradient.FANTASIA;
+    private static BackgroundGradient _background = BackgroundGradient.FANTASIA;
     private static Palette palette = Palette.GREENFIELD;
     
     public static Color Color1 = ColorUtility.ColorFromHex("#3E713E");
@@ -75,7 +75,7 @@ public class Environment : MonoBehaviour
     }
 
     public static void SetBackground(BackgroundGradient background) {
-        Environment.background = background;
+        _background = background;
 
         Dictionary<BackgroundGradient,(Color, Color)> gradients = new Dictionary<BackgroundGradient, (Color, Color)>();
         gradients.Add(BackgroundGradient.SUNSHINE, (Environment.FromRGB(177, 214, 128), Environment.FromRGB(38, 113, 156)));
@@ -90,7 +90,7 @@ public class Environment : MonoBehaviour
     }
 
     public static BackgroundGradient GetBackground() {
-        return Environment.background;
+        return Environment._background;
     }
 
     public static Palette GetPalette() {

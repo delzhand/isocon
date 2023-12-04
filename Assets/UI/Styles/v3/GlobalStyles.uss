@@ -217,3 +217,21 @@
     align-items: center;
     align-self: center;
 }
+
+.roundbutton:focus,
+.roundbutton {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background-color: #FFF;
+    color: #000;
+    border-color: rgba(255, 255, 255, 0);
+    padding: 0;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+.roundbutton:hover {
+    border-color: #FFF;
+    background-color: rgba(255, 255, 255, .5);
+}

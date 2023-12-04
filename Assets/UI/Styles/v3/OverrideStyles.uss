@@ -202,3 +202,29 @@
 #FloatingControls .active {
     -unity-background-image-tint-color: rgb(25, 130, 156);
 }
+
+#SelectedTokenPanel #DataColumn {
+    flex-direction: row;
+}
+
+#SelectedTokenPanel #Vitals,
+#SelectedTokenPanel #Conditions {
+    margin-left: 8px;
+    margin-right: 0px; 
+}
+
+#FocusedTokenPanel #DataColumn {
+    flex-direction: row-reverse;
+}
+
+#FocusedTokenPanel #Vitals,
+#FocusedTokenPanel #Conditions {
+    margin-left: 0px;
+    margin-right: 8px; 
+}
+
+#FocusedTokenPanel #DataColumn Button,
+#FocusedTokenPanel #Controls {
+        display: none;
+}
+

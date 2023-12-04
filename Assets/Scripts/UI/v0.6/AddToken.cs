@@ -7,23 +7,12 @@ using UnityEngine.UIElements;
 public class AddToken
 {
     public static void OpenModal(ClickEvent evt) {
+        Token.DeselectAll();
         Modal.Reset("Add Token");
-
         Modal.AddSearchField("ImageSearchField", "Add Token", "", GetImageOptions());
-
         GameSystem.Current().AddTokenModal();
-
-        Button confirm = new Button();
-        confirm.text = "Confirm";
-        confirm.RegisterCallback<ClickEvent>(ConfirmAddToken);
-        confirm.AddToClassList("preferred");
-
-        Button cancel = new Button();
-        cancel.text = "Cancel";
-        cancel.RegisterCallback<ClickEvent>(CloseModal);
-
-        Modal.AddButton(confirm);
-        Modal.AddButton(cancel);
+        Modal.AddPreferredButton("Confirm", ConfirmAddToken);
+        Modal.AddButton("Cancel", CloseModal);
     }   
 
     private static void ConfirmAddToken(ClickEvent evt) {

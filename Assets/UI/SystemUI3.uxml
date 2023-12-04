@@ -66,35 +66,25 @@
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="FocusedTokenPanel" class="panel edit-panel" style="position: absolute; top: auto; left: auto; bottom: 10px; display: none; right: 0;">
-                    <ui:Label tabindex="-1" text="FOCUSED TOKEN" display-tooltip-when-elided="true" class="panel-header" />
-                    <ui:VisualElement style="flex-direction: row-reverse; min-width: auto; min-height: auto;">
-                        <ui:VisualElement name="InfoColumn" style="flex-direction: column; margin-left: 0; max-width: 90px;">
+                <ui:VisualElement name="FocusedTokenPanel" class="panel edit-panel" style="position: absolute; top: auto; left: auto; bottom: 10px; display: flex; right: 0;">
+                    <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Name" text="Token Name" style="padding-left: 4px; padding-right: 4px; padding-top: 0; padding-bottom: 0; white-space: normal; -unity-text-align: upper-right; font-size: 20px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; background-color: rgba(0, 0, 0, 0.49); border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px;" />
+                    <ui:VisualElement name="Data" style="flex-direction: row-reverse; min-width: auto; min-height: auto;">
+                        <ui:VisualElement name="PortraitColumn" style="flex-direction: column; margin-left: 0; max-width: 90px;">
                             <ui:VisualElement name="PortraitFrame" style="background-color: rgba(0, 0, 0, 0); width: 90px; height: 90px;">
-                                <ui:VisualElement name="ClassBackground" class="centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.72); width: 70%; height: 70%; rotate: 45deg; translate: -50% -50%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-left-color: rgb(0, 131, 255); border-right-color: rgb(0, 131, 255); border-top-color: rgb(0, 131, 255); border-bottom-color: rgb(0, 131, 255); border-left-width: 5px; border-right-width: 5px; border-top-width: 5px; border-bottom-width: 5px;" />
+                                <ui:VisualElement name="ClassBackground" class="centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.72); width: 70%; height: 70%; rotate: 45deg; translate: -50% -50%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-left-color: rgb(0, 131, 255); border-right-color: rgb(0, 131, 255); border-top-color: rgb(0, 131, 255); border-bottom-color: rgb(0, 131, 255); border-left-width: 8px; border-right-width: 8px; border-top-width: 8px; border-bottom-width: 8px;" />
                                 <ui:VisualElement name="Portrait" class="self-centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: none; position: absolute; height: 100%; left: 50%; width: 100%; top: 50%; -unity-background-scale-mode: scale-to-fit;" />
                             </ui:VisualElement>
-                            <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Name" style="margin-left: 0; margin-right: 0; margin-top: 4px; margin-bottom: 4px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; white-space: normal;" />
-                        </ui:VisualElement>
-                        <ui:VisualElement name="VitalsColumn" style="width: 100px; display: none;">
-                            <ui:VisualElement name="Vitals" style="background-color: rgba(0, 0, 0, 0); padding-top: 4px;" />
-                            <ui:VisualElement name="Stats" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); margin-top: 4px; display: none;" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="SelectedTokenPanel" class="panel edit-panel" style="position: absolute; top: auto; left: 0; bottom: 10px; display: none; right: auto;">
-                    <ui:Label tabindex="-1" text="SELECTED TOKEN" display-tooltip-when-elided="true" class="panel-header" />
-                    <ui:VisualElement style="flex-direction: row-reverse; min-width: auto; min-height: auto;">
-                        <ui:VisualElement name="InfoColumn" style="flex-direction: column; margin-left: 0; max-width: 90px;">
+                <ui:VisualElement name="SelectedTokenPanel" class="panel edit-panel" style="position: absolute; top: auto; left: 0; bottom: 10px; display: flex; right: auto;">
+                    <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Name" text="Token Name" style="padding-left: 4px; padding-right: 4px; padding-top: 0; padding-bottom: 0; white-space: normal; -unity-text-align: upper-left; font-size: 20px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; background-color: rgba(0, 0, 0, 0.49); border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px;" />
+                    <ui:VisualElement name="Data" style="flex-direction: row; min-width: auto; min-height: auto;">
+                        <ui:VisualElement name="PortraitColumn" style="flex-direction: column; margin-left: 0; max-width: 90px;">
                             <ui:VisualElement name="PortraitFrame" style="background-color: rgba(0, 0, 0, 0); width: 90px; height: 90px;">
-                                <ui:VisualElement name="ClassBackground" class="centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.72); width: 70%; height: 70%; rotate: 45deg; translate: -50% -50%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-left-color: rgb(0, 131, 255); border-right-color: rgb(0, 131, 255); border-top-color: rgb(0, 131, 255); border-bottom-color: rgb(0, 131, 255); border-left-width: 5px; border-right-width: 5px; border-top-width: 5px; border-bottom-width: 5px;" />
-                                <ui:VisualElement name="Portrait" class="self-centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: none; position: absolute; height: 100%; left: 50%; width: 100%; top: 50%; -unity-background-scale-mode: scale-to-fit;" />
+                                <ui:VisualElement name="ClassBackground" class="centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.72); width: 70%; height: 70%; rotate: 45deg; translate: -50% -50%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-left-color: rgb(0, 131, 255); border-right-color: rgb(0, 131, 255); border-top-color: rgb(0, 131, 255); border-bottom-color: rgb(0, 131, 255); border-left-width: 8px; border-right-width: 8px; border-top-width: 8px; border-bottom-width: 8px;" />
+                                <ui:VisualElement name="Portrait" class="self-centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: none; position: absolute; height: 90%; left: 50%; width: 90%; top: 50%; -unity-background-scale-mode: scale-to-fit;" />
                             </ui:VisualElement>
-                            <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Name" style="margin-left: 0; margin-right: 0; margin-top: 4px; margin-bottom: 4px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; white-space: normal;" />
-                        </ui:VisualElement>
-                        <ui:VisualElement name="VitalsColumn" style="width: 100px; display: none;">
-                            <ui:VisualElement name="Vitals" style="background-color: rgba(0, 0, 0, 0); padding-top: 4px;" />
-                            <ui:VisualElement name="Stats" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); margin-top: 4px; display: none;" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
@@ -124,12 +114,7 @@
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <ui:VisualElement name="Config" style="flex-grow: 1; width: 30px; height: 30px; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/config&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 8px;" />
-                    <ui:VisualElement name="Debug" style="flex-grow: 1; width: 30px; height: 30px; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/qmark&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 8px; display: none;">
-                        <ui:VisualElement name="Panel" class="panel" style="flex-grow: 1; position: absolute; translate: -50% 0; top: 36px; left: 50%; width: 350px; display: none;">
-                            <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Message" text="Your IP is &lt;IP&gt;" style="flex-wrap: wrap; white-space: normal; -unity-text-align: upper-center;" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                    <ui:VisualElement name="Debug2" style="flex-grow: 1; width: 30px; height: 30px; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/qmark&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 8px; display: none;">
+                    <ui:VisualElement name="Debug" style="flex-grow: 1; width: 30px; height: 30px; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/qmark&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 8px; display: flex;">
                         <ui:VisualElement name="Panel" class="panel" style="flex-grow: 1; position: absolute; translate: -50% 0; top: 36px; left: 50%; width: 350px; display: none;">
                             <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Message" text="Your IP is &lt;IP&gt;" style="flex-wrap: wrap; white-space: normal; -unity-text-align: upper-center;" />
                         </ui:VisualElement>
@@ -155,6 +140,7 @@
                                 <ui:Label tabindex="-1" text="Paintbrush Bottom" display-tooltip-when-elided="true" style="flex-grow: 1;" />
                                 <ui:VisualElement name="Color6" style="background-color: rgb(0, 0, 0); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
                             </ui:VisualElement>
+                            <ui:DropdownField label="Texture" index="0" choices="None,Stone,Liquid" name="PaintTexture" class="no-margin" style="margin-top: 4px; margin-bottom: 4px;" />
                         </ui:Foldout>
                         <ui:Foldout text="Base Colors" value="false" focusable="true" style="margin-bottom: 0;">
                             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
@@ -264,7 +250,6 @@
                     <ui:Label tabindex="-1" text="UNIT MENU" display-tooltip-when-elided="true" name="Label" class="panel-header" />
                     <ui:VisualElement name="Contents" style="flex-grow: 1; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; margin-top: 0; overflow: hidden;" />
                 </ui:VisualElement>
-                <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="dcount" style="position: absolute; -unity-font-style: bold; font-size: 40px; left: 16px; bottom: 30px; display: none;" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="BottomBar" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.33); position: absolute; width: 100%; height: 80px; bottom: 0; background-image: resource(&apos;Textures/gradient 2&apos;); -unity-background-image-tint-color: rgba(0, 0, 0, 0.58); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; border-top-width: 2px; border-left-color: rgba(0, 0, 0, 0.25); border-right-color: rgba(0, 0, 0, 0.25); border-top-color: rgba(0, 0, 0, 0.25); border-bottom-color: rgba(0, 0, 0, 0.25); display: flex;">

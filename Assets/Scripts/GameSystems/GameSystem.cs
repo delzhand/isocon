@@ -30,7 +30,7 @@ public class GameSystem : MonoBehaviour
 
         // Setting up play mode tile effects modal has to wait until the gamesystem is created
         UI.System.Q("TerrainInfo").Q("AddEffect").RegisterCallback<ClickEvent>(AddTerrainEffect.OpenModal);
-        UI.System.Q("TerrainInfo").Q("AddObject").RegisterCallback<ClickEvent>(AddObject.OpenModal);        
+        // UI.System.Q("TerrainInfo").Q("AddObject").RegisterCallback<ClickEvent>(AddObject.OpenModal);        
     }
 
     public virtual void Teardown()

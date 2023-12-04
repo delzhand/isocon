@@ -62,6 +62,8 @@ public class Tabletop : MonoBehaviour
     private void FloatingControlsSetup() {
         VisualElement root = UI.System.Q("FloatingControls");
         UI.SetBlocking(UI.System, "FloatingControls");
+        UI.SetBlocking(UI.System, "SelectedTokenPanel");
+        UI.SetBlocking(UI.System, "FocusedTokenPanel");
         UI.HoverSetup(root.Q("EditMap"));
         UI.HoverSetup(root.Q("Config"));
         UI.HoverSetup(root.Q("RotateCCW"));

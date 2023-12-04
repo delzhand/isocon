@@ -6,9 +6,13 @@ using UnityEngine.UIElements;
 
 public class Modal
 {
+    private static bool isOpen = false;
+    
     public delegate void ConfirmCallback();
     
     private static ConfirmCallback _doubleConfirm;
+
+    private static EventCallback<ClickEvent> preferredAction;
 
     public static void Setup() {
         UI.SetBlocking(UI.System, new string[]{"GeneralModal", "Backdrop", "DoubleConfirmModal"});
@@ -30,8 +34,10 @@ public class Modal
         modal.Q<Label>("Title").text = title;
         modal.Q("Contents").Clear();
         modal.Q("Buttons").Clear();
+        preferredAction = null;
 
         UI.ToggleDisplay("Backdrop", true);
+        isOpen = true;
     }
 
     private static void AddContents(VisualElement e) {
@@ -40,15 +46,37 @@ public class Modal
         e.SendToBack();
     }
 
-    public static void AddButton(VisualElement e) {
+    public static void AddButton(string label, EventCallback<ClickEvent> onClick) {
         VisualElement modal = Find();
-        modal.Q("Buttons").Add(e);
+        Button button = new Button();
+        button.text = label;
+        button.RegisterCallback<ClickEvent>(onClick);
+        modal.Q("Buttons").Add(button);
+    }
+
+    public static void AddPreferredButton(string label, EventCallback<ClickEvent> onClick) {
+        preferredAction = onClick;
+        VisualElement modal = Find();
+        Button button = new Button();
+        button.text = label;
+        button.AddToClassList("preferred");
+        button.RegisterCallback<ClickEvent>(onClick);
+        modal.Q("Buttons").Add(button);
     }
 
     public static void Close() {
         VisualElement modal = Find();
         UI.ToggleDisplay(modal, false);
         UI.ToggleDisplay("Backdrop", false);
+        isOpen = false;
+    }
+
+    public static bool IsOpen() {
+        return isOpen;
+    }
+
+    public static void Activate() {
+        preferredAction.Invoke(new ClickEvent());
     }
 
     public static void DoubleConfirm(string title, string message, ConfirmCallback confirm) {

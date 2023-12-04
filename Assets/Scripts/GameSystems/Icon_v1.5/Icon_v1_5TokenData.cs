@@ -92,7 +92,7 @@ public class Icon_v1_5TokenData : TokenData
     public string Hatred;
     public string Stance;
 
-    public List<string> Statuses = new();
+    public List<string> Conditions = new();
 
     public int Size;
 
@@ -108,15 +108,19 @@ public class Icon_v1_5TokenData : TokenData
         return MaxHP == 0;
     }
 
-    public void UpdateTokenPanel(string elementName) {
-        VisualElement panel = UI.System.Q(elementName);
-        panel.Q("Portrait").style.backgroundImage = Graphic;
-        panel.Q<Label>("Name").text = Name;
-        Color c = UnitColor();
-        panel.Q("ClassBackground").style.borderTopColor = c;
-        panel.Q("ClassBackground").style.borderRightColor = c;
-        panel.Q("ClassBackground").style.borderBottomColor = c;
-        panel.Q("ClassBackground").style.borderLeftColor = c;
+    public override void UpdateOverheadValues() {
+        overhead.Q<ProgressBar>("VigorBar").value = Vigor;
+        overhead.Q<ProgressBar>("VigorBar").highValue = MaxHP;
+        UI.ToggleDisplay(overhead.Q("VigorBar"), Vigor > 0);
+
+        overhead.Q<ProgressBar>("HpBar").value = CurrentHP;
+        overhead.Q<ProgressBar>("HpBar").highValue = MaxHP;
+
+        UI.ToggleDisplay(overhead.Q("Wound1"), Wounds >= 1);
+        UI.ToggleDisplay(overhead.Q("Wound2"), Wounds >= 2);
+        UI.ToggleDisplay(overhead.Q("Wound3"), Wounds >= 3);
+        
+        UI.ToggleDisplay(overhead.Q("HpBar"), CurrentHP > 0);
     }
 
     public override void TokenDataSetup(string json, string id) {
@@ -222,58 +226,6 @@ public class Icon_v1_5TokenData : TokenData
         Wounds = 0;
     }
 
-    // public override void Change(int value) {
-        // FileLogger.Write($"{Name} {label} set to {value}");
-        // int originValue;
-        // switch(label) {
-        //     case "CurrentHP":
-        //         originValue = CurrentHP;
-        //         CurrentHP = value;                
-        //         PopoverText.Create(TokenObject.GetComponent<Token>(), $"/{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}|_HP", ChangeColor(value, originValue));
-        //         TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
-        //         break;
-        //     case "Vigor":
-        //         originValue = Vigor;
-        //         Vigor = value;
-        //         PopoverText.Create(TokenObject.GetComponent<Token>(), $"/{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}|_VIG", ChangeColor(value, originValue));
-        //         break;
-        //     case "Wounds":
-        //         originValue = Wounds;
-        //         Wounds = value;
-        //         break;
-        //     case "Aether":
-        //         originValue = Aether;
-        //         Aether = value;
-        //         break;
-        //     case "Resolve":
-        //         originValue = Resolve;
-        //         Resolve = value;
-        //         break;
-        //     case "PartyResolve":
-        //         // Do nothing, we only call this to trigger the redraw
-        //         originValue = int.MinValue;
-        //         break;
-        //     case "Vigilance":
-        //         originValue = Vigilance;
-        //         Vigilance = value;
-        //         break;
-        //     case "Blessings":
-        //         originValue = Blessings;
-        //         Blessings = value;
-        //         break;
-        //     default:
-        //         FileLogger.Write($"Invalid label '{label}' for int value change");
-        //         throw new Exception($"Invalid label '{label}' for int value change");
-        // }
-
-        // if (originValue == value) {
-        //     return;
-        // }
-        // // PopoverText.Create(TokenObject.GetComponent<Token>(), $"{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}{shortLabel}", ChangeColor(value, originValue));
-        // TokenEditPanel.SyncValues();
-        // LifeEditPanel.SyncValues();
-    // }
-
     public override void Change(string value) {
         FileLogger.Write($"{Name} changed - {value}");
         if (value.StartsWith("GainHP")) {
@@ -286,6 +238,7 @@ public class Icon_v1_5TokenData : TokenData
                 PopoverText.Create(TokenObject.GetComponent<Token>(), $"/+{diff}|_HP", Color.white);
                 TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
             }
+            return;
         }
         if (value.StartsWith("LoseHP")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -297,52 +250,122 @@ public class Icon_v1_5TokenData : TokenData
                 PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-{diff}|_HP", Color.white);
                 TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
             }
+            return;
         }
         if (value.StartsWith("GainVIG")) {
             int diff = int.Parse(value.Split("|")[1]);
             if (Vigor + diff > MaxHP/4) {
-                diff = MaxHP/4 - CurrentHP;
+                diff = MaxHP/4 - Vigor;
             }
             if (diff > 0) {
-                CurrentHP+=diff;
-                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/+{diff}|_HP", Color.white);
+                Vigor+=diff;
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/+{diff}|_VIG", Color.white);
+            }
+            return;
+        }
+        if (value.StartsWith("LoseVIG")) {
+            int diff = int.Parse(value.Split("|")[1]);
+            if (Vigor - diff < 0) {
+                diff = Vigor;
+            }
+            if (diff > 0) {
+                Vigor-=diff;
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-{diff}|_VIG", Color.white);
+            }
+            return;
+        }
+        if (value.StartsWith("GainRES")) {
+            int diff = int.Parse(value.Split("|")[1]);
+            if (diff + Resolve > 6) {
+                diff = 6 - Resolve;
+            }
+            if (diff > 0) {
+                Resolve+=diff;
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/+{diff}|_RES", Color.white);
             }
         }
+        if (value.StartsWith("GainPRES")) {
+            int diff = int.Parse(value.Split("|")[1]);
+            Icon_v1_5.PartyResolve+=diff;
+        }
+        if (value.StartsWith("LoseRES")) {
+            int diff = int.Parse(value.Split("|")[1]);
+            Resolve = Math.Max(0, Resolve - diff);
+        }
+        if (value.StartsWith("LosePRES")) {
+            int diff = int.Parse(value.Split("|")[1]);
+            if (diff > Icon_v1_5.PartyResolve) {
+                diff = Icon_v1_5.PartyResolve;
+            }
+            Icon_v1_5.PartyResolve-=diff;
+        }
 
-        // FileLogger.Write($"{Name} {label} set to {value}");
-        // switch(label) {
-        //     case "Status":
-        //         string[] split = value.Split('|');
-        //         if (Statuses.Contains(value)) {
-        //             Statuses.Remove(value);
-        //             PopoverText.Create(TokenObject.GetComponent<Token>(), $"=-|={split[0].ToUpper()}", ColorUtility.ColorFromHex("#BBBBBB"));
-        //             if (value.Contains("Turn Ended")) {
-        //                 Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = Color.white;
-        //             }
-        //         }
-        //         else {
-        //             Statuses.Add(value);
-        //             PopoverText.Create(TokenObject.GetComponent<Token>(), $"=+|={split[0].ToUpper()}", Color.white);
-        //             if (value.Contains("Turn Ended")) {
-        //                 Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = ColorUtility.ColorFromHex("#505050");
-        //             }
-        //         }
-
-        //         break;
-        //     case "Stance":
-        //         Stance = value;
-        //         break;
-        //     case "Marked":
-        //         Marked = value;
-        //         break;
-        //     case "Hatred":
-        //         Hatred = value;
-        //         break;
-        //     default:
-        //         FileLogger.Write($"Invalid label '{label}' for string value change");
-        //         throw new Exception($"Invalid label '{label}' for string value change");
-        // }
-
-        // TokenEditPanel.SyncValues();
+        if (value.StartsWith("Damage")) {
+            int diff = int.Parse(value.Split("|")[1]);
+            if (Vigor + CurrentHP - diff < 0) {
+                diff = Vigor+CurrentHP;
+            }
+            if (diff <= 0) {
+                return;
+            }
+            if (diff < Vigor) {
+                // Vig damage only
+                Vigor -= diff;
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-{diff}|_VIG", Color.white);
+            }
+            else if (diff > Vigor && Vigor > 0) {
+                // Vig zeroed and HP damage
+                CurrentHP -= (diff - Vigor);
+                Vigor = 0;
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-{diff}|_HP/VIG", Color.white);
+                TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
+            }
+            else if (Vigor <= 0) {
+                // HP damage only
+                CurrentHP -= diff;
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-{diff}|_HP", Color.white);
+                TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
+            }
+        }
+        if (value.StartsWith("LoseStatus")) {
+            Toast.Add("Not implemented");
+        }
+        if (value.StartsWith("GainStatus")) {
+            Toast.Add("Not implemented");
+        }
     }  
+
+    public override void UpdateTokenPanel(string elementName) {
+        base.UpdateTokenPanel(elementName);
+        VisualElement panel = UI.System.Q(elementName);
+
+        Color c = UnitColor();
+        panel.Q("ClassBackground").style.borderTopColor = c;
+        panel.Q("ClassBackground").style.borderRightColor = c;
+        panel.Q("ClassBackground").style.borderBottomColor = c;
+        panel.Q("ClassBackground").style.borderLeftColor = c;
+
+        panel.Q<Label>("CHP").text = $"{ CurrentHP }";
+        panel.Q<Label>("MHP").text = $"/{ MaxHP }";
+        panel.Q<ProgressBar>("HpBar").value = CurrentHP;
+        panel.Q<ProgressBar>("HpBar").highValue = MaxHP;
+        
+
+        panel.Q<Label>("VIG").text = $"+{ Vigor }";
+        UI.ToggleDisplay(panel.Q("VIG"), Vigor > 0);
+        panel.Q<ProgressBar>("VigorBar").value = Vigor;
+        panel.Q<ProgressBar>("VigorBar").highValue = MaxHP;
+        UI.ToggleDisplay(panel.Q("VigorBar"), Vigor > 0);
+
+        UI.ToggleDisplay(panel.Q("Wound1"), Wounds >= 1);
+        UI.ToggleDisplay(panel.Q("Wound2"), Wounds >= 2);
+        UI.ToggleDisplay(panel.Q("Wound3"), Wounds >= 3);
+
+        panel.Q<Label>("ResolveNum").text = $"{ Resolve }";
+        panel.Q<ProgressBar>("ResolveBar").value = Resolve + Icon_v1_5.PartyResolve;
+        
+        panel.Q<Label>("PartyResolveNum").text = $"+{ Icon_v1_5.PartyResolve }";
+        UI.ToggleDisplay(panel.Q<Label>("PartyResolveNum"), Icon_v1_5.PartyResolve > 0);
+        panel.Q<ProgressBar>("PartyResolveBar").value = Icon_v1_5.PartyResolve;
+    }
 }

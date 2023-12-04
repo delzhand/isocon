@@ -10,12 +10,23 @@ using SimpleJSON;
 
 public class Icon_v1_5 : GameSystem
 {
-    public int TurnNumber = 1;
-    public int PartyResolve = 0;
+    public static int TurnNumber = 1;
+    public static int PartyResolve = 0;
 
     public override string SystemName()
     {
         return "ICON 1.5";
+    }
+
+    public override void Setup()
+    {
+        base.Setup();
+
+        VisualElement selectedPanel = UI.CreateFromTemplate("UITemplates/GameSystem/IconUnitPanel");
+        UI.System.Q("SelectedTokenPanel").Q("Data").Add(selectedPanel);
+
+        VisualElement focusedPanel = UI.CreateFromTemplate("UITemplates/GameSystem/IconUnitPanel");
+        UI.System.Q("FocusedTokenPanel").Q("Data").Add(focusedPanel);
     }
 
     public override string GetTokenDataRawJson() {
@@ -23,16 +34,19 @@ public class Icon_v1_5 : GameSystem
     }
 
     public override void GameDataSetValue(string value) {
+        FileLogger.Write($"Game system changed - {value}");
         if (value == "IncrementTurn") {
             TurnNumber++;
+            PartyResolve++;
             // Todo: update UI turn number
             foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
                 Icon_v1_5TokenData data = g.GetComponent<Icon_v1_5TokenData>();
-                data.Change("RemoveStatus|TurnEnded");
+                data.Change("LoseStatus|TurnEnded");
             }
         }
-        else if (value == "IncrementPartyResolve") {
-            PartyResolve++;
+        if (value.StartsWith("GainPRES")) {
+            int diff = int.Parse(value.Split("|")[1]);
+            PartyResolve+=diff;
         }
     }
 
@@ -144,5 +158,4 @@ public class Icon_v1_5 : GameSystem
         UI.ToggleDisplay(Modal.Find().Q("Size"), size);
         UI.ToggleDisplay(Modal.Find().Q("ObjectHP"), objectHP);
     }
-
 }
