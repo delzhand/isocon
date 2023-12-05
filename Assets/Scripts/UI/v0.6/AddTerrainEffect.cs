@@ -10,7 +10,7 @@ public class AddTerrainEffect
         Modal.Reset("Add Terrain Effect");
         Modal.AddSearchField("SearchField", "Add Terrain Effect", "", GameSystem.Current().GetEffectList());
         Modal.AddPreferredButton("Confirm", ConfirmAddEffect);
-        Modal.AddButton("Cancel", CloseModal);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
     private static void ConfirmAddEffect(ClickEvent evt) {
@@ -24,9 +24,4 @@ public class AddTerrainEffect
         });
         Player.Self().CmdRequestMapSetValue(blockNames.ToArray(), "Effect", value);
     }
-
-    private static void CloseModal(ClickEvent evt) {
-        Modal.Close();
-    }
-
 }

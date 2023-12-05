@@ -71,6 +71,10 @@ public class Modal
         isOpen = false;
     }
 
+    public static void CloseEvent(ClickEvent evt) {
+        Close();
+    }
+
     public static bool IsOpen() {
         return isOpen;
     }

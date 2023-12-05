@@ -12,16 +12,11 @@ public class AddObject
         Modal.AddToggleField("SuppressTileEffects", "Suppress Tile Effects", false);
         Modal.AddDropdownField("ObjectHeight", "Height", "1", new string[]{"1", "2", "3", "4", "5"});
         Modal.AddPreferredButton("Confirm", ConfirmAddEffect);
-        Modal.AddButton("Cancel", CloseModal);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
     private static void ConfirmAddEffect(ClickEvent evt) {
         string value = Modal.Find().Q("ImageSearchField").Q<TextField>("SearchInput").value;
         Modal.Close();
     }
-
-    private static void CloseModal(ClickEvent evt) {
-        Modal.Close();
-    }
-
 }

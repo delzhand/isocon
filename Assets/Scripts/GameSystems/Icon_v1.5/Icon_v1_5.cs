@@ -23,9 +23,19 @@ public class Icon_v1_5 : GameSystem
         base.Setup();
 
         VisualElement selectedPanel = UI.CreateFromTemplate("UITemplates/GameSystem/IconUnitPanel");
+        selectedPanel.Q("Damage").Q<Label>("Label").text = "DMG/FRAY";
+        selectedPanel.Q("Range").Q<Label>("Label").text = "RNG";
+        selectedPanel.Q("Speed").Q<Label>("Label").text = "SPD/DASH";
+        selectedPanel.Q("Defense").Q<Label>("Label").text = "DEF";
+        selectedPanel.Q<Button>("AlterVitals").RegisterCallback<ClickEvent>(AlterVitalsModal);
+        selectedPanel.Q<Button>("AddStatus").RegisterCallback<ClickEvent>(AddStatusModal);
         UI.System.Q("SelectedTokenPanel").Q("Data").Add(selectedPanel);
 
         VisualElement focusedPanel = UI.CreateFromTemplate("UITemplates/GameSystem/IconUnitPanel");
+        focusedPanel.Q("Damage").Q<Label>("Label").text = "DMG/FRAY";
+        focusedPanel.Q("Range").Q<Label>("Label").text = "RNG";
+        focusedPanel.Q("Speed").Q<Label>("Label").text = "SPD/DASH";
+        focusedPanel.Q("Defense").Q<Label>("Label").text = "DEF";
         UI.System.Q("FocusedTokenPanel").Q("Data").Add(focusedPanel);
     }
 
@@ -150,12 +160,58 @@ public class Icon_v1_5 : GameSystem
         bool size = foeClass;
         bool objectHP = modal.Q<DropdownField>("Type").value == "Object";
 
-        UI.ToggleDisplay(Modal.Find().Q("PlayerJob"), playerJob);
-        UI.ToggleDisplay(Modal.Find().Q("FoeClass"), foeClass);
-        UI.ToggleDisplay(Modal.Find().Q("FoeJob"), foeJob);
-        UI.ToggleDisplay(Modal.Find().Q("Elite"), elite);
-        UI.ToggleDisplay(Modal.Find().Q("LegendHP"), legendHP);
-        UI.ToggleDisplay(Modal.Find().Q("Size"), size);
-        UI.ToggleDisplay(Modal.Find().Q("ObjectHP"), objectHP);
+        UI.ToggleDisplay(modal.Q("PlayerJob"), playerJob);
+        UI.ToggleDisplay(modal.Q("FoeClass"), foeClass);
+        UI.ToggleDisplay(modal.Q("FoeJob"), foeJob);
+        UI.ToggleDisplay(modal.Q("Elite"), elite);
+        UI.ToggleDisplay(modal.Q("LegendHP"), legendHP);
+        UI.ToggleDisplay(modal.Q("Size"), size);
+        UI.ToggleDisplay(modal.Q("ObjectHP"), objectHP);
+    }
+
+    private static void AlterVitalsModal(ClickEvent evt) {
+        Modal.Reset("Alter Vitals");
+        Modal.AddIntField("Number", "Value", 0);
+        Modal.AddButton("Damage HP/VIG", (evt) => AlterVitals("Damage"));
+        Modal.AddButton("Reduce HP", (evt) => AlterVitals("LoseHP"));
+        Modal.AddButton("Recover HP", (evt) => AlterVitals("GainHP"));
+        Modal.AddButton("Reduce VIG", (evt) => AlterVitals("LoseVIG"));
+        Modal.AddButton("Recover VIG", (evt) => AlterVitals("GainVIG"));
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+    }
+
+    private static void AlterVitals(string cmd) {
+        int val = Modal.Find().Q<IntegerField>("Number").value;
+        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelectedData().GetComponent<TokenData>(), $"{cmd}|{val}");
+    }
+
+    private static void AddStatusModal(ClickEvent evt) {
+        Modal.Reset("Add Status");
+        Modal.AddDropdownField("Type", "Type", "Predefined", StringUtility.Arr("Predefined", "Simple", "Counter"), (evt) => AddStatusModalEvaluateConditions());
+        Modal.AddSearchField("PregenStatuses", "Status", "", StringUtility.Arr("Aether","Armor","Blessing","Blind","Blind+","Counter","Cover","Dark Knight","Dazed","Dazed+",
+            "Defiance","Dodge","Endless Battlement","Evasion","Evasion+","Flying","Gentleness","Gravebirth","Odinforce","Pacified","Pacified+","Phasing","Regeneration","Riposte",
+            "Sealed","Sealed+","Shattered","Shattered+","Slashed","Slashed+","Soul Blade","Stacked Dice","Stealth","Stunned","Stunned+","Sturdy","The Saints","Unstoppable",
+            "Vigilance","Vulnerable","Vulnerable+","Weakened","Weakened+"
+        ));
+        Modal.AddDropdownField("Color", "Color", "Gray", StringUtility.Arr("Gray", "Green", "Red", "Blue", "Purple", "Yellow", "Orange"));
+        Modal.AddPreferredButton("Add", (evt) => {
+            string pregenStatus = SearchField.GetValue(Modal.Find().Q("PregenStatuses"));
+            Player.Self().CmdRequestTokenDataSetValue(Token.GetSelectedData().GetComponent<TokenData>(), $"GainStatus|{pregenStatus}");
+        });
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+    }
+
+    private static void AddStatusModalEvaluateConditions() {
+        VisualElement modal = Modal.Find();
+
+        bool pregenStatus = modal.Q<DropdownField>("Type").value == "Predefined";
+        bool color = modal.Q<DropdownField>("Type").value != "Predefined";
+
+        UI.ToggleDisplay(modal.Q("PregenStatuses"), pregenStatus);
+        UI.ToggleDisplay(modal.Q("Color"), color);
+    }
+
+    private static void AddStatus(ClickEvent evt) {
+        
     }
 }

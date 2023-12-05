@@ -4,7 +4,7 @@
     <ui:Template name="StatTemplate" src="project://database/Assets/Resources/UITemplates/GameSystem/StatTemplate.uxml?fileID=9197481963319205126&amp;guid=80bbd3f70be4eca4faa677a44a6f09b2&amp;type=3#StatTemplate" />
     <ui:VisualElement name="DataColumn" style="display: flex; margin-right: 0;">
         <ui:VisualElement name="Vitals" style="background-color: rgba(0, 0, 0, 0); padding-top: 4px; width: 100px;">
-            <ui:Button text="Alter Vitals" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-bottom: 4px;" />
+            <ui:Button text="Alter Vitals" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AlterVitals" style="margin-top: 0; margin-bottom: 4px;" />
             <ui:Instance template="IconHPBar" name="IconHPBar" />
             <ui:Instance template="IconResolveBar" name="IconResolveBar" />
             <ui:VisualElement name="Stats" style="flex-grow: 1;">
@@ -15,7 +15,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="Conditions" style="background-color: rgba(0, 0, 0, 0); padding-top: 4px; min-width: 100px;">
-            <ui:Button text="Add Status" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-bottom: 4px;" />
+            <ui:Button text="Add Status" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddStatus" style="margin-top: 0; margin-bottom: 4px;" />
             <ui:VisualElement style="padding-right: 2px; padding-bottom: 2px; padding-left: 2px; background-color: rgb(31, 108, 64); flex-direction: row; justify-content: space-between; padding-top: 2px; margin-bottom: 2px;">
                 <ui:Label tabindex="-1" text="Aether 4" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                 <ui:VisualElement name="Controls" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; align-items: center; margin-left: 8px;">

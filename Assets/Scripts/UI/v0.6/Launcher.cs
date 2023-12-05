@@ -5,9 +5,6 @@ using Unity.Services.RemoteConfig;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using System.Threading.Tasks;
-using System.Linq;
-using Newtonsoft.Json.Linq;
-using SimpleJSON;
 
 public class Launcher : MonoBehaviour
 {
@@ -157,7 +154,7 @@ public class Launcher : MonoBehaviour
         }
 
         Modal.AddPreferredButton("Confirm", ConfirmConfig);
-        Modal.AddButton("Cancel", CloseModal);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
     private void ConfirmConfig(ClickEvent evt) {
@@ -183,10 +180,6 @@ public class Launcher : MonoBehaviour
                 GetComponent<Tabletop>().ConnectAsClient();
                 break;
         }
-        Modal.Close();
-    }
-
-    private void CloseModal(ClickEvent evt) {
         Modal.Close();
     }
 }

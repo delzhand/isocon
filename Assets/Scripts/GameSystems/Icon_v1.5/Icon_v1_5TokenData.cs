@@ -367,5 +367,10 @@ public class Icon_v1_5TokenData : TokenData
         panel.Q<Label>("PartyResolveNum").text = $"+{ Icon_v1_5.PartyResolve }";
         UI.ToggleDisplay(panel.Q<Label>("PartyResolveNum"), Icon_v1_5.PartyResolve > 0);
         panel.Q<ProgressBar>("PartyResolveBar").value = Icon_v1_5.PartyResolve;
+
+        panel.Q("Damage").Q<Label>("Value").text = $"{ Damage }/{ Fray }";
+        panel.Q("Range").Q<Label>("Value").text = $"{ Range }";
+        panel.Q("Speed").Q<Label>("Value").text = $"{ Speed }/{ Dash }";
+        panel.Q("Defense").Q<Label>("Value").text = $"{ Defense }";
     }
 }

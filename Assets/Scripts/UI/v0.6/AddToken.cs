@@ -12,17 +12,13 @@ public class AddToken
         Modal.AddSearchField("ImageSearchField", "Add Token", "", GetImageOptions());
         GameSystem.Current().AddTokenModal();
         Modal.AddPreferredButton("Confirm", ConfirmAddToken);
-        Modal.AddButton("Cancel", CloseModal);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
     }   
 
     private static void ConfirmAddToken(ClickEvent evt) {
         string json = GameSystem.Current().GetTokenDataRawJson();
         Debug.Log(json);
         Player.Self().CmdCreateTokenData(json);
-        Modal.Close();
-    }
-
-    private static void CloseModal(ClickEvent evt) {
         Modal.Close();
     }
 

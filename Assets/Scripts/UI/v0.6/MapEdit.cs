@@ -99,7 +99,7 @@ public class MapEdit
 
         Button cancel = new Button();
         cancel.text = "Cancel";
-        cancel.RegisterCallback<ClickEvent>(CloseModal);
+        cancel.RegisterCallback<ClickEvent>(Modal.CloseEvent);
         modal.Q("Buttons").Add(cancel);
     }
 
@@ -107,11 +107,7 @@ public class MapEdit
         Modal.Reset("Open Map");
         Modal.AddSearchField("SearchField", "Filename", "", GetAllMapFiles());
         Modal.AddPreferredButton("Confirm", ConfirmMapOpen);
-        Modal.AddButton("Cancel", CloseModal);
-    }
-    
-    private static void CloseModal(ClickEvent evt) {
-        Modal.Close();
+        Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
     private static void ConfirmMapOpen(ClickEvent evt) {

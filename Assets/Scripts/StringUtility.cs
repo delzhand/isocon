@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 public class StringUtility
 {
     public static bool InList(string first, params string[] rest)
@@ -10,5 +12,13 @@ public class StringUtility
             }
         }
         return false;
+    }
+
+    public static string[] Arr(params string[] items) {
+        List<string> list = new();
+        foreach (var str in items) {
+            list.Add(str);
+        }
+        return list.ToArray();
     }
 }
