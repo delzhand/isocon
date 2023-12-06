@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="Wrapper" style="padding-right: 2px; padding-bottom: 2px; padding-left: 2px; background-color: rgb(31, 108, 64); flex-direction: row; justify-content: space-between; padding-top: 2px; margin-bottom: 2px;">
+        <ui:Label tabindex="-1" text="Aether 4" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Name" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+        <ui:VisualElement name="Controls" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; align-items: center; margin-left: 8px;">
+            <ui:Button text="-" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="true" name="Decrement" class="roundbutton" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px;" />
+            <ui:Button text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Increment" class="roundbutton" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px;" />
+            <ui:Button text="×" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Remove" class="roundbutton" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

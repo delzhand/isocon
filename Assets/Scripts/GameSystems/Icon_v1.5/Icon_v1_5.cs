@@ -187,31 +187,81 @@ public class Icon_v1_5 : GameSystem
 
     private static void AddStatusModal(ClickEvent evt) {
         Modal.Reset("Add Status");
-        Modal.AddDropdownField("Type", "Type", "Predefined", StringUtility.Arr("Predefined", "Simple", "Counter"), (evt) => AddStatusModalEvaluateConditions());
-        Modal.AddSearchField("PregenStatuses", "Status", "", StringUtility.Arr("Aether","Armor","Blessing","Blind","Blind+","Counter","Cover","Dark Knight","Dazed","Dazed+",
-            "Defiance","Dodge","Endless Battlement","Evasion","Evasion+","Flying","Gentleness","Gravebirth","Odinforce","Pacified","Pacified+","Phasing","Regeneration","Riposte",
-            "Sealed","Sealed+","Shattered","Shattered+","Slashed","Slashed+","Soul Blade","Stacked Dice","Stealth","Stunned","Stunned+","Sturdy","The Saints","Unstoppable",
-            "Vigilance","Vulnerable","Vulnerable+","Weakened","Weakened+"
-        ));
+        Modal.AddDropdownField("Type", "Type", "Predefined", StringUtility.Arr("Predefined", "Simple", "Number", "Detail"), (evt) => AddStatusModalEvaluateConditions());
+
+        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
+        List<string> statuses = new();
+        foreach (JSONNode s in gamedata["Icon1_5"]["StatusEffects"].AsArray) {
+            statuses.Add(s["Name"]);
+        }
+        Modal.AddSearchField("PregenStatuses", "Status", "", statuses.ToArray());
+        Modal.AddTextField("Name", "Name", "");
         Modal.AddDropdownField("Color", "Color", "Gray", StringUtility.Arr("Gray", "Green", "Red", "Blue", "Purple", "Yellow", "Orange"));
-        Modal.AddPreferredButton("Add", (evt) => {
-            string pregenStatus = SearchField.GetValue(Modal.Find().Q("PregenStatuses"));
-            Player.Self().CmdRequestTokenDataSetValue(Token.GetSelectedData().GetComponent<TokenData>(), $"GainStatus|{pregenStatus}");
-        });
+        Modal.AddIntField("Number", "Number", 0);
+        Modal.AddTextField("Detail", "Detail", "");
+        Modal.AddPreferredButton("Add", AddStatus);
         Modal.AddButton("Cancel", Modal.CloseEvent);
+
+        AddStatusModalEvaluateConditions();
     }
 
     private static void AddStatusModalEvaluateConditions() {
         VisualElement modal = Modal.Find();
 
         bool pregenStatus = modal.Q<DropdownField>("Type").value == "Predefined";
-        bool color = modal.Q<DropdownField>("Type").value != "Predefined";
+        bool name = !pregenStatus;
+        bool color = !pregenStatus;
+        bool number = modal.Q<DropdownField>("Type").value == "Number";
+        bool detail = modal.Q<DropdownField>("Type").value == "Detail";
 
         UI.ToggleDisplay(modal.Q("PregenStatuses"), pregenStatus);
+        UI.ToggleDisplay(modal.Q("Name"), name);
         UI.ToggleDisplay(modal.Q("Color"), color);
+        UI.ToggleDisplay(modal.Q("Number"), number);
+        UI.ToggleDisplay(modal.Q("Detail"), detail);
     }
 
     private static void AddStatus(ClickEvent evt) {
+        VisualElement modal = Modal.Find();
+        string type = modal.Q<DropdownField>("Type").value;
+        string pregenStatus = SearchField.GetValue(Modal.Find().Q("PregenStatuses"));
+        string customStatus = modal.Q<TextField>("Name").value;
+        string color = modal.Q<DropdownField>("Color").value;
+        // string detail = modal.Q<TextField>("Detail").value;
+        int number = modal.Q<IntegerField>("Number").value;
+        StatusEffect s;
+        if (type == "Predefined") {
+            s = FindStatusEffect(pregenStatus);
+        }
+        else {
+            s = new StatusEffect() {
+                Name = customStatus,
+                Type = type,
+                Color = color,
+                Number = number
+            };
+        }
         
+        // Strip characters that would break parse
+        s.Name = s.Name.Replace("|", "");
+
+        string statusData = $"{s.Name}|{s.Type}|{s.Color}|{s.Number}";
+
+        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelectedData().GetComponent<TokenData>(), $"GainStatus|{statusData}");        
+        Modal.Close();
+    }
+
+    private static StatusEffect FindStatusEffect(string name) {
+        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
+        foreach (JSONNode s in gamedata["Icon1_5"]["StatusEffects"].AsArray) {
+            if (s["Name"] == name) {
+                return new StatusEffect() {
+                    Name = s["Name"],
+                    Color = s["Color"],
+                    Type = s["Type"]
+                };
+            }
+        }
+        throw new Exception("Status Effect not found");
     }
 }

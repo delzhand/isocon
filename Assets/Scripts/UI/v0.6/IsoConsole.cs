@@ -28,6 +28,18 @@ public class IsoConsole
             json = "{\"Name\":\"Graddes\",\"GraphicHash\":\"82d39a85a409a2f54c4799049869001e216495926ae028bb531ec6cbce100b6b\",\"Size\":2,\"Class\":\"Wright\",\"Job\":\"Enochian\",\"Elite\":false,\"HPMultiplier\":1}";
             Player.Self().CmdCreateTokenData(json);
         }
+        if (command == "SampleParty") {
+            string json = "{\"Name\":\"Ada\",\"GraphicHash\":\"df6ee698a739576676d5f99c113a61fecdd1f2a66cc3fd7fc1b8ac21f3ba4067\",\"Size\":1,\"Class\":\"Stalwart\",\"Job\":\"Bastion\",\"Elite\":false,\"HPMultiplier\":1}";
+            Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"Sae\",\"GraphicHash\":\"7451fc67cb845c64f81d0918baeaf5829d7821790cf98b388b364d18a893e2fe\",\"Size\":1,\"Class\":\"Mendicant\",\"Job\":\"Chanter\",\"Elite\":false,\"HPMultiplier\":1}";
+            Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"Graddes\",\"GraphicHash\":\"82d39a85a409a2f54c4799049869001e216495926ae028bb531ec6cbce100b6b\",\"Size\":1,\"Class\":\"Wright\",\"Job\":\"Enochian\",\"Elite\":false,\"HPMultiplier\":1}";
+            Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"Bungus\",\"GraphicHash\":\"7130a6a54a23159422fd5c5fda379cf59e5ed64f6a1534cf9ef318232561fcc3\",\"Size\":2,\"Class\":\"Heavy\",\"Job\":\"Halitoad\",\"Elite\":true,\"HPMultiplier\":2}";
+            Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"Kingpecker\",\"GraphicHash\":\"13883d5d1959df44b6f03973cfaad587056d00ae732e981d8050c24b1a4c1cad\",\"Size\":1,\"Class\":\"Skirmisher\",\"Job\":\"Skinner Shrike\",\"Elite\":false,\"HPMultiplier\":1}";
+            Player.Self().CmdCreateTokenData(json);
+        }
         if (command == "Aura") {
             AuraManager am = Token.GetSelected().AddComponent<AuraManager>();
             am.AddAura("Rampart", 2);

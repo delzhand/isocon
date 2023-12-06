@@ -101,7 +101,9 @@ public class Token : MonoBehaviour
         UnfocusAll();
         DeselectAll();
         Selected = true;
-        UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().Element.Q("Selected"), true); // selected indicator in unit bar
+        TokenData data = onlineDataObject.GetComponent<TokenData>();
+        data.Select();
+        UI.ToggleDisplay(data.Element.Q("Selected"), true); // selected indicator in unit bar
         UI.ToggleDisplay("SelectedTokenPanel", true); // selected token panel
         TokenMenu.ShowMenu();
     }
@@ -140,6 +142,8 @@ public class Token : MonoBehaviour
     }
 
     public void Focus() {
+        TokenData data = onlineDataObject.GetComponent<TokenData>();
+        data.Focus();
         LastFocused = this;
         Focused = true;
     }

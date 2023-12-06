@@ -207,6 +207,10 @@
     flex-direction: row;
 }
 
+#SelectedTokenPanel #Conditions {
+    min-width: 120px;
+}
+
 #SelectedTokenPanel #Vitals,
 #SelectedTokenPanel #Conditions {
     margin-left: 8px;
@@ -221,6 +225,10 @@
 #FocusedTokenPanel #Conditions {
     margin-left: 0px;
     margin-right: 8px; 
+}
+
+#FocusedTokenPanel #Conditions {
+    min-width: 0;
 }
 
 #FocusedTokenPanel #DataColumn Button,

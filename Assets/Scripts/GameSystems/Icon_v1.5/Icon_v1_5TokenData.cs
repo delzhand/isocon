@@ -39,8 +39,11 @@ public class Icon_v1_5TokenDataRaw: TokenDataRaw
         else if (type == "Foe") {
             raw.Class = modal.Q<DropdownField>("FoeClass").value;
             raw.Job = modal.Q<TextField>("FoeJob").value;
-            raw.Elite = modal.Q<Toggle>("Elite").value;
             raw.HPMultiplier = raw.Class == "Legend" ? int.Parse(modal.Q<DropdownField>("LegendHP").value.Replace("x", "")) : 1;
+            raw.Elite = modal.Q<Toggle>("Elite").value;
+            if (raw.Elite) {
+                raw.HPMultiplier = 2;
+            }
             raw.Size = int.Parse(modal.Q<DropdownField>("Size").value[..1]);
         }
         else if (type == "Object") {
@@ -84,15 +87,7 @@ public class Icon_v1_5TokenData : TokenData
     public int Defense;
     public bool Elite;
 
-    public int Aether;
-    public int Vigilance;
-    public int Blessings;
-
-    public string Marked;
-    public string Hatred;
-    public string Stance;
-
-    public List<string> Conditions = new();
+    public Dictionary<string, StatusEffect> Conditions = new();
 
     public int Size;
 
@@ -215,13 +210,8 @@ public class Icon_v1_5TokenData : TokenData
         Speed = gamedata["Icon1_5"]["Stats"][color]["Speed"];
         Dash = gamedata["Icon1_5"]["Stats"][color]["Dash"];
         Defense = gamedata["Icon1_5"]["Stats"][color]["Defense"];
-
-        if (elite) {
-            MaxHP *= 2;
-        }
-        else {
-            MaxHP *= hpMultiplier;
-        }
+        Elite = elite;
+        MaxHP *= hpMultiplier;
         Vigor = 0;
         Wounds = 0;
     }
@@ -328,10 +318,30 @@ public class Icon_v1_5TokenData : TokenData
             }
         }
         if (value.StartsWith("LoseStatus")) {
-            Toast.Add("Not implemented");
+            string[] parts = value.Split("|");
+            Conditions.Remove(parts[1]);
+            PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-|_{parts[1].ToUpper()}", Color.white);
+            reinitUI = true;
         }
         if (value.StartsWith("GainStatus")) {
-            Toast.Add("Not implemented");
+            string[] parts = value.Split("|");
+            Conditions.Add(parts[1], new StatusEffect(){Name = parts[1], Type = parts[2], Color = parts[3], Number = int.Parse(parts[4])});
+            PopoverText.Create(TokenObject.GetComponent<Token>(), $"/+|_{parts[1].ToUpper()}", Color.white);
+            reinitUI = true;
+        }
+        if (value.StartsWith("IncrementStatus")) {
+            string status = value.Split("|")[1];
+            StatusEffect se = Conditions[status];
+            se.Number++;
+            Conditions[status] = se;
+            reinitUI = true;
+        }
+        if (value.StartsWith("DecrementStatus")) {
+            string status = value.Split("|")[1];
+            StatusEffect se = Conditions[status];
+            se.Number--;
+            Conditions[status] = se;
+            reinitUI = true;
         }
     }  
 
@@ -372,5 +382,62 @@ public class Icon_v1_5TokenData : TokenData
         panel.Q("Range").Q<Label>("Value").text = $"{ Range }";
         panel.Q("Speed").Q<Label>("Value").text = $"{ Speed }/{ Dash }";
         panel.Q("Defense").Q<Label>("Value").text = $"{ Defense }";
+
+        if (reinitUI) {
+            ReinitUI(elementName);
+        }
+    }
+
+    private void ReinitUI(string elementName) {
+        reinitUI = false;
+        VisualElement panel = UI.System.Q(elementName);
+        panel.Q("Conditions").Q("List").Clear();
+
+        foreach(KeyValuePair<string, StatusEffect> item in Conditions) {
+            VisualElement e = UI.CreateFromTemplate("UITemplates/GameSystem/ConditionTemplate");
+            e.Q<Label>("Name").text = item.Key;
+            Color c = Color.black;
+            switch (item.Value.Color) {
+                case "Gray":
+                    c = ColorUtility.ColorFromHex("7b7b7b");
+                    break;
+                case "Green":
+                    c = ColorUtility.ColorFromHex("248d2e");
+                    break;
+                case "Red":
+                    c = ColorUtility.ColorFromHex("8d2424");
+                    break;
+                case "Blue":
+                    c = ColorUtility.ColorFromHex("24448d");
+                    break;
+                case "Purple":
+                    c = ColorUtility.ColorFromHex("5c159f");
+                    break;
+                case "Yellow":
+                    c = ColorUtility.ColorFromHex("887708");
+                    break;
+                case "Orange":
+                    c = ColorUtility.ColorFromHex("a57519");
+                    break;
+            }
+            e.Q("Wrapper").style.backgroundColor = c;
+            if (item.Value.Type == "Number") {
+                e.Q<Label>("Name").text = $"{item.Key} {item.Value.Number}";
+                e.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) => {
+                    Player.Self().CmdRequestTokenDataSetValue(this, $"IncrementStatus|{ item.Key }");
+                });
+                e.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) => {
+                    Player.Self().CmdRequestTokenDataSetValue(this, $"DecrementStatus|{ item.Key }");
+                });
+            }
+            else {
+                UI.ToggleDisplay(e.Q("Increment"), false);
+                UI.ToggleDisplay(e.Q("Decrement"), false);
+            }
+            e.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) => {
+                Player.Self().CmdRequestTokenDataSetValue(this, $"LoseStatus|{ item.Key }");
+            });
+            panel.Q("Conditions").Q("List").Add(e);
+        }
     }
 }

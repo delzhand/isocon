@@ -36,6 +36,7 @@ public class TokenData : NetworkBehaviour
 
     private bool initialized = false;
     private float awaitingGraphicSync = 0;
+    protected bool reinitUI = false;
 
     void Update() {
         BaseUpdate();
@@ -99,6 +100,14 @@ public class TokenData : NetworkBehaviour
         VisualElement panel = UI.System.Q(elementName);
         panel.Q("Portrait").style.backgroundImage = Graphic;
         panel.Q<Label>("Name").text = Name;
+    }
+
+    public void Select() {
+        reinitUI = true;
+    }
+
+    public void Focus() {
+        reinitUI = true;
     }
 
     public virtual void UpdateOverheadValues() {

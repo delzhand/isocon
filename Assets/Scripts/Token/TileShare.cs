@@ -26,8 +26,14 @@ public class TileShare
                 {-.33f, 0}, {.33f, 0},
             };
             for (int i = 0; i < sharing.Count; i++) {
-                sharing[i].ShareOffsetX = offsets[i, 0];
-                sharing[i].ShareOffsetY = offsets[i, 1];
+                if (i < offsets.GetLength(0)) {
+                    sharing[i].ShareOffsetX = offsets[i, 0];
+                    sharing[i].ShareOffsetY = offsets[i, 1];
+                }
+                else {
+                    sharing[i].ShareOffsetX = 0;
+                    sharing[i].ShareOffsetY = 0;
+                }
             }
         }
     }

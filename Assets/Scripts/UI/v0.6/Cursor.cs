@@ -23,6 +23,9 @@ public class Cursor : MonoBehaviour
 
     void Update()
     {
+        if (Modal.IsOpen()) {
+            return;
+        }
         if (UI.ClicksSuspended) {
             return;
         }
