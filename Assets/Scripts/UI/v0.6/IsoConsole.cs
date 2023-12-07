@@ -79,6 +79,41 @@ public class IsoConsole
             Player.Self().CmdRequestGameDataSetValue(command);
             Toast.Add("Console command executed on current game system.");
         }
+        if (command.StartsWith("ArtDemo")) {
+            GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+            for(int i = 0; i < blocks.Length; i++) {
+                Block b = blocks[i].GetComponent<Block>();
+                if (b.getY() == 0) {
+                    b.ApplyStyle("DryGrass");
+                }
+                else if (b.getY() == 1) {
+                    b.ApplyStyle("Grass");
+                }
+                else if (b.getY() == 2) {
+                    b.ApplyStyle("Water");
+                }
+                else if (b.getY() == 3) {
+                    b.ApplyStyle("Rock");
+                }
+                else if (b.getY() == 4) {
+                    b.ApplyStyle("Stone");
+                }
+                else if (b.getY() == 5) {
+                    b.ApplyStyle("Lava");
+                }
+            }
+        }
+
+        if (command.StartsWith("LavaDemo")) {
+            GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+            for(int i = 0; i < blocks.Length; i++) {
+                Block b = blocks[i].GetComponent<Block>();
+                b.ApplyStyle("Stone");
+                if ((b.getY() == 3 || b.getY() == 4) && (b.getX() == 3 || b.getX() == 4)) {
+                    b.ApplyStyle("Lava");
+                }
+            }
+        }
 
     }
 

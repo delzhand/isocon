@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -88,8 +89,10 @@ public class Block : MonoBehaviour
         materials.Add("selected", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
         materials["selected"].SetInt("_Selected", 1);
 
-        textures.Add("Stone", Resources.Load<Texture2D>("Textures/stone"));
-        textures.Add("Liquid", Resources.Load<Texture2D>("Textures/liquid"));
+        foreach(string s in StringUtility.Arr("Lava", "Water", "Grass", "DryGrass", "Rock", "Stone")) {
+            materials.Add($"{s}Side", Instantiate(Resources.Load<Material>($"Materials/Block/Artistic/{s}Side")));
+            materials.Add($"{s}Top", Instantiate(Resources.Load<Material>($"Materials/Block/Artistic/{s}Top")));
+        }
     }
 
     public override string ToString(){
@@ -295,6 +298,14 @@ public class Block : MonoBehaviour
     public void Depaint() {
         Painted = false;
         MaterialReset = true;
+    }
+
+    public void ApplyStyle(string name) {
+        MeshRenderer mr = GetComponent<MeshRenderer>();
+        Material[] mats = mr.materials;
+        mats[0] = materials[$"{name}Side"];
+        mats[1] = materials[$"{name}Top"];
+        mr.SetMaterials(mats.ToList()); 
     }
 
     public Color[] SamplePaint() {
