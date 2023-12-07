@@ -207,8 +207,8 @@ public class BlockMesh
     public static Vector2[] GetSlopeUVs() {
         Vector2[] uv = new Vector2[14];
         uv[0] = new Vector2(0f, 0f);
-        uv[1] = new Vector2(0f, 1f);
-        uv[2] = new Vector2(1f, 0f);
+        uv[1] = new Vector2(1f, 0f);
+        uv[2] = new Vector2(0f, 1f);
         uv[3] = new Vector2(1f, 1f);
         return uv;
     }

@@ -79,7 +79,10 @@ public class IsoConsole
             Player.Self().CmdRequestGameDataSetValue(command);
             Toast.Add("Console command executed on current game system.");
         }
-        if (command.StartsWith("ArtDemo")) {
+        if (command.StartsWith("MapArtDemo")) {
+            MapSaver.StegLoad("C:\\Users\\delzh\\Projects\\isocon_data/maps/ArtDemo.png");
+        }
+        if (command.StartsWith("TileArtDemo")) {
             GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
             for(int i = 0; i < blocks.Length; i++) {
                 Block b = blocks[i].GetComponent<Block>();
