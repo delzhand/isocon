@@ -111,6 +111,9 @@ public class TerrainController : MonoBehaviour
                 case "Paintbrush":
                     PaintBlocks();
                     break;
+                case "ArtBrush":
+                    StyleBlocks();
+                    break;
                 case "Unpaint":
                     DepaintBlocks();
                     break;
@@ -253,7 +256,7 @@ public class TerrainController : MonoBehaviour
     public static void PaintBlocks() {
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            block.Paint(Environment.Color5, Environment.Color6, UI.System.Q<DropdownField>("PaintTexture").value);
+            block.Paint(Environment.Color5, Environment.Color6);
         });
     }
 
@@ -261,6 +264,13 @@ public class TerrainController : MonoBehaviour
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
             block.Depaint();
+        });
+    }
+
+    public static void StyleBlocks() {
+        List<Block> selected = Block.GetSelected().ToList();
+        selected.ForEach(block => {
+            block.ApplyStyle(UI.System.Q<DropdownField>("ArtTexture").value);
         });
     }
 
@@ -465,7 +475,7 @@ public class TerrainController : MonoBehaviour
             if (selected.Length == 1) {
                 block = selected[0];
                 singleSelected = true;
-                UI.ToggleDisplay(root.Q("AddObject"), true);
+                // UI.ToggleDisplay(root.Q("AddObject"), true);
             }
             else if (focused) {
                 block = focused;

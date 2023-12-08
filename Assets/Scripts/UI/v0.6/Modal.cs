@@ -6,7 +6,8 @@ using UnityEngine.UIElements;
 
 public class Modal
 {
-    private static bool isOpen = false;
+    private static bool isModalOpen = false;
+    private static bool isConfirmOpen = false;
     
     public delegate void ConfirmCallback();
     
@@ -37,7 +38,7 @@ public class Modal
         preferredAction = null;
 
         UI.ToggleDisplay("Backdrop", true);
-        isOpen = true;
+        isModalOpen = true;
     }
 
     private static void AddContents(VisualElement e) {
@@ -65,10 +66,19 @@ public class Modal
     }
 
     public static void Close() {
-        VisualElement modal = Find();
-        UI.ToggleDisplay(modal, false);
-        UI.ToggleDisplay("Backdrop", false);
-        isOpen = false;
+        if (isConfirmOpen) {
+            DoubleConfirmCancelled(new ClickEvent());
+        }
+        else if (isModalOpen) {
+            VisualElement modal = Find();
+            modal.Q<Label>("Title").text = "";
+            modal.Q("Contents").Clear();
+            modal.Q("Buttons").Clear();
+            preferredAction = null;
+            UI.ToggleDisplay(modal, false);
+            UI.ToggleDisplay("Backdrop", false);
+            isModalOpen = false;
+        }
     }
 
     public static void CloseEvent(ClickEvent evt) {
@@ -76,11 +86,16 @@ public class Modal
     }
 
     public static bool IsOpen() {
-        return isOpen;
+        return isModalOpen || isConfirmOpen;
     }
 
     public static void Activate() {
-        preferredAction.Invoke(new ClickEvent());
+        if (isConfirmOpen) {
+            DoubleConfirmConfirmed(new ClickEvent());
+        }
+        else if (isModalOpen && preferredAction != null) {
+            preferredAction.Invoke(new ClickEvent());
+        }
     }
 
     public static void DoubleConfirm(string title, string message, ConfirmCallback confirm) {
@@ -92,6 +107,8 @@ public class Modal
         UI.ToggleDisplay(dcModal, true);
         _doubleConfirm = null;
         _doubleConfirm += confirm;
+        UI.ToggleDisplay("Backdrop", true);
+        isConfirmOpen = true;
     }
 
     private static void DoubleConfirmConfirmed(ClickEvent evt) {
@@ -101,13 +118,21 @@ public class Modal
         UI.ToggleDisplay(modal, false);
         UI.ToggleDisplay(dcModal, false);
         UI.ToggleDisplay("Backdrop", false);
+        isModalOpen = false;
+        isConfirmOpen = false;
     }
 
     private static void DoubleConfirmCancelled(ClickEvent evt) {
         VisualElement modal = Find();
         VisualElement dcModal = FindDoubleConfirm();
-        UI.ToggleDisplay(modal, true);
         UI.ToggleDisplay(dcModal, false);
+        isConfirmOpen = false;
+        if (isModalOpen) {
+            UI.ToggleDisplay(modal, true);
+        }
+        else {
+            UI.ToggleDisplay("Backdrop", false);
+        }
     }
 
     public static void AddTextField(string name, string label, string defaultValue, EventCallback<ChangeEvent<string>> onChange = null) {

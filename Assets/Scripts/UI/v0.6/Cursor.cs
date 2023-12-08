@@ -37,6 +37,7 @@ public class Cursor : MonoBehaviour
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         RaycastHit[] hits = Physics.RaycastAll(ray, 100f); // use an array so we can hit the block behind a token
+        System.Array.Sort(hits, (x,y) => x.distance.CompareTo(y.distance));
         if (hits.Length > 0) {
             firstBlockHit = false;
             firstTokenHit = false;

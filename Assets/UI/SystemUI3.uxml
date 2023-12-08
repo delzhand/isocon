@@ -44,6 +44,11 @@
         <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: flex;">
             <ui:VisualElement name="Gamespace" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; position: relative; margin-right: 0;">
                 <ui:VisualElement name="TerrainInfo" style="background-color: rgba(0, 0, 0, 0); display: flex; position: absolute; right: 0; top: 0; padding-right: 0; align-items: auto;">
+                    <ui:VisualElement name="Turn" class="panel2" style="flex-direction: row; justify-content: flex-end; padding-right: 60px; right: -60px; padding-left: 10px; margin-bottom: 8px; overflow: hidden;">
+                        <ui:Label tabindex="-1" display-tooltip-when-elided="true" text="TURN" style="font-size: 14px; -unity-font-style: bold; color: rgb(255, 255, 255); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 8px; margin-top: 0; margin-bottom: 1px; -unity-text-align: lower-right;" />
+                        <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="TurnNumber" text="1" style="font-size: 32px; color: rgb(255, 255, 255); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: -8px; margin-bottom: -5px; -unity-font-style: normal; -unity-text-align: lower-right;" />
+                        <ui:Button text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" name="TurnAdvance" class="roundbutton" style="margin-left: 16px; align-self: center;" />
+                    </ui:VisualElement>
                     <ui:VisualElement name="Elev" class="panel2" style="flex-direction: row; justify-content: flex-end; padding-right: 60px; right: -60px; padding-left: 10px; margin-bottom: 4px; overflow: hidden;">
                         <ui:Label tabindex="-1" display-tooltip-when-elided="true" text="ELEV" style="font-size: 14px; -unity-font-style: bold; color: rgb(255, 255, 255); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 8px; margin-top: 0; margin-bottom: 1px; -unity-text-align: lower-right;" />
                         <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Height" text="1" style="font-size: 32px; color: rgb(255, 255, 255); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: -8px; margin-bottom: -5px; -unity-font-style: normal; -unity-text-align: lower-right;" />
@@ -88,7 +93,7 @@
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="FloatingControls" style="flex-grow: 1; position: absolute; left: 50%; translate: -50% 0; top: 0; flex-direction: row; margin-left: -8px;">
+                <ui:VisualElement name="FloatingControls" style="flex-grow: 1; position: absolute; left: 50%; translate: -50% 0; top: 0; flex-direction: row; margin-left: -8px; display: flex; opacity: 0.3;">
                     <ui:VisualElement name="Rotate" style="flex-grow: 1; flex-direction: row; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 17px; border-top-right-radius: 17px; border-bottom-right-radius: 17px; border-bottom-left-radius: 17px; min-height: 0; min-width: 0; margin-left: 8px;">
                         <ui:VisualElement name="RotateCCW" style="flex-grow: 1; width: 30px; height: 20px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/rotateCCW&apos;); -unity-background-scale-mode: scale-to-fit; margin-top: 5px; margin-bottom: 5px;" />
                         <ui:VisualElement style="flex-grow: 1; width: 30px; height: 30px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/camera&apos;); -unity-background-scale-mode: scale-to-fit;" />
@@ -140,7 +145,10 @@
                                 <ui:Label tabindex="-1" text="Paintbrush Bottom" display-tooltip-when-elided="true" style="flex-grow: 1;" />
                                 <ui:VisualElement name="Color6" style="background-color: rgb(0, 0, 0); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
                             </ui:VisualElement>
-                            <ui:DropdownField label="Texture" index="0" choices="None,Stone,Liquid" name="PaintTexture" class="no-margin" style="margin-top: 4px; margin-bottom: 4px;" />
+                        </ui:Foldout>
+                        <ui:Foldout text="Artistic" style="margin-top: 4px;">
+                            <ui:Button text="Art Brush" display-tooltip-when-elided="true" name="ArtBrush" class="toolbox tool-button" style="margin-top: 4px; margin-bottom: 4px;" />
+                            <ui:DropdownField label="Texture" index="0" choices="Acid Flow, Acid, Old Brick, Brick, Dry Grass, Grass, Gold, Lava Flow, Lava, Metal, Poison Flow, Poison, Sand, Snow, Soil, Stone, Water Flow, Water, Wood, Old Wood," name="ArtTexture" class="no-margin" style="margin-top: 4px; margin-bottom: 4px;" />
                         </ui:Foldout>
                         <ui:Foldout text="Base Colors" value="false" focusable="true" style="margin-bottom: 0;">
                             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">

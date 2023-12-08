@@ -79,7 +79,9 @@ public class TokenMenu
 
     public static void ClickDelete(ClickEvent evt) {
         TokenData data = Token.GetSelected().onlineDataObject.GetComponent<TokenData>();
-        Token.DeselectAll();
-        Player.Self().CmdRequestDeleteToken(data);
+        Modal.DoubleConfirm("Delete Token", $"Are you sure you want to delete {data.Name}? This action cannot be undone.", () => {
+            Token.DeselectAll();
+            Player.Self().CmdRequestDeleteToken(data);
+        });
     }
 }

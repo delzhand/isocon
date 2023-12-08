@@ -27,12 +27,15 @@ public class Block : MonoBehaviour
     public BlockType Type = BlockType.Solid;
     public bool Destroyable = true;
     private List<string> effects;
+
     private bool Painted = false;
     private Color PaintColorTop;
     private Color PaintColorSide;
-    private string PaintTexture = "None";
     private Material PaintMaterialTop;
     private Material PaintMaterialSide;
+
+    private string Style = "";
+
     private Material markerMaterial;
     private bool MaterialReset = true;
 
@@ -89,9 +92,8 @@ public class Block : MonoBehaviour
         materials.Add("selected", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
         materials["selected"].SetInt("_Selected", 1);
 
-        foreach(string s in StringUtility.Arr("Lava", "Water", "Grass", "DryGrass", "Rock", "Stone")) {
-            materials.Add($"{s}Side", Instantiate(Resources.Load<Material>($"Materials/Block/Artistic/{s}Side")));
-            materials.Add($"{s}Top", Instantiate(Resources.Load<Material>($"Materials/Block/Artistic/{s}Top")));
+        foreach(string s in StringUtility.Arr("AcidSide","AcidTopFlow","AcidTopStill","Brick2Side","Brick2Top","BrickSide","BrickTop","DryGrassTop","GoldSide","GoldTop","GrassTop","LavaSide","LavaTopFlow","LavaTopStill","MetalSide","MetalTop","PoisonSide","PoisonTopFlow","PoisonTopStill","SandSide","SandTop","SnowSide","SnowTop","SoilSide","SoilTop","StoneSide","StoneTop","WaterSide","WaterTopFlow","WaterTopStill","Wood2Side","Wood2Top","WoodSide","WoodTop")) {
+            materials.Add($"{s}", Instantiate(Resources.Load<Material>($"Materials/Block/Artistic/{s}")));
         }
     }
 
@@ -114,7 +116,7 @@ public class Block : MonoBehaviour
             Painted.ToString(),
             PaintColorTopHex,
             PaintColorSideHex,
-            PaintTexture
+            Style
         };
         return string.Join("|", bits);
     }  
@@ -174,12 +176,12 @@ public class Block : MonoBehaviour
         if (painted) {
             Color top = ColorUtility.ColorFromHex(data[8]);
             Color sides = ColorUtility.ColorFromHex(data[9]);
-            string texture = "None";
-            if (data.Length >= 11) {
-                texture = data[10];
-            }
-            block.GetComponent<Block>().Paint(top, sides, texture);
+            block.GetComponent<Block>().Paint(top, sides);
         }
+        if (data.Length > 10) {
+            block.GetComponent<Block>().Style = data[10];
+        }
+
         return block;
     }
 
@@ -287,10 +289,9 @@ public class Block : MonoBehaviour
         MaterialReset = true;
     }
 
-    public void Paint(Color top, Color sides, string texture) {
+    public void Paint(Color top, Color sides) {
         PaintColorSide = sides;
         PaintColorTop = top;
-        PaintTexture = texture;
         Painted = true;
         MaterialReset = true;
     }
@@ -301,11 +302,8 @@ public class Block : MonoBehaviour
     }
 
     public void ApplyStyle(string name) {
-        MeshRenderer mr = GetComponent<MeshRenderer>();
-        Material[] mats = mr.materials;
-        mats[0] = materials[$"{name}Side"];
-        mats[1] = materials[$"{name}Top"];
-        mr.SetMaterials(mats.ToList()); 
+        Style = name;
+        MaterialReset = true;
     }
 
     public Color[] SamplePaint() {
@@ -325,16 +323,96 @@ public class Block : MonoBehaviour
             }
             PaintMaterialSide.color = PaintColorSide;
             PaintMaterialTop.color = PaintColorTop;
-            if (PaintTexture != "None") {
-                PaintMaterialTop.SetTexture("_Image", textures[PaintTexture]);
-                PaintMaterialSide.SetTexture("_Image", textures[PaintTexture]);
-            }
-            else {
-                PaintMaterialTop.SetTexture("_Image", null);
-                PaintMaterialSide.SetTexture("_Image", null);
-            }
             blockMaterials.Add(PaintMaterialSide);
             blockMaterials.Add(PaintMaterialTop);
+        }
+        else if (Style.Length > 0) {
+            string side = "";
+            string top = "";
+            switch (Style) {
+                case "Acid Flow":
+                    side = "AcidSide";
+                    top = "AcidTopStill";
+                    break;
+                case "Acid":
+                    side = "AcidSide";
+                    top = "AcidTopFlow";
+                    break;
+                case "Old Brick":
+                    side = "Brick2Side";
+                    top = "Brick2Top";
+                    break;
+                case "Brick":
+                    side = "BrickSide";
+                    top = "BrickTop";
+                    break;
+                case "Dry Grass":
+                    side = "SoilSide";
+                    top = "DryGrassTop";
+                    break;
+                case "Grass":
+                    side = "SoilSide";
+                    top = "GrassTop";
+                    break;
+                case "Gold":
+                    side = "GoldSide";
+                    top = "GoldTop";
+                    break;
+                case "Lava Flow":
+                    side = "LavaSide";
+                    top = "LavaTopFlow";
+                    break;
+                case "Lava":
+                    side = "LavaSide";
+                    top = "LavaTopStill";
+                    break;
+                case "Metal":
+                    side = "MetalSide";
+                    top = "MetalTop";
+                    break;
+                case "Poison Flow":
+                    side = "PoisonSide";
+                    top = "PoisonTopFlow";
+                    break;
+                case "Poison":
+                    side = "PoisonSide";
+                    top = "PoisonTopStill";
+                    break;
+                case "Sand":
+                    side = "SandSide";
+                    top = "SandTop";
+                    break;
+                case "Snow":
+                    side = "SnowSide";
+                    top = "SnowTop";
+                    break;
+                case "Soil":
+                    side = "SoilSide";
+                    top = "SoilTop";
+                    break;
+                case "Stone":
+                    side = "StoneSide";
+                    top = "StoneTop";
+                    break;
+                case "Water Flow":
+                    side = "WaterSide";
+                    top = "WaterTopFlow";
+                    break;
+                case "Water":
+                    side = "WaterSide";
+                    top = "WaterTopStill";
+                    break;
+                case "Wood":
+                    side = "WoodSide";
+                    top = "WoodTop";
+                    break;
+                case "Old Wood":
+                    side = "Wood2Side";
+                    top = "Wood2Top";
+                    break;
+            }
+            blockMaterials.Add(materials[side]);
+            blockMaterials.Add(materials[top]);
         }
         else {
             // Checkerboard

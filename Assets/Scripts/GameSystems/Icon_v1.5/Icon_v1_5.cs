@@ -48,7 +48,7 @@ public class Icon_v1_5 : GameSystem
         if (value == "IncrementTurn") {
             TurnNumber++;
             PartyResolve++;
-            // Todo: update UI turn number
+            UI.System.Q<Label>("TurnNumber").text = TurnNumber.ToString();
             foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
                 Icon_v1_5TokenData data = g.GetComponent<Icon_v1_5TokenData>();
                 data.Change("LoseStatus|TurnEnded");
@@ -140,7 +140,7 @@ public class Icon_v1_5 : GameSystem
 
         Modal.AddToggleField("Elite", "Elite", false);
 
-        Modal.AddDropdownField("LegendHP", "Legend HP Multiplier", "x4", new string[]{"x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8"});
+        Modal.AddDropdownField("LegendHP", "Legend HP Multiplier", "x4", new string[]{"x2", "x3", "x4", "x5", "x6", "x7", "x8"});
 
         Modal.AddDropdownField("Size", "Size", "1x1", new string[]{"1x1", "2x2", "3x3"});
 

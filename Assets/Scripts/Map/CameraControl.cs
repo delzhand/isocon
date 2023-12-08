@@ -67,8 +67,10 @@ public class CameraControl : MonoBehaviour
         }
 
         if (!UI.ClicksSuspended && Player.IsOnline()) {
+            Vector3 view = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+            bool isOutside = view.x < 0 || view.x > 1 || view.y < 0 || view.y > 1;
             float scroll = Input.GetAxis("Mouse ScrollWheel");
-            if (scroll != 0) {
+            if (!isOutside && scroll != 0) {
                 float z = UI.System.Q<Slider>("ZoomScale").value;
                 z += scroll;
                 Camera.main.GetComponent<Camera>().orthographicSize = z;

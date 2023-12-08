@@ -16,6 +16,7 @@ public class Tabletop : MonoBehaviour
         ConnectionSetup();
         BottomBarSetup();
         FloatingControlsSetup();
+        TurnIndicatorSetup();
     }
 
     void Update()
@@ -61,6 +62,13 @@ public class Tabletop : MonoBehaviour
 
     private void FloatingControlsSetup() {
         VisualElement root = UI.System.Q("FloatingControls");
+        root.style.opacity = .05f;
+        root.RegisterCallback<MouseEnterEvent>((evt) => {
+            root.style.opacity = 1f;
+        });
+        root.RegisterCallback<MouseLeaveEvent>((evt) => {
+            root.style.opacity = .05f;
+        });
         UI.SetBlocking(UI.System, "FloatingControls");
         UI.SetBlocking(UI.System, "SelectedTokenPanel");
         UI.SetBlocking(UI.System, "FocusedTokenPanel");
@@ -94,4 +102,11 @@ public class Tabletop : MonoBehaviour
         });
     }
 
+    private void TurnIndicatorSetup() {
+        UI.System.Q<Button>("TurnAdvance").RegisterCallback<ClickEvent>((evt) => {
+            Modal.DoubleConfirm("Advance Turn", "Increase the turn counter?", () => {
+                Player.Self().CmdRequestGameDataSetValue("IncrementTurn");
+            });
+        });
+    }
 }

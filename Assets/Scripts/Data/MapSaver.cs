@@ -7,7 +7,6 @@ using UnityEngine;
 public class MapSaver
 {
     public static void StegLoad(string fullPath) {
-        Debug.Log(fullPath);
         byte[] imageData = File.ReadAllBytes(fullPath);
         Texture2D texture = new Texture2D(2, 2);
         texture.LoadImage(imageData);
