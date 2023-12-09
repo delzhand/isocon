@@ -173,6 +173,7 @@ public class Player : NetworkBehaviour
                 target.EffectChange(value);
             }
         }
+        TerrainController.SetInfo();
     }
     #endregion
 

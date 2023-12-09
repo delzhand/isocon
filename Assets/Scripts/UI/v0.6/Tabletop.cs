@@ -108,5 +108,8 @@ public class Tabletop : MonoBehaviour
                 Player.Self().CmdRequestGameDataSetValue("IncrementTurn");
             });
         });
+         UI.System.Q("TerrainInfo").Q<Button>("ClearSelected").RegisterCallback<ClickEvent>((evt) => {
+            Block.DeselectAll();
+         });
     }
 }

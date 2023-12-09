@@ -445,8 +445,7 @@ public class TerrainController : MonoBehaviour
         UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), false);
         UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), false);
         UI.ToggleDisplay(root.Q("AddEffect"), false);
-        UI.ToggleDisplay(root.Q("AddObject"), false);
-
+        UI.ToggleDisplay(root.Q("ClearSelected"), false);
         UI.ToggleDisplay(root, false);
 
         Block[] selected = Block.GetSelected();
@@ -466,6 +465,7 @@ public class TerrainController : MonoBehaviour
             color = ColorUtility.ColorFromHex("#9C7A19");
             UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), true);
             UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), true);
+            UI.ToggleDisplay(root.Q("ClearSelected"), true);
         }
  
         UI.ToggleDisplay(root, true);
