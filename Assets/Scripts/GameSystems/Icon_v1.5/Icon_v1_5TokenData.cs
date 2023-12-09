@@ -223,11 +223,12 @@ public class Icon_v1_5TokenData : TokenData
             Wounds = Math.Min(Wounds, 3);
             int woundMaxHP = MaxHP / 4 * (4 - Wounds);
             CurrentHP = Math.Min(CurrentHP, woundMaxHP);
-            OnHPChange();
+            OnVitalChange();
         }
         if (value.StartsWith("LoseWound")) {
             Wounds--;
             Wounds = Math.Max(Wounds, 0);
+            OnVitalChange();
         }
         if (value.StartsWith("GainHP")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -240,7 +241,7 @@ public class Icon_v1_5TokenData : TokenData
                 PopoverText.Create(TokenObject.GetComponent<Token>(), $"/+{diff}|_HP", Color.white);
                 TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
             }
-            OnHPChange();
+            OnVitalChange();
         }
         if (value.StartsWith("LoseHP")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -252,7 +253,7 @@ public class Icon_v1_5TokenData : TokenData
                 PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-{diff}|_HP", Color.white);
                 TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
             }
-            OnHPChange();
+            OnVitalChange();
         }
         if (value.StartsWith("GainVIG")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -263,6 +264,7 @@ public class Icon_v1_5TokenData : TokenData
                 Vigor+=diff;
                 PopoverText.Create(TokenObject.GetComponent<Token>(), $"/+{diff}|_VIG", Color.white);
             }
+            OnVitalChange();
         }
         if (value.StartsWith("LoseVIG")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -273,6 +275,7 @@ public class Icon_v1_5TokenData : TokenData
                 Vigor-=diff;
                 PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-{diff}|_VIG", Color.white);
             }
+            OnVitalChange();
         }
         if (value.StartsWith("GainRES")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -283,14 +286,17 @@ public class Icon_v1_5TokenData : TokenData
                 Resolve+=diff;
                 PopoverText.Create(TokenObject.GetComponent<Token>(), $"/+{diff}|_RES", Color.white);
             }
+            OnVitalChange();
         }
         if (value.StartsWith("GainPRES")) {
             int diff = int.Parse(value.Split("|")[1]);
             Icon_v1_5.PartyResolve+=diff;
+            OnVitalChange();
         }
         if (value.StartsWith("LoseRES")) {
             int diff = int.Parse(value.Split("|")[1]);
             Resolve = Math.Max(0, Resolve - diff);
+            OnVitalChange();
         }
         if (value.StartsWith("LosePRES")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -298,8 +304,8 @@ public class Icon_v1_5TokenData : TokenData
                 diff = Icon_v1_5.PartyResolve;
             }
             Icon_v1_5.PartyResolve-=diff;
+            OnVitalChange();
         }
-
         if (value.StartsWith("Damage")) {
             int diff = int.Parse(value.Split("|")[1]);
             if (Vigor + CurrentHP - diff < 0) {
@@ -325,19 +331,26 @@ public class Icon_v1_5TokenData : TokenData
                 PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-{diff}|_HP", Color.white);
                 TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
             }
-            OnHPChange();
+            OnVitalChange();
         }
         if (value.StartsWith("LoseStatus")) {
             string[] parts = value.Split("|");
             Conditions.Remove(parts[1]);
             PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-|_{parts[1].ToUpper()}", Color.white);
             reinitUI = true;
+            OnStatusChange();
         }
         if (value.StartsWith("GainStatus")) {
             string[] parts = value.Split("|");
-            Conditions.Add(parts[1], new StatusEffect(){Name = parts[1], Type = parts[2], Color = parts[3], Number = int.Parse(parts[4])});
+            if (!Conditions.ContainsKey(parts[1])) {
+                Conditions.Add(parts[1], new StatusEffect(){Name = parts[1], Type = parts[2], Color = parts[3], Number = int.Parse(parts[4])});
+            }
+            else {
+                Toast.Add($"Condition { parts[1] } is already set on { Name }.");
+            }
             PopoverText.Create(TokenObject.GetComponent<Token>(), $"/+|_{parts[1].ToUpper()}", Color.white);
             reinitUI = true;
+            OnStatusChange();
         }
         if (value.StartsWith("IncrementStatus")) {
             string status = value.Split("|")[1];
@@ -345,6 +358,7 @@ public class Icon_v1_5TokenData : TokenData
             se.Number++;
             Conditions[status] = se;
             reinitUI = true;
+            OnStatusChange();
         }
         if (value.StartsWith("DecrementStatus")) {
             string status = value.Split("|")[1];
@@ -352,10 +366,11 @@ public class Icon_v1_5TokenData : TokenData
             se.Number--;
             Conditions[status] = se;
             reinitUI = true;
+            OnStatusChange();
         }
     }  
 
-    private void OnHPChange() {
+    private void OnVitalChange() {
         TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
         if (CurrentHP <= 0) {
             Conditions["Defeated"] = new StatusEffect(){Name = "Defeated", Type = "Simple", Color = "Red"};
@@ -378,6 +393,15 @@ public class Icon_v1_5TokenData : TokenData
             }
         }
         reinitUI = true;
+    }
+
+    /**
+     * This happens on demand regardless of whether token is selected or focused
+     * compare with UpdateTokenPanel, which runs every frame for selected/focused tokens only
+     */
+    private void OnStatusChange() {
+        Color c = Conditions.ContainsKey("Turn Ended") ? ColorUtility.ColorFromHex("#505050") : Color.white;
+        Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = c;
     }
 
     public override void UpdateTokenPanel(string elementName) {

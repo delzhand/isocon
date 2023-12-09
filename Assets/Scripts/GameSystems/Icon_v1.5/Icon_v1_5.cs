@@ -61,7 +61,7 @@ public class Icon_v1_5 : GameSystem
             UI.System.Q<Label>("TurnNumber").text = TurnNumber.ToString();
             foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
                 Icon_v1_5TokenData data = g.GetComponent<Icon_v1_5TokenData>();
-                data.Change("LoseStatus|TurnEnded");
+                data.Change("LoseStatus|Turn Ended");
             }
         }
         if (value.StartsWith("GainPRES")) {
