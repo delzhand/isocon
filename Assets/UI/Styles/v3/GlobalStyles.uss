@@ -235,3 +235,14 @@
     border-color: #FFF;
     background-color: rgba(255, 255, 255, .5);
 }
+
+.error-message {
+    background-color: #962D2D;
+    color: #FFF;
+    padding: 10px;
+    white-space: normal;
+}
+
+.separator {
+    padding: 4px;
+}

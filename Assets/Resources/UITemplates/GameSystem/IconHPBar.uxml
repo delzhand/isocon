@@ -12,9 +12,8 @@
         <ui:ProgressBar value="3" high-value="40" name="VigorBar" style="margin-top: 0; max-height: 4px; position: absolute; bottom: 0; translate: 0 -2px;" />
         <ui:VisualElement name="Wounds" style="position: absolute; bottom: 0; width: 100%; height: 8px;">
             <ui:Label tabindex="-1" text="×" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Wound1" class="wound one" style="visibility: visible; -unity-text-align: middle-center;" />
-            <ui:Label tabindex="-1" text="×" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Wound2" class="wound two" style="visibility: hidden; -unity-text-align: middle-center;" />
-            <ui:Label tabindex="-1" text="×" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Wound3" class="wound three" style="visibility: hidden; -unity-text-align: middle-center;" />
-            <ui:Label tabindex="-1" text="×" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Wound4" class="wound four" style="visibility: hidden; -unity-text-align: middle-center;" />
+            <ui:Label tabindex="-1" text="×" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Wound2" class="wound two" style="visibility: visible; -unity-text-align: middle-center;" />
+            <ui:Label tabindex="-1" text="×" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Wound3" class="wound three" style="visibility: visible; -unity-text-align: middle-center;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

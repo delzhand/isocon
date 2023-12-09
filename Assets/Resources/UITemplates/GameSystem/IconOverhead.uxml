@@ -7,13 +7,13 @@
             <ui:ProgressBar value="3" name="VigorBar" high-value="12" />
             <ui:ProgressBar value="3.09" high-value="24" name="HpBar" />
             <ui:VisualElement name="Wounds" class="test">
-                <ui:VisualElement name="Wound1" class="wound" style="flex-grow: 1; background-color: rgb(0, 0, 0);">
+                <ui:VisualElement name="Wound1" class="wound" style="flex-grow: 1; background-color: rgb(0, 0, 0); visibility: visible;">
                     <ui:Label tabindex="-1" text="X" display-tooltip-when-elided="true" name="X" style="color: rgb(255, 0, 0); font-size: 8px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-text-align: middle-center; -unity-font-style: bold;" />
                 </ui:VisualElement>
-                <ui:VisualElement name="Wound2" class="wound">
+                <ui:VisualElement name="Wound2" class="wound" style="visibility: visible;">
                     <ui:Label tabindex="-1" text="X" display-tooltip-when-elided="true" name="X" style="color: rgb(255, 0, 0); font-size: 8px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-text-align: middle-center; -unity-font-style: bold;" />
                 </ui:VisualElement>
-                <ui:VisualElement name="Wound3" class="wound test">
+                <ui:VisualElement name="Wound3" class="wound test" style="visibility: visible;">
                     <ui:Label tabindex="-1" text="X" display-tooltip-when-elided="true" name="X" style="color: rgb(255, 0, 0); font-size: 8px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-text-align: middle-center; -unity-font-style: bold;" />
                 </ui:VisualElement>
             </ui:VisualElement>

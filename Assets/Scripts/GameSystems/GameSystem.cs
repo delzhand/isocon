@@ -52,6 +52,12 @@ public class GameSystem : MonoBehaviour
         Modal.AddTextField("NameField", "Token Name", "");
     }
 
+    public virtual void CreateToken() {
+        string json = GameSystem.Current().GetTokenDataRawJson();
+        FileLogger.Write($"Token added: {json}");
+        Player.Self().CmdCreateTokenData(json);
+    }
+
     public virtual string GetTokenDataRawJson()
     {
         throw new NotImplementedException();

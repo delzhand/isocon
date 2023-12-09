@@ -40,7 +40,7 @@
         </ui:VisualElement>
         <ui:Label tabindex="-1" text="v0.6.0" display-tooltip-when-elided="true" name="Version" style="position: absolute; right: auto; bottom: 0; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); font-size: 12px; left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 4px; padding-right: 0; padding-bottom: 4px; padding-left: 0; -unity-text-align: middle-center; width: 100%;" />
     </ui:VisualElement>
-    <ui:VisualElement name="Tabletop" style="flex-grow: 1; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex;">
+    <ui:VisualElement name="Tabletop" style="flex-grow: 1; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: none;">
         <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: flex;">
             <ui:VisualElement name="Gamespace" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; position: relative; margin-right: 0;">
                 <ui:VisualElement name="TerrainInfo" style="background-color: rgba(0, 0, 0, 0); display: flex; position: absolute; right: 0; top: 0; padding-right: 0; align-items: auto;">
@@ -79,6 +79,7 @@
                                 <ui:VisualElement name="ClassBackground" class="centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.72); width: 70%; height: 70%; rotate: 45deg; translate: -50% -50%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-left-color: rgb(0, 131, 255); border-right-color: rgb(0, 131, 255); border-top-color: rgb(0, 131, 255); border-bottom-color: rgb(0, 131, 255); border-left-width: 8px; border-right-width: 8px; border-top-width: 8px; border-bottom-width: 8px;" />
                                 <ui:VisualElement name="Portrait" class="self-centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: none; position: absolute; height: 100%; left: 50%; width: 100%; top: 50%; -unity-background-scale-mode: scale-to-fit;" />
                             </ui:VisualElement>
+                            <ui:VisualElement name="ExtraInfo" style="flex-grow: 1;" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
@@ -90,6 +91,7 @@
                                 <ui:VisualElement name="ClassBackground" class="centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.72); width: 70%; height: 70%; rotate: 45deg; translate: -50% -50%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-left-color: rgb(0, 131, 255); border-right-color: rgb(0, 131, 255); border-top-color: rgb(0, 131, 255); border-bottom-color: rgb(0, 131, 255); border-left-width: 8px; border-right-width: 8px; border-top-width: 8px; border-bottom-width: 8px;" />
                                 <ui:VisualElement name="Portrait" class="self-centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: none; position: absolute; height: 90%; left: 50%; width: 90%; top: 50%; -unity-background-scale-mode: scale-to-fit;" />
                             </ui:VisualElement>
+                            <ui:VisualElement name="ExtraInfo" style="flex-grow: 1;" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
@@ -146,9 +148,9 @@
                                 <ui:VisualElement name="Color6" style="background-color: rgb(0, 0, 0); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
                             </ui:VisualElement>
                         </ui:Foldout>
-                        <ui:Foldout text="Artistic" value="false" style="margin-top: 4px;">
+                        <ui:Foldout text="Artistic" value="false" style="margin-top: 4px; margin-bottom: 0;">
                             <ui:Button text="Art Brush" display-tooltip-when-elided="true" name="ArtBrush" class="toolbox tool-button" style="margin-top: 4px; margin-bottom: 4px;" />
-                            <ui:DropdownField label="Texture" index="0" choices="Acid Flow, Acid, Old Brick, Brick, Dry Grass, Grass, Gold, Lava Flow, Lava, Metal, Poison Flow, Poison, Sand, Snow, Soil, Stone, Water Flow, Water, Wood, Old Wood," name="ArtTexture" class="no-margin" style="margin-top: 4px; margin-bottom: 4px;" />
+                            <ui:DropdownField index="0" choices="Acid Flow, Acid, Old Brick, Brick, Dry Grass, Grass, Gold, Lava Flow, Lava, Metal, Poison Flow, Poison, Sand, Snow, Soil, Stone, Water Flow, Water, Wood, Old Wood," name="ArtTexture" focusable="false" class="no-margin" style="margin-top: 4px; margin-bottom: 4px;" />
                         </ui:Foldout>
                         <ui:Foldout text="Base Colors" value="false" focusable="true" style="margin-bottom: 0;">
                             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
@@ -270,80 +272,8 @@
             </ui:ScrollView>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="Icon1_5LifeEdit" class="panel" style="flex-grow: 1; position: absolute; top: auto; left: 258px; flex-direction: column; bottom: 80px; display: none;">
-        <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
-            <ui:VisualElement style="flex-grow: 1; align-items: center;">
-                <ui:Label tabindex="-1" text="VIG" parse-escape-sequences="true" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
-                <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" name="v_CurrentVig" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: middle-left;" />
-                <ui:IntegerField value="0" name="v_VigDiff" class="no-margin" style="-unity-text-align: middle-center;" />
-                <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" name="v_NewVig" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
-            </ui:VisualElement>
-            <ui:VisualElement style="flex-grow: 1; align-items: center;">
-                <ui:Label tabindex="-1" text="HP" parse-escape-sequences="true" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
-                <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" name="v_CurrentHp" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: middle-left;" />
-                <ui:IntegerField value="0" name="v_HpDiff" class="no-margin" style="-unity-text-align: middle-center;" />
-                <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" name="v_NewHp" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
-            </ui:VisualElement>
-            <ui:VisualElement style="flex-grow: 1; align-items: center;">
-                <ui:Label tabindex="-1" text="(0)" parse-escape-sequences="true" display-tooltip-when-elided="true" name="v_CurrentBulk" style="margin-top: 24px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: middle-left;" />
-                <ui:Label tabindex="-1" text="(0)" parse-escape-sequences="true" display-tooltip-when-elided="true" name="v_BulkDiff" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
-                <ui:Label tabindex="-1" text="(0)" parse-escape-sequences="true" display-tooltip-when-elided="true" name="v_NewBulk" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 6px;" />
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:Button text="Apply" parse-escape-sequences="true" display-tooltip-when-elided="true" name="v_ApplyButton" />
-    </ui:VisualElement>
-    <ui:VisualElement name="EditPanel" style="flex-grow: 1; position: absolute; left: 0; bottom: 0;">
-        <ui:VisualElement name="Icon1_5EditPanel" class="panel edit-panel" style="position: absolute; left: 0; display: none; bottom: 0;">
-            <ui:Label tabindex="-1" text="STATUS" display-tooltip-when-elided="true" class="panel-header" />
-            <ui:ScrollView mouse-wheel-scroll-size="800" style="max-height: 310px;">
-                <ui:Foldout text="Vitals" value="false">
-                    <ui:VisualElement style="flex-direction: row;">
-                        <ui:SliderInt picking-mode="Ignore" label="HP" value="40" high-value="40" name="e_CurrentHPSlider" />
-                        <ui:Label tabindex="-1" text="40" display-tooltip-when-elided="true" name="e_CurrentHP" />
-                    </ui:VisualElement>
-                    <ui:VisualElement style="flex-direction: row;">
-                        <ui:SliderInt picking-mode="Ignore" label="Vigor" value="0" high-value="40" name="e_VigorSlider" />
-                        <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="e_Vigor" />
-                    </ui:VisualElement>
-                    <IsoconUILibrary.NumberNudger label="Wounds" name="e_Wounds" />
-                    <IsoconUILibrary.NumberNudger label="Resolve" name="e_Resolve" />
-                    <IsoconUILibrary.NumberNudger label="Party Resolve" name="e_PartyResolve" />
-                </ui:Foldout>
-                <ui:Foldout text="Class Features" value="false">
-                    <IsoconUILibrary.NumberNudger label="Aether" name="e_Aether" />
-                    <IsoconUILibrary.NumberNudger label="Vigilance" name="e_Vigilance" />
-                    <IsoconUILibrary.NumberNudger name="e_Blessings" label="Blessings" />
-                    <ui:Toggle label="Stacked Die" name="e_StackedDie" value="false" />
-                    <ui:DropdownField label="Stance" index="0" choices="None,Endless Battlement,Soul Blade,Riposte,Dark Knight,The Saints,Gentleness,Gravebirth,Odinforce" name="e_Stance" />
-                </ui:Foldout>
-                <ui:Foldout text="Buffs" value="true">
-                    <ui:VisualElement style="flex-direction: row;">
-                        <ui:DropdownField index="0" choices="Counter,Cover,Defiance,Dodge,Evasion,Evasion+,Flying,Phasing,Stealth,Sturdy,Unstoppable,Regeneration" name="e_BuffDropdown" class="no-margin" style="margin-top: 4px; flex-grow: 1; margin-right: 2px;" />
-                        <ui:Button text="Toggle" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ToggleBuffButton" style="margin-top: 4px;" />
-                    </ui:VisualElement>
-                </ui:Foldout>
-                <ui:Foldout text="Debuffs" style="margin-bottom: 0;">
-                    <ui:VisualElement style="flex-direction: row;">
-                        <ui:DropdownField index="0" choices="Blind,Blind+,Dazed,Dazed+,Pacified,Pacified+,Sealed,Sealed+,Shattered,Shattered+,Slashed,Slashed+,Stunned,Stunned+,Weakened,Weakened+,Vulnerable,Vulnerable+" name="e_DebuffDropdown" class="no-margin" style="margin-top: 4px; flex-grow: 1; margin-right: 2px;" />
-                        <ui:Button text="Toggle" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ToggleDebuffButton" style="margin-top: 4px;" />
-                    </ui:VisualElement>
-                    <ui:TextField picking-mode="Ignore" label="Marked by" name="e_Marked" class="no-margin" style="margin-top: 4px;" />
-                    <ui:TextField picking-mode="Ignore" label="Hatred of" name="e_Hatred" class="no-margin" style="margin-top: 4px;" />
-                </ui:Foldout>
-            </ui:ScrollView>
-        </ui:VisualElement>
-        <ui:VisualElement name="MaleghastEditPanel" class="panel edit-panel" style="position: absolute; left: 0; display: none; bottom: 0;">
-            <ui:Label tabindex="-1" text="STATUS" display-tooltip-when-elided="true" class="panel-header" />
-            <IsoconUILibrary.NumberNudger label="HP" name="e_HP" />
-            <IsoconUILibrary.NumberNudger label="SOUL" name="e_Soul" />
-            <IsoconUILibrary.NumberNudger label="+Str/Weak-" name="e_Strength" />
-            <IsoconUILibrary.NumberNudger label="+Spd/Slow-" name="e_Speed" />
-            <IsoconUILibrary.NumberNudger label="+Vit/Vuln-" name="e_Vit" />
-            <ui:Toggle label="Loaded" name="e_Loaded" value="true" focusable="false" />
-        </ui:VisualElement>
-    </ui:VisualElement>
     <ui:VisualElement name="Backdrop" style="flex-grow: 1; position: absolute; left: auto; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.86); display: none;" />
-    <ui:VisualElement name="GeneralModal" class="modal panel" style="position: absolute; left: 50%; top: 50%; background-image: resource(&apos;Textures/9slice_modal&apos;); -unity-slice-left: 28; -unity-slice-top: 103; -unity-slice-right: 34; -unity-slice-bottom: 30; translate: -50% -50%; display: none;">
+    <ui:VisualElement name="GeneralModal" class="modal panel" style="position: absolute; left: 50%; top: 50%; background-image: resource(&apos;Textures/9slice_modal&apos;); -unity-slice-left: 28; -unity-slice-top: 103; -unity-slice-right: 34; -unity-slice-bottom: 30; translate: -50% -50%; display: none; max-width: 600px;">
         <ui:Label tabindex="-1" text="Load Map" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="-unity-text-align: upper-center; margin-top: 0; margin-right: 0; margin-bottom: 4px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
         <ui:VisualElement name="Wrapper" style="flex-grow: 1; background-color: rgb(57, 52, 51); min-width: 0; min-height: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; flex-direction: column-reverse;">
             <ui:VisualElement name="Buttons" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; margin-top: 24px; background-color: rgba(0, 0, 0, 0.67); padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;" />

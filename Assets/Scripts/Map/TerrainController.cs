@@ -246,7 +246,12 @@ public class TerrainController : MonoBehaviour
     public static void RotateBlocks() {
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            block.transform.Rotate(0, 90f, 0);
+            if (GridType == "Square") {
+                block.transform.Rotate(0, 90f, 0);
+            }
+            else if (GridType == "Hex") {
+                block.transform.Rotate(0, 60f, 0);
+            }
         });
     }
 
@@ -382,10 +387,15 @@ public class TerrainController : MonoBehaviour
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
             block.TypeChange(type);
-            block.transform.Rotate(0, 90f, 0);
-            if (type == BlockType.Slope) {
-                // counter-rotate indicator
-                block.transform.Find("Indicator").transform.eulerAngles = new Vector3(90, -90, 0);
+            if (GridType == "Square") {
+                block.transform.Rotate(0, 90f, 0);
+                if (type == BlockType.Slope) {
+                    // counter-rotate indicator
+                    block.transform.Find("Indicator").transform.eulerAngles = new Vector3(90, -90, 0);
+                }
+            }
+            else if (GridType == "Hex") {
+                block.transform.Rotate(0, 60f, 0);
             }
         });
     }

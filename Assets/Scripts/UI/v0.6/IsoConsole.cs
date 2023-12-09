@@ -27,6 +27,8 @@ public class IsoConsole
             Player.Self().CmdCreateTokenData(json);
             json = "{\"Name\":\"Graddes\",\"GraphicHash\":\"82d39a85a409a2f54c4799049869001e216495926ae028bb531ec6cbce100b6b\",\"Size\":2,\"Class\":\"Wright\",\"Job\":\"Enochian\",\"Elite\":false,\"HPMultiplier\":1}";
             Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"Duvalla\",\"GraphicHash\":\"c7fc3457bc38f379578b41a1faaad501db00f06de38c21d7a13e6625b02708de\",\"Size\":1,\"Class\":\"Vagabond\",\"Job\":\"Shade\",\"Elite\":false,\"HPMultiplier\":1}";
+            Player.Self().CmdCreateTokenData(json);
         }
         if (command == "SampleParty") {
             string json = "{\"Name\":\"Ada\",\"GraphicHash\":\"df6ee698a739576676d5f99c113a61fecdd1f2a66cc3fd7fc1b8ac21f3ba4067\",\"Size\":1,\"Class\":\"Stalwart\",\"Job\":\"Bastion\",\"Elite\":false,\"HPMultiplier\":1}";
@@ -34,6 +36,8 @@ public class IsoConsole
             json = "{\"Name\":\"Sae\",\"GraphicHash\":\"7451fc67cb845c64f81d0918baeaf5829d7821790cf98b388b364d18a893e2fe\",\"Size\":1,\"Class\":\"Mendicant\",\"Job\":\"Chanter\",\"Elite\":false,\"HPMultiplier\":1}";
             Player.Self().CmdCreateTokenData(json);
             json = "{\"Name\":\"Graddes\",\"GraphicHash\":\"82d39a85a409a2f54c4799049869001e216495926ae028bb531ec6cbce100b6b\",\"Size\":1,\"Class\":\"Wright\",\"Job\":\"Enochian\",\"Elite\":false,\"HPMultiplier\":1}";
+            Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"Duvalla\",\"GraphicHash\":\"c7fc3457bc38f379578b41a1faaad501db00f06de38c21d7a13e6625b02708de\",\"Size\":1,\"Class\":\"Vagabond\",\"Job\":\"Shade\",\"Elite\":false,\"HPMultiplier\":1}";
             Player.Self().CmdCreateTokenData(json);
             json = "{\"Name\":\"Bungus\",\"GraphicHash\":\"7130a6a54a23159422fd5c5fda379cf59e5ed64f6a1534cf9ef318232561fcc3\",\"Size\":2,\"Class\":\"Heavy\",\"Job\":\"Halitoad\",\"Elite\":true,\"HPMultiplier\":2}";
             Player.Self().CmdCreateTokenData(json);

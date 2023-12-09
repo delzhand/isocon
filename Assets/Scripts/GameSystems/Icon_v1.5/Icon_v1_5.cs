@@ -22,21 +22,31 @@ public class Icon_v1_5 : GameSystem
     {
         base.Setup();
 
-        VisualElement selectedPanel = UI.CreateFromTemplate("UITemplates/GameSystem/IconUnitPanel");
-        selectedPanel.Q("Damage").Q<Label>("Label").text = "DMG/FRAY";
-        selectedPanel.Q("Range").Q<Label>("Label").text = "RNG";
-        selectedPanel.Q("Speed").Q<Label>("Label").text = "SPD/DASH";
-        selectedPanel.Q("Defense").Q<Label>("Label").text = "DEF";
-        selectedPanel.Q<Button>("AlterVitals").RegisterCallback<ClickEvent>(AlterVitalsModal);
-        selectedPanel.Q<Button>("AddStatus").RegisterCallback<ClickEvent>(AddStatusModal);
-        UI.System.Q("SelectedTokenPanel").Q("Data").Add(selectedPanel);
+        // Selected
+        VisualElement selectedPanel = UI.System.Q("SelectedTokenPanel");
+        VisualElement unitPanel = UI.CreateFromTemplate("UITemplates/GameSystem/IconUnitPanel");
+        unitPanel.Q("Damage").Q<Label>("Label").text = "DMG/FRAY";
+        unitPanel.Q("Range").Q<Label>("Label").text = "RNG";
+        unitPanel.Q("Speed").Q<Label>("Label").text = "SPD/DASH";
+        unitPanel.Q("Defense").Q<Label>("Label").text = "DEF";
+        unitPanel.Q<Button>("AlterVitals").RegisterCallback<ClickEvent>(AlterVitalsModal);
+        unitPanel.Q<Button>("AddStatus").RegisterCallback<ClickEvent>(AddStatusModal);
+        selectedPanel.Q("Data").Add(unitPanel);
+        selectedPanel.Q("ExtraInfo").Add(new Label(){ name = "Class" });
+        selectedPanel.Q("ExtraInfo").Add(new Label(){ name = "Job" });
+        selectedPanel.Q("ExtraInfo").Add(new Label(){ name = "Elite", text = "Elite" });
 
-        VisualElement focusedPanel = UI.CreateFromTemplate("UITemplates/GameSystem/IconUnitPanel");
-        focusedPanel.Q("Damage").Q<Label>("Label").text = "DMG/FRAY";
-        focusedPanel.Q("Range").Q<Label>("Label").text = "RNG";
-        focusedPanel.Q("Speed").Q<Label>("Label").text = "SPD/DASH";
-        focusedPanel.Q("Defense").Q<Label>("Label").text = "DEF";
-        UI.System.Q("FocusedTokenPanel").Q("Data").Add(focusedPanel);
+        // Focused
+        VisualElement focusedPanel = UI.System.Q("FocusedTokenPanel");
+        unitPanel = UI.CreateFromTemplate("UITemplates/GameSystem/IconUnitPanel");
+        unitPanel.Q("Damage").Q<Label>("Label").text = "DMG/FRAY";
+        unitPanel.Q("Range").Q<Label>("Label").text = "RNG";
+        unitPanel.Q("Speed").Q<Label>("Label").text = "SPD/DASH";
+        unitPanel.Q("Defense").Q<Label>("Label").text = "DEF";
+        focusedPanel.Q("Data").Add(unitPanel);
+        focusedPanel.Q("ExtraInfo").Add(new Label(){ name = "Class" });
+        focusedPanel.Q("ExtraInfo").Add(new Label(){ name = "Job" });
+        focusedPanel.Q("ExtraInfo").Add(new Label(){ name = "Elite", text = "Elite" });
     }
 
     public override string GetTokenDataRawJson() {
@@ -146,7 +156,25 @@ public class Icon_v1_5 : GameSystem
 
         Modal.AddIntField("ObjectHP", "Object HP", 1);
 
+        Modal.AddIntField("CloneCount", "Clone Count", 1);
+
         AddTokenModalEvaluateConditions();
+    }
+
+    public override void CreateToken()
+    {
+        string json = GetTokenDataRawJson();
+        FileLogger.Write($"Token added: {json}");
+        VisualElement modal = Modal.Find();
+        if (modal.Q<DropdownField>("Type").value == "Object" || modal.Q<DropdownField>("FoeClass").value == "Mob") {
+            int count = modal.Q<IntegerField>("CloneCount").value;
+            for(int i = 0; i < count; i++) {
+                Player.Self().CmdCreateTokenData(json);
+            }
+        }
+        else {
+            Player.Self().CmdCreateTokenData(json);
+        }
     }
 
     private static void AddTokenModalEvaluateConditions() {
@@ -159,6 +187,7 @@ public class Icon_v1_5 : GameSystem
         bool legendHP = foeClass && modal.Q<DropdownField>("FoeClass").value == "Legend";
         bool size = foeClass;
         bool objectHP = modal.Q<DropdownField>("Type").value == "Object";
+        bool cloneCount = modal.Q<DropdownField>("Type").value == "Object" || modal.Q<DropdownField>("FoeClass").value == "Mob";
 
         UI.ToggleDisplay(modal.Q("PlayerJob"), playerJob);
         UI.ToggleDisplay(modal.Q("FoeClass"), foeClass);
@@ -167,16 +196,20 @@ public class Icon_v1_5 : GameSystem
         UI.ToggleDisplay(modal.Q("LegendHP"), legendHP);
         UI.ToggleDisplay(modal.Q("Size"), size);
         UI.ToggleDisplay(modal.Q("ObjectHP"), objectHP);
+        UI.ToggleDisplay(modal.Q("CloneCount"), cloneCount);
     }
 
     private static void AlterVitalsModal(ClickEvent evt) {
         Modal.Reset("Alter Vitals");
         Modal.AddIntField("Number", "Value", 0);
-        Modal.AddButton("Damage HP/VIG", (evt) => AlterVitals("Damage"));
-        Modal.AddButton("Reduce HP", (evt) => AlterVitals("LoseHP"));
-        Modal.AddButton("Recover HP", (evt) => AlterVitals("GainHP"));
-        Modal.AddButton("Reduce VIG", (evt) => AlterVitals("LoseVIG"));
-        Modal.AddButton("Recover VIG", (evt) => AlterVitals("GainVIG"));
+        Modal.AddContentButton("Damage HP/VIG", (evt) => AlterVitals("Damage"));
+        Modal.AddContentButton("Reduce HP", (evt) => AlterVitals("LoseHP"));
+        Modal.AddContentButton("Recover HP", (evt) => AlterVitals("GainHP"));
+        Modal.AddContentButton("Reduce VIG", (evt) => AlterVitals("LoseVIG"));
+        Modal.AddContentButton("Recover VIG", (evt) => AlterVitals("GainVIG"));
+        Modal.AddSeparator();
+        Modal.AddContentButton("Add Wound", (evt) => AlterVitals("GainWound"));
+        Modal.AddContentButton("Remove Wound", (evt) => AlterVitals("LoseWound"));
         Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 

@@ -233,6 +233,14 @@
 
 #FocusedTokenPanel #DataColumn Button,
 #FocusedTokenPanel #Controls {
-        display: none;
+    display: none;
 }
 
+#SelectedTokenPanel #ExtraInfo .unity-label,
+#FocusedTokenPanel #ExtraInfo .unity-label {
+    -unity-text-align: middle-center;
+    color: #FFF;
+    -unity-font-style: bold;
+    white-space: normal;
+
+}

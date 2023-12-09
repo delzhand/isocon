@@ -129,8 +129,9 @@ public class Launcher : MonoBehaviour
 
         if (_connectMode == "solo" || _connectMode == "host") {
             string system = PlayerPrefs.GetString("System", "Generic");
-            Modal.AddDropdownField("GameSystem", "Game System", system, new string[]{"Generic", "ICON 1.5", "Maleghast"}, (evt) => {
+            Modal.AddDropdownField("GameSystem", "Game System", system, new string[]{"Generic", "ICON 1.5", "Maleghast", "Lancer"}, (evt) => {
                 PlayerPrefs.SetString("System", evt.newValue);
+                ConfigModalEvaluateConditions();
             });
 
             string gridType = PlayerPrefs.GetString("Grid", "Square");
@@ -155,6 +156,7 @@ public class Launcher : MonoBehaviour
 
         Modal.AddPreferredButton("Confirm", ConfirmConfig);
         Modal.AddButton("Cancel", Modal.CloseEvent);
+        ConfigModalEvaluateConditions();
     }
 
     private void ConfirmConfig(ClickEvent evt) {
@@ -164,6 +166,7 @@ public class Launcher : MonoBehaviour
         switch (_connectMode) {
             case "solo":
                 GameSystem.Set(PlayerPrefs.GetString("System", "Generic"));
+                
                 _manager.maxConnections = 1;
                 _manager.StartHost();
                 GetComponent<Tabletop>().ConnectAsSolo();
@@ -181,5 +184,24 @@ public class Launcher : MonoBehaviour
                 break;
         }
         Modal.Close();
+    }
+
+    private void ConfigModalEvaluateConditions() {
+        VisualElement modal = Modal.Find();
+
+        bool grid = modal.Q<DropdownField>("GameSystem").value == "Generic";
+        UI.ToggleDisplay(modal.Q("GridType"), grid);
+    }
+
+    private string DefaultGridType() {
+        switch (PlayerPrefs.GetString("System", "Generic")) {
+            case "ICON 1.5":
+            case "Maleghast":
+                return "Square";
+            case "Lancer":
+                return "Hex";
+            default:
+                return PlayerPrefs.GetString("Grid", "Square");
+        }
     }
 }

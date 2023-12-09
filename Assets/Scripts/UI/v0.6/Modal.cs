@@ -46,6 +46,15 @@ public class Modal
         e.SendToBack();
     }
 
+    public static void AddContentButton(string label, EventCallback<ClickEvent> onClick) {
+        VisualElement modal = Find();
+        Button button = new Button();
+        button.text = label;
+        button.RegisterCallback<ClickEvent>(onClick);
+        modal.Q("Contents").Add(button);   
+        button.SendToBack();     
+    }
+
     public static void AddButton(string label, EventCallback<ClickEvent> onClick) {
         VisualElement modal = Find();
         Button button = new Button();
@@ -132,6 +141,20 @@ public class Modal
         else {
             UI.ToggleDisplay("Backdrop", false);
         }
+    }
+
+    public static void AddLabel(string text, string styleClass) {
+        Label field = new Label();
+        field.text = text;
+        field.AddToClassList("no-margin");
+        field.AddToClassList(styleClass);
+        Modal.AddContents(field);
+    }
+
+    public static void AddSeparator() {
+        VisualElement v = new VisualElement();
+        v.AddToClassList("separator");
+        Modal.AddContents(v);
     }
 
     public static void AddTextField(string name, string label, string defaultValue, EventCallback<ChangeEvent<string>> onChange = null) {

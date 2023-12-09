@@ -30,6 +30,7 @@ public class TokenMenu
             items.Add(new MenuItem("Remove", "Remove", ClickRemove));
             items.Add(new MenuItem("Move", "Move", ClickMove));
         }
+        items.Add(new MenuItem("Clone", "Clone", ClickClone));
         items.Add(new MenuItem("Delete", "Delete", ClickDelete));
         return items.ToArray();
     }
@@ -83,5 +84,10 @@ public class TokenMenu
             Token.DeselectAll();
             Player.Self().CmdRequestDeleteToken(data);
         });
+    }
+
+    public static void ClickClone(ClickEvent evt) {
+        TokenData data = Token.GetSelected().onlineDataObject.GetComponent<TokenData>();
+        Player.Self().CmdCreateTokenData(data.Json);
     }
 }

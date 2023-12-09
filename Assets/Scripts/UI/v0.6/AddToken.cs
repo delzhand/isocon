@@ -9,16 +9,21 @@ public class AddToken
     public static void OpenModal(ClickEvent evt) {
         Token.DeselectAll();
         Modal.Reset("Add Token");
-        Modal.AddSearchField("ImageSearchField", "Add Token", "", GetImageOptions());
-        GameSystem.Current().AddTokenModal();
-        Modal.AddPreferredButton("Confirm", ConfirmAddToken);
+        string[] imageOptions = GetImageOptions();
+        if (imageOptions.Length > 0) {
+            Modal.AddSearchField("ImageSearchField", "Add Token", "", GetImageOptions());
+            GameSystem.Current().AddTokenModal();
+            Modal.AddPreferredButton("Confirm", ConfirmAddToken);
+        }
+        else {
+            string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+            Modal.AddLabel($"No images were found. Token images must be added to { path }/tokens (this can be changed in configuration).", "error-message");
+        }
         Modal.AddButton("Cancel", Modal.CloseEvent);
     }   
 
     private static void ConfirmAddToken(ClickEvent evt) {
-        string json = GameSystem.Current().GetTokenDataRawJson();
-        Debug.Log(json);
-        Player.Self().CmdCreateTokenData(json);
+        GameSystem.Current().CreateToken();
         Modal.Close();
     }
 

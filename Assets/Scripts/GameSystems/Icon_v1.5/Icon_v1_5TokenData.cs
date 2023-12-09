@@ -190,10 +190,10 @@ public class Icon_v1_5TokenData : TokenData
         string colorName = UnitColorName();
         return colorName switch
         {
-            "Blue" => new Color(0, .63f, 1),
-            "Yellow" => new Color(1, .68f, 0),
-            "Red" => new Color(.93f, .13f, .05f),
-            "Green" => new Color(.38f, .85f, .21f),
+            "Blue" => ColorUtility.ColorFromHex("1A93B7"),
+            "Yellow" => ColorUtility.ColorFromHex("C6BB23"),
+            "Red" => ColorUtility.ColorFromHex("B72019"),
+            "Green" => ColorUtility.ColorFromHex("379317"),
             "Purple" => new Color(.79f, .33f, .94f),
             "Gray" => new Color(.57f, .57f, .57f),
             _ => Color.black
@@ -218,17 +218,29 @@ public class Icon_v1_5TokenData : TokenData
 
     public override void Change(string value) {
         FileLogger.Write($"{Name} changed - {value}");
+        if (value.StartsWith("GainWound")) {
+            Wounds++;
+            Wounds = Math.Min(Wounds, 3);
+            int woundMaxHP = MaxHP / 4 * (4 - Wounds);
+            CurrentHP = Math.Min(CurrentHP, woundMaxHP);
+            OnHPChange();
+        }
+        if (value.StartsWith("LoseWound")) {
+            Wounds--;
+            Wounds = Math.Max(Wounds, 0);
+        }
         if (value.StartsWith("GainHP")) {
             int diff = int.Parse(value.Split("|")[1]);
-            if (CurrentHP + diff > MaxHP) {
-                diff = MaxHP - CurrentHP;
+            int woundMaxHP = MaxHP / 4 * (4 - Wounds);
+            if (CurrentHP + diff > woundMaxHP) {
+                diff = woundMaxHP - CurrentHP;
             }
             if (diff > 0) {
                 CurrentHP+=diff;
                 PopoverText.Create(TokenObject.GetComponent<Token>(), $"/+{diff}|_HP", Color.white);
                 TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
             }
-            return;
+            OnHPChange();
         }
         if (value.StartsWith("LoseHP")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -240,7 +252,7 @@ public class Icon_v1_5TokenData : TokenData
                 PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-{diff}|_HP", Color.white);
                 TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
             }
-            return;
+            OnHPChange();
         }
         if (value.StartsWith("GainVIG")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -251,7 +263,6 @@ public class Icon_v1_5TokenData : TokenData
                 Vigor+=diff;
                 PopoverText.Create(TokenObject.GetComponent<Token>(), $"/+{diff}|_VIG", Color.white);
             }
-            return;
         }
         if (value.StartsWith("LoseVIG")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -262,7 +273,6 @@ public class Icon_v1_5TokenData : TokenData
                 Vigor-=diff;
                 PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-{diff}|_VIG", Color.white);
             }
-            return;
         }
         if (value.StartsWith("GainRES")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -308,7 +318,6 @@ public class Icon_v1_5TokenData : TokenData
                 CurrentHP -= (diff - Vigor);
                 Vigor = 0;
                 PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-{diff}|_HP/VIG", Color.white);
-                TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
             }
             else if (Vigor <= 0) {
                 // HP damage only
@@ -316,6 +325,7 @@ public class Icon_v1_5TokenData : TokenData
                 PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-{diff}|_HP", Color.white);
                 TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
             }
+            OnHPChange();
         }
         if (value.StartsWith("LoseStatus")) {
             string[] parts = value.Split("|");
@@ -345,6 +355,31 @@ public class Icon_v1_5TokenData : TokenData
         }
     }  
 
+    private void OnHPChange() {
+        TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
+        if (CurrentHP <= 0) {
+            Conditions["Defeated"] = new StatusEffect(){Name = "Defeated", Type = "Simple", Color = "Red"};
+            if (Conditions.ContainsKey("Bloodied")) {
+                Conditions.Remove("Bloodied");
+            }
+        }
+        else if (CurrentHP <= MaxHP/2) {
+            Conditions["Bloodied"] = new StatusEffect(){Name = "Bloodied", Type = "Simple", Color = "Red"};
+            if (Conditions.ContainsKey("Defeated")) {
+                Conditions.Remove("Defeated");
+            }
+        }
+        else {
+            if (Conditions.ContainsKey("Bloodied")) {
+                Conditions.Remove("Bloodied");
+            }
+            if (Conditions.ContainsKey("Defeated")) {
+                Conditions.Remove("Defeated");
+            }
+        }
+        reinitUI = true;
+    }
+
     public override void UpdateTokenPanel(string elementName) {
         base.UpdateTokenPanel(elementName);
         VisualElement panel = UI.System.Q(elementName);
@@ -354,6 +389,14 @@ public class Icon_v1_5TokenData : TokenData
         panel.Q("ClassBackground").style.borderRightColor = c;
         panel.Q("ClassBackground").style.borderBottomColor = c;
         panel.Q("ClassBackground").style.borderLeftColor = c;
+
+        panel.Q<Label>("Class").text = Class;
+        panel.Q<Label>("Class").style.backgroundColor = c;
+        panel.Q<Label>("Job").text = Job;
+        panel.Q<Label>("Job").style.backgroundColor = c;
+
+        UI.ToggleDisplay(panel.Q("Elite"), Elite);
+        panel.Q("Elite").style.backgroundColor = new Color(.79f, .33f, .94f);
 
         panel.Q<Label>("CHP").text = $"{ CurrentHP }";
         panel.Q<Label>("MHP").text = $"/{ MaxHP }";
