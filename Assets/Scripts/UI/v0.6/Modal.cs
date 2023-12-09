@@ -16,7 +16,6 @@ public class Modal
     private static EventCallback<ClickEvent> preferredAction;
 
     public static void Setup() {
-        UI.SetBlocking(UI.System, new string[]{"GeneralModal", "Backdrop", "DoubleConfirmModal"});
         FindDoubleConfirm().Q<Button>("Confirm").RegisterCallback<ClickEvent>(DoubleConfirmConfirmed);
         FindDoubleConfirm().Q<Button>("Cancel").RegisterCallback<ClickEvent>(DoubleConfirmCancelled);
     }

@@ -42,6 +42,7 @@ public class Block : MonoBehaviour
     void Awake() {
         if (materials.Count == 0) {
             MaterialSetup();
+            BlockMesh.Setup();
         }
 
         effects = new List<string>();
@@ -254,19 +255,30 @@ public class Block : MonoBehaviour
     public void TypeChange(BlockType blocktype) {
         Type = blocktype;
         Mesh m = null;
-        switch (Type) {
-            case BlockType.Solid:
-                m = BlockMesh.GenerateBlockMesh(1f);
-                break;
-            case BlockType.Slope:
-                m = BlockMesh.GenerateSlopeMesh();
-                break;
-            case BlockType.Spacer:
-                m = BlockMesh.GenerateCubeMesh(.3f);
-                break;
-            case BlockType.Hidden:
-                m = BlockMesh.GenerateCubeMesh(0f);
-                break;
+        if (TerrainController.GridType == "Square") {
+            switch (Type) {
+                case BlockType.Solid:
+                    m = BlockMesh.Shapes["Block"];
+                    transform.localScale = Vector3.one;
+                    break;
+                case BlockType.Slope:
+                    m = BlockMesh.Shapes["Slope"];
+                    transform.localScale = Vector3.one;
+                    break;
+                case BlockType.Spacer:
+                    m = BlockMesh.Shapes["Block"];
+                    transform.localScale = new Vector3(.3f, .3f, .3f);
+                    break;
+                case BlockType.Hidden:
+                    m = BlockMesh.Shapes["Block"];
+                    m = BlockMesh.GenerateCubeMesh(0f);
+                    transform.localScale = Vector3.zero;
+                    break;
+            }
+        }
+        else if (TerrainController.GridType == "Hex") {
+            m = BlockMesh.Shapes["Hex"];
+            transform.localScale = Vector3.one;
         }
         GetComponent<MeshFilter>().mesh = m;
         MaterialReset = true;
@@ -323,8 +335,8 @@ public class Block : MonoBehaviour
             }
             PaintMaterialSide.color = PaintColorSide;
             PaintMaterialTop.color = PaintColorTop;
-            blockMaterials.Add(PaintMaterialSide);
             blockMaterials.Add(PaintMaterialTop);
+            blockMaterials.Add(PaintMaterialSide);
         }
         else if (Style.Length > 0) {
             string side = "";
@@ -411,8 +423,8 @@ public class Block : MonoBehaviour
                     top = "Wood2Top";
                     break;
             }
-            blockMaterials.Add(materials[side]);
             blockMaterials.Add(materials[top]);
+            blockMaterials.Add(materials[side]);
         }
         else {
             // Checkerboard
@@ -426,8 +438,8 @@ public class Block : MonoBehaviour
                 altSides = ((x + y + z) % 2 == 0);
                 altTop = ((x + y) % 2 == 0);
             }
-            blockMaterials.Add(materials["side" + (altSides ? "1" : "2")]);
             blockMaterials.Add(materials["top" + (altSides ? "1" : "2")]);
+            blockMaterials.Add(materials["side" + (altSides ? "1" : "2")]);
         }
 
         // Overwrite checkerboard/paint if highlighted

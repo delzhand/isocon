@@ -134,7 +134,7 @@ public class Launcher : MonoBehaviour
             });
 
             string gridType = PlayerPrefs.GetString("Grid", "Square");
-            Modal.AddDropdownField("GridType", "Grid Type", gridType, new string[]{"Square"}, (evt) => {
+            Modal.AddDropdownField("GridType", "Grid Type", gridType, new string[]{"Square", "Hex"}, (evt) => {
                 PlayerPrefs.SetString("Grid", evt.newValue);
             });
         }

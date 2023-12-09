@@ -145,9 +145,6 @@ public class TerrainController : MonoBehaviour
                         column.name = columnName;
                         column.transform.parent = map.transform;
                         column.transform.localPosition = new Vector3(x, 0, y);
-                        if (GridType == "Hex") {
-                            column.transform.localPosition = new Vector3(x * 0.866f, 0, y * 1.5f);
-                        }
                         column.transform.localScale = Vector3.one;
                         column.AddComponent<Column>().Set(x, y);
                     }
@@ -385,8 +382,8 @@ public class TerrainController : MonoBehaviour
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
             block.TypeChange(type);
+            block.transform.Rotate(0, 90f, 0);
             if (type == BlockType.Slope) {
-                block.transform.Rotate(0, 90f, 0);
                 // counter-rotate indicator
                 block.transform.Find("Indicator").transform.eulerAngles = new Vector3(90, -90, 0);
             }

@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class BlockMesh
 {
+    public static Dictionary<string, Mesh> Shapes;
+
+    public static void Setup() {
+        Shapes = new Dictionary<string, Mesh>();
+        Shapes.Add("Block", Resources.Load<Mesh>("Models/Block"));
+        Shapes.Add("Slope", Resources.Load<Mesh>("Models/Slope"));
+        Shapes.Add("Hex", Resources.Load<Mesh>("Models/Hex"));
+    }
+
+
         // Cube
     public static Vector3[] GetCubeVertices(float size) {
         Vector3[] vertices = new Vector3[24];

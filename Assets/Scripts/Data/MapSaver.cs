@@ -29,10 +29,22 @@ public class MapSaver
 
         fullPath = fullPath.Replace(".json", ".png");
         GameObject.Find("Screenshot Camera").GetComponent<Camera>().orthographicSize = Camera.main.orthographicSize;
-        RenderTexture rt = Resources.Load<RenderTexture>("Textures/ScreenshotTexture");
         Block.UnfocusAll();
-        Texture2D screenshot = toTexture2D(rt);
-        Texture2D encoded = Encode(screenshot, json);
+
+        Texture2D destination = new Texture2D(640, 480, TextureFormat.RGB24, false);
+        RenderTexture renderTexture = RenderTexture.GetTemporary(640, 480, 24);
+        Camera.main.targetTexture = renderTexture;
+        RenderTexture.active = renderTexture;
+        Camera.main.Render();
+        destination.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+        destination.Apply();
+
+        RenderTexture.ReleaseTemporary(renderTexture);
+        RenderTexture.active = null;
+        GameObject.Destroy(destination);
+        Camera.main.targetTexture = null;
+
+        Texture2D encoded = Encode(destination, json);
         byte[] bytes = encoded.EncodeToPNG();
         System.IO.File.WriteAllBytes(fullPath, bytes);
         Toast.Add($"Map written to {fullPath.Replace("\\", "/")}");
