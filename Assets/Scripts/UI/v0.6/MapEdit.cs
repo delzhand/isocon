@@ -8,27 +8,65 @@ using UnityEngine.UIElements;
 public class MapEdit
 {
     private static string CurrentFile = "";
-    private static List<string> EditOps = new List<string>();
+    private static string EditOp;
+
+    public static BlockType Shape;
 
     public static void Setup()
     {
         VisualElement root = UI.System.Q("ToolsPanel");
         UI.SetBlocking(UI.System, "ToolsPanel");
         UI.ToggleDisplay(root, false);
-        root.Q<Button>("Open").RegisterCallback<ClickEvent>(OpenOpenModal);
-        root.Q<Button>("Save").RegisterCallback<ClickEvent>(OpenSaveModal);
-        root.Q<Button>("Reset").RegisterCallback<ClickEvent>(ResetConfirm);
+        // root.Q<Button>("Open").RegisterCallback<ClickEvent>(OpenOpenModal);
+        // root.Q<Button>("Save").RegisterCallback<ClickEvent>(OpenSaveModal);
+        // root.Q<Button>("Reset").RegisterCallback<ClickEvent>(ResetConfirm);
         root.Query<Button>(null, "tool-button").ForEach(RegisterButton);
-        root.Query<Foldout>(null, "unity-foldout").ForEach(RegisterFoldout);
+        // root.Query<Foldout>(null, "unity-foldout").ForEach(RegisterFoldout);
 
-        ColorEdit.Setup();
-        RegisterColorChangeCallback("Color1");
-        RegisterColorChangeCallback("Color2");
-        RegisterColorChangeCallback("Color3");
-        RegisterColorChangeCallback("Color4");
-        RegisterColorChangeCallback("Color5");
-        RegisterColorChangeCallback("Color6");
+        // ColorEdit.Setup();
+        // RegisterColorChangeCallback("Color1");
+        // RegisterColorChangeCallback("Color2");
+        // RegisterColorChangeCallback("Color3");
+        // RegisterColorChangeCallback("Color4");
+        // RegisterColorChangeCallback("Color5");
+        // RegisterColorChangeCallback("Color6");
 
+
+        OptionsSetup();
+    }
+
+    public static void OptionsSetup() {
+        VisualElement root = UI.System.Q("ToolOptions");
+        UI.SetBlocking(UI.System, "ToolOptions");
+        UI.ToggleDisplay(root, false);
+
+        // Shape
+        root.Q("ShapeSolid").AddToClassList("active");
+        root.Q("ShapeSolid").RegisterCallback<ClickEvent>((evt) => {
+            Shape = BlockType.Solid;
+            root.Q("ShapeSolid").AddToClassList("active");
+            root.Q("ShapeSlope").RemoveFromClassList("active");
+            root.Q("ShapeHidden").RemoveFromClassList("active");
+        });
+        root.Q("ShapeSlope").RegisterCallback<ClickEvent>((evt) => {
+            Shape = BlockType.Slope;
+            root.Q("ShapeSolid").RemoveFromClassList("active");
+            root.Q("ShapeSlope").AddToClassList("active");
+            root.Q("ShapeHidden").RemoveFromClassList("active");
+        });
+        root.Q("ShapeHidden").RegisterCallback<ClickEvent>((evt) => {
+            Shape = BlockType.Hidden;
+            root.Q("ShapeSolid").RemoveFromClassList("active");
+            root.Q("ShapeSlope").RemoveFromClassList("active");
+            root.Q("ShapeHidden").AddToClassList("active");
+        });
+
+
+        VisualElement styleSearch = SearchField.Create(StringUtility.Arr("None", "Paint", "Acid Flow", "Acid", "Old Brick", "Brick", "Gray Brick", "Dry Grass", "Grass", "Gold", "Lava Flow", "Lava", "Metal", "Gray Metal", "Poison Flow", "Poison", "Sand", "Snow", "Soil", "Stone", "Water Flow", "Water", "Wood", "Old Wood"), "Style Search");
+        styleSearch.name = "StyleSearch";
+        styleSearch.style.minWidth = 300;
+        root.Q("StyleOptions").Add(styleSearch);
+        styleSearch.BringToFront();
     }
 
     public static void ToggleEditMode(ClickEvent evt) {
@@ -215,16 +253,31 @@ public class MapEdit
         root.Query<Button>(null, "tool-button").ForEach(DisableButton);
         Button button = (Button)obj.target;
         button.AddToClassList("active");
-        EditOps.Clear();
-        EditOps.Add(button.name);
+        EditOp = button.name;
+        ShowOptions(button.name);
+    }
+
+    private static void ShowOptions(string op) {
+        UI.ToggleDisplay("ToolOptions", false);
+        UI.System.Q("ToolOptions").Query(null, "tool-option-group").ForEach((item) => {
+            UI.ToggleDisplay(item, false);
+        });
+        if (op == "ChangeShape") {
+            UI.ToggleDisplay("ToolOptions", true);
+            UI.ToggleDisplay("ShapeOptions", true);
+        }
+        if(op == "StyleBlock") {
+            UI.ToggleDisplay("ToolOptions", true);
+            UI.ToggleDisplay("StyleOptions", true);
+        }
     }
 
     private static void DisableButton(Button button) {
         button.RemoveFromClassList("active");
     }
 
-    public static List<string> GetOps() {
-        return EditOps;
+    public static string GetOp() {
+        return EditOp;
     }
 
     private static void RegisterFoldout(Foldout foldout) {

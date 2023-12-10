@@ -69,58 +69,54 @@ public class TerrainController : MonoBehaviour
 
     public static void Edit(Block block) {
         MapDirty = true;
-        List<string> ops = MapEdit.GetOps();
-        foreach(string op in ops) {
-            switch (op) {
-                case "AddBlock":
-                    AddBlocks();
-                    break;
-                case "RemoveBlock":
-                    RemoveBlocks();
-                    break;
-                case "CloneRow":
-                    CloneRow();
-                    break;
-                case "CloneCol":
-                    CloneColumn();
-                    break;
-                case "RemoveRow":
-                    DeleteRow();
-                    break;
-                case "RemoveCol":
-                    DeleteColumn();
-                    break;
-                case "Solid":
-                    ChangeType(BlockType.Solid);
-                    break;
-                case "Slope":
-                    ChangeType(BlockType.Slope);
-                    break;
-                case "Hidden":
-                    ChangeType(BlockType.Spacer);
-                    break;
-                case "AddMark":
-                    ChangeEffect(MapEdit.GetMarkerEffect());
-                    break;
-                case "ClearMarks":
-                    ChangeEffect("Clear");
-                    break;
-                case "CenterView":
-                    CameraControl.GoToBlock(block);
-                    break;
-                case "Paintbrush":
-                    PaintBlocks();
-                    break;
-                case "ArtBrush":
-                    StyleBlocks();
-                    break;
-                case "Unpaint":
-                    DepaintBlocks();
-                    break;
-                case "Eyedropper":
-                    Eyedropper();
-                    break;
-            }
+        switch (MapEdit.GetOp()) {
+            case "AddBlock":
+                AddBlocks();
+                break;
+            case "RemoveBlock":
+                RemoveBlocks();
+                break;
+            case "CloneRow":
+                CloneRow();
+                break;
+            case "CloneCol":
+                CloneColumn();
+                break;
+            case "RemoveRow":
+                DeleteRow();
+                break;
+            case "RemoveCol":
+                DeleteColumn();
+                break;
+            case "RotateBlock":
+
+            case "ChangeShape":
+                ChangeType();
+                break;
+            case "AddMark":
+                ChangeEffect(MapEdit.GetMarkerEffect());
+                break;
+            case "ClearMarks":
+                ChangeEffect("Clear");
+                break;
+            case "CenterView":
+                CameraControl.GoToBlock(block);
+                break;
+            case "StyleBlock":
+                ApplyStyle();
+                break;
+            // case "Paintbrush":
+            //     PaintBlocks();
+            //     break;
+            // case "ArtBrush":
+            //     StyleBlocks();
+            //     break;
+            // case "Unpaint":
+            //     DepaintBlocks();
+            //     break;
+            // case "Eyedropper":
+            //     Eyedropper();
+            //     break;
         }
     }
 
@@ -244,15 +240,30 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void RotateBlocks() {
+        // List<Block> selected = Block.GetSelected().ToList();
+        // selected.ForEach(block => {
+        //     if (GridType == "Square") {
+        //         block.transform.Rotate(0, 90f, 0);
+        //     }
+        //     else if (GridType == "Hex") {
+        //         block.transform.Rotate(0, 60f, 0);
+        //     }
+        // });
+
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
             if (GridType == "Square") {
                 block.transform.Rotate(0, 90f, 0);
+                if (block.Type == BlockType.Slope) {
+                    // counter-rotate indicator
+                    block.transform.Find("Indicator").transform.eulerAngles = new Vector3(90, -90, 0);
+                }
             }
             else if (GridType == "Hex") {
                 block.transform.Rotate(0, 60f, 0);
             }
         });
+
     }
 
     public static void PaintBlocks() {
@@ -269,10 +280,10 @@ public class TerrainController : MonoBehaviour
         });
     }
 
-    public static void StyleBlocks() {
+    public static void StyleBlocks(string style) {
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            block.ApplyStyle(UI.System.Q<DropdownField>("ArtTexture").value);
+            block.ApplyStyle(style);
         });
     }
 
@@ -383,20 +394,12 @@ public class TerrainController : MonoBehaviour
         ReorgNeeded = true;
     }
 
-    public static void ChangeType(BlockType type) {
+    public static void ChangeType() {
+        BlockType type = MapEdit.Shape;
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
             block.TypeChange(type);
-            if (GridType == "Square") {
-                block.transform.Rotate(0, 90f, 0);
-                if (type == BlockType.Slope) {
-                    // counter-rotate indicator
-                    block.transform.Find("Indicator").transform.eulerAngles = new Vector3(90, -90, 0);
-                }
-            }
-            else if (GridType == "Hex") {
-                block.transform.Rotate(0, 60f, 0);
-            }
+            RotateBlocks();
         });
     }
 
@@ -405,6 +408,13 @@ public class TerrainController : MonoBehaviour
         selected.ForEach(block => {
             block.EffectChange(effect);
         });
+    }
+
+    public static void ApplyStyle() {
+        string style = SearchField.GetValue(UI.System.Q("ToolOptions").Q("StyleSearch"));
+        if (style != "Paint" && style != "None") {
+            StyleBlocks(style);
+        }
     }
 
     private static GameObject TopBlock(GameObject column) {

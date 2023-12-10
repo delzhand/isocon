@@ -70,9 +70,9 @@ public class BlockMesh: MonoBehaviour
     public static (string,string) StyleMaterials(string style) {
         switch (style) {
             case "Acid Flow":
+                return ("AcidSide", "AcidTopFlow");
+            case "Acid":
                 return ("AcidSide", "AcidTopStill");
-            // case "Acid":
-            //     return ("AcidSide", "AcidTopFlow");
             case "Old Brick":
                 return ("Brick2Side", "Brick2Top");
             // case "Brick":
