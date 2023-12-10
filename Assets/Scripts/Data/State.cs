@@ -46,7 +46,7 @@ public class State
         List<string> blockStrings = new List<string>();
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
         for (int i = 0; i < blocks.Length; i++) {
-            blockStrings.Add(blocks[i].GetComponent<Block>().ToString());
+            blockStrings.Add(blocks[i].GetComponent<Block>().WriteOut());
         }
         State state = new State();
         state.Version = "v1";
@@ -63,7 +63,7 @@ public class State
         Environment.SetTileColors(ColorUtility.ColorFromHex(state.Color1), ColorUtility.ColorFromHex(state.Color2));
         Environment.SetBackgroundColors(ColorUtility.ColorFromHex(state.Color3), ColorUtility.ColorFromHex(state.Color4));
         foreach (string s in state.Blocks) {
-            Block.FromString(state.Version, s);
+            Block.ReadIn(state.Version, s);
         }
         TerrainController.ReorgNeeded = true;
         TerrainController.MapDirty = false;

@@ -258,14 +258,14 @@ public class TerrainController : MonoBehaviour
     public static void PaintBlocks() {
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            block.Paint(Environment.Color5, Environment.Color6);
+            block.ApplyPaint(Environment.Color5, Environment.Color6);
         });
     }
 
     public static void DepaintBlocks() {
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            block.Depaint();
+            block.RemovePaint();
         });
     }
 

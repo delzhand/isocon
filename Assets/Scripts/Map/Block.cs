@@ -15,18 +15,18 @@ public enum BlockType
 
 public class Block : MonoBehaviour
 {
-    private static Dictionary<string, Material> materials = new Dictionary<string, Material>();
-    private static Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
-
     public static Block LastFocused;
 
+    // Focus State
     public bool Selected = false;
     public bool Focused = false;
     public bool Highlighted = false;
 
     public BlockType Type = BlockType.Solid;
     public bool Destroyable = true;
-    private List<string> effects;
+
+    private List<string> effects = new();
+    private Material markerMaterial;
 
     private bool Painted = false;
     private Color PaintColorTop;
@@ -36,21 +36,16 @@ public class Block : MonoBehaviour
 
     private string Style = "";
 
-    private Material markerMaterial;
     private bool MaterialReset = true;
 
     void Awake() {
-        if (materials.Count == 0) {
-            MaterialSetup();
+        if (!BlockMesh.IsSetup) {
             BlockMesh.Setup();
         }
-
-        effects = new List<string>();
+        PaintMaterialSide = Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideC"));
+        PaintMaterialTop = Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopC"));
+        markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));
         TypeChange(Type);
-    }
-
-    void Start()
-    {
     }
 
     void Update()
@@ -74,31 +69,7 @@ public class Block : MonoBehaviour
         }
     }
 
-    public static void MaterialSetup() {
-        materials.Add("side1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideA")));
-        materials.Add("side2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideB")));
-        materials.Add("top1", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopA")));
-        materials.Add("top2", Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopB")));
-
-        materials.Add("highlighted", Instantiate(Resources.Load<Material>("Materials/Block/Highlighted")));
-
-        materials.Add("unfocused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
-        materials.Add("focused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
-        materials["focused"].SetInt("_Focused", 1);
-
-        materials.Add("selectfocused", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
-        materials["selectfocused"].SetInt("_Selected", 1);
-        materials["selectfocused"].SetInt("_Focused", 1);
-
-        materials.Add("selected", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
-        materials["selected"].SetInt("_Selected", 1);
-
-        foreach(string s in StringUtility.Arr("AcidSide","AcidTopFlow","AcidTopStill","Brick2Side","Brick2Top","BrickSide","BrickTop","DryGrassTop","GoldSide","GoldTop","GrassTop","LavaSide","LavaTopFlow","LavaTopStill","MetalSide","MetalTop","PoisonSide","PoisonTopFlow","PoisonTopStill","SandSide","SandTop","SnowSide","SnowTop","SoilSide","SoilTop","StoneSide","StoneTop","WaterSide","WaterTopFlow","WaterTopStill","Wood2Side","Wood2Top","WoodSide","WoodTop", "GrayBrickSide", "GrayBrickTop", "GrayMetalSide", "GrayMetalTop")) {
-            materials.Add($"{s}", Instantiate(Resources.Load<Material>($"Materials/Block/Artistic/{s}")));
-        }
-    }
-
-    public override string ToString(){
+    public string WriteOut(){
         Column c = transform.parent.GetComponent<Column>();
         string PaintColorTopHex = "";
         string PaintColorSideHex = "";
@@ -122,7 +93,7 @@ public class Block : MonoBehaviour
         return string.Join("|", bits);
     }  
 
-    public static GameObject FromString(string version, string block) {
+    public static GameObject ReadIn(string version, string block) {
         string[] data = block.Split("|");
         switch (version) {
             case "v1":
@@ -177,7 +148,7 @@ public class Block : MonoBehaviour
         if (painted) {
             Color top = ColorUtility.ColorFromHex(data[8]);
             Color sides = ColorUtility.ColorFromHex(data[9]);
-            block.GetComponent<Block>().Paint(top, sides);
+            block.GetComponent<Block>().ApplyPaint(top, sides);
         }
         if (data.Length > 10) {
             block.GetComponent<Block>().Style = data[10];
@@ -212,10 +183,7 @@ public class Block : MonoBehaviour
     }
 
     public static void SetColor(string id, Color color) {
-        if (materials.Count == 0) {
-            MaterialSetup();
-        }
-        materials[id].SetColor("_BaseColor", color);
+        BlockMesh.SharedMaterials[id].SetColor("_BaseColor", color);
     }
 
     public int getX() {
@@ -237,9 +205,7 @@ public class Block : MonoBehaviour
     public static string GetAlpha(int x) {
         const int Base = 26;
         const int Offset = 64; // ASCII offset for uppercase letters
-
         string column = "";
-        
         while (x > 0)
         {
             int remainder = x % Base;
@@ -248,7 +214,6 @@ public class Block : MonoBehaviour
             column = letter + column;
             x = (x - 1) / Base; // Adjust number for next iteration
         }
-        
         return column;    
     }
 
@@ -271,7 +236,6 @@ public class Block : MonoBehaviour
                     break;
                 case BlockType.Hidden:
                     m = BlockMesh.Shapes["Block"];
-                    m = BlockMesh.GenerateCubeMesh(0f);
                     transform.localScale = Vector3.zero;
                     break;
             }
@@ -301,20 +265,27 @@ public class Block : MonoBehaviour
         MaterialReset = true;
     }
 
-    public void Paint(Color top, Color sides) {
+    public void ApplyPaint(Color top, Color sides) {
         PaintColorSide = sides;
         PaintColorTop = top;
         Painted = true;
+        Style = "";
         MaterialReset = true;
     }
 
-    public void Depaint() {
+    public void RemovePaint() {
         Painted = false;
         MaterialReset = true;
     }
 
     public void ApplyStyle(string name) {
         Style = name;
+        Painted = false;
+        MaterialReset = true;
+    }
+
+    public void RemoveStyle() {
+        Style = "";
         MaterialReset = true;
     }
 
@@ -323,143 +294,43 @@ public class Block : MonoBehaviour
     }
 
     void SetMaterials() {
-        List<Material> blockMaterials = new List<Material>();
         MeshRenderer mr = GetComponent<MeshRenderer>();
 
+        Material[] mats = mr.materials;
+
         if (Painted) {
-            if (PaintMaterialSide == null) {
-                PaintMaterialSide = Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideC"));
-            }
-            if (PaintMaterialTop == null) {
-                PaintMaterialTop = Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopC"));
-            }
             PaintMaterialSide.color = PaintColorSide;
             PaintMaterialTop.color = PaintColorTop;
-            blockMaterials.Add(PaintMaterialTop);
-            blockMaterials.Add(PaintMaterialSide);
+            mats[BlockMesh.MaterialSideIndex()] = PaintMaterialSide;
+            mats[BlockMesh.MaterialTopIndex()] = PaintMaterialTop;
         }
         else if (Style.Length > 0) {
-            string side = "";
-            string top = "";
-            switch (Style) {
-                case "Acid Flow":
-                    side = "AcidSide";
-                    top = "AcidTopStill";
-                    break;
-                case "Acid":
-                    side = "AcidSide";
-                    top = "AcidTopFlow";
-                    break;
-                case "Old Brick":
-                    side = "Brick2Side";
-                    top = "Brick2Top";
-                    break;
-                case "Brick":
-                    side = "BrickSide";
-                    top = "BrickTop";
-                    break;
-                case "Dry Grass":
-                    side = "SoilSide";
-                    top = "DryGrassTop";
-                    break;
-                case "Grass":
-                    side = "SoilSide";
-                    top = "GrassTop";
-                    break;
-                case "Gold":
-                    side = "GoldSide";
-                    top = "GoldTop";
-                    break;
-                case "Lava Flow":
-                    side = "LavaSide";
-                    top = "LavaTopFlow";
-                    break;
-                case "Lava":
-                    side = "LavaSide";
-                    top = "LavaTopStill";
-                    break;
-                case "Metal":
-                    side = "MetalSide";
-                    top = "MetalTop";
-                    break;
-                case "Poison Flow":
-                    side = "PoisonSide";
-                    top = "PoisonTopFlow";
-                    break;
-                case "Poison":
-                    side = "PoisonSide";
-                    top = "PoisonTopStill";
-                    break;
-                case "Sand":
-                    side = "SandSide";
-                    top = "SandTop";
-                    break;
-                case "Snow":
-                    side = "SnowSide";
-                    top = "SnowTop";
-                    break;
-                case "Soil":
-                    side = "SoilSide";
-                    top = "SoilTop";
-                    break;
-                case "Stone":
-                    side = "StoneSide";
-                    top = "StoneTop";
-                    break;
-                case "Water Flow":
-                    side = "WaterSide";
-                    top = "WaterTopFlow";
-                    break;
-                case "Water":
-                    side = "WaterSide";
-                    top = "WaterTopStill";
-                    break;
-                case "Wood":
-                    side = "WoodSide";
-                    top = "WoodTop";
-                    break;
-                case "Old Wood":
-                    side = "Wood2Side";
-                    top = "Wood2Top";
-                    break;
-                case "Gray Metal":
-                    side = "GrayMetalSide";
-                    top = "GrayMetalTop";
-                    break;
-                case "Gray Brick":
-                    side = "GrayBrickSide";
-                    top = "GrayBrickTop";
-                    break;
-            }
-            blockMaterials.Add(materials[top]);
-            blockMaterials.Add(materials[side]);
+            (string,string) styleMats = BlockMesh.StyleMaterials(Style);
+            mats[BlockMesh.MaterialSideIndex()] = BlockMesh.SharedMaterials[styleMats.Item1];
+            mats[BlockMesh.MaterialTopIndex()] = BlockMesh.SharedMaterials[styleMats.Item2];
         }
         else {
             // Checkerboard
             bool altSides = false;
-            bool altTop = false;
+            // bool altTop = false;
             if (transform.parent != null) {
                 // Checkerboard
                 float x = transform.parent.GetComponent<Column>().X;
                 float y = transform.parent.GetComponent<Column>().Y;
                 float z = transform.localPosition.y;
                 altSides = ((x + y + z) % 2 == 0);
-                altTop = ((x + y) % 2 == 0);
+                // altTop = ((x + y) % 2 == 0);
             }
-            blockMaterials.Add(materials["top" + (altSides ? "1" : "2")]);
-            blockMaterials.Add(materials["side" + (altSides ? "1" : "2")]);
+            mats[BlockMesh.MaterialSideIndex()] = BlockMesh.SharedMaterials["side" + (altSides ? "1" : "2")];
+            mats[BlockMesh.MaterialTopIndex()] = BlockMesh.SharedMaterials["top" + (altSides ? "1" : "2")];
         }
 
         // Overwrite checkerboard/paint if highlighted
         if (Highlighted) {
-            blockMaterials.RemoveAt(blockMaterials.Count-1);
-            blockMaterials.Add(materials["highlighted"]);
+            mats[BlockMesh.MaterialTopIndex()] = BlockMesh.SharedMaterials["highlighted"];
         }
 
         // Markers
-        if (markerMaterial == null) {
-            markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));
-        }
         markerMaterial.SetInt("_Impassable", 0);
         if (GameSystem.Current().HasEffect("Blocked", effects)) {
             markerMaterial.SetInt("_Impassable", 1);
@@ -484,23 +355,23 @@ public class Block : MonoBehaviour
         if (GameSystem.Current().HasCustomEffect(effects)) {
             markerMaterial.SetInt("_Other", 1);
         }
-        blockMaterials.Add(markerMaterial);
-        
+        mats[BlockMesh.MaterialMarkerIndex()] = markerMaterial;
+
         // Selected/Focused
-        string fmat = "unfocused";
+        string focusState = "unfocused";
         if (Selected && !Focused) {
-            fmat = "selected";
+            focusState = "selected";
         }
         else if (!Selected && Focused) {
-            fmat = "focused";
+            focusState = "focused";
         }
         else if (Selected && Focused) {
-            fmat = "selectfocused";
+            focusState = "selectfocused";
         }
-        blockMaterials.Add(materials[fmat]);
+        mats[BlockMesh.MaterialFocusIndex()] = BlockMesh.SharedMaterials[focusState];
 
         // Apply
-        mr.SetMaterials(blockMaterials);
+        mr.SetMaterials(mats.ToList());
     }
 
     public static void ToggleSpacers(bool show) {
