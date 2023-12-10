@@ -20,6 +20,33 @@ public class IsoConsole
     private static void ConsoleExecute(ClickEvent evt) {
         string command = Modal.Find().Q<TextField>("Console").value;
         Modal.Find().Q<TextField>("Console").Focus();
+        if (command == "MGSample") {
+            string json = "{\"Name\":\"\",\"GraphicHash\":\"8b3627c36b26c32aaa2997d2ed422253e9f0e19f896978cd22514514545f3830\",\"Size\":0,\"HouseJob\":\"CARCASS/Gunwight\"}";
+            json = "{\"Name\":\"\",\"GraphicHash\":\"8b3627c36b26c32aaa2997d2ed422253e9f0e19f896978cd22514514545f3830\",\"Size\":0,\"HouseJob\":\"CARCASS/Gunwight\"}";
+            Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"\",\"GraphicHash\":\"4c08f3acb936735fe653143f2ead7901bff050a4866700c925da123f02d44d26\",\"Size\":0,\"HouseJob\":\"CARCASS/Enforcer\"}";
+            Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"\",\"GraphicHash\":\"3b87c5c8d58f95efeafc0ccc9aa26ea27c62fe0c013945bae8395081be372892\",\"Size\":0,\"HouseJob\":\"CARCASS/Ammo Goblin\"}";
+            Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"\",\"GraphicHash\":\"3b87c5c8d58f95efeafc0ccc9aa26ea27c62fe0c013945bae8395081be372892\",\"Size\":0,\"HouseJob\":\"CARCASS/Ammo Goblin\"}";
+            Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"\",\"GraphicHash\":\"1863750677b8b4a95f23fd514d063bb64c5489d333553757b86dac69a8647c2d\",\"Size\":0,\"HouseJob\":\"CARCASS/EGIS Weapon\"}";
+            Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"Simon\",\"GraphicHash\":\"c6d4ec159945cd89ce03f532135b004d354dc6467f97fd5321eb2b07884f8acd\",\"Size\":0,\"HouseJob\":\"CARCASS/Operator\"}";
+            Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"\",\"GraphicHash\":\"8cd93a4e7531967360021609aed93802c5965cd43cf9ae6babd9d51d0c194689\",\"Size\":0,\"HouseJob\":\"Goregrinders/Painghoul\"}";
+            Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"\",\"GraphicHash\":\"8cd93a4e7531967360021609aed93802c5965cd43cf9ae6babd9d51d0c194689\",\"Size\":0,\"HouseJob\":\"Goregrinders/Painghoul\"}";
+            Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"\",\"GraphicHash\":\"04620e2d88b75279048c70d47122571f875511486a7cbb8a4046f158422e9737\",\"Size\":0,\"HouseJob\":\"Goregrinders/Berserker\"}";
+            Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"\",\"GraphicHash\":\"04620e2d88b75279048c70d47122571f875511486a7cbb8a4046f158422e9737\",\"Size\":0,\"HouseJob\":\"Goregrinders/Berserker\"}";
+            Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"\",\"GraphicHash\":\"23315fbd145c38e918b4cd51513e3add44f1a22d745bae5345441216fcc267cd\",\"Size\":0,\"HouseJob\":\"Goregrinders/Painwheel\"}";
+            Player.Self().CmdCreateTokenData(json);
+            json = "{\"Name\":\"Tethys\",\"GraphicHash\":\"ca6d8e3015a2f46d27b1e0f8b6a160652254cf4be8715131d145f0f5d46ca094\",\"Size\":0,\"HouseJob\":\"Goregrinders/Warlord\"}";
+            Player.Self().CmdCreateTokenData(json);
+        }
         if (command == "Ada") {
             string json = "{\"Name\":\"Ada\",\"GraphicHash\":\"df6ee698a739576676d5f99c113a61fecdd1f2a66cc3fd7fc1b8ac21f3ba4067\",\"Size\":1,\"Class\":\"Stalwart\",\"Job\":\"Bastion\",\"Elite\":false,\"HPMultiplier\":1}";
             Player.Self().CmdCreateTokenData(json);

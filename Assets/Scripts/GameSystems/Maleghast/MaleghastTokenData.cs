@@ -1,43 +1,22 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using Mirror;
+using SimpleJSON;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 [System.Serializable]
-public class MaleghastTokenDataRaw
+public class MaleghastTokenDataRaw: TokenDataRaw
 {
-    public string Name;
-    public string House;
-    public string UnitType;
-    public int Size;
-    public string GraphicHash;
-
+    public string HouseJob;
 
     public static string ToJson() {
+        VisualElement modal = Modal.Find();
         MaleghastTokenDataRaw raw = new MaleghastTokenDataRaw();
-
-        TextField nameField = UI.System.Q<TextField>("TokenNameField");
-        raw.Name = nameField.value;
-
-        DropdownField houseField = UI.System.Q<DropdownField>("HouseDropdown");
-        raw.House = houseField.value;
-
-        DropdownField unitTypeField = UI.System.Q<DropdownField>("TypeDropdown");
-        raw.UnitType = unitTypeField.value;
-
-        DropdownField graphicField = UI.System.Q<DropdownField>("GraphicDropdown");
-        Texture2D graphic = TextureSender.CopyLocalImage(graphicField.value);
+        raw.Name = modal.Q<TextField>("NameField").value;
+        Texture2D graphic = TextureSender.CopyLocalImage(modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
         raw.GraphicHash = TextureSender.GetTextureHash(graphic);
-
-        raw.Size = 1;
-        if (raw.UnitType.Contains("Tyrant")) {
-            raw.Size = 2;
-        }
-
+        raw.HouseJob = SearchField.GetValue(modal.Q("UnitType"));
         return JsonUtility.ToJson(raw);
     }
 }
@@ -45,10 +24,14 @@ public class MaleghastTokenDataRaw
 public class MaleghastTokenData : TokenData
 {
     [SyncVar]
-    public string House;
+    public string House;  // CARCASS
 
     [SyncVar]
-    public string UnitType;
+    public string Type; // Thrall
+
+    public string Job; // Gunwight
+
+    public Color Color;
 
     [SyncVar]
     public int CurrentHP;
@@ -64,8 +47,6 @@ public class MaleghastTokenData : TokenData
     public int Move;
     public int Defense;
 
-    public int Size;
-
     public string ActAbilities;
     public string SoulAbilities;
     public string Upgrades;
@@ -76,7 +57,9 @@ public class MaleghastTokenData : TokenData
     public int Speed;
     public bool Loaded = true;
 
-    public bool TurnEnded;
+    public Dictionary<string, StatusEffect> Conditions = new();
+
+    public int Size;
 
     void Update()
     {
@@ -91,10 +74,6 @@ public class MaleghastTokenData : TokenData
     public override void UpdateOverheadValues() {
         overhead.Q<ProgressBar>("HpBar").value = CurrentHP;
         overhead.Q<ProgressBar>("HpBar").highValue = MaxHP;
-        UI.ToggleDisplay(overhead.Q<ProgressBar>("VigorBar"), false);
-        for (int i = 1; i <= 3; i++) {
-            UI.ToggleDisplay(overhead.Q("Wound" + i), false);            
-        }
     }
 
     public override void TokenDataSetup(string json, string id) {
@@ -107,27 +86,29 @@ public class MaleghastTokenData : TokenData
         MaleghastTokenDataRaw raw = JsonUtility.FromJson<MaleghastTokenDataRaw>(Json);
         Name = raw.Name;
         GraphicHash = raw.GraphicHash;
-        House = raw.House;
-        UnitType = raw.UnitType;
-        Size = raw.Size;
-        SetStats(raw.UnitType);
+        SetStats(raw.HouseJob);
+    }
+
+    public override void CreateOverhead() {
+        VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/GameSystem/SimpleOverhead");
+        VisualElement instance = template.Instantiate();
+        overhead = instance.Q("Overhead");
+        UI.System.Q("Worldspace").Add(overhead);
     }
 
     public override void CreateWorldToken() {
         base.CreateWorldToken();    
-        Color c = ClassColor();
         Material m = Instantiate(Resources.Load<Material>("Materials/Token/BorderBase"));
-        m.SetColor("_Border", c);
+        m.SetColor("_Border", Color);
         TokenObject.transform.Find("Base").GetComponent<DecalProjector>().material = m;
     }
 
     public override void CreateUnitBarItem() {
         base.CreateUnitBarItem();
-        Color c = ClassColor();
-        Element.Q("ClassBackground").style.borderTopColor = c;
-        Element.Q("ClassBackground").style.borderRightColor = c;
-        Element.Q("ClassBackground").style.borderBottomColor = c;
-        Element.Q("ClassBackground").style.borderLeftColor = c;
+        Element.Q("ClassBackground").style.borderTopColor = Color;
+        Element.Q("ClassBackground").style.borderRightColor = Color;
+        Element.Q("ClassBackground").style.borderBottomColor = Color;
+        Element.Q("ClassBackground").style.borderLeftColor = Color;
     }
 
     public override int GetSize()
@@ -135,458 +116,199 @@ public class MaleghastTokenData : TokenData
         return Size;
     }
 
-    private Color ClassColor() {
-        return House switch
-        {
-            "C.A.R.C.A.S.S." => Environment.FromHex("#f20dae"),
-            "Goregrinders" => Environment.FromHex("#ff7829"),
-            "Gargamox" => Environment.FromHex("#29ff3d"),
-            "Deadsouls" => Environment.FromHex("#90ffef"),
-            "Abhorrers" => Environment.FromHex("#ffc93b"),
-            "Igorri" => Environment.FromHex("#a000ff"),
-            _ => throw new Exception(),
-        };
+    private void SetStats(string houseJob) {
+        House = houseJob.Split("/")[0];
+        Job = houseJob.Split("/")[1];
+
+        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
+
+        foreach (JSONNode house in gamedata["Maleghast"]["Houses"].AsArray) {
+            if (house["name"] == House) {
+                Color = ColorUtility.ColorFromHex(house["color"]);
+                foreach (JSONNode unit in house["units"].AsArray) {
+                    if (unit["name"] == Job) {
+                        Type = unit["type"];
+                        Move = unit["move"];
+                        MaxHP = unit["hp"];
+                        Defense = unit["def"];
+                        Armor = unit["armor"];
+                        // Traits = "Formation,Thrall";
+                        // ActAbilities = "OL45,Baton";
+                        // Upgrades = "Brace,Tactical Reload,Scavenge Ammo";
+                    }
+                }
+            }
+        }
+
+        if (Type == "Tyrant") {
+            Size = 2;
+        }
     }
 
-    public void Change(string label, int value) {
-        FileLogger.Write($"{Name} {label} set to {value}");
-        int originValue;
-        switch(label) {
-            case "CurrentHP":
-                originValue = CurrentHP;
-                CurrentHP = value;                
-                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}|_HP", ChangeColor(value, originValue));
+    public override void Change(string value)
+    {
+        FileLogger.Write($"{Name} changed - {value}");
+        if (value.StartsWith("GainHP")) {
+            int diff = int.Parse(value.Split("|")[1]);
+            if (CurrentHP + diff > MaxHP) {
+                diff = MaxHP - CurrentHP;
+            }
+            if (diff > 0) {
+                CurrentHP+=diff;
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/+{diff}|_HP", Color.white);
                 TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
-                break;
-            case "Strength":
-                originValue = Strength;
-                Strength = value;
-                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}|_STR", ChangeColor(value, originValue));
-                break;
-            case "Vitality":
-                originValue = Vitality;
-                Vitality = value;
-                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}|_VIT", ChangeColor(value, originValue));
-                break;
-            case "Speed":
-                originValue = Speed;
-                Speed = value;
-                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}|_SPD", ChangeColor(value, originValue));
-                break;
-            case "Loaded":
-                originValue = Loaded ? 1 : 0;
-                if (value == 1) {
-                    Loaded = true;
-                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"=RELOADED", ChangeColor(1, 0));
-                }
-                else {
-                    Loaded = false;
-                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"=UNLOADED", ChangeColor(0, 1));
-                }
-                break;
-            case "Soul":
-                originValue = Soul;
-                Soul = value;
-                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}|_SOUL", ChangeColor(value, originValue));
-                break;
-            default:
-                FileLogger.Write($"Invalid label '{label}' for int value change");
-                throw new Exception($"Invalid label '{label}' for int value change");
+            }
+            OnVitalChange();
         }
+        if (value.StartsWith("LoseHP")) {
+            int diff = int.Parse(value.Split("|")[1]);
+            if (CurrentHP - diff < 0) {
+                diff = CurrentHP;
+            }
+            if (diff > 0) {
+                CurrentHP-=diff;
+                PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-{diff}|_HP", Color.white);
+                TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
+            }
+            OnVitalChange();
+        }
+        if (value.StartsWith("LoseStatus")) {
+            string[] parts = value.Split("|");
+            Conditions.Remove(parts[1]);
+            PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-|_{parts[1].ToUpper()}", Color.white);
+            reinitUI = true;
+            OnStatusChange();
+        }
+        if (value.StartsWith("GainStatus")) {
+            string[] parts = value.Split("|");
+            if (!Conditions.ContainsKey(parts[1])) {
+                Conditions.Add(parts[1], new StatusEffect(){Name = parts[1], Type = parts[2], Color = parts[3], Number = int.Parse(parts[4])});
+            }
+            else {
+                Toast.Add($"Condition { parts[1] } is already set on { Name }.");
+            }
+            PopoverText.Create(TokenObject.GetComponent<Token>(), $"/+|_{parts[1].ToUpper()}", Color.white);
+            reinitUI = true;
+            OnStatusChange();
+        }
+        if (value.StartsWith("IncrementStatus")) {
+            string status = value.Split("|")[1];
+            StatusEffect se = Conditions[status];
+            se.Number++;
+            Conditions[status] = se;
+            reinitUI = true;
+            OnStatusChange();
+        }
+        if (value.StartsWith("DecrementStatus")) {
+            string status = value.Split("|")[1];
+            StatusEffect se = Conditions[status];
+            se.Number--;
+            Conditions[status] = se;
+            reinitUI = true;
+            OnStatusChange();
+        }
+    }  
 
-        if (originValue == value) {
-            return;
+    private void OnVitalChange() {
+        TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
+        if (CurrentHP <= 0) {
+            Conditions["Corpse"] = new StatusEffect(){Name = "Corpse", Type = "Simple", Color = "Gray"};
         }
-        // PopoverText.Create(TokenObject.GetComponent<Token>(), $"{(value < originValue ? "-" : "+")}{Math.Abs(originValue-value)}{shortLabel}", ChangeColor(value, originValue));
-        TokenEditPanel.SyncValues();
-        LifeEditPanel.SyncValues();
+        else {
+            if (Conditions.ContainsKey("Corpse")) {
+                Conditions.Remove("Corpse");
+            }
+        }
+        reinitUI = true;
     }
 
-    public void Change(string label, string value) {
-        FileLogger.Write($"{Name} {label} set to {value}");
-        switch(label) {
-            case "Status":
-                // cut out some conditions because this is only used for Turn Ended in maleghast
-                if (TurnEnded) {
-                    TurnEnded = false;
-                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"=TURN RESET", Color.white);
-                    Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = Color.white;
-                }
-                else {
-                    TurnEnded = true;
-                    PopoverText.Create(TokenObject.GetComponent<Token>(), $"=TURN ENDED", Color.white);
-                    Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = ColorUtility.ColorFromHex("#505050");
-                    Element.BringToFront();
-                }
-                break;
-            default:
-                FileLogger.Write($"Invalid label '{label}' for string value change");
-                throw new Exception($"Invalid label '{label}' for string value change");
-        }
-
-        TokenEditPanel.SyncValues();
-    }
-
-    private Color ChangeColor(int a, int b) {
-        // return Color.white;
-        return ColorUtility.ColorFromHex(a < b ? "#F77474" : "#74F774");
-    }
-
-    private void SetStats(string unitType) {
-        switch (unitType) {
-            case "Gunwight/Thrall":
-                Move = 2;
-                MaxHP = 2;
-                Defense = 4;
-                Armor = "";
-                Traits = "Formation,Thrall";
-                ActAbilities = "OL45,Baton";
-                Upgrades = "Brace,Tactical Reload,Scavenge Ammo";
-                break;
-            case "Enforcer/Scion":
-                Move = 3;
-                MaxHP = 4;
-                Defense = 3;
-                Armor = "PHYS";
-                Traits = "Formation";
-                ActAbilities = "Skull Crack,Flashbang,Shieldwall";
-                Upgrades = "Shield Charge,Bulwark,Bone Dust Napalm";
-                break;
-            case "Ammo Goblin/Freak":
-                Move = 3;
-                MaxHP = 4;
-                Defense = 4;
-                Armor = "";
-                Traits = "Formation";
-                ActAbilities = "Regurgitate Ammo,Bone Shards,Destructive Glee";
-                Upgrades = "Vomit Bullets,Napalm Injector,Hot Chamber";
-                break;
-            case "Barrelform/Hunter":
-                Move = 2;
-                MaxHP = 4;
-                Defense = 4;
-                Armor = "";
-                Traits = "Formation";
-                ActAbilities = "Snipe,Transform To Gun,Deathmark";
-                Upgrades = "Claw Pitons,Extended Barrel,Caliber Up";
-                break;
-            case "EGIS Weapon/Tyrant":
-                Move = 3;
-                MaxHP = 6;
-                Defense = 2;
-                Armor = "PHYS";
-                Traits = "Formation,Siege Shield,Tyrant";
-                ActAbilities = "Juggernaut,Mortar,Catechism Devil Cannon";
-                Upgrades = "Fortify,Heavy Caliber Cannon,Gunner Pivot";
-                break;
-            case "Operator/Necromancer":
-                Move = 4;
-                MaxHP = 8;
-                Defense = 4;
-                Armor = "PHYS";
-                Traits = "Formation,Hot Clip";
-                ActAbilities = "Akimbo";
-                SoulAbilities = "Reload Slide,Bullet Time";
-                break;
-            case "Warhead/Thrall":
-                Move = 4;
-                MaxHP = 2;
-                Defense = 3;
-                Armor = "";
-                Traits = "Blood Rage,Thrall";
-                ActAbilities = "Charge,Cleave";
-                Upgrades = "Bladed,Overclocked,Lobotomized";
-                break;
-            case "Carnifex/Scion":
-                Move = 4;
-                MaxHP = 4;
-                Defense = 3;
-                Armor = "";
-                Traits = "Blood Rage";
-                ActAbilities = "Rev,Chainsaw,Wild Slashes";
-                Upgrades = "Heavy Swing,Rile,Bloody Teeth";
-                break;
-            case "Painghoul/Freak":
-                Move = 4;
-                MaxHP = 4;
-                Defense = 3;
-                Armor = "";
-                Traits = "Blood Rage";
-                ActAbilities = "Pain Frenzy,Cauterize,Meat Hook";
-                Upgrades = "Stim Haze,Frenzy Hook,Adrenalize";
-                break;
-            case "Painwheel/Horror":
-                Move = 5;
-                MaxHP = 4;
-                Defense = 3;
-                Armor = "";
-                Traits = "Blood Rage,Hellwheel";
-                ActAbilities = "Exfoliate,Spin Out";
-                Upgrades = "Barbed Wheel,Endless Screaming,Hurtle";
-                break;
-            case "Berserker/Tyrant":
-                Move = 4;
-                MaxHP = 6;
-                Defense = 2;
-                Armor = "";
-                Traits = "Blood Rage,Steaming Rage,Tyrant";
-                ActAbilities = "Pulverize,Building Rage,Rip and Tear";
-                Upgrades = "Machineheart,Fuel Injectors,Bifurcate";
-                break;
-            case "Warlord/Necromancer":
-                Move = 4;
-                MaxHP = 10;
-                Defense = 3;
-                Armor = "";
-                Traits = "Blood Rage,Fueled By Rage";
-                ActAbilities = "Superheated Chainblade";
-                SoulAbilities = "Ignite,Glory Kill";
-                break;
-            case "Scum/Thrall":
-                Move = 3;
-                MaxHP = 1;
-                Defense = 4;
-                Armor = "PHYS";
-                Traits = "Toxic Revenge,Thrall";
-                ActAbilities = "Pseudopod,Shamble";
-                Upgrades = "Bloat,Tentacle Whip,Aftermath";
-                break;
-            case "Rotten/Scion":
-                Move = 4;
-                MaxHP = 4;
-                Defense = 3;
-                Armor = "PHYS";
-                Traits = "Plaguebearer";
-                ActAbilities = "Pustulate,Vomitous Mass,Rotblade";
-                Upgrades = "Catalyze,Invigorating Viscera,Smog Shroud";
-                break;
-            case "Leech/Freak":
-                Move = 4;
-                MaxHP = 4;
-                Defense = 4;
-                Armor = "MAG";
-                Traits = "Deathwash";
-                ActAbilities = "Suppurate,Evolve Strain,Swell with Corruption";
-                Upgrades = "Massive Swell,Spreading Strain,Acid Blood";
-                break;
-            case "Host/Hunter":
-                Move = 2;
-                MaxHP = 4;
-                Defense = 4;
-                Armor = "";
-                Traits = "Swarm Release";
-                ActAbilities = "Propagate Swarm,Driving Vermin";
-                Upgrades = "Swarm Feed,Toxic Avenger,Defiler";
-                break;
-            case "Slime/Horror":
-                Move = 4;
-                MaxHP = 4;
-                Defense = 4;
-                Armor = "";
-                Traits = "Vile Rupture";
-                ActAbilities = "Percolate,Surge";
-                Upgrades = "Rotten Surge,Sticky Trail,The Gunk";
-                break;
-            case "Plaguelord/Necromancer":
-                Move = 4;
-                MaxHP = 10;
-                Defense = 4;
-                Armor = "";
-                Traits = "Blessed with Filth";
-                ActAbilities = "Virulence";
-                SoulAbilities = "Infest,Slime Form";
-                break;
-            case "Sacrifice/Thrall":
-                Move = 3;
-                MaxHP = 2;
-                Defense = 4;
-                Armor = "";
-                Traits = "Inverted Crucifix,Thrall";
-                ActAbilities= "Beckon,Shudder";
-                Upgrades = "Squirm,Dead Grasp,Impending Death";
-                break;
-            case "Chosen/Scion":
-                Move = 4;
-                MaxHP = 3;
-                Defense = 5;
-                Armor = "MAG";
-                Traits = "Slither";
-                ActAbilities = "Tombraiser,Kidnap,Serpent's Kiss";
-                Upgrades = "Ivory Serpent,Leap,Foul Monuments";
-                break;
-            case "Vizigheist/Horror":
-                Move = 4;
-                MaxHP = 3;
-                Defense = 5;
-                Armor = "MAG";
-                Traits = "Teleport";
-                ActAbilities = "Horrendous Shriek,Urgal Blade";
-                Upgrades = "Terrorize,Soul Frost,Condemn";
-                break;
-            case "Banshee/Hunter":
-                Move = 3;
-                MaxHP = 3;
-                Defense = 5;
-                Armor = "MAG";
-                Traits = "Soul Sight";
-                ActAbilities = "Bale Scream,Tombstone";
-                Upgrades = "Doom Bell,Freeze Soul,Siren";
-                break;
-            case "Bound Devil/Tyrant":
-                Move = 3;
-                MaxHP = 6;
-                Defense = 2;
-                Armor = "MAG";
-                Traits = "Flight,Tyrant";
-                ActAbilities= "Omnipresence,Beckon Lamb,Limb From Limb";
-                Upgrades = "To The Slaughter,Death Toll,Strong Pact";
-                break;
-            case "Dark Priest/Necromancer":
-                Move = 4;
-                MaxHP = 8;
-                Defense = 4;
-                Armor = "MAG";
-                Traits = "Dread Presence";
-                ActAbilities = "Doom Blade";
-                SoulAbilities = "Cyclopean Monolith,Soulfeed";
-                break;
-            case "Penitent/Scion":
-                Move = 4;
-                MaxHP = 3;
-                Defense = 2;
-                Armor = "SUPER";
-                Traits = "Miracle";
-                ActAbilities = "Mea Culpa, Holy Water, Excoriate";
-                Upgrades = "Holy Blood, Eager, Taste the Lash";
-                break;
-            case "Zealot/Horror":
-                Move = 4;
-                MaxHP = 4;
-                Defense = 3;
-                Armor = "";
-                Traits = "Miracle, Zealotry";
-                ActAbilities = "Smite, Whirling Chain";
-                Upgrades = "Punisher, Suffuse, Fiery Chain";
-                break;
-            case "Antipriest/Freak":
-                Move = 3;
-                MaxHP = 4;
-                Defense = 4;
-                Armor = "MAG";
-                Traits = "Miracle";
-                ActAbilities = "Gentleness, Delay Judgement, Blessed Censer";
-                Upgrades = "Cleansing Prayer, Consecrate, Boiling Censer";
-                break;
-            case "Inquisitor/Hunter":
-                Move = 3;
-                MaxHP = 4;
-                Defense = 3;
-                Armor = "";
-                Traits = "Miracle";
-                ActAbilities = "Winch, Requiesce en Pace";
-                Upgrades = "Focus, Heart Destroyer, Explosive Bolts";
-                break;
-            case "Holy Body/Tyrant":
-                Move = 3;
-                MaxHP = 3;
-                Defense = 2;
-                Armor = "SUPER";
-                Traits = "Flight, Miraculous Flesh, Tyrant";
-                ActAbilities = "Bolides, Indignation, Ablutions";
-                Upgrades = "Scathe, Holy Font, Witness";
-                Vitality = 4;
-                break;
-            case "Exorcist/Necromancer":
-                Move = 4;
-                MaxHP = 10;
-                Defense = 4;
-                Armor = "";
-                Traits = "Holy Vessel";
-                ActAbilities = "Starmetal Godsword, Absolution, Will of God";
-                Upgrades = "";
-                break;
-            case "Stitch/Thrall":
-                Move = 3;
-                MaxHP = 2;
-                Defense = 4;
-                Armor = "";
-                Traits = "Fall To Shambles,Thrall";
-                ActAbilities = "Unstable Mutation,Twisting Strike";
-                Upgrades = "Genestealer, Spread Mutate, Warping Mutate";
-                break;
-            case "Chop Doc/Freak":
-                Move = 4;
-                MaxHP = 4;
-                Defense = 4;
-                Armor = "MAG";
-                Traits = "Leftovers";
-                ActAbilities = "Inject Mutagen, Purge, Marriage";
-                Upgrades = "Absorb, Scour Flesh, Conjoin";
-                break;
-            case "Lycan/Horror":
-                Move = 4;
-                MaxHP = 4;
-                Defense = 4;
-                Armor = "";
-                Traits = "Lope";
-                ActAbilities = "Bloodgorger, Bloody Slashes";
-                Upgrades = "The Hunger, Autophagia, Hunch";
-                break;
-            case "Strigoi/Hunter":
-                Move = 3;
-                MaxHP = 4;
-                Defense = 4;
-                Armor = "";
-                Traits = "Flight";
-                ActAbilities = "Regurgitate, Sin Eater";
-                Upgrades = "Drown In Viscera, Rapid Adaptation, Cleansing Wash";
-                break;
-            case "Homonculus/Tyrant":
-                Move = 4;
-                MaxHP = 6;
-                Defense = 3;
-                Armor = "";
-                Traits = "Warpflesh,Tyrant";
-                ActAbilities = "Scult Flesh, Absorb, Flesh Whip";
-                Upgrades = "Ball of Limbs, Meld, Form Carapace";
-                break;
-            case "Chirurgeon/Necromancer":
-                Move = 4;
-                MaxHP = 10;
-                Defense = 3;
-                Armor = "MAG";
-                Traits = "Polyglot";
-                ActAbilities = "Experimental Surgery, Wild Mutation, Sample Genome";
-                Upgrades = "";
-                break;
-            default:
-                throw new Exception($"UnitType '{unitType}' unsupported.");
-        }
+    /**
+     * This happens on demand regardless of whether token is selected or focused
+     * compare with UpdateTokenPanel, which runs every frame for selected/focused tokens only
+     */
+    private void OnStatusChange() {
+        Color c = Conditions.ContainsKey("Turn Ended") ? ColorUtility.ColorFromHex("#505050") : Color.white;
+        Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = c;
     }
 
     public override void UpdateTokenPanel(string elementName) {
+        base.UpdateTokenPanel(elementName);
+        VisualElement panel = UI.System.Q(elementName);
+
+        panel.Q("ClassBackground").style.borderTopColor = Color;
+        panel.Q("ClassBackground").style.borderRightColor = Color;
+        panel.Q("ClassBackground").style.borderBottomColor = Color;
+        panel.Q("ClassBackground").style.borderLeftColor = Color;
+
+        panel.Q<Label>("House").text = House;
+        panel.Q<Label>("House").style.backgroundColor = Color;
+        panel.Q<Label>("Job").text = Job;
+        panel.Q<Label>("Job").style.backgroundColor = Color;
+
+        panel.Q<Label>("CHP").text = $"{ CurrentHP }";
+        panel.Q<Label>("MHP").text = $"/{ MaxHP }";
+        panel.Q<ProgressBar>("HpBar").value = CurrentHP;
+        panel.Q<ProgressBar>("HpBar").highValue = MaxHP;
+        
+        panel.Q("Defense").Q<Label>("Value").text = $"{ Defense }";
+        panel.Q("Move").Q<Label>("Value").text = $"{ Move }";
+        panel.Q("Armor").Q<Label>("Value").text = $"{ Armor.ToUpper() }";
+        panel.Q("Type").Q<Label>("Value").text = Type;
+        if (reinitUI) {
+            ReinitUI(elementName);
+        }
     }
 
-    // private void addStatus(VisualElement v, string statusName, string colorShorthand) {
-    //     Color c = Color.white;
-    //     if (colorShorthand == "pos") {
-    //         c = ColorUtility.ColorFromHex("#74f774");
-    //     }
-    //     else if (colorShorthand == "neg") {
-    //         c = ColorUtility.ColorFromHex("#f77474");
-    //     }
-    //     Label label = new Label(statusName);
-    //     label.AddToClassList("no-margin");
-    //     label.style.color = c;
-    //     v.Q("Statuses").Add(label);  
-    // }
+    private void ReinitUI(string elementName) {
+        reinitUI = false;
+        VisualElement panel = UI.System.Q(elementName);
+        panel.Q("Conditions").Q("List").Clear();
 
-    // public override bool CheckCondition(string label) {
-    //     switch (label) {
-    //         case "TurnEnded":
-    //             return TurnEnded;
-    //     }
-    //     throw new Exception($"TokenData Condition '{label}' unsupported.");
-    // } 
-
+        foreach(KeyValuePair<string, StatusEffect> item in Conditions) {
+            VisualElement e = UI.CreateFromTemplate("UITemplates/GameSystem/ConditionTemplate");
+            e.Q<Label>("Name").text = item.Key;
+            Color c = Color.black;
+            switch (item.Value.Color) {
+                case "Gray":
+                    c = ColorUtility.ColorFromHex("7b7b7b");
+                    break;
+                case "Green":
+                    c = ColorUtility.ColorFromHex("248d2e");
+                    break;
+                case "Red":
+                    c = ColorUtility.ColorFromHex("8d2424");
+                    break;
+                case "Blue":
+                    c = ColorUtility.ColorFromHex("24448d");
+                    break;
+                case "Purple":
+                    c = ColorUtility.ColorFromHex("5c159f");
+                    break;
+                case "Yellow":
+                    c = ColorUtility.ColorFromHex("887708");
+                    break;
+                case "Orange":
+                    c = ColorUtility.ColorFromHex("a57519");
+                    break;
+            }
+            e.Q("Wrapper").style.backgroundColor = c;
+            if (item.Value.Type == "Number") {
+                e.Q<Label>("Name").text = $"{item.Key} {item.Value.Number}";
+                e.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) => {
+                    Player.Self().CmdRequestTokenDataSetValue(this, $"IncrementStatus|{ item.Key }");
+                });
+                e.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) => {
+                    Player.Self().CmdRequestTokenDataSetValue(this, $"DecrementStatus|{ item.Key }");
+                });
+            }
+            else {
+                UI.ToggleDisplay(e.Q("Increment"), false);
+                UI.ToggleDisplay(e.Q("Decrement"), false);
+            }
+            e.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) => {
+                Player.Self().CmdRequestTokenDataSetValue(this, $"LoseStatus|{ item.Key }");
+            });
+            panel.Q("Conditions").Q("List").Add(e);
+        }
+    }
 }

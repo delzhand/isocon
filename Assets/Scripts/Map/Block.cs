@@ -93,7 +93,7 @@ public class Block : MonoBehaviour
         materials.Add("selected", Instantiate(Resources.Load<Material>("Materials/Block/Marker/Focused")));
         materials["selected"].SetInt("_Selected", 1);
 
-        foreach(string s in StringUtility.Arr("AcidSide","AcidTopFlow","AcidTopStill","Brick2Side","Brick2Top","BrickSide","BrickTop","DryGrassTop","GoldSide","GoldTop","GrassTop","LavaSide","LavaTopFlow","LavaTopStill","MetalSide","MetalTop","PoisonSide","PoisonTopFlow","PoisonTopStill","SandSide","SandTop","SnowSide","SnowTop","SoilSide","SoilTop","StoneSide","StoneTop","WaterSide","WaterTopFlow","WaterTopStill","Wood2Side","Wood2Top","WoodSide","WoodTop")) {
+        foreach(string s in StringUtility.Arr("AcidSide","AcidTopFlow","AcidTopStill","Brick2Side","Brick2Top","BrickSide","BrickTop","DryGrassTop","GoldSide","GoldTop","GrassTop","LavaSide","LavaTopFlow","LavaTopStill","MetalSide","MetalTop","PoisonSide","PoisonTopFlow","PoisonTopStill","SandSide","SandTop","SnowSide","SnowTop","SoilSide","SoilTop","StoneSide","StoneTop","WaterSide","WaterTopFlow","WaterTopStill","Wood2Side","Wood2Top","WoodSide","WoodTop", "GrayBrickSide", "GrayBrickTop", "GrayMetalSide", "GrayMetalTop")) {
             materials.Add($"{s}", Instantiate(Resources.Load<Material>($"Materials/Block/Artistic/{s}")));
         }
     }
@@ -421,6 +421,14 @@ public class Block : MonoBehaviour
                 case "Old Wood":
                     side = "Wood2Side";
                     top = "Wood2Top";
+                    break;
+                case "Gray Metal":
+                    side = "GrayMetalSide";
+                    top = "GrayMetalTop";
+                    break;
+                case "Gray Brick":
+                    side = "GrayBrickSide";
+                    top = "GrayBrickTop";
                     break;
             }
             blockMaterials.Add(materials[top]);

@@ -91,9 +91,6 @@ public class Icon_v1_5TokenData : TokenData
 
     public int Size;
 
-    void Start() {      
-    }
-
     void Update()
     {
         BaseUpdate();

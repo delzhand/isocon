@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"bc817f5c-1721-4b41-a800-d398ad3910f6\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"96eed410-a22a-47ef-88cb-01034dfd95d6\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"0.5.11\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"d47c7cec-2eb4-4856-b19b-8043fb431172\"\r\n    },\r\n    \"rs\":
+    \"entityId\": \"6e223d39-36a1-4628-b89c-d7eb861d155d\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"ac390018-5380-412d-9c76-1f01eebb3f28\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"482d53b1-c574-4d2d-86d9-aaf13c1b767b\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
     \"Stats\": {\r\n            \"Blue\": {\r\n              \"MaxHP\": 32,\r\n             
@@ -81,9 +81,7 @@ MonoBehaviour:
     {\r\n              \"Name\": \"Gentleness\",\r\n              \"Color\": \"Purple\",\r\n             
     \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
     \"Gravebirth\",\r\n              \"Color\": \"Purple\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Hatred
-    of ...\",\r\n              \"Color\": \"Red\",\r\n              \"Type\": \"Detail\"\r\n           
-    },\r\n            {\r\n              \"Name\": \"Odinforce\",\r\n             
+    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Odinforce\",\r\n             
     \"Color\": \"Purple\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
     {\r\n              \"Name\": \"Pacified\",\r\n              \"Color\": \"Red\",\r\n             
     \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
@@ -125,17 +123,194 @@ MonoBehaviour:
     {\r\n              \"Name\": \"Weakened\",\r\n              \"Color\": \"Red\",\r\n             
     \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
     \"Weakened+\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            }\r\n          ]\r\n        }\r\n      }\r\n    }\r\n 
-    }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"bc817f5c-1721-4b41-a800-d398ad3910f6\"\r\n   
+    \"Simple\"\r\n            }\r\n          ]\r\n        },\r\n        \"Maleghast\":
+    {\r\n          \"Houses\": [\r\n            {\r\n              \"name\": \"CARCASS\",\r\n             
+    \"color\": \"f20dae\",\r\n              \"units\": [\r\n                {\r\n                 
+    \"name\": \"Gunwight\",\r\n                  \"type\": \"Thrall\",\r\n                 
+    \"move\": 2,\r\n                  \"hp\": 2,\r\n                  \"def\": 4,\r\n                 
+    \"armor\": \"none\",\r\n                  \"traits\": [\r\n                   
+    \"Formation\",\r\n                    \"Thrall\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"OL45\",\r\n                    \"Baton\"\r\n                 
+    ],\r\n                  \"upgrades\": [\r\n                    \"Brace\",\r\n                   
+    \"Tactical Reload\",\r\n                    \"Scavenge Ammo\"\r\n                 
+    ]\r\n                },\r\n                {\r\n                  \"name\": \"Ammo
+    Goblin\",\r\n                  \"type\": \"Freak\",\r\n                  \"move\":
+    3,\r\n                  \"hp\": 4,\r\n                  \"def\": 4,\r\n                 
+    \"armor\": \"none\",\r\n                  \"traits\": [\r\n                   
+    \"Formation\"\r\n                  ],\r\n                  \"actAbilities\":
+    [\r\n                    \"Regurgitate Ammo\",\r\n                    \"Bone
+    Shards\",\r\n                    \"Destructive Glee\"\r\n                  ],\r\n                 
+    \"upgrades\": [\r\n                    \"Vomit Bullets\",\r\n                   
+    \"Napalm Injector\",\r\n                    \"Hot Chamber\"\r\n                 
+    ]\r\n                },\r\n                {\r\n                  \"name\": \"Enforcer\",\r\n                 
+    \"type\": \"Scion\",\r\n                  \"move\": 3,\r\n                  \"hp\":
+    4,\r\n                  \"def\": 3,\r\n                  \"armor\": \"PHYS\",\r\n                 
+    \"traits\": [\r\n                    \"Formation\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Skull Crack\",\r\n                   
+    \"Flashbang\",\r\n                    \"Shieldwall\"\r\n                  ],\r\n                 
+    \"upgrades\": [\r\n                    \"Shield Charge\",\r\n                   
+    \"Bulwark\",\r\n                    \"Bone Dust Napalm\"\r\n                 
+    ]\r\n                },\r\n                {\r\n                  \"name\": \"Barrelform\",\r\n                 
+    \"type\": \"Hunter\",\r\n                  \"move\": 2,\r\n                 
+    \"hp\": 4,\r\n                  \"def\": 4,\r\n                  \"armor\": \"none\",\r\n                 
+    \"traits\": [\r\n                    \"Formation\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Snipe\",\r\n                   
+    \"Transform to Gun\",\r\n                    \"Deathmark\"\r\n                 
+    ],\r\n                  \"upgrades\": [\r\n                    \"Claw Pitons\",\r\n                   
+    \"Extended Barrel\",\r\n                    \"Caliber Up\"\r\n                 
+    ]\r\n                },\r\n                {\r\n                  \"name\": \"EGIS
+    Weapon\",\r\n                  \"type\": \"Tyrant\",\r\n                  \"move\":
+    3,\r\n                  \"hp\": 6,\r\n                  \"def\": 2,\r\n                 
+    \"armor\": \"PHYS\",\r\n                  \"traits\": [\r\n                   
+    \"Formation\",\r\n                    \"Siege Shield\",\r\n                   
+    \"Tyrant\"\r\n                  ],\r\n                  \"actAbilities\": [\r\n                   
+    \"Juggernaut\",\r\n                    \"Mortar\",\r\n                    \"Catechism
+    Devil Cannon\"\r\n                  ],\r\n                  \"upgrades\": [\r\n                   
+    \"Fortify\",\r\n                    \"Heavy Caliber Cannon\",\r\n                   
+    \"Gunner Pivot\"\r\n                  ]\r\n                },\r\n               
+    {\r\n                  \"name\": \"Operator\",\r\n                  \"type\":
+    \"Necromancer\",\r\n                  \"move\": 4,\r\n                  \"hp\":
+    8,\r\n                  \"def\": 4,\r\n                  \"armor\": \"PHYS\",\r\n                 
+    \"traits\": [\r\n                    \"Formation\",\r\n                    \"Hot
+    Clip\"\r\n                  ],\r\n                  \"actAbilities\": [\r\n                   
+    \"Akimbo\"\r\n                  ],\r\n                  \"soulAbilities\": [\r\n                   
+    \"1-Reload Slide\",\r\n                    \"3-Bullet Time\"\r\n                 
+    ],\r\n                  \"bonusTraits\": [\r\n                    \"Bone Wall\",\r\n                   
+    \"Gun Kata\",\r\n                    \"Clutch Reload\"\r\n                  ],\r\n                 
+    \"actUpgrades\": [\r\n                    \"Grenade Jump\",\r\n                   
+    \"Armor Lock\",\r\n                    \"Devil Bullet\",\r\n                   
+    \"Superkick\",\r\n                    \"Lv4 Living Cannon\",\r\n                   
+    \"SG88 Two Barrel Shotgun\",\r\n                    \"Unholy Sixgun\"\r\n                 
+    ],\r\n                  \"soulUpgrades\": [\r\n                    \"1-Double
+    Tap\",\r\n                    \"1-Frag Bullet\",\r\n                    \"2-Bullet
+    Hustle\",\r\n                    \"3-Overwatch\",\r\n                    \"4-Bullet
+    Sonata\",\r\n                    \"6-S.T.G.\"\r\n                  ]\r\n               
+    }\r\n              ]\r\n            },\r\n            {\r\n              \"name\":
+    \"Goregrinders\",\r\n              \"color\": \"ff7829\",\r\n              \"units\":
+    [\r\n                {\r\n                  \"name\": \"Warhead\",\r\n                 
+    \"type\": \"Thrall\",\r\n                  \"move\": 4,\r\n                 
+    \"hp\": 2,\r\n                  \"def\": 3,\r\n                  \"armor\": \"none\",\r\n                 
+    \"traits\": [\r\n                    \"Blood Rage\",\r\n                    \"Thrall\"\r\n                 
+    ],\r\n                  \"actAbilities\": [\r\n                    \"Charge\",\r\n                   
+    \"Cleave\"\r\n                  ],\r\n                  \"upgrades\": [\r\n                   
+    \"Bladed\",\r\n                    \"Overclocked\",\r\n                    \"Lobotomized\"\r\n                 
+    ]\r\n                },\r\n                {\r\n                  \"name\": \"Painghoul\",\r\n                 
+    \"type\": \"Freak\",\r\n                  \"move\": 4,\r\n                  \"hp\":
+    4,\r\n                  \"def\": 3,\r\n                  \"armor\": \"none\",\r\n                 
+    \"traits\": [\r\n                    \"Blood Rage\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Pain Frenzy\",\r\n                   
+    \"Cauterize\",\r\n                    \"Meat Hook\"\r\n                  ],\r\n                 
+    \"upgrades\": [\r\n                    \"Stim Haze\",\r\n                   
+    \"Frenzy Hook\",\r\n                    \"Adrenalize\"\r\n                  ]\r\n               
+    },\r\n                {\r\n                  \"name\": \"Carnifex\",\r\n                 
+    \"type\": \"Scion\",\r\n                  \"move\": 4,\r\n                  \"hp\":
+    4,\r\n                  \"def\": 3,\r\n                  \"armor\": \"none\",\r\n                 
+    \"traits\": [\r\n                    \"Blood Rage\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Rev\",\r\n                    \"Chainsaw\",\r\n                   
+    \"Wild Slashes\"\r\n                  ],\r\n                  \"upgrades\": [\r\n                   
+    \"Heavy Swing\",\r\n                    \"Rile\",\r\n                    \"Bloody
+    Teeth\"\r\n                  ]\r\n                },\r\n                {\r\n                 
+    \"name\": \"Painwheel\",\r\n                  \"type\": \"Horror\",\r\n                 
+    \"move\": 5,\r\n                  \"hp\": 4,\r\n                  \"def\": 3,\r\n                 
+    \"armor\": \"none\",\r\n                  \"traits\": [\r\n                   
+    \"Blood Rage\",\r\n                    \"Hellwheel\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Exfoliate\",\r\n                   
+    \"Spin Out\"\r\n                  ],\r\n                  \"upgrades\": [\r\n                   
+    \"Barbed Wheel\",\r\n                    \"Endless Screaming\",\r\n                   
+    \"Hurtle\"\r\n                  ]\r\n                },\r\n                {\r\n                 
+    \"name\": \"Berserker\",\r\n                  \"type\": \"Tyrant\",\r\n                 
+    \"move\": 4,\r\n                  \"hp\": 6,\r\n                  \"def\": 2,\r\n                 
+    \"armor\": \"none\",\r\n                  \"traits\": [\r\n                   
+    \"Blood Rage\",\r\n                    \"Steaming Rage\",\r\n                   
+    \"Tyrant\"\r\n                  ],\r\n                  \"actAbilities\": [\r\n                   
+    \"Pulverize\",\r\n                    \"Building Rage\",\r\n                   
+    \"Rip and Tear\"\r\n                  ],\r\n                  \"upgrades\": [\r\n                   
+    \"Machineheart\",\r\n                    \"Fuel Injectors\",\r\n                   
+    \"Bifurcate\"\r\n                  ]\r\n                },\r\n               
+    {\r\n                  \"name\": \"Warlord\",\r\n                  \"type\":
+    \"Necromancer\",\r\n                  \"move\": 4,\r\n                  \"hp\":
+    10,\r\n                  \"def\": 3,\r\n                  \"armor\": \"none\",\r\n                 
+    \"traits\": [\r\n                    \"Blood Rage\",\r\n                    \"Fueled
+    by Rage\"\r\n                  ],\r\n                  \"actAbilities\": [\r\n                   
+    \"Superheated Chainblade\"\r\n                  ],\r\n                  \"soulAbilities\":
+    [\r\n                    \"1-Ignite\",\r\n                    \"3-Glory Kill\"\r\n                 
+    ],\r\n                  \"bonusTraits\": [\r\n                    \"Nerve Twitch\",\r\n                   
+    \"Blood Drinker\",\r\n                    \"Blood Rush\"\r\n                 
+    ],\r\n                  \"actUpgrades\": [\r\n                    \"Quench\",\r\n                   
+    \"Frenzy Chain\",\r\n                    \"Furious Roar\",\r\n                   
+    \"Apoplexy\",\r\n                    \"Pilebunker\",\r\n                    \"Saw
+    Toothed Slayer Axe\",\r\n                    \"Spine Devil Blade\"\r\n                 
+    ],\r\n                  \"soulUpgrades\": [\r\n                    \"1-Hellrider
+    Kick\",\r\n                    \"1-Overclock\",\r\n                    \"2-Gorebather\",\r\n                   
+    \"3-Killing Spree\",\r\n                    \"4-Blood Boil\",\r\n                   
+    \"6-Devil Impact\"\r\n                  ]\r\n                }\r\n             
+    ]\r\n            },\r\n            {\r\n              \"name\": \"Gargamox\",\r\n             
+    \"color\": \"29ff3d\",\r\n              \"units\": [\r\n                {\r\n                 
+    \"name\": \"Scum\",\r\n                  \"type\": \"Thrall\",\r\n                 
+    \"move\": 3,\r\n                  \"hp\": 1,\r\n                  \"def\": 4,\r\n                 
+    \"armor\": \"phys\",\r\n                  \"traits\": [\r\n                   
+    \"Toxic Revenge\",\r\n                    \"Thrall\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Pseudopod\",\r\n                   
+    \"Shamble\"\r\n                  ],\r\n                  \"upgrades\": [\r\n                   
+    \"Bloat\",\r\n                    \"Tentacle Whip\",\r\n                    \"Aftermath\"\r\n                 
+    ]\r\n                },\r\n                {\r\n                  \"name\": \"Leech\",\r\n                 
+    \"type\": \"Freak\",\r\n                  \"move\": 4,\r\n                  \"hp\":
+    4,\r\n                  \"def\": 4,\r\n                  \"armor\": \"MAG\",\r\n                 
+    \"traits\": [\r\n                    \"Deathwash\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Suppurate\",\r\n                   
+    \"Evolve Strain\",\r\n                    \"Swell with Corruption\"\r\n                 
+    ],\r\n                  \"upgrades\": [\r\n                    \"Massive Swell\",\r\n                   
+    \"Spreading Strain\",\r\n                    \"Acid Blood\"\r\n                 
+    ]\r\n                },\r\n                {\r\n                  \"name\": \"Rotten\",\r\n                 
+    \"type\": \"Scion\",\r\n                  \"move\": 4,\r\n                  \"hp\":
+    4,\r\n                  \"def\": 3,\r\n                  \"armor\": \"PHYS\",\r\n                 
+    \"traits\": [\r\n                    \"Plaguebearer\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Pustulate\",\r\n                   
+    \"Vomitous Mass\",\r\n                    \"Rothblade\"\r\n                 
+    ],\r\n                  \"upgrades\": [\r\n                    \"Catalyze\",\r\n                   
+    \"Invigorating Viscera\",\r\n                    \"Smog Shroud\"\r\n                 
+    ]\r\n                },\r\n                {\r\n                  \"name\": \"Host\",\r\n                 
+    \"type\": \"Hunter\",\r\n                  \"move\": 2,\r\n                 
+    \"hp\": 4,\r\n                  \"def\": 4,\r\n                  \"armor\": \"none\",\r\n                 
+    \"traits\": [\r\n                    \"Swarm Release\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Propagate Swarm\",\r\n                   
+    \"Driving Vermin\"\r\n                  ],\r\n                  \"upgrades\":
+    [\r\n                    \"Swarm Feed\",\r\n                    \"Toxic Avenger\",\r\n                   
+    \"Defiler\"\r\n                  ]\r\n                },\r\n                {\r\n                 
+    \"name\": \"Slime\",\r\n                  \"type\": \"Horror\",\r\n                 
+    \"move\": 4,\r\n                  \"hp\": 4,\r\n                  \"def\": 4,\r\n                 
+    \"armor\": \"none\",\r\n                  \"traits\": [\r\n                   
+    \"Vile Rupture\"\r\n                  ],\r\n                  \"actAbilities\":
+    [\r\n                    \"Percolate\",\r\n                    \"Surge\"\r\n                 
+    ],\r\n                  \"upgrades\": [\r\n                    \"Rotten Surge\",\r\n                   
+    \"Sticky Trail\",\r\n                    \"The Gunk\"\r\n                  ]\r\n               
+    },\r\n                {\r\n                  \"name\": \"Plaguelord\",\r\n                 
+    \"type\": \"Necromancer\",\r\n                  \"move\": 4,\r\n                 
+    \"hp\": 10,\r\n                  \"def\": 4,\r\n                  \"armor\":
+    \"none\",\r\n                  \"traits\": [\r\n                    \"Blessed
+    with Filth\"\r\n                  ],\r\n                  \"actAbilities\": [\r\n                   
+    \"Virulence\"\r\n                  ],\r\n                  \"soulAbilities\":
+    [\r\n                    \"1-Infest\",\r\n                    \"3-Slime Form\"\r\n                 
+    ],\r\n                  \"bonusTraits\": [\r\n                    \"Pollution
+    Shroud\",\r\n                    \"Corruptor\",\r\n                    \"Spreader\"\r\n                 
+    ],\r\n                  \"actUpgrades\": [\r\n                    \"Melt\",\r\n                   
+    \"Corpse Explosion\",\r\n                    \"Vermin Form\",\r\n                   
+    \"Ceaseless Spew\",\r\n                    \"Carniphagous Blade\",\r\n                   
+    \"Scourge\",\r\n                    \"Necrocide\"\r\n                  ],\r\n                 
+    \"soulUpgrades\": [\r\n                    \"1-Purge Guts\",\r\n                   
+    \"1-Insides Out\",\r\n                    \"2-Fecundity\",\r\n                   
+    \"3-Unholy Vapors\",\r\n                    \"4-Praise the Filth\",\r\n                   
+    \"6-Mox Populi\"\r\n                  ]\r\n                }\r\n             
+    ]\r\n            }\r\n          ]\r\n        }\r\n      }\r\n    }\r\n  }\r\n]"
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"96eed410-a22a-47ef-88cb-01034dfd95d6\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"0.5.11\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"d47c7cec-2eb4-4856-b19b-8043fb431172\"\r\n    },\r\n    \"rs\":
+    \"entityId\": \"6e223d39-36a1-4628-b89c-d7eb861d155d\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"ac390018-5380-412d-9c76-1f01eebb3f28\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"482d53b1-c574-4d2d-86d9-aaf13c1b767b\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
     \"Stats\": {\r\n            \"Blue\": {\r\n              \"MaxHP\": 32,\r\n             
@@ -196,9 +371,7 @@ MonoBehaviour:
     {\r\n              \"Name\": \"Gentleness\",\r\n              \"Color\": \"Purple\",\r\n             
     \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
     \"Gravebirth\",\r\n              \"Color\": \"Purple\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Hatred
-    of ...\",\r\n              \"Color\": \"Red\",\r\n              \"Type\": \"Detail\"\r\n           
-    },\r\n            {\r\n              \"Name\": \"Odinforce\",\r\n             
+    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Odinforce\",\r\n             
     \"Color\": \"Purple\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
     {\r\n              \"Name\": \"Pacified\",\r\n              \"Color\": \"Red\",\r\n             
     \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
@@ -240,8 +413,185 @@ MonoBehaviour:
     {\r\n              \"Name\": \"Weakened\",\r\n              \"Color\": \"Red\",\r\n             
     \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
     \"Weakened+\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            }\r\n          ]\r\n        }\r\n      }\r\n    }\r\n 
-    }\r\n]"
+    \"Simple\"\r\n            }\r\n          ]\r\n        },\r\n        \"Maleghast\":
+    {\r\n          \"Houses\": [\r\n            {\r\n              \"name\": \"CARCASS\",\r\n             
+    \"color\": \"f20dae\",\r\n              \"units\": [\r\n                {\r\n                 
+    \"name\": \"Gunwight\",\r\n                  \"type\": \"Thrall\",\r\n                 
+    \"move\": 2,\r\n                  \"hp\": 2,\r\n                  \"def\": 4,\r\n                 
+    \"armor\": \"none\",\r\n                  \"traits\": [\r\n                   
+    \"Formation\",\r\n                    \"Thrall\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"OL45\",\r\n                    \"Baton\"\r\n                 
+    ],\r\n                  \"upgrades\": [\r\n                    \"Brace\",\r\n                   
+    \"Tactical Reload\",\r\n                    \"Scavenge Ammo\"\r\n                 
+    ]\r\n                },\r\n                {\r\n                  \"name\": \"Ammo
+    Goblin\",\r\n                  \"type\": \"Freak\",\r\n                  \"move\":
+    3,\r\n                  \"hp\": 4,\r\n                  \"def\": 4,\r\n                 
+    \"armor\": \"none\",\r\n                  \"traits\": [\r\n                   
+    \"Formation\"\r\n                  ],\r\n                  \"actAbilities\":
+    [\r\n                    \"Regurgitate Ammo\",\r\n                    \"Bone
+    Shards\",\r\n                    \"Destructive Glee\"\r\n                  ],\r\n                 
+    \"upgrades\": [\r\n                    \"Vomit Bullets\",\r\n                   
+    \"Napalm Injector\",\r\n                    \"Hot Chamber\"\r\n                 
+    ]\r\n                },\r\n                {\r\n                  \"name\": \"Enforcer\",\r\n                 
+    \"type\": \"Scion\",\r\n                  \"move\": 3,\r\n                  \"hp\":
+    4,\r\n                  \"def\": 3,\r\n                  \"armor\": \"PHYS\",\r\n                 
+    \"traits\": [\r\n                    \"Formation\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Skull Crack\",\r\n                   
+    \"Flashbang\",\r\n                    \"Shieldwall\"\r\n                  ],\r\n                 
+    \"upgrades\": [\r\n                    \"Shield Charge\",\r\n                   
+    \"Bulwark\",\r\n                    \"Bone Dust Napalm\"\r\n                 
+    ]\r\n                },\r\n                {\r\n                  \"name\": \"Barrelform\",\r\n                 
+    \"type\": \"Hunter\",\r\n                  \"move\": 2,\r\n                 
+    \"hp\": 4,\r\n                  \"def\": 4,\r\n                  \"armor\": \"none\",\r\n                 
+    \"traits\": [\r\n                    \"Formation\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Snipe\",\r\n                   
+    \"Transform to Gun\",\r\n                    \"Deathmark\"\r\n                 
+    ],\r\n                  \"upgrades\": [\r\n                    \"Claw Pitons\",\r\n                   
+    \"Extended Barrel\",\r\n                    \"Caliber Up\"\r\n                 
+    ]\r\n                },\r\n                {\r\n                  \"name\": \"EGIS
+    Weapon\",\r\n                  \"type\": \"Tyrant\",\r\n                  \"move\":
+    3,\r\n                  \"hp\": 6,\r\n                  \"def\": 2,\r\n                 
+    \"armor\": \"PHYS\",\r\n                  \"traits\": [\r\n                   
+    \"Formation\",\r\n                    \"Siege Shield\",\r\n                   
+    \"Tyrant\"\r\n                  ],\r\n                  \"actAbilities\": [\r\n                   
+    \"Juggernaut\",\r\n                    \"Mortar\",\r\n                    \"Catechism
+    Devil Cannon\"\r\n                  ],\r\n                  \"upgrades\": [\r\n                   
+    \"Fortify\",\r\n                    \"Heavy Caliber Cannon\",\r\n                   
+    \"Gunner Pivot\"\r\n                  ]\r\n                },\r\n               
+    {\r\n                  \"name\": \"Operator\",\r\n                  \"type\":
+    \"Necromancer\",\r\n                  \"move\": 4,\r\n                  \"hp\":
+    8,\r\n                  \"def\": 4,\r\n                  \"armor\": \"PHYS\",\r\n                 
+    \"traits\": [\r\n                    \"Formation\",\r\n                    \"Hot
+    Clip\"\r\n                  ],\r\n                  \"actAbilities\": [\r\n                   
+    \"Akimbo\"\r\n                  ],\r\n                  \"soulAbilities\": [\r\n                   
+    \"1-Reload Slide\",\r\n                    \"3-Bullet Time\"\r\n                 
+    ],\r\n                  \"bonusTraits\": [\r\n                    \"Bone Wall\",\r\n                   
+    \"Gun Kata\",\r\n                    \"Clutch Reload\"\r\n                  ],\r\n                 
+    \"actUpgrades\": [\r\n                    \"Grenade Jump\",\r\n                   
+    \"Armor Lock\",\r\n                    \"Devil Bullet\",\r\n                   
+    \"Superkick\",\r\n                    \"Lv4 Living Cannon\",\r\n                   
+    \"SG88 Two Barrel Shotgun\",\r\n                    \"Unholy Sixgun\"\r\n                 
+    ],\r\n                  \"soulUpgrades\": [\r\n                    \"1-Double
+    Tap\",\r\n                    \"1-Frag Bullet\",\r\n                    \"2-Bullet
+    Hustle\",\r\n                    \"3-Overwatch\",\r\n                    \"4-Bullet
+    Sonata\",\r\n                    \"6-S.T.G.\"\r\n                  ]\r\n               
+    }\r\n              ]\r\n            },\r\n            {\r\n              \"name\":
+    \"Goregrinders\",\r\n              \"color\": \"ff7829\",\r\n              \"units\":
+    [\r\n                {\r\n                  \"name\": \"Warhead\",\r\n                 
+    \"type\": \"Thrall\",\r\n                  \"move\": 4,\r\n                 
+    \"hp\": 2,\r\n                  \"def\": 3,\r\n                  \"armor\": \"none\",\r\n                 
+    \"traits\": [\r\n                    \"Blood Rage\",\r\n                    \"Thrall\"\r\n                 
+    ],\r\n                  \"actAbilities\": [\r\n                    \"Charge\",\r\n                   
+    \"Cleave\"\r\n                  ],\r\n                  \"upgrades\": [\r\n                   
+    \"Bladed\",\r\n                    \"Overclocked\",\r\n                    \"Lobotomized\"\r\n                 
+    ]\r\n                },\r\n                {\r\n                  \"name\": \"Painghoul\",\r\n                 
+    \"type\": \"Freak\",\r\n                  \"move\": 4,\r\n                  \"hp\":
+    4,\r\n                  \"def\": 3,\r\n                  \"armor\": \"none\",\r\n                 
+    \"traits\": [\r\n                    \"Blood Rage\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Pain Frenzy\",\r\n                   
+    \"Cauterize\",\r\n                    \"Meat Hook\"\r\n                  ],\r\n                 
+    \"upgrades\": [\r\n                    \"Stim Haze\",\r\n                   
+    \"Frenzy Hook\",\r\n                    \"Adrenalize\"\r\n                  ]\r\n               
+    },\r\n                {\r\n                  \"name\": \"Carnifex\",\r\n                 
+    \"type\": \"Scion\",\r\n                  \"move\": 4,\r\n                  \"hp\":
+    4,\r\n                  \"def\": 3,\r\n                  \"armor\": \"none\",\r\n                 
+    \"traits\": [\r\n                    \"Blood Rage\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Rev\",\r\n                    \"Chainsaw\",\r\n                   
+    \"Wild Slashes\"\r\n                  ],\r\n                  \"upgrades\": [\r\n                   
+    \"Heavy Swing\",\r\n                    \"Rile\",\r\n                    \"Bloody
+    Teeth\"\r\n                  ]\r\n                },\r\n                {\r\n                 
+    \"name\": \"Painwheel\",\r\n                  \"type\": \"Horror\",\r\n                 
+    \"move\": 5,\r\n                  \"hp\": 4,\r\n                  \"def\": 3,\r\n                 
+    \"armor\": \"none\",\r\n                  \"traits\": [\r\n                   
+    \"Blood Rage\",\r\n                    \"Hellwheel\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Exfoliate\",\r\n                   
+    \"Spin Out\"\r\n                  ],\r\n                  \"upgrades\": [\r\n                   
+    \"Barbed Wheel\",\r\n                    \"Endless Screaming\",\r\n                   
+    \"Hurtle\"\r\n                  ]\r\n                },\r\n                {\r\n                 
+    \"name\": \"Berserker\",\r\n                  \"type\": \"Tyrant\",\r\n                 
+    \"move\": 4,\r\n                  \"hp\": 6,\r\n                  \"def\": 2,\r\n                 
+    \"armor\": \"none\",\r\n                  \"traits\": [\r\n                   
+    \"Blood Rage\",\r\n                    \"Steaming Rage\",\r\n                   
+    \"Tyrant\"\r\n                  ],\r\n                  \"actAbilities\": [\r\n                   
+    \"Pulverize\",\r\n                    \"Building Rage\",\r\n                   
+    \"Rip and Tear\"\r\n                  ],\r\n                  \"upgrades\": [\r\n                   
+    \"Machineheart\",\r\n                    \"Fuel Injectors\",\r\n                   
+    \"Bifurcate\"\r\n                  ]\r\n                },\r\n               
+    {\r\n                  \"name\": \"Warlord\",\r\n                  \"type\":
+    \"Necromancer\",\r\n                  \"move\": 4,\r\n                  \"hp\":
+    10,\r\n                  \"def\": 3,\r\n                  \"armor\": \"none\",\r\n                 
+    \"traits\": [\r\n                    \"Blood Rage\",\r\n                    \"Fueled
+    by Rage\"\r\n                  ],\r\n                  \"actAbilities\": [\r\n                   
+    \"Superheated Chainblade\"\r\n                  ],\r\n                  \"soulAbilities\":
+    [\r\n                    \"1-Ignite\",\r\n                    \"3-Glory Kill\"\r\n                 
+    ],\r\n                  \"bonusTraits\": [\r\n                    \"Nerve Twitch\",\r\n                   
+    \"Blood Drinker\",\r\n                    \"Blood Rush\"\r\n                 
+    ],\r\n                  \"actUpgrades\": [\r\n                    \"Quench\",\r\n                   
+    \"Frenzy Chain\",\r\n                    \"Furious Roar\",\r\n                   
+    \"Apoplexy\",\r\n                    \"Pilebunker\",\r\n                    \"Saw
+    Toothed Slayer Axe\",\r\n                    \"Spine Devil Blade\"\r\n                 
+    ],\r\n                  \"soulUpgrades\": [\r\n                    \"1-Hellrider
+    Kick\",\r\n                    \"1-Overclock\",\r\n                    \"2-Gorebather\",\r\n                   
+    \"3-Killing Spree\",\r\n                    \"4-Blood Boil\",\r\n                   
+    \"6-Devil Impact\"\r\n                  ]\r\n                }\r\n             
+    ]\r\n            },\r\n            {\r\n              \"name\": \"Gargamox\",\r\n             
+    \"color\": \"29ff3d\",\r\n              \"units\": [\r\n                {\r\n                 
+    \"name\": \"Scum\",\r\n                  \"type\": \"Thrall\",\r\n                 
+    \"move\": 3,\r\n                  \"hp\": 1,\r\n                  \"def\": 4,\r\n                 
+    \"armor\": \"phys\",\r\n                  \"traits\": [\r\n                   
+    \"Toxic Revenge\",\r\n                    \"Thrall\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Pseudopod\",\r\n                   
+    \"Shamble\"\r\n                  ],\r\n                  \"upgrades\": [\r\n                   
+    \"Bloat\",\r\n                    \"Tentacle Whip\",\r\n                    \"Aftermath\"\r\n                 
+    ]\r\n                },\r\n                {\r\n                  \"name\": \"Leech\",\r\n                 
+    \"type\": \"Freak\",\r\n                  \"move\": 4,\r\n                  \"hp\":
+    4,\r\n                  \"def\": 4,\r\n                  \"armor\": \"MAG\",\r\n                 
+    \"traits\": [\r\n                    \"Deathwash\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Suppurate\",\r\n                   
+    \"Evolve Strain\",\r\n                    \"Swell with Corruption\"\r\n                 
+    ],\r\n                  \"upgrades\": [\r\n                    \"Massive Swell\",\r\n                   
+    \"Spreading Strain\",\r\n                    \"Acid Blood\"\r\n                 
+    ]\r\n                },\r\n                {\r\n                  \"name\": \"Rotten\",\r\n                 
+    \"type\": \"Scion\",\r\n                  \"move\": 4,\r\n                  \"hp\":
+    4,\r\n                  \"def\": 3,\r\n                  \"armor\": \"PHYS\",\r\n                 
+    \"traits\": [\r\n                    \"Plaguebearer\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Pustulate\",\r\n                   
+    \"Vomitous Mass\",\r\n                    \"Rothblade\"\r\n                 
+    ],\r\n                  \"upgrades\": [\r\n                    \"Catalyze\",\r\n                   
+    \"Invigorating Viscera\",\r\n                    \"Smog Shroud\"\r\n                 
+    ]\r\n                },\r\n                {\r\n                  \"name\": \"Host\",\r\n                 
+    \"type\": \"Hunter\",\r\n                  \"move\": 2,\r\n                 
+    \"hp\": 4,\r\n                  \"def\": 4,\r\n                  \"armor\": \"none\",\r\n                 
+    \"traits\": [\r\n                    \"Swarm Release\"\r\n                  ],\r\n                 
+    \"actAbilities\": [\r\n                    \"Propagate Swarm\",\r\n                   
+    \"Driving Vermin\"\r\n                  ],\r\n                  \"upgrades\":
+    [\r\n                    \"Swarm Feed\",\r\n                    \"Toxic Avenger\",\r\n                   
+    \"Defiler\"\r\n                  ]\r\n                },\r\n                {\r\n                 
+    \"name\": \"Slime\",\r\n                  \"type\": \"Horror\",\r\n                 
+    \"move\": 4,\r\n                  \"hp\": 4,\r\n                  \"def\": 4,\r\n                 
+    \"armor\": \"none\",\r\n                  \"traits\": [\r\n                   
+    \"Vile Rupture\"\r\n                  ],\r\n                  \"actAbilities\":
+    [\r\n                    \"Percolate\",\r\n                    \"Surge\"\r\n                 
+    ],\r\n                  \"upgrades\": [\r\n                    \"Rotten Surge\",\r\n                   
+    \"Sticky Trail\",\r\n                    \"The Gunk\"\r\n                  ]\r\n               
+    },\r\n                {\r\n                  \"name\": \"Plaguelord\",\r\n                 
+    \"type\": \"Necromancer\",\r\n                  \"move\": 4,\r\n                 
+    \"hp\": 10,\r\n                  \"def\": 4,\r\n                  \"armor\":
+    \"none\",\r\n                  \"traits\": [\r\n                    \"Blessed
+    with Filth\"\r\n                  ],\r\n                  \"actAbilities\": [\r\n                   
+    \"Virulence\"\r\n                  ],\r\n                  \"soulAbilities\":
+    [\r\n                    \"1-Infest\",\r\n                    \"3-Slime Form\"\r\n                 
+    ],\r\n                  \"bonusTraits\": [\r\n                    \"Pollution
+    Shroud\",\r\n                    \"Corruptor\",\r\n                    \"Spreader\"\r\n                 
+    ],\r\n                  \"actUpgrades\": [\r\n                    \"Melt\",\r\n                   
+    \"Corpse Explosion\",\r\n                    \"Vermin Form\",\r\n                   
+    \"Ceaseless Spew\",\r\n                    \"Carniphagous Blade\",\r\n                   
+    \"Scourge\",\r\n                    \"Necrocide\"\r\n                  ],\r\n                 
+    \"soulUpgrades\": [\r\n                    \"1-Purge Guts\",\r\n                   
+    \"1-Insides Out\",\r\n                    \"2-Fecundity\",\r\n                   
+    \"3-Unholy Vapors\",\r\n                    \"4-Praise the Filth\",\r\n                   
+    \"6-Mox Populi\"\r\n                  ]\r\n                }\r\n             
+    ]\r\n            }\r\n          ]\r\n        }\r\n      }\r\n    }\r\n  }\r\n]"
   _environments: "[\r\n  {\r\n    \"projectId\": \"84cc6114-4488-4698-9103-7c2948671b2e\",\r\n   
     \"name\": \"production\",\r\n    \"id\": \"b3e19d49-e656-4b78-b133-15a1b7d39d66\",\r\n   
     \"isDefault\": true,\r\n    \"createdAt\": \"2023-11-05T13:57:15Z\",\r\n    \"updatedAt\":

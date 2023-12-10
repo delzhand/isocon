@@ -106,7 +106,7 @@ public class GameSystem : MonoBehaviour
     }
 
     public virtual bool HasCustomEffect(List<string> effects) {
-        throw new NotImplementedException();
+        return false;
     }
 
     public static void Set(string value) {

@@ -93,6 +93,8 @@ public class TokenData : NetworkBehaviour
     }
 
     public virtual bool NeedsSetup() {
+        // To return true, choose a required value with an invalid value
+        // MaxHP == 0 will usually work (unless HP-less objects are possible...)
         return false;
     }
 

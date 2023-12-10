@@ -5,6 +5,8 @@ using Unity.Services.RemoteConfig;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using System.Threading.Tasks;
+using SimpleJSON;
+using System.Collections.Generic;
 
 public class Launcher : MonoBehaviour
 {

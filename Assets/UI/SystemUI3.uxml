@@ -149,7 +149,7 @@
                         </ui:Foldout>
                         <ui:Foldout text="Artistic" value="false" style="margin-top: 4px; margin-bottom: 0;">
                             <ui:Button text="Art Brush" display-tooltip-when-elided="true" name="ArtBrush" class="toolbox tool-button" style="margin-top: 4px; margin-bottom: 4px;" />
-                            <ui:DropdownField index="0" choices="Acid Flow, Acid, Old Brick, Brick, Dry Grass, Grass, Gold, Lava Flow, Lava, Metal, Poison Flow, Poison, Sand, Snow, Soil, Stone, Water Flow, Water, Wood, Old Wood," name="ArtTexture" focusable="false" class="no-margin" style="margin-top: 4px; margin-bottom: 4px;" />
+                            <ui:DropdownField index="0" choices="Acid Flow,Acid,Old Brick,Brick,Gray Brick,Dry Grass,Grass,Gold,Lava Flow,Lava,Metal,Gray Metal,Poison Flow,Poison,Sand,Snow,Soil,Stone,Water Flow,Water,Wood,Old Wood," name="ArtTexture" focusable="false" class="no-margin" style="margin-top: 4px; margin-bottom: 4px;" />
                         </ui:Foldout>
                         <ui:Foldout text="Base Colors" value="false" focusable="true" style="margin-bottom: 0;">
                             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
