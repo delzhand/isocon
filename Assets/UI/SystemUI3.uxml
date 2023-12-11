@@ -127,7 +127,7 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="TopLeft" style="flex-grow: 1; position: absolute; left: 0; top: 0; flex-direction: row; align-items: flex-start;">
-                    <ui:VisualElement name="ToolsPanel" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: none; width: 116px; margin-right: 8px;">
+                    <ui:VisualElement name="ToolsPanel" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: flex; width: 116px; margin-right: 8px;">
                         <ui:Label tabindex="-1" text="EDIT TOOLS" display-tooltip-when-elided="true" class="panel-header" />
                         <ui:VisualElement style="flex-grow: 1; flex-direction: row; margin-top: 0; margin-right: -2px; margin-bottom: -4px; margin-left: -2px; flex-wrap: wrap;">
                             <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddBlock" class="tool-button" style="background-image: resource(&apos;Textures/ToolIcons/addblock&apos;); width: 48px; height: 48px; -unity-background-scale-mode: scale-to-fit; margin-top: 0; margin-right: 2px; margin-bottom: 4px; margin-left: 2px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
@@ -136,6 +136,8 @@
                             <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="RotateBlock" class="tool-button" style="background-image: resource(&apos;Textures/ToolIcons/rotateblock&apos;); width: 48px; height: 48px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-background-scale-mode: scale-to-fit; margin-top: 0; margin-right: 2px; margin-bottom: 4px; margin-left: 2px;" />
                             <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="MultiBlock" class="tool-button" style="background-image: resource(&apos;Textures/ToolIcons/colrow&apos;); width: 48px; height: 48px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-background-scale-mode: scale-to-fit; margin-top: 0; margin-right: 2px; margin-bottom: 4px; margin-left: 2px;" />
                             <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="StyleBlock" class="tool-button" style="background-image: resource(&apos;Textures/ToolIcons/style&apos;); width: 48px; height: 48px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-background-scale-mode: scale-to-fit; margin-top: 0; margin-right: 2px; margin-bottom: 4px; margin-left: 2px;" />
+                            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="Environment" class="tool-button" style="background-image: resource(&apos;Textures/ToolIcons/environment&apos;); width: 48px; height: 48px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-background-scale-mode: scale-to-fit; margin-top: 0; margin-right: 2px; margin-bottom: 4px; margin-left: 2px;" />
+                            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="Data" class="tool-button" style="background-image: resource(&apos;Textures/ToolIcons/data&apos;); width: 48px; height: 48px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-background-scale-mode: scale-to-fit; margin-top: 0; margin-right: 2px; margin-bottom: 4px; margin-left: 2px;" />
                         </ui:VisualElement>
                         <ui:VisualElement style="flex-grow: 1; flex-direction: column-reverse; display: none;">
                             <ui:Foldout text="Data" value="false" style="margin-top: 4px; margin-bottom: 0;">
@@ -213,7 +215,7 @@
                             <ui:Button text="Clone Column" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-right: 2px; margin-left: 2px;" />
                             <ui:Button text="Clone Row" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-right: 2px; margin-left: 2px;" />
                         </ui:VisualElement>
-                        <ui:VisualElement name="StyleOptions" class="tool-option-group" style="flex-grow: 0; flex-direction: column; align-items: flex-start; align-self: flex-start; justify-content: flex-start; display: flex; margin-right: -2px; margin-left: -2px;">
+                        <ui:VisualElement name="StyleOptions" class="tool-option-group" style="flex-grow: 0; flex-direction: column; align-items: flex-start; align-self: flex-start; justify-content: flex-start; display: none; margin-right: -2px; margin-left: -2px;">
                             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
                                 <ui:Label tabindex="-1" text="Top Color" display-tooltip-when-elided="true" style="flex-grow: 1;" />
                                 <ui:VisualElement name="Color5" style="background-color: rgb(0, 0, 0); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
@@ -222,6 +224,11 @@
                                 <ui:Label tabindex="-1" text="Side Color" display-tooltip-when-elided="true" style="flex-grow: 1;" />
                                 <ui:VisualElement name="Color5" style="background-color: rgb(0, 0, 0); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px;" />
                             </ui:VisualElement>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="DataOptions" class="tool-option-group" style="flex-grow: 0; flex-direction: row; align-items: flex-start; align-self: flex-start; justify-content: flex-start; display: flex; margin-right: -2px; margin-left: -2px;">
+                            <ui:Button text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Save" style="margin-top: 0; margin-right: 2px; margin-left: 2px;" />
+                            <ui:Button text="Open" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Open" style="margin-top: 0; margin-right: 2px; margin-left: 2px;" />
+                            <ui:Button text="Reset" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Reset" style="margin-top: 0; margin-right: 2px; margin-left: 2px;" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <ui:VisualElement name="ColorPanel" class="panel" style="position: relative; margin-bottom: 4px; display: none; width: 240px;">

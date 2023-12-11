@@ -28,7 +28,6 @@ public class MapSaver
         string json = JsonUtility.ToJson(state);
 
         fullPath = fullPath.Replace(".json", ".png");
-        GameObject.Find("Screenshot Camera").GetComponent<Camera>().orthographicSize = Camera.main.orthographicSize;
         Block.UnfocusAll();
 
         Texture2D destination = new Texture2D(640, 480, TextureFormat.RGB24, false);

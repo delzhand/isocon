@@ -75,38 +75,22 @@ public class BlockMesh: MonoBehaviour
                 return ("AcidSide", "AcidTopStill");
             case "Old Brick":
                 return ("Brick2Side", "Brick2Top");
-            // case "Brick":
-            //     return ("BrickSide", "BrickTop");
             case "Dry Grass":
                 return ("SoilSide", "DryGrassTop");
             case "Grass":
                 return ("SoilSide", "GrassTop");
-            // case "Gold":
-            //     return ("GoldSide", "GoldTop");
             case "Lava Flow":
                 return ("LavaSide", "LavaTopFlow");
             case "Lava":
                 return ("LavaSide", "LavaTopStill");
-            // case "Metal":
-            //     return ("MetalSide", "MetalTop");
             case "Poison Flow":
                 return ("PoisonSide", "PoisonTopFlow");
             case "Poison":
                 return ("PoisonSide", "PoisonTopStill");
-            // case "Sand":
-            //     return ("SandSide", "SandTop");
-            // case "Snow":
-            //     return ("SnowSide", "SnowTop");
-            // case "Soil":
-            //     return ("SoilSide", "SoilTop");
-            // case "Stone":
-            //     return ("StoneSide", "StoneTop");
             case "Water Flow":
                 return ("WaterSide", "WaterTopFlow");
             case "Water":
                 return ("WaterSide", "WaterTopStill");
-            // case "Wood":
-            //     return ("WoodSide", "WoodTop");
             case "Old Wood":
                 return ("Wood2Side", "Wood2Top");
             case "Gray Metal":
@@ -115,6 +99,6 @@ public class BlockMesh: MonoBehaviour
                 return ("GrayBrickSide", "GrayBrickTop");
             default:
                 return ($"{style}Top", $"{style}Side");
+        }
     }
-}
 }

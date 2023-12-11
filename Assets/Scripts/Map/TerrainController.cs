@@ -89,7 +89,8 @@ public class TerrainController : MonoBehaviour
                 DeleteColumn();
                 break;
             case "RotateBlock":
-
+                RotateBlocks();
+                break;
             case "ChangeShape":
                 ChangeType();
                 break;

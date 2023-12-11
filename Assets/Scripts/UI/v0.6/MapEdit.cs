@@ -61,6 +61,16 @@ public class MapEdit
             root.Q("ShapeHidden").AddToClassList("active");
         });
 
+        // Data
+        root.Q("DataOptions").Q("Save").RegisterCallback<ClickEvent>((evt) => {
+            OpenSaveModal(new ClickEvent());
+        });
+        root.Q("DataOptions").Q("Open").RegisterCallback<ClickEvent>((evt) => {
+            OpenOpenModal(new ClickEvent());
+        });
+        root.Q("DataOptions").Q("Reset").RegisterCallback<ClickEvent>((evt) => {
+            ResetConfirm(new ClickEvent());
+        });
 
         VisualElement styleSearch = SearchField.Create(StringUtility.Arr("None", "Paint", "Acid Flow", "Acid", "Old Brick", "Brick", "Gray Brick", "Dry Grass", "Grass", "Gold", "Lava Flow", "Lava", "Metal", "Gray Metal", "Poison Flow", "Poison", "Sand", "Snow", "Soil", "Stone", "Water Flow", "Water", "Wood", "Old Wood"), "Style Search");
         styleSearch.name = "StyleSearch";
@@ -92,6 +102,7 @@ public class MapEdit
         Cursor.Mode = CursorMode.Default;
         UI.ToggleDisplay("ToolsPanel", false);
         UI.ToggleDisplay("ColorPanel", false);
+        UI.ToggleDisplay("ToolOptions", false);
         State.SetCurrentJson();
         Player.Self().CmdMapSync();
         UI.ToggleActiveClass(UI.System.Q("FloatingControls").Q("EditMap"), false);
@@ -269,6 +280,10 @@ public class MapEdit
         if(op == "StyleBlock") {
             UI.ToggleDisplay("ToolOptions", true);
             UI.ToggleDisplay("StyleOptions", true);
+        }
+        if (op == "Data") {
+            UI.ToggleDisplay("ToolOptions", true);
+            UI.ToggleDisplay("DataOptions", true);
         }
     }
 
