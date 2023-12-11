@@ -27,6 +27,7 @@ public class Maleghast : GameSystem
         unitPanel.Q("Armor").Q<Label>("Label").text = "ARMOR";
         // unitPanel.Q<Button>("AlterVitals").RegisterCallback<ClickEvent>(AlterVitalsModal);
         // unitPanel.Q<Button>("AddStatus").RegisterCallback<ClickEvent>(AddStatusModal);
+        // unitPanel.Q<Button>("Upgrades").RegisterCallback<ClickEvent>(UpgradesModal);
         selectedPanel.Q("Data").Add(unitPanel);
         selectedPanel.Q("ExtraInfo").Add(new Label(){ name = "House" });
         selectedPanel.Q("ExtraInfo").Add(new Label(){ name = "Job" });
@@ -129,4 +130,21 @@ public class Maleghast : GameSystem
 
         Modal.AddSearchField("UnitType", "Unit Type", "", units.ToArray());
     }
+
+    // private static void UpgradesModal(ClickEvent evt) {
+    //     Modal.Reset("Upgrades");
+    //     MaleghastTokenData data = Token.GetSelectedData().GetComponent<TokenData>() as MaleghastTokenData;
+    //     Modal.AddLabel("Traits", "");
+    //     foreach (string s in data.Traits) {
+    //         if (s.EndsWith("|0")) {
+    //             string name = s.Replace("|0", "");
+    //             Modal.AddToggleField(name, name, false, (evt) => {
+
+    //             });
+    //         }
+    //     }
+    //     Modal.AddToggleField()
+    //     Modal.AddPreferredButton("Confirm", Modal.CloseEvent);
+
+    // }
 }

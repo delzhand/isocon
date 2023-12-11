@@ -127,7 +127,7 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="TopLeft" style="flex-grow: 1; position: absolute; left: 0; top: 0; flex-direction: row; align-items: flex-start;">
-                    <ui:VisualElement name="ToolsPanel" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: flex; width: 116px; margin-right: 8px;">
+                    <ui:VisualElement name="ToolsPanel" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: none; width: 116px; margin-right: 8px;">
                         <ui:Label tabindex="-1" text="EDIT TOOLS" display-tooltip-when-elided="true" class="panel-header" />
                         <ui:VisualElement style="flex-grow: 1; flex-direction: row; margin-top: 0; margin-right: -2px; margin-bottom: -4px; margin-left: -2px; flex-wrap: wrap;">
                             <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddBlock" class="tool-button" style="background-image: resource(&apos;Textures/ToolIcons/addblock&apos;); width: 48px; height: 48px; -unity-background-scale-mode: scale-to-fit; margin-top: 0; margin-right: 2px; margin-bottom: 4px; margin-left: 2px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
@@ -202,7 +202,7 @@
                             </ui:Foldout>
                         </ui:VisualElement>
                     </ui:VisualElement>
-                    <ui:VisualElement name="ToolOptions" class="panel" style="flex-grow: 1; align-items: stretch; justify-content: flex-start; display: flex;">
+                    <ui:VisualElement name="ToolOptions" class="panel" style="flex-grow: 1; align-items: stretch; justify-content: flex-start; display: none;">
                         <ui:Label tabindex="-1" text="TOOL OPTIONS" display-tooltip-when-elided="true" class="panel-header" />
                         <ui:VisualElement name="ShapeOptions" class="tool-option-group" style="flex-grow: 0; flex-direction: row; align-items: flex-start; align-self: flex-start; justify-content: flex-start; display: none; margin-right: -2px; margin-left: -2px;">
                             <ui:Button text="Solid" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ShapeSolid" class="tool-button" style="margin-right: 2px; margin-left: 2px;" />

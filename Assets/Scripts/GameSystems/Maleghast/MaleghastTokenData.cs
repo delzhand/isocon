@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Mirror;
 using SimpleJSON;
 using UnityEngine;
@@ -23,39 +24,31 @@ public class MaleghastTokenDataRaw: TokenDataRaw
 
 public class MaleghastTokenData : TokenData
 {
-    [SyncVar]
-    public string House;  // CARCASS
-
-    [SyncVar]
-    public string Type; // Thrall
-
-    public string Job; // Gunwight
-
-    public Color Color;
-
+    // Mutable - these variables change during play
     [SyncVar]
     public int CurrentHP;
-
     [SyncVar]
     public int Soul;
-
     [SyncVar]
+    public int Strength;
+    [SyncVar]
+    public int Vitality;
+    [SyncVar]
+    public int Speed;
+
+    public string[] Traits;
+    public string[] ActAbilities;
+    public string[] SoulAbilities;
+
+    // Derived - these values can be initialized from json
+    public string House;  // eg CARCASS
+    public string Type; // eg Thrall
+    public string Job; // eg Gunwight
+    public Color Color;
     public string Armor;
-
     public int MaxHP;
-
     public int Move;
     public int Defense;
-
-    public string ActAbilities;
-    public string SoulAbilities;
-    public string Upgrades;
-    public string Traits;
-
-    public int Strength;
-    public int Vitality;
-    public int Speed;
-    public bool Loaded = true;
 
     public Dictionary<string, StatusEffect> Conditions = new();
 
@@ -132,9 +125,20 @@ public class MaleghastTokenData : TokenData
                         MaxHP = unit["hp"];
                         Defense = unit["def"];
                         Armor = unit["armor"];
+
+                        // string traits = unit["traits"];
+                        // Traits = traits.Split(",");
+
+                        // string actAbilities = unit["actAbilities"];
+                        // ActAbilities = actAbilities.Split(",");
+                        
+                        // string upgrades = unit["upgrad"]
                         // Traits = "Formation,Thrall";
                         // ActAbilities = "OL45,Baton";
                         // Upgrades = "Brace,Tactical Reload,Scavenge Ammo";
+
+                        Traits = StringUtility.Arr("Formation","Thrall","Brace|0","Tactical Reload|0","Scavenge Ammo|0");
+                        ActAbilities = StringUtility.Arr("OL45", "Baton");
                     }
                 }
             }
@@ -207,6 +211,20 @@ public class MaleghastTokenData : TokenData
             reinitUI = true;
             OnStatusChange();
         }
+        if (value.StartsWith("EnableUpgrade")) {
+            string upgrade = value.Split("|")[1];
+            for (int i = 0; i < Traits.Length; i++) {
+                string trait = Traits[i];
+                if (trait.StartsWith(upgrade)) {
+                    if (trait.EndsWith("|0")) {
+                        Traits[i] = Traits[i].Replace("|0", "|1");
+                    }
+                    else if (trait.EndsWith("|1")) {
+                        Traits[i] = Traits[i].Replace("|1", "|0");
+                    }
+                }
+            }
+        }
     }  
 
     private void OnVitalChange() {
@@ -254,6 +272,14 @@ public class MaleghastTokenData : TokenData
         panel.Q("Move").Q<Label>("Value").text = $"{ Move }";
         panel.Q("Armor").Q<Label>("Value").text = $"{ Armor.ToUpper() }";
         panel.Q("Type").Q<Label>("Value").text = Type;
+        
+        panel.Q("Traits").Q("List").Clear();
+        foreach (string s in Traits) {
+            if (!s.EndsWith("|0")) {
+                panel.Q("Traits").Q("List").Add(new Label(){text = s.Replace("|1", "")});
+            }
+        }
+
         if (reinitUI) {
             ReinitUI(elementName);
         }

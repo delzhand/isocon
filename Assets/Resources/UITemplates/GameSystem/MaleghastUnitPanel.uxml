@@ -16,5 +16,9 @@
             <ui:Button text="Add Status" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddStatus" style="margin-top: 0; margin-bottom: 4px;" />
             <ui:VisualElement name="List" style="flex-grow: 1;" />
         </ui:VisualElement>
+        <ui:VisualElement name="Traits" style="background-color: rgba(0, 0, 0, 0); padding-top: 4px;">
+            <ui:Button text="Upgrades" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Upgrades" style="margin-top: 0; margin-bottom: 4px;" />
+            <ui:VisualElement name="List" style="flex-grow: 1;" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
