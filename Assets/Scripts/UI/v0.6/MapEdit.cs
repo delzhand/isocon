@@ -17,11 +17,7 @@ public class MapEdit
         VisualElement root = UI.System.Q("ToolsPanel");
         UI.SetBlocking(UI.System, "ToolsPanel");
         UI.ToggleDisplay(root, false);
-        // root.Q<Button>("Open").RegisterCallback<ClickEvent>(OpenOpenModal);
-        // root.Q<Button>("Save").RegisterCallback<ClickEvent>(OpenSaveModal);
-        // root.Q<Button>("Reset").RegisterCallback<ClickEvent>(ResetConfirm);
         root.Query<Button>(null, "tool-button").ForEach(RegisterButton);
-        // root.Query<Foldout>(null, "unity-foldout").ForEach(RegisterFoldout);
 
         // ColorEdit.Setup();
         // RegisterColorChangeCallback("Color1");
@@ -30,7 +26,6 @@ public class MapEdit
         // RegisterColorChangeCallback("Color4");
         // RegisterColorChangeCallback("Color5");
         // RegisterColorChangeCallback("Color6");
-
 
         OptionsSetup();
     }
@@ -72,11 +67,45 @@ public class MapEdit
             ResetConfirm(new ClickEvent());
         });
 
-        VisualElement styleSearch = SearchField.Create(StringUtility.Arr("None", "Paint", "Acid Flow", "Acid", "Old Brick", "Brick", "Gray Brick", "Dry Grass", "Grass", "Gold", "Lava Flow", "Lava", "Metal", "Gray Metal", "Poison Flow", "Poison", "Sand", "Snow", "Soil", "Stone", "Water Flow", "Water", "Wood", "Old Wood"), "Style Search");
-        styleSearch.name = "StyleSearch";
-        styleSearch.style.minWidth = 300;
-        root.Q("StyleOptions").Add(styleSearch);
-        styleSearch.BringToFront();
+        // Environment
+        root.Q("EnvOptions").Q("LightAngle").RegisterCallback<ChangeEvent<float>>((evt) => {
+            TerrainController.LightAngle = evt.newValue;
+            TerrainController.UpdateLight();
+        });
+        root.Q("EnvOptions").Q("LightHeight").RegisterCallback<ChangeEvent<float>>((evt) => {
+            TerrainController.LightHeight = evt.newValue;
+            TerrainController.UpdateLight();
+        });
+        root.Q("EnvOptions").Q("LightIntensity").RegisterCallback<ChangeEvent<float>>((evt) => {
+            TerrainController.LightIntensity = evt.newValue;
+            TerrainController.UpdateLight();
+        });
+        root.Q("EnvOptions").Q("TopBgColor").RegisterCallback<ClickEvent>((evt) => {
+            Modal.Reset("Set Top Background Color");
+            Modal.AddColorField("TopBgColor");
+            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+        });
+        root.Q("EnvOptions").Q("BotBgColor").RegisterCallback<ClickEvent>((evt) => {
+            Modal.Reset("Set Bottom Background Color");
+            Modal.AddColorField("BotBgColor");
+            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+        });
+        root.Q("EnvOptions").Q("TopBlockColor").RegisterCallback<ClickEvent>((evt) => {
+            Modal.Reset("Set Default Block Top Color");
+            Modal.AddColorField("TopBlockColor");
+            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+        });
+        root.Q("EnvOptions").Q("SideBlockColor").RegisterCallback<ClickEvent>((evt) => {
+            Modal.Reset("Set Default Block Side Color");
+            Modal.AddColorField("SideBlockColor");
+            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+        });
+
+        // VisualElement styleSearch = SearchField.Create(StringUtility.Arr("None", "Paint", "Acid Flow", "Acid", "Old Brick", "Brick", "Gray Brick", "Dry Grass", "Grass", "Gold", "Lava Flow", "Lava", "Metal", "Gray Metal", "Poison Flow", "Poison", "Sand", "Snow", "Soil", "Stone", "Water Flow", "Water", "Wood", "Old Wood"), "Style Search");
+        // styleSearch.name = "StyleSearch";
+        // styleSearch.style.minWidth = 300;
+        // root.Q("StyleOptions").Add(styleSearch);
+        // styleSearch.BringToFront();
     }
 
     public static void ToggleEditMode(ClickEvent evt) {
@@ -200,8 +229,8 @@ public class MapEdit
                 Modal.DoubleConfirm("Confirm Overwrite", "A file with this name already exists. Overwrite?", WriteFile);
             }
             else {
-                Modal.Close();
                 WriteFile();
+                Modal.Close();
             }
         }
     }
@@ -281,9 +310,17 @@ public class MapEdit
             UI.ToggleDisplay("ToolOptions", true);
             UI.ToggleDisplay("StyleOptions", true);
         }
+        if (op == "MultiBlock") {
+            UI.ToggleDisplay("ToolOptions", true);
+            UI.ToggleDisplay("MultiOptions", true);
+        }
         if (op == "Data") {
             UI.ToggleDisplay("ToolOptions", true);
             UI.ToggleDisplay("DataOptions", true);
+        }
+        if (op == "Environment") {
+            UI.ToggleDisplay("ToolOptions", true);
+            UI.ToggleDisplay("EnvOptions", true);
         }
     }
 
@@ -295,51 +332,31 @@ public class MapEdit
         return EditOp;
     }
 
-    private static void RegisterFoldout(Foldout foldout) {
-        foldout.RegisterCallback<ClickEvent>((evt) => {
-            if (foldout.value) {
-                VisualElement root = UI.System.Q("ToolsPanel");
-                root.Query<Foldout>(null, "unity-foldout").ForEach((otherFoldout) => {
-                    if (otherFoldout != foldout) {
-                        otherFoldout.value = false;
-                    }
-                });
-            }
-        });
-    }
-
     public static string GetMarkerEffect() {
          return UI.System.Q("ToolsPanel").Q("EffectSearch").Q<TextField>("SearchInput").value;
     }
 
-    private static void RegisterColorChangeCallback(string elementName) {
-        UI.System.Q(elementName).RegisterCallback<ClickEvent>((evt) => {
-            UI.ToggleDisplay("ColorPanel", true);
-            ColorEdit.ClearColorChangeListeners();
-            ColorEdit.SetColor(UI.System.Q(elementName).resolvedStyle.backgroundColor);
-            ColorEdit.onColorChange += (c) => HandleColorChange(elementName, c);
-        });
-    }
-
-    private static void HandleColorChange(string elementName, Color c) {
-        UI.System.Q(elementName).style.backgroundColor = c;
-        switch(elementName) {
-            case "Color1":
+    public static void ColorChanged() {
+        VisualElement root = UI.System.Q("ToolOptions");
+        Color c = ColorField.FromSliders();
+        root.Q(ColorField.CurrentName).style.backgroundColor = c;
+        switch (ColorField.CurrentName) {
+            case "TopBlockColor":
                 Environment.Color1 = c;
                 Block.SetColor("top1", c);
                 Block.SetColor("top2", ColorUtility.DarkenColor(c, .2f));
                 break;
-            case "Color2":
+            case "SideBlockColor":
                 Environment.Color2 = c;
                 Block.SetColor("side1", c);
                 Block.SetColor("side2", ColorUtility.DarkenColor(c, .2f));
                 break;
-            case "Color3":
+            case "TopBgColor":
                 Environment.Color3 = c;
                 MeshRenderer mra = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
                 mra.material.SetColor("_Color1", c);
                 break;
-            case "Color4":
+            case "BotBgColor":
                 Environment.Color4 = c;
                 MeshRenderer mrb = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
                 mrb.material.SetColor("_Color2", c);
@@ -352,4 +369,46 @@ public class MapEdit
                 break;
         }
     }
+
+    // private static void RegisterColorChangeCallback(string elementName) {
+    //     UI.System.Q(elementName).RegisterCallback<ClickEvent>((evt) => {
+
+    //         UI.ToggleDisplay("ColorPanel", true);
+    //         ColorEdit.ClearColorChangeListeners();
+    //         ColorEdit.SetColor(UI.System.Q(elementName).resolvedStyle.backgroundColor);
+    //         ColorEdit.onColorChange += (c) => HandleColorChange(elementName, c);
+    //     });
+    // }
+
+    // private static void HandleColorChange(string elementName, Color c) {
+    //     UI.System.Q(elementName).style.backgroundColor = c;
+    //     switch(elementName) {
+    //         case "Color1":
+    //             Environment.Color1 = c;
+    //             Block.SetColor("top1", c);
+    //             Block.SetColor("top2", ColorUtility.DarkenColor(c, .2f));
+    //             break;
+    //         case "Color2":
+    //             Environment.Color2 = c;
+    //             Block.SetColor("side1", c);
+    //             Block.SetColor("side2", ColorUtility.DarkenColor(c, .2f));
+    //             break;
+    //         case "Color3":
+    //             Environment.Color3 = c;
+    //             MeshRenderer mra = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
+    //             mra.material.SetColor("_Color1", c);
+    //             break;
+    //         case "Color4":
+    //             Environment.Color4 = c;
+    //             MeshRenderer mrb = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
+    //             mrb.material.SetColor("_Color2", c);
+    //             break;
+    //         case "Color5":
+    //             Environment.Color5 = c;
+    //             break;
+    //         case "Color6":
+    //             Environment. Color6 = c;
+    //             break;
+    //     }
+    // }
 }

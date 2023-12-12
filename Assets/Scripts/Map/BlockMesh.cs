@@ -34,7 +34,7 @@ public class BlockMesh: MonoBehaviour
         SharedMaterials.Add("selected", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")));
         SharedMaterials["selected"].SetInt("_Selected", 1);
 
-        foreach(string s in StringUtility.Arr("AcidSide","AcidTopFlow","AcidTopStill","Brick2Side","Brick2Top","BrickSide","BrickTop","DryGrassTop","GoldSide","GoldTop","GrassTop","LavaSide","LavaTopFlow","LavaTopStill","MetalSide","MetalTop","PoisonSide","PoisonTopFlow","PoisonTopStill","SandSide","SandTop","SnowSide","SnowTop","SoilSide","SoilTop","StoneSide","StoneTop","WaterSide","WaterTopFlow","WaterTopStill","Wood2Side","Wood2Top","WoodSide","WoodTop", "GrayBrickSide", "GrayBrickTop", "GrayMetalSide", "GrayMetalTop")) {
+        foreach(string s in StringUtility.Arr("AcidSide","AcidTopFlow","AcidTopStill","Brick2Side","Brick2Top","BrickSide","BrickTop","DryGrassTop","GoldSide","GoldTop","GrassTop","LavaSide","LavaTopFlow","LavaTopStill","MetalSide","MetalTop","PoisonSide","PoisonTopFlow","PoisonTopStill","SandSide","SandTop","SnowSide","SnowTop","SoilSide","SoilTop","StoneSide","StoneTop","WaterSideFlow", "WaterSideStill","WaterTopFlow","WaterTopStill","Wood2Side","Wood2Top","WoodSide","WoodTop", "GrayBrickSide", "GrayBrickTop", "GrayMetalSide", "GrayMetalTop")) {
             SharedMaterials.Add($"{s}", new Material(Resources.Load<Material>($"Materials/Block/Artistic/{s}")));
         }
 
@@ -88,9 +88,9 @@ public class BlockMesh: MonoBehaviour
             case "Poison":
                 return ("PoisonSide", "PoisonTopStill");
             case "Water Flow":
-                return ("WaterSide", "WaterTopFlow");
+                return ("WaterSideFlow", "WaterTopFlow");
             case "Water":
-                return ("WaterSide", "WaterTopStill");
+                return ("WaterSideStill", "WaterTopStill");
             case "Old Wood":
                 return ("Wood2Side", "Wood2Top");
             case "Gray Metal":
@@ -98,7 +98,7 @@ public class BlockMesh: MonoBehaviour
             case "Gray Brick":
                 return ("GrayBrickSide", "GrayBrickTop");
             default:
-                return ($"{style}Top", $"{style}Side");
+                return ($"{style}Side", $"{style}Top");
         }
     }
 }

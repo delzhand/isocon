@@ -9,6 +9,9 @@ using TMPro;
 public class TerrainController : MonoBehaviour
 {
     public static string GridType = "Square";
+    public static float LightAngle = 330f;
+    public static float LightHeight = 50f;
+    public static float LightIntensity = 2;
     
     private List<Label> identifierLabels = new List<Label>();
 
@@ -48,23 +51,6 @@ public class TerrainController : MonoBehaviour
             Reorg();
             ReorgNeeded = false;
         }
-    }
-
-    private void resetConditionalElements() {
-        UI.System.Q("EditTerrainOptions").style.display = DisplayStyle.None;
-        UI.System.Q("EditBlockOptions").style.display = DisplayStyle.None;
-        UI.System.Q("MarkBlockOptions").style.display = DisplayStyle.None;
-        UI.System.Q("AppearanceOptions").style.display = DisplayStyle.None;
-    }
-
-    private void showConditionalElement(string name) {
-        UI.System.Q(name).style.display = DisplayStyle.Flex;
-    }
-
-    private string getValue(RadioButtonGroup g, int i) {
-        IEnumerable<string> choices = g.choices;
-        string[] s = choices.ToArray();
-        return s[i];
     }
 
     public static void Edit(Block block) {
@@ -630,5 +616,11 @@ public class TerrainController : MonoBehaviour
     private static void showBlock(Block b) {
         b.GetComponent<MeshRenderer>().enabled = true;
         b.transform.Find("Indicator").GetComponent<TextMeshPro>().enabled = true;
+    }
+
+    public static void UpdateLight() {
+        Light l = GameObject.Find("Light").GetComponent<Light>();
+        l.intensity = LightIntensity;
+        l.transform.eulerAngles = new Vector3(LightHeight, LightAngle, 0);
     }
 }

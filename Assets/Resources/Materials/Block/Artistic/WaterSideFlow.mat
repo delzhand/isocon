@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WaterSide
+  m_Name: WaterSideFlow
   m_Shader: {fileID: -6465566751694194690, guid: 0a7f47a7b22ca2d47b50df19ebba965a,
     type: 3}
   m_Parent: {fileID: 0}

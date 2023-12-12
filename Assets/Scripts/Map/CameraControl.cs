@@ -66,7 +66,7 @@ public class CameraControl : MonoBehaviour
             }
         }
 
-        if (!UI.ClicksSuspended && Player.IsOnline()) {
+        if (!UI.ClicksSuspended && Player.IsOnline() && !Modal.IsOpen()) {
             Vector3 view = Camera.main.ScreenToViewportPoint(Input.mousePosition);
             bool isOutside = view.x < 0 || view.x > 1 || view.y < 0 || view.y > 1;
             float scroll = Input.GetAxis("Mouse ScrollWheel");

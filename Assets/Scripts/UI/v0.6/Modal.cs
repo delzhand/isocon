@@ -209,8 +209,14 @@ public class Modal
     }
 
     public static void AddSearchField(string name, string label, string defaultValue, string[] options) {
-        VisualElement searchField = SearchField.Create(options, label);
-        searchField.name = name;
-        Modal.AddContents(searchField);
+        VisualElement field = SearchField.Create(options, label);
+        field.name = name;
+        Modal.AddContents(field);
+    }
+
+    public static void AddColorField(string name) {
+        VisualElement field = ColorField.Create(name);
+        field.name = name;
+        Modal.AddContents(field);
     }
 }
