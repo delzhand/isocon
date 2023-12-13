@@ -20,6 +20,7 @@ public class Cursor : MonoBehaviour
     private static RaycastHit hit;
     private bool firstBlockHit = false;
     private bool firstTokenHit = false;
+    private bool firstHit = false;
 
     void Update()
     {
@@ -39,15 +40,16 @@ public class Cursor : MonoBehaviour
         RaycastHit[] hits = Physics.RaycastAll(ray, 100f); // use an array so we can hit the block behind a token
         System.Array.Sort(hits, (x,y) => x.distance.CompareTo(y.distance));
         if (hits.Length > 0) {
+            firstHit = false;
             firstBlockHit = false;
             firstTokenHit = false;
             foreach (RaycastHit hit in hits) {    
-                BlockHitCheck(hit);
                 TokenHitCheck(hit);
+                BlockHitCheck(hit);
             }
         }
 
-        if (!firstBlockHit) {
+        if (!firstHit) {
             Block.UnfocusAll();
             Block.DehighlightAll();
             if (Block.GetSelected().Length == 0) {
@@ -105,12 +107,20 @@ public class Cursor : MonoBehaviour
         if (!b.Focused) {
             b.Focus();
         }
-        BlockClicks(b);
+        
+        if (!firstTokenHit) {
+            BlockClicks(b);
+        }
 
+        firstHit = true;
         firstBlockHit = true;
     }
 
     private void TokenHitCheck(RaycastHit hit) {
+        if (firstHit) {
+            return;
+        }
+
         if (!hit.collider || !hit.collider.gameObject) {
             // Token.UnfocusAll();
             return;
@@ -138,6 +148,7 @@ public class Cursor : MonoBehaviour
                 break;
         }
 
+        firstHit = true;
         firstTokenHit = true;
     }
 
