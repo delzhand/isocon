@@ -142,6 +142,7 @@ public class Token : MonoBehaviour
     }
 
     public void Focus() {
+        UnfocusAll();
         TokenData data = onlineDataObject.GetComponent<TokenData>();
         data.Focus();
         LastFocused = this;

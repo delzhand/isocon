@@ -109,9 +109,6 @@
             "m_Id": "45e4a0eaabae4cb7a5a92f43294585b4"
         },
         {
-            "m_Id": "3436244b42e7429b98c64b9ec1d5afad"
-        },
-        {
             "m_Id": "b420848823f84f19ae58bb6f842097fb"
         },
         {
@@ -534,9 +531,6 @@
             },
             {
                 "m_Id": "45e4a0eaabae4cb7a5a92f43294585b4"
-            },
-            {
-                "m_Id": "3436244b42e7429b98c64b9ec1d5afad"
             }
         ]
     },
@@ -1222,55 +1216,6 @@
 {
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
-    "m_ObjectId": "2fd8a616a55340d780960f4b223e423e",
-    "m_Id": 0,
-    "m_DisplayName": "Alpha",
-    "m_SlotType": 0,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "Alpha",
-    "m_StageCapability": 2,
-    "m_Value": 1.0,
-    "m_DefaultValue": 1.0,
-    "m_Labels": []
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.BlockNode",
-    "m_ObjectId": "3436244b42e7429b98c64b9ec1d5afad",
-    "m_Group": {
-        "m_Id": ""
-    },
-    "m_Name": "SurfaceDescription.Alpha",
-    "m_DrawState": {
-        "m_Expanded": true,
-        "m_Position": {
-            "serializedVersion": "2",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 0.0,
-            "height": 0.0
-        }
-    },
-    "m_Slots": [
-        {
-            "m_Id": "2fd8a616a55340d780960f4b223e423e"
-        }
-    ],
-    "synonyms": [],
-    "m_Precision": 0,
-    "m_PreviewExpanded": true,
-    "m_DismissedVersion": 0,
-    "m_PreviewMode": 0,
-    "m_CustomColors": {
-        "m_SerializableColors": []
-    },
-    "m_SerializedDescriptor": "SurfaceDescription.Alpha"
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "35f554bf2ef84ba893f1650061f8333b",
     "m_Id": 4,
     "m_DisplayName": "Smooth Delta",
@@ -1398,7 +1343,7 @@
         "m_Id": "8aab31d025464e3a8d76c8428f9ca8ec"
     },
     "m_AllowMaterialOverride": false,
-    "m_SurfaceType": 1,
+    "m_SurfaceType": 0,
     "m_ZTestMode": 4,
     "m_ZWriteControl": 0,
     "m_AlphaMode": 0,
@@ -2483,7 +2428,7 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
-    "m_Value": false
+    "m_Value": true
 }
 
 {

@@ -34,7 +34,7 @@ public class BlockMesh: MonoBehaviour
         SharedMaterials.Add("selected", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")));
         SharedMaterials["selected"].SetInt("_Selected", 1);
 
-        foreach(string s in StringUtility.Arr("AcidSide","AcidTopFlow","AcidTopStill","Brick2Side","Brick2Top","BrickSide","BrickTop","DryGrassTop","GoldSide","GoldTop","GrassTop","LavaSide","LavaTopFlow","LavaTopStill","MetalSide","MetalTop","PoisonSide","PoisonTopFlow","PoisonTopStill","SandSide","SandTop","SnowSide","SnowTop","SoilSide","SoilTop","StoneSide","StoneTop","WaterSideFlow", "WaterSideStill","WaterTopFlow","WaterTopStill","Wood2Side","Wood2Top","WoodSide","WoodTop", "GrayBrickSide", "GrayBrickTop", "GrayMetalSide", "GrayMetalTop")) {
+        foreach(string s in StringUtility.Arr("Brick3Side", "Brick3Top", "SmallTileTop", "BigTileTop", "AcidSide","AcidTopFlow","AcidTopStill","Brick2Side","Brick2Top","BrickSide","BrickTop","DryGrassTop","GoldSide","GoldTop","GrassTop","LavaSide","LavaTopFlow","LavaTopStill","MetalSide","MetalTop","PoisonSide","PoisonTopFlow","PoisonTopStill","SandSide","SandTop","SnowSide","SnowTop","SoilSide","SoilTop","StoneSide","StoneTop","WaterSideFlow", "WaterSideStill","WaterTopFlow","WaterTopStill","Wood2Side","Wood2Top","WoodSide","WoodTop", "GrayBrickSide", "GrayBrickTop", "GrayMetalSide", "GrayMetalTop")) {
             SharedMaterials.Add($"{s}", new Material(Resources.Load<Material>($"Materials/Block/Artistic/{s}")));
         }
 
@@ -97,6 +97,12 @@ public class BlockMesh: MonoBehaviour
                 return ("GrayMetalSide", "GrayMetalTop");
             case "Gray Brick":
                 return ("GrayBrickSide", "GrayBrickTop");
+            case "Small Tile":
+                return ("Brick3Side", "SmallTileTop");
+            case "Big Tile":
+                return ("Brick3Side", "BigTileTop");
+            case "White Brick":
+                return ("Brick3Side", "Brick3Top");
             default:
                 return ($"{style}Side", $"{style}Top");
         }

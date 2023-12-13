@@ -101,11 +101,11 @@ public class MapEdit
             Modal.AddPreferredButton("Close", Modal.CloseEvent);
         });
 
-        // VisualElement styleSearch = SearchField.Create(StringUtility.Arr("None", "Paint", "Acid Flow", "Acid", "Old Brick", "Brick", "Gray Brick", "Dry Grass", "Grass", "Gold", "Lava Flow", "Lava", "Metal", "Gray Metal", "Poison Flow", "Poison", "Sand", "Snow", "Soil", "Stone", "Water Flow", "Water", "Wood", "Old Wood"), "Style Search");
-        // styleSearch.name = "StyleSearch";
-        // styleSearch.style.minWidth = 300;
-        // root.Q("StyleOptions").Add(styleSearch);
-        // styleSearch.BringToFront();
+        VisualElement styleSearch = SearchField.Create(StringUtility.Arr("None", "Paint", "Acid Flow", "Acid", "Old Brick", "Brick", "Gray Brick", "White Brick", "Dry Grass", "Grass", "Gold", "Lava Flow", "Lava", "Metal", "Gray Metal", "Poison Flow", "Poison", "Sand", "Snow", "Soil", "Stone", "Small Tile", "Big Tile", "Water Flow", "Water", "Wood", "Old Wood"), "Style Search");
+        styleSearch.name = "StyleSearch";
+        styleSearch.style.minWidth = 300;
+        root.Q("StyleOptions").Add(styleSearch);
+        styleSearch.BringToFront();
     }
 
     public static void ToggleEditMode(ClickEvent evt) {
@@ -370,45 +370,4 @@ public class MapEdit
         }
     }
 
-    // private static void RegisterColorChangeCallback(string elementName) {
-    //     UI.System.Q(elementName).RegisterCallback<ClickEvent>((evt) => {
-
-    //         UI.ToggleDisplay("ColorPanel", true);
-    //         ColorEdit.ClearColorChangeListeners();
-    //         ColorEdit.SetColor(UI.System.Q(elementName).resolvedStyle.backgroundColor);
-    //         ColorEdit.onColorChange += (c) => HandleColorChange(elementName, c);
-    //     });
-    // }
-
-    // private static void HandleColorChange(string elementName, Color c) {
-    //     UI.System.Q(elementName).style.backgroundColor = c;
-    //     switch(elementName) {
-    //         case "Color1":
-    //             Environment.Color1 = c;
-    //             Block.SetColor("top1", c);
-    //             Block.SetColor("top2", ColorUtility.DarkenColor(c, .2f));
-    //             break;
-    //         case "Color2":
-    //             Environment.Color2 = c;
-    //             Block.SetColor("side1", c);
-    //             Block.SetColor("side2", ColorUtility.DarkenColor(c, .2f));
-    //             break;
-    //         case "Color3":
-    //             Environment.Color3 = c;
-    //             MeshRenderer mra = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
-    //             mra.material.SetColor("_Color1", c);
-    //             break;
-    //         case "Color4":
-    //             Environment.Color4 = c;
-    //             MeshRenderer mrb = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
-    //             mrb.material.SetColor("_Color2", c);
-    //             break;
-    //         case "Color5":
-    //             Environment.Color5 = c;
-    //             break;
-    //         case "Color6":
-    //             Environment. Color6 = c;
-    //             break;
-    //     }
-    // }
 }
