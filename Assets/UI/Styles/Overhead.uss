@@ -135,3 +135,14 @@
 #Overhead #Color.purple {
     background-color: #ca55ef;
 }
+
+#Overhead #VigorBar .unity-progress-bar__progress {
+    border-width: 1px;
+    border-color: white;
+    height: 7px;
+}
+#Overhead #HpBar {
+    border-width: 1px;
+    border-color: white;
+    height: 7px;
+}
