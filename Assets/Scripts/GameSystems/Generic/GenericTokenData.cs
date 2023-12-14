@@ -51,8 +51,8 @@ public class GenericTokenData : TokenData
     }
 
     public override void UpdateOverheadValues() {
-        overhead.Q<ProgressBar>("HpBar").value = CurrentHP;
-        overhead.Q<ProgressBar>("HpBar").highValue = MaxHP;
+        OverheadElement.Q<ProgressBar>("HpBar").value = CurrentHP;
+        OverheadElement.Q<ProgressBar>("HpBar").highValue = MaxHP;
     }
 
     public override void TokenDataSetup(string json, string id) {

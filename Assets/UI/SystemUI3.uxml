@@ -359,4 +359,5 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="Toasts" style="flex-grow: 1; background-color: rgb(34, 58, 118); position: absolute; left: auto; top: auto; border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); color: rgb(255, 255, 255); -unity-text-align: middle-right; padding-left: 10px; padding-right: 10px; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; display: none; right: 10px; bottom: 10px;" />
+    <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Debug" class="self-centered" style="left: 50%; top: 20%; color: rgb(255, 255, 255); font-size: 24px; -unity-font-style: bold; display: none;" />
 </ui:UXML>

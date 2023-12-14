@@ -65,8 +65,8 @@ public class MaleghastTokenData : TokenData
     }
 
     public override void UpdateOverheadValues() {
-        overhead.Q<ProgressBar>("HpBar").value = CurrentHP;
-        overhead.Q<ProgressBar>("HpBar").highValue = MaxHP;
+        OverheadElement.Q<ProgressBar>("HpBar").value = CurrentHP;
+        OverheadElement.Q<ProgressBar>("HpBar").highValue = MaxHP;
     }
 
     public override void TokenDataSetup(string json, string id) {
@@ -85,8 +85,8 @@ public class MaleghastTokenData : TokenData
     public override void CreateOverhead() {
         VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/GameSystem/SimpleOverhead");
         VisualElement instance = template.Instantiate();
-        overhead = instance.Q("Overhead");
-        UI.System.Q("Worldspace").Add(overhead);
+        OverheadElement = instance.Q("Overhead");
+        UI.System.Q("Worldspace").Add(OverheadElement);
     }
 
     public override void CreateWorldToken() {
@@ -98,10 +98,10 @@ public class MaleghastTokenData : TokenData
 
     public override void CreateUnitBarItem() {
         base.CreateUnitBarItem();
-        Element.Q("ClassBackground").style.borderTopColor = Color;
-        Element.Q("ClassBackground").style.borderRightColor = Color;
-        Element.Q("ClassBackground").style.borderBottomColor = Color;
-        Element.Q("ClassBackground").style.borderLeftColor = Color;
+        UnitBarElement.Q("ClassBackground").style.borderTopColor = Color;
+        UnitBarElement.Q("ClassBackground").style.borderRightColor = Color;
+        UnitBarElement.Q("ClassBackground").style.borderBottomColor = Color;
+        UnitBarElement.Q("ClassBackground").style.borderLeftColor = Color;
     }
 
     public override int GetSize()
@@ -246,7 +246,7 @@ public class MaleghastTokenData : TokenData
      */
     private void OnStatusChange() {
         Color c = Conditions.ContainsKey("Turn Ended") ? ColorUtility.ColorFromHex("#505050") : Color.white;
-        Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = c;
+        UnitBarElement.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = c;
     }
 
     public override void UpdateTokenPanel(string elementName) {

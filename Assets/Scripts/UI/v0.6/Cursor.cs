@@ -39,10 +39,10 @@ public class Cursor : MonoBehaviour
 
         RaycastHit[] hits = Physics.RaycastAll(ray, 100f); // use an array so we can hit the block behind a token
         System.Array.Sort(hits, (x,y) => x.distance.CompareTo(y.distance));
+        firstHit = false;
+        firstBlockHit = false;
+        firstTokenHit = false;
         if (hits.Length > 0) {
-            firstHit = false;
-            firstBlockHit = false;
-            firstTokenHit = false;
             foreach (RaycastHit hit in hits) {    
                 TokenHitCheck(hit);
                 BlockHitCheck(hit);
@@ -57,7 +57,7 @@ public class Cursor : MonoBehaviour
             }
         }
 
-        if (!firstTokenHit) {
+        if (!firstTokenHit && !TokenData.MouseOverUnitBarElement) {
             Token.UnfocusAll();
         }
 
@@ -65,6 +65,11 @@ public class Cursor : MonoBehaviour
             TerrainController.SetInfo();
         }
 
+        if (!firstHit && Block.GetSelected().Length == 0) {
+            // Debug.Log("foo");
+            Block.UnfocusAll();
+            TerrainController.SetInfo();
+        }
 
         // else {
         //     Block.UnfocusAll();

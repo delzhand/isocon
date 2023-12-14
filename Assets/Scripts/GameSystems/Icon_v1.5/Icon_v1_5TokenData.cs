@@ -101,18 +101,18 @@ public class Icon_v1_5TokenData : TokenData
     }
 
     public override void UpdateOverheadValues() {
-        overhead.Q<ProgressBar>("VigorBar").value = Vigor;
-        overhead.Q<ProgressBar>("VigorBar").highValue = MaxHP;
-        UI.ToggleDisplay(overhead.Q("VigorBar"), Vigor > 0);
+        OverheadElement.Q<ProgressBar>("VigorBar").value = Vigor;
+        OverheadElement.Q<ProgressBar>("VigorBar").highValue = MaxHP;
+        UI.ToggleDisplay(OverheadElement.Q("VigorBar"), Vigor > 0);
 
-        overhead.Q<ProgressBar>("HpBar").value = CurrentHP;
-        overhead.Q<ProgressBar>("HpBar").highValue = MaxHP;
+        OverheadElement.Q<ProgressBar>("HpBar").value = CurrentHP;
+        OverheadElement.Q<ProgressBar>("HpBar").highValue = MaxHP;
 
-        UI.ToggleDisplay(overhead.Q("Wound1"), Wounds >= 1);
-        UI.ToggleDisplay(overhead.Q("Wound2"), Wounds >= 2);
-        UI.ToggleDisplay(overhead.Q("Wound3"), Wounds >= 3);
+        UI.ToggleDisplay(OverheadElement.Q("Wound1"), Wounds >= 1);
+        UI.ToggleDisplay(OverheadElement.Q("Wound2"), Wounds >= 2);
+        UI.ToggleDisplay(OverheadElement.Q("Wound3"), Wounds >= 3);
         
-        UI.ToggleDisplay(overhead.Q("HpBar"), CurrentHP > 0);
+        UI.ToggleDisplay(OverheadElement.Q("HpBar"), CurrentHP > 0);
     }
 
     public override void TokenDataSetup(string json, string id) {
@@ -135,8 +135,8 @@ public class Icon_v1_5TokenData : TokenData
     public override void CreateOverhead() {
         VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/GameSystem/IconOverhead");
         VisualElement instance = template.Instantiate();
-        overhead = instance.Q("Overhead");
-        UI.System.Q("Worldspace").Add(overhead);
+        OverheadElement = instance.Q("Overhead");
+        UI.System.Q("Worldspace").Add(OverheadElement);
     }
 
     public override void CreateWorldToken() {
@@ -150,10 +150,10 @@ public class Icon_v1_5TokenData : TokenData
     public override void CreateUnitBarItem() {
         base.CreateUnitBarItem();
         Color c = UnitColor();
-        Element.Q("ClassBackground").style.borderTopColor = c;
-        Element.Q("ClassBackground").style.borderRightColor = c;
-        Element.Q("ClassBackground").style.borderBottomColor = c;
-        Element.Q("ClassBackground").style.borderLeftColor = c;
+        UnitBarElement.Q("ClassBackground").style.borderTopColor = c;
+        UnitBarElement.Q("ClassBackground").style.borderRightColor = c;
+        UnitBarElement.Q("ClassBackground").style.borderBottomColor = c;
+        UnitBarElement.Q("ClassBackground").style.borderLeftColor = c;
     }
 
     public override int GetSize()
@@ -398,7 +398,7 @@ public class Icon_v1_5TokenData : TokenData
      */
     private void OnStatusChange() {
         Color c = Conditions.ContainsKey("Turn Ended") ? ColorUtility.ColorFromHex("#505050") : Color.white;
-        Element.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = c;
+        UnitBarElement.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = c;
     }
 
     public override void UpdateTokenPanel(string elementName) {

@@ -30,9 +30,11 @@ public class TokenData : NetworkBehaviour
     public bool OnField;
 
     public GameObject TokenObject;
-    public VisualElement Element;
-    public VisualElement overhead;
+    public VisualElement UnitBarElement;
+    public VisualElement OverheadElement;
     public Texture2D Graphic;
+
+    public static bool MouseOverUnitBarElement = false;
 
     private bool initialized = false;
     private float awaitingGraphicSync = 0;
@@ -43,8 +45,8 @@ public class TokenData : NetworkBehaviour
     }
 
     public void Disconnect() {
-        UI.System.Q("UnitBar").Remove(Element);
-        UI.System.Q("Worldspace").Remove(overhead);
+        UI.System.Q("UnitBar").Remove(UnitBarElement);
+        UI.System.Q("Worldspace").Remove(OverheadElement);
         Destroy(TokenObject);
         initialized = false;
     }
@@ -84,10 +86,10 @@ public class TokenData : NetworkBehaviour
             TokenObject.transform.position = transform.position;
             TokenObject.transform.localScale = OnField ? Vector3.one : Vector3.zero;
         }
-        if (overhead != null) {
+        if (OverheadElement != null) {
             UpdateOverheadScreenPosition();
             UpdateOverheadValues();
-            overhead.style.display = (OnField ? DisplayStyle.Flex : DisplayStyle.None);
+            OverheadElement.style.display = (OnField ? DisplayStyle.Flex : DisplayStyle.None);
         }
 
     }
@@ -153,8 +155,8 @@ public class TokenData : NetworkBehaviour
     public virtual void CreateUnitBarItem() {
         // Create the element in the UI
         VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/UnitTemplate");
-        Element = template.Instantiate();
-        Element.style.display = DisplayStyle.Flex;
+        UnitBarElement = template.Instantiate();
+        UnitBarElement.style.display = DisplayStyle.Flex;
 
         // Set the UI portrait
         float height = 60;
@@ -165,23 +167,33 @@ public class TokenData : NetworkBehaviour
         else {
             width *= (Graphic.width/(float)Graphic.height);
         }
-        Element.Q("Portrait").style.backgroundImage = Graphic;
-        Element.Q("Portrait").style.width = width;
-        Element.Q("Portrait").style.height = height;
+        UnitBarElement.Q("Portrait").style.backgroundImage = Graphic;
+        UnitBarElement.Q("Portrait").style.width = width;
+        UnitBarElement.Q("Portrait").style.height = height;
 
-        Element.RegisterCallback<ClickEvent>((evt) => {
-            TokenObject.GetComponent<Token>().LeftClick();
+        Token t = TokenObject.GetComponent<Token>();
+        UnitBarElement.RegisterCallback<ClickEvent>((evt) => {
+            t.LeftClick();
+            t.Focus();
+        });
+        UnitBarElement.RegisterCallback<MouseEnterEvent>((evt) => {
+            MouseOverUnitBarElement = true;
+            t.Focus();
+        });
+        UnitBarElement.RegisterCallback<MouseLeaveEvent>((evt) => {
+            MouseOverUnitBarElement = false;
+            t.Unfocus();
         });
 
         // Add it to the UI
-        UI.System.Q("UnitBar").Add(Element);
+        UI.System.Q("UnitBar").Add(UnitBarElement);
     }
 
     public virtual void CreateOverhead() {
         VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/GameSystem/SimpleOverhead");
         VisualElement instance = template.Instantiate();
-        overhead = instance.Q("Overhead");
-        UI.System.Q("Worldspace").Add(overhead);
+        OverheadElement = instance.Q("Overhead");
+        UI.System.Q("Worldspace").Add(OverheadElement);
     }
 
     public virtual int GetSize() {
@@ -189,8 +201,8 @@ public class TokenData : NetworkBehaviour
     }
 
     private void UpdateOverheadScreenPosition() {
-        overhead.style.display = DisplayStyle.Flex;
-        UI.FollowToken(TokenObject.GetComponent<Token>(), overhead, Camera.main, Vector2.zero, true);
+        OverheadElement.style.display = DisplayStyle.Flex;
+        UI.FollowToken(TokenObject.GetComponent<Token>(), OverheadElement, Camera.main, Vector2.zero, true);
     }
 
     public virtual bool CheckCondition(string label) {
@@ -201,8 +213,8 @@ public class TokenData : NetworkBehaviour
         foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
             TokenData t = g.GetComponent<TokenData>();
             if (t.Id == id) {
-                UI.System.Q("UnitBar").Remove(t.Element);
-                UI.System.Q("Worldspace").Remove(t.overhead);
+                UI.System.Q("UnitBar").Remove(t.UnitBarElement);
+                UI.System.Q("Worldspace").Remove(t.OverheadElement);
                 Destroy(t.TokenObject);
                 Destroy(t);
                 Destroy(g);
