@@ -366,14 +366,14 @@ public class Icon_v1_5TokenData : TokenData
     private void OnVitalChange() {
         TokenObject.GetComponent<Token>().SetDefeated(CurrentHP <= 0);
         if (CurrentHP <= 0) {
-            Conditions["Defeated"] = new StatusEffect(){Name = "Defeated", Type = "Simple", Color = "Red"};
+            Conditions["Defeated"] = new StatusEffect(){Name = "Defeated", Type = "Simple", Color = "Red", Locked = true};
             if (Conditions.ContainsKey("Bloodied")) {
                 Conditions.Remove("Bloodied");
                 OnStatusChange();
             }
         }
         else if (CurrentHP <= MaxHP/2) {
-            Conditions["Bloodied"] = new StatusEffect(){Name = "Bloodied", Type = "Simple", Color = "Red"};
+            Conditions["Bloodied"] = new StatusEffect(){Name = "Bloodied", Type = "Simple", Color = "Red", Locked = true};
             if (Conditions.ContainsKey("Defeated")) {
                 Conditions.Remove("Defeated");
                 OnStatusChange();
@@ -448,6 +448,7 @@ public class Icon_v1_5TokenData : TokenData
         panel.Q("Defense").Q<Label>("Value").text = $"{ Defense }";
 
         if (RedrawConditionsElement) {
+            Debug.Log("fooo");
             panel.Q("Conditions").Q("List").Clear();
             panel.Q("Conditions").Q("List").Add(ConditionsElement);
             RedrawConditionsElement = false;

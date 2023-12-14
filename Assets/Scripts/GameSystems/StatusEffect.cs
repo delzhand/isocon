@@ -9,4 +9,5 @@ public struct StatusEffect
     public string Type;
     public string Color;
     public int Number;
+    public bool Locked;
 }

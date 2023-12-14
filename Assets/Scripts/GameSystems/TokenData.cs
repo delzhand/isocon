@@ -278,6 +278,9 @@ public class TokenData : NetworkBehaviour
             e.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) => {
                 Player.Self().CmdRequestTokenDataSetValue(this, $"LoseStatus|{ item.Key }");
             });
+            if (item.Value.Locked) {
+                UI.ToggleDisplay(e.Q("Remove"), false);
+            }
             ConditionsElement.Add(e);
         }
     }    
