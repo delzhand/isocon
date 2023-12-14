@@ -32,13 +32,16 @@ public class TokenData : NetworkBehaviour
     public GameObject TokenObject;
     public VisualElement UnitBarElement;
     public VisualElement OverheadElement;
+    public VisualElement ConditionsElement;
+    public bool RedrawConditionsElement = false;
+
     public Texture2D Graphic;
 
     public static bool MouseOverUnitBarElement = false;
+    public Dictionary<string, StatusEffect> Conditions = new();
 
     private bool initialized = false;
     private float awaitingGraphicSync = 0;
-    protected bool reinitUI = false;
 
     void Update() {
         BaseUpdate();
@@ -73,7 +76,7 @@ public class TokenData : NetworkBehaviour
             Graphic = TextureSender.LoadImageFromFile(GraphicHash, true);
             if (Graphic) {
                 CreateWorldToken();
-                CreateUnitBarItem();
+                CreateUI();
                 CreateOverhead();
             }
             else {
@@ -107,11 +110,11 @@ public class TokenData : NetworkBehaviour
     }
 
     public void Select() {
-        reinitUI = true;
+        RedrawConditionsElement = true;
     }
 
     public void Focus() {
-        reinitUI = true;
+        RedrawConditionsElement = true;
     }
 
     public virtual void UpdateOverheadValues() {
@@ -152,7 +155,7 @@ public class TokenData : NetworkBehaviour
         }        
     }
 
-    public virtual void CreateUnitBarItem() {
+    public virtual void CreateUI() {
         // Create the element in the UI
         VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/UnitTemplate");
         UnitBarElement = template.Instantiate();
@@ -226,4 +229,56 @@ public class TokenData : NetworkBehaviour
 
     public virtual void Change(string value) {
     }
+
+    protected void RedrawConditions() {
+        Debug.Log($"Redraw conditions for { Name }");
+        RedrawConditionsElement = true;
+        ConditionsElement.Clear();
+        foreach(KeyValuePair<string, StatusEffect> item in Conditions) {
+            VisualElement e = UI.CreateFromTemplate("UITemplates/GameSystem/ConditionTemplate");
+            e.Q<Label>("Name").text = item.Key;
+            Color c = Color.black;
+            switch (item.Value.Color) {
+                case "Gray":
+                    c = ColorUtility.ColorFromHex("7b7b7b");
+                    break;
+                case "Green":
+                    c = ColorUtility.ColorFromHex("248d2e");
+                    break;
+                case "Red":
+                    c = ColorUtility.ColorFromHex("8d2424");
+                    break;
+                case "Blue":
+                    c = ColorUtility.ColorFromHex("24448d");
+                    break;
+                case "Purple":
+                    c = ColorUtility.ColorFromHex("5c159f");
+                    break;
+                case "Yellow":
+                    c = ColorUtility.ColorFromHex("887708");
+                    break;
+                case "Orange":
+                    c = ColorUtility.ColorFromHex("a57519");
+                    break;
+            }
+            e.Q("Wrapper").style.backgroundColor = c;
+            if (item.Value.Type == "Number") {
+                e.Q<Label>("Name").text = $"{item.Key} {item.Value.Number}";
+                e.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) => {
+                    Player.Self().CmdRequestTokenDataSetValue(this, $"IncrementStatus|{ item.Key }");
+                });
+                e.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) => {
+                    Player.Self().CmdRequestTokenDataSetValue(this, $"DecrementStatus|{ item.Key }");
+                });
+            }
+            else {
+                UI.ToggleDisplay(e.Q("Increment"), false);
+                UI.ToggleDisplay(e.Q("Decrement"), false);
+            }
+            e.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) => {
+                Player.Self().CmdRequestTokenDataSetValue(this, $"LoseStatus|{ item.Key }");
+            });
+            ConditionsElement.Add(e);
+        }
+    }    
 }

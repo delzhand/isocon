@@ -87,8 +87,6 @@ public class Icon_v1_5TokenData : TokenData
     public int Defense;
     public bool Elite;
 
-    public Dictionary<string, StatusEffect> Conditions = new();
-
     public int Size;
 
     void Update()
@@ -147,13 +145,15 @@ public class Icon_v1_5TokenData : TokenData
         TokenObject.transform.Find("Base").GetComponent<DecalProjector>().material = m;
     }
 
-    public override void CreateUnitBarItem() {
-        base.CreateUnitBarItem();
+    public override void CreateUI() {
+        base.CreateUI();
         Color c = UnitColor();
         UnitBarElement.Q("ClassBackground").style.borderTopColor = c;
         UnitBarElement.Q("ClassBackground").style.borderRightColor = c;
         UnitBarElement.Q("ClassBackground").style.borderBottomColor = c;
         UnitBarElement.Q("ClassBackground").style.borderLeftColor = c;
+
+        ConditionsElement = new VisualElement();
     }
 
     public override int GetSize()
@@ -334,7 +334,6 @@ public class Icon_v1_5TokenData : TokenData
             string[] parts = value.Split("|");
             Conditions.Remove(parts[1]);
             PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-|_{parts[1].ToUpper()}", Color.white);
-            reinitUI = true;
             OnStatusChange();
         }
         if (value.StartsWith("GainStatus")) {
@@ -346,7 +345,6 @@ public class Icon_v1_5TokenData : TokenData
                 Toast.Add($"Condition { parts[1] } is already set on { Name }.");
             }
             PopoverText.Create(TokenObject.GetComponent<Token>(), $"/+|_{parts[1].ToUpper()}", Color.white);
-            reinitUI = true;
             OnStatusChange();
         }
         if (value.StartsWith("IncrementStatus")) {
@@ -354,7 +352,6 @@ public class Icon_v1_5TokenData : TokenData
             StatusEffect se = Conditions[status];
             se.Number++;
             Conditions[status] = se;
-            reinitUI = true;
             OnStatusChange();
         }
         if (value.StartsWith("DecrementStatus")) {
@@ -362,7 +359,6 @@ public class Icon_v1_5TokenData : TokenData
             StatusEffect se = Conditions[status];
             se.Number--;
             Conditions[status] = se;
-            reinitUI = true;
             OnStatusChange();
         }
     }  
@@ -373,23 +369,26 @@ public class Icon_v1_5TokenData : TokenData
             Conditions["Defeated"] = new StatusEffect(){Name = "Defeated", Type = "Simple", Color = "Red"};
             if (Conditions.ContainsKey("Bloodied")) {
                 Conditions.Remove("Bloodied");
+                OnStatusChange();
             }
         }
         else if (CurrentHP <= MaxHP/2) {
             Conditions["Bloodied"] = new StatusEffect(){Name = "Bloodied", Type = "Simple", Color = "Red"};
             if (Conditions.ContainsKey("Defeated")) {
                 Conditions.Remove("Defeated");
+                OnStatusChange();
             }
         }
         else {
             if (Conditions.ContainsKey("Bloodied")) {
                 Conditions.Remove("Bloodied");
+                OnStatusChange();
             }
             if (Conditions.ContainsKey("Defeated")) {
                 Conditions.Remove("Defeated");
+                OnStatusChange();
             }
         }
-        reinitUI = true;
     }
 
     /**
@@ -399,6 +398,7 @@ public class Icon_v1_5TokenData : TokenData
     private void OnStatusChange() {
         Color c = Conditions.ContainsKey("Turn Ended") ? ColorUtility.ColorFromHex("#505050") : Color.white;
         UnitBarElement.Q<VisualElement>("Portrait").style.unityBackgroundImageTintColor = c;
+        RedrawConditions();
     }
 
     public override void UpdateTokenPanel(string elementName) {
@@ -447,61 +447,12 @@ public class Icon_v1_5TokenData : TokenData
         panel.Q("Speed").Q<Label>("Value").text = $"{ Speed }/{ Dash }";
         panel.Q("Defense").Q<Label>("Value").text = $"{ Defense }";
 
-        if (reinitUI) {
-            ReinitUI(elementName);
+        if (RedrawConditionsElement) {
+            panel.Q("Conditions").Q("List").Clear();
+            panel.Q("Conditions").Q("List").Add(ConditionsElement);
+            RedrawConditionsElement = false;
         }
     }
 
-    private void ReinitUI(string elementName) {
-        reinitUI = false;
-        VisualElement panel = UI.System.Q(elementName);
-        panel.Q("Conditions").Q("List").Clear();
 
-        foreach(KeyValuePair<string, StatusEffect> item in Conditions) {
-            VisualElement e = UI.CreateFromTemplate("UITemplates/GameSystem/ConditionTemplate");
-            e.Q<Label>("Name").text = item.Key;
-            Color c = Color.black;
-            switch (item.Value.Color) {
-                case "Gray":
-                    c = ColorUtility.ColorFromHex("7b7b7b");
-                    break;
-                case "Green":
-                    c = ColorUtility.ColorFromHex("248d2e");
-                    break;
-                case "Red":
-                    c = ColorUtility.ColorFromHex("8d2424");
-                    break;
-                case "Blue":
-                    c = ColorUtility.ColorFromHex("24448d");
-                    break;
-                case "Purple":
-                    c = ColorUtility.ColorFromHex("5c159f");
-                    break;
-                case "Yellow":
-                    c = ColorUtility.ColorFromHex("887708");
-                    break;
-                case "Orange":
-                    c = ColorUtility.ColorFromHex("a57519");
-                    break;
-            }
-            e.Q("Wrapper").style.backgroundColor = c;
-            if (item.Value.Type == "Number") {
-                e.Q<Label>("Name").text = $"{item.Key} {item.Value.Number}";
-                e.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) => {
-                    Player.Self().CmdRequestTokenDataSetValue(this, $"IncrementStatus|{ item.Key }");
-                });
-                e.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) => {
-                    Player.Self().CmdRequestTokenDataSetValue(this, $"DecrementStatus|{ item.Key }");
-                });
-            }
-            else {
-                UI.ToggleDisplay(e.Q("Increment"), false);
-                UI.ToggleDisplay(e.Q("Decrement"), false);
-            }
-            e.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) => {
-                Player.Self().CmdRequestTokenDataSetValue(this, $"LoseStatus|{ item.Key }");
-            });
-            panel.Q("Conditions").Q("List").Add(e);
-        }
-    }
 }

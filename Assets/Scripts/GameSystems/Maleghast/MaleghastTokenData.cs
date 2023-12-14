@@ -50,8 +50,6 @@ public class MaleghastTokenData : TokenData
     public int Move;
     public int Defense;
 
-    public Dictionary<string, StatusEffect> Conditions = new();
-
     public int Size;
 
     void Update()
@@ -96,8 +94,8 @@ public class MaleghastTokenData : TokenData
         TokenObject.transform.Find("Base").GetComponent<DecalProjector>().material = m;
     }
 
-    public override void CreateUnitBarItem() {
-        base.CreateUnitBarItem();
+    public override void CreateUI() {
+        base.CreateUI();
         UnitBarElement.Q("ClassBackground").style.borderTopColor = Color;
         UnitBarElement.Q("ClassBackground").style.borderRightColor = Color;
         UnitBarElement.Q("ClassBackground").style.borderBottomColor = Color;
@@ -180,7 +178,6 @@ public class MaleghastTokenData : TokenData
             string[] parts = value.Split("|");
             Conditions.Remove(parts[1]);
             PopoverText.Create(TokenObject.GetComponent<Token>(), $"/-|_{parts[1].ToUpper()}", Color.white);
-            reinitUI = true;
             OnStatusChange();
         }
         if (value.StartsWith("GainStatus")) {
@@ -192,7 +189,6 @@ public class MaleghastTokenData : TokenData
                 Toast.Add($"Condition { parts[1] } is already set on { Name }.");
             }
             PopoverText.Create(TokenObject.GetComponent<Token>(), $"/+|_{parts[1].ToUpper()}", Color.white);
-            reinitUI = true;
             OnStatusChange();
         }
         if (value.StartsWith("IncrementStatus")) {
@@ -200,7 +196,6 @@ public class MaleghastTokenData : TokenData
             StatusEffect se = Conditions[status];
             se.Number++;
             Conditions[status] = se;
-            reinitUI = true;
             OnStatusChange();
         }
         if (value.StartsWith("DecrementStatus")) {
@@ -208,7 +203,6 @@ public class MaleghastTokenData : TokenData
             StatusEffect se = Conditions[status];
             se.Number--;
             Conditions[status] = se;
-            reinitUI = true;
             OnStatusChange();
         }
         if (value.StartsWith("EnableUpgrade")) {
@@ -237,7 +231,6 @@ public class MaleghastTokenData : TokenData
                 Conditions.Remove("Corpse");
             }
         }
-        reinitUI = true;
     }
 
     /**
@@ -279,14 +272,9 @@ public class MaleghastTokenData : TokenData
                 panel.Q("Traits").Q("List").Add(new Label(){text = s.Replace("|1", "")});
             }
         }
-
-        if (reinitUI) {
-            ReinitUI(elementName);
-        }
     }
 
     private void ReinitUI(string elementName) {
-        reinitUI = false;
         VisualElement panel = UI.System.Q(elementName);
         panel.Q("Conditions").Q("List").Clear();
 

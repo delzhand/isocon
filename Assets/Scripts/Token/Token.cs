@@ -142,6 +142,9 @@ public class Token : MonoBehaviour
     }
 
     public void Focus() {
+        if (Token.GetSelected() == this) {
+            return;
+        }
         UnfocusAll();
         TokenData data = onlineDataObject.GetComponent<TokenData>();
         data.Focus();
