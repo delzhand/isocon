@@ -55,27 +55,30 @@ public class TerrainController : MonoBehaviour
 
     public static void Edit(Block block) {
         MapDirty = true;
-        switch (MapEdit.GetOp()) {
+        switch (MapEdit.EditOp) {
             case "AddBlock":
                 AddBlocks();
                 break;
             case "RemoveBlock":
                 RemoveBlocks();
                 break;
-            case "CloneRow":
-                CloneRow();
-                break;
-            case "CloneCol":
-                CloneColumn();
-                break;
-            case "RemoveRow":
-                DeleteRow();
-                break;
-            case "RemoveCol":
-                DeleteColumn();
-                break;
             case "RotateBlock":
                 RotateBlocks();
+                break;
+            // case "CloneRow":
+            //     CloneRow();
+            //     break;
+            // case "CloneCol":
+            //     CloneColumn();
+            //     break;
+            // case "RemoveRow":
+            //     DeleteRow();
+            //     break;
+            // case "RemoveCol":
+            //     DeleteColumn();
+            //     break;
+            case "MultiBlock":
+                MultiBlock();
                 break;
             case "ChangeShape":
                 ChangeType();
@@ -226,6 +229,25 @@ public class TerrainController : MonoBehaviour
         ReorgNeeded = true;
     }
 
+    public static void MultiBlock() {
+        switch (MapEdit.MultiOp) {
+            case "CloneRow":
+                CloneRow();
+                break;
+            case "CloneCol":
+                CloneColumn();
+                break;
+            case "RemoveRow":
+                DeleteRow();
+                break;
+            case "RemoveCol":
+                DeleteColumn();
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+    }
+
     public static void RotateBlocks() {
         // List<Block> selected = Block.GetSelected().ToList();
         // selected.ForEach(block => {
@@ -271,6 +293,13 @@ public class TerrainController : MonoBehaviour
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
             block.ApplyStyle(style);
+        });
+    }
+
+    public static void DestyleBlocks() {
+        List<Block> selected = Block.GetSelected().ToList();
+        selected.ForEach(block => {
+            block.RemoveStyle();
         });
     }
 
@@ -382,7 +411,15 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void ChangeType() {
-        BlockType type = MapEdit.Shape;
+        BlockType type = BlockType.Solid;
+        switch(MapEdit.ShapeOp) {
+            case "ShapeSlope":
+                type = BlockType.Slope;
+                break;
+            case "ShapeHidden":
+                type = BlockType.Spacer;
+                break;            
+        }
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
             block.TypeChange(type);
@@ -398,9 +435,18 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void ApplyStyle() {
-        string style = SearchField.GetValue(UI.System.Q("ToolOptions").Q("StyleSearch"));
-        if (style != "Paint" && style != "None") {
-            StyleBlocks(style);
+        switch (MapEdit.StyleOp) {
+            case "Paint":
+                PaintBlocks();
+                break;
+            case "Texture":
+                string style = UI.System.Q<DropdownField>("BlockTexture").value;
+                StyleBlocks(style);
+                break;
+            case "Erase":
+                DepaintBlocks();
+                DestyleBlocks();
+                break;
         }
     }
 
