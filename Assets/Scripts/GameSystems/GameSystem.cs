@@ -21,12 +21,12 @@ public class GameSystem : MonoBehaviour
 
     public virtual void Setup()
     {
-        // Search field for tile effects
-        VisualElement root = UI.System.Q("ToolsPanel");
-        VisualElement searchField = SearchField.Create(GameSystem.Current().GetEffectList(), "");
-        searchField.name = "EffectSearchField";
-        searchField.style.marginTop = 2;
-        root.Q("EffectSearch").Add(searchField);
+        // // Search field for tile effects
+        // VisualElement root = UI.System.Q("ToolsPanel");
+        // VisualElement searchField = SearchField.Create(GameSystem.Current().GetEffectList(), "");
+        // searchField.name = "EffectSearchField";
+        // searchField.style.marginTop = 2;
+        // root.Q("EffectSearch").Add(searchField);
 
         // Setting up play mode tile effects modal has to wait until the gamesystem is created
         UI.System.Q("TerrainInfo").Q("AddEffectButton").RegisterCallback<ClickEvent>(AddTerrainEffect.OpenModal);
@@ -34,8 +34,8 @@ public class GameSystem : MonoBehaviour
 
     public virtual void Teardown()
     {
-        VisualElement root = UI.System.Q("ToolsPanel");
-        root.Q("EffectSearch").Clear();
+        // VisualElement root = UI.System.Q("ToolsPanel");
+        // root.Q("EffectSearch").Clear();
 
         UI.System.Q("TerrainInfo").Q("AddEffectButton").UnregisterCallback<ClickEvent>(AddTerrainEffect.OpenModal);
     }

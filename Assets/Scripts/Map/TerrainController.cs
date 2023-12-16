@@ -230,7 +230,7 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void MultiBlock() {
-        switch (MapEdit.MultiOp) {
+        switch (MapEdit.ResizeOp) {
             case "CloneRow":
                 CloneRow();
                 break;

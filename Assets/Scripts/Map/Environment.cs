@@ -125,8 +125,8 @@ public class Environment : MonoBehaviour
         Block.SetColor("top2", DarkenColor(top, .2f));
         Block.SetColor("side1", sides);
         Block.SetColor("side2", DarkenColor(sides, .2f));
-        UI.System.Q("Color1").style.backgroundColor = Color1;
-        UI.System.Q("Color2").style.backgroundColor = Color1;
+        UI.System.Q("TopBlockColor").style.backgroundColor = Color1;
+        UI.System.Q("SideBlockColor").style.backgroundColor = Color1;
     }
 
     public static void SetBackgroundColors(Color bottom, Color top) {
@@ -135,8 +135,8 @@ public class Environment : MonoBehaviour
         MeshRenderer mr = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
         mr.material.SetColor("_Color1", bottom);
         mr.material.SetColor("_Color2", top);
-        UI.System.Q("Color3").style.backgroundColor = Color3;
-        UI.System.Q("Color4").style.backgroundColor = Color4;
+        UI.System.Q("TopBgColor").style.backgroundColor = Color3;
+        UI.System.Q("BotBgColor").style.backgroundColor = Color4;
     }
 
 }

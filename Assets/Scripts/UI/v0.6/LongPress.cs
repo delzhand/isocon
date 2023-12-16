@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using UnityEngine;
 
 public class LongPress : MonoBehaviour
 {
     private float duration;
-    private string claim;
+    private static string claim;
 
     // Start is called before the first frame update
     void Start()
@@ -25,8 +26,16 @@ public class LongPress : MonoBehaviour
     }
 
     public static void Add(string claim) {
-        LongPress longpress = GameObject.Find("Engine").AddComponent<LongPress>();
-        longpress.claim = claim;
-        longpress.duration = .5f;
+        if (GameObject.Find("Engine").GetComponent<LongPress>() == null) {
+            LongPress longpress = GameObject.Find("Engine").AddComponent<LongPress>();
+            LongPress.claim = claim;
+            longpress.duration = .5f;
+        }
+    }
+
+    public static void ClearAll() {
+        GameObject.Find("Engine").GetComponents<LongPress>().ToList().ForEach((item) => {
+            Destroy(item);
+        });
     }
 }
