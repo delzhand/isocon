@@ -62,12 +62,17 @@ public class Tabletop : MonoBehaviour
 
     private void FloatingControlsSetup() {
         VisualElement root = UI.System.Q("FloatingControls");
-        root.style.opacity = .05f;
+        VisualElement locator = UI.System.Q("FControlLocator");
+
+        root.style.opacity = 0f;
+        locator.style.opacity = 1f;
         root.RegisterCallback<MouseEnterEvent>((evt) => {
             root.style.opacity = 1f;
+            locator.style.opacity = 0f;
         });
         root.RegisterCallback<MouseLeaveEvent>((evt) => {
-            root.style.opacity = .05f;
+            root.style.opacity = 0f;
+            locator.style.opacity = 1f;
         });
         UI.SetBlocking(UI.System, "FloatingControls");
         UI.SetBlocking(UI.System, "SelectedTokenPanel");
