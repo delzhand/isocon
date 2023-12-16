@@ -9,42 +9,126 @@ using UnityEngine.UIElements;
 public class MapEdit
 {
     private static string CurrentFile = "";
-    public static string EditOp;
+    public static string EditOp = "AddBlock";
     public static string ShapeOp = "Solid";
     public static string MultiOp = "CloneRow";
     public static string StyleOp = "Paint";
 
-    // public static BlockType Shape;
-
     public static void Setup()
     {
-        VisualElement root = UI.System.Q("ToolsPanel");
         UI.SetBlocking(UI.System, "ToolsPanel");
-        UI.ToggleDisplay(root, false);
-        root.Query<Button>(null, "tool-button").ForEach(RegisterButton);
-        OptionsSetup();
 
-        UI.System.Q("ClickCatcher").RegisterCallback<ClickEvent>(CloseOptionFlyout);
+        VisualElement toolsRoot = UI.System.Q("ToolsPanel");
+        VisualElement optionsRoot = UI.System.Q("ToolOptions");
+
+        UI.ToggleDisplay(toolsRoot, false);
+        UI.ToggleDisplay(optionsRoot, false);
+
+        UI.System.Q("ClickCatcher").RegisterCallback<ClickEvent>(CloseSubtoolFlyouts);
+
+        // toolsRoot.Query<Button>(null, "tool-button").ForEach(RegisterButton);
+
+        // Single Mode Buttons
+        foreach (string s in StringUtility.Arr("AddBlock", "RemoveBlock", "RotateBlock")) {
+            // Clear handler that eats mousedown
+            toolsRoot.Q<Button>(s).clickable.activators.Clear();
+            // register mouse down callback
+            toolsRoot.Q<Button>(s).RegisterCallback<MouseDownEvent>((evt) => {
+                // set op
+                EditOp = s;
+                // set active class on current
+                toolsRoot.Query(null, "tool-button").ForEach((item) => {
+                    UI.ToggleActiveClass(item, item.name == s);
+                });
+                // close options
+                UI.ToggleDisplay(optionsRoot, false);
+                // close flyouts
+                CloseSubtoolFlyouts(new ClickEvent());
+            });
+        }
+
+        // Multi-mode Buttons
+        foreach (string s in StringUtility.Arr("ChangeShape", "MultiBlock")) {
+            // Clear handler that eats mousedown
+            toolsRoot.Q<Button>(s).clickable.activators.Clear();
+            toolsRoot.Q<Button>(s).RegisterCallback<MouseDownEvent>((evt) => {
+                // set op
+                EditOp = s;
+                // set active class on current
+                toolsRoot.Query(null, "tool-button").ForEach((item) => {
+                    UI.ToggleActiveClass(item, item.name == s);
+                });
+                // close options
+                UI.ToggleDisplay(optionsRoot, false);
+                LongPress.Add(s);
+            });          
+        }
+
+        // Subtools
+        foreach (string s in StringUtility.Arr("ShapeSlope", "ShapeSolid", "ShapeHidden", "CloneRow", "CloneCol", "RemoveRow", "RemoveCol", "CloneLayer")) {
+            toolsRoot.Q<Button>(s).RegisterCallback<ClickEvent>((evt) => {
+                if (s.Contains("Shape")) {
+                    ShapeOp = s;
+                }
+                else if (s == "Paint" || s == "Texture") {
+                    StyleOp = s;
+                }
+                else {
+                    MultiOp = s;
+                }
+                toolsRoot.Query(null, "tool-sub-button").ForEach((item) => {
+                    UI.ToggleActiveClass(item, StringUtility.Arr(ShapeOp, MultiOp, StyleOp).ToList().Contains(item.name));
+                });
+                CloseSubtoolFlyouts(new ClickEvent());
+            });
+        }
+
+        // // Shape
+        // toolsRoot.Q<Button>("ChangeShape").RegisterCallback<ClickEvent>((evt) => {
+        //     toolsRoot.Q(s).RegisterCallback<ClickEvent>((evt) => {
+                
+        //     });
+        //     UI.ToggleActiveClass(toolsRoot.Q<Button>("ChangeShape"), true);
+        // });
+        // LongPressChecker(toolsRoot.Q<Button>("ChangeShape"));
+        // foreach (string s in StringUtility.Arr("ShapeSlope", "ShapeSolid", "ShapeHidden")) {
+        //     toolsRoot.Q(s).RegisterCallback<ClickEvent>((evt) => {
+        //         ShapeOp = s;
+        //         toolsRoot.Query(null, "tool-sub-button").ForEach((item) => {
+        //             UI.ToggleActiveClass(item, item.name == s);
+        //         });
+        //         UI.ToggleDisplay(optionsRoot, false);
+        //     });
+        // }
+
+
+    }
+
+    public static void LongPressResult(string claim) {
+        OpenSubtoolFlyout(UI.System.Q("ToolsPanel").Q(claim).Q("Options"));
     }
 
     public static void OptionsSetup() {
-        VisualElement root = UI.System.Q("ToolsPanel");
+        VisualElement toolsRoot = UI.System.Q("ToolsPanel");
+        VisualElement optionsRoot = UI.System.Q("ToolOptions");
 
         // Shape
+        LongPressChecker(toolsRoot.Q<Button>("ChangeShape"));
         foreach (string s in StringUtility.Arr("ShapeSlope", "ShapeSolid", "ShapeHidden")) {
-            root.Q(s).RegisterCallback<ClickEvent>((evt) => {
+            toolsRoot.Q(s).RegisterCallback<ClickEvent>((evt) => {
                 ShapeOp = s;
-                root.Query(null, "tool-sub-button").ForEach((item) => {
+                toolsRoot.Query(null, "tool-sub-button").ForEach((item) => {
                     UI.ToggleActiveClass(item, item.name == s);
                 });
+                UI.ToggleDisplay(optionsRoot, false);
             });
         }
 
         // Multi
         foreach (string s in StringUtility.Arr("CloneRow", "CloneCol", "RemoveRow", "RemoveCol", "AddHeight")) {
-            root.Q(s).RegisterCallback<ClickEvent>((evt) => {
+            toolsRoot.Q(s).RegisterCallback<ClickEvent>((evt) => {
                 MultiOp = s;
-                root.Query(null, "tool-sub-button").ForEach((item) => {
+                toolsRoot.Query(null, "tool-sub-button").ForEach((item) => {
                     UI.ToggleActiveClass(item, item.name == s);
                 });
             });
@@ -52,9 +136,9 @@ public class MapEdit
 
         // Style
         foreach (string s in StringUtility.Arr("Paint", "Texture", "Eraser")) {
-            root.Q(s).RegisterCallback<ClickEvent>((evt) => {
+            toolsRoot.Q(s).RegisterCallback<ClickEvent>((evt) => {
                 StyleOp = s;
-                root.Query(null, "tool-sub-button").ForEach((item) => {
+                toolsRoot.Query(null, "tool-sub-button").ForEach((item) => {
                     UI.ToggleActiveClass(item, item.name == s);
                 });
                 UI.System.Q("ToolOptions").Query(null, "style-option-group").ForEach((item) => {
@@ -74,56 +158,62 @@ public class MapEdit
             });
         }
 
-        // // Data
-        // root.Q("DataOptions").Q("Save").RegisterCallback<ClickEvent>((evt) => {
-        //     OpenSaveModal(new ClickEvent());
-        // });
-        // root.Q("DataOptions").Q("Open").RegisterCallback<ClickEvent>((evt) => {
-        //     OpenOpenModal(new ClickEvent());
-        // });
-        // root.Q("DataOptions").Q("Reset").RegisterCallback<ClickEvent>((evt) => {
-        //     ResetConfirm(new ClickEvent());
-        // });
+        // Data
+        optionsRoot.Q("DataOptions").Q("Save").RegisterCallback<ClickEvent>((evt) => {
+            OpenSaveModal(new ClickEvent());
+        });
+        optionsRoot.Q("DataOptions").Q("Open").RegisterCallback<ClickEvent>((evt) => {
+            OpenOpenModal(new ClickEvent());
+        });
+        optionsRoot.Q("DataOptions").Q("Reset").RegisterCallback<ClickEvent>((evt) => {
+            ResetConfirm(new ClickEvent());
+        });
 
-        // // Environment
-        // root.Q("EnvOptions").Q("LightAngle").RegisterCallback<ChangeEvent<float>>((evt) => {
-        //     TerrainController.LightAngle = evt.newValue;
-        //     TerrainController.UpdateLight();
-        // });
-        // root.Q("EnvOptions").Q("LightHeight").RegisterCallback<ChangeEvent<float>>((evt) => {
-        //     TerrainController.LightHeight = evt.newValue;
-        //     TerrainController.UpdateLight();
-        // });
-        // root.Q("EnvOptions").Q("LightIntensity").RegisterCallback<ChangeEvent<float>>((evt) => {
-        //     TerrainController.LightIntensity = evt.newValue;
-        //     TerrainController.UpdateLight();
-        // });
-        // root.Q("EnvOptions").Q("TopBgColor").RegisterCallback<ClickEvent>((evt) => {
-        //     Modal.Reset("Set Top Background Color");
-        //     Modal.AddColorField("TopBgColor");
-        //     Modal.AddPreferredButton("Close", Modal.CloseEvent);
-        // });
-        // root.Q("EnvOptions").Q("BotBgColor").RegisterCallback<ClickEvent>((evt) => {
-        //     Modal.Reset("Set Bottom Background Color");
-        //     Modal.AddColorField("BotBgColor");
-        //     Modal.AddPreferredButton("Close", Modal.CloseEvent);
-        // });
-        // root.Q("EnvOptions").Q("TopBlockColor").RegisterCallback<ClickEvent>((evt) => {
-        //     Modal.Reset("Set Default Block Top Color");
-        //     Modal.AddColorField("TopBlockColor");
-        //     Modal.AddPreferredButton("Close", Modal.CloseEvent);
-        // });
-        // root.Q("EnvOptions").Q("SideBlockColor").RegisterCallback<ClickEvent>((evt) => {
-        //     Modal.Reset("Set Default Block Side Color");
-        //     Modal.AddColorField("SideBlockColor");
-        //     Modal.AddPreferredButton("Close", Modal.CloseEvent);
-        // });
+        // Environment
+        optionsRoot.Q("EnvOptions").Q("LightAngle").RegisterCallback<ChangeEvent<float>>((evt) => {
+            TerrainController.LightAngle = evt.newValue;
+            TerrainController.UpdateLight();
+        });
+        optionsRoot.Q("EnvOptions").Q("LightHeight").RegisterCallback<ChangeEvent<float>>((evt) => {
+            TerrainController.LightHeight = evt.newValue;
+            TerrainController.UpdateLight();
+        });
+        optionsRoot.Q("EnvOptions").Q("LightIntensity").RegisterCallback<ChangeEvent<float>>((evt) => {
+            TerrainController.LightIntensity = evt.newValue;
+            TerrainController.UpdateLight();
+        });
+        optionsRoot.Q("EnvOptions").Q("TopBgColor").RegisterCallback<ClickEvent>((evt) => {
+            Modal.Reset("Set Top Background Color");
+            Modal.AddColorField("TopBgColor");
+            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+        });
+        optionsRoot.Q("EnvOptions").Q("BotBgColor").RegisterCallback<ClickEvent>((evt) => {
+            Modal.Reset("Set Bottom Background Color");
+            Modal.AddColorField("BotBgColor");
+            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+        });
+        optionsRoot.Q("EnvOptions").Q("TopBlockColor").RegisterCallback<ClickEvent>((evt) => {
+            Modal.Reset("Set Default Block Top Color");
+            Modal.AddColorField("TopBlockColor");
+            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+        });
+        optionsRoot.Q("EnvOptions").Q("SideBlockColor").RegisterCallback<ClickEvent>((evt) => {
+            Modal.Reset("Set Default Block Side Color");
+            Modal.AddColorField("SideBlockColor");
+            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+        });
+    }
 
-        // VisualElement styleSearch = SearchField.Create(StringUtility.Arr("None", "Paint", "Acid Flow", "Acid", "Old Brick", "Brick", "Gray Brick", "White Brick", "Dry Grass", "Grass", "Gold", "Lava Flow", "Lava", "Metal", "Gray Metal", "Poison Flow", "Poison", "Sand", "Snow", "Soil", "Stone", "Small Tile", "Big Tile", "Water Flow", "Water", "Wood", "Old Wood"), "Style Search");
-        // styleSearch.name = "StyleSearch";
-        // styleSearch.style.minWidth = 300;
-        // root.Q("StyleOptions").Add(styleSearch);
-        // styleSearch.BringToFront();
+    public static void LongPressChecker(Button b) {
+        b.clickable.activators.Clear();
+        b.RegisterCallback<MouseDownEvent>((evt) => {
+            LongPress.Add(b.name);
+        });
+        b.RegisterCallback<MouseUpEvent>((evt) => {
+            // if (LongPress.Complete(b.name)) {
+            //     ButtonLongClick(b);
+            // }
+        });
     }
 
     public static void ToggleEditMode(ClickEvent evt) {
@@ -134,6 +224,64 @@ public class MapEdit
             EndEditing();
         }
     }
+
+    private static void RegisterButton(Button button) {
+        // button.RegisterCallback<
+        button.clickable.clickedWithEventInfo += ButtonClick;
+    }
+
+    private static void ButtonClick(EventBase obj) {
+        VisualElement root = UI.System.Q("ToolsPanel");
+        root.Query(null, "tool-button").ForEach((item) => {
+            item.RemoveFromClassList("active");
+        });
+        Button button = (Button)obj.target;
+        button.AddToClassList("active");
+        EditOp = button.name;
+        ButtonActions(button);
+    }
+
+    private static void ButtonLongClick(Button button) {
+        if (StringUtility.Arr("ChangeShape", "MultiBlock", "StyleBlock").ToList().Contains(button.name)) {
+            OpenSubtoolFlyout(button.Q("Options"));
+        }
+    }
+
+    private static void OpenSubtoolFlyout(VisualElement v) {
+        UI.ToggleDisplay("ClickCatcher", true);
+        // Close existing subtool flyouts
+        UI.System.Q("ToolsPanel").Query(null, "subtool-flyout").ForEach((item) => {
+            UI.ToggleDisplay(item, false);
+        });
+        // Show passed-in flyout
+        UI.ToggleDisplay(v, true);
+
+        // Activate relevant subtools
+        UI.System.Q("ToolsPanel").Q(ShapeOp).AddToClassList("active");
+        UI.System.Q("ToolsPanel").Q(MultiOp).AddToClassList("active");
+        UI.System.Q("ToolsPanel").Q(StyleOp).AddToClassList("active");
+    }
+
+    private static void CloseSubtoolFlyouts(ClickEvent evt) {
+        UI.ToggleDisplay("ClickCatcher", false);
+        UI.System.Q("ToolsPanel").Query(null, "subtool-flyout").ForEach((item) => {
+            UI.ToggleDisplay(item, false);
+        });
+    }
+
+    private static void ButtonActions(Button button) {
+        // CloseOptionFlyout(new ClickEvent());
+        // if (StringUtility.Arr("ChangeShape", "MultiBlock", "StyleBlock").ToList().Contains(button.name)) {
+        //     OpenOptionFlyout(button.Q("Options"));
+        // }
+
+        UI.ToggleDisplay("ToolOptions", false);
+        if (StringUtility.Arr("StyleBlock", "Data").ToList().Contains(button.name)) {
+            UI.ToggleDisplay("ToolOptions", true);
+            UI.ToggleDisplay($"{button.name}Options", true);
+        }
+    }
+
 
     private static void StartEditing() {
         UI.ToggleDisplay("ToolsPanel", true);
@@ -301,50 +449,6 @@ public class MapEdit
         }
 
         return mapFiles.ToArray();
-    }
-
-    private static void RegisterButton(Button button) {
-        button.clickable.clickedWithEventInfo += ButtonClick;
-    }
-
-    private static void ButtonClick(EventBase obj) {
-        VisualElement root = UI.System.Q("ToolsPanel");
-        root.Query(null, "tool-button").ForEach((item) => {
-            item.RemoveFromClassList("active");
-        });
-        Button button = (Button)obj.target;
-        button.AddToClassList("active");
-        EditOp = button.name;
-        ButtonActions(button);
-    }
-
-    private static void OpenOptionFlyout(VisualElement v) {
-        UI.ToggleDisplay("ClickCatcher", true);
-        UI.ToggleDisplay(v, true);
-        UI.System.Q("ToolsPanel").Q(ShapeOp).AddToClassList("active");
-        UI.System.Q("ToolsPanel").Q(MultiOp).AddToClassList("active");
-        UI.System.Q("ToolsPanel").Q(StyleOp).AddToClassList("active");
-    }
-
-    private static void CloseOptionFlyout(ClickEvent evt) {
-        UI.ToggleDisplay("ClickCatcher", false);
-        VisualElement root = UI.System.Q("ToolsPanel");
-        root.Query(null, "tool-options").ForEach((item) => {
-            UI.ToggleDisplay(item, false);
-        });
-    }
-
-    private static void ButtonActions(Button button) {
-        CloseOptionFlyout(new ClickEvent());
-        if (StringUtility.Arr("ChangeShape", "MultiBlock", "StyleBlock").ToList().Contains(button.name)) {
-            OpenOptionFlyout(button.Q("Options"));
-        }
-
-        UI.ToggleDisplay("ToolOptions", false);
-        if (StringUtility.Arr("StyleBlock").ToList().Contains(button.name)) {
-            UI.ToggleDisplay("ToolOptions", true);
-            UI.ToggleDisplay($"{button.name}Options", true);
-        }
     }
 
     public static string GetMarkerEffect() {

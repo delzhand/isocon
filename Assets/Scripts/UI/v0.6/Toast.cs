@@ -20,7 +20,7 @@ public class Toast : MonoBehaviour
     {
         label = new Label();
         label.text = Message;     
-            UI.System.Q("Toasts").Add(label);
+        UI.System.Q("Toasts").Add(label);
         UI.System.Q("Toasts").style.display = DisplayStyle.Flex;
     }
 
