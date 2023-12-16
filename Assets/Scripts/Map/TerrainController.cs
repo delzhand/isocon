@@ -65,23 +65,14 @@ public class TerrainController : MonoBehaviour
             case "RotateBlock":
                 RotateBlocks();
                 break;
-            // case "CloneRow":
-            //     CloneRow();
-            //     break;
-            // case "CloneCol":
-            //     CloneColumn();
-            //     break;
-            // case "RemoveRow":
-            //     DeleteRow();
-            //     break;
-            // case "RemoveCol":
-            //     DeleteColumn();
-            //     break;
+            case "ResizeMap":
+                ResizeMap();
+                break;
             case "MultiBlock":
                 MultiBlock();
                 break;
             case "ChangeShape":
-                ChangeType();
+                ChangeShape();
                 break;
             case "AddMark":
                 ChangeEffect(MapEdit.GetMarkerEffect());
@@ -95,18 +86,6 @@ public class TerrainController : MonoBehaviour
             case "StyleBlock":
                 ApplyStyle();
                 break;
-            // case "Paintbrush":
-            //     PaintBlocks();
-            //     break;
-            // case "ArtBrush":
-            //     StyleBlocks();
-            //     break;
-            // case "Unpaint":
-            //     DepaintBlocks();
-            //     break;
-            // case "Eyedropper":
-            //     Eyedropper();
-            //     break;
         }
     }
 
@@ -263,7 +242,7 @@ public class TerrainController : MonoBehaviour
         selected.ForEach(block => {
             if (GridType == "Square") {
                 block.transform.Rotate(0, 90f, 0);
-                if (block.Type == BlockType.Slope) {
+                if (block.Type == BlockShape.Slope) {
                     // counter-rotate indicator
                     block.transform.Find("Indicator").transform.eulerAngles = new Vector3(90, -90, 0);
                 }
@@ -273,6 +252,26 @@ public class TerrainController : MonoBehaviour
             }
         });
 
+    }
+
+    public static void ResizeMap() {
+        switch (MapEdit.ResizeOp) {
+            case "ResizeCloneRow": 
+                CloneRow();
+                break;
+            case "ResizeDeleteRow":
+                DeleteRow();
+                break;
+            case "ResizeCloneCol":
+                CloneColumn();
+                break;
+            case "ResizeDeleteCol":
+                DeleteColumn();
+                break;
+            case "ResizeAddLayer":
+                AddLayer();
+                break;
+        }
     }
 
     public static void PaintBlocks() {
@@ -410,21 +409,36 @@ public class TerrainController : MonoBehaviour
         ReorgNeeded = true;
     }
 
-    public static void ChangeType() {
-        BlockType type = BlockType.Solid;
+    public static void AddLayer() {
+        GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
+        foreach(GameObject column in columns) {
+            GameObject currentTop = TopBlock(column.gameObject);
+            if (currentTop.GetComponent<Block>().Type != BlockShape.Spacer) {
+                GameObject newblock = Instantiate(Resources.Load("Prefabs/Block") as GameObject);                 
+                newblock.transform.parent = currentTop.transform.parent;
+                newblock.transform.localPosition = new Vector3(0, currentTop.transform.localPosition.y + 1, 0);
+                newblock.transform.localScale = currentTop.transform.localScale;
+            }
+        }
+        ReorgNeeded = true;
+    }
+
+    public static void ChangeShape() {
+        BlockShape shape = BlockShape.Solid;
         switch(MapEdit.ShapeOp) {
             case "ShapeSlope":
-                type = BlockType.Slope;
+                shape = BlockShape.Slope;
                 break;
             case "ShapeHidden":
-                type = BlockType.Spacer;
+                shape = BlockShape.Spacer;
                 break;            
         }
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            block.TypeChange(type);
+            block.ShapeChange(shape);
             RotateBlocks();
         });
+        ReorgNeeded = true;
     }
 
     public static void ChangeEffect(string effect) {
@@ -436,14 +450,14 @@ public class TerrainController : MonoBehaviour
 
     public static void ApplyStyle() {
         switch (MapEdit.StyleOp) {
-            case "Paint":
+            case "StylePaint":
                 PaintBlocks();
                 break;
-            case "Texture":
+            case "StyleTexture":
                 string style = UI.System.Q<DropdownField>("BlockTexture").value;
                 StyleBlocks(style);
                 break;
-            case "Erase":
+            case "StyleErase":
                 DepaintBlocks();
                 DestyleBlocks();
                 break;
@@ -531,7 +545,7 @@ public class TerrainController : MonoBehaviour
                 block = focused;
             }
             height = (block.transform.localPosition.y + 1).ToString();
-            if (block.Type == BlockType.Slope) {
+            if (block.Type == BlockShape.Slope) {
                 height = height + ".5";
             }
             coords = Block.GetAlpha(block.getY() + 1) + "" + (block.getX()+1);
@@ -618,7 +632,7 @@ public class TerrainController : MonoBehaviour
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
         for (int i = 0; i < blocks.Length; i++) {
             Block b = blocks[i].GetComponent<Block>();
-            if (b.Type == BlockType.Solid) {
+            if (b.Type == BlockShape.Solid) {
                 count++;
                 solids[b.getX(), b.getY(), b.getZ()] = true;
                 blks[b.getX(), b.getY(), b.getZ()] = b.gameObject;

@@ -247,3 +247,8 @@
 .separator {
     padding: 4px;
 }
+
+.better-dropdown {
+    width: 340px;
+    --unity-metrics-single_line-height: 500px;    
+}

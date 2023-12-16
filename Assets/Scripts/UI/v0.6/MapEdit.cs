@@ -26,6 +26,8 @@ public class MapEdit
 
         UI.System.Q("ClickCatcher").RegisterCallback<ClickEvent>(CloseSubtoolFlyouts);
 
+        OptionsSetup();
+
         toolsRoot.Query(null, "tool").ForEach((tool) => {
             Button toolButton = tool as Button;
             // Clear handler that eats mousedown
@@ -67,11 +69,9 @@ public class MapEdit
             }
         });
 
-        // Subtools
         toolsRoot.Query(null, "subtool").ForEach((tool) => {
             string s = tool.name;
             toolsRoot.Q<Button>(s).RegisterCallback<ClickEvent>((evt) => {
-                Debug.Log(s);
                 if (s.StartsWith("Shape")) {
                     ShapeOp = s;
                     toolsRoot.Q("ChangeShape").Q("Icon").style.backgroundImage = toolsRoot.Q(s).Q("Icon").resolvedStyle.backgroundImage;
@@ -109,101 +109,55 @@ public class MapEdit
         });
     }
 
-    // public static void OptionsSetup() {
-    //     VisualElement toolsRoot = UI.System.Q("ToolsPanel");
-    //     VisualElement optionsRoot = UI.System.Q("ToolOptions");
+    public static void OptionsSetup() {
 
-    //     // Shape
-    //     LongPressChecker(toolsRoot.Q<Button>("ChangeShape"));
-    //     foreach (string s in StringUtility.Arr("ShapeSlope", "ShapeSolid", "ShapeHidden")) {
-    //         toolsRoot.Q(s).RegisterCallback<ClickEvent>((evt) => {
-    //             ShapeOp = s;
-    //             toolsRoot.Query(null, "tool-sub-button").ForEach((item) => {
-    //                 UI.ToggleActiveClass(item, item.name == s);
-    //             });
-    //             UI.ToggleDisplay(optionsRoot, false);
-    //         });
-    //     }
+        VisualElement optionsRoot = UI.System.Q("ToolOptions");
 
-    //     // Multi
-    //     foreach (string s in StringUtility.Arr("CloneRow", "CloneCol", "RemoveRow", "RemoveCol", "AddHeight")) {
-    //         toolsRoot.Q(s).RegisterCallback<ClickEvent>((evt) => {
-    //             ResizeOp = s;
-    //             toolsRoot.Query(null, "tool-sub-button").ForEach((item) => {
-    //                 UI.ToggleActiveClass(item, item.name == s);
-    //             });
-    //         });
-    //     }
+        // Data
+        optionsRoot.Q("DataOptions").Q("Save").RegisterCallback<ClickEvent>((evt) => {
+            OpenSaveModal(new ClickEvent());
+        });
+        optionsRoot.Q("ToolOptions").Q("DataOptions").Q("Open").RegisterCallback<ClickEvent>((evt) => {
+            OpenOpenModal(new ClickEvent());
+        });
+        optionsRoot.Q("ToolOptions").Q("DataOptions").Q("Reset").RegisterCallback<ClickEvent>((evt) => {
+            ResetConfirm(new ClickEvent());
+        });
 
-    //     // Style
-    //     foreach (string s in StringUtility.Arr("Paint", "Texture", "Eraser")) {
-    //         toolsRoot.Q(s).RegisterCallback<ClickEvent>((evt) => {
-    //             StyleOp = s;
-    //             toolsRoot.Query(null, "tool-sub-button").ForEach((item) => {
-    //                 UI.ToggleActiveClass(item, item.name == s);
-    //             });
-    //             UI.System.Q("ToolOptions").Query(null, "style-option-group").ForEach((item) => {
-    //                 UI.ToggleDisplay(item, false);
-    //             });
-    //             if (s == "Paint") {
-    //                 UI.ToggleDisplay("ToolOptions", true);
-    //                 UI.ToggleDisplay("PaintOptions", true);
-    //             }
-    //             if (s == "Texture") {
-    //                 UI.ToggleDisplay("ToolOptions", true);
-    //                 UI.ToggleDisplay("TextureOptions", true);
-    //             }
-    //             if (s == "Eraser") {
-    //                 UI.ToggleDisplay("ToolOptions", false);
-    //             }
-    //         });
-    //     }
-
-    //     // Data
-    //     optionsRoot.Q("DataOptions").Q("Save").RegisterCallback<ClickEvent>((evt) => {
-    //         OpenSaveModal(new ClickEvent());
-    //     });
-    //     optionsRoot.Q("DataOptions").Q("Open").RegisterCallback<ClickEvent>((evt) => {
-    //         OpenOpenModal(new ClickEvent());
-    //     });
-    //     optionsRoot.Q("DataOptions").Q("Reset").RegisterCallback<ClickEvent>((evt) => {
-    //         ResetConfirm(new ClickEvent());
-    //     });
-
-    //     // Environment
-    //     optionsRoot.Q("EnvOptions").Q("LightAngle").RegisterCallback<ChangeEvent<float>>((evt) => {
-    //         TerrainController.LightAngle = evt.newValue;
-    //         TerrainController.UpdateLight();
-    //     });
-    //     optionsRoot.Q("EnvOptions").Q("LightHeight").RegisterCallback<ChangeEvent<float>>((evt) => {
-    //         TerrainController.LightHeight = evt.newValue;
-    //         TerrainController.UpdateLight();
-    //     });
-    //     optionsRoot.Q("EnvOptions").Q("LightIntensity").RegisterCallback<ChangeEvent<float>>((evt) => {
-    //         TerrainController.LightIntensity = evt.newValue;
-    //         TerrainController.UpdateLight();
-    //     });
-    //     optionsRoot.Q("EnvOptions").Q("TopBgColor").RegisterCallback<ClickEvent>((evt) => {
-    //         Modal.Reset("Set Top Background Color");
-    //         Modal.AddColorField("TopBgColor");
-    //         Modal.AddPreferredButton("Close", Modal.CloseEvent);
-    //     });
-    //     optionsRoot.Q("EnvOptions").Q("BotBgColor").RegisterCallback<ClickEvent>((evt) => {
-    //         Modal.Reset("Set Bottom Background Color");
-    //         Modal.AddColorField("BotBgColor");
-    //         Modal.AddPreferredButton("Close", Modal.CloseEvent);
-    //     });
-    //     optionsRoot.Q("EnvOptions").Q("TopBlockColor").RegisterCallback<ClickEvent>((evt) => {
-    //         Modal.Reset("Set Default Block Top Color");
-    //         Modal.AddColorField("TopBlockColor");
-    //         Modal.AddPreferredButton("Close", Modal.CloseEvent);
-    //     });
-    //     optionsRoot.Q("EnvOptions").Q("SideBlockColor").RegisterCallback<ClickEvent>((evt) => {
-    //         Modal.Reset("Set Default Block Side Color");
-    //         Modal.AddColorField("SideBlockColor");
-    //         Modal.AddPreferredButton("Close", Modal.CloseEvent);
-    //     });
-    // }
+        // Environment
+        optionsRoot.Q("EnvironmentOptions").Q("LightAngle").RegisterCallback<ChangeEvent<float>>((evt) => {
+            TerrainController.LightAngle = evt.newValue;
+            TerrainController.UpdateLight();
+        });
+        optionsRoot.Q("EnvironmentOptions").Q("LightHeight").RegisterCallback<ChangeEvent<float>>((evt) => {
+            TerrainController.LightHeight = evt.newValue;
+            TerrainController.UpdateLight();
+        });
+        optionsRoot.Q("EnvironmentOptions").Q("LightIntensity").RegisterCallback<ChangeEvent<float>>((evt) => {
+            TerrainController.LightIntensity = evt.newValue;
+            TerrainController.UpdateLight();
+        });
+        optionsRoot.Q("EnvironmentOptions").Q("TopBgColor").RegisterCallback<ClickEvent>((evt) => {
+            Modal.Reset("Set Top Background Color");
+            Modal.AddColorField("TopBgColor");
+            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+        });
+        optionsRoot.Q("EnvironmentOptions").Q("BotBgColor").RegisterCallback<ClickEvent>((evt) => {
+            Modal.Reset("Set Bottom Background Color");
+            Modal.AddColorField("BotBgColor");
+            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+        });
+        optionsRoot.Q("EnvironmentOptions").Q("TopBlockColor").RegisterCallback<ClickEvent>((evt) => {
+            Modal.Reset("Set Default Block Top Color");
+            Modal.AddColorField("TopBlockColor");
+            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+        });
+        optionsRoot.Q("EnvironmentOptions").Q("SideBlockColor").RegisterCallback<ClickEvent>((evt) => {
+            Modal.Reset("Set Default Block Side Color");
+            Modal.AddColorField("SideBlockColor");
+            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+        });
+    }
 
     private static void OpenSubtoolFlyout(VisualElement v) {
         UI.ToggleDisplay("ClickCatcher", true);

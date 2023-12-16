@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public enum BlockType
+public enum BlockShape
 {
   Solid,
   Slope,
@@ -22,7 +22,7 @@ public class Block : MonoBehaviour
     public bool Focused = false;
     public bool Highlighted = false;
 
-    public BlockType Type = BlockType.Solid;
+    public BlockShape Type = BlockShape.Solid;
     public bool Destroyable = true;
 
     private List<string> effects = new();
@@ -45,13 +45,13 @@ public class Block : MonoBehaviour
         PaintMaterialSide = Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideC"));
         PaintMaterialTop = Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopC"));
         markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));
-        TypeChange(Type);
+        ShapeChange(Type);
     }
 
     void Update()
     {
         GameObject indicator = transform.Find("Indicator").gameObject;
-        if (Type == BlockType.Solid || Type == BlockType.Slope) {
+        if (Type == BlockShape.Solid || Type == BlockShape.Slope) {
             indicator.transform.eulerAngles = new Vector3(90, -90, 0);
             indicator.SetActive(TerrainController.Indicators);
         }
@@ -107,7 +107,7 @@ public class Block : MonoBehaviour
         int y = int.Parse(data[1]);
         float z = float.Parse(data[2]);
         float r = float.Parse(data[3]);
-        BlockType type = (BlockType)Enum.Parse(typeof(BlockType), data[4], true);
+        BlockShape type = (BlockShape)Enum.Parse(typeof(BlockShape), data[4], true);
         bool destroyable = bool.Parse(data[5]);
         string[] markersArray = data[6].Split(",");
         List<string> markers = new List<string>();
@@ -141,7 +141,7 @@ public class Block : MonoBehaviour
         block.transform.localPosition = new Vector3(0, z, 0);
         block.transform.localRotation = Quaternion.Euler(0, r, 0);
         block.GetComponent<Block>().Destroyable = destroyable;
-        block.GetComponent<Block>().TypeChange(type);
+        block.GetComponent<Block>().ShapeChange(type);
         for (int i = 0; i < markers.Count; i++) {
             block.GetComponent<Block>().EffectChange(markers[i]);
         }
@@ -217,24 +217,24 @@ public class Block : MonoBehaviour
         return column;    
     }
 
-    public void TypeChange(BlockType blocktype) {
+    public void ShapeChange(BlockShape blocktype) {
         Type = blocktype;
         Mesh m = null;
         if (TerrainController.GridType == "Square") {
             switch (Type) {
-                case BlockType.Solid:
+                case BlockShape.Solid:
                     m = BlockMesh.Shapes["Block"];
                     transform.localScale = Vector3.one;
                     break;
-                case BlockType.Slope:
+                case BlockShape.Slope:
                     m = BlockMesh.Shapes["Slope"];
                     transform.localScale = Vector3.one;
                     break;
-                case BlockType.Spacer:
+                case BlockShape.Spacer:
                     m = BlockMesh.Shapes["Block"];
                     transform.localScale = new Vector3(.3f, .3f, .3f);
                     break;
-                case BlockType.Hidden:
+                case BlockShape.Hidden:
                     m = BlockMesh.Shapes["Block"];
                     transform.localScale = Vector3.zero;
                     break;
@@ -377,11 +377,11 @@ public class Block : MonoBehaviour
     public static void ToggleSpacers(bool show) {
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
         for(int i = 0; i < blocks.Length; i++) {
-            if (!show && blocks[i].GetComponent<Block>().Type == BlockType.Spacer) {
-                blocks[i].GetComponent<Block>().TypeChange(BlockType.Hidden);
+            if (!show && blocks[i].GetComponent<Block>().Type == BlockShape.Spacer) {
+                blocks[i].GetComponent<Block>().ShapeChange(BlockShape.Hidden);
             }
-            if (show && blocks[i].GetComponent<Block>().Type == BlockType.Hidden) {
-                blocks[i].GetComponent<Block>().TypeChange(BlockType.Spacer);
+            if (show && blocks[i].GetComponent<Block>().Type == BlockShape.Hidden) {
+                blocks[i].GetComponent<Block>().ShapeChange(BlockShape.Spacer);
             }
         }
     }
