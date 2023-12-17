@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using IsoconUILibrary;
+using SimpleJSON;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -14,33 +15,54 @@ public class Maleghast : GameSystem
         return "Maleghast";
     }
 
-    public override string GetTokenData()
+    public override void Setup() {
+        base.Setup();
+
+        // Selected
+        VisualElement selectedPanel = UI.System.Q("SelectedTokenPanel");
+        VisualElement unitPanel = UI.CreateFromTemplate("UITemplates/GameSystem/MaleghastUnitPanel");
+        unitPanel.Q("Type").Q<Label>("Label").text = "TYPE";
+        unitPanel.Q("Defense").Q<Label>("Label").text = "DEFENSE";
+        unitPanel.Q("Move").Q<Label>("Label").text = "MOVE";
+        unitPanel.Q("Armor").Q<Label>("Label").text = "ARMOR";
+        // unitPanel.Q<Button>("AlterVitals").RegisterCallback<ClickEvent>(AlterVitalsModal);
+        // unitPanel.Q<Button>("AddStatus").RegisterCallback<ClickEvent>(AddStatusModal);
+        // unitPanel.Q<Button>("Upgrades").RegisterCallback<ClickEvent>(UpgradesModal);
+        selectedPanel.Q("Data").Add(unitPanel);
+        selectedPanel.Q("ExtraInfo").Add(new Label(){ name = "House" });
+        selectedPanel.Q("ExtraInfo").Add(new Label(){ name = "Job" });
+
+        // Focused
+        VisualElement focusedPanel = UI.System.Q("FocusedTokenPanel");
+        unitPanel = UI.CreateFromTemplate("UITemplates/GameSystem/MaleghastUnitPanel");
+        unitPanel.Q("Type").Q<Label>("Label").text = "TYPE";
+        unitPanel.Q("Defense").Q<Label>("Label").text = "DEFENSE";
+        unitPanel.Q("Move").Q<Label>("Label").text = "MOVE";
+        unitPanel.Q("Armor").Q<Label>("Label").text = "ARMOR";
+        focusedPanel.Q("Data").Add(unitPanel);
+        focusedPanel.Q("ExtraInfo").Add(new Label(){ name = "House" });
+        focusedPanel.Q("ExtraInfo").Add(new Label(){ name = "Job" });
+    }
+
+    public override string GetTokenDataRawJson()
     {
         return MaleghastTokenDataRaw.ToJson();
     }
 
-    public override void TokenDataSetValue(TokenData data, string label, int value)
+    public override void TokenDataSetValue(TokenData data, string value)
     {
-        (data as MaleghastTokenData).Change(label, value);
+        (data as MaleghastTokenData).Change(value);
     }
 
-    public override void TokenDataSetValue(TokenData data, string label, string value)
-    {
-        (data as MaleghastTokenData).Change(label, value);
-    }
-
-    public override void GameDataSetValue(string label, int value) {
-        switch (label) {
-            case "TurnNumber":
-                TurnNumber = value;
-                UI.System.Q<Label>("TurnNumber").text = $"Turn {TurnNumber}";
-                foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
-                    MaleghastTokenData data = g.GetComponent<MaleghastTokenData>();
-                    if (data.CheckCondition("TurnEnded")) {
-                        data.Change("Status", "Turn Ended|neu");
-                    }
-                }
-                break;
+    public override void GameDataSetValue(string value) {
+        FileLogger.Write($"Game system changed - {value}");
+        if (value == "IncrementTurn") {
+            TurnNumber++;
+            UI.System.Q<Label>("TurnNumber").text = TurnNumber.ToString();
+            foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
+                Icon_v1_5TokenData data = g.GetComponent<Icon_v1_5TokenData>();
+                data.Change("LoseStatus|Turn Ended");
+            }
         }
     }
 
@@ -57,103 +79,84 @@ public class Maleghast : GameSystem
         return Instantiate(Resources.Load<GameObject>("Prefabs/MaleghastTokenData"));
     }
 
-    public override void Setup() {
-        AddTokenSetup();
-        EditTokenSetup();
-        SetTypeOptions("C.A.R.C.A.S.S.");
-        UI.ToggleDisplay("Icon1_5TurnInfo", true);
-        UI.ToggleDisplay(UI.System.Q("MaleghastStats"), true);
-        UI.ToggleDisplay(UI.System.Q("MaleghastEditPanel"), true);
-        UI.System.Q<Button>("NewTurnButton").RegisterCallback<ClickEvent>((evt) => {
-            Player.Self().CmdRequestGameDataSetValue("TurnNumber", TurnNumber+1);
-        });
-    }
-
-    public override void Teardown() {
-        AddTokenTeardown();
-        UI.ToggleDisplay(UI.System.Q("MaleghastStats"), false);
-        UI.ToggleDisplay(UI.System.Q("MaleghastEditPanel"), false);
-    }
-
-    private void EditTokenSetup() {
-
-        VisualElement panel = UI.System.Q("MaleghastEditPanel");
-
-        panel.Q<NumberNudger>("e_HP").AddValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "CurrentHP", evt);
-        });
-        panel.Q<NumberNudger>("e_Strength").AddValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Strength", evt);
-        });
-        panel.Q<NumberNudger>("e_Vit").AddValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Vitality", evt);
-        });
-        panel.Q<NumberNudger>("e_Speed").AddValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Speed", evt);
-        });
-        panel.Q<NumberNudger>("e_Soul").AddValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Soul", evt);
-        });
-        panel.Q<Toggle>("e_Loaded").RegisterValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Loaded", evt.newValue ? 1 : 0);
-        });
-    }
-
-    public override void SyncEditValues(TokenData data)
+    public override void UpdateTokenPanel(GameObject data, string elementName)
     {
-        MaleghastTokenData Data = data as MaleghastTokenData;
-        VisualElement root = UI.System.Q("MaleghastEditPanel");
-        root.Q<NumberNudger>("e_HP").SetValueWithoutNotify(Data.CurrentHP);
-        root.Q<NumberNudger>("e_Soul").SetValueWithoutNotify(Data.Soul);
-        root.Q<NumberNudger>("e_Strength").SetValueWithoutNotify(Data.Strength);
-        root.Q<NumberNudger>("e_Speed").SetValueWithoutNotify(Data.Speed);
-        root.Q<NumberNudger>("e_Vit").SetValueWithoutNotify(Data.Vitality);
-        root.Q<Toggle>("e_Loaded").SetValueWithoutNotify(Data.Loaded);
-    }
-
-    public override void UpdateSelectedTokenPanel(GameObject data)
-    {
-        data.GetComponent<MaleghastTokenData>().UpdateSelectedTokenPanel();
-    }
-
-    public override string GetEditPanelName() {
-        return "MaleghastEditPanel";
-    }
-
-    private void AddTokenSetup() {
-        VisualElement root = UI.System.Q("AddTokenSystem").Q("Maleghast");
-        UI.ToggleDisplay(root, true);
-        root.Q<DropdownField>("HouseDropdown").RegisterValueChangedCallback(SetTypeOptions);
-    }
-
-    private void AddTokenTeardown() {
-        foreach(VisualElement child in UI.System.Q("AddTokenSystem").Children()) {
-            UI.ToggleDisplay(child, false);
+        if (data == null) {
+            UI.ToggleDisplay(elementName, false);
+            return;
         }
-        VisualElement root = UI.System.Q("AddTokenSystem");
-        root.Q<DropdownField>("HouseDropdown").UnregisterValueChangedCallback(SetTypeOptions);
+        UI.ToggleDisplay(elementName, true);
+        data.GetComponent<MaleghastTokenData>().UpdateTokenPanel(elementName);
     }
 
-    private void SetTypeOptions(ChangeEvent<string> evt) {
-        SetTypeOptions(evt.newValue);
+    public override string MappedEffectName(string effect) {
+        switch (effect) {
+            case "Blocked":
+                return "Impassable";
+            case "Spiky":
+                return "Hazard";
+            case "Wavy":
+                return "Adverse";
+            default:
+                return effect;
+        }
     }
 
-    private void SetTypeOptions(string house) {
-        List<string> types = GetTypes(house);
-        UI.System.Q<DropdownField>("TypeDropdown").choices = types;
-        UI.System.Q<DropdownField>("TypeDropdown").value = types[0];
+    public override string DeMappedEffectName(string effect) {
+        switch (effect) {
+            case "Impassable":
+                return "Blocked";
+            case "Hazard":
+                return "Spiky";
+            case "Adverse":
+                return "Wavy";
+            default:
+                return effect;
+        }
     }
 
-    private List<string> GetTypes(string house) {
-        return house switch
-        {
-            "C.A.R.C.A.S.S." => new string[] {"Gunwight/Thrall", "Enforcer/Scion", "Ammo Goblin/Freak", "Barrelform/Hunter", "EGIS Weapon/Tyrant", "Operator/Necromancer"}.ToList(),
-            "Goregrinders" => new string[] {"Warhead/Thrall", "Carnifex/Scion", "Painghoul/Freak", "Painwheel/Horror", "Berserker/Tyrant", "Warlord/Necromancer"}.ToList(),
-            "Gargamox" => new string[] {"Scum/Thrall", "Rotten/Scion", "Leech/Freak", "Host/Hunter", "Slime/Horror", "Plaguelord/Necromancer"}.ToList(),
-            "Deadsouls" => new string[] {"Sacrifice/Thrall", "Chosen/Scion", "Vizigheist/Horror", "Banshee/Hunter", "Bound Devil/Tyrant", "Dark Priest/Necromancer"}.ToList(),
-            "Abhorrers" => new string[] {"Penitent/Scion", "Zealot/Horror", "Antipriest/Freak", "Inquisitor/Hunter", "Holy Body/Tyrant", "Exorcist/Necromancer"}.ToList(),
-            "Igorri" => new string[] {"Stitch/Thrall", "Chop Doc/Freak", "Lycan/Horror", "Strigoi/Hunter", "Homonculus/Tyrant", "Chirurgeon/Necromancer"}.ToList(),
-            _ => new string[] { }.ToList(),
-        };
+    public override string[] GetEffectList() {
+        return new string[]{"Adverse", "Hazard", "Impassable"};
     }
+
+    public override void CreateToken()
+    {
+        string json = GetTokenDataRawJson();
+        Debug.Log(json);
+
+        base.CreateToken();
+    }
+
+    public override void AddTokenModal()
+    {
+        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
+        List<string> units = new();
+        foreach (JSONNode house in gamedata["Maleghast"]["Houses"].AsArray) {
+            foreach (JSONNode unit in house["units"].AsArray) {
+                string houseJob = $"{ house["name"] }/{ unit["name"] }";
+                units.Add(houseJob.Replace("\"", ""));
+            }
+        }
+
+        base.AddTokenModal();
+
+        Modal.AddSearchField("UnitType", "Unit Type", "", units.ToArray());
+    }
+
+    // private static void UpgradesModal(ClickEvent evt) {
+    //     Modal.Reset("Upgrades");
+    //     MaleghastTokenData data = Token.GetSelectedData().GetComponent<TokenData>() as MaleghastTokenData;
+    //     Modal.AddLabel("Traits", "");
+    //     foreach (string s in data.Traits) {
+    //         if (s.EndsWith("|0")) {
+    //             string name = s.Replace("|0", "");
+    //             Modal.AddToggleField(name, name, false, (evt) => {
+
+    //             });
+    //         }
+    //     }
+    //     Modal.AddToggleField()
+    //     Modal.AddPreferredButton("Confirm", Modal.CloseEvent);
+
+    // }
 }

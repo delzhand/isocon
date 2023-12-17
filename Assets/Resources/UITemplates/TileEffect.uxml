@@ -1,6 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:VisualElement name="TileEffect" class="effect">
-        <ui:Label tabindex="-1" text="Dangerous" display-tooltip-when-elided="true" name="Label" />
-        <ui:Button text="X" display-tooltip-when-elided="true" name="RemoveButton" />
-    </ui:VisualElement>
-</ui:UXML>

@@ -10,14 +10,13 @@ using UnityEngine.UIElements;
 public class State
 {
     public string Version;
-    public Palette Palette; // Deprecated
-    public BackgroundGradient Background; // Deprecated
-
-    public string Color1; // Tile tops
-    public string Color2; // Tile sides
-    public string Color3; // Background bottom
-    public string Color4; // Background Top
-
+    public string TileTops;
+    public string TileSides;
+    public string BgBottom;
+    public string BgTop;
+    public float LightIntensity;
+    public float LightAngle;
+    public float LightHeight;
     public string[] Blocks;
 
     public static string CurrentStateJson;
@@ -46,26 +45,34 @@ public class State
         List<string> blockStrings = new List<string>();
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
         for (int i = 0; i < blocks.Length; i++) {
-            blockStrings.Add(blocks[i].GetComponent<Block>().ToString());
+            blockStrings.Add(blocks[i].GetComponent<Block>().WriteOut());
         }
         State state = new State();
         state.Version = "v1";
-        state.Color1 = ColorSidebar.ColorToHex(Environment.Color1);
-        state.Color2 = ColorSidebar.ColorToHex(Environment.Color2);
-        state.Color3 = ColorSidebar.ColorToHex(Environment.Color3);
-        state.Color4 = ColorSidebar.ColorToHex(Environment.Color4);
+        state.TileTops = ColorUtility.ColorToHex(Environment.TileTopColor);
+        state.TileSides = ColorUtility.ColorToHex(Environment.TileSideColor);
+        state.BgBottom = ColorUtility.ColorToHex(Environment.BgBottomColor);
+        state.BgTop = ColorUtility.ColorToHex(Environment.BgTopColor);
+        state.LightAngle = TerrainController.LightAngle;
+        state.LightHeight = TerrainController.LightHeight;
+        state.LightIntensity = TerrainController.LightIntensity;
         state.Blocks = blockStrings.ToArray();
         return state;
     }
 
     public static void SetSceneFromState(State state) {
         TerrainController.DestroyAllBlocks();
-        Environment.SetTileColors(ColorSidebar.FromHex(state.Color1), ColorSidebar.FromHex(state.Color2));
-        Environment.SetBackgroundColors(ColorSidebar.FromHex(state.Color3), ColorSidebar.FromHex(state.Color4));
+        Environment.SetTileColors(ColorUtility.ColorFromHex(state.TileTops), ColorUtility.ColorFromHex(state.TileSides));
+        Environment.SetBackgroundColors(ColorUtility.ColorFromHex(state.BgBottom), ColorUtility.ColorFromHex(state.BgTop));
         foreach (string s in state.Blocks) {
-            Block.FromString(state.Version, s);
+            Block.ReadIn(state.Version, s);
         }
+        TerrainController.LightAngle = state.LightAngle;
+        TerrainController.LightHeight = state.LightHeight;
+        TerrainController.LightIntensity = state.LightIntensity;
+        TerrainController.UpdateLight();
         TerrainController.ReorgNeeded = true;
+        TerrainController.MapDirty = false;
     }
 
     public static void SetCurrentJson() {

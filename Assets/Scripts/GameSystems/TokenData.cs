@@ -6,6 +6,13 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 
+[System.Serializable]
+public class TokenDataRaw {
+    public string Name;
+    public string GraphicHash;
+    public int Size;
+}
+
 public class TokenData : NetworkBehaviour
 {
     public string Id;
@@ -23,9 +30,15 @@ public class TokenData : NetworkBehaviour
     public bool OnField;
 
     public GameObject TokenObject;
-    public VisualElement Element;
-    public VisualElement overhead;
+    public VisualElement UnitBarElement;
+    public VisualElement OverheadElement;
+    public VisualElement ConditionsElement;
+    public bool RedrawConditionsElement = false;
+
     public Texture2D Graphic;
+
+    public static bool MouseOverUnitBarElement = false;
+    public Dictionary<string, StatusEffect> Conditions = new();
 
     private bool initialized = false;
     private float awaitingGraphicSync = 0;
@@ -35,8 +48,8 @@ public class TokenData : NetworkBehaviour
     }
 
     public void Disconnect() {
-        UI.System.Q("UnitBar").Remove(Element);
-        UI.System.Q("Worldspace").Remove(overhead);
+        UI.System.Q("UnitBar").Remove(UnitBarElement);
+        UI.System.Q("Worldspace").Remove(OverheadElement);
         Destroy(TokenObject);
         initialized = false;
     }
@@ -63,7 +76,7 @@ public class TokenData : NetworkBehaviour
             Graphic = TextureSender.LoadImageFromFile(GraphicHash, true);
             if (Graphic) {
                 CreateWorldToken();
-                CreateUnitBarItem();
+                CreateUI();
                 CreateOverhead();
             }
             else {
@@ -76,19 +89,35 @@ public class TokenData : NetworkBehaviour
             TokenObject.transform.position = transform.position;
             TokenObject.transform.localScale = OnField ? Vector3.one : Vector3.zero;
         }
-        if (overhead != null) {
+        if (OverheadElement != null) {
             UpdateOverheadScreenPosition();
-            UpdateUIData();
-            overhead.style.display = (OnField ? DisplayStyle.Flex : DisplayStyle.None);
+            UpdateOverheadValues();
+            OverheadElement.style.display = (OnField ? DisplayStyle.Flex : DisplayStyle.None);
         }
 
     }
 
     public virtual bool NeedsSetup() {
+        // To return true, choose a required value with an invalid value
+        // MaxHP == 0 will usually work (unless HP-less objects are possible...)
         return false;
     }
 
-    public virtual void UpdateUIData() {
+    public virtual void UpdateTokenPanel(string elementName) {
+        VisualElement panel = UI.System.Q(elementName);
+        panel.Q("Portrait").style.backgroundImage = Graphic;
+        panel.Q<Label>("Name").text = Name;
+    }
+
+    public void Select() {
+        RedrawConditionsElement = true;
+    }
+
+    public void Focus() {
+        RedrawConditionsElement = true;
+    }
+
+    public virtual void UpdateOverheadValues() {
     }
 
     public virtual void TokenDataSetup(string json, string id) {
@@ -109,25 +138,28 @@ public class TokenData : NetworkBehaviour
         token.onlineDataObject = gameObject;
 
         int size = GetSize();
+        if (size == 1) {
+            TokenObject.GetComponent<Token>().Size = 1;
+            TokenObject.transform.Find("Offset").transform.localScale = new Vector3(1, 1, 1);
+            TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(.7f, .7f, 4);
+        }
         if (size == 2) {
             TokenObject.GetComponent<Token>().Size = 2;
-            TokenObject.transform.Find("Offset").transform.localPosition += new Vector3(0, 0, -.73f);
-            TokenObject.transform.Find("Base").transform.localPosition += new Vector3(0, 0, -.73f);
             TokenObject.transform.Find("Offset").transform.localScale = new Vector3(2, 2, 2);
-            TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2, 2, 4);
+            TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2*.7f, 2*.7f, 4);
         }
         else if (size == 3) {
             TokenObject.GetComponent<Token>().Size = 3;
             TokenObject.transform.Find("Offset").transform.localScale = new Vector3(3, 3, 3);
-            TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(3, 3, 4);
+            TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(3*.7f, 3*.7f, 4);
         }        
     }
 
-    public virtual void CreateUnitBarItem() {
+    public virtual void CreateUI() {
         // Create the element in the UI
         VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/UnitTemplate");
-        Element = template.Instantiate();
-        Element.style.display = DisplayStyle.Flex;
+        UnitBarElement = template.Instantiate();
+        UnitBarElement.style.display = DisplayStyle.Flex;
 
         // Set the UI portrait
         float height = 60;
@@ -138,41 +170,42 @@ public class TokenData : NetworkBehaviour
         else {
             width *= (Graphic.width/(float)Graphic.height);
         }
-        Element.Q("Portrait").style.backgroundImage = Graphic;
-        Element.Q("Portrait").style.width = width;
-        Element.Q("Portrait").style.height = height;
+        UnitBarElement.Q("Portrait").style.backgroundImage = Graphic;
+        UnitBarElement.Q("Portrait").style.width = width;
+        UnitBarElement.Q("Portrait").style.height = height;
 
-        Element.RegisterCallback<ClickEvent>((evt) => {
-            Token t = TokenObject.GetComponent<Token>();
-            TokenController.TokenClick(t);
+        Token t = TokenObject.GetComponent<Token>();
+        UnitBarElement.RegisterCallback<ClickEvent>((evt) => {
+            t.LeftClick();
+            t.Focus();
+        });
+        UnitBarElement.RegisterCallback<MouseEnterEvent>((evt) => {
+            MouseOverUnitBarElement = true;
+            t.Focus();
+        });
+        UnitBarElement.RegisterCallback<MouseLeaveEvent>((evt) => {
+            MouseOverUnitBarElement = false;
+            t.Unfocus();
         });
 
         // Add it to the UI
-        UI.System.Q("UnitBar").Add(Element);
+        UI.System.Q("UnitBar").Add(UnitBarElement);
     }
 
     public virtual void CreateOverhead() {
-        VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/Overhead");
+        VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/GameSystem/SimpleOverhead");
         VisualElement instance = template.Instantiate();
-        overhead = instance.Q("Overhead");
-        overhead.Q<VisualElement>("Color").style.display = DisplayStyle.None;
-        overhead.Q<VisualElement>("Elite").style.display = DisplayStyle.None;
-        UI.System.Q("Worldspace").Add(overhead);
+        OverheadElement = instance.Q("Overhead");
+        UI.System.Q("Worldspace").Add(OverheadElement);
     }
 
     public virtual int GetSize() {
         return 1;
     }
 
-    private void DestroyOverhead() {
-        if (overhead != null) {
-            UI.System.Remove(overhead);
-        }
-    }
-
     private void UpdateOverheadScreenPosition() {
-        overhead.style.display = DisplayStyle.Flex;
-        UI.FollowToken(TokenObject.GetComponent<Token>(), overhead, Camera.main, Vector2.zero, true);
+        OverheadElement.style.display = DisplayStyle.Flex;
+        UI.FollowToken(TokenObject.GetComponent<Token>(), OverheadElement, Camera.main, Vector2.zero, true);
     }
 
     public virtual bool CheckCondition(string label) {
@@ -183,16 +216,72 @@ public class TokenData : NetworkBehaviour
         foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
             TokenData t = g.GetComponent<TokenData>();
             if (t.Id == id) {
-                UI.System.Q("UnitBar").Remove(t.Element);
-                UI.System.Q("Worldspace").Remove(t.overhead);
+                UI.System.Q("UnitBar").Remove(t.UnitBarElement);
+                UI.System.Q("Worldspace").Remove(t.OverheadElement);
                 Destroy(t.TokenObject);
                 Destroy(t);
                 Destroy(g);
-                TokenController.Deselect();
-
-
+                // TokenController.Deselect();
             }
         }
 
     }
+
+    public virtual void Change(string value) {
+    }
+
+    protected void RedrawConditions() {
+        Debug.Log($"Redraw conditions for { Name }");
+        RedrawConditionsElement = true;
+        ConditionsElement.Clear();
+        foreach(KeyValuePair<string, StatusEffect> item in Conditions) {
+            VisualElement e = UI.CreateFromTemplate("UITemplates/GameSystem/ConditionTemplate");
+            e.Q<Label>("Name").text = item.Key;
+            Color c = Color.black;
+            switch (item.Value.Color) {
+                case "Gray":
+                    c = ColorUtility.ColorFromHex("7b7b7b");
+                    break;
+                case "Green":
+                    c = ColorUtility.ColorFromHex("248d2e");
+                    break;
+                case "Red":
+                    c = ColorUtility.ColorFromHex("8d2424");
+                    break;
+                case "Blue":
+                    c = ColorUtility.ColorFromHex("24448d");
+                    break;
+                case "Purple":
+                    c = ColorUtility.ColorFromHex("5c159f");
+                    break;
+                case "Yellow":
+                    c = ColorUtility.ColorFromHex("887708");
+                    break;
+                case "Orange":
+                    c = ColorUtility.ColorFromHex("a57519");
+                    break;
+            }
+            e.Q("Wrapper").style.backgroundColor = c;
+            if (item.Value.Type == "Number") {
+                e.Q<Label>("Name").text = $"{item.Key} {item.Value.Number}";
+                e.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) => {
+                    Player.Self().CmdRequestTokenDataSetValue(this, $"IncrementStatus|{ item.Key }");
+                });
+                e.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) => {
+                    Player.Self().CmdRequestTokenDataSetValue(this, $"DecrementStatus|{ item.Key }");
+                });
+            }
+            else {
+                UI.ToggleDisplay(e.Q("Increment"), false);
+                UI.ToggleDisplay(e.Q("Decrement"), false);
+            }
+            e.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) => {
+                Player.Self().CmdRequestTokenDataSetValue(this, $"LoseStatus|{ item.Key }");
+            });
+            if (item.Value.Locked) {
+                UI.ToggleDisplay(e.Q("Remove"), false);
+            }
+            ConditionsElement.Add(e);
+        }
+    }    
 }

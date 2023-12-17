@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Styles/Overhead.uss?fileID=7433441132597879392&amp;guid=db9f5488cbd5b104699c060ac772337b&amp;type=3#Overhead" />
+    <ui:VisualElement name="Overhead" class="token" style="translate: -50% -50%; height: 7px; width: 60px;">
+        <ui:ProgressBar value="3.09" high-value="24" name="HpBar" />
+    </ui:VisualElement>
+</ui:UXML>

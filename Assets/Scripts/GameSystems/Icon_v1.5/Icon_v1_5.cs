@@ -6,52 +6,67 @@ using System.Linq;
 using System;
 using System.Data.Common;
 using IsoconUILibrary;
+using SimpleJSON;
 
 public class Icon_v1_5 : GameSystem
 {
-    public int TurnNumber = 1;
-    public int PartyResolve = 0;
-
+    public static int TurnNumber = 1;
+    public static int PartyResolve = 0;
 
     public override string SystemName()
     {
         return "ICON 1.5";
     }
 
-    public override string GetTokenData() {
+    public override void Setup()
+    {
+        base.Setup();
+
+        // Selected
+        VisualElement selectedPanel = UI.System.Q("SelectedTokenPanel");
+        VisualElement unitPanel = UI.CreateFromTemplate("UITemplates/GameSystem/IconUnitPanel");
+        unitPanel.Q("Damage").Q<Label>("Label").text = "DMG/FRAY";
+        unitPanel.Q("Range").Q<Label>("Label").text = "RNG";
+        unitPanel.Q("Speed").Q<Label>("Label").text = "SPD/DASH";
+        unitPanel.Q("Defense").Q<Label>("Label").text = "DEF";
+        unitPanel.Q<Button>("AlterVitals").RegisterCallback<ClickEvent>(AlterVitalsModal);
+        unitPanel.Q<Button>("AddStatus").RegisterCallback<ClickEvent>(AddStatusModal);
+        selectedPanel.Q("Data").Add(unitPanel);
+        selectedPanel.Q("ExtraInfo").Add(new Label(){ name = "Class" });
+        selectedPanel.Q("ExtraInfo").Add(new Label(){ name = "Job" });
+        selectedPanel.Q("ExtraInfo").Add(new Label(){ name = "Elite", text = "Elite" });
+
+        // Focused
+        VisualElement focusedPanel = UI.System.Q("FocusedTokenPanel");
+        unitPanel = UI.CreateFromTemplate("UITemplates/GameSystem/IconUnitPanel");
+        unitPanel.Q("Damage").Q<Label>("Label").text = "DMG/FRAY";
+        unitPanel.Q("Range").Q<Label>("Label").text = "RNG";
+        unitPanel.Q("Speed").Q<Label>("Label").text = "SPD/DASH";
+        unitPanel.Q("Defense").Q<Label>("Label").text = "DEF";
+        focusedPanel.Q("Data").Add(unitPanel);
+        focusedPanel.Q("ExtraInfo").Add(new Label(){ name = "Class" });
+        focusedPanel.Q("ExtraInfo").Add(new Label(){ name = "Job" });
+        focusedPanel.Q("ExtraInfo").Add(new Label(){ name = "Elite", text = "Elite" });
+    }
+
+    public override string GetTokenDataRawJson() {
         return Icon_v1_5TokenDataRaw.ToJson();
     }
 
-    public override void TokenDataSetValue(TokenData data, string label, int value)
-    {
-        (data as Icon_v1_5TokenData).Change(label, value);
-    }
-
-    public override void TokenDataSetValue(TokenData data, string label, string value)
-    {
-        (data as Icon_v1_5TokenData).Change(label, value);
-    }
-
-    public override void GameDataSetValue(string label, int value) {
-        switch (label) {
-            case "TurnNumber":
-                TurnNumber = value;
-                UI.System.Q<Label>("TurnNumber").text = $"Turn {TurnNumber}";
-                foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
-                    Icon_v1_5TokenData data = g.GetComponent<Icon_v1_5TokenData>();
-                    if (data.CheckCondition("TurnEnded")) {
-                        data.Change("Status", "Turn Ended|neu");
-                    }
-                }
-                break;
-            case "PartyResolve":
-                PartyResolve = value;
-                Token selected = TokenController.GetSelected();
-                if (selected != null) {
-                    TokenData selectedData = selected.onlineDataObject.GetComponent<TokenData>();
-                    Player.Self().CmdRequestTokenDataSetValue(selectedData, "PartyResolve", PartyResolve);
-                }
-                break;
+    public override void GameDataSetValue(string value) {
+        FileLogger.Write($"Game system changed - {value}");
+        if (value == "IncrementTurn") {
+            TurnNumber++;
+            PartyResolve++;
+            UI.System.Q<Label>("TurnNumber").text = TurnNumber.ToString();
+            foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
+                Icon_v1_5TokenData data = g.GetComponent<Icon_v1_5TokenData>();
+                data.Change("LoseStatus|Turn Ended");
+            }
+        }
+        if (value.StartsWith("GainPRES")) {
+            int diff = int.Parse(value.Split("|")[1]);
+            PartyResolve+=diff;
         }
     }
 
@@ -68,213 +83,229 @@ public class Icon_v1_5 : GameSystem
         return Instantiate(Resources.Load<GameObject>("Prefabs/Icon_v1_5TokenData"));
     }
 
-    public override void Setup() {
-        AddTokenSetup();
-        EditTokenSetup();
-        SetJobOptions("Stalwart");
-        UI.ToggleDisplay("Icon1_5TurnInfo", true);
-        UI.ToggleDisplay("AlterHPMenuItem", true);
-        UI.ToggleDisplay(UI.System.Q("IconV1_5Stats"), true);
-        UI.System.Q<Button>("NewTurnButton").RegisterCallback<ClickEvent>((evt) => {
-            Player.Self().CmdRequestGameDataSetValue("TurnNumber", TurnNumber+1);
-            Player.Self().CmdRequestGameDataSetValue("PartyResolve", PartyResolve+1);
-        });
-    }
-
-    public override void Teardown() {
-        AddTokenTeardown();
-        UI.ToggleDisplay(UI.System.Q("Icon1_5EditPanel"), false);
-        UI.ToggleDisplay(UI.System.Q("IconV1_5Stats"), false);
-        UI.ToggleDisplay("AlterHPMenuItem", false);
-    }
-
-    public override void SyncEditValues(TokenData data)
+    public override void UpdateTokenPanel(GameObject data, string elementName)
     {
-        Icon_v1_5TokenData Data = data as Icon_v1_5TokenData;
-        UI.System.Q<Label>("e_CurrentHP").text = $"{Data.CurrentHP}";
-        UI.System.Q<SliderInt>("e_CurrentHPSlider").highValue = Data.MaxHP;
-        UI.System.Q<SliderInt>("e_CurrentHPSlider").value = Data.CurrentHP;
-
-        UI.System.Q<Label>("e_Vigor").text = $"{Data.Vigor}";
-        UI.System.Q<SliderInt>("e_VigorSlider").highValue = Data.MaxHP;
-        UI.System.Q<SliderInt>("e_VigorSlider").value = Data.Vigor;
-
-        UI.System.Q<NumberNudger>("e_Wounds").SetValueWithoutNotify(Data.Wounds);
-        UI.System.Q<NumberNudger>("e_Resolve").SetValueWithoutNotify(Data.Resolve);
-        UI.System.Q<NumberNudger>("e_PartyResolve").SetValueWithoutNotify((GameSystem.Current() as Icon_v1_5).PartyResolve);
-        UI.System.Q<NumberNudger>("e_Aether").SetValueWithoutNotify(Data.Aether);
-        UI.System.Q<NumberNudger>("e_Vigilance").SetValueWithoutNotify(Data.Vigilance);
-        UI.System.Q<NumberNudger>("e_Blessings").SetValueWithoutNotify(Data.Blessings);
-
-        UI.System.Q<Toggle>("e_StackedDie").SetValueWithoutNotify(Data.StatusesToString().Contains("Stacked Die"));
-        UI.System.Q<TextField>("e_Marked").SetValueWithoutNotify(Data.Marked);
-        UI.System.Q<TextField>("e_Marked").SetValueWithoutNotify(Data.Hatred);
-        UI.System.Q<DropdownField>("e_Stance").SetValueWithoutNotify(Data.Stance);
-    }
-
-    public override void UpdateSelectedTokenPanel(GameObject data)
-    {
-        data.GetComponent<Icon_v1_5TokenData>().UpdateSelectedTokenPanel();
-    }
-
-    public override string GetEditPanelName()
-    {
-        return "Icon1_5EditPanel";
-    }
-
-    private void AddTokenSetup() {
-        VisualElement root = UI.System.Q("AddTokenSystem").Q("Icon_v1_5");
-        UI.ToggleDisplay(root, true);
-        List<string> classes = GetClasses();
-        root.Q<DropdownField>("ClassDropdown").choices = classes;
-        root.Q<DropdownField>("ClassDropdown").value = classes[0];
-        root.Q<DropdownField>("ClassDropdown").RegisterValueChangedCallback(SetJobOptions);
-    }
-
-    private void AddTokenTeardown() {
-        foreach(VisualElement child in UI.System.Q("AddTokenSystem").Children()) {
-            UI.ToggleDisplay(child, false);
+        if (data == null) {
+            UI.ToggleDisplay(elementName, false);
+            return;
         }
-        VisualElement root = UI.System.Q("AddTokenSystem");
-        root.Q<DropdownField>("ClassDropdown").UnregisterValueChangedCallback(SetJobOptions);
+        UI.ToggleDisplay(elementName, true);
+        data.GetComponent<Icon_v1_5TokenData>().UpdateTokenPanel(elementName);
     }
 
-    private void EditTokenSetup() {
+    public override string MappedEffectName(string effect) {
+        switch (effect) {
+            case "Blocked":
+                return "Impassable";
+            case "Spiky":
+                return "Dangerous";
+            case "Wavy":
+                return "Difficult";
+            case "Hand":
+                return "Interactive";
+            case "Hole":
+                return "Pit";
+            default:
+                return effect;
+        }
+    }
 
-        VisualElement panel = UI.System.Q("Icon1_5EditPanel");
+    // public override string[] GetEffectList() {
+    //     return new string[]{"Difficult", "Pit", "Dangerous", "Impassable", "Interactive", "Demon Slayer/Flash Step - Afterimage", "Demon Slayer/Six Hells Trigram", "Demon Slayer/Heroic Six Hells Trigram", "Fool/Party Favor", "Freelancer/Showdown - Quench", "Freelancer/Warding Bolts", "Shade/Shadow Cloud (Blinded+ exc Caster)", "Harvester/Plant", "Harvester/Blood Grove", "Harvester/Mote of Life (Blessing))", "Harvester/Mote of Life (Regen)", "Spellblade/Lightning Spike 1", "Spellblade/Lightning Spike 2", "Spellblade/Lightning Spike 3", "Spellblade/Lightning Spike 4", "Spellblade/Lightning Spike 5", "Spellblade/Lightning Spike 6", "Stormbender/Selkie", "Stormbender/Salt Sprite", "Stormbender/Pit", "Stormbender/Tsunami", "Stormbender/Tsunami - Stormlash", "Stormbender/Dangerous", "Stormbender/Geyser I", "Stormbender/Gust", "Stormbender/Gust I", "Stormbender/Gust II", "Stormbender/Waterspout", "Stormbender/Waterspout - Hurricane", "Stormbender/Waterspout I", "Stormbender/Waterspout I - Hurricane", "Stormbender/Waterspout II", "Stormbender/Waterspout II - Hurricane"};
+    // }
+
+    // public override bool HasEffect(string search, List<string> effects)
+    // {
+    //     switch (search) {
+    //         case "Blocked":
+    //             return effects.Contains("Impassable");
+    //         case "Spiky":
+    //             return effects.Contains("Dangerous");
+    //         case "Wavy":
+    //             return effects.Contains("Difficult");
+    //         case "Hand":
+    //             return effects.Contains("Interactive");
+    //         case "Hole":
+    //             return effects.Contains("Pit");
+    //         default:
+    //             return false;
+    //     }
+    // }
+
+    // public override bool HasCustomEffect(List<string> effects)
+    // {
+    //     List<string> specialEffects = new string[]{"Impassable", "Dangerous", "Difficult", "Interactive", "Pit"}.ToList();
+    //     foreach (string s in effects) {
+    //         if (!specialEffects.Contains(s)) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
+
+    public override void AddTokenModal()
+    {
+        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
+        List<string> playerJobs = new();
+        foreach (JSONNode pjob in gamedata["Icon1_5"]["PlayerJobs"].AsArray) {
+            playerJobs.Add(pjob);
+        }
+        List<string> foeClasses = new();
+        foreach (JSONNode fclass in gamedata["Icon1_5"]["FoeClasses"].AsArray) {
+            foeClasses.Add(fclass);
+        }
+
+        base.AddTokenModal();
+
+        Modal.AddDropdownField("Type", "Type", "Player", new string[]{"Player", "Foe", "Object"}, (evt) => AddTokenModalEvaluateConditions());
+
+        Modal.AddSearchField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs.ToArray());
+
+        Modal.AddDropdownField("FoeClass", "Class", foeClasses[0], foeClasses.ToArray(), (evt) => AddTokenModalEvaluateConditions());
+
+        Modal.AddTextField("FoeJob", "Job", "");
+
+        Modal.AddToggleField("Elite", "Elite", false);
+
+        Modal.AddDropdownField("LegendHP", "Legend HP Multiplier", "x4", new string[]{"x2", "x3", "x4", "x5", "x6", "x7", "x8"});
+
+        Modal.AddDropdownField("Size", "Size", "1x1", new string[]{"1x1", "2x2", "3x3"});
+
+        Modal.AddIntField("ObjectHP", "Object HP", 1);
+
+        Modal.AddIntField("CloneCount", "Clone Count", 1);
+
+        AddTokenModalEvaluateConditions();
+    }
+
+    public override void CreateToken()
+    {
+        string json = GetTokenDataRawJson();
+        FileLogger.Write($"Token added: {json}");
+        if (UI.Modal.Q<DropdownField>("Type").value == "Object" || UI.Modal.Q<DropdownField>("FoeClass").value == "Mob") {
+            int count = UI.Modal.Q<IntegerField>("CloneCount").value;
+            for(int i = 0; i < count; i++) {
+                Player.Self().CmdCreateTokenData(json);
+            }
+        }
+        else {
+            Player.Self().CmdCreateTokenData(json);
+        }
+    }
+
+    private static void AddTokenModalEvaluateConditions() {
+        bool playerJob = UI.Modal.Q<DropdownField>("Type").value == "Player";
+        bool foeClass = UI.Modal.Q<DropdownField>("Type").value == "Foe";
+        bool foeJob = UI.Modal.Q<DropdownField>("Type").value == "Foe";
+        bool elite = foeClass && !StringUtility.InList(UI.Modal.Q<DropdownField>("FoeClass").value, "Legend", "Mob");
+        bool legendHP = foeClass && UI.Modal.Q<DropdownField>("FoeClass").value == "Legend";
+        bool size = foeClass;
+        bool objectHP = UI.Modal.Q<DropdownField>("Type").value == "Object";
+        bool cloneCount = UI.Modal.Q<DropdownField>("Type").value == "Object" || UI.Modal.Q<DropdownField>("FoeClass").value == "Mob";
+
+        UI.ToggleDisplay(UI.Modal.Q("PlayerJob"), playerJob);
+        UI.ToggleDisplay(UI.Modal.Q("FoeClass"), foeClass);
+        UI.ToggleDisplay(UI.Modal.Q("FoeJob"), foeJob);
+        UI.ToggleDisplay(UI.Modal.Q("Elite"), elite);
+        UI.ToggleDisplay(UI.Modal.Q("LegendHP"), legendHP);
+        UI.ToggleDisplay(UI.Modal.Q("Size"), size);
+        UI.ToggleDisplay(UI.Modal.Q("ObjectHP"), objectHP);
+        UI.ToggleDisplay(UI.Modal.Q("CloneCount"), cloneCount);
+    }
+
+    private static void AlterVitalsModal(ClickEvent evt) {
+        Modal.Reset("Alter Vitals");
+        Modal.AddIntField("Number", "Value", 0);
+        Modal.AddContentButton("Damage HP/VIG", (evt) => AlterVitals("Damage"));
+        Modal.AddContentButton("Reduce HP", (evt) => AlterVitals("LoseHP"));
+        Modal.AddContentButton("Recover HP", (evt) => AlterVitals("GainHP"));
+        Modal.AddContentButton("Reduce VIG", (evt) => AlterVitals("LoseVIG"));
+        Modal.AddContentButton("Recover VIG", (evt) => AlterVitals("GainVIG"));
+        Modal.AddSeparator();
+        Modal.AddContentButton("Add Wound", (evt) => AlterVitals("GainWound"));
+        Modal.AddContentButton("Remove Wound", (evt) => AlterVitals("LoseWound"));
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+    }
+
+    private static void AlterVitals(string cmd) {
+        int val = UI.Modal.Q<IntegerField>("Number").value;
+        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelectedData().GetComponent<TokenData>(), $"{cmd}|{val}");
+    }
+
+    private static void AddStatusModal(ClickEvent evt) {
+        Modal.Reset("Add Status");
+        Modal.AddDropdownField("Type", "Type", "Predefined", StringUtility.Arr("Predefined", "Simple", "Number", "Detail"), (evt) => AddStatusModalEvaluateConditions());
+
+        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
+        List<string> statuses = new();
+        foreach (JSONNode s in gamedata["Icon1_5"]["StatusEffects"].AsArray) {
+            statuses.Add(s["Name"]);
+        }
+        Modal.AddSearchField("PregenStatuses", "Status", "", statuses.ToArray());
+        Modal.AddTextField("Name", "Name", "");
+        Modal.AddDropdownField("Color", "Color", "Gray", StringUtility.Arr("Gray", "Green", "Red", "Blue", "Purple", "Yellow", "Orange"));
+        Modal.AddIntField("Number", "Number", 0);
+        Modal.AddTextField("Detail", "Detail", "");
+        Modal.AddPreferredButton("Add", AddStatus);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+
+        AddStatusModalEvaluateConditions();
+    }
+
+    private static void AddStatusModalEvaluateConditions() {
+        bool pregenStatus = UI.Modal.Q<DropdownField>("Type").value == "Predefined";
+        bool name = !pregenStatus;
+        bool color = !pregenStatus;
+        bool number = UI.Modal.Q<DropdownField>("Type").value == "Number";
+        bool detail = UI.Modal.Q<DropdownField>("Type").value == "Detail";
+
+        UI.ToggleDisplay(UI.Modal.Q("PregenStatuses"), pregenStatus);
+        UI.ToggleDisplay(UI.Modal.Q("Name"), name);
+        UI.ToggleDisplay(UI.Modal.Q("Color"), color);
+        UI.ToggleDisplay(UI.Modal.Q("Number"), number);
+        UI.ToggleDisplay(UI.Modal.Q("Detail"), detail);
+    }
+
+    private static void AddStatus(ClickEvent evt) {
+        string type = UI.Modal.Q<DropdownField>("Type").value;
+        string pregenStatus = SearchField.GetValue(UI.Modal.Q("PregenStatuses"));
+        string customStatus = UI.Modal.Q<TextField>("Name").value;
+        string color = UI.Modal.Q<DropdownField>("Color").value;
+        // string detail = UI.Modal.Q<TextField>("Detail").value;
+        int number = UI.Modal.Q<IntegerField>("Number").value;
+        StatusEffect s;
+        if (type == "Predefined") {
+            s = FindStatusEffect(pregenStatus);
+        }
+        else {
+            s = new StatusEffect() {
+                Name = customStatus,
+                Type = type,
+                Color = color,
+                Number = number
+            };
+        }
         
-        #region HP
-        panel.Q<SliderInt>("e_CurrentHPSlider").RegisterValueChangedCallback((evt) => {
-            panel.Q<Label>("e_CurrentHP").text = evt.newValue.ToString();
-        });
-        panel.Q<SliderInt>("e_CurrentHPSlider").RegisterCallback<MouseEnterEvent>((evt) => {
-            TokenEditPanel.HPOld = panel.Q<SliderInt>("e_CurrentHPSlider").value;
-        });
-        panel.Q<SliderInt>("e_CurrentHPSlider").RegisterCallback<MouseLeaveEvent>((evt) => {
-            int HPNew = panel.Q<SliderInt>("e_CurrentHPSlider").value;
-            int HPDiff = -(TokenEditPanel.HPOld - HPNew);
-            if (HPDiff != 0) {
-                Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "CurrentHP", HPNew);
+        // Strip characters that would break parse
+        s.Name = s.Name.Replace("|", "");
+
+        string statusData = $"{s.Name}|{s.Type}|{s.Color}|{s.Number}";
+
+        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelectedData().GetComponent<TokenData>(), $"GainStatus|{statusData}");        
+        Modal.Close();
+    }
+
+    private static StatusEffect FindStatusEffect(string name) {
+        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
+        foreach (JSONNode s in gamedata["Icon1_5"]["StatusEffects"].AsArray) {
+            if (s["Name"] == name) {
+                return new StatusEffect() {
+                    Name = s["Name"],
+                    Color = s["Color"],
+                    Type = s["Type"]
+                };
             }
-        });
-        #endregion
-
-        #region Vigor
-        panel.Q<SliderInt>("e_VigorSlider").RegisterValueChangedCallback((evt) => {
-            panel.Q<Label>("e_Vigor").text = evt.newValue.ToString();
-        });
-        panel.Q<SliderInt>("e_VigorSlider").RegisterCallback<MouseEnterEvent>((evt) => {
-            TokenEditPanel.HPOld = panel.Q<SliderInt>("e_VigorSlider").value;
-        });
-        panel.Q<SliderInt>("e_VigorSlider").RegisterCallback<MouseLeaveEvent>((evt) => {
-            int HPNew = panel.Q<SliderInt>("e_VigorSlider").value;
-            int HPDiff = -(TokenEditPanel.HPOld - HPNew);
-            if (HPDiff != 0) {
-                Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Vigor", HPNew);
-            }
-        });        
-        #endregion
-
-        #region Wounds
-        panel.Q<NumberNudger>("e_Wounds").AddValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Wounds", Math.Clamp(evt, 0, 4));
-        });
-        #endregion
-
-        #region Resolve
-        panel.Q<NumberNudger>("e_Resolve").AddValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Resolve", evt);
-        });
-        panel.Q<NumberNudger>("e_PartyResolve").AddValueChangedCallback((evt) => {
-            Player.Self().CmdRequestGameDataSetValue("PartyResolve", evt);
-            // Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "PartyResolve", evt);
-        });        
-        #endregion
-
-        #region ClassFeatures
-        panel.Q<NumberNudger>("e_Aether").AddValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Aether", evt);
-        });
-        panel.Q<NumberNudger>("e_Vigilance").AddValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Vigilance", evt);
-        }); 
-        panel.Q<NumberNudger>("e_Blessings").AddValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Blessings", evt);
-        });
-        panel.Q<Toggle>("e_StackedDie").RegisterValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Status", "Stacked Die|pos");
-        });        
-        panel.Q<DropdownField>("e_Stance").RegisterValueChangedCallback((evt) => {
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Stance", evt.newValue);
-        });
-        #endregion
-
-        #region Status
-        panel.Q<Button>("ToggleBuffButton").RegisterCallback<ClickEvent>((evt) => {
-            string status = panel.Q<DropdownField>("e_BuffDropdown").value;
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Status", $"{status}|pos");
-        });
-
-        panel.Q<Button>("ToggleDebuffButton").RegisterCallback<ClickEvent>((evt) => {
-            string status = panel.Q<DropdownField>("e_DebuffDropdown").value;
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Status", $"{status}|neg");
-        });
-
-        panel.Q<TextField>("e_Marked").RegisterCallback<BlurEvent>((evt) => {
-            string s = panel.Q<TextField>("e_Marked").value;
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Marked", s);
-        });
-
-        panel.Q<TextField>("e_Hatred").RegisterCallback<BlurEvent>((evt) => {
-            string s = panel.Q<TextField>("e_Hatred").value;
-            Player.Self().CmdRequestTokenDataSetValue(TokenEditPanel.Data, "Hatred", s);
-        });
-        #endregion
+        }
+        throw new Exception("Status Effect not found");
     }
-
-    private void SetJobOptions(ChangeEvent<string> evt) {
-        SetJobOptions(evt.newValue);
-    }
-
-    private void SetJobOptions(string jclass) {
-        List<string> jobs = GetJobs(jclass);
-        UI.System.Q<DropdownField>("JobDropdown").choices = jobs;
-        UI.System.Q<DropdownField>("JobDropdown").value = jobs[0];
-
-        UI.ToggleDisplay("EliteToggle", IsFoe(jclass));
-        UI.ToggleDisplay("SizeDropdown", IsFoe(jclass) || jclass == "Object");
-        UI.ToggleDisplay("LegendHPDropdown", jclass == "Legend");
-        UI.ToggleDisplay("ObjectHPField", jclass == "Object");
-    }
-
-    private static bool IsFoe(string jclass) {
-        return jclass switch
-        {
-            "Stalwart" or "Wright" or "Mendicant" or "Vagabond" or "Object" => false,
-            _ => true,
-        };
-    }
-
-    private List<string> GetClasses() {
-        return new string[]{"Stalwart", "Vagabond", "Mendicant", "Wright", "Heavy", "Skirmisher","Leader","Artillery","Legend","Mob","Object"}.ToList();
-    }
-
-    private List<string> GetJobs(string jclass) {
-        return jclass switch
-        {
-            "Stalwart" => new string[] { "Bastion", "Demon Slayer", "Knave", "Colossus" }.ToList(),
-            "Vagabond" => new string[] { "Shade", "Freelancer", "Fool", "Warden" }.ToList(),
-            "Mendicant" => new string[] { "Seer", "Chanter", "Sealer", "Harvester" }.ToList(),
-            "Wright" => new string[] { "Enochian", "Geomancer", "Spellblade", "Stormbender" }.ToList(),
-            "Heavy" => new string[] { "Warrior", "Soldier", "Impaler", "Greatsword", "Brute", "Knuckle", "Sentinel", "Crusher", "Berserker", "Sledge" }.ToList(),
-            "Skirmisher" => new string[] { "Pepperbox", "Hunter", "Fencer", "Assassin", "Hellion", "Skulk", "Shadow", "Arsonist" }.ToList(),
-            "Leader" => new string[] { "Errant", "Priest", "Commander", "Aburer", "Diviner", "Greenseer", "Judge", "Saint", "Cantrix" }.ToList(),
-            "Artillery" => new string[] { "Blaster", "Seismatist", "Storm Caller", "Rift Dancer", "Disruptor", "Chaos Wright", "Scourer", "Sapper", "Justicar", "Sniper", "Alchemist" }.ToList(),
-            "Legend" => new string[] { "Demolisher", "Nocturnal", "Master", "Razer" }.ToList(),
-            "Mob" => new string[] { "Mob" }.ToList(),
-            "Object" => new string[] { "Destructible" }.ToList(),
-            _ => new string[] { }.ToList(),
-        };
-    }
-
 }

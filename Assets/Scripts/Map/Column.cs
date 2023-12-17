@@ -22,5 +22,13 @@ public class Column : MonoBehaviour
     }
 
     void Update() {
+        Vector3 v = new Vector3(x, 0, y);
+        if (TerrainController.GridType == "Hex") {
+            v.z *= .866f;
+            if (y%2 == 1) {
+                v.x += .5f;
+            }
+        }
+        transform.localPosition = v;
     }
 }

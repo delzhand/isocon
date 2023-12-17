@@ -5,6 +5,7 @@ using System.Text;
 using Mirror;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.TerrainUtils;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
@@ -47,7 +48,7 @@ public class Player : NetworkBehaviour
                     Vector3 position = objs[i].transform.position;
                     OfflineTokenData otd = objs[i].GetComponent<OfflineTokenData>();
                     Destroy(otd.TokenObject);
-                    Player.Self().CmdCreateTokenData(otd.Json, position);
+                    Player.Self().CmdCreateTokenData(otd.Json);
                 }
             }
             else {
@@ -55,31 +56,9 @@ public class Player : NetworkBehaviour
             }
         } 
 
-        VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/ConnectedPlayer");
-        VisualElement instance = template.Instantiate();
-        UI.System.Q("PlayerList").Add(instance);
-        PlayerReference pRef = new GameObject(Name + " Reference").AddComponent<PlayerReference>();
         Toast.Add(Name + " connected.");
-        pRef.player = this;
-        pRef.visualElement = instance;
 
         if (isLocalPlayer) {
-            // Set up editing
-            instance.Q<Label>("PlayerName").RegisterCallback<ClickEvent>((evt) => {
-                instance.Q<TextField>("PlayerNameEdit").value = Name;
-                UI.ToggleDisplay(instance.Q("PlayerName"), false);
-                UI.ToggleDisplay(instance.Q("PlayerNameEdit"), true);
-            });
-
-            // Change name
-            instance.Q<TextField>("PlayerNameEdit").RegisterCallback<BlurEvent>((evt) => {
-                Name = instance.Q<TextField>("PlayerNameEdit").value;
-                PlayerPrefs.SetString("PlayerName", Name);
-                UI.ToggleDisplay(instance.Q("PlayerName"), true);
-                UI.ToggleDisplay(instance.Q("PlayerNameEdit"), false);
-            });
-
-            // Request session data from host
             CmdRequestMapSync();
         }
     }
@@ -112,16 +91,16 @@ public class Player : NetworkBehaviour
 
     #region Create Token
     [Command]
-    public void CmdCreateTokenData(string json, Vector3 position) {
+    public void CmdCreateTokenData(string json) {
         FileLogger.Write($"Client {connectionToClient.connectionId} created a token");
         GameObject g = GameSystem.Current().GetDataPrefab();
         NetworkServer.Spawn(g); 
-        RpcInitTokenData(g, json, Guid.NewGuid().ToString(), position);
+        RpcInitTokenData(g, json, Guid.NewGuid().ToString());
     }
     [ClientRpc]
-    public void RpcInitTokenData(GameObject g, string json, string id, Vector3 position) {
+    public void RpcInitTokenData(GameObject g, string json, string id) {
         FileLogger.Write($"A token was initialized");
-        g.transform.position = position;
+        g.transform.position = new Vector3(-100, 0, -100);
         GameSystem.Current().TokenDataSetup(g, json, id);
     }
     #endregion
@@ -163,43 +142,38 @@ public class Player : NetworkBehaviour
         DoMoveToken(dataObject, v + new Vector3(0, 1f, 0), true);
         DoMoveToken(dataObject, v, false);
     }
-    // [ClientRpc]
-    // public void RpcPlaceToken(GameObject dataObject) {
-    //     dataObject.GetComponent<TokenData>().OnField = true;
-    // }
     [Command]
-    public void CmdRequestGameDataSetValue(string label, int value) {
-        RpcGameDataSetValue(label, value);
+    public void CmdRequestGameDataSetValue(string value) {
+        RpcGameDataSetValue(value);
     }
     [ClientRpc]
-    public void RpcGameDataSetValue(string label, int value) {
-        GameSystem.Current().GameDataSetValue(label, value);
+    public void RpcGameDataSetValue(string value) {
+        GameSystem.Current().GameDataSetValue(value);
     }
     [Command]
-    public void CmdRequestTokenDataSetValue(TokenData data, string label, int value) {
-        RpcTokenDataSetValue(data, label, value);
+    public void CmdRequestTokenDataSetValue(TokenData data, string value) {
+        RpcTokenDataSetValue(data, value);
     }
     [ClientRpc]
-    public void RpcTokenDataSetValue(TokenData data, string label, int value) {
-        GameSystem.Current().TokenDataSetValue(data, label, value);
-    }
-    [Command]
-    public void CmdRequestTokenDataSetValue(TokenData data, string label, string value) {
-        RpcTokenDataSetValue(data, label, value);
-    }
-    [ClientRpc]
-    public void RpcTokenDataSetValue(TokenData data, string label, string value) {
-        GameSystem.Current().TokenDataSetValue(data, label, value);
+    public void RpcTokenDataSetValue(TokenData data, string value) {
+        GameSystem.Current().TokenDataSetValue(data, value);
     }    
     #endregion
 
     #region MapChange
     [Command]
-    public void CmdRequestMapSetValue(int x, int y, int z, string label, string value) {
-        // Find block
-            // EffectChange(marker);
-            // UI.System.Q("Effects").Remove(instance);
-        // CmdMapSync
+    public void CmdRequestMapSetValue(string[] blocks, string label, string value) {
+        RpcMapSetValue(blocks, label, value);
+    }
+    [ClientRpc]
+    public void RpcMapSetValue(string[] blocks, string label, string value) {
+        if (label == "Effect") {
+            for (int i = 0; i < blocks.Length; i++) {
+                Block target = GameObject.Find(blocks[i]).GetComponent<Block>();
+                target.EffectChange(value);
+            }
+        }
+        TerrainController.SetInfo();
     }
     #endregion
 
@@ -213,7 +187,7 @@ public class Player : NetworkBehaviour
     }
     [ClientRpc]
     public void RpcDiceRoll(DiceTray tray) {
-        DiceSidebar.AddOutcome(tray);
+        DiceRoller.AddOutcome(tray);
     }
     #endregion
 
@@ -224,7 +198,7 @@ public class Player : NetworkBehaviour
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
         byte[] compressedJson = Compression.CompressString(json);
-        Debug.Log($"Original data size: {Encoding.UTF8.GetBytes(json).Length}, compressed data size: {compressedJson.Length}");
+        // Debug.Log($"Original data size: {Encoding.UTF8.GetBytes(json).Length}, compressed data size: {compressedJson.Length}");
         RpcMapSync(compressedJson);
     }
     [Command]
@@ -233,10 +207,11 @@ public class Player : NetworkBehaviour
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
         byte[] compressedJson = Compression.CompressString(json);
-        TargetMapSync(connectionToClient, compressedJson);        
+        TargetMapSync(connectionToClient, compressedJson);
     }
     [TargetRpc]
-    public void TargetMapSync(NetworkConnectionToClient target, byte[] bytes) {        FileLogger.Write($"Map received from host by this client");
+    public void TargetMapSync(NetworkConnectionToClient target, byte[] bytes) {
+        FileLogger.Write($"Map received from host by this client");
         string json = Compression.DecompressString(bytes);
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
@@ -249,8 +224,8 @@ public class Player : NetworkBehaviour
         if (Player.IsGM()) {
             return; // GM already has current state
         }
-        FileLogger.Write($"Map received from host by everyone");
         string json = Compression.DecompressString(bytes);
+        FileLogger.Write($"Map received from host by everyone");
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
         Block.ToggleSpacers(false);

@@ -8,6 +8,11 @@ using TMPro;
 
 public class TerrainController : MonoBehaviour
 {
+    public static string GridType = "Square";
+    public static float LightAngle = 330f;
+    public static float LightHeight = 50f;
+    public static float LightIntensity = 2;
+    
     private List<Label> identifierLabels = new List<Label>();
 
     public static bool Indicators = false;
@@ -15,29 +20,7 @@ public class TerrainController : MonoBehaviour
 
     public static bool ReorgNeeded = false;
 
-    // void Start() {
-    //     // registerCallbacks();
-    //     // disableIndicators();
-    //     // InitializeTerrain(8, 8, 1);
-    // }
-
-    // private void editTerrainSelect(ChangeEvent<string> evt) {
-    //     resetConditionalElements();
-    //     switch (evt.newValue) {
-    //         case "EDIT TERRAIN":
-    //             showConditionalElement("EditTerrainOptions");
-    //             break;
-    //         case "EDIT BLOCK":
-    //             showConditionalElement("EditBlockOptions");
-    //             break;
-    //         case "MARK BLOCK":
-    //             showConditionalElement("MarkBlockOptions");
-    //             break;
-    //         case "APPEARANCE":
-    //             showConditionalElement("AppearanceOptions");
-    //             break;
-    //     }
-    // }
+    public static bool MapDirty = false;
 
     void LateUpdate() {
         if (ReorgNeeded) {
@@ -46,73 +29,30 @@ public class TerrainController : MonoBehaviour
         }
     }
 
-    private void resetConditionalElements() {
-        UI.System.Q("EditTerrainOptions").style.display = DisplayStyle.None;
-        UI.System.Q("EditBlockOptions").style.display = DisplayStyle.None;
-        UI.System.Q("MarkBlockOptions").style.display = DisplayStyle.None;
-        UI.System.Q("AppearanceOptions").style.display = DisplayStyle.None;
-    }
-
-    private void showConditionalElement(string name) {
-        UI.System.Q(name).style.display = DisplayStyle.Flex;
-    }
-
-    private string getValue(RadioButtonGroup g, int i) {
-        IEnumerable<string> choices = g.choices;
-        string[] s = choices.ToArray();
-        return s[i];
-    }
-
-    public void Edit(Block block) {
-        List<string> ops = ToolsSidebar.GetOps();
-        foreach(string op in ops) {
-            switch (op) {
-                case "AddBlock":
-                    AddBlocks();
-                    break;
-                case "RemoveBlock":
-                    RemoveBlocks();
-                    break;
-                case "CloneRow":
-                    CloneRow();
-                    break;
-                case "CloneCol":
-                    CloneColumn();
-                    break;
-                case "RemoveRow":
-                    DeleteRow();
-                    break;
-                case "RemoveCol":
-                    DeleteColumn();
-                    break;
-                case "Solid":
-                    ChangeType(BlockType.Solid);
-                    break;
-                case "Slope":
-                    ChangeType(BlockType.Slope);
-                    break;
-                case "Hidden":
-                    ChangeType(BlockType.Spacer);
-                    break;
-                case "AddMark":
-                    ChangeEffect(ToolsSidebar.MarkerEffect);
-                    break;
-                case "ClearMarks":
-                    ChangeEffect("Clear");
-                    break;
-                case "CenterView":
-                    CameraControl.GoToBlock(block);
-                    break;
-                case "Paintbrush":
-                    PaintBlocks();
-                    break;
-                case "Unpaint":
-                    DepaintBlocks();
-                    break;
-                case "Eyedropper":
-                    Eyedropper();
-                    break;
-            }
+    public static void Edit(Block block) {
+        MapDirty = true;
+        switch (MapEdit.EditOp) {
+            case "AddBlock":
+                AddBlocks();
+                break;
+            case "RemoveBlock":
+                RemoveBlocks();
+                break;
+            case "RotateBlock":
+                RotateBlocks();
+                break;
+            case "ResizeMap":
+                ResizeMap();
+                break;
+            case "ChangeShape":
+                ChangeShape();
+                break;
+            case "StyleBlock":
+                ApplyStyle();
+                break;
+            case "TerrainEffect":
+                ChangeEffect();
+                break;
         }
     }
 
@@ -161,8 +101,9 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void ResetTerrain() {
-        // DestroyAllBlocks();
-        // InitializeTerrain(8, 8, 3);
+        DestroyAllBlocks();
+        InitializeTerrain(8, 8, 1);
+        MapDirty = false;
     }
 
     public static Vector3 Center() {
@@ -193,8 +134,8 @@ public class TerrainController : MonoBehaviour
 
     }
 
-    public static Vector2 Size() {
-        Vector2 size = Vector2.zero;
+    public static Vector2Int Size() {
+        Vector2Int size = Vector2Int.zero;
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
         for (int i = 0; i < blocks.Length; i++) {
             size.x = Mathf.Max(size.x, blocks[i].GetComponent<Block>().getX()+1);
@@ -204,7 +145,7 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void AddBlocks() {        
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         List<Column> markedCols = new List<Column>();
         selected.ForEach(block => {
             Column column = block.transform.parent.GetComponent<Column>();
@@ -221,11 +162,11 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void RemoveBlocks() {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block =>  {
-            if (block.GetComponent<Block>().Destroyable) {
+            if (block.Destroyable) {
                 GravityDrop(block.transform.parent.gameObject, block.transform.localPosition.y);
-                GameObject.DestroyImmediate(block);
+                GameObject.DestroyImmediate(block.gameObject);
             }
             else {
                 Toast.Add("Foundation blocks cannot be deleted (but can be hidden).", ToastType.Error);
@@ -234,40 +175,129 @@ public class TerrainController : MonoBehaviour
         ReorgNeeded = true;
     }
 
+    public static void MultiBlock() {
+        switch (MapEdit.ResizeOp) {
+            case "CloneRow":
+                CloneRow();
+                break;
+            case "CloneCol":
+                CloneColumn();
+                break;
+            case "RemoveRow":
+                DeleteRow();
+                break;
+            case "RemoveCol":
+                DeleteColumn();
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+    }
+
     public static void RotateBlocks() {
-        List<GameObject> selected = Block.GetAllSelected();
+        // List<Block> selected = Block.GetSelected().ToList();
+        // selected.ForEach(block => {
+        //     if (GridType == "Square") {
+        //         block.transform.Rotate(0, 90f, 0);
+        //     }
+        //     else if (GridType == "Hex") {
+        //         block.transform.Rotate(0, 60f, 0);
+        //     }
+        // });
+
+        List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            block.transform.Rotate(0, 90f, 0);
+            if (GridType == "Square") {
+                block.transform.Rotate(0, 90f, 0);
+                if (block.Type == BlockShape.Slope) {
+                    // counter-rotate indicator
+                    block.transform.Find("Indicator").transform.eulerAngles = new Vector3(90, -90, 0);
+                }
+            }
+            else if (GridType == "Hex") {
+                block.transform.Rotate(0, 60f, 0);
+            }
         });
+
+    }
+
+    public static void ResizeMap() {
+        switch (MapEdit.ResizeOp) {
+            case "ResizeCloneRow": 
+                CloneRow();
+                break;
+            case "ResizeDeleteRow":
+                DeleteRow();
+                break;
+            case "ResizeCloneCol":
+                CloneColumn();
+                break;
+            case "ResizeDeleteCol":
+                DeleteColumn();
+                break;
+            case "ResizeAddLayer":
+                AddLayer();
+                break;
+        }
     }
 
     public static void PaintBlocks() {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            block.GetComponent<Block>().Paint(Environment.Color5, Environment.Color6);
+            block.ApplyPaint(Environment.CurrentPaintTop, Environment.CurrentPaintSide);
         });
     }
 
     public static void DepaintBlocks() {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            block.GetComponent<Block>().Depaint();
+            block.RemovePaint();
         });
     }
 
-    public static void Eyedropper() {
-        List<GameObject> selected = Block.GetAllSelected();
+    public static void StyleBlocks(string style) {
+        List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            Color[] colors = block.GetComponent<Block>().SamplePaint();
-            Environment.Color5 = colors[0];
-            Environment.Color6 = colors[1];
-            UI.System.Q("Color5").style.backgroundColor = colors[0];
-            UI.System.Q("Color6").style.backgroundColor = colors[1];
+            block.ApplyTexture(style);
+        });
+    }
+
+    public static void DestyleBlocks() {
+        List<Block> selected = Block.GetSelected().ToList();
+        selected.ForEach(block => {
+            block.RemoveTexture();
+            block.RemovePaint();
+        });
+    }
+
+    public static void SampleStyle() {
+        List<Block> selected = Block.GetSelected().ToList();
+        selected.ForEach(block => {
+            Color[] colors = block.SamplePaint();
+            if (colors != null) {
+                Environment.CurrentPaintTop = colors[0];
+                Environment.CurrentPaintSide = colors[1];
+                UI.System.Q("ToolOptions").Q("TopBlockPaint").style.backgroundColor = colors[0];
+                UI.System.Q("ToolOptions").Q("SideBlockPaint").style.backgroundColor = colors[1];
+                UI.ToggleDisplay(UI.System.Q("ToolOptions"), true);
+                UI.ToggleDisplay(UI.System.Q("ToolOptions").Q("StylePaintOptions"), true);
+                UI.ToggleDisplay(UI.System.Q("ToolOptions").Q("StyleTextureOptions"), false);
+                return;
+            }
+            String texture = block.SampleTexture();
+            if (texture.Length > 0) {
+                UI.System.Q("ToolOptions").Q<DropdownField>("BlockTexture").value = texture;
+                UI.ToggleDisplay(UI.System.Q("ToolOptions"), true);
+                UI.ToggleDisplay(UI.System.Q("ToolOptions").Q("StylePaintOptions"), false);
+                UI.ToggleDisplay(UI.System.Q("ToolOptions").Q("StyleTextureOptions"), true);
+                return;
+            }
+            Toast.Add("Nothing sampled.");
         });
     }
 
     public static void CloneRow() {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         selected.ForEach(selectedBlock => {
             for (int i = 0; i < columns.Length; i++) {
@@ -293,7 +323,7 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void DeleteRow() {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         selected.ForEach(selectedBlock => {
             int selectedX = selectedBlock.transform.parent.GetComponent<Column>().X;
@@ -315,7 +345,7 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void CloneColumn() {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         selected.ForEach(selectedBlock => {
             for (int i = 0; i < columns.Length; i++) {
@@ -341,7 +371,7 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void DeleteColumn() {
-        List<GameObject> selected = Block.GetAllSelected();
+        List<Block> selected = Block.GetSelected().ToList();
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         selected.ForEach(selectedBlock => {
             int selectedY = selectedBlock.transform.parent.GetComponent<Column>().Y;
@@ -362,37 +392,85 @@ public class TerrainController : MonoBehaviour
         ReorgNeeded = true;
     }
 
-    public static void ChangeType(BlockType type) {
-        List<GameObject> selected = Block.GetAllSelected();
-        selected.ForEach(block => {
-            block.GetComponent<Block>().TypeChange(type);
-            if (type == BlockType.Slope) {
-                block.transform.Rotate(0, 90f, 0);
-                // counter-rotate indicator
-                block.transform.Find("Indicator").transform.eulerAngles = new Vector3(90, -90, 0);
+    public static void AddLayer() {
+        GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
+        foreach(GameObject column in columns) {
+            GameObject currentTop = TopBlock(column.gameObject);
+            if (currentTop.GetComponent<Block>().Type != BlockShape.Spacer) {
+                GameObject newblock = Instantiate(Resources.Load("Prefabs/Block") as GameObject);                 
+                newblock.transform.parent = currentTop.transform.parent;
+                newblock.transform.localPosition = new Vector3(0, currentTop.transform.localPosition.y + 1, 0);
+                newblock.transform.localScale = currentTop.transform.localScale;
             }
+        }
+        ReorgNeeded = true;
+    }
+
+    public static void ChangeShape() {
+        BlockShape shape = BlockShape.Solid;
+        switch(MapEdit.ShapeOp) {
+            case "ShapeSlope":
+                shape = BlockShape.Slope;
+                break;
+            case "ShapeHidden":
+                shape = BlockShape.Spacer;
+                break;            
+        }
+        List<Block> selected = Block.GetSelected().ToList();
+        selected.ForEach(block => {
+            block.ShapeChange(shape);
+            RotateBlocks();
+        });
+        ReorgNeeded = true;
+    }
+
+    public static void ChangeEffect() {
+        string effect = UI.System.Q("ToolOptions").Q<DropdownField>("BlockEffect").value;
+        List<Block> selected = Block.GetSelected().ToList();
+        selected.ForEach(block => {
+            block.EffectChange(effect);
         });
     }
 
-    public static void ChangeEffect(string effect) {
-        List<GameObject> selected = Block.GetAllSelected();
-        selected.ForEach((Action<GameObject>)(block => {
-            block.GetComponent<Block>().EffectChange(effect);
-        }));
+    public static void ApplyStyle() {
+        switch (MapEdit.StyleOp) {
+            case "StylePaint":
+                PaintBlocks();
+                break;
+            case "StyleTexture":
+                string style = UI.System.Q<DropdownField>("BlockTexture").value;
+                StyleBlocks(style);
+                break;
+            case "StyleEraser":
+                DepaintBlocks();
+                DestyleBlocks();
+                break;
+            case "StyleSample":
+                SampleStyle();
+                break;
+        }
     }
 
     private static GameObject TopBlock(GameObject column) {
-        Block[] blocks = column.GetComponentsInChildren<Block>();
-        GameObject top = null;
-        float highest = float.MinValue;
-        for (int i = 0; i < blocks.Length; i++)
-        {
-            float height = blocks[i].transform.localPosition.y;
-            if (height > highest) {
-                top = blocks[i].gameObject;
+        try {
+            GameObject top = null;
+            Block[] blocks = column.GetComponentsInChildren<Block>();
+            float highest = float.MinValue;
+            for (int i = 0; i < blocks.Length; i++)
+            {
+                float height = blocks[i].transform.localPosition.y;
+                if (height > highest) {
+                    top = blocks[i].gameObject;
+                }
             }
+            return top;
         }
-        return top;
+        #pragma warning disable
+        catch(Exception e) {
+            // Exceptions are fine, it means there's no block because it's out of bounds
+            return null;
+        }
+        #pragma warning restore
     }
 
     private static void GravityDrop(GameObject column, float threshold) {
@@ -402,6 +480,118 @@ public class TerrainController : MonoBehaviour
                 blocks[i].transform.localPosition -= new Vector3(0, 1, 0);
             }
         }
+    }
+
+    public static void SetInfo() {
+        VisualElement root = UI.System.Q("TerrainInfo");
+        UI.ToggleDisplay(root.Q("Elev"), false);
+        UI.ToggleDisplay(root.Q("Pos"), false);
+        UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), false);
+        UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), false);
+        UI.ToggleDisplay(root.Q("AddEffect"), false);
+        UI.ToggleDisplay(root.Q("ClearSelected"), false);
+        UI.ToggleDisplay(root, false);
+
+        Block[] selected = Block.GetSelected();
+        Block focused = Block.LastFocused;
+        Block block = null;
+
+        if (selected.Length == 0 && focused == null) {
+            return;
+        }
+        else {
+            UI.ToggleDisplay(root.Q("Elev"), true);
+            UI.ToggleDisplay(root.Q("Pos"), true);
+        }
+
+        Color color = Color.white;
+        if (selected.Length > 0 && Cursor.Mode != CursorMode.Editing) {
+            color = ColorUtility.UIBlue;
+            UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), true);
+            UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), true);
+            UI.ToggleDisplay(root.Q("ClearSelected"), true);
+        }
+ 
+        UI.ToggleDisplay(root, true);
+
+        string height;
+        string coords;
+        bool singleSelected = false;
+
+        if (selected.Length > 1) {
+            height = "*";
+            coords = "*";
+        }
+        else {
+            if (selected.Length == 1) {
+                block = selected[0];
+                singleSelected = true;
+                // UI.ToggleDisplay(root.Q("AddObject"), true);
+            }
+            else if (focused) {
+                block = focused;
+            }
+            height = (block.transform.localPosition.y + 1).ToString();
+            if (block.Type == BlockShape.Slope) {
+                height = height + ".5";
+            }
+            coords = Block.GetAlpha(block.getY() + 1) + "" + (block.getX()+1);
+        }
+
+        root.Q<Label>("Height").text = $"{height}";
+        root.Q<Label>("Height").style.color = color;
+        root.Q<Label>("Coords").text = coords;
+        root.Q<Label>("Coords").style.color = color;
+
+        root.Q("CurrentEffects").Clear();
+        if (block) {
+            block.GetEffects().ForEach(marker => {
+                VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/TerrainEffect");
+                VisualElement instance = template.Instantiate();
+                instance.Q<Label>("Label").text = marker.ToUpper();
+                VisualElement remove = instance.Q("Remove");
+                if (!singleSelected) {
+                    UI.ToggleDisplay(remove, false);
+                }
+                else {
+                    remove.RegisterCallback<ClickEvent>((evt) => {
+                        Player.Self().CmdRequestMapSetValue(new string[]{block.name}, "Effect", marker);
+                    });
+                }
+                root.Q("CurrentEffects").Add(instance);
+            });
+
+        }
+        if (selected.Length > 0) {
+            UI.ToggleDisplay(root.Q("AddEffect"), true);
+        }
+
+    }
+    
+    public static Block[] FindNeighbors(Block origin, int radius) {
+        int[,] offsets = {
+            {-1, -1}, {-1, 0}, {0, -1},
+            {-1, 1},           {0, 1},
+            {1, -1},  {1, 0},  {1, 1}
+        };
+        List<Block> neighbors = new();
+        int j = 0;
+        if (radius == 2) {
+            j = 3;
+        }
+        else if (radius == 3) {
+            j = 8;
+        }
+        for (int i = 0; i < j; i++) {
+            int x = origin.getX() + offsets[i, 0];
+            int y = origin.getY() + offsets[i, 1];
+            GameObject col = GameObject.Find($"{x},{y}");
+            GameObject topBlockObj = TopBlock(col);
+            if (topBlockObj) {
+                neighbors.Add(topBlockObj.GetComponent<Block>());
+            }
+        }
+        return neighbors.ToArray();
     }
 
     public static void Reorg() {
@@ -414,7 +604,7 @@ public class TerrainController : MonoBehaviour
         for (int i = 0; i < blocks.Length; i++) {
             Block b = blocks[i].GetComponent<Block>();
             TextMeshPro tm = blocks[i].transform.Find("Indicator").GetComponent<TextMeshPro>();
-            tm.text = b.getAlphaY() + (b.getX()+1);
+            tm.text = Block.GetAlpha(b.getY() + 1) + (b.getX() + 1);
             blocks[i].name = "block " + b.getX() + "," + b.getY() + "," + b.getZ();
 
         }         
@@ -429,7 +619,7 @@ public class TerrainController : MonoBehaviour
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
         for (int i = 0; i < blocks.Length; i++) {
             Block b = blocks[i].GetComponent<Block>();
-            if (b.Type == BlockType.Solid) {
+            if (b.Type == BlockShape.Solid) {
                 count++;
                 solids[b.getX(), b.getY(), b.getZ()] = true;
                 blks[b.getX(), b.getY(), b.getZ()] = b.gameObject;
@@ -473,5 +663,11 @@ public class TerrainController : MonoBehaviour
     private static void showBlock(Block b) {
         b.GetComponent<MeshRenderer>().enabled = true;
         b.transform.Find("Indicator").GetComponent<TextMeshPro>().enabled = true;
+    }
+
+    public static void UpdateLight() {
+        Light l = GameObject.Find("Light").GetComponent<Light>();
+        l.intensity = LightIntensity;
+        l.transform.eulerAngles = new Vector3(LightHeight, LightAngle, 0);
     }
 }

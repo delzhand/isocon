@@ -11,7 +11,7 @@ public class Generic : GameSystem
         return "Generic System";
     }
 
-    public override string GetTokenData() {
+    public override string GetTokenDataRawJson() {
         return GenericTokenDataRaw.ToJson();
     }
 
@@ -28,7 +28,21 @@ public class Generic : GameSystem
         return Instantiate(Resources.Load<GameObject>("Prefabs/GenericTokenData"));
     }
 
-    public override void UpdateSelectedTokenPanel(GameObject data)
+    public override void UpdateTokenPanel(GameObject data, string elementName)
     {
+        if (data == null) {
+            UI.ToggleDisplay(elementName, false);
+            return;
+        }
+        UI.ToggleDisplay(elementName, true);
+        data.GetComponent<GenericTokenData>().UpdateTokenPanel(elementName);
     }
+
+    public override void AddTokenModal()
+    {
+        base.AddTokenModal();
+        Modal.AddDropdownField("SizeField", "Size", "1x1", new string[]{"1x1", "2x2", "3x3"});
+        Modal.AddIntField("HPField", "HP", 1);
+    }
+
 }

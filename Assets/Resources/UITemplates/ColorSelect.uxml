@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="ColorSelect" style="flex-grow: 1;">
+        <ui:VisualElement name="Preview" style="flex-grow: 1; height: 100px; margin-bottom: 8px; background-color: rgb(0, 0, 0);" />
+        <ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                <ui:Label tabindex="-1" text="R" display-tooltip-when-elided="true" style="width: 20px;" />
+                <ui:SliderInt picking-mode="Ignore" value="0" high-value="255" show-input-field="true" name="EditRed" class="no-margin" style="flex-grow: 1;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
+            <ui:Label tabindex="-1" text="G" display-tooltip-when-elided="true" style="width: 20px;" />
+            <ui:SliderInt picking-mode="Ignore" value="0" high-value="255" show-input-field="true" name="EditGreen" class="no-margin" style="flex-grow: 1;" />
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 4px;">
+            <ui:Label tabindex="-1" text="B" display-tooltip-when-elided="true" style="width: 20px;" />
+            <ui:SliderInt picking-mode="Ignore" value="0" high-value="255" show-input-field="true" name="EditBlue" class="no-margin" style="flex-grow: 1;" />
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: space-between; margin-top: 4px;">
+            <ui:Label tabindex="-1" text="Hexadecimal" display-tooltip-when-elided="true" />
+            <ui:TextField picking-mode="Ignore" value="#000000" name="EditColorHex" class="no-margin" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

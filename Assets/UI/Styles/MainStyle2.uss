@@ -71,6 +71,7 @@
 .menu-button.active {
     border-color: rgb(141, 131, 39);
     background-color: rgb(192, 178, 53);
+    -unity-background-image-tint-color: rgb(25, 130, 156);
 }
 
 .menu-button {

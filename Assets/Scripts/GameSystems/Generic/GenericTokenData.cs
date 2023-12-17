@@ -6,28 +6,28 @@ using UnityEngine.Animations;
 using UnityEngine.UIElements;
 
 [System.Serializable]
-public class GenericTokenDataRaw
+public class GenericTokenDataRaw: TokenDataRaw
 {
-    public string Name;
     public int CurrentHP;
     public int MaxHP;
-    public string GraphicHash;
-    public int Size;
 
     public static string ToJson() {
         GenericTokenDataRaw raw = new GenericTokenDataRaw();
 
-        TextField nameField = UI.System.Q<TextField>("TokenNameField");
-        raw.Name = nameField.value;
-        
-        DropdownField graphicField = UI.System.Q<DropdownField>("GraphicDropdown");
-        Texture2D graphic = TextureSender.CopyLocalImage(graphicField.value);
+        raw.Name = UI.Modal.Q<TextField>("NameField").value;
+        Texture2D graphic = TextureSender.CopyLocalImage(UI.Modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
         raw.GraphicHash = TextureSender.GetTextureHash(graphic);
         
-        raw.MaxHP = 100;
-        raw.CurrentHP = raw.MaxHP;
+        raw.MaxHP = UI.Modal.Q<IntegerField>("HPField").value;
         
         raw.Size = 1;
+        string sizeValue = UI.Modal.Q<DropdownField>("SizeField").value;
+        if (sizeValue == "2x2") {
+            raw.Size = 2;
+        }
+        else if (sizeValue == "3x3") {
+            raw.Size = 3;
+        }
 
         return JsonUtility.ToJson(raw);
     }
@@ -48,15 +48,15 @@ public class GenericTokenData : TokenData
         BaseUpdate();
     }
 
-    public override void UpdateUIData() {
-        overhead.Q<ProgressBar>("HpBar").value = CurrentHP;
-        overhead.Q<ProgressBar>("HpBar").highValue = MaxHP;
-        overhead.Q<ProgressBar>("VigorBar").style.display = DisplayStyle.None;
+    public override void UpdateOverheadValues() {
+        OverheadElement.Q<ProgressBar>("HpBar").value = CurrentHP;
+        OverheadElement.Q<ProgressBar>("HpBar").highValue = MaxHP;
     }
 
     public override void TokenDataSetup(string json, string id) {
         base.TokenDataSetup(json, id);
         DoTokenDataSetup();
+        CurrentHP = MaxHP;
     }
 
     public override void DoTokenDataSetup()
@@ -66,7 +66,6 @@ public class GenericTokenData : TokenData
         MaxHP = raw.MaxHP;
         GraphicHash = raw.GraphicHash;
         Size = raw.Size;
-        // CurrentHP = raw.CurrentHP;
     }
 
     public override int GetSize()

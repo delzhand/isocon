@@ -35,12 +35,12 @@
     height: 100%;
     max-height: none;
     min-height: 0;
-    transition-duration: .5s;
+    transition-duration: 0.5s;
 }
 
 .unity-button {
     margin: 0;
-    padding: 2px 6px;
+    padding: 0 6px 2px;
     border-width: 1px;
     border-radius: 2px;
     background-color: rgba(100, 100, 100, 0.15);
@@ -75,7 +75,7 @@
 }
 
 .unity-foldout__input {
-    background-color: rgb(55, 55, 55);
+    background-color: rgb(31, 31, 31);
     padding-left: 4px;
     padding-right: 4px;
     padding-top: 2px;

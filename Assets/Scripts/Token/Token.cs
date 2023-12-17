@@ -19,14 +19,44 @@ public class Token : MonoBehaviour
     public GameObject offlineDataObject;
     public GameObject onlineDataObject;
 
+    public float ShareOffsetX;
+    public float ShareOffsetY;
+
+    public Token LastFocused;
+
+    public bool Selected = false;
+    public bool Focused = false;
+
     void Update()
     {
         alignToCamera();
+        UpdateVisualEffect();
+        Offset();
+
+        if (Focused && this != LastFocused) {
+            Unfocus();
+        }
+
     }
 
     private void alignToCamera() {
         Transform camera = GameObject.Find("CameraOrigin").transform;
         transform.Find("Offset").transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 90, 0);
+    }
+
+    private void Offset() {
+        float x = ShareOffsetX;
+        float y = ShareOffsetY;
+        if (Size == 2) {
+            x = 0;
+            y = -.73f;
+        }
+        else if (Size == 3) {
+            x = 0;
+            y = 0;
+        }
+        transform.Find("Offset").transform.localPosition = new Vector3(x, .2f, y);
+        transform.Find("Base").transform.localPosition = new Vector3(x, .2f,y);
     }
 
     public void SetImage(Texture2D image) {
@@ -36,55 +66,163 @@ public class Token : MonoBehaviour
         transform.Find("Offset/Avatar/Cutout/Cutout Quad").transform.localScale = new Vector3(aspectRatio, 1f, 1f);
     }
 
-    public void BlockClick(Block block) {
-        Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
-        switch (UnitMenu.ActiveMenuItem) {
-            case "Placing":
-                Player.Self().CmdRequestPlaceToken(onlineDataObject, v);
-                UnitMenu.DonePlacing();
-                SetNeutral();
+    public void LeftClick() {
+        switch (Cursor.Mode) {
+            case CursorMode.Placing:
+            case CursorMode.Moving:
+                TokenMenu.EndCursorMode();
                 break;
-            case "Moving":
-                Player.Self().CmdMoveToken(onlineDataObject, v, false);
-                break;
+        }
+
+        if (Selected) {
+            Deselect();
+        }
+        else {
+            Select();
         }
     }
 
-    public void Select(bool deselectOthers = false) {
-        if (deselectOthers) {
-            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Token")) {
-                g.GetComponent<Token>().Deselect();
-            }
-        }
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1); // worldspace token selected material
-        UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().Element.Q("Selected"), true); // selected indicator in unit bar
+    public void RightClick() {
+
+    }
+
+    public void Place(Block block) {
+        Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
+        Player.Self().CmdRequestPlaceToken(onlineDataObject, v);
+        Cursor.Mode = CursorMode.Default;
+    }
+
+    public void Move(Block block) {
+        Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
+        Player.Self().CmdMoveToken(onlineDataObject, v, false);
+    }
+
+    public void Select() {
+        UnfocusAll();
+        DeselectAll();
+        Selected = true;
+        TokenData data = onlineDataObject.GetComponent<TokenData>();
+        data.Select();
+        UI.ToggleDisplay(data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
         UI.ToggleDisplay("SelectedTokenPanel", true); // selected token panel
-        GameSystem.Current().UpdateSelectedTokenPanel(onlineDataObject);
-        SetNeutral();
+        TokenMenu.ShowMenu();
     }
 
     public void Deselect() {
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
-        UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().Element.Q("Selected"), false);
+        Selected = false;
+        UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().UnitBarElement.Q("Selected"), false);
         UI.ToggleDisplay("SelectedTokenPanel", false);
+        SelectionMenu.Hide();
+        Cursor.Mode = CursorMode.Default;
     }
 
-    public void SetPlacing() {
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1);
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 0);
+    public static void DeselectAll() {
+        Token t = GetSelected();
+        if (t) {
+            t.Deselect();
+        }
     }
 
-    public void SetMoving() {
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 0);
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 1);
+    public static Token GetSelected() {
+        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
+        for (int i = 0; i < tokens.Length; i++) {
+            if (tokens[i].GetComponent<Token>().Selected) {
+                return tokens[i].GetComponent<Token>();
+            }
+        }
+        return null;
     }
 
-    public void SetNeutral() {
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", 1);
-        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", 0);
+    public static GameObject GetSelectedData() {
+        Token selected = GetSelected();
+        if (selected != null && selected.onlineDataObject != null) {
+            return selected.onlineDataObject;
+        }
+        return null;
     }
+
+    public void Focus() {
+        if (Token.GetSelected() == this) {
+            return;
+        }
+        UnfocusAll();
+        TokenData data = onlineDataObject.GetComponent<TokenData>();
+        data.Focus();
+        LastFocused = this;
+        Focused = true;
+    }
+
+    public void Unfocus() {
+        Focused = false;
+    }
+
+    public static Token GetFocused() {
+        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
+        for (int i = 0; i < tokens.Length; i++) {
+            if (tokens[i].GetComponent<Token>().Focused) {
+
+                return tokens[i].GetComponent<Token>();
+            }
+        }
+        return null;
+    }
+
+    public static GameObject GetFocusedData() {
+        Token focused = GetFocused();
+        if (focused != null && focused.onlineDataObject != null) {
+            return focused.onlineDataObject;
+        }
+        return null;
+    }
+
+    public static void UnfocusAll() {
+        Token t = GetFocused();
+        if (t) {
+            t.Unfocus();
+        }
+    }
+
+    public void UpdateVisualEffect() {
+        if (Selected && Cursor.Mode == CursorMode.Moving) {
+            SetVisualArrows();
+        }
+        else if (Selected) {
+            SetVisualSquareYellow();
+        }
+        else if (Focused) {
+            SetVisualSquareBlue();
+        }
+        else {
+            SetVisualNone();
+        }
+    }
+
+    private void SetVisualArrows() {
+        SetVisual(false, true, false, false);
+    }
+
+    private void SetVisualSquareYellow() {
+        SetVisual(true, false, false, false);
+    }
+
+    private void SetVisualSquareBlue() {
+        SetVisual(false, false, true, false);
+    }
+
+    private void SetVisualNone() {
+        SetVisual(false, false, false, false);
+    }
+
+    private void SetVisual(bool yellowSquare, bool yellowArrows, bool blueSquare, bool blueArrows) {
+        transform.Find("Offset/Select").GetComponent<MeshRenderer>().material.SetInt("_Selected", yellowSquare ? 1:0);
+        transform.Find("Offset/Select").GetComponent<MeshRenderer>().material.SetInt("_Moving", yellowArrows ? 1:0);
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", blueSquare ? 1:0);
+        transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", blueArrows ? 1:0);
+    }
+
 
     public void SetDefeated(bool defeated) {
         transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetInt("_Dead", defeated ? 1 : 0);
     }
+    
 }

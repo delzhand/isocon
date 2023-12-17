@@ -31,7 +31,7 @@
 }
 
 #EditToken {
-    padding-bottom: 3px; /* 8px default -5 from last element */
+    padding-bottom: 3px;
 }
 
 #EditToken .unity-scroll-view {
@@ -54,7 +54,7 @@
     margin: 0;
     margin-bottom: 2px;
     padding: 2px 2px 2px 6px;
-    background-color: #FFF;
+    background-color: rgb(255, 255, 255);
     -unity-font-style: bold;
     border-radius: 10px;
     -unity-font-definition: resource('Fonts/ModernSans-Light SDF');
@@ -63,7 +63,11 @@
     flex-direction: row;
 }
 
-#Effects .effect .unity-label,
+#Effects .effect .unity-label {
+    margin: 0;
+    padding: 0;
+}
+
 #Effects .effect .unity-button {
     margin: 0;
     padding: 0;
@@ -135,7 +139,7 @@
 .edit-panel .unity-base-field .unity-base-field__label {
     flex-grow: 0;
     flex-shrink: 1;
-    min-width: 0px;
+    min-width: 0;
     width: 100px;
 }
 
@@ -154,5 +158,89 @@
 }
 
 #DiceResult {
-    /* flex-basis: 100%; */
+}
+
+#SearchResults {
+    width: 244px;
+}
+
+#SearchResults .unity-label {
+    color: black;
+    margin: 0;
+    padding: 2px 4px;
+}
+
+#SearchResults .unity-label.selected {
+    color: rgb(255, 255, 255);
+    background-color: orange;
+}
+
+.no-title #SearchInput {
+    min-width: 0;
+}
+
+.no-title #SearchResults {
+    width: 100%;
+}
+
+#GeneralModal #Buttons .unity-button {
+    margin-left: 4px;
+}
+
+#GeneralModal .unity-text-field__input {
+    min-width: 244px;
+}
+
+#GeneralModal #Contents > * {
+    margin-bottom: 4px;
+}
+
+#FloatingControls .hover {
+    -unity-background-image-tint-color: rgb(156, 122, 25);
+}
+
+#FloatingControls .active {
+    -unity-background-image-tint-color: rgb(25, 130, 156);
+}
+
+#SelectedTokenPanel #DataColumn {
+    flex-direction: row;
+}
+
+#SelectedTokenPanel #Conditions {
+    min-width: 120px;
+}
+
+#SelectedTokenPanel #Vitals,
+#SelectedTokenPanel #Conditions {
+    margin-left: 8px;
+    margin-right: 0px; 
+}
+
+#FocusedTokenPanel #DataColumn {
+    flex-direction: row-reverse;
+}
+
+#FocusedTokenPanel #Vitals,
+#FocusedTokenPanel #Conditions {
+    margin-left: 0px;
+    margin-right: 8px; 
+}
+
+#FocusedTokenPanel #Conditions {
+    min-width: 0;
+}
+
+#FocusedTokenPanel #DataColumn Button,
+#FocusedTokenPanel #Controls {
+    display: none;
+}
+
+#SelectedTokenPanel #ExtraInfo .unity-label,
+#FocusedTokenPanel #ExtraInfo .unity-label {
+    -unity-text-align: middle-center;
+    color: #FFF;
+    -unity-font-style: bold;
+    white-space: normal;
+
 }

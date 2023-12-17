@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="MenuItem" class="unit-menu-item" style="margin-left: -1px; margin-right: 0; margin-top: 0; margin-bottom: 0; border-left-color: rgba(255, 255, 255, 0.31); border-right-color: rgba(255, 255, 255, 0.31); border-top-color: rgba(255, 255, 255, 0.31); border-bottom-color: rgba(255, 255, 255, 0.31); border-bottom-width: 1px;">
+        <ui:VisualElement class="self-centered" style="flex-grow: 1; background-color: rgb(255, 255, 255); rotate: 45deg; width: 6px; height: 6px; position: absolute; top: 50%;" />
+        <ui:Label tabindex="-1" text="Place" display-tooltip-when-elided="true" name="Label" style="padding-left: 10px; padding-right: 10px; padding-top: 2px; padding-bottom: 2px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; display: flex;" />
+    </ui:VisualElement>
+</ui:UXML>

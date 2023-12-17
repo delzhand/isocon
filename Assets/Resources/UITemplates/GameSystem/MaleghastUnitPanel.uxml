@@ -1,0 +1,24 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Template name="SimpleHPBar" src="project://database/Assets/Resources/UITemplates/GameSystem/SimpleHPBar.uxml?fileID=9197481963319205126&amp;guid=3db9de4376a3b2249b01c738447136d0&amp;type=3#SimpleHPBar" />
+    <ui:Template name="StatTemplate" src="project://database/Assets/Resources/UITemplates/GameSystem/StatTemplate.uxml?fileID=9197481963319205126&amp;guid=80bbd3f70be4eca4faa677a44a6f09b2&amp;type=3#StatTemplate" />
+    <ui:VisualElement name="DataColumn" style="display: flex; margin-right: 0;">
+        <ui:VisualElement name="Vitals" style="background-color: rgba(0, 0, 0, 0); padding-top: 4px; width: 100px;">
+            <ui:Button text="Alter Vitals" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AlterVitals" style="margin-top: 0; margin-bottom: 4px;" />
+            <ui:Instance template="SimpleHPBar" name="SimpleHPBar" />
+            <ui:VisualElement name="Stats" style="flex-grow: 1;">
+                <ui:Instance template="StatTemplate" name="Type" />
+                <ui:Instance template="StatTemplate" name="Move" />
+                <ui:Instance template="StatTemplate" name="Defense" />
+                <ui:Instance template="StatTemplate" name="Armor" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="Conditions" style="background-color: rgba(0, 0, 0, 0); padding-top: 4px;">
+            <ui:Button text="Add Status" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddStatus" style="margin-top: 0; margin-bottom: 4px;" />
+            <ui:VisualElement name="List" style="flex-grow: 1;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Traits" style="background-color: rgba(0, 0, 0, 0); padding-top: 4px;">
+            <ui:Button text="Upgrades" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Upgrades" style="margin-top: 0; margin-bottom: 4px;" />
+            <ui:VisualElement name="List" style="flex-grow: 1;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
