@@ -97,16 +97,17 @@ public class GameSystem : MonoBehaviour
         throw new NotImplementedException();        
     }
 
-    public virtual string[] GetEffectList() {
-        throw new NotImplementedException();
+    public virtual string MappedEffectName(string effect) {
+        return effect;
     }
 
-    public virtual bool HasEffect(string search, List<string> effects) {
-        return effects.Contains(search);
+    public virtual string DeMappedEffectName(string effect) {
+        return effect;
     }
 
-    public virtual bool HasCustomEffect(List<string> effects) {
-        return false;
+    public virtual string[] GetEffectList()
+    {
+        return new string[]{"Wavy", "Spiky", "Hand", "Hole", "Blocked", "Corners"};
     }
 
     public static void Set(string value) {

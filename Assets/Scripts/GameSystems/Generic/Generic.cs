@@ -38,21 +38,6 @@ public class Generic : GameSystem
         data.GetComponent<GenericTokenData>().UpdateTokenPanel(elementName);
     }
 
-    public override string[] GetEffectList()
-    {
-        return new string[]{"Wavy", "Spiky", "Hand", "Hole", "Blocked", "Corners"};
-    }
-
-    public override bool HasCustomEffect(List<string> effects)
-    {
-        return effects.Count > 0 && 
-            !HasEffect("Wavy", effects) &&
-            !HasEffect("Spiky", effects) &&
-            !HasEffect("Hand", effects) &&
-            !HasEffect("Hole", effects) &&
-            !HasEffect("Blocked", effects);
-    }
-
     public override void AddTokenModal()
     {
         base.AddTokenModal();

@@ -18,8 +18,8 @@ public class IsoConsole
     }
 
     private static void ConsoleExecute(ClickEvent evt) {
-        string command = Modal.Find().Q<TextField>("Console").value;
-        Modal.Find().Q<TextField>("Console").Focus();
+        string command = UI.Modal.Q<TextField>("Console").value;
+        UI.Modal.Q<TextField>("Console").Focus();
         if (command == "MGSample") {
             string json = "{\"Name\":\"\",\"GraphicHash\":\"8b3627c36b26c32aaa2997d2ed422253e9f0e19f896978cd22514514545f3830\",\"Size\":0,\"HouseJob\":\"CARCASS/Gunwight\"}";
             json = "{\"Name\":\"\",\"GraphicHash\":\"8b3627c36b26c32aaa2997d2ed422253e9f0e19f896978cd22514514545f3830\",\"Size\":0,\"HouseJob\":\"CARCASS/Gunwight\"}";

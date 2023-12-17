@@ -89,22 +89,34 @@ public class Maleghast : GameSystem
         data.GetComponent<MaleghastTokenData>().UpdateTokenPanel(elementName);
     }
 
-    public override string[] GetEffectList() {
-        return new string[]{"Adverse", "Hazard", "Impassable"};
+    public override string MappedEffectName(string effect) {
+        switch (effect) {
+            case "Blocked":
+                return "Impassable";
+            case "Spiky":
+                return "Hazard";
+            case "Wavy":
+                return "Adverse";
+            default:
+                return effect;
+        }
     }
 
-    public override bool HasEffect(string search, List<string> effects)
-    {
-        switch (search) {
-            case "Blocked":
-                return effects.Contains("Impassable");
-            case "Spiky":
-                return effects.Contains("Hazard");
-            case "Wavy":
-                return effects.Contains("Adverse");
+    public override string DeMappedEffectName(string effect) {
+        switch (effect) {
+            case "Impassable":
+                return "Blocked";
+            case "Hazard":
+                return "Spiky";
+            case "Adverse":
+                return "Wavy";
             default:
-                return false;
+                return effect;
         }
+    }
+
+    public override string[] GetEffectList() {
+        return new string[]{"Adverse", "Hazard", "Impassable"};
     }
 
     public override void CreateToken()

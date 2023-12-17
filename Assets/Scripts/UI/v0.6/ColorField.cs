@@ -48,14 +48,14 @@ public class ColorField
     }
 
     private static void SetRGB(Color c, VisualElement element = null) {
-        element ??= Modal.Find();
+        element ??= UI.Modal;
         element.Q<SliderInt>("EditGreen").value = Mathf.RoundToInt(c.g * 255);
         element.Q<SliderInt>("EditRed").value = Mathf.RoundToInt(c.r * 255);
         element.Q<SliderInt>("EditBlue").value = Mathf.RoundToInt(c.b * 255);
     }
 
     public static Color FromSliders(VisualElement element = null) {
-        element ??= Modal.Find();
+        element ??= UI.Modal;
         int r = element.Q<SliderInt>("EditRed").value;
         int g = element.Q<SliderInt>("EditGreen").value;
         int b = element.Q<SliderInt>("EditBlue").value;
@@ -63,12 +63,12 @@ public class ColorField
     }
 
     private static void SetHex(Color c, VisualElement element = null) {
-        element ??= Modal.Find();
+        element ??= UI.Modal;
         element.Q<TextField>("EditColorHex").value = ColorUtility.ColorToHex(c);
     }
 
     private static void UpdatePreview(VisualElement element = null) {
-        element ??= Modal.Find();
+        element ??= UI.Modal;
         element.Q("Preview").style.backgroundColor = FromSliders(element);
     }
 }

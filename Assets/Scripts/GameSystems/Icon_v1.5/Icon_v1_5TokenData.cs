@@ -18,16 +18,15 @@ public class Icon_v1_5TokenDataRaw: TokenDataRaw
     public int HPMultiplier;
 
     public static string ToJson() {
-        VisualElement modal = Modal.Find();
 
         Icon_v1_5TokenDataRaw raw = new Icon_v1_5TokenDataRaw();
 
-        raw.Name = modal.Q<TextField>("NameField").value;
-        Texture2D graphic = TextureSender.CopyLocalImage(modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
+        raw.Name = UI.Modal.Q<TextField>("NameField").value;
+        Texture2D graphic = TextureSender.CopyLocalImage(UI.Modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
         raw.GraphicHash = TextureSender.GetTextureHash(graphic);
 
-        string type = modal.Q<DropdownField>("Type").value;
-        string playerJob = SearchField.GetValue(modal.Q("PlayerJob"));
+        string type = UI.Modal.Q<DropdownField>("Type").value;
+        string playerJob = SearchField.GetValue(UI.Modal.Q("PlayerJob"));
         
         if (type == "Player") {
             raw.Class = playerJob.Split("/")[0];
@@ -37,21 +36,21 @@ public class Icon_v1_5TokenDataRaw: TokenDataRaw
             raw.Size = 1;
         }
         else if (type == "Foe") {
-            raw.Class = modal.Q<DropdownField>("FoeClass").value;
-            raw.Job = modal.Q<TextField>("FoeJob").value;
-            raw.HPMultiplier = raw.Class == "Legend" ? int.Parse(modal.Q<DropdownField>("LegendHP").value.Replace("x", "")) : 1;
-            raw.Elite = modal.Q<Toggle>("Elite").value;
+            raw.Class = UI.Modal.Q<DropdownField>("FoeClass").value;
+            raw.Job = UI.Modal.Q<TextField>("FoeJob").value;
+            raw.HPMultiplier = raw.Class == "Legend" ? int.Parse(UI.Modal.Q<DropdownField>("LegendHP").value.Replace("x", "")) : 1;
+            raw.Elite = UI.Modal.Q<Toggle>("Elite").value;
             if (raw.Elite) {
                 raw.HPMultiplier = 2;
             }
-            raw.Size = int.Parse(modal.Q<DropdownField>("Size").value[..1]);
+            raw.Size = int.Parse(UI.Modal.Q<DropdownField>("Size").value[..1]);
         }
         else if (type == "Object") {
             raw.Class = "Object";
             raw.Job = "";
             raw.Elite = false;
-            raw.HPMultiplier = modal.Q<IntegerField>("ObjectHP").value;
-            raw.Size = int.Parse(modal.Q<DropdownField>("Size").value[..1]);
+            raw.HPMultiplier = UI.Modal.Q<IntegerField>("ObjectHP").value;
+            raw.Size = int.Parse(UI.Modal.Q<DropdownField>("Size").value[..1]);
         }
 
         return JsonUtility.ToJson(raw);

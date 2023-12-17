@@ -23,7 +23,7 @@ public class AddObject
     }
 
     private static void ConfirmAddEffect(ClickEvent evt) {
-        string value = Modal.Find().Q("ImageSearchField").Q<TextField>("SearchInput").value;
+        string value = UI.Modal.Q("ImageSearchField").Q<TextField>("SearchInput").value;
         Modal.Close();
     }
 }

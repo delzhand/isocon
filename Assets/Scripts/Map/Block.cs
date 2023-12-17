@@ -250,7 +250,7 @@ public class Block : MonoBehaviour
 
     public void EffectChange(string effect) {
         switch (effect) {
-            case "Clear":
+            case "None":
                 effects.Clear();
                 break;
             default:
@@ -339,29 +339,35 @@ public class Block : MonoBehaviour
 
         // Markers
         markerMaterial.SetInt("_Impassable", 0);
-        if (GameSystem.Current().HasEffect("Blocked", effects)) {
-            markerMaterial.SetInt("_Impassable", 1);
-        }
         markerMaterial.SetInt("_Dangerous", 0);
-        if (GameSystem.Current().HasEffect("Spiky", effects)) {
-            markerMaterial.SetInt("_Dangerous", 1);
-        }
         markerMaterial.SetInt("_Difficult", 0);
-        if (GameSystem.Current().HasEffect("Wavy", effects)) {
-            markerMaterial.SetInt("_Difficult", 1);
-        }
         markerMaterial.SetInt("_Interactive", 0);
-        if (GameSystem.Current().HasEffect("Hand", effects)) {
-            markerMaterial.SetInt("_Interactive", 1);
-        }
         markerMaterial.SetInt("_Pit", 0);
-        if (GameSystem.Current().HasEffect("Hole", effects)) {
-            markerMaterial.SetInt("_Pit", 1);
-        }
         markerMaterial.SetInt("_Other", 0);
-        if (GameSystem.Current().HasCustomEffect(effects)) {
-            markerMaterial.SetInt("_Other", 1);
+        
+        foreach (string s in effects) {
+            switch (s) {
+                case "Blocked":
+                    markerMaterial.SetInt("_Impassable", 1);
+                    break;
+                case "Spiky":
+                    markerMaterial.SetInt("_Dangerous", 1);
+                    break;
+                case "Wavy":
+                    markerMaterial.SetInt("_Difficult", 1);
+                    break;
+                case "Hand":
+                    markerMaterial.SetInt("_Interactive", 1);
+                    break;
+                case "Hole":
+                    markerMaterial.SetInt("_Pit", 1);
+                    break;
+                default:
+                    markerMaterial.SetInt("_Other", 1);
+                    break;
+            }
         }
+
         mats[BlockMesh.MaterialMarkerIndex()] = markerMaterial;
 
         // Selected/Focused

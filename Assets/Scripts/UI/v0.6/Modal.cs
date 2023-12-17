@@ -20,20 +20,15 @@ public class Modal
         FindDoubleConfirm().Q<Button>("Cancel").RegisterCallback<ClickEvent>(DoubleConfirmCancelled);
     }
 
-    public static VisualElement Find() {
-        return UI.System.Q("GeneralModal");
-    }
-
     private static VisualElement FindDoubleConfirm() {
         return UI.System.Q("DoubleConfirmModal");
     }
 
     public static void Reset(string title) {
-        VisualElement modal = Find();
-        UI.ToggleDisplay(modal, true);
-        modal.Q<Label>("Title").text = title;
-        modal.Q("Contents").Clear();
-        modal.Q("Buttons").Clear();
+        UI.ToggleDisplay(UI.Modal, true);
+        UI.Modal.Q<Label>("Title").text = title;
+        UI.Modal.Q("Contents").Clear();
+        UI.Modal.Q("Buttons").Clear();
         preferredAction = null;
 
         UI.ToggleDisplay("Backdrop", true);
@@ -41,36 +36,32 @@ public class Modal
     }
 
     private static void AddContents(VisualElement e) {
-        VisualElement modal = Find();
-        modal.Q("Contents").Add(e);
+        UI.Modal.Q("Contents").Add(e);
         e.SendToBack();
     }
 
     public static void AddContentButton(string label, EventCallback<ClickEvent> onClick) {
-        VisualElement modal = Find();
         Button button = new Button();
         button.text = label;
         button.RegisterCallback<ClickEvent>(onClick);
-        modal.Q("Contents").Add(button);   
+        UI.Modal.Q("Contents").Add(button);   
         button.SendToBack();     
     }
 
     public static void AddButton(string label, EventCallback<ClickEvent> onClick) {
-        VisualElement modal = Find();
         Button button = new Button();
         button.text = label;
         button.RegisterCallback<ClickEvent>(onClick);
-        modal.Q("Buttons").Add(button);
+        UI.Modal.Q("Buttons").Add(button);
     }
 
     public static void AddPreferredButton(string label, EventCallback<ClickEvent> onClick) {
         preferredAction = onClick;
-        VisualElement modal = Find();
         Button button = new Button();
         button.text = label;
         button.AddToClassList("preferred");
         button.RegisterCallback<ClickEvent>(onClick);
-        modal.Q("Buttons").Add(button);
+        UI.Modal.Q("Buttons").Add(button);
     }
 
     public static void Close() {
@@ -78,12 +69,11 @@ public class Modal
             DoubleConfirmCancelled(new ClickEvent());
         }
         else if (isModalOpen) {
-            VisualElement modal = Find();
-            modal.Q<Label>("Title").text = "";
-            modal.Q("Contents").Clear();
-            modal.Q("Buttons").Clear();
+            UI.Modal.Q<Label>("Title").text = "";
+            UI.Modal.Q("Contents").Clear();
+            UI.Modal.Q("Buttons").Clear();
             preferredAction = null;
-            UI.ToggleDisplay(modal, false);
+            UI.ToggleDisplay(UI.Modal, false);
             UI.ToggleDisplay("Backdrop", false);
             isModalOpen = false;
         }
@@ -107,11 +97,10 @@ public class Modal
     }
 
     public static void DoubleConfirm(string title, string message, ConfirmCallback confirm) {
-        VisualElement modal = Find();
         VisualElement dcModal = FindDoubleConfirm();
         dcModal.Q<Label>("Title").text = title;
         dcModal.Q<Label>("Message").text = message;
-        UI.ToggleDisplay(modal, false);
+        UI.ToggleDisplay(UI.Modal, false);
         UI.ToggleDisplay(dcModal, true);
         _doubleConfirm = null;
         _doubleConfirm += confirm;
@@ -121,9 +110,8 @@ public class Modal
 
     private static void DoubleConfirmConfirmed(ClickEvent evt) {
         _doubleConfirm?.Invoke();
-        VisualElement modal = Find();
         VisualElement dcModal = FindDoubleConfirm();
-        UI.ToggleDisplay(modal, false);
+        UI.ToggleDisplay(UI.Modal, false);
         UI.ToggleDisplay(dcModal, false);
         UI.ToggleDisplay("Backdrop", false);
         isModalOpen = false;
@@ -131,12 +119,11 @@ public class Modal
     }
 
     private static void DoubleConfirmCancelled(ClickEvent evt) {
-        VisualElement modal = Find();
         VisualElement dcModal = FindDoubleConfirm();
         UI.ToggleDisplay(dcModal, false);
         isConfirmOpen = false;
         if (isModalOpen) {
-            UI.ToggleDisplay(modal, true);
+            UI.ToggleDisplay(UI.Modal, true);
         }
         else {
             UI.ToggleDisplay("Backdrop", false);

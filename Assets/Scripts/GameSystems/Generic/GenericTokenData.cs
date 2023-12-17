@@ -12,18 +12,16 @@ public class GenericTokenDataRaw: TokenDataRaw
     public int MaxHP;
 
     public static string ToJson() {
-        VisualElement modal = Modal.Find();
-
         GenericTokenDataRaw raw = new GenericTokenDataRaw();
 
-        raw.Name = modal.Q<TextField>("NameField").value;
-        Texture2D graphic = TextureSender.CopyLocalImage(modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
+        raw.Name = UI.Modal.Q<TextField>("NameField").value;
+        Texture2D graphic = TextureSender.CopyLocalImage(UI.Modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
         raw.GraphicHash = TextureSender.GetTextureHash(graphic);
         
-        raw.MaxHP = modal.Q<IntegerField>("HPField").value;
+        raw.MaxHP = UI.Modal.Q<IntegerField>("HPField").value;
         
         raw.Size = 1;
-        string sizeValue = modal.Q<DropdownField>("SizeField").value;
+        string sizeValue = UI.Modal.Q<DropdownField>("SizeField").value;
         if (sizeValue == "2x2") {
             raw.Size = 2;
         }

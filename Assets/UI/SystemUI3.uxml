@@ -230,6 +230,13 @@
                                 </ui:VisualElement>
                                 <ui:VisualElement name="More" style="flex-grow: 1; background-image: resource(&apos;Textures/ToolIcons/subtool&apos;); width: 8px; height: 8px; position: absolute; right: 2px; bottom: 2px;" />
                             </ui:Button>
+                            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="TerrainEffect" class="tool has-options" style="width: 48px; height: 48px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-background-scale-mode: scale-to-fit; margin-top: 0; margin-right: 2px; margin-bottom: 4px; margin-left: 2px; overflow: visible;">
+                                <ui:VisualElement name="Icon" style="flex-grow: 1; background-image: resource(&apos;Textures/ToolIcons/terrain-effect&apos;); -unity-background-scale-mode: scale-to-fit;" />
+                                <ui:VisualElement name="Tooltip" style="flex-grow: 1; position: absolute; background-color: rgb(195, 195, 195); left: 52px; top: 32px; padding-top: 4px; padding-right: 10px; padding-bottom: 4px; padding-left: 10px; display: none;">
+                                    <ui:Label tabindex="-1" text="Environment" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ToolName" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; color: rgb(0, 0, 0); -unity-font-style: bold; -unity-text-align: middle-left;" />
+                                    <ui:Label tabindex="-1" text="Change default colors or lighting" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Description" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; color: rgb(96, 96, 96); -unity-text-align: middle-left; font-size: 12px;" />
+                                </ui:VisualElement>
+                            </ui:Button>
                             <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="Environment" class="tool has-options" style="width: 48px; height: 48px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-background-scale-mode: scale-to-fit; margin-top: 0; margin-right: 2px; margin-bottom: 4px; margin-left: 2px; overflow: visible;">
                                 <ui:VisualElement name="Icon" style="flex-grow: 1; background-image: resource(&apos;Textures/ToolIcons/environment&apos;); -unity-background-scale-mode: scale-to-fit;" />
                                 <ui:VisualElement name="Tooltip" style="flex-grow: 1; position: absolute; background-color: rgb(195, 195, 195); left: 52px; top: 32px; padding-top: 4px; padding-right: 10px; padding-bottom: 4px; padding-left: 10px; display: none;">
@@ -254,7 +261,7 @@
                                 <ui:VisualElement name="TopBlockPaint" style="background-color: rgb(0, 0, 0); width: 28px; height: 28px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; left: -15px;" />
                             </ui:VisualElement>
                         </ui:VisualElement>
-                        <ui:VisualElement name="StyleTextureOptions" class="tool-options" style="flex-grow: 0; flex-direction: column; align-items: stretch; align-self: flex-start; justify-content: flex-start; display: flex; margin-right: 0; margin-left: 0; margin-bottom: 0; width: 100%; margin-top: 0;">
+                        <ui:VisualElement name="StyleTextureOptions" class="tool-options" style="flex-grow: 0; flex-direction: column; align-items: stretch; align-self: flex-start; justify-content: flex-start; display: none; margin-right: 0; margin-left: 0; margin-bottom: 0; width: 100%; margin-top: 0;">
                             <ui:DropdownField label="Tile Texture" index="0" choices="Acid Flow, Acid, Old Brick, Brick, Gray Brick, White Brick, Dry Grass, Grass, Gold, Lava Flow, Lava, Metal, Gray Metal, Poison Flow, Poison, Sand, Snow, Soil, Stone, Small Tile, Big Tile, Water Flow, Water, Wood, Old Wood" name="BlockTexture" focusable="false" class="no-margin better-dropdown" style="display: flex; width: 340px;" />
                         </ui:VisualElement>
                         <ui:VisualElement name="EnvironmentOptions" class="tool-options" style="flex-grow: 0; flex-direction: column; align-items: stretch; align-self: flex-start; justify-content: flex-start; display: none; margin-right: 0; margin-left: 0; margin-bottom: 0; width: 100%; margin-top: 0;">
@@ -271,6 +278,9 @@
                             <ui:Slider picking-mode="Ignore" label="Light Angle" value="330" high-value="360" name="LightAngle" focusable="false" class="no-margin" />
                             <ui:Slider picking-mode="Ignore" label="Light Height" value="50" high-value="90" name="LightHeight" focusable="false" class="no-margin" />
                             <ui:Slider picking-mode="Ignore" label="Light Intensity" value="2" high-value="3" name="LightIntensity" focusable="false" class="no-margin" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="TerrainEffectOptions" class="tool-options" style="flex-grow: 0; flex-direction: column; align-items: stretch; align-self: flex-start; justify-content: flex-start; display: none; margin-right: 0; margin-left: 0; margin-bottom: 0; width: 100%; margin-top: 0;">
+                            <ui:DropdownField label="Terrain Effect" index="0" choices="None,Wavy,Spiky,Hole,Hand,Blocked,Corners" name="BlockEffect" focusable="false" class="no-margin better-dropdown" style="display: flex; width: 340px;" />
                         </ui:VisualElement>
                         <ui:VisualElement name="DataOptions" class="tool-options" style="flex-grow: 0; flex-direction: row; align-items: stretch; align-self: flex-start; justify-content: flex-start; display: none; margin-right: -2px; margin-left: -2px; margin-bottom: -4px; width: 100%; margin-top: 0;">
                             <ui:Button text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Save" style="margin-top: 0; margin-right: 2px; margin-left: 2px; margin-bottom: 4px;" />

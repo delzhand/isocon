@@ -189,10 +189,8 @@ public class Launcher : MonoBehaviour
     }
 
     private void ConfigModalEvaluateConditions() {
-        VisualElement modal = Modal.Find();
-
-        bool grid = modal.Q<DropdownField>("GameSystem").value == "Generic";
-        UI.ToggleDisplay(modal.Q("GridType"), grid);
+        bool grid = UI.Modal.Q<DropdownField>("GameSystem").value == "Generic";
+        UI.ToggleDisplay(UI.Modal.Q("GridType"), grid);
     }
 
     private string DefaultGridType() {

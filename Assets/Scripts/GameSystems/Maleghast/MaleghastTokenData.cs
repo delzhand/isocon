@@ -12,12 +12,11 @@ public class MaleghastTokenDataRaw: TokenDataRaw
     public string HouseJob;
 
     public static string ToJson() {
-        VisualElement modal = Modal.Find();
         MaleghastTokenDataRaw raw = new MaleghastTokenDataRaw();
-        raw.Name = modal.Q<TextField>("NameField").value;
-        Texture2D graphic = TextureSender.CopyLocalImage(modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
+        raw.Name = UI.Modal.Q<TextField>("NameField").value;
+        Texture2D graphic = TextureSender.CopyLocalImage(UI.Modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
         raw.GraphicHash = TextureSender.GetTextureHash(graphic);
-        raw.HouseJob = SearchField.GetValue(modal.Q("UnitType"));
+        raw.HouseJob = SearchField.GetValue(UI.Modal.Q("UnitType"));
         return JsonUtility.ToJson(raw);
     }
 }

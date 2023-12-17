@@ -22,30 +22,6 @@ public class TerrainController : MonoBehaviour
 
     public static bool MapDirty = false;
 
-    // void Start() {
-    //     // registerCallbacks();
-    //     // disableIndicators();
-    //     // InitializeTerrain(8, 8, 1);
-    // }
-
-    // private void editTerrainSelect(ChangeEvent<string> evt) {
-    //     resetConditionalElements();
-    //     switch (evt.newValue) {
-    //         case "EDIT TERRAIN":
-    //             showConditionalElement("EditTerrainOptions");
-    //             break;
-    //         case "EDIT BLOCK":
-    //             showConditionalElement("EditBlockOptions");
-    //             break;
-    //         case "MARK BLOCK":
-    //             showConditionalElement("MarkBlockOptions");
-    //             break;
-    //         case "APPEARANCE":
-    //             showConditionalElement("AppearanceOptions");
-    //             break;
-    //     }
-    // }
-
     void LateUpdate() {
         if (ReorgNeeded) {
             Reorg();
@@ -71,14 +47,11 @@ public class TerrainController : MonoBehaviour
             case "ChangeShape":
                 ChangeShape();
                 break;
-            case "AddMark":
-                ChangeEffect(MapEdit.GetMarkerEffect());
-                break;
-            case "ClearMarks":
-                ChangeEffect("Clear");
-                break;
             case "StyleBlock":
                 ApplyStyle();
+                break;
+            case "TerrainEffect":
+                ChangeEffect();
                 break;
         }
     }
@@ -451,7 +424,8 @@ public class TerrainController : MonoBehaviour
         ReorgNeeded = true;
     }
 
-    public static void ChangeEffect(string effect) {
+    public static void ChangeEffect() {
+        string effect = UI.System.Q("ToolOptions").Q<DropdownField>("BlockEffect").value;
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
             block.EffectChange(effect);

@@ -93,38 +93,55 @@ public class Icon_v1_5 : GameSystem
         data.GetComponent<Icon_v1_5TokenData>().UpdateTokenPanel(elementName);
     }
 
-    public override string[] GetEffectList() {
-        return new string[]{"Difficult", "Pit", "Dangerous", "Impassable", "Interactive", "Demon Slayer/Flash Step - Afterimage", "Demon Slayer/Six Hells Trigram", "Demon Slayer/Heroic Six Hells Trigram", "Fool/Party Favor", "Freelancer/Showdown - Quench", "Freelancer/Warding Bolts", "Shade/Shadow Cloud (Blinded+ exc Caster)", "Harvester/Plant", "Harvester/Blood Grove", "Harvester/Mote of Life (Blessing))", "Harvester/Mote of Life (Regen)", "Spellblade/Lightning Spike 1", "Spellblade/Lightning Spike 2", "Spellblade/Lightning Spike 3", "Spellblade/Lightning Spike 4", "Spellblade/Lightning Spike 5", "Spellblade/Lightning Spike 6", "Stormbender/Selkie", "Stormbender/Salt Sprite", "Stormbender/Pit", "Stormbender/Tsunami", "Stormbender/Tsunami - Stormlash", "Stormbender/Dangerous", "Stormbender/Geyser I", "Stormbender/Gust", "Stormbender/Gust I", "Stormbender/Gust II", "Stormbender/Waterspout", "Stormbender/Waterspout - Hurricane", "Stormbender/Waterspout I", "Stormbender/Waterspout I - Hurricane", "Stormbender/Waterspout II", "Stormbender/Waterspout II - Hurricane"};
-    }
-
-    public override bool HasEffect(string search, List<string> effects)
-    {
-        switch (search) {
+    public override string MappedEffectName(string effect) {
+        switch (effect) {
             case "Blocked":
-                return effects.Contains("Impassable");
+                return "Impassable";
             case "Spiky":
-                return effects.Contains("Dangerous");
+                return "Dangerous";
             case "Wavy":
-                return effects.Contains("Difficult");
+                return "Difficult";
             case "Hand":
-                return effects.Contains("Interactive");
+                return "Interactive";
             case "Hole":
-                return effects.Contains("Pit");
+                return "Pit";
             default:
-                return false;
+                return effect;
         }
     }
 
-    public override bool HasCustomEffect(List<string> effects)
-    {
-        List<string> specialEffects = new string[]{"Impassable", "Dangerous", "Difficult", "Interactive", "Pit"}.ToList();
-        foreach (string s in effects) {
-            if (!specialEffects.Contains(s)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // public override string[] GetEffectList() {
+    //     return new string[]{"Difficult", "Pit", "Dangerous", "Impassable", "Interactive", "Demon Slayer/Flash Step - Afterimage", "Demon Slayer/Six Hells Trigram", "Demon Slayer/Heroic Six Hells Trigram", "Fool/Party Favor", "Freelancer/Showdown - Quench", "Freelancer/Warding Bolts", "Shade/Shadow Cloud (Blinded+ exc Caster)", "Harvester/Plant", "Harvester/Blood Grove", "Harvester/Mote of Life (Blessing))", "Harvester/Mote of Life (Regen)", "Spellblade/Lightning Spike 1", "Spellblade/Lightning Spike 2", "Spellblade/Lightning Spike 3", "Spellblade/Lightning Spike 4", "Spellblade/Lightning Spike 5", "Spellblade/Lightning Spike 6", "Stormbender/Selkie", "Stormbender/Salt Sprite", "Stormbender/Pit", "Stormbender/Tsunami", "Stormbender/Tsunami - Stormlash", "Stormbender/Dangerous", "Stormbender/Geyser I", "Stormbender/Gust", "Stormbender/Gust I", "Stormbender/Gust II", "Stormbender/Waterspout", "Stormbender/Waterspout - Hurricane", "Stormbender/Waterspout I", "Stormbender/Waterspout I - Hurricane", "Stormbender/Waterspout II", "Stormbender/Waterspout II - Hurricane"};
+    // }
+
+    // public override bool HasEffect(string search, List<string> effects)
+    // {
+    //     switch (search) {
+    //         case "Blocked":
+    //             return effects.Contains("Impassable");
+    //         case "Spiky":
+    //             return effects.Contains("Dangerous");
+    //         case "Wavy":
+    //             return effects.Contains("Difficult");
+    //         case "Hand":
+    //             return effects.Contains("Interactive");
+    //         case "Hole":
+    //             return effects.Contains("Pit");
+    //         default:
+    //             return false;
+    //     }
+    // }
+
+    // public override bool HasCustomEffect(List<string> effects)
+    // {
+    //     List<string> specialEffects = new string[]{"Impassable", "Dangerous", "Difficult", "Interactive", "Pit"}.ToList();
+    //     foreach (string s in effects) {
+    //         if (!specialEffects.Contains(s)) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
     public override void AddTokenModal()
     {
@@ -165,9 +182,8 @@ public class Icon_v1_5 : GameSystem
     {
         string json = GetTokenDataRawJson();
         FileLogger.Write($"Token added: {json}");
-        VisualElement modal = Modal.Find();
-        if (modal.Q<DropdownField>("Type").value == "Object" || modal.Q<DropdownField>("FoeClass").value == "Mob") {
-            int count = modal.Q<IntegerField>("CloneCount").value;
+        if (UI.Modal.Q<DropdownField>("Type").value == "Object" || UI.Modal.Q<DropdownField>("FoeClass").value == "Mob") {
+            int count = UI.Modal.Q<IntegerField>("CloneCount").value;
             for(int i = 0; i < count; i++) {
                 Player.Self().CmdCreateTokenData(json);
             }
@@ -178,25 +194,23 @@ public class Icon_v1_5 : GameSystem
     }
 
     private static void AddTokenModalEvaluateConditions() {
-        VisualElement modal = Modal.Find();
-
-        bool playerJob = modal.Q<DropdownField>("Type").value == "Player";
-        bool foeClass = modal.Q<DropdownField>("Type").value == "Foe";
-        bool foeJob = modal.Q<DropdownField>("Type").value == "Foe";
-        bool elite = foeClass && !StringUtility.InList(modal.Q<DropdownField>("FoeClass").value, "Legend", "Mob");
-        bool legendHP = foeClass && modal.Q<DropdownField>("FoeClass").value == "Legend";
+        bool playerJob = UI.Modal.Q<DropdownField>("Type").value == "Player";
+        bool foeClass = UI.Modal.Q<DropdownField>("Type").value == "Foe";
+        bool foeJob = UI.Modal.Q<DropdownField>("Type").value == "Foe";
+        bool elite = foeClass && !StringUtility.InList(UI.Modal.Q<DropdownField>("FoeClass").value, "Legend", "Mob");
+        bool legendHP = foeClass && UI.Modal.Q<DropdownField>("FoeClass").value == "Legend";
         bool size = foeClass;
-        bool objectHP = modal.Q<DropdownField>("Type").value == "Object";
-        bool cloneCount = modal.Q<DropdownField>("Type").value == "Object" || modal.Q<DropdownField>("FoeClass").value == "Mob";
+        bool objectHP = UI.Modal.Q<DropdownField>("Type").value == "Object";
+        bool cloneCount = UI.Modal.Q<DropdownField>("Type").value == "Object" || UI.Modal.Q<DropdownField>("FoeClass").value == "Mob";
 
-        UI.ToggleDisplay(modal.Q("PlayerJob"), playerJob);
-        UI.ToggleDisplay(modal.Q("FoeClass"), foeClass);
-        UI.ToggleDisplay(modal.Q("FoeJob"), foeJob);
-        UI.ToggleDisplay(modal.Q("Elite"), elite);
-        UI.ToggleDisplay(modal.Q("LegendHP"), legendHP);
-        UI.ToggleDisplay(modal.Q("Size"), size);
-        UI.ToggleDisplay(modal.Q("ObjectHP"), objectHP);
-        UI.ToggleDisplay(modal.Q("CloneCount"), cloneCount);
+        UI.ToggleDisplay(UI.Modal.Q("PlayerJob"), playerJob);
+        UI.ToggleDisplay(UI.Modal.Q("FoeClass"), foeClass);
+        UI.ToggleDisplay(UI.Modal.Q("FoeJob"), foeJob);
+        UI.ToggleDisplay(UI.Modal.Q("Elite"), elite);
+        UI.ToggleDisplay(UI.Modal.Q("LegendHP"), legendHP);
+        UI.ToggleDisplay(UI.Modal.Q("Size"), size);
+        UI.ToggleDisplay(UI.Modal.Q("ObjectHP"), objectHP);
+        UI.ToggleDisplay(UI.Modal.Q("CloneCount"), cloneCount);
     }
 
     private static void AlterVitalsModal(ClickEvent evt) {
@@ -214,7 +228,7 @@ public class Icon_v1_5 : GameSystem
     }
 
     private static void AlterVitals(string cmd) {
-        int val = Modal.Find().Q<IntegerField>("Number").value;
+        int val = UI.Modal.Q<IntegerField>("Number").value;
         Player.Self().CmdRequestTokenDataSetValue(Token.GetSelectedData().GetComponent<TokenData>(), $"{cmd}|{val}");
     }
 
@@ -239,29 +253,26 @@ public class Icon_v1_5 : GameSystem
     }
 
     private static void AddStatusModalEvaluateConditions() {
-        VisualElement modal = Modal.Find();
-
-        bool pregenStatus = modal.Q<DropdownField>("Type").value == "Predefined";
+        bool pregenStatus = UI.Modal.Q<DropdownField>("Type").value == "Predefined";
         bool name = !pregenStatus;
         bool color = !pregenStatus;
-        bool number = modal.Q<DropdownField>("Type").value == "Number";
-        bool detail = modal.Q<DropdownField>("Type").value == "Detail";
+        bool number = UI.Modal.Q<DropdownField>("Type").value == "Number";
+        bool detail = UI.Modal.Q<DropdownField>("Type").value == "Detail";
 
-        UI.ToggleDisplay(modal.Q("PregenStatuses"), pregenStatus);
-        UI.ToggleDisplay(modal.Q("Name"), name);
-        UI.ToggleDisplay(modal.Q("Color"), color);
-        UI.ToggleDisplay(modal.Q("Number"), number);
-        UI.ToggleDisplay(modal.Q("Detail"), detail);
+        UI.ToggleDisplay(UI.Modal.Q("PregenStatuses"), pregenStatus);
+        UI.ToggleDisplay(UI.Modal.Q("Name"), name);
+        UI.ToggleDisplay(UI.Modal.Q("Color"), color);
+        UI.ToggleDisplay(UI.Modal.Q("Number"), number);
+        UI.ToggleDisplay(UI.Modal.Q("Detail"), detail);
     }
 
     private static void AddStatus(ClickEvent evt) {
-        VisualElement modal = Modal.Find();
-        string type = modal.Q<DropdownField>("Type").value;
-        string pregenStatus = SearchField.GetValue(Modal.Find().Q("PregenStatuses"));
-        string customStatus = modal.Q<TextField>("Name").value;
-        string color = modal.Q<DropdownField>("Color").value;
-        // string detail = modal.Q<TextField>("Detail").value;
-        int number = modal.Q<IntegerField>("Number").value;
+        string type = UI.Modal.Q<DropdownField>("Type").value;
+        string pregenStatus = SearchField.GetValue(UI.Modal.Q("PregenStatuses"));
+        string customStatus = UI.Modal.Q<TextField>("Name").value;
+        string color = UI.Modal.Q<DropdownField>("Color").value;
+        // string detail = UI.Modal.Q<TextField>("Detail").value;
+        int number = UI.Modal.Q<IntegerField>("Number").value;
         StatusEffect s;
         if (type == "Predefined") {
             s = FindStatusEffect(pregenStatus);

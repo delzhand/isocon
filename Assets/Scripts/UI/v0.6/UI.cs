@@ -41,6 +41,18 @@ public class UI : MonoBehaviour
         }
     }
 
+    public static VisualElement Modal {
+        get {
+            return UI.System.Q("GeneralModal");
+        }
+    }
+
+    public static VisualElement ToolsPanel {
+        get {
+            return UI.System.Q("ToolsPanel");
+        }
+    }
+
     public static void SetBlocking(VisualElement root, string blockingElement) {
         SetBlocking(root, new string[]{blockingElement});
     }

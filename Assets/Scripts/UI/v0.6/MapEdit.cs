@@ -245,8 +245,6 @@ public class MapEdit
     private static void OpenSaveModal(ClickEvent evt) {
         Modal.Reset("Save Map");
 
-        VisualElement modal = Modal.Find();
-
         TextField filenameField = new TextField();
         filenameField.name = "Filename";
         filenameField.label = "Filename";
@@ -255,18 +253,18 @@ public class MapEdit
         }
         filenameField.AddToClassList("no-margin");
         filenameField.style.minWidth = 400;
-        modal.Q("Contents").Add(filenameField);
+        UI.Modal.Q("Contents").Add(filenameField);
 
         Button confirm = new Button();
         confirm.text = "Confirm";
         confirm.RegisterCallback<ClickEvent>(ConfirmMapSave);
         confirm.AddToClassList("preferred");
-        modal.Q("Buttons").Add(confirm);
+        UI.Modal.Q("Buttons").Add(confirm);
 
         Button cancel = new Button();
         cancel.text = "Cancel";
         cancel.RegisterCallback<ClickEvent>(Modal.CloseEvent);
-        modal.Q("Buttons").Add(cancel);
+        UI.Modal.Q("Buttons").Add(cancel);
     }
 
     private static void OpenOpenModal(ClickEvent evt) {
@@ -277,7 +275,7 @@ public class MapEdit
     }
 
     private static void ConfirmMapOpen(ClickEvent evt) {
-        string value = Modal.Find().Q("SearchField").Q<TextField>("SearchInput").value;
+        string value = UI.Modal.Q("SearchField").Q<TextField>("SearchInput").value;
         if (!TerrainController.MapDirty) {
             OpenFile();
             Modal.Close();
@@ -288,7 +286,7 @@ public class MapEdit
     }
 
     private static void OpenFile() {
-        string filename = Modal.Find().Q("SearchField").Q<TextField>("SearchInput").value;
+        string filename = UI.Modal.Q("SearchField").Q<TextField>("SearchInput").value;
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
         string fullPath = path + "/maps/" + filename;
         CurrentFile = filename.Replace(".png", "").Replace(".json", "");
@@ -301,7 +299,7 @@ public class MapEdit
     }
 
     private static void ConfirmMapSave(ClickEvent evt) {
-        string value = Modal.Find().Q<TextField>("Filename").value;
+        string value = UI.Modal.Q<TextField>("Filename").value;
         if (value.Length == 0) {
             Toast.Add("Not a valid filename.", ToastType.Error);
         }
@@ -311,7 +309,7 @@ public class MapEdit
             }
             if (!value.EndsWith(".png")) {
                 value += ".png";
-                Modal.Find().Q<TextField>("Filename").value = value;
+                UI.Modal.Q<TextField>("Filename").value = value;
             }
             if (FileExists(value)) {
                 Modal.DoubleConfirm("Confirm Overwrite", "A file with this name already exists. Overwrite?", WriteFile);
@@ -324,7 +322,7 @@ public class MapEdit
     }
 
     private static void WriteFile() {
-        string filename = Modal.Find().Q<TextField>("Filename").value;
+        string filename = UI.Modal.Q<TextField>("Filename").value;
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
         string fullPath = path + "/maps/" + filename;
         MapSaver.StegSave(fullPath);
