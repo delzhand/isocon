@@ -390,12 +390,12 @@ public class MapEdit
                 Block.SetColor("side2", ColorUtility.DarkenColor(c, .2f));
                 break;
             case "TopBgColor":
-                Environment.BgBottomColor = c;
+                Environment.BgTopColor = c;
                 MeshRenderer mra = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
                 mra.material.SetColor("_Color1", c);
                 break;
             case "BotBgColor":
-                Environment.BgTopColor = c;
+                Environment.BgBottomColor = c;
                 MeshRenderer mrb = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
                 mrb.material.SetColor("_Color2", c);
                 break;

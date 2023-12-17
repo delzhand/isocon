@@ -6,9 +6,6 @@ using UnityEngine.UIElements;
 
 public class ColorField
 {
-    // public delegate void ColorChangeCallback(Color newColor);
-    // public static ColorChangeCallback onColorChange;
-
     public static string CurrentName;
 
     public static VisualElement Create(string name, Color initial) {
@@ -19,9 +16,8 @@ public class ColorField
             try {
                 Color c = ColorUtility.ColorFromHex(evt.newValue);
                 SetRGB(c);
-                UpdatePreview();
+                UpdatePreview(c);
                 MapEdit.ColorChanged();
-                // onColorChange?.Invoke(c);
             }
             catch (Exception e) {
                 Debug.LogWarning(e);
@@ -33,8 +29,8 @@ public class ColorField
         element.Q<SliderInt>("EditBlue").RegisterValueChangedCallback<int>(SliderChange);
 
         SetRGB(initial, element);
-        UpdatePreview(element);
         SetHex(initial, element);
+        UpdatePreview(initial, element);
 
         return element;
     }
@@ -42,9 +38,8 @@ public class ColorField
     private static void SliderChange(ChangeEvent<int> evt) {
         Color c = FromSliders();
         SetHex(c);
-        UpdatePreview();
+        UpdatePreview(c);
         MapEdit.ColorChanged();
-        // onColorChange?.Invoke(c);
     }
 
     private static void SetRGB(Color c, VisualElement element = null) {
@@ -67,8 +62,8 @@ public class ColorField
         element.Q<TextField>("EditColorHex").value = ColorUtility.ColorToHex(c);
     }
 
-    private static void UpdatePreview(VisualElement element = null) {
+    private static void UpdatePreview(Color c, VisualElement element = null) {
         element ??= UI.Modal;
-        element.Q("Preview").style.backgroundColor = FromSliders(element);
+        element.Q("Preview").style.backgroundColor = c;
     }
 }

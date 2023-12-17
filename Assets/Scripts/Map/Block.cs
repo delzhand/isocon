@@ -183,7 +183,7 @@ public class Block : MonoBehaviour
     }
 
     public static void SetColor(string id, Color color) {
-        BlockMesh.SharedMaterials[id].SetColor("_BaseColor", color);
+        BlockMesh.SharedMaterials[id].SetColor("_Color", color);
     }
 
     public int getX() {

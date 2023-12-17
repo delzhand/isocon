@@ -36,8 +36,8 @@ public class Environment : MonoBehaviour
         MeshRenderer mr = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
         mr.material.SetColor("_Color1", bottom);
         mr.material.SetColor("_Color2", top);
-        UI.System.Q("TopBgColor").style.backgroundColor = BgBottomColor;
-        UI.System.Q("BotBgColor").style.backgroundColor = BgTopColor;
+        UI.System.Q("BotBgColor").style.backgroundColor = BgBottomColor;
+        UI.System.Q("TopBgColor").style.backgroundColor = BgTopColor;
     }
 
 }
