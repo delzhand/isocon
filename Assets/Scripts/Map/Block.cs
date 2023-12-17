@@ -34,7 +34,7 @@ public class Block : MonoBehaviour
     private Material PaintMaterialTop;
     private Material PaintMaterialSide;
 
-    private string Style = "";
+    private string Texture = "";
 
     private bool MaterialReset = true;
 
@@ -88,7 +88,7 @@ public class Block : MonoBehaviour
             Painted.ToString(),
             PaintColorTopHex,
             PaintColorSideHex,
-            Style
+            Texture
         };
         return string.Join("|", bits);
     }  
@@ -151,7 +151,7 @@ public class Block : MonoBehaviour
             block.GetComponent<Block>().ApplyPaint(top, sides);
         }
         if (data.Length > 10) {
-            block.GetComponent<Block>().Style = data[10];
+            block.GetComponent<Block>().Texture = data[10];
         }
 
         return block;
@@ -269,7 +269,7 @@ public class Block : MonoBehaviour
         PaintColorSide = sides;
         PaintColorTop = top;
         Painted = true;
-        Style = "";
+        Texture = "";
         MaterialReset = true;
     }
 
@@ -278,19 +278,26 @@ public class Block : MonoBehaviour
         MaterialReset = true;
     }
 
-    public void ApplyStyle(string name) {
-        Style = name;
+    public Color[] SamplePaint() {
+        if (Painted) {
+            return new Color[]{PaintColorTop, PaintColorSide};
+        }
+        return null;
+    }
+
+    public void ApplyTexture(string name) {
+        Texture = name;
         Painted = false;
         MaterialReset = true;
     }
 
-    public void RemoveStyle() {
-        Style = "";
+    public void RemoveTexture() {
+        Texture = "";
         MaterialReset = true;
     }
 
-    public Color[] SamplePaint() {
-        return new Color[]{PaintColorTop, PaintColorSide};
+    public string SampleTexture() {
+        return Texture;
     }
 
     void SetMaterials() {
@@ -304,8 +311,8 @@ public class Block : MonoBehaviour
             mats[BlockMesh.MaterialSideIndex()] = PaintMaterialSide;
             mats[BlockMesh.MaterialTopIndex()] = PaintMaterialTop;
         }
-        else if (Style.Length > 0) {
-            (string,string) styleMats = BlockMesh.StyleMaterials(Style);
+        else if (Texture.Length > 0) {
+            (string,string) styleMats = BlockMesh.StyleMaterials(Texture);
             mats[BlockMesh.MaterialSideIndex()] = BlockMesh.SharedMaterials[styleMats.Item1];
             mats[BlockMesh.MaterialTopIndex()] = BlockMesh.SharedMaterials[styleMats.Item2];
         }

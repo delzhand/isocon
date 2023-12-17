@@ -108,22 +108,22 @@ public class IsoConsole
             for(int i = 0; i < blocks.Length; i++) {
                 Block b = blocks[i].GetComponent<Block>();
                 if (b.getY() == 0) {
-                    b.ApplyStyle("DryGrass");
+                    b.ApplyTexture("DryGrass");
                 }
                 else if (b.getY() == 1) {
-                    b.ApplyStyle("Grass");
+                    b.ApplyTexture("Grass");
                 }
                 else if (b.getY() == 2) {
-                    b.ApplyStyle("Water");
+                    b.ApplyTexture("Water");
                 }
                 else if (b.getY() == 3) {
-                    b.ApplyStyle("Rock");
+                    b.ApplyTexture("Rock");
                 }
                 else if (b.getY() == 4) {
-                    b.ApplyStyle("Stone");
+                    b.ApplyTexture("Stone");
                 }
                 else if (b.getY() == 5) {
-                    b.ApplyStyle("Lava");
+                    b.ApplyTexture("Lava");
                 }
             }
         }
@@ -132,9 +132,9 @@ public class IsoConsole
             GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
             for(int i = 0; i < blocks.Length; i++) {
                 Block b = blocks[i].GetComponent<Block>();
-                b.ApplyStyle("Stone");
+                b.ApplyTexture("Stone");
                 if ((b.getY() == 3 || b.getY() == 4) && (b.getX() == 3 || b.getX() == 4)) {
-                    b.ApplyStyle("Lava");
+                    b.ApplyTexture("Lava");
                 }
             }
         }

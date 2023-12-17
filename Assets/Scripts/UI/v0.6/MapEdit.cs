@@ -117,10 +117,10 @@ public class MapEdit
         optionsRoot.Q("DataOptions").Q("Save").RegisterCallback<ClickEvent>((evt) => {
             OpenSaveModal(new ClickEvent());
         });
-        optionsRoot.Q("ToolOptions").Q("DataOptions").Q("Open").RegisterCallback<ClickEvent>((evt) => {
+        optionsRoot.Q("DataOptions").Q("Open").RegisterCallback<ClickEvent>((evt) => {
             OpenOpenModal(new ClickEvent());
         });
-        optionsRoot.Q("ToolOptions").Q("DataOptions").Q("Reset").RegisterCallback<ClickEvent>((evt) => {
+        optionsRoot.Q("DataOptions").Q("Reset").RegisterCallback<ClickEvent>((evt) => {
             ResetConfirm(new ClickEvent());
         });
 
@@ -139,24 +139,37 @@ public class MapEdit
         });
         optionsRoot.Q("EnvironmentOptions").Q("TopBgColor").RegisterCallback<ClickEvent>((evt) => {
             Modal.Reset("Set Top Background Color");
-            Modal.AddColorField("TopBgColor");
+            Modal.AddColorField("TopBgColor", Environment.BgTopColor);
             Modal.AddPreferredButton("Close", Modal.CloseEvent);
         });
         optionsRoot.Q("EnvironmentOptions").Q("BotBgColor").RegisterCallback<ClickEvent>((evt) => {
             Modal.Reset("Set Bottom Background Color");
-            Modal.AddColorField("BotBgColor");
+            Modal.AddColorField("BotBgColor", Environment.BgBottomColor);
             Modal.AddPreferredButton("Close", Modal.CloseEvent);
         });
         optionsRoot.Q("EnvironmentOptions").Q("TopBlockColor").RegisterCallback<ClickEvent>((evt) => {
             Modal.Reset("Set Default Block Top Color");
-            Modal.AddColorField("TopBlockColor");
+            Modal.AddColorField("TopBlockColor", Environment.TileTopColor);
             Modal.AddPreferredButton("Close", Modal.CloseEvent);
         });
         optionsRoot.Q("EnvironmentOptions").Q("SideBlockColor").RegisterCallback<ClickEvent>((evt) => {
             Modal.Reset("Set Default Block Side Color");
-            Modal.AddColorField("SideBlockColor");
+            Modal.AddColorField("SideBlockColor", Environment.TileSideColor);
             Modal.AddPreferredButton("Close", Modal.CloseEvent);
         });
+
+        // Tile Paint
+        optionsRoot.Q("StylePaintOptions").Q("TopBlockPaint").RegisterCallback<ClickEvent>((evt) => {
+            Modal.Reset("Set Block Top Paint");
+            Modal.AddColorField("TopBlockPaint", Environment.CurrentPaintTop);
+            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+        });
+        optionsRoot.Q("StylePaintOptions").Q("SideBlockPaint").RegisterCallback<ClickEvent>((evt) => {
+            Modal.Reset("Set Block Side Paint");
+            Modal.AddColorField("SideBlockPaint", Environment.CurrentPaintSide);
+            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+        });
+
     }
 
     private static void OpenSubtoolFlyout(VisualElement v) {
@@ -369,30 +382,30 @@ public class MapEdit
         root.Q(ColorField.CurrentName).style.backgroundColor = c;
         switch (ColorField.CurrentName) {
             case "TopBlockColor":
-                Environment.Color1 = c;
+                Environment.TileTopColor = c;
                 Block.SetColor("top1", c);
                 Block.SetColor("top2", ColorUtility.DarkenColor(c, .2f));
                 break;
             case "SideBlockColor":
-                Environment.Color2 = c;
+                Environment.TileSideColor = c;
                 Block.SetColor("side1", c);
                 Block.SetColor("side2", ColorUtility.DarkenColor(c, .2f));
                 break;
             case "TopBgColor":
-                Environment.Color3 = c;
+                Environment.BgBottomColor = c;
                 MeshRenderer mra = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
                 mra.material.SetColor("_Color1", c);
                 break;
             case "BotBgColor":
-                Environment.Color4 = c;
+                Environment.BgTopColor = c;
                 MeshRenderer mrb = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
                 mrb.material.SetColor("_Color2", c);
                 break;
-            case "Color5":
-                Environment.Color5 = c;
+            case "TopBlockPaint":
+                Environment.CurrentPaintTop = c;
                 break;
-            case "Color6":
-                Environment. Color6 = c;
+            case "SideBlockPaint":
+                Environment. CurrentPaintSide = c;
                 break;
         }
     }

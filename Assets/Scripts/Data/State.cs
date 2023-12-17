@@ -10,9 +10,6 @@ using UnityEngine.UIElements;
 public class State
 {
     public string Version;
-    public Palette Palette; // Deprecated
-    public BackgroundGradient Background; // Deprecated
-
     public string Color1; // Tile tops
     public string Color2; // Tile sides
     public string Color3; // Background bottom
@@ -50,10 +47,10 @@ public class State
         }
         State state = new State();
         state.Version = "v1";
-        state.Color1 = ColorUtility.ColorToHex(Environment.Color1);
-        state.Color2 = ColorUtility.ColorToHex(Environment.Color2);
-        state.Color3 = ColorUtility.ColorToHex(Environment.Color3);
-        state.Color4 = ColorUtility.ColorToHex(Environment.Color4);
+        state.Color1 = ColorUtility.ColorToHex(Environment.TileTopColor);
+        state.Color2 = ColorUtility.ColorToHex(Environment.TileSideColor);
+        state.Color3 = ColorUtility.ColorToHex(Environment.BgBottomColor);
+        state.Color4 = ColorUtility.ColorToHex(Environment.BgTopColor);
         state.Blocks = blockStrings.ToArray();
         return state;
     }

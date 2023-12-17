@@ -47,7 +47,7 @@ public class Launcher : MonoBehaviour
         await AsyncAwake();
         if (_version != _latestVersion) {
             UI.System.Q<Label>("Version").text = $"v{_version} (version {_latestVersion} available)";
-            UI.System.Q<Label>("Version").style.backgroundColor = Environment.FromHex("9C7A19");
+            UI.System.Q<Label>("Version").style.backgroundColor = ColorUtility.ColorFromHex("9C7A19");
         }
         else {
             UI.System.Q<Label>("Version").text = $"v{_version}";

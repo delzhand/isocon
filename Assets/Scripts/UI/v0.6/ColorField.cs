@@ -11,7 +11,7 @@ public class ColorField
 
     public static string CurrentName;
 
-    public static VisualElement Create(string name) {
+    public static VisualElement Create(string name, Color initial) {
         VisualElement element = UI.CreateFromTemplate("UITemplates/ColorSelect");
         CurrentName = name;
 
@@ -32,6 +32,10 @@ public class ColorField
         element.Q<SliderInt>("EditGreen").RegisterValueChangedCallback<int>(SliderChange);
         element.Q<SliderInt>("EditBlue").RegisterValueChangedCallback<int>(SliderChange);
 
+        SetRGB(initial, element);
+        UpdatePreview(element);
+        SetHex(initial, element);
+
         return element;
     }
 
@@ -43,25 +47,28 @@ public class ColorField
         // onColorChange?.Invoke(c);
     }
 
-
-    private static void SetRGB(Color c) {
-        UI.System.Q("ColorSelect").Q<SliderInt>("EditGreen").value = Mathf.RoundToInt(c.g * 255);
-        UI.System.Q("ColorSelect").Q<SliderInt>("EditRed").value = Mathf.RoundToInt(c.r * 255);
-        UI.System.Q("ColorSelect").Q<SliderInt>("EditBlue").value = Mathf.RoundToInt(c.b * 255);
+    private static void SetRGB(Color c, VisualElement element = null) {
+        element ??= Modal.Find();
+        element.Q<SliderInt>("EditGreen").value = Mathf.RoundToInt(c.g * 255);
+        element.Q<SliderInt>("EditRed").value = Mathf.RoundToInt(c.r * 255);
+        element.Q<SliderInt>("EditBlue").value = Mathf.RoundToInt(c.b * 255);
     }
 
-    public static Color FromSliders() {
-        int r = UI.System.Q("ColorSelect").Q<SliderInt>("EditRed").value;
-        int g = UI.System.Q("ColorSelect").Q<SliderInt>("EditGreen").value;
-        int b = UI.System.Q("ColorSelect").Q<SliderInt>("EditBlue").value;
+    public static Color FromSliders(VisualElement element = null) {
+        element ??= Modal.Find();
+        int r = element.Q<SliderInt>("EditRed").value;
+        int g = element.Q<SliderInt>("EditGreen").value;
+        int b = element.Q<SliderInt>("EditBlue").value;
         return new Color(r/255f, g/255f, b/255f);
     }
 
-    private static void SetHex(Color c) {
-        UI.System.Q("ColorSelect").Q<TextField>("EditColorHex").value = ColorUtility.ColorToHex(c);
+    private static void SetHex(Color c, VisualElement element = null) {
+        element ??= Modal.Find();
+        element.Q<TextField>("EditColorHex").value = ColorUtility.ColorToHex(c);
     }
 
-    private static void UpdatePreview() {
-        UI.System.Q("ColorSelect").Q("Preview").style.backgroundColor = FromSliders();
+    private static void UpdatePreview(VisualElement element = null) {
+        element ??= Modal.Find();
+        element.Q("Preview").style.backgroundColor = FromSliders(element);
     }
 }

@@ -68,9 +68,6 @@ public class TerrainController : MonoBehaviour
             case "ResizeMap":
                 ResizeMap();
                 break;
-            case "MultiBlock":
-                MultiBlock();
-                break;
             case "ChangeShape":
                 ChangeShape();
                 break;
@@ -79,9 +76,6 @@ public class TerrainController : MonoBehaviour
                 break;
             case "ClearMarks":
                 ChangeEffect("Clear");
-                break;
-            case "CenterView":
-                CameraControl.GoToBlock(block);
                 break;
             case "StyleBlock":
                 ApplyStyle();
@@ -277,7 +271,7 @@ public class TerrainController : MonoBehaviour
     public static void PaintBlocks() {
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            block.ApplyPaint(Environment.Color5, Environment.Color6);
+            block.ApplyPaint(Environment.CurrentPaintTop, Environment.CurrentPaintSide);
         });
     }
 
@@ -291,25 +285,41 @@ public class TerrainController : MonoBehaviour
     public static void StyleBlocks(string style) {
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            block.ApplyStyle(style);
+            block.ApplyTexture(style);
         });
     }
 
     public static void DestyleBlocks() {
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            block.RemoveStyle();
+            block.RemoveTexture();
+            block.RemovePaint();
         });
     }
 
-    public static void Eyedropper() {
+    public static void SampleStyle() {
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
             Color[] colors = block.SamplePaint();
-            Environment.Color5 = colors[0];
-            Environment.Color6 = colors[1];
-            UI.System.Q("Color5").style.backgroundColor = colors[0];
-            UI.System.Q("Color6").style.backgroundColor = colors[1];
+            if (colors != null) {
+                Environment.CurrentPaintTop = colors[0];
+                Environment.CurrentPaintSide = colors[1];
+                UI.System.Q("ToolOptions").Q("TopBlockPaint").style.backgroundColor = colors[0];
+                UI.System.Q("ToolOptions").Q("SideBlockPaint").style.backgroundColor = colors[1];
+                UI.ToggleDisplay(UI.System.Q("ToolOptions"), true);
+                UI.ToggleDisplay(UI.System.Q("ToolOptions").Q("StylePaintOptions"), true);
+                UI.ToggleDisplay(UI.System.Q("ToolOptions").Q("StyleTextureOptions"), false);
+                return;
+            }
+            String texture = block.SampleTexture();
+            if (texture.Length > 0) {
+                UI.System.Q("ToolOptions").Q<DropdownField>("BlockTexture").value = texture;
+                UI.ToggleDisplay(UI.System.Q("ToolOptions"), true);
+                UI.ToggleDisplay(UI.System.Q("ToolOptions").Q("StylePaintOptions"), false);
+                UI.ToggleDisplay(UI.System.Q("ToolOptions").Q("StyleTextureOptions"), true);
+                return;
+            }
+            Toast.Add("Nothing sampled.");
         });
     }
 
@@ -457,9 +467,12 @@ public class TerrainController : MonoBehaviour
                 string style = UI.System.Q<DropdownField>("BlockTexture").value;
                 StyleBlocks(style);
                 break;
-            case "StyleErase":
+            case "StyleEraser":
                 DepaintBlocks();
                 DestyleBlocks();
+                break;
+            case "StyleSample":
+                SampleStyle();
                 break;
         }
     }

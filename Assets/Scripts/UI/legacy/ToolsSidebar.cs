@@ -75,30 +75,30 @@ public class ToolsSidebar : MonoBehaviour
         UI.System.Q(elementName).style.backgroundColor = c;
         switch(elementName) {
             case "Color1":
-                Environment.Color1 = c;
+                Environment.TileTopColor = c;
                 Block.SetColor("top1", c);
                 Block.SetColor("top2", ColorUtility.DarkenColor(c, .2f));
                 break;
             case "Color2":
-                Environment.Color2 = c;
+                Environment.TileSideColor = c;
                 Block.SetColor("side1", c);
                 Block.SetColor("side2", ColorUtility.DarkenColor(c, .2f));
                 break;
             case "Color3":
-                Environment.Color3 = c;
+                Environment.BgBottomColor = c;
                 MeshRenderer mra = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
                 mra.material.SetColor("_Color1", c);
                 break;
             case "Color4":
-                Environment.Color4 = c;
+                Environment.BgTopColor = c;
                 MeshRenderer mrb = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
                 mrb.material.SetColor("_Color2", c);
                 break;
             case "Color5":
-                Environment.Color5 = c;
+                Environment.CurrentPaintTop = c;
                 break;
             case "Color6":
-                Environment. Color6 = c;
+                Environment. CurrentPaintSide = c;
                 break;
         }
     }

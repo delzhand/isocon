@@ -214,8 +214,8 @@ public class Modal
         Modal.AddContents(field);
     }
 
-    public static void AddColorField(string name) {
-        VisualElement field = ColorField.Create(name);
+    public static void AddColorField(string name, Color initial) {
+        VisualElement field = ColorField.Create(name, initial);
         field.name = name;
         Modal.AddContents(field);
     }
