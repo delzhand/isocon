@@ -95,7 +95,7 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="FControlLocator" style="flex-grow: 1; width: 30px; height: 30px; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/camera&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 0; position: absolute; left: 50%; translate: -50% 0;" />
-                <ui:VisualElement name="FloatingControls" style="flex-grow: 1; position: absolute; left: 50%; translate: -50% 0; top: 0; flex-direction: row; margin-left: -8px; display: flex; opacity: 1;">
+                <ui:VisualElement name="FloatingControls" style="flex-grow: 1; position: absolute; left: 50%; translate: -50% 0; top: 0; flex-direction: row; margin-left: -8px; display: flex; opacity: 0;">
                     <ui:VisualElement name="FixedView" style="flex-grow: 1; width: 30px; height: 30px; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/fixedview&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 8px;" />
                     <ui:VisualElement name="Indicators" style="flex-grow: 1; width: 30px; height: 30px; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/coord&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 8px;" />
                     <ui:VisualElement name="Tilt" style="flex-grow: 1; flex-direction: row; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 17px; border-top-right-radius: 17px; border-bottom-right-radius: 17px; border-bottom-left-radius: 17px; min-height: 0; min-width: 0; margin-left: 8px;">
@@ -129,7 +129,7 @@
                 </ui:VisualElement>
                 <ui:VisualElement name="ClickCatcher" style="flex-grow: 1; position: absolute; left: -20%; top: -20%; right: -20%; bottom: -20%; display: none;" />
                 <ui:VisualElement name="TopLeft" style="flex-grow: 1; position: absolute; left: 0; top: 0; flex-direction: row; align-items: flex-start;">
-                    <ui:VisualElement name="ToolsPanel" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: flex; width: 66px; margin-right: 8px; padding-right: 10px; padding-top: 8px;">
+                    <ui:VisualElement name="ToolsPanel" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: none; width: 66px; margin-right: 8px; padding-right: 10px; padding-top: 8px;">
                         <ui:VisualElement style="flex-grow: 1; flex-direction: row; margin-top: 0; margin-right: -2px; margin-bottom: -4px; margin-left: -2px; flex-wrap: wrap;">
                             <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddBlock" class="active tool" style="width: 48px; height: 48px; -unity-background-scale-mode: scale-to-fit; margin-top: 0; margin-right: 2px; margin-bottom: 4px; margin-left: 2px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; overflow: visible;">
                                 <ui:VisualElement name="Tooltip" style="flex-grow: 1; position: absolute; background-color: rgb(195, 195, 195); left: 52px; top: 32px; padding-top: 4px; padding-right: 10px; padding-bottom: 4px; padding-left: 10px; display: none;">
@@ -246,7 +246,7 @@
                             </ui:Button>
                         </ui:VisualElement>
                     </ui:VisualElement>
-                    <ui:VisualElement name="ToolOptions" class="panel" style="flex-grow: 1; align-items: stretch; justify-content: flex-start; display: flex; margin-bottom: 0; padding-bottom: 10px; padding-right: 10px; padding-top: 8px;">
+                    <ui:VisualElement name="ToolOptions" class="panel" style="flex-grow: 1; align-items: stretch; justify-content: flex-start; display: none; margin-bottom: 0; padding-bottom: 10px; padding-right: 10px; padding-top: 8px;">
                         <ui:VisualElement name="StylePaintOptions" class="tool-options" style="flex-grow: 0; flex-direction: column; align-items: stretch; align-self: flex-start; justify-content: flex-start; display: none; margin-right: 0; margin-left: 0; margin-bottom: 0; width: 100%; margin-top: 0;">
                             <ui:VisualElement name="PaintColors" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 0;">
                                 <ui:Label tabindex="-1" text="Tile Paint Colors" display-tooltip-when-elided="true" style="flex-grow: 1; margin-top: 10px; margin-bottom: 8px;" />

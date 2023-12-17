@@ -10,11 +10,13 @@ using UnityEngine.UIElements;
 public class State
 {
     public string Version;
-    public string Color1; // Tile tops
-    public string Color2; // Tile sides
-    public string Color3; // Background bottom
-    public string Color4; // Background Top
-
+    public string TileTops;
+    public string TileSides;
+    public string BgBottom;
+    public string BgTop;
+    public float LightIntensity;
+    public float LightAngle;
+    public float LightHeight;
     public string[] Blocks;
 
     public static string CurrentStateJson;
@@ -47,21 +49,28 @@ public class State
         }
         State state = new State();
         state.Version = "v1";
-        state.Color1 = ColorUtility.ColorToHex(Environment.TileTopColor);
-        state.Color2 = ColorUtility.ColorToHex(Environment.TileSideColor);
-        state.Color3 = ColorUtility.ColorToHex(Environment.BgBottomColor);
-        state.Color4 = ColorUtility.ColorToHex(Environment.BgTopColor);
+        state.TileTops = ColorUtility.ColorToHex(Environment.TileTopColor);
+        state.TileSides = ColorUtility.ColorToHex(Environment.TileSideColor);
+        state.BgBottom = ColorUtility.ColorToHex(Environment.BgBottomColor);
+        state.BgTop = ColorUtility.ColorToHex(Environment.BgTopColor);
+        state.LightAngle = TerrainController.LightAngle;
+        state.LightHeight = TerrainController.LightHeight;
+        state.LightIntensity = TerrainController.LightIntensity;
         state.Blocks = blockStrings.ToArray();
         return state;
     }
 
     public static void SetSceneFromState(State state) {
         TerrainController.DestroyAllBlocks();
-        Environment.SetTileColors(ColorUtility.ColorFromHex(state.Color1), ColorUtility.ColorFromHex(state.Color2));
-        Environment.SetBackgroundColors(ColorUtility.ColorFromHex(state.Color3), ColorUtility.ColorFromHex(state.Color4));
+        Environment.SetTileColors(ColorUtility.ColorFromHex(state.TileTops), ColorUtility.ColorFromHex(state.TileSides));
+        Environment.SetBackgroundColors(ColorUtility.ColorFromHex(state.BgBottom), ColorUtility.ColorFromHex(state.BgTop));
         foreach (string s in state.Blocks) {
             Block.ReadIn(state.Version, s);
         }
+        TerrainController.LightAngle = state.LightAngle;
+        TerrainController.LightHeight = state.LightHeight;
+        TerrainController.LightIntensity = state.LightIntensity;
+        TerrainController.UpdateLight();
         TerrainController.ReorgNeeded = true;
         TerrainController.MapDirty = false;
     }
