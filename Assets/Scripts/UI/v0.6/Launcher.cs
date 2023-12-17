@@ -5,8 +5,6 @@ using Unity.Services.RemoteConfig;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using System.Threading.Tasks;
-using SimpleJSON;
-using System.Collections.Generic;
 
 public class Launcher : MonoBehaviour
 {
@@ -33,6 +31,8 @@ public class Launcher : MonoBehaviour
         UI.System.Q("Debug").RegisterCallback<ClickEvent>((evt) => {
             IsoConsole.OpenModal(evt);
         });
+
+
     }
 
     void Update()
@@ -47,7 +47,7 @@ public class Launcher : MonoBehaviour
         await AsyncAwake();
         if (_version != _latestVersion) {
             UI.System.Q<Label>("Version").text = $"v{_version} (version {_latestVersion} available)";
-            UI.System.Q<Label>("Version").style.backgroundColor = ColorUtility.ColorFromHex("9C7A19");
+            UI.System.Q<Label>("Version").style.backgroundColor = ColorUtility.UIBlue;
         }
         else {
             UI.System.Q<Label>("Version").text = $"v{_version}";

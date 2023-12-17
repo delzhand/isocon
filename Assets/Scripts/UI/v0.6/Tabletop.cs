@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Mirror;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class Tabletop : MonoBehaviour
 {
+    private static Material mapbackground;
+
     void Start()
     {
         Modal.Setup();
@@ -17,6 +20,8 @@ public class Tabletop : MonoBehaviour
         BottomBarSetup();
         FloatingControlsSetup();
         TurnIndicatorSetup();
+
+        mapbackground = new Material(Resources.Load<Material>($"Materials/Gradient"));
     }
 
     void Update()
@@ -34,6 +39,7 @@ public class Tabletop : MonoBehaviour
     public void ConnectAsClient() {
         UI.System.Q("FloatingControls").Q("Connection").Q<Label>("Message").text = "You are connected as a client.";
         UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Connection"), true);
+        SetupBackground();
     }
 
     public void ConnectAsHost() {
@@ -43,11 +49,13 @@ public class Tabletop : MonoBehaviour
         IPFinder.GetPublic(message);
 
         UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Connection"), true);
+        SetupBackground();
     }
 
     public void ConnectAsSolo() {
         TerrainController.InitializeTerrain(8, 8, 1);
         UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Connection"), false);
+        SetupBackground();
     }
 
     private void ConnectionSetup() {
@@ -58,6 +66,11 @@ public class Tabletop : MonoBehaviour
         UI.System.Q("FloatingControls").Q("Connection").RegisterCallback<MouseLeaveEvent>((evt) =>  {
             UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Connection").Q("Panel"), false);
         });
+    }
+
+    private static void SetupBackground() {
+        GameObject.Find("Background").GetComponent<MeshRenderer>().SetMaterials(new Material[]{mapbackground}.ToList());
+        
     }
 
     private void FloatingControlsSetup() {

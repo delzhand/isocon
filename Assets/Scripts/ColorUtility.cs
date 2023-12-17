@@ -3,6 +3,18 @@ using UnityEngine;
 
 public class ColorUtility
 {
+    public static Color UIBlue {
+        get {
+            return ColorFromHex("2c5d87");
+        }
+    }
+
+    public static Color UIOrange {
+        get {
+            return ColorFromHex("B78E1A");
+        }
+    }
+
     public static string ColorToHex(Color color)
     {
         int r = Mathf.RoundToInt(color.r * 255);
