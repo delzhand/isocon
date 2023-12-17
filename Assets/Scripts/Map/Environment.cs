@@ -12,6 +12,8 @@ public class Environment : MonoBehaviour
     public static Color CurrentPaintTop = ColorUtility.ColorFromHex("#000000");
     public static Color CurrentPaintSide = ColorUtility.ColorFromHex("#000000");
 
+    private static Material BackgroundMat;
+
     private static Color DarkenColor(Color originalColor, float percentage)
     {
         float darkenAmount = Mathf.Clamp01(percentage);
@@ -34,6 +36,12 @@ public class Environment : MonoBehaviour
         BgBottomColor = bottom;
         BgTopColor = top;
         MeshRenderer mr = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
+        if (BackgroundMat == null) {
+            BackgroundMat = Resources.Load<Material>($"Materials/Environment/Gradient");
+            List<Material> bgmats = new();
+            bgmats.Add(BackgroundMat);
+            mr.SetMaterials(bgmats);
+        }
         mr.material.SetColor("_Color1", bottom);
         mr.material.SetColor("_Color2", top);
         UI.System.Q("BotBgColor").style.backgroundColor = BgBottomColor;

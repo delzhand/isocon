@@ -506,7 +506,7 @@ public class TerrainController : MonoBehaviour
 
         Color color = Color.white;
         if (selected.Length > 0 && Cursor.Mode != CursorMode.Editing) {
-            color = ColorUtility.ColorFromHex("#9C7A19");
+            color = ColorUtility.UIBlue;
             UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), true);
             UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), true);
             UI.ToggleDisplay(root.Q("ClearSelected"), true);
