@@ -9,6 +9,7 @@ public enum BlockShape
 {
   Solid,
   Slope,
+  Steps,
   Spacer,
   Hidden
 }
@@ -22,7 +23,7 @@ public class Block : MonoBehaviour
     public bool Focused = false;
     public bool Highlighted = false;
 
-    public BlockShape Type = BlockShape.Solid;
+    public BlockShape Shape = BlockShape.Solid;
     public bool Destroyable = true;
 
     private List<string> effects = new();
@@ -45,13 +46,13 @@ public class Block : MonoBehaviour
         PaintMaterialSide = Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideC"));
         PaintMaterialTop = Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopC"));
         markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));
-        ShapeChange(Type);
+        ShapeChange(Shape);
     }
 
     void Update()
     {
         GameObject indicator = transform.Find("Indicator").gameObject;
-        if (Type == BlockShape.Solid || Type == BlockShape.Slope) {
+        if (Shape == BlockShape.Solid || Shape == BlockShape.Slope) {
             indicator.transform.eulerAngles = new Vector3(90, -90, 0);
             indicator.SetActive(TerrainController.Indicators);
         }
@@ -82,7 +83,7 @@ public class Block : MonoBehaviour
             c.Y.ToString(),
             transform.localPosition.y.ToString(),
             transform.localEulerAngles.y.ToString(),
-            Type.ToString(),
+            Shape.ToString(),
             Destroyable.ToString(),
             string.Join(",", effects.ToArray()),
             Painted.ToString(),
@@ -218,16 +219,20 @@ public class Block : MonoBehaviour
     }
 
     public void ShapeChange(BlockShape blocktype) {
-        Type = blocktype;
+        Shape = blocktype;
         Mesh m = null;
         if (TerrainController.GridType == "Square") {
-            switch (Type) {
+            switch (Shape) {
                 case BlockShape.Solid:
                     m = BlockMesh.Shapes["Block"];
                     transform.localScale = Vector3.one;
                     break;
                 case BlockShape.Slope:
                     m = BlockMesh.Shapes["Slope"];
+                    transform.localScale = Vector3.one;
+                    break;
+                case BlockShape.Steps:
+                    m = BlockMesh.Shapes["Steps"];
                     transform.localScale = Vector3.one;
                     break;
                 case BlockShape.Spacer:
@@ -308,13 +313,13 @@ public class Block : MonoBehaviour
         if (Painted) {
             PaintMaterialSide.color = PaintColorSide;
             PaintMaterialTop.color = PaintColorTop;
-            mats[BlockMesh.MaterialSideIndex()] = PaintMaterialSide;
-            mats[BlockMesh.MaterialTopIndex()] = PaintMaterialTop;
+            mats[BlockMesh.MaterialSideIndex(Shape)] = PaintMaterialSide;
+            mats[BlockMesh.MaterialTopIndex(Shape)] = PaintMaterialTop;
         }
         else if (Texture.Length > 0) {
             (string,string) styleMats = BlockMesh.StyleMaterials(Texture);
-            mats[BlockMesh.MaterialSideIndex()] = BlockMesh.SharedMaterials[styleMats.Item1];
-            mats[BlockMesh.MaterialTopIndex()] = BlockMesh.SharedMaterials[styleMats.Item2];
+            mats[BlockMesh.MaterialSideIndex(Shape)] = BlockMesh.SharedMaterials[styleMats.Item1];
+            mats[BlockMesh.MaterialTopIndex(Shape)] = BlockMesh.SharedMaterials[styleMats.Item2];
         }
         else {
             // Checkerboard
@@ -328,13 +333,13 @@ public class Block : MonoBehaviour
                 altSides = ((x + y + z) % 2 == 0);
                 // altTop = ((x + y) % 2 == 0);
             }
-            mats[BlockMesh.MaterialSideIndex()] = BlockMesh.SharedMaterials["side" + (altSides ? "1" : "2")];
-            mats[BlockMesh.MaterialTopIndex()] = BlockMesh.SharedMaterials["top" + (altSides ? "1" : "2")];
+            mats[BlockMesh.MaterialSideIndex(Shape)] = BlockMesh.SharedMaterials["side" + (altSides ? "1" : "2")];
+            mats[BlockMesh.MaterialTopIndex(Shape)] = BlockMesh.SharedMaterials["top" + (altSides ? "1" : "2")];
         }
 
         // Overwrite checkerboard/paint if highlighted
         if (Highlighted) {
-            mats[BlockMesh.MaterialTopIndex()] = BlockMesh.SharedMaterials["highlighted"];
+            mats[BlockMesh.MaterialTopIndex(Shape)] = BlockMesh.SharedMaterials["highlighted"];
         }
 
         // Markers
@@ -368,7 +373,7 @@ public class Block : MonoBehaviour
             }
         }
 
-        mats[BlockMesh.MaterialMarkerIndex()] = markerMaterial;
+        mats[BlockMesh.MaterialMarkerIndex(Shape)] = markerMaterial;
 
         // Selected/Focused
         string focusState = "unfocused";
@@ -381,7 +386,7 @@ public class Block : MonoBehaviour
         else if (Selected && Focused) {
             focusState = "selectfocused";
         }
-        mats[BlockMesh.MaterialFocusIndex()] = BlockMesh.SharedMaterials[focusState];
+        mats[BlockMesh.MaterialFocusIndex(Shape)] = BlockMesh.SharedMaterials[focusState];
 
         // Apply
         mr.SetMaterials(mats.ToList());
@@ -390,10 +395,10 @@ public class Block : MonoBehaviour
     public static void ToggleSpacers(bool show) {
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
         for(int i = 0; i < blocks.Length; i++) {
-            if (!show && blocks[i].GetComponent<Block>().Type == BlockShape.Spacer) {
+            if (!show && blocks[i].GetComponent<Block>().Shape == BlockShape.Spacer) {
                 blocks[i].GetComponent<Block>().ShapeChange(BlockShape.Hidden);
             }
-            if (show && blocks[i].GetComponent<Block>().Type == BlockShape.Hidden) {
+            if (show && blocks[i].GetComponent<Block>().Shape == BlockShape.Hidden) {
                 blocks[i].GetComponent<Block>().ShapeChange(BlockShape.Spacer);
             }
         }

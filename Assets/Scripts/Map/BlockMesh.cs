@@ -15,6 +15,7 @@ public class BlockMesh: MonoBehaviour
 
         Shapes.Add("Block", Resources.Load<Mesh>("Models/Block"));
         Shapes.Add("Slope", Resources.Load<Mesh>("Models/Slope"));
+        Shapes.Add("Steps", Resources.Load<Mesh>("Models/Steps"));
         Shapes.Add("Hex", Resources.Load<Mesh>("Models/Hex"));
 
         SharedMaterials.Add("side1", new Material(Resources.Load<Material>("Materials/Block/Checker/SideA")));
@@ -45,25 +46,37 @@ public class BlockMesh: MonoBehaviour
         throw new NotImplementedException();
     }
 
-    public static int MaterialTopIndex() {
+    public static int MaterialTopIndex(BlockShape shape) {
         if (TerrainController.GridType == "Hex") {
             return 1;
+        }
+        if (shape == BlockShape.Steps) {
+            return 3; 
         }
         return 0;
     }
 
-    public static int MaterialSideIndex() {
+    public static int MaterialSideIndex(BlockShape shape) {
         if (TerrainController.GridType == "Hex") {
             return 0;
+        }
+        if (shape == BlockShape.Steps) {
+            return 1; 
         }
         return 1;
     }
 
-    public static int MaterialMarkerIndex() {
+    public static int MaterialMarkerIndex(BlockShape shape) {
+        if (shape == BlockShape.Steps) {
+            return 2; 
+        }
         return 2;
     }
 
-    public static int MaterialFocusIndex() {
+    public static int MaterialFocusIndex(BlockShape shape) {
+        if (shape == BlockShape.Steps) {
+            return 0; 
+        }
         return 3;
     }
 

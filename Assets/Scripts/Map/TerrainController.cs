@@ -209,7 +209,7 @@ public class TerrainController : MonoBehaviour
         selected.ForEach(block => {
             if (GridType == "Square") {
                 block.transform.Rotate(0, 90f, 0);
-                if (block.Type == BlockShape.Slope) {
+                if (block.Shape == BlockShape.Slope) {
                     // counter-rotate indicator
                     block.transform.Find("Indicator").transform.eulerAngles = new Vector3(90, -90, 0);
                 }
@@ -396,7 +396,7 @@ public class TerrainController : MonoBehaviour
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         foreach(GameObject column in columns) {
             GameObject currentTop = TopBlock(column.gameObject);
-            if (currentTop.GetComponent<Block>().Type != BlockShape.Spacer) {
+            if (currentTop.GetComponent<Block>().Shape != BlockShape.Spacer) {
                 GameObject newblock = Instantiate(Resources.Load("Prefabs/Block") as GameObject);                 
                 newblock.transform.parent = currentTop.transform.parent;
                 newblock.transform.localPosition = new Vector3(0, currentTop.transform.localPosition.y + 1, 0);
@@ -414,7 +414,10 @@ public class TerrainController : MonoBehaviour
                 break;
             case "ShapeHidden":
                 shape = BlockShape.Spacer;
-                break;            
+                break;     
+            case "ShapeSteps":
+                shape = BlockShape.Steps;
+                break;       
         }
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
@@ -532,7 +535,7 @@ public class TerrainController : MonoBehaviour
                 block = focused;
             }
             height = (block.transform.localPosition.y + 1).ToString();
-            if (block.Type == BlockShape.Slope) {
+            if (block.Shape == BlockShape.Slope) {
                 height = height + ".5";
             }
             coords = Block.GetAlpha(block.getY() + 1) + "" + (block.getX()+1);
@@ -619,7 +622,7 @@ public class TerrainController : MonoBehaviour
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
         for (int i = 0; i < blocks.Length; i++) {
             Block b = blocks[i].GetComponent<Block>();
-            if (b.Type == BlockShape.Solid) {
+            if (b.Shape == BlockShape.Solid) {
                 count++;
                 solids[b.getX(), b.getY(), b.getZ()] = true;
                 blks[b.getX(), b.getY(), b.getZ()] = b.gameObject;
