@@ -17,6 +17,7 @@ public class BlockMesh: MonoBehaviour
         Shapes.Add("Slope", Resources.Load<Mesh>("Models/Slope"));
         Shapes.Add("Steps", Resources.Load<Mesh>("Models/Steps"));
         Shapes.Add("Hex", Resources.Load<Mesh>("Models/Hex"));
+        Shapes.Add("Corner", Resources.Load<Mesh>("Models/Corner"));
 
         SharedMaterials.Add("side1", new Material(Resources.Load<Material>("Materials/Block/Checker/SideA")));
         SharedMaterials.Add("side2", new Material(Resources.Load<Material>("Materials/Block/Checker/SideB")));

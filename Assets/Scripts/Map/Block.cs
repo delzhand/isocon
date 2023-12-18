@@ -10,6 +10,7 @@ public enum BlockShape
   Solid,
   Slope,
   Steps,
+  Corner,
   Spacer,
   Hidden
 }
@@ -235,6 +236,10 @@ public class Block : MonoBehaviour
                     m = BlockMesh.Shapes["Steps"];
                     transform.localScale = Vector3.one;
                     break;
+                case BlockShape.Corner:
+                    m = BlockMesh.Shapes["Corner"];
+                    transform.localScale = Vector3.one;
+                    break;
                 case BlockShape.Spacer:
                     m = BlockMesh.Shapes["Block"];
                     transform.localScale = new Vector3(.3f, .3f, .3f);
@@ -243,6 +248,8 @@ public class Block : MonoBehaviour
                     m = BlockMesh.Shapes["Block"];
                     transform.localScale = Vector3.zero;
                     break;
+                default:
+                    throw new Exception($"No such shape {blocktype.ToString()}");
             }
         }
         else if (TerrainController.GridType == "Hex") {
