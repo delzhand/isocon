@@ -18,6 +18,7 @@ public class BlockMesh: MonoBehaviour
         Shapes.Add("Steps", Resources.Load<Mesh>("Models/Steps"));
         Shapes.Add("Hex", Resources.Load<Mesh>("Models/Hex"));
         Shapes.Add("Corner", Resources.Load<Mesh>("Models/Corner"));
+        Shapes.Add("Upslope", Resources.Load<Mesh>("Models/Upslope"));
 
         SharedMaterials.Add("side1", new Material(Resources.Load<Material>("Materials/Block/Checker/SideA")));
         SharedMaterials.Add("side2", new Material(Resources.Load<Material>("Materials/Block/Checker/SideB")));
@@ -54,6 +55,9 @@ public class BlockMesh: MonoBehaviour
         if (shape == BlockShape.Steps) {
             return 3; 
         }
+        if (shape == BlockShape.Corner) {
+            return 1;
+        }
         return 0;
     }
 
@@ -64,13 +68,13 @@ public class BlockMesh: MonoBehaviour
         if (shape == BlockShape.Steps) {
             return 1; 
         }
+        if (shape == BlockShape.Corner) {
+            return 0;
+        }
         return 1;
     }
 
     public static int MaterialMarkerIndex(BlockShape shape) {
-        if (shape == BlockShape.Steps) {
-            return 2; 
-        }
         return 2;
     }
 

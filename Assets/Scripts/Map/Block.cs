@@ -11,6 +11,7 @@ public enum BlockShape
   Slope,
   Steps,
   Corner,
+  Upslope,
   Spacer,
   Hidden
 }
@@ -226,6 +227,10 @@ public class Block : MonoBehaviour
             switch (Shape) {
                 case BlockShape.Solid:
                     m = BlockMesh.Shapes["Block"];
+                    transform.localScale = Vector3.one;
+                    break;
+                case BlockShape.Upslope:
+                    m = BlockMesh.Shapes["Upslope"];
                     transform.localScale = Vector3.one;
                     break;
                 case BlockShape.Slope:

@@ -421,6 +421,9 @@ public class TerrainController : MonoBehaviour
             case "ShapeCorner":
                 shape = BlockShape.Corner;
                 break;     
+            case "ShapeUpslope":
+                shape = BlockShape.Upslope;
+                break;
         }
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
