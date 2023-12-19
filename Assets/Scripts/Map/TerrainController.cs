@@ -421,6 +421,9 @@ public class TerrainController : MonoBehaviour
             case "ShapeCorner":
                 shape = BlockShape.Corner;
                 break;     
+            case "ShapeFlatCorner":
+                shape = BlockShape.FlatCorner;
+                break;
             case "ShapeUpslope":
                 shape = BlockShape.Upslope;
                 break;

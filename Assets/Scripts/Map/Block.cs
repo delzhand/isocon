@@ -11,6 +11,7 @@ public enum BlockShape
   Slope,
   Steps,
   Corner,
+  FlatCorner,
   Upslope,
   Spacer,
   Hidden
@@ -228,40 +229,29 @@ public class Block : MonoBehaviour
         Mesh m = null;
         if (TerrainController.GridType == "Square") {
             switch (Shape) {
-                case BlockShape.Solid:
-                    m = BlockMesh.Shapes["Block"];
-                    transform.localScale = Vector3.one;
-                    break;
-                case BlockShape.Upslope:
-                    m = BlockMesh.Shapes["Upslope"];
-                    transform.localScale = Vector3.one;
-                    break;
-                case BlockShape.Slope:
-                    m = BlockMesh.Shapes["Slope"];
-                    transform.localScale = Vector3.one;
-                    break;
-                case BlockShape.Steps:
-                    m = BlockMesh.Shapes["Steps"];
-                    transform.localScale = Vector3.one;
-                    break;
-                case BlockShape.Corner:
-                    m = BlockMesh.Shapes["Corner"];
-                    transform.localScale = Vector3.one;
-                    break;
                 case BlockShape.Spacer:
-                    m = BlockMesh.Shapes["Block"];
+                    m = BlockMesh.Shapes[BlockShape.Solid];
                     transform.localScale = new Vector3(.3f, .3f, .3f);
                     break;
                 case BlockShape.Hidden:
-                    m = BlockMesh.Shapes["Block"];
+                    m = BlockMesh.Shapes[BlockShape.Solid];
                     transform.localScale = Vector3.zero;
                     break;
                 default:
-                    throw new Exception($"No such shape {blocktype.ToString()}");
+                    try {
+                        m = BlockMesh.Shapes[Shape];
+                        transform.localScale = Vector3.one;
+                        break;
+                    }
+                    catch (Exception e) {
+                        Debug.LogError(e.Message);
+                        throw new Exception($"No such shape {blocktype.ToString()}");
+                    }
+
             }
         }
         else if (TerrainController.GridType == "Hex") {
-            m = BlockMesh.Shapes["Hex"];
+            m = BlockMesh.Hex;
             transform.localScale = Vector3.one;
         }
         GetComponent<MeshFilter>().mesh = m;

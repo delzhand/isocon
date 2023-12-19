@@ -177,7 +177,11 @@
                                     </ui:Button>
                                     <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="ShapeCorner" class="subtool" style="flex-direction: row; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 4px;">
                                         <ui:VisualElement name="Icon" style="width: 40px; height: 32px; background-image: resource(&apos;Textures/ToolIcons/round-corner&apos;); -unity-background-scale-mode: scale-to-fit;" />
-                                        <ui:Label tabindex="-1" text="Corner" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 4px; padding-bottom: 0; padding-left: 4px;" />
+                                        <ui:Label tabindex="-1" text="Round Corner" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 4px; padding-bottom: 0; padding-left: 4px;" />
+                                    </ui:Button>
+                                    <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="ShapeFlatCorner" class="subtool" style="flex-direction: row; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 4px;">
+                                        <ui:VisualElement name="Icon" style="width: 40px; height: 32px; background-image: none; -unity-background-scale-mode: scale-to-fit;" />
+                                        <ui:Label tabindex="-1" text="Straight Corner" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 4px; padding-bottom: 0; padding-left: 4px;" />
                                     </ui:Button>
                                     <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="ShapeUpslope" class="subtool" style="-unity-background-scale-mode: scale-to-fit; flex-direction: row; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 4px;">
                                         <ui:VisualElement name="Icon" style="width: 40px; height: 32px; -unity-background-scale-mode: scale-to-fit; background-image: resource(&apos;Textures/ToolIcons/upslope&apos;);" />
