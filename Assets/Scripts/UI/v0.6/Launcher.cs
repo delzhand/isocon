@@ -17,6 +17,7 @@ public class Launcher : MonoBehaviour
     private string _connectMode;
     private NetworkManager _manager;
     private bool _lastUpdateIsOnline = false;
+    private bool _lastUpdateIsConnecting = false;
 
     void Awake() {
         _manager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
@@ -31,8 +32,6 @@ public class Launcher : MonoBehaviour
         UI.System.Q("Debug").RegisterCallback<ClickEvent>((evt) => {
             IsoConsole.OpenModal(evt);
         });
-
-
     }
 
     void Update()
@@ -41,6 +40,13 @@ public class Launcher : MonoBehaviour
         UI.ToggleDisplay("Version", !NetworkClient.isConnected);
 
         CheckForDisconnect();
+        CheckForFailedConnect();
+
+        bool isIdle = !NetworkServer.active && !NetworkClient.active && !NetworkClient.isConnected;
+        bool isConnecting = NetworkClient.active && !NetworkClient.isConnected;
+
+        UI.ToggleDisplay("StartupOptions", isIdle);
+        UI.ToggleDisplay("ConnectingMessage", isConnecting);
     }
 
     private async void SetVersionText() {
@@ -60,6 +66,16 @@ public class Launcher : MonoBehaviour
             PlayerController.Disconnect();
         }
         _lastUpdateIsOnline = NetworkClient.isConnected;
+    }
+
+    private void CheckForFailedConnect() {
+        bool isIdle = !NetworkServer.active && !NetworkClient.active && !NetworkClient.isConnected;
+        bool isConnecting = NetworkClient.active && !NetworkClient.isConnected;
+
+        if (isIdle && _lastUpdateIsConnecting) {
+            Toast.Add("Could not establish a connection.");
+        }
+        _lastUpdateIsConnecting = isConnecting;
     }
 
     async Task InitializeRemoteConfigAsync() {
@@ -119,6 +135,11 @@ public class Launcher : MonoBehaviour
             _connectMode = "client";
             OpenConfigModal(evt);
         });      
+
+        UI.System.Q<Button>("CancelConnecting").RegisterCallback<ClickEvent>((evt) => {
+            GameObject.Find("NetworkController").GetComponent<NetworkManager>().StopClient();
+            Toast.Add("Connection attempt cancelled.");
+        });
     }
 
     private void OpenConfigModal(ClickEvent evt) {
@@ -158,7 +179,7 @@ public class Launcher : MonoBehaviour
 
         Modal.AddPreferredButton("Confirm", ConfirmConfig);
         Modal.AddButton("Cancel", Modal.CloseEvent);
-        ConfigModalEvaluateConditions();
+        // ConfigModalEvaluateConditions();
     }
 
     private void ConfirmConfig(ClickEvent evt) {
