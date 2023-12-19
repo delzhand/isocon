@@ -53,14 +53,11 @@ public class Player : NetworkBehaviour
             }
             else {
                 FileLogger.Write("Player is client");
+                CmdRequestClientInit();
             }
         } 
 
         Toast.Add(Name + " connected.");
-
-        // if (isLocalPlayer) {
-        //     CmdRequestMapSync();
-        // }
     }
 
     public static bool IsHost() {

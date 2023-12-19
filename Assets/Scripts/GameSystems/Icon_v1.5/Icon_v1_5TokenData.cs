@@ -447,7 +447,6 @@ public class Icon_v1_5TokenData : TokenData
         panel.Q("Defense").Q<Label>("Value").text = $"{ Defense }";
 
         if (RedrawConditionsElement) {
-            Debug.Log("fooo");
             panel.Q("Conditions").Q("List").Clear();
             panel.Q("Conditions").Q("List").Add(ConditionsElement);
             RedrawConditionsElement = false;
