@@ -186,6 +186,9 @@ public class Block : MonoBehaviour
     }
 
     public static void SetColor(string id, Color color) {
+        if (BlockMesh.SharedMaterials.Count == 0) {
+            BlockMesh.Setup();
+        }
         BlockMesh.SharedMaterials[id].SetColor("_Color", color);
     }
 

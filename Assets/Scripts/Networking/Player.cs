@@ -58,9 +58,9 @@ public class Player : NetworkBehaviour
 
         Toast.Add(Name + " connected.");
 
-        if (isLocalPlayer) {
-            CmdRequestMapSync();
-        }
+        // if (isLocalPlayer) {
+        //     CmdRequestMapSync();
+        // }
     }
 
     public static bool IsHost() {
@@ -88,6 +88,22 @@ public class Player : NetworkBehaviour
         }
         return null;
     }
+
+    #region Client Kickoff
+    [Command]
+    public void CmdRequestClientInit() {
+        FileLogger.Write($"Client {connectionToClient.connectionId} requested game system");
+        string system = PlayerPrefs.GetString("System", "Generic");
+        TargetGameSystem(connectionToClient, system);
+    }
+    [TargetRpc]
+    public void TargetGameSystem(NetworkConnectionToClient target, string system) {
+        FileLogger.Write($"Local game system set to {system}");
+        GameSystem.Set(system);
+        CmdRequestMapSync();
+    }
+
+    #endregion
 
     #region Create Token
     [Command]

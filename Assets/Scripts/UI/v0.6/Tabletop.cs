@@ -34,6 +34,7 @@ public class Tabletop : MonoBehaviour
     public void ConnectAsClient() {
         UI.System.Q("FloatingControls").Q("Connection").Q<Label>("Message").text = "You are connected as a client.";
         UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Connection"), true);
+        Player.Self().CmdRequestClientInit();
     }
 
     public void ConnectAsHost() {

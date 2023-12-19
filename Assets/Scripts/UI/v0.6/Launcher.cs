@@ -189,7 +189,6 @@ public class Launcher : MonoBehaviour
         switch (_connectMode) {
             case "solo":
                 GameSystem.Set(PlayerPrefs.GetString("System", "Generic"));
-                
                 _manager.maxConnections = 1;
                 _manager.StartHost();
                 GetComponent<Tabletop>().ConnectAsSolo();
