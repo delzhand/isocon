@@ -75,6 +75,7 @@ public class TokenData : NetworkBehaviour
             initialized = true;
             Graphic = TextureSender.LoadImageFromFile(GraphicHash, true);
             if (Graphic) {
+                Graphic.wrapMode = TextureWrapMode.Clamp;
                 CreateWorldToken();
                 CreateUI();
                 CreateOverhead();
