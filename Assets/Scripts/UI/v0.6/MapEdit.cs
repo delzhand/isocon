@@ -10,7 +10,7 @@ public class MapEdit
 {
     private static string CurrentFile = "";
     public static string EditOp = "AddBlock";
-    public static string ShapeOp = "ShapeSlope";
+    public static string ShapeOp = "ShapeSolid";
     public static string ResizeOp = "ResizeCloneCol";
     public static string StyleOp = "StylePaint";
 

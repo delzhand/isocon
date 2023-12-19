@@ -15,6 +15,24 @@ MonoBehaviour:
   m_Version: 1.1.0
   m_Material: {fileID: 7968536419413933082}
   m_SourceFontFileGUID: 3a113c68cebab2f4e80832ab54c8a01a
+  m_fontAssetCreationEditorSettings:
+    sourceFontFileGUID: 3a113c68cebab2f4e80832ab54c8a01a
+    faceIndex: 0
+    pointSizeSamplingMode: 0
+    pointSize: 98
+    padding: 9
+    paddingMode: 1
+    packingMode: 0
+    atlasWidth: 512
+    atlasHeight: 512
+    characterSetSelectionMode: 0
+    characterSequence: 32 - 126, 160, 8203, 8230, 9633
+    referencedFontAssetGUID: 
+    referencedTextAssetGUID: 
+    fontStyle: 0
+    fontStyleModifier: 0
+    renderMode: 4165
+    includeFontFeatures: 0
   m_SourceFontFile: {fileID: 0}
   m_SourceFontFilePath: 
   m_AtlasPopulationMode: 0
@@ -1541,24 +1559,6 @@ MonoBehaviour:
     m_MarkToBaseAdjustmentRecords: []
     m_MarkToMarkAdjustmentRecords: []
   m_FallbackFontAssetTable: []
-  m_fontAssetCreationEditorSettings:
-    sourceFontFileGUID: 3a113c68cebab2f4e80832ab54c8a01a
-    faceIndex: 0
-    pointSizeSamplingMode: 0
-    pointSize: 98
-    padding: 9
-    paddingMode: 1
-    packingMode: 0
-    atlasWidth: 512
-    atlasHeight: 512
-    characterSetSelectionMode: 0
-    characterSequence: 32 - 126, 160, 8203, 8230, 9633
-    referencedFontAssetGUID: 
-    referencedTextAssetGUID: 
-    fontStyle: 0
-    fontStyleModifier: 0
-    renderMode: 4165
-    includeFontFeatures: 0
   m_FontWeightTable:
   - regularTypeface: {fileID: 0}
     italicTypeface: {fileID: 0}

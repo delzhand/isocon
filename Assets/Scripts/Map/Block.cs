@@ -9,6 +9,7 @@ public enum BlockShape
 {
   Solid,
   Slope,
+  SlopeInt,
   Steps,
   Corner,
   FlatCorner,
