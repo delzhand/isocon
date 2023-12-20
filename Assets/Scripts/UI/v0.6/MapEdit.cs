@@ -212,12 +212,14 @@ public class MapEdit
         Token.UnfocusAll();
         Block.ToggleSpacers(true);
         Cursor.Mode = CursorMode.Editing;
+        BlockMesh.ToggleBorders(true);
         UI.ToggleActiveClass(UI.System.Q("FloatingControls").Q("EditMap"), true);
         UI.ToggleDisplay("BottomBar", false);
     }
 
     private static void EndEditing() {
         Cursor.Mode = CursorMode.Default;
+        BlockMesh.ToggleBorders(false);
         UI.ToggleDisplay("ToolsPanel", false);
         UI.ToggleDisplay("ToolOptions", false);
         Block.ToggleSpacers(false);

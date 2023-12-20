@@ -547,7 +547,7 @@ public class TerrainController : MonoBehaviour
                 block = focused;
             }
             height = (block.transform.localPosition.y + 1).ToString();
-            if (block.Shape == BlockShape.Slope) {
+            if (block.Shape == BlockShape.Slope || block.Shape == BlockShape.Steps || block.Shape == BlockShape.SlopeInt) {
                 height = height + ".5";
             }
             coords = Block.GetAlpha(block.getY() + 1) + "" + (block.getX()+1);

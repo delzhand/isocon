@@ -43,11 +43,13 @@ public class Tabletop : MonoBehaviour
         IPFinder.GetPublic(message);
 
         UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Connection"), true);
+        BlockMesh.ToggleBorders(false);
     }
 
     public void ConnectAsSolo() {
         TerrainController.InitializeTerrain(8, 8, 1);
         UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Connection"), false);
+        BlockMesh.ToggleBorders(false);
     }
 
     private void ConnectionSetup() {

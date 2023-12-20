@@ -29,6 +29,7 @@ public class TokenMenu
         else {
             items.Add(new MenuItem("Remove", "Remove", ClickRemove));
             items.Add(new MenuItem("Move", "Move", ClickMove));
+            items.Add(new MenuItem("Flip", "Flip", ClickFlip));
         }
         items.Add(new MenuItem("Clone", "Clone", ClickClone));
         items.Add(new MenuItem("EndTurn", "End Turn", ClickEndTurn));
@@ -44,6 +45,7 @@ public class TokenMenu
         Block.DeselectAll();
         Block.UnfocusAll();
         Cursor.Mode = CursorMode.Placing;
+        BlockMesh.ToggleBorders(true);
         SelectionMenu.ActivateItem("Place");
     }
 
@@ -60,7 +62,12 @@ public class TokenMenu
         Block.DeselectAll();
         Block.UnfocusAll();
         Cursor.Mode = CursorMode.Moving;
+        BlockMesh.ToggleBorders(true);
         SelectionMenu.ActivateItem("Move");
+    }
+
+    public static void ClickFlip(ClickEvent evt) {
+        Token.GetSelected().transform.Find("Offset/Avatar/Cutout/Cutout Quad").Rotate(new Vector3(0, 180, 0));
     }
 
     public static void DoMove(Block b) {

@@ -72,7 +72,7 @@ public class CameraControl : MonoBehaviour
             float scroll = Input.GetAxis("Mouse ScrollWheel");
             if (!isOutside && scroll != 0) {
                 float z = UI.System.Q<Slider>("ZoomScale").value;
-                z += scroll;
+                z -= scroll;
                 Camera.main.GetComponent<Camera>().orthographicSize = z;
                 UI.System.Q<Slider>("ZoomScale").value = z;
             }

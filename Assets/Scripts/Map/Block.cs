@@ -510,4 +510,13 @@ public class Block : MonoBehaviour
         }
     }
     #endregion
+
+    public static void ToggleBorders(bool show) {
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < blocks.Length; i++) {
+            Block b = blocks[i].GetComponent<Block>();
+            b.PaintMaterialSide.SetInt("_ShowOutline", show ? 1 : 0);            
+            b.PaintMaterialTop.SetInt("_ShowOutline", show ? 1 : 0);            
+        }
+    }
 }

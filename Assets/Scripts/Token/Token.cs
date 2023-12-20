@@ -90,6 +90,7 @@ public class Token : MonoBehaviour
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
         Player.Self().CmdRequestPlaceToken(onlineDataObject, v);
         Cursor.Mode = CursorMode.Default;
+        BlockMesh.ToggleBorders(false);
     }
 
     public void Move(Block block) {
@@ -114,6 +115,7 @@ public class Token : MonoBehaviour
         UI.ToggleDisplay("SelectedTokenPanel", false);
         SelectionMenu.Hide();
         Cursor.Mode = CursorMode.Default;
+        BlockMesh.ToggleBorders(false);
     }
 
     public static void DeselectAll() {

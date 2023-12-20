@@ -41,10 +41,23 @@ public class BlockMesh: MonoBehaviour
         SharedMaterials.Add("selected", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")));
         SharedMaterials["selected"].SetInt("_Selected", 1);
 
-        foreach(string s in StringUtility.Arr("Brick3Side", "Brick3Top", "SmallTileTop", "BigTileTop", "AcidSide","AcidTopFlow","AcidTopStill","Brick2Side","Brick2Top","BrickSide","BrickTop","DryGrassTop","GoldSide","GoldTop","GrassTop","LavaSide","LavaTopFlow","LavaTopStill","MetalSide","MetalTop","PoisonSide","PoisonTopFlow","PoisonTopStill","SandSide","SandTop","SnowSide","SnowTop","SoilSide","SoilTop","StoneSide","StoneTop","WaterSideFlow", "WaterSideStill","WaterTopFlow","WaterTopStill","Wood2Side","Wood2Top","WoodSide","WoodTop", "GrayBrickSide", "GrayBrickTop", "GrayMetalSide", "GrayMetalTop")) {
+        foreach(string s in TextureMaterials()) {
             SharedMaterials.Add($"{s}", new Material(Resources.Load<Material>($"Materials/Block/Artistic/{s}")));
         }
+    }
 
+    public static void ToggleBorders(bool show) {
+        foreach(string s in TextureMaterials()) {
+            SharedMaterials[s].SetInt("_ShowOutline", show ? 1 : 0);
+        }
+        foreach(string s in StringUtility.Arr("side1", "side2", "top1", "top2")) {
+            SharedMaterials[s].SetInt("_ShowOutline", show ? 1 : 0);
+        }
+        Block.ToggleBorders(show);
+    }
+
+    private static string[] TextureMaterials() {
+        return StringUtility.Arr("Brick3Side", "Brick3Top", "SmallTileTop", "BigTileTop", "AcidSide","AcidTopFlow","AcidTopStill","Brick2Side","Brick2Top","BrickSide","BrickTop","DryGrassTop","GoldSide","GoldTop","GrassTop","LavaSide","LavaTopFlow","LavaTopStill","MetalSide","MetalTop","PoisonSide","PoisonTopFlow","PoisonTopStill","SandSide","SandTop","SnowSide","SnowTop","SoilSide","SoilTop","StoneSide","StoneTop","WaterSideFlow", "WaterSideStill","WaterTopFlow","WaterTopStill","Wood2Side","Wood2Top","WoodSide","WoodTop", "GrayBrickSide", "GrayBrickTop", "GrayMetalSide", "GrayMetalTop");
     }
 
     private static Material Instantiate(Material material)
