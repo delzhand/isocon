@@ -149,13 +149,13 @@
 
 .unity-scroll-view .unity-scroller--vertical {
     border-width: 0;
-    width: 4px;
+    width: 5px;
     translate: 5px 0;
 }
 
 .unity-scroll-view .unity-scroller--vertical .unity-scroller__slider {
-    width: 4px;
-    min-width: 4px;
+    width: 10px;
+    min-width: 5px;
 }
 
 .unity-scroll-view .unity-scroller--vertical .unity-base-slider__tracker {
@@ -164,7 +164,7 @@
 }
 
 .unity-scroll-view .unity-scroller--vertical .unity-base-slider__dragger {
-    width: 4px;
+    width: 10px;
     border-width: 0;
 }
 
@@ -180,6 +180,44 @@
 }
 
 .unity-scroll-view .unity-scroller--vertical .unity-scroller__high-button {
+    display: none;
+}
+
+.unity-scroll-view .unity-scroller--horizontal {
+    border-width: 0;
+    height: 5px;
+    translate: 0 5px;
+}
+
+.unity-scroll-view .unity-scroller--horizontal .unity-scroller__slider {
+    height: 10px;
+    min-height: 5px;
+}
+
+.unity-scroll-view .unity-scroller--horizontal .unity-base-slider__tracker {
+    background-color: transparent;
+    border-width: 0;
+    height: 5px;
+}
+
+.unity-scroll-view .unity-scroller--horizontal .unity-base-slider__dragger {
+    height: 5px;
+    border-width: 0;
+    background-color: #FFF;
+}
+
+.unity-scroll-view .unity-scroller--horizontal .unity-slider__input {
+}
+
+.unity-scroll-view .unity-scroller--horizontal .unity-scroller__slider {
+    margin: 0;
+}
+
+.unity-scroll-view .unity-scroller--horizontal .unity-scroller__low-button {
+    display: none;
+}
+
+.unity-scroll-view .unity-scroller--horizontal .unity-scroller__high-button {
     display: none;
 }
 
