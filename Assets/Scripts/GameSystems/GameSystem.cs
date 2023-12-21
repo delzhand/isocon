@@ -97,14 +97,6 @@ public class GameSystem : MonoBehaviour
         throw new NotImplementedException();        
     }
 
-    public virtual string MappedEffectName(string effect) {
-        return effect;
-    }
-
-    public virtual string DeMappedEffectName(string effect) {
-        return effect;
-    }
-
     public virtual string[] GetEffectList()
     {
         return new string[]{"Wavy", "Spiky", "Hand", "Hole", "Blocked", "Corners"};

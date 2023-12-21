@@ -93,55 +93,9 @@ public class Icon_v1_5 : GameSystem
         data.GetComponent<Icon_v1_5TokenData>().UpdateTokenPanel(elementName);
     }
 
-    public override string MappedEffectName(string effect) {
-        switch (effect) {
-            case "Blocked":
-                return "Impassable";
-            case "Spiky":
-                return "Dangerous";
-            case "Wavy":
-                return "Difficult";
-            case "Hand":
-                return "Interactive";
-            case "Hole":
-                return "Pit";
-            default:
-                return effect;
-        }
+    public override string[] GetEffectList() {
+        return new string[]{"Difficult", "Pit", "Dangerous", "Impassable", "Interactive", "Demon Slayer/Flash Step - Afterimage", "Demon Slayer/Six Hells Trigram", "Demon Slayer/Heroic Six Hells Trigram", "Fool/Party Favor", "Freelancer/Showdown - Quench", "Freelancer/Warding Bolts", "Shade/Shadow Cloud (Blinded+ exc Caster)", "Harvester/Plant", "Harvester/Blood Grove", "Harvester/Mote of Life (Blessing))", "Harvester/Mote of Life (Regen)", "Spellblade/Lightning Spike 1", "Spellblade/Lightning Spike 2", "Spellblade/Lightning Spike 3", "Spellblade/Lightning Spike 4", "Spellblade/Lightning Spike 5", "Spellblade/Lightning Spike 6", "Stormbender/Selkie", "Stormbender/Salt Sprite", "Stormbender/Pit", "Stormbender/Tsunami", "Stormbender/Tsunami - Stormlash", "Stormbender/Dangerous", "Stormbender/Geyser I", "Stormbender/Gust", "Stormbender/Gust I", "Stormbender/Gust II", "Stormbender/Waterspout", "Stormbender/Waterspout - Hurricane", "Stormbender/Waterspout I", "Stormbender/Waterspout I - Hurricane", "Stormbender/Waterspout II", "Stormbender/Waterspout II - Hurricane"};
     }
-
-    // public override string[] GetEffectList() {
-    //     return new string[]{"Difficult", "Pit", "Dangerous", "Impassable", "Interactive", "Demon Slayer/Flash Step - Afterimage", "Demon Slayer/Six Hells Trigram", "Demon Slayer/Heroic Six Hells Trigram", "Fool/Party Favor", "Freelancer/Showdown - Quench", "Freelancer/Warding Bolts", "Shade/Shadow Cloud (Blinded+ exc Caster)", "Harvester/Plant", "Harvester/Blood Grove", "Harvester/Mote of Life (Blessing))", "Harvester/Mote of Life (Regen)", "Spellblade/Lightning Spike 1", "Spellblade/Lightning Spike 2", "Spellblade/Lightning Spike 3", "Spellblade/Lightning Spike 4", "Spellblade/Lightning Spike 5", "Spellblade/Lightning Spike 6", "Stormbender/Selkie", "Stormbender/Salt Sprite", "Stormbender/Pit", "Stormbender/Tsunami", "Stormbender/Tsunami - Stormlash", "Stormbender/Dangerous", "Stormbender/Geyser I", "Stormbender/Gust", "Stormbender/Gust I", "Stormbender/Gust II", "Stormbender/Waterspout", "Stormbender/Waterspout - Hurricane", "Stormbender/Waterspout I", "Stormbender/Waterspout I - Hurricane", "Stormbender/Waterspout II", "Stormbender/Waterspout II - Hurricane"};
-    // }
-
-    // public override bool HasEffect(string search, List<string> effects)
-    // {
-    //     switch (search) {
-    //         case "Blocked":
-    //             return effects.Contains("Impassable");
-    //         case "Spiky":
-    //             return effects.Contains("Dangerous");
-    //         case "Wavy":
-    //             return effects.Contains("Difficult");
-    //         case "Hand":
-    //             return effects.Contains("Interactive");
-    //         case "Hole":
-    //             return effects.Contains("Pit");
-    //         default:
-    //             return false;
-    //     }
-    // }
-
-    // public override bool HasCustomEffect(List<string> effects)
-    // {
-    //     List<string> specialEffects = new string[]{"Impassable", "Dangerous", "Difficult", "Interactive", "Pit"}.ToList();
-    //     foreach (string s in effects) {
-    //         if (!specialEffects.Contains(s)) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
 
     public override void AddTokenModal()
     {

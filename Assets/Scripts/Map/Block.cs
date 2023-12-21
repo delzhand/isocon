@@ -356,8 +356,9 @@ public class Block : MonoBehaviour
         markerMaterial.SetInt("_Pit", 0);
         markerMaterial.SetInt("_Other", 0);
         
-        foreach (string s in effects) {
-            switch (s) {
+        foreach (string effect in effects) {
+            string marker = effect.Split("|")[1];
+            switch (marker) {
                 case "Blocked":
                     markerMaterial.SetInt("_Impassable", 1);
                     break;
@@ -373,7 +374,7 @@ public class Block : MonoBehaviour
                 case "Hole":
                     markerMaterial.SetInt("_Pit", 1);
                     break;
-                default:
+                case "Corners":
                     markerMaterial.SetInt("_Other", 1);
                     break;
             }

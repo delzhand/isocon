@@ -560,17 +560,17 @@ public class TerrainController : MonoBehaviour
 
         root.Q("CurrentEffects").Clear();
         if (block) {
-            block.GetEffects().ForEach(marker => {
+            block.GetEffects().ForEach(effect => {
                 VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/TerrainEffect");
                 VisualElement instance = template.Instantiate();
-                instance.Q<Label>("Label").text = marker.ToUpper();
+                instance.Q<Label>("Label").text = effect.ToUpper().Split("|")[0];
                 VisualElement remove = instance.Q("Remove");
                 if (!singleSelected) {
                     UI.ToggleDisplay(remove, false);
                 }
                 else {
                     remove.RegisterCallback<ClickEvent>((evt) => {
-                        Player.Self().CmdRequestMapSetValue(new string[]{block.name}, "Effect", marker);
+                        Player.Self().CmdRequestMapSetValue(new string[]{block.name}, "Effect", effect);
                     });
                 }
                 root.Q("CurrentEffects").Add(instance);
