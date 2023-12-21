@@ -8,6 +8,9 @@
         },
         {
             "m_Id": "2545c2696d4f4e97a2eb79ae0523bcf4"
+        },
+        {
+            "m_Id": "5056de34031446d6a199a5978fc1d0e5"
         }
     ],
     "m_Keywords": [],
@@ -240,6 +243,9 @@
         },
         {
             "m_Id": "2545c2696d4f4e97a2eb79ae0523bcf4"
+        },
+        {
+            "m_Id": "5056de34031446d6a199a5978fc1d0e5"
         }
     ]
 }
@@ -636,6 +642,29 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.BooleanShaderProperty",
+    "m_ObjectId": "5056de34031446d6a199a5978fc1d0e5",
+    "m_Guid": {
+        "m_GuidSerialized": "ecb72a7f-429c-493f-a889-26b83a76b3af"
+    },
+    "m_Name": "UseNoise",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "UseNoise",
+    "m_DefaultReferenceName": "_UseNoise",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": false
 }
 
 {
