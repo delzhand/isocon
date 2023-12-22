@@ -23,6 +23,7 @@ public class BlockMesh: MonoBehaviour
         Shapes.Add(BlockShape.FlatCorner, Resources.Load<Mesh>("Models/FlatCorner"));
         Shapes.Add(BlockShape.Upslope, Resources.Load<Mesh>("Models/Upslope"));
         Shapes.Add(BlockShape.SlopeInt, Resources.Load<Mesh>("Models/SlopeIntCorner"));
+        Shapes.Add(BlockShape.SlopeExt, Resources.Load<Mesh>("Models/SlopeExtCorner"));
 
         SharedMaterials.Add("side1", new Material(Resources.Load<Material>("Materials/Block/Checker/SideA")));
         SharedMaterials.Add("side2", new Material(Resources.Load<Material>("Materials/Block/Checker/SideB")));

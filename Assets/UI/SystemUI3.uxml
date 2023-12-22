@@ -175,6 +175,10 @@
                                         <ui:VisualElement name="Icon" style="width: 40px; height: 32px; -unity-background-scale-mode: scale-to-fit;" />
                                         <ui:Label tabindex="-1" text="Slope Corner Inside" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 4px; padding-bottom: 0; padding-left: 4px;" />
                                     </ui:Button>
+                                    <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="ShapeSlopeExt" class="subtool" style="flex-direction: row; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 4px;">
+                                        <ui:VisualElement name="Icon" style="width: 40px; height: 32px; -unity-background-scale-mode: scale-to-fit;" />
+                                        <ui:Label tabindex="-1" text="Slope Corner Outside" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 4px; padding-bottom: 0; padding-left: 4px;" />
+                                    </ui:Button>
                                     <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="ShapeSteps" class="subtool" style="flex-direction: row; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 4px;">
                                         <ui:VisualElement name="Icon" style="width: 40px; height: 32px; background-image: resource(&apos;Textures/ToolIcons/steps&apos;); -unity-background-scale-mode: scale-to-fit;" />
                                         <ui:Label tabindex="-1" text="Steps" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 4px; padding-bottom: 0; padding-left: 4px;" />

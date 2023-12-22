@@ -10,6 +10,7 @@ using UnityEngine.UIElements;
 public class MaleghastTokenDataRaw: TokenDataRaw
 {
     public string HouseJob;
+    public string Color;
 
     public static string ToJson() {
         MaleghastTokenDataRaw raw = new MaleghastTokenDataRaw();
@@ -17,6 +18,7 @@ public class MaleghastTokenDataRaw: TokenDataRaw
         Texture2D graphic = TextureSender.CopyLocalImage(UI.Modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
         raw.GraphicHash = TextureSender.GetTextureHash(graphic);
         raw.HouseJob = SearchField.GetValue(UI.Modal.Q("UnitType"));
+        raw.Color = UI.Modal.Q<DropdownField>("PlayerColor").value;
         return JsonUtility.ToJson(raw);
     }
 }
@@ -76,7 +78,7 @@ public class MaleghastTokenData : TokenData
         MaleghastTokenDataRaw raw = JsonUtility.FromJson<MaleghastTokenDataRaw>(Json);
         Name = raw.Name;
         GraphicHash = raw.GraphicHash;
-        SetStats(raw.HouseJob);
+        SetStats(raw.HouseJob, raw.Color);
     }
 
     public override void CreateOverhead() {
@@ -106,15 +108,22 @@ public class MaleghastTokenData : TokenData
         return Size;
     }
 
-    private void SetStats(string houseJob) {
+    private void SetStats(string houseJob, string color) {
         House = houseJob.Split("/")[0];
         Job = houseJob.Split("/")[1];
 
         JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
 
         foreach (JSONNode house in gamedata["Maleghast"]["Houses"].AsArray) {
-            if (house["name"] == House) {
+            if (color != "House Default" && color == house["name"]) {
+                Debug.Log($"{color}|{house["color"]}");
                 Color = ColorUtility.ColorFromHex(house["color"]);
+            }
+            if (house["name"] == House) {
+                if (color == "House Default") {
+                    Debug.Log($"{color}|{house["color"]}");
+                    Color = ColorUtility.ColorFromHex(house["color"]);
+                }
                 foreach (JSONNode unit in house["units"].AsArray) {
                     if (unit["name"] == Job) {
                         Type = unit["type"];

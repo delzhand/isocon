@@ -179,12 +179,12 @@ public class Launcher : MonoBehaviour
 
         Modal.AddPreferredButton("Confirm", ConfirmConfig);
         Modal.AddButton("Cancel", Modal.CloseEvent);
-        // ConfigModalEvaluateConditions();
+        
+        ConfigModalEvaluateConditions();
     }
 
     private void ConfirmConfig(ClickEvent evt) {
-        string gridType = PlayerPrefs.GetString("Grid", "Square");
-        TerrainController.GridType = gridType;
+        TerrainController.GridType = DefaultGridType();
 
         switch (_connectMode) {
             case "solo":
@@ -209,7 +209,7 @@ public class Launcher : MonoBehaviour
     }
 
     private void ConfigModalEvaluateConditions() {
-        bool grid = UI.Modal.Q<DropdownField>("GameSystem").value == "Generic";
+        bool grid = StringUtility.InList(UI.Modal.Q<DropdownField>("GameSystem").value, "Generic", "Lancer");
         UI.ToggleDisplay(UI.Modal.Q("GridType"), grid);
     }
 

@@ -98,6 +98,7 @@ public class TerrainController : MonoBehaviour
             }
         }
         ReorgNeeded = true;
+        Environment.SetBackgroundColors(Environment.BgBottomColor, Environment.BgTopColor);
     }
 
     public static void ResetTerrain() {
@@ -430,6 +431,9 @@ public class TerrainController : MonoBehaviour
             case "ShapeSlopeInt":
                 shape = BlockShape.SlopeInt;
                 break;
+            case "ShapeSlopeExt":
+                shape = BlockShape.SlopeExt;
+                break;
         }
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
@@ -547,7 +551,7 @@ public class TerrainController : MonoBehaviour
                 block = focused;
             }
             height = (block.transform.localPosition.y + 1).ToString();
-            if (block.Shape == BlockShape.Slope || block.Shape == BlockShape.Steps || block.Shape == BlockShape.SlopeInt) {
+            if (block.Shape == BlockShape.Slope || block.Shape == BlockShape.Steps || block.Shape == BlockShape.SlopeInt || block.Shape == BlockShape.SlopeExt) {
                 height = height + ".5";
             }
             coords = Block.GetAlpha(block.getY() + 1) + "" + (block.getX()+1);

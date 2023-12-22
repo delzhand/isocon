@@ -92,11 +92,17 @@ public class Player : NetworkBehaviour
         FileLogger.Write($"Client {connectionToClient.connectionId} requested game system");
         string system = PlayerPrefs.GetString("System", "Generic");
         TargetGameSystem(connectionToClient, system);
+        TargetGridType(connectionToClient, TerrainController.GridType);
     }
     [TargetRpc]
     public void TargetGameSystem(NetworkConnectionToClient target, string system) {
         FileLogger.Write($"Local game system set to {system}");
         GameSystem.Set(system);
+    }
+    [TargetRpc]
+    public void TargetGridType(NetworkConnectionToClient target, string grid) {
+        FileLogger.Write($"Local grid type set to {grid}");
+        TerrainController.GridType = grid;
         CmdRequestMapSync();
     }
 

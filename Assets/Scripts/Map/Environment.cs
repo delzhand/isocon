@@ -47,5 +47,4 @@ public class Environment : MonoBehaviour
         UI.System.Q("BotBgColor").style.backgroundColor = BgBottomColor;
         UI.System.Q("TopBgColor").style.backgroundColor = BgTopColor;
     }
-
 }
