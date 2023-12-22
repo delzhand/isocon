@@ -90,7 +90,7 @@ public class Maleghast : GameSystem
     }
 
     public override string[] GetEffectList() {
-        return new string[]{"Adverse", "Hazard", "Impassable"};
+        return new string[]{"Adverse", "Hazard", "Impassable", "Corpse"};
     }
 
     public override void CreateToken()
