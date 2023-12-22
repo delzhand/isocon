@@ -105,7 +105,9 @@ public class Maleghast : GameSystem
     {
         JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
         List<string> units = new();
+        List<string> houses = new();
         foreach (JSONNode house in gamedata["Maleghast"]["Houses"].AsArray) {
+            houses.Add(house["name"]);
             foreach (JSONNode unit in house["units"].AsArray) {
                 string houseJob = $"{ house["name"] }/{ unit["name"] }";
                 units.Add(houseJob.Replace("\"", ""));
@@ -115,6 +117,7 @@ public class Maleghast : GameSystem
         base.AddTokenModal();
 
         Modal.AddSearchField("UnitType", "Unit Type", "", units.ToArray());
+        Modal.AddDropdownField("PlayerColor", "Player Color", "House Default", houses.ToArray());
     }
 
     // private static void UpgradesModal(ClickEvent evt) {
