@@ -99,7 +99,7 @@ public class GameSystem : MonoBehaviour
 
     public virtual string[] GetEffectList()
     {
-        return new string[]{"Wavy", "Spiky", "Hand", "Hole", "Blocked", "Corners"};
+        return new string[]{"Wavy", "Spiky", "Hand", "Skull", "Hole", "Blocked", "Corners"};
     }
 
     public static void Set(string value) {

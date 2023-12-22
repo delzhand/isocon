@@ -116,12 +116,10 @@ public class MaleghastTokenData : TokenData
 
         foreach (JSONNode house in gamedata["Maleghast"]["Houses"].AsArray) {
             if (color != "House Default" && color == house["name"]) {
-                Debug.Log($"{color}|{house["color"]}");
                 Color = ColorUtility.ColorFromHex(house["color"]);
             }
             if (house["name"] == House) {
                 if (color == "House Default") {
-                    Debug.Log($"{color}|{house["color"]}");
                     Color = ColorUtility.ColorFromHex(house["color"]);
                 }
                 foreach (JSONNode unit in house["units"].AsArray) {

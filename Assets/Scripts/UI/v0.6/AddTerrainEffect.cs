@@ -9,7 +9,7 @@ public class AddTerrainEffect
     public static void OpenModal(ClickEvent evt) {
         Modal.Reset("Add Terrain Effect");
         Modal.AddSearchField("SearchField", "Add Terrain Effect", "", GameSystem.Current().GetEffectList());
-        Modal.AddDropdownField("VisualMarker", "Visual Marker", "None", StringUtility.Arr("None", "Spiky", "Wavy", "Hole", "Hand", "Blocked", "Corners"));
+        Modal.AddDropdownField("VisualMarker", "Visual Marker", "None", StringUtility.Arr("None", "Spiky", "Wavy", "Hole", "Hand", "Skull", "Blocked", "Corners"));
         Modal.AddPreferredButton("Confirm", ConfirmAddEffect);
         Modal.AddButton("Cancel", Modal.CloseEvent);
     }

@@ -356,6 +356,7 @@ public class Block : MonoBehaviour
         markerMaterial.SetInt("_Interactive", 0);
         markerMaterial.SetInt("_Pit", 0);
         markerMaterial.SetInt("_Other", 0);
+        markerMaterial.SetInt("_Skull", 0);
         
         foreach (string effect in effects) {
             string marker = effect.Split("|")[1];
@@ -377,6 +378,9 @@ public class Block : MonoBehaviour
                     break;
                 case "Corners":
                     markerMaterial.SetInt("_Other", 1);
+                    break;
+                case "Skull":
+                    markerMaterial.SetInt("_Skull", 1);
                     break;
             }
         }

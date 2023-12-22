@@ -147,12 +147,12 @@ public class TokenData : NetworkBehaviour
         if (size == 2) {
             TokenObject.GetComponent<Token>().Size = 2;
             TokenObject.transform.Find("Offset").transform.localScale = new Vector3(2, 2, 2);
-            TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2*.7f, 2*.7f, 4);
+            TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(1.7f, 1.7f, 4);
         }
         else if (size == 3) {
             TokenObject.GetComponent<Token>().Size = 3;
             TokenObject.transform.Find("Offset").transform.localScale = new Vector3(3, 3, 3);
-            TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(3*.7f, 3*.7f, 4);
+            TokenObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2.7f, 2.7f, 4);
         }        
     }
 

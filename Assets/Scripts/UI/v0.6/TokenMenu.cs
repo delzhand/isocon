@@ -88,7 +88,8 @@ public class TokenMenu
 
     public static void ClickDelete(ClickEvent evt) {
         TokenData data = Token.GetSelected().onlineDataObject.GetComponent<TokenData>();
-        Modal.DoubleConfirm("Delete Token", $"Are you sure you want to delete {data.Name}? This action cannot be undone.", () => {
+        string name = data.Name.Length == 0 ? "this token" : data.Name;
+        Modal.DoubleConfirm("Delete Token", $"Are you sure you want to delete {name}? This action cannot be undone.", () => {
             Token.DeselectAll();
             Player.Self().CmdRequestDeleteToken(data);
         });
@@ -96,7 +97,10 @@ public class TokenMenu
 
     public static void ClickClone(ClickEvent evt) {
         TokenData data = Token.GetSelected().onlineDataObject.GetComponent<TokenData>();
-        Player.Self().CmdCreateTokenData(data.Json);
+        string name = data.Name.Length == 0 ? "this token" : data.Name;
+        Modal.DoubleConfirm("Clone Token", $"Are you sure you want to clone {name}?", () => {
+            Player.Self().CmdCreateTokenData(data.Json);
+        });
     }
 
     public static void ClickEndTurn(ClickEvent evt) {
