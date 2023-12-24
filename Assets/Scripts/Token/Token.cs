@@ -108,14 +108,12 @@ public class Token : MonoBehaviour
         Selected = true;
         Data.Select();
         UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
-        UI.ToggleDisplay("SelectedTokenPanel", true); // selected token panel
         TokenMenu.ShowMenu();
     }
 
     public void Deselect() {
         Selected = false;
         UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), false);
-        UI.ToggleDisplay("SelectedTokenPanel", false);
         SelectionMenu.Hide();
         Cursor.Mode = CursorMode.Default;
         BlockMesh.ToggleBorders(false);

@@ -203,6 +203,26 @@
     -unity-background-image-tint-color: rgb(25, 130, 156);
 }
 
+#SelectedTokenPanel {
+    left: -400px;
+    opacity: 0;
+}
+
+#FocusedTokenPanel {
+    right: -400px;
+    opacity: 0;
+}
+
+#SelectedTokenPanel.active {
+    left: 0;
+    opacity: 1;
+}
+
+#FocusedTokenPanel.active {
+    right: 0;
+    opacity: 1;
+}
+
 #SelectedTokenPanel #DataColumn {
     flex-direction: row;
 }

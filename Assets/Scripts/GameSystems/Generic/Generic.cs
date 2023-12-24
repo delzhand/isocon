@@ -30,6 +30,7 @@ public class Generic : GameSystem
     {
         base.AddTokenModal();
         Modal.AddDropdownField("SizeField", "Size", "1x1", new string[]{"1x1", "2x2", "3x3"});
+        Modal.AddTextField("ExtraInfo", "Extra Info", "");
         Modal.AddIntField("HPField", "HP", 1);
     }
 
@@ -39,6 +40,7 @@ public class Generic : GameSystem
 public class GenericData {
     public int CurrentHP;
     public int MaxHP;
+    public string ExtraInfo;
 }
 
 public class GenericInterpreter {
@@ -49,10 +51,12 @@ public class GenericInterpreter {
         string graphicHash = TextureSender.GetTextureHash(graphic);
         int size = int.Parse(UI.Modal.Q<DropdownField>("SizeField").value.Substring(0, 1));
         int hp = UI.Modal.Q<IntegerField>("HPField").value;
+        string extraInfo = UI.Modal.Q<TextField>("ExtraInfo").value;
 
         GenericData data = new(){
             CurrentHP = hp,
-            MaxHP = hp
+            MaxHP = hp,
+            ExtraInfo = extraInfo
         };
 
         Player.Self().CmdCreateToken("Generic", graphicHash, name, size, Color.black, JsonUtility.ToJson(data));
@@ -71,13 +75,13 @@ public class GenericInterpreter {
 
     public static void UpdateTokenPanel(string tokenId, string elementName) {
         TokenData2 data = TokenData2.Find(tokenId);
+        UI.ToggleActiveClass(elementName, data != null);
         if (!data) {
-            UI.ToggleDisplay(elementName, false);
             return;
         }
 
         data.UpdateTokenPanel(elementName);
-        GenericData mdata = JsonUtility.FromJson<GenericData>(data.SystemData);
+        GenericData sysdata = JsonUtility.FromJson<GenericData>(data.SystemData);
 
         VisualElement panel = UI.System.Q(elementName);
 
@@ -85,6 +89,15 @@ public class GenericInterpreter {
         panel.Q("ClassBackground").style.borderRightColor = data.Color;
         panel.Q("ClassBackground").style.borderBottomColor = data.Color;
         panel.Q("ClassBackground").style.borderLeftColor = data.Color;
+
+        panel.Q("ExtraInfo").Clear();
+        Label l = new()
+        {
+            text = sysdata.ExtraInfo
+        };
+        panel.Q("ExtraInfo").Add(l);
+
+        UI.ToggleDisplay(panel.Q("Data"), false);
     }
 
 

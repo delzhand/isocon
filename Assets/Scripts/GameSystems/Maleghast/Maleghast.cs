@@ -172,13 +172,13 @@ public class MaleghastInterpreter {
 
     public static void UpdateTokenPanel(string tokenId, string elementName) {
         TokenData2 data = TokenData2.Find(tokenId);
-        UI.ToggleDisplay(elementName, data != null);
+        UI.ToggleActiveClass(elementName, data != null);
         if (!data) {
             return;
         }
 
         data.UpdateTokenPanel(elementName);
-        MaleghastData mdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
+        MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
 
         VisualElement panel = UI.System.Q(elementName);
 
@@ -187,20 +187,20 @@ public class MaleghastInterpreter {
         panel.Q("ClassBackground").style.borderBottomColor = data.Color;
         panel.Q("ClassBackground").style.borderLeftColor = data.Color;
 
-        panel.Q<Label>("House").text = mdata.House;
+        panel.Q<Label>("House").text = sysdata.House;
         panel.Q<Label>("House").style.backgroundColor = data.Color;
-        panel.Q<Label>("Job").text = mdata.Job;
+        panel.Q<Label>("Job").text = sysdata.Job;
         panel.Q<Label>("Job").style.backgroundColor = data.Color;
 
-        panel.Q<Label>("CHP").text = $"{ mdata.CurrentHP }";
-        panel.Q<Label>("MHP").text = $"/{ mdata.MaxHP }";
-        panel.Q<ProgressBar>("HpBar").value = mdata.CurrentHP;
-        panel.Q<ProgressBar>("HpBar").highValue = mdata.MaxHP;
+        panel.Q<Label>("CHP").text = $"{ sysdata.CurrentHP }";
+        panel.Q<Label>("MHP").text = $"/{ sysdata.MaxHP }";
+        panel.Q<ProgressBar>("HpBar").value = sysdata.CurrentHP;
+        panel.Q<ProgressBar>("HpBar").highValue = sysdata.MaxHP;
         
-        panel.Q("Defense").Q<Label>("Value").text = $"{ mdata.Defense }";
-        panel.Q("Move").Q<Label>("Value").text = $"{ mdata.Move }";
+        panel.Q("Defense").Q<Label>("Value").text = $"{ sysdata.Defense }";
+        panel.Q("Move").Q<Label>("Value").text = $"{ sysdata.Move }";
         // panel.Q("Armor").Q<Label>("Value").text = $"{ Armor.ToUpper() }";
-        panel.Q("Type").Q<Label>("Value").text = mdata.Type;
+        panel.Q("Type").Q<Label>("Value").text = sysdata.Type;
         
         // panel.Q("Traits").Q("List").Clear();
         // foreach (string s in Traits) {
