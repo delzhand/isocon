@@ -22,6 +22,8 @@ public class Cursor : MonoBehaviour
     private bool firstTokenHit = false;
     private bool firstHit = false;
 
+    public static bool OverUnitBarElement = false;
+
     void Update()
     {
         if (Modal.IsOpen()) {
@@ -57,7 +59,7 @@ public class Cursor : MonoBehaviour
             }
         }
 
-        if (!firstTokenHit && !TokenData.MouseOverUnitBarElement) {
+        if (!firstTokenHit && !OverUnitBarElement) {
             Token.UnfocusAll();
         }
 

@@ -1,23 +1,25 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using IsoconUILibrary;
+using System.Reflection;
 using SimpleJSON;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class Maleghast : GameSystem
 {
-    public int TurnNumber = 1;
-
     public override string SystemName()
     {
         return "Maleghast";
     }
 
-    public override void Setup() {
-        base.Setup();
+    public override void InterpreterMethod(string name, object[] args)
+    {
+        Type classType = Type.GetType("MaleghastInterpreter");
+        MethodInfo method = classType.GetMethod(name, BindingFlags.Public | BindingFlags.Static);
+        method.Invoke(null, args);
+    }
 
+    public override void Setup() {
         // Selected
         VisualElement selectedPanel = UI.System.Q("SelectedTokenPanel");
         VisualElement unitPanel = UI.CreateFromTemplate("UITemplates/GameSystem/MaleghastUnitPanel");
@@ -44,62 +46,22 @@ public class Maleghast : GameSystem
         focusedPanel.Q("ExtraInfo").Add(new Label(){ name = "Job" });
     }
 
-    public override string GetTokenDataRawJson()
-    {
-        return MaleghastTokenDataRaw.ToJson();
-    }
-
-    public override void TokenDataSetValue(TokenData data, string value)
-    {
-        (data as MaleghastTokenData).Change(value);
-    }
-
     public override void GameDataSetValue(string value) {
         FileLogger.Write($"Game system changed - {value}");
         if (value == "IncrementTurn") {
             TurnNumber++;
             UI.System.Q<Label>("TurnNumber").text = TurnNumber.ToString();
             foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
-                Icon_v1_5TokenData data = g.GetComponent<Icon_v1_5TokenData>();
-                data.Change("LoseStatus|Turn Ended");
+                TokenData2 data = g.GetComponent<TokenData2>();
+                TokenDataSetValue(data.Id, "LoseStatus|Turn Ended");
             }
         }
-    }
-
-    public override Texture2D GetGraphic(string json) {
-        MaleghastTokenDataRaw raw = JsonUtility.FromJson<MaleghastTokenDataRaw>(json);
-        return TextureSender.LoadImageFromFile(raw.GraphicHash, true);
-    }
-
-    public override void TokenDataSetup(GameObject g, string json, string id) {
-        g.GetComponent<MaleghastTokenData>().TokenDataSetup(json, id);
-    }
-
-    public override GameObject GetDataPrefab() {
-        return Instantiate(Resources.Load<GameObject>("Prefabs/MaleghastTokenData"));
-    }
-
-    public override void UpdateTokenPanel(GameObject data, string elementName)
-    {
-        if (data == null) {
-            UI.ToggleDisplay(elementName, false);
-            return;
-        }
-        UI.ToggleDisplay(elementName, true);
-        data.GetComponent<MaleghastTokenData>().UpdateTokenPanel(elementName);
     }
 
     public override string[] GetEffectList() {
         return new string[]{"Adverse", "Hazard", "Impassable", "Corpse"};
     }
 
-    public override void CreateToken()
-    {
-        string json = GetTokenDataRawJson();
-        Debug.Log(json);
-
-        base.CreateToken();
-    }
 
     public override void AddTokenModal()
     {
@@ -119,21 +81,134 @@ public class Maleghast : GameSystem
         Modal.AddSearchField("UnitType", "Unit Type", "", units.ToArray());
         Modal.AddDropdownField("PlayerColor", "Player Color", "House Default", houses.ToArray());
     }
+}
 
-    // private static void UpgradesModal(ClickEvent evt) {
-    //     Modal.Reset("Upgrades");
-    //     MaleghastTokenData data = Token.GetSelectedData().GetComponent<TokenData>() as MaleghastTokenData;
-    //     Modal.AddLabel("Traits", "");
-    //     foreach (string s in data.Traits) {
-    //         if (s.EndsWith("|0")) {
-    //             string name = s.Replace("|0", "");
-    //             Modal.AddToggleField(name, name, false, (evt) => {
+[Serializable]
+public class MaleghastData {
+    public int CurrentHP;
+    public int MaxHP;
+    public int Soul;
+    public string House;
+    public string Type;
+    public string Job;
+    public int Move;
+    public int Defense;
+}
 
-    //             });
-    //         }
-    //     }
-    //     Modal.AddToggleField()
-    //     Modal.AddPreferredButton("Confirm", Modal.CloseEvent);
+public class MaleghastInterpreter {
 
-    // }
+    public static void CreateToken() {
+        string name = UI.Modal.Q<TextField>("NameField").value;
+        Texture2D graphic = TextureSender.CopyLocalImage(UI.Modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
+        string graphicHash = TextureSender.GetTextureHash(graphic);
+
+        string houseJob = SearchField.GetValue(UI.Modal.Q("UnitType"));
+        string house = houseJob.Split("/")[0];
+        string job = houseJob.Split("/")[1];
+        string colorValue = UI.Modal.Q<DropdownField>("PlayerColor").value;
+
+        MaleghastData data = new(){
+            House = house,
+            Job = job
+        };
+        InitSystemData(data);
+        
+        int size = 1;
+        if (data.Type == "Tyrant") {
+            size = 2;
+        }
+
+        Color color = ColorUtility.ColorFromHex(FindHouse(house)["color"]);
+        if (colorValue != "House Default") {
+            color = ColorUtility.ColorFromHex(FindHouse(colorValue)["color"]);
+        }
+
+        Player.Self().CmdCreateToken("Maleghast", graphicHash, name, size, color, JsonUtility.ToJson(data));
+    }
+
+    public static void UpdateData(TokenData2 data) {
+        MaleghastData mdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
+        data.OverheadElement.Q<ProgressBar>("HpBar").value = mdata.CurrentHP;
+        data.OverheadElement.Q<ProgressBar>("HpBar").highValue = mdata.MaxHP;        
+    }
+
+    private static void InitSystemData(MaleghastData data) {
+        JSONNode job = FindJob(data.House, data.Job);
+        data.Type = job["type"];
+        data.Move = job["move"];
+        data.MaxHP = job["hp"];
+        data.CurrentHP = job["hp"];
+        data.Defense = job["def"];
+    }
+
+    private static JSONNode FindHouse(string searchHouse) {
+        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
+        foreach (JSONNode house in gamedata["Maleghast"]["Houses"].AsArray) {
+            if (house["name"] == searchHouse) {
+                return house;
+            }
+        }
+        return null;
+    }
+
+    private static JSONNode FindJob(string searchHouse, string searchJob) {
+        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
+        foreach (JSONNode house in gamedata["Maleghast"]["Houses"].AsArray) {
+            if (house["name"] == searchHouse) {
+                foreach (JSONNode unit in house["units"].AsArray) {
+                    if (unit["name"] == searchJob) {
+                        return unit;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static void Change(string tokenId, string value) {
+        TokenData2 data = TokenData2.Find(tokenId);
+        Debug.Log($"MaleghastInterpreter change registered for {data.Name}: {value}");
+    }
+
+    public static void UpdateTokenPanel(string tokenId, string elementName) {
+        TokenData2 data = TokenData2.Find(tokenId);
+        UI.ToggleDisplay(elementName, data != null);
+        if (!data) {
+            return;
+        }
+
+        data.UpdateTokenPanel(elementName);
+        MaleghastData mdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
+
+        VisualElement panel = UI.System.Q(elementName);
+
+        panel.Q("ClassBackground").style.borderTopColor = data.Color;
+        panel.Q("ClassBackground").style.borderRightColor = data.Color;
+        panel.Q("ClassBackground").style.borderBottomColor = data.Color;
+        panel.Q("ClassBackground").style.borderLeftColor = data.Color;
+
+        panel.Q<Label>("House").text = mdata.House;
+        panel.Q<Label>("House").style.backgroundColor = data.Color;
+        panel.Q<Label>("Job").text = mdata.Job;
+        panel.Q<Label>("Job").style.backgroundColor = data.Color;
+
+        panel.Q<Label>("CHP").text = $"{ mdata.CurrentHP }";
+        panel.Q<Label>("MHP").text = $"/{ mdata.MaxHP }";
+        panel.Q<ProgressBar>("HpBar").value = mdata.CurrentHP;
+        panel.Q<ProgressBar>("HpBar").highValue = mdata.MaxHP;
+        
+        panel.Q("Defense").Q<Label>("Value").text = $"{ mdata.Defense }";
+        panel.Q("Move").Q<Label>("Value").text = $"{ mdata.Move }";
+        // panel.Q("Armor").Q<Label>("Value").text = $"{ Armor.ToUpper() }";
+        panel.Q("Type").Q<Label>("Value").text = mdata.Type;
+        
+        // panel.Q("Traits").Q("List").Clear();
+        // foreach (string s in Traits) {
+        //     if (!s.EndsWith("|0")) {
+        //         panel.Q("Traits").Q("List").Add(new Label(){text = s.Replace("|1", "")});
+        //     }
+        // }
+    }
+
+
 }

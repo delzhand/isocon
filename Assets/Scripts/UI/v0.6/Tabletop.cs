@@ -17,6 +17,8 @@ public class Tabletop : MonoBehaviour
         BottomBarSetup();
         FloatingControlsSetup();
         TurnIndicatorSetup();
+
+        UI.System.Q("TerrainInfo").Q("AddEffectButton").RegisterCallback<ClickEvent>(AddTerrainEffect.OpenModal);
     }
 
     void Update()
@@ -24,11 +26,13 @@ public class Tabletop : MonoBehaviour
         UI.ToggleDisplay("Tabletop", NetworkClient.isConnected);
         TileShare.Offsets();
 
-        if (GameSystem.Current()) {
-            GameSystem.Current().UpdateTokenPanel(Token.GetSelectedData(), "SelectedTokenPanel");
-            GameSystem.Current().UpdateTokenPanel(Token.GetFocusedData(), "FocusedTokenPanel");
-        }
+        if (GameSystem.Current() != null) {
+            Token selected = Token.GetSelected();
+            GameSystem.Current().UpdateTokenPanel(selected != null ? selected.Data.Id : null, "SelectedTokenPanel");
 
+            Token focused = Token.GetFocused();
+            GameSystem.Current().UpdateTokenPanel(focused != null ? focused.Data.Id : null, "FocusedTokenPanel");
+        }
     }
 
     public void ConnectAsClient() {

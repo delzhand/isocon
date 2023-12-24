@@ -209,8 +209,10 @@ public class Launcher : MonoBehaviour
     }
 
     private void ConfigModalEvaluateConditions() {
-        bool grid = StringUtility.InList(UI.Modal.Q<DropdownField>("GameSystem").value, "Generic", "Lancer");
-        UI.ToggleDisplay(UI.Modal.Q("GridType"), grid);
+        if (UI.Modal.Q("GameSystem") != null) {
+            bool grid = StringUtility.InList(UI.Modal.Q<DropdownField>("GameSystem").value, "Generic", "Lancer");
+            UI.ToggleDisplay(UI.Modal.Q("GridType"), grid);
+        }
     }
 
     private string DefaultGridType() {

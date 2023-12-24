@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,40 +9,35 @@ public class GameSystem : MonoBehaviour
 {
     public static string DataJson = "{}";
 
+    protected int TurnNumber = 1;
+
     public static GameSystem Current() {
-        string system = PlayerPrefs.GetString("System", "Generic");
-        switch (system) {
-            case "ICON 1.5":
-                return GameObject.Find("GameSystem").GetComponent<Icon_v1_5>();
+        GameSystem system = GameObject.Find("GameSystem").GetComponent<GameSystem>();
+        switch(system.SystemName()) {
+            // case "ICON 1.5":
+            //     return system as Icon_v1_5;
             case "Maleghast":
-                return GameObject.Find("GameSystem").GetComponent<Maleghast>();
+                return system as Maleghast;
+            case "Generic System":
+                return system as Generic;
         }
-        return GameObject.Find("GameSystem").GetComponent<Generic>();
+        return null;
     }
 
     public virtual void Setup()
     {
-        // // Search field for tile effects
-        // VisualElement root = UI.System.Q("ToolsPanel");
-        // VisualElement searchField = SearchField.Create(GameSystem.Current().GetEffectList(), "");
-        // searchField.name = "EffectSearchField";
-        // searchField.style.marginTop = 2;
-        // root.Q("EffectSearch").Add(searchField);
-
-        // Setting up play mode tile effects modal has to wait until the gamesystem is created
-        UI.System.Q("TerrainInfo").Q("AddEffectButton").RegisterCallback<ClickEvent>(AddTerrainEffect.OpenModal);
     }
 
     public virtual void Teardown()
     {
-        // VisualElement root = UI.System.Q("ToolsPanel");
-        // root.Q("EffectSearch").Clear();
-
-        UI.System.Q("TerrainInfo").Q("AddEffectButton").UnregisterCallback<ClickEvent>(AddTerrainEffect.OpenModal);
     }
 
     public virtual string SystemName()
     {
+        return null;
+    }
+
+    public virtual void InterpreterMethod(string name, object[] args) {
         throw new NotImplementedException();
     }
 
@@ -49,58 +45,37 @@ public class GameSystem : MonoBehaviour
         Modal.AddTextField("NameField", "Token Name", "");
     }
 
-    public virtual void CreateToken() {
-        string json = GameSystem.Current().GetTokenDataRawJson();
-        FileLogger.Write($"Token added: {json}");
-        Player.Self().CmdCreateTokenData(json);
-    }
-
-    public virtual string GetTokenDataRawJson()
-    {
-        throw new NotImplementedException();
-    }
-
-    public virtual MenuItem[] GetTokenMenuItems(TokenData data) {
+    public virtual MenuItem[] GetTokenMenuItems(TokenData2 data) {
         List<MenuItem> items = new();
         return items.ToArray();
-    }
-
-    public virtual void TokenDataSetValue(TokenData data, string value) {
-        data.Change(value);
     }
 
     public virtual void GameDataSetValue(string value) {
         throw new NotImplementedException();
     }
 
-    public virtual Texture2D GetGraphic(string json) {
-        throw new NotImplementedException();
-    }
-
-    public virtual void TokenDataSetup(GameObject g, string json, string id) {
-        throw new NotImplementedException();
-    }
-
-    public virtual GameObject GetDataPrefab() {
-        throw new NotImplementedException();
-    }
-
-    public virtual void UpdateTokenPanel(GameObject data, string elementName) {
-        throw new NotImplementedException();
-    }
-
-    public virtual string GetEditPanelName() {
-        throw new NotImplementedException();
-    }
-
-    public virtual void SyncEditValues(TokenData data) {
-        throw new NotImplementedException();        
-    }
-
     public virtual string[] GetEffectList()
     {
         return new string[]{"Wavy", "Spiky", "Hand", "Skull", "Hole", "Blocked", "Corners"};
     }
+
+    #region Interpreted Methods
+    public void CreateToken() {
+        InterpreterMethod("CreateToken", new object[]{});
+    }
+
+    public virtual void UpdateData(TokenData2 data) {
+        InterpreterMethod("UpdateData", new object[]{data});
+    }
+
+    public void TokenDataSetValue(string tokenId, string value) {
+        InterpreterMethod("Change", new object[]{tokenId, value});
+    }
+
+    public void UpdateTokenPanel(string tokenId, string elementName) {
+        InterpreterMethod("UpdateTokenPanel", new object[]{tokenId, elementName});
+    }
+    #endregion
 
     public static void Set(string value) {
         GameSystem current = GameSystem.Current();
@@ -114,10 +89,9 @@ public class GameSystem : MonoBehaviour
             case "Generic":
                 system = g.AddComponent<Generic>();
                 break;
-            case "ICON 1.5":
-                system = g.AddComponent<Icon_v1_5>();
-                break;
-            case "Maleghast 666":
+            // case "ICON 1.5":
+            //     system = g.AddComponent<Icon_v1_5>();
+            //     break;
             case "Maleghast":
                 system = g.AddComponent<Maleghast>();
                 break;
@@ -126,5 +100,4 @@ public class GameSystem : MonoBehaviour
         system.Teardown();
         system.Setup();
     }
-
 }

@@ -242,5 +242,6 @@
     color: #FFF;
     -unity-font-style: bold;
     white-space: normal;
-
+    padding: 2px 6px;
+    margin: 0px 2px;
 }

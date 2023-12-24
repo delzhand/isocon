@@ -1,6 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using Mirror;
+using System;
+using System.Reflection;
+using SimpleJSON;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,31 +11,19 @@ public class Generic : GameSystem
         return "Generic System";
     }
 
-    public override string GetTokenDataRawJson() {
-        return GenericTokenDataRaw.ToJson();
-    }
-
-    public override Texture2D GetGraphic(string json) {
-        GenericTokenDataRaw raw = JsonUtility.FromJson<GenericTokenDataRaw>(json);
-        return TextureSender.LoadImageFromFile(raw.GraphicHash, true);
-    }
-
-    public override void TokenDataSetup(GameObject g, string json, string id) {
-        g.GetComponent<GenericTokenData>().TokenDataSetup(json, id);
-    }
-
-    public override GameObject GetDataPrefab() {
-        return Instantiate(Resources.Load<GameObject>("Prefabs/GenericTokenData"));
-    }
-
-    public override void UpdateTokenPanel(GameObject data, string elementName)
+    public override void InterpreterMethod(string name, object[] args)
     {
-        if (data == null) {
-            UI.ToggleDisplay(elementName, false);
-            return;
+        Type classType = Type.GetType("GenericInterpreter");
+        MethodInfo method = classType.GetMethod(name, BindingFlags.Public | BindingFlags.Static);
+        method.Invoke(null, args);
+    }
+    
+    public override void GameDataSetValue(string value) {
+        FileLogger.Write($"Game system changed - {value}");
+        if (value == "IncrementTurn") {
+            TurnNumber++;
+            UI.System.Q<Label>("TurnNumber").text = TurnNumber.ToString();
         }
-        UI.ToggleDisplay(elementName, true);
-        data.GetComponent<GenericTokenData>().UpdateTokenPanel(elementName);
     }
 
     public override void AddTokenModal()
@@ -44,5 +32,60 @@ public class Generic : GameSystem
         Modal.AddDropdownField("SizeField", "Size", "1x1", new string[]{"1x1", "2x2", "3x3"});
         Modal.AddIntField("HPField", "HP", 1);
     }
+
+}
+
+[Serializable]
+public class GenericData {
+    public int CurrentHP;
+    public int MaxHP;
+}
+
+public class GenericInterpreter {
+
+    public static void CreateToken() {
+        string name = UI.Modal.Q<TextField>("NameField").value;
+        Texture2D graphic = TextureSender.CopyLocalImage(UI.Modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
+        string graphicHash = TextureSender.GetTextureHash(graphic);
+        int size = int.Parse(UI.Modal.Q<DropdownField>("SizeField").value.Substring(0, 1));
+        int hp = UI.Modal.Q<IntegerField>("HPField").value;
+
+        GenericData data = new(){
+            CurrentHP = hp,
+            MaxHP = hp
+        };
+
+        Player.Self().CmdCreateToken("Generic", graphicHash, name, size, Color.black, JsonUtility.ToJson(data));
+    }
+
+    public static void UpdateData(TokenData2 data) {
+        GenericData mdata = JsonUtility.FromJson<GenericData>(data.SystemData);
+        data.OverheadElement.Q<ProgressBar>("HpBar").value = mdata.CurrentHP;
+        data.OverheadElement.Q<ProgressBar>("HpBar").highValue = mdata.MaxHP;        
+    }
+
+    public static void Change(string tokenId, string value) {
+        TokenData2 data = TokenData2.Find(tokenId);
+        Debug.Log($"GenericInterpreter change registered for {data.Name}: {value}");
+    }
+
+    public static void UpdateTokenPanel(string tokenId, string elementName) {
+        TokenData2 data = TokenData2.Find(tokenId);
+        if (!data) {
+            UI.ToggleDisplay(elementName, false);
+            return;
+        }
+
+        data.UpdateTokenPanel(elementName);
+        GenericData mdata = JsonUtility.FromJson<GenericData>(data.SystemData);
+
+        VisualElement panel = UI.System.Q(elementName);
+
+        panel.Q("ClassBackground").style.borderTopColor = data.Color;
+        panel.Q("ClassBackground").style.borderRightColor = data.Color;
+        panel.Q("ClassBackground").style.borderBottomColor = data.Color;
+        panel.Q("ClassBackground").style.borderLeftColor = data.Color;
+    }
+
 
 }

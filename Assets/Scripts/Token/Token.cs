@@ -16,8 +16,8 @@ public class Token : MonoBehaviour
     public int Size = 1;
     public Texture2D Image;
 
-    public GameObject offlineDataObject;
-    public GameObject onlineDataObject;
+    // public GameObject onlineDataObject;
+    public TokenData2 Data;
 
     public float ShareOffsetX;
     public float ShareOffsetY;
@@ -88,30 +88,33 @@ public class Token : MonoBehaviour
 
     public void Place(Block block) {
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
-        Player.Self().CmdRequestPlaceToken(onlineDataObject, v);
+        Player.Self().CmdRequestPlaceToken(Data.Id, v);
         Cursor.Mode = CursorMode.Default;
         BlockMesh.ToggleBorders(false);
     }
 
+    public void Remove() {
+        Player.Self().CmdRequestRemoveToken(Data.Id);
+    }
+
     public void Move(Block block) {
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
-        Player.Self().CmdMoveToken(onlineDataObject, v, false);
+        Player.Self().CmdMoveToken(Data.Id, v, false);
     }
 
     public void Select() {
         UnfocusAll();
         DeselectAll();
         Selected = true;
-        TokenData data = onlineDataObject.GetComponent<TokenData>();
-        data.Select();
-        UI.ToggleDisplay(data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
+        Data.Select();
+        UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
         UI.ToggleDisplay("SelectedTokenPanel", true); // selected token panel
         TokenMenu.ShowMenu();
     }
 
     public void Deselect() {
         Selected = false;
-        UI.ToggleDisplay(onlineDataObject.GetComponent<TokenData>().UnitBarElement.Q("Selected"), false);
+        UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), false);
         UI.ToggleDisplay("SelectedTokenPanel", false);
         SelectionMenu.Hide();
         Cursor.Mode = CursorMode.Default;
@@ -135,21 +138,12 @@ public class Token : MonoBehaviour
         return null;
     }
 
-    public static GameObject GetSelectedData() {
-        Token selected = GetSelected();
-        if (selected != null && selected.onlineDataObject != null) {
-            return selected.onlineDataObject;
-        }
-        return null;
-    }
-
     public void Focus() {
         if (Token.GetSelected() == this) {
             return;
         }
         UnfocusAll();
-        TokenData data = onlineDataObject.GetComponent<TokenData>();
-        data.Focus();
+        Data.Focus();
         LastFocused = this;
         Focused = true;
     }
@@ -165,14 +159,6 @@ public class Token : MonoBehaviour
 
                 return tokens[i].GetComponent<Token>();
             }
-        }
-        return null;
-    }
-
-    public static GameObject GetFocusedData() {
-        Token focused = GetFocused();
-        if (focused != null && focused.onlineDataObject != null) {
-            return focused.onlineDataObject;
         }
         return null;
     }

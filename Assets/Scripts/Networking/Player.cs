@@ -33,23 +33,15 @@ public class Player : NetworkBehaviour
     void Start()
     {
         if (isLocalPlayer) {
+            Name = PlayerPrefs.GetString("PlayerName", "New Player");
+
             if (GameObject.FindGameObjectsWithTag("Player").Length == 1) {
                 Role = PlayerRole.GM;
             }
-            Name = PlayerPrefs.GetString("PlayerName", "New Player");
 
             if (NetworkServer.active && NetworkClient.active) {
                 FileLogger.Write("Player is host");
                 Host = true;
-
-                // If connecting as host, convert any offline data to online data
-                GameObject[] objs = GameObject.FindGameObjectsWithTag("OfflineData");
-                for (int i = 0; i < objs.Length; i++) {
-                    Vector3 position = objs[i].transform.position;
-                    OfflineTokenData otd = objs[i].GetComponent<OfflineTokenData>();
-                    Destroy(otd.TokenObject);
-                    Player.Self().CmdCreateTokenData(otd.Json);
-                }
             }
             else {
                 FileLogger.Write("Player is client");
@@ -110,57 +102,75 @@ public class Player : NetworkBehaviour
 
     #region Create Token
     [Command]
-    public void CmdCreateTokenData(string json) {
-        FileLogger.Write($"Client {connectionToClient.connectionId} created a token");
-        GameObject g = GameSystem.Current().GetDataPrefab();
-        NetworkServer.Spawn(g); 
-        RpcInitTokenData(g, json, Guid.NewGuid().ToString());
-    }
-    [ClientRpc]
-    public void RpcInitTokenData(GameObject g, string json, string id) {
-        FileLogger.Write($"A token was initialized");
-        g.transform.position = new Vector3(-100, 0, -100);
-        GameSystem.Current().TokenDataSetup(g, json, id);
+    public void CmdCreateToken(string system, string graphicHash, string name, int size, Color color, string systemData) {
+        string id = Guid.NewGuid().ToString();
+        GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData2"));
+        TokenData2 data = g.GetComponent<TokenData2>();
+        data.Id = id;
+        data.System = system;
+        data.GraphicHash = graphicHash;
+        data.Name = name;
+        data.Size = size;
+        data.Color = color;
+        data.SystemData = systemData;
+        NetworkServer.Spawn(g);
     }
     #endregion
 
     #region Delete Token
     [Command]
-    public void CmdRequestDeleteToken(TokenData data) {
+    public void CmdRequestDeleteToken(string tokenId) {
+        TokenData2 data = TokenData2.Find(tokenId);
         FileLogger.Write($"Client {connectionToClient.connectionId} requested to delete token {data.Name}");
-        RpcDeleteToken(data);
+        RpcDeleteToken(tokenId);
     }
     [ClientRpc]
-    public void RpcDeleteToken(TokenData data) {
+    public void RpcDeleteToken(string tokenId) {
+        TokenData2 data = TokenData2.Find(tokenId);
+        data.Delete();
         FileLogger.Write($"Token {data.Name} was deleted");
-        TokenData.DeleteById(data.Id);
         Toast.Add($"{data.Name} deleted.");
     }
     #endregion 
 
     #region Token Movement
     [Command]
-    public void CmdMoveToken(GameObject dataObject, Vector3 v, bool immediate) {
-        DoMoveToken(dataObject, v, immediate);
+    public void CmdMoveToken(string tokenId, Vector3 v, bool immediate) {
+        RpcDoMoveToken(tokenId, v, immediate);
     }
-    private void DoMoveToken(GameObject dataObject, Vector3 v, bool immediate) {
-        dataObject.transform.localScale = Vector3.one;
+
+    [Command]
+    public void CmdRequestPlaceToken(string tokenId, Vector3 v) {
+        RpcPlaceToken(tokenId, true);
+        RpcDoMoveToken(tokenId, v + new Vector3(0, 1f, 0), true);
+        RpcDoMoveToken(tokenId, v, false);
+    }
+    [Command]
+    public void CmdRequestRemoveToken(string tokenId) {
+        RpcPlaceToken(tokenId, false);
+        RpcDoMoveToken(tokenId, new Vector3(0, -10f, 0), true);
+    }
+
+    [ClientRpc]
+    private void RpcDoMoveToken(string tokenId, Vector3 v, bool immediate) {
+        TokenData2 data = TokenData2.Find(tokenId);
+        data.LastKnownPosition = v;
         if (immediate) {
-            dataObject.transform.position = v;
+            data.WorldObject.transform.position = v;
         }
         else {
-            MoveLerp.Create(dataObject, v);
+            MoveLerp.Create(data.WorldObject, v);
         }
+    }
+
+    [ClientRpc]
+    private void RpcPlaceToken(string tokenId, bool place) {
+        TokenData2 data = TokenData2.Find(tokenId);
+        data.Place(place);
     }
     #endregion
 
     #region Token Status
-    [Command]
-    public void CmdRequestPlaceToken(GameObject dataObject, Vector3 v) {
-        dataObject.GetComponent<TokenData>().OnField = true;
-        DoMoveToken(dataObject, v + new Vector3(0, 1f, 0), true);
-        DoMoveToken(dataObject, v, false);
-    }
     [Command]
     public void CmdRequestGameDataSetValue(string value) {
         RpcGameDataSetValue(value);
@@ -170,12 +180,12 @@ public class Player : NetworkBehaviour
         GameSystem.Current().GameDataSetValue(value);
     }
     [Command]
-    public void CmdRequestTokenDataSetValue(TokenData data, string value) {
-        RpcTokenDataSetValue(data, value);
+    public void CmdRequestTokenDataSetValue(string tokenId, string value) {
+        RpcTokenDataSetValue(tokenId, value);
     }
     [ClientRpc]
-    public void RpcTokenDataSetValue(TokenData data, string value) {
-        GameSystem.Current().TokenDataSetValue(data, value);
+    public void RpcTokenDataSetValue(string tokenId, string value) {
+        GameSystem.Current().TokenDataSetValue(tokenId, value);
     }    
     #endregion
 

@@ -35,41 +35,41 @@ public class GenericTokenDataRaw: TokenDataRaw
 
 public class GenericTokenData : TokenData
 {
-    [SyncVar]
-    public int CurrentHP;
+    // [SyncVar]
+    // public int CurrentHP;
 
-    [SyncVar]
-    public int MaxHP;
+    // [SyncVar]
+    // public int MaxHP;
 
-    public int Size;
+    // public int Size;
 
-    void Update()
-    {
-        BaseUpdate();
-    }
+    // void Update()
+    // {
+    //     BaseUpdate();
+    // }
 
-    public override void UpdateOverheadValues() {
-        OverheadElement.Q<ProgressBar>("HpBar").value = CurrentHP;
-        OverheadElement.Q<ProgressBar>("HpBar").highValue = MaxHP;
-    }
+    // public override void UpdateOverheadValues() {
+    //     OverheadElement.Q<ProgressBar>("HpBar").value = CurrentHP;
+    //     OverheadElement.Q<ProgressBar>("HpBar").highValue = MaxHP;
+    // }
 
-    public override void TokenDataSetup(string json, string id) {
-        base.TokenDataSetup(json, id);
-        DoTokenDataSetup();
-        CurrentHP = MaxHP;
-    }
+    // public override void TokenDataSetup(string json, string id) {
+    //     base.TokenDataSetup(json, id);
+    //     DoTokenDataSetup();
+    //     CurrentHP = MaxHP;
+    // }
 
-    public override void DoTokenDataSetup()
-    {
-        GenericTokenDataRaw raw = JsonUtility.FromJson<GenericTokenDataRaw>(Json);
-        Name = raw.Name;
-        MaxHP = raw.MaxHP;
-        GraphicHash = raw.GraphicHash;
-        Size = raw.Size;
-    }
+    // public override void DoTokenDataSetup()
+    // {
+    //     GenericTokenDataRaw raw = JsonUtility.FromJson<GenericTokenDataRaw>(Json);
+    //     Name = raw.Name;
+    //     MaxHP = raw.MaxHP;
+    //     GraphicHash = raw.GraphicHash;
+    //     Size = raw.Size;
+    // }
 
-    public override int GetSize()
-    {
-        return Size;
-    }
+    // public override int GetSize()
+    // {
+    //     return Size;
+    // }
 }

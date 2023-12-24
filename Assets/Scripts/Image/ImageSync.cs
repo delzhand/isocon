@@ -9,7 +9,7 @@ public class ImageSync : MonoBehaviour
     private Dictionary<string, Texture2D> database = new();
 
     public static ImageSync Find() {
-        return GameObject.Find("ImageSync").GetComponent<ImageSync>();
+        return GameObject.Find("Engine").GetComponent<ImageSync>();
     }
 
     public Texture2D GetImage(string filename) {

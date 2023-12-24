@@ -8,7 +8,7 @@ public class TokenMenu
     public static void ShowMenu() {
         Block.DeselectAll();
         Block.DehighlightAll();
-        TokenData data = Token.GetSelected().onlineDataObject.GetComponent<TokenData>();
+        TokenData2 data = Token.GetSelected().Data;
         SelectionMenu.Reset("TOKEN MENU");
         MenuItem[] defaultItems = GetTokenMenuItems(data);
         foreach (MenuItem m in defaultItems) {
@@ -20,10 +20,10 @@ public class TokenMenu
         }
     }
 
-    public static MenuItem[] GetTokenMenuItems(TokenData data)
+    public static MenuItem[] GetTokenMenuItems(TokenData2 data)
     {
         List<MenuItem> items = new();
-        if (!data.OnField) {
+        if (!data.Placed) {
             items.Add(new MenuItem("Place", "Place", ClickPlace));
         }
         else {
@@ -52,6 +52,8 @@ public class TokenMenu
     public static void DoPlace(Block b) {
         Token.GetSelected().Place(b);
         EndCursorMode();
+        Token.GetSelected().Data.Placed = true; // change this locally just so we can get updated menu options immediately
+        ShowMenu();
     }
 
     public static void ClickMove(ClickEvent evt) {
@@ -81,30 +83,30 @@ public class TokenMenu
     }
 
     public static void ClickRemove(ClickEvent evt) {
-        Token.GetSelected().onlineDataObject.GetComponent<TokenData>().OnField = false;
-        Token.GetSelected().UpdateVisualEffect();
+        Token.GetSelected().Remove();
+        Token.GetSelected().Data.Placed = false; // change this locally just so we can get updated menu options immediately
         ShowMenu();
     }
 
     public static void ClickDelete(ClickEvent evt) {
-        TokenData data = Token.GetSelected().onlineDataObject.GetComponent<TokenData>();
+        TokenData2 data = Token.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
         Modal.DoubleConfirm("Delete Token", $"Are you sure you want to delete {name}? This action cannot be undone.", () => {
             Token.DeselectAll();
-            Player.Self().CmdRequestDeleteToken(data);
+            Player.Self().CmdRequestDeleteToken(data.Id);
         });
     }
 
     public static void ClickClone(ClickEvent evt) {
-        TokenData data = Token.GetSelected().onlineDataObject.GetComponent<TokenData>();
+        TokenData2 data = Token.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
         Modal.DoubleConfirm("Clone Token", $"Are you sure you want to clone {name}?", () => {
-            Player.Self().CmdCreateTokenData(data.Json);
+            Player.Self().CmdCreateToken(data.System, data.GraphicHash, data.Name, data.Size, data.Color, data.SystemData);
         });
     }
 
     public static void ClickEndTurn(ClickEvent evt) {
-        TokenData data = Token.GetSelected().onlineDataObject.GetComponent<TokenData>();
-        Player.Self().CmdRequestTokenDataSetValue(data, "GainStatus|Turn Ended|Simple|Gray|0");
+        TokenData2 data = Token.GetSelected().Data;
+        Player.Self().CmdRequestTokenDataSetValue(data.Id, "GainStatus|Turn Ended|Simple|Gray|0");
     }
 }

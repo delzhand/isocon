@@ -29,13 +29,10 @@ public class PlayerController : NetworkBehaviour
     public static void Disconnect() {
         FileLogger.Write("Disconnected");
         Toast.Add("Disconnected.");
-        // UI.System.Q("PlayerList").Clear();
-        // UI.ToggleDisplay("SelectedTokenPanel", false);
         GameObject[] objs = GameObject.FindGameObjectsWithTag("TokenData");
         for (int i = 0; i < objs.Length; i++) {
-            objs[i].GetComponent<TokenData>().Disconnect();
+            objs[i].GetComponent<TokenData2>().Disconnect();
         }
-        // TerrainController.DestroyAllBlocks();
-        // StartupPanel.Disconnect();
+        TerrainController.DestroyAllBlocks();
     }
 }
