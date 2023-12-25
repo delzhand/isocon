@@ -11,6 +11,40 @@ public class Generic : GameSystem
         return "Generic System";
     }
 
+    public override void Setup() {
+        SetupPanel("SelectedTokenPanel", true);
+        SetupPanel("FocusedTokenPanel", false);
+    }
+
+    private void SetupPanel(string elementName, bool editable) {
+        VisualElement panel = UI.System.Q("elementName");
+        VisualElement hpBar = UI.CreateFromTemplate("UITemplates/GameSystem/SimpleHPBar");
+        panel.Q("Data").Add(hpBar);
+        if (editable) {
+            Button hpButton = new(){
+                text = "Alter HP",
+                name = "AlterHP"
+            };
+            hpButton.style.marginLeft = 6;
+            hpButton.RegisterCallback<ClickEvent>(AlterHPModal);
+            panel.Q("Data").Add(hpButton);
+        }
+    }
+
+    private void AlterHPModal(ClickEvent evt) {
+        Modal.Reset("Alter HP");
+        Modal.AddIntField("Number", "Value", 0);
+        UI.Modal.Q("Number").AddToClassList("big-number");
+        Modal.AddContentButton("Reduce HP", (evt) => AlterVitals("LoseHP"));
+        Modal.AddContentButton("Recover HP", (evt) => AlterVitals("GainHP"));
+        Modal.AddButton("Done", Modal.CloseEvent);
+    }
+
+    private static void AlterVitals(string cmd) {
+        int val = UI.Modal.Q<IntegerField>("Number").value;
+        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, $"{cmd}|{val}");
+    }
+
     public override void InterpreterMethod(string name, object[] args)
     {
         Type classType = Type.GetType("GenericInterpreter");
@@ -41,6 +75,47 @@ public class GenericData {
     public int CurrentHP;
     public int MaxHP;
     public string ExtraInfo;
+
+    public void Change(string value, Token token, bool placed) {
+        if (value.StartsWith("GainHP")) {
+            int diff = int.Parse(value.Split("|")[1]);
+            if (CurrentHP + diff > MaxHP) {
+                diff = MaxHP - CurrentHP;
+            }
+            if (diff > 0) {
+                CurrentHP+=diff;
+                if (placed) {
+                    PopoverText.Create(token, $"/+{diff}|_HP", Color.white);
+                }
+            }
+            OnVitalChange(token);
+        }
+        if (value.StartsWith("LoseHP")) {
+            int diff = int.Parse(value.Split("|")[1]);
+            if (CurrentHP - diff < 0) {
+                diff = CurrentHP;
+            }
+            if (diff > 0) {
+                CurrentHP-=diff;
+                if (placed) {
+                    PopoverText.Create(token, $"/-{diff}|_HP", Color.white);
+                }
+            }
+            OnVitalChange(token);
+        }        
+    }
+
+    private void OnVitalChange(Token token) {
+        token.SetDefeated(CurrentHP <= 0);
+        if (CurrentHP <= 0) {
+            // Conditions["Corpse"] = new StatusEffect(){Name = "Corpse", Type = "Simple", Color = "Gray"};
+        }
+        else {
+            // if (Conditions.ContainsKey("Corpse")) {
+            //     Conditions.Remove("Corpse");
+            // }
+        }
+    }
 }
 
 public class GenericInterpreter {
@@ -71,6 +146,9 @@ public class GenericInterpreter {
     public static void Change(string tokenId, string value) {
         TokenData2 data = TokenData2.Find(tokenId);
         Debug.Log($"GenericInterpreter change registered for {data.Name}: {value}");
+        GenericData sysdata = JsonUtility.FromJson<GenericData>(data.SystemData);
+        sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
+        data.SystemData = JsonUtility.ToJson(sysdata);
     }
 
     public static void UpdateTokenPanel(string tokenId, string elementName) {
@@ -97,7 +175,11 @@ public class GenericInterpreter {
         };
         panel.Q("ExtraInfo").Add(l);
 
-        UI.ToggleDisplay(panel.Q("Data"), false);
+        panel.Q<ProgressBar>("HpBar").style.minWidth = 150;
+        panel.Q<Label>("CHP").text = $"{ sysdata.CurrentHP }";
+        panel.Q<Label>("MHP").text = $"/{ sysdata.MaxHP }";
+        panel.Q<ProgressBar>("HpBar").value = sysdata.CurrentHP;
+        panel.Q<ProgressBar>("HpBar").highValue = sysdata.MaxHP;
     }
 
 

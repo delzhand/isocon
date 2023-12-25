@@ -20,30 +20,29 @@ public class Maleghast : GameSystem
     }
 
     public override void Setup() {
-        // Selected
-        VisualElement selectedPanel = UI.System.Q("SelectedTokenPanel");
-        VisualElement unitPanel = UI.CreateFromTemplate("UITemplates/GameSystem/MaleghastUnitPanel");
-        unitPanel.Q("Type").Q<Label>("Label").text = "TYPE";
-        unitPanel.Q("Defense").Q<Label>("Label").text = "DEFENSE";
-        unitPanel.Q("Move").Q<Label>("Label").text = "MOVE";
-        unitPanel.Q("Armor").Q<Label>("Label").text = "ARMOR";
-        // unitPanel.Q<Button>("AlterVitals").RegisterCallback<ClickEvent>(AlterVitalsModal);
-        // unitPanel.Q<Button>("AddStatus").RegisterCallback<ClickEvent>(AddStatusModal);
-        // unitPanel.Q<Button>("Upgrades").RegisterCallback<ClickEvent>(UpgradesModal);
-        selectedPanel.Q("Data").Add(unitPanel);
-        selectedPanel.Q("ExtraInfo").Add(new Label(){ name = "House" });
-        selectedPanel.Q("ExtraInfo").Add(new Label(){ name = "Job" });
+        SetupPanel("SelectedTokenPanel", true);
+        SetupPanel("FocusedTokenPanel", false);
+    }
 
-        // Focused
-        VisualElement focusedPanel = UI.System.Q("FocusedTokenPanel");
-        unitPanel = UI.CreateFromTemplate("UITemplates/GameSystem/MaleghastUnitPanel");
+    private void SetupPanel(string elementName, bool editable) {
+        VisualElement panel = UI.System.Q(elementName);
+        VisualElement unitPanel = UI.CreateFromTemplate("UITemplates/GameSystem/MaleghastUnitPanel");
+        unitPanel.Q("SOUL").Q<ProgressBar>("HpBar").value = 0;
+        unitPanel.Q("SOUL").Q<ProgressBar>("HpBar").highValue = 6;
+        unitPanel.Q("SOUL").Q<Label>("StatLabel").text = "SOUL";
+        
         unitPanel.Q("Type").Q<Label>("Label").text = "TYPE";
         unitPanel.Q("Defense").Q<Label>("Label").text = "DEFENSE";
         unitPanel.Q("Move").Q<Label>("Label").text = "MOVE";
         unitPanel.Q("Armor").Q<Label>("Label").text = "ARMOR";
-        focusedPanel.Q("Data").Add(unitPanel);
-        focusedPanel.Q("ExtraInfo").Add(new Label(){ name = "House" });
-        focusedPanel.Q("ExtraInfo").Add(new Label(){ name = "Job" });
+        if (editable) {
+            // unitPanel.Q<Button>("AlterVitals").RegisterCallback<ClickEvent>(AlterVitalsModal);
+            // unitPanel.Q<Button>("AddStatus").RegisterCallback<ClickEvent>(AddStatusModal);
+            // unitPanel.Q<Button>("Upgrades").RegisterCallback<ClickEvent>(UpgradesModal);
+        }
+        panel.Q("Data").Add(unitPanel);
+        panel.Q("ExtraInfo").Add(new Label(){ name = "House" });
+        panel.Q("ExtraInfo").Add(new Label(){ name = "Job" });
     }
 
     public override void GameDataSetValue(string value) {
@@ -93,6 +92,12 @@ public class MaleghastData {
     public string Job;
     public int Move;
     public int Defense;
+    public string Armor;
+    public string[] Traits;
+    public string[] ActAbilities;
+    public string[] SoulAbilities;
+    public string[] Upgrades;
+    public string[] StatusTokens;
 }
 
 public class MaleghastInterpreter {
@@ -139,6 +144,15 @@ public class MaleghastInterpreter {
         data.MaxHP = job["hp"];
         data.CurrentHP = job["hp"];
         data.Defense = job["def"];
+        data.Armor = job["armor"];
+        string traits = job["traits"];
+        data.Traits = traits.Split("|");
+        string actAbilities = job["actAbilities"];
+        data.ActAbilities = actAbilities.Split("|");
+        string soulAbilities = job["soulAbilities"];
+        if (soulAbilities != null) {
+            data.SoulAbilities = soulAbilities.Split("|");
+        }
     }
 
     private static JSONNode FindHouse(string searchHouse) {
@@ -192,22 +206,53 @@ public class MaleghastInterpreter {
         panel.Q<Label>("Job").text = sysdata.Job;
         panel.Q<Label>("Job").style.backgroundColor = data.Color;
 
-        panel.Q<Label>("CHP").text = $"{ sysdata.CurrentHP }";
-        panel.Q<Label>("MHP").text = $"/{ sysdata.MaxHP }";
-        panel.Q<ProgressBar>("HpBar").value = sysdata.CurrentHP;
-        panel.Q<ProgressBar>("HpBar").highValue = sysdata.MaxHP;
-        
+        panel.Q("HP").Q<Label>("CHP").text = $"{ sysdata.CurrentHP }";
+        panel.Q("HP").Q<Label>("MHP").text = $"/{ sysdata.MaxHP }";
+        panel.Q("HP").Q<ProgressBar>("HpBar").value = sysdata.CurrentHP;
+        panel.Q("HP").Q<ProgressBar>("HpBar").highValue = sysdata.MaxHP;
+
+        panel.Q("SOUL").Q<Label>("CHP").text = $"{ sysdata.Soul }";
+        panel.Q("SOUL").Q<Label>("MHP").text = $"/6";
+        panel.Q("SOUL").Q<ProgressBar>("HpBar").value = sysdata.Soul;
+        panel.Q("SOUL").Q<ProgressBar>("HpBar").highValue = 6;
+
         panel.Q("Defense").Q<Label>("Value").text = $"{ sysdata.Defense }";
         panel.Q("Move").Q<Label>("Value").text = $"{ sysdata.Move }";
-        // panel.Q("Armor").Q<Label>("Value").text = $"{ Armor.ToUpper() }";
-        panel.Q("Type").Q<Label>("Value").text = sysdata.Type;
-        
-        // panel.Q("Traits").Q("List").Clear();
-        // foreach (string s in Traits) {
-        //     if (!s.EndsWith("|0")) {
-        //         panel.Q("Traits").Q("List").Add(new Label(){text = s.Replace("|1", "")});
-        //     }
-        // }
+        panel.Q("Armor").Q<Label>("Value").text = $"{ sysdata.Armor.ToUpper() }";
+        panel.Q("Type").Q<Label>("Value").text = (sysdata.Type == "Necromancer") ? "NECRO" : sysdata.Type.ToUpper();
+
+        panel.Q("Traits").Clear();
+        foreach (string s in sysdata.Traits) {
+            if (!s.StartsWith("-")) {
+                panel.Q("Traits").Add(new Label(){text = s});
+            }
+        }
+
+        panel.Q("ACTAbilities").Clear();
+        foreach (string s in sysdata.ActAbilities) {
+            if (!s.StartsWith("-")) {
+                panel.Q("ACTAbilities").Add(new Label(){text = s});
+            }
+        }
+
+        panel.Q("SOULAbilities").Clear();
+        foreach (string s in sysdata.SoulAbilities) {
+            if (!s.StartsWith("-")) {
+                panel.Q("SOULAbilities").Add(new Label(){text = s});
+            }
+        }
+
+        panel.Q("Conditions").Clear();
+        panel.Q("Conditions").Add(new Label(){text = "Flight"});
+        panel.Q("Conditions").Add(new Label(){text = "Madness"});
+    
+        panel.Q("Tokens").Clear();
+        panel.Q("Tokens").Add(new Label(){text = "Strength"});
+        panel.Q("Tokens").Add(new Label(){text = "Strength"});
+        panel.Q("Tokens").Add(new Label(){text = "Vulnerable"});
+
+        UI.ToggleDisplay(panel.Q("SOUL"), sysdata.Type == "Necromancer");
+        UI.ToggleDisplay(panel.Q("SOULAbilities"), sysdata.Type == "Necromancer");
     }
 
 

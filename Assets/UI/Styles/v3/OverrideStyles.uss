@@ -195,6 +195,17 @@
     margin-bottom: 4px;
 }
 
+#GeneralModal #Contents .big-number.unity-base-field {
+    flex-direction: column;
+    margin-bottom: 8px;
+}
+
+#GeneralModal #Contents .big-number .unity-integer-field__input {
+    font-size: 32px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
 #FloatingControls .hover {
     -unity-background-image-tint-color: rgb(156, 122, 25);
 }
@@ -264,4 +275,10 @@
     white-space: normal;
     padding: 2px 6px;
     margin: 0px 2px;
+}
+
+.maleghast-list .unity-label {
+    margin: 0;
+    padding: 0;
+    margin-top: 2px;
 }

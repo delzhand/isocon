@@ -108,6 +108,7 @@ public class Token : MonoBehaviour
         Selected = true;
         Data.Select();
         UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
+        Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
         TokenMenu.ShowMenu();
     }
 
@@ -142,12 +143,17 @@ public class Token : MonoBehaviour
         }
         UnfocusAll();
         Data.Focus();
+        UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
+        Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UIFocusBlue;
         LastFocused = this;
         Focused = true;
     }
 
     public void Unfocus() {
         Focused = false;
+        if (Selected == false) {
+            UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), false);
+        }
     }
 
     public static Token GetFocused() {

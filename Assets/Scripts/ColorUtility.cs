@@ -15,6 +15,18 @@ public class ColorUtility
         }
     }
 
+    public static Color UIFocusBlue {
+        get {
+            return new Color(0, .445f, 1);
+        }
+    }
+
+    public static Color UISelectYellow {
+        get {
+            return new Color(.914f, 1, 0);
+        }
+    }
+
     public static string ColorToHex(Color color)
     {
         int r = Mathf.RoundToInt(color.r * 255);
