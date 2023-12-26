@@ -107,14 +107,6 @@ public class GenericData {
 
     private void OnVitalChange(Token token) {
         token.SetDefeated(CurrentHP <= 0);
-        if (CurrentHP <= 0) {
-            // Conditions["Corpse"] = new StatusEffect(){Name = "Corpse", Type = "Simple", Color = "Gray"};
-        }
-        else {
-            // if (Conditions.ContainsKey("Corpse")) {
-            //     Conditions.Remove("Corpse");
-            // }
-        }
     }
 }
 

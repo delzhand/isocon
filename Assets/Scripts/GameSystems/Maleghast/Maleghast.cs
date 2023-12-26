@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using SimpleJSON;
 using UnityEngine;
@@ -98,7 +99,59 @@ public class MaleghastData {
     public string[] SoulAbilities;
     public string[] Upgrades;
     public string[] StatusTokens;
+
+    public void Change(string value, Token token, bool placed) {
+        if (value.StartsWith("GainHP")) {
+            int diff = int.Parse(value.Split("|")[1]);
+            if (CurrentHP + diff > MaxHP) {
+                diff = MaxHP - CurrentHP;
+            }
+            if (diff > 0) {
+                CurrentHP+=diff;
+                if (placed) {
+                    PopoverText.Create(token, $"/+{diff}|_HP", Color.white);
+                }
+            }
+            OnVitalChange(token);
+        }
+        if (value.StartsWith("LoseHP")) {
+            int diff = int.Parse(value.Split("|")[1]);
+            if (CurrentHP - diff < 0) {
+                diff = CurrentHP;
+            }
+            if (diff > 0) {
+                CurrentHP-=diff;
+                if (placed) {
+                    PopoverText.Create(token, $"/-{diff}|_HP", Color.white);
+                }
+            }
+            OnVitalChange(token);
+        }        
+    }
+
+    private void OnVitalChange(Token token) {
+        List<string> statustokens = StatusTokens.ToList();
+
+        token.SetDefeated(CurrentHP <= 0);
+        if (CurrentHP <= 0) {
+            if (!statustokens.Contains("Corpse")) {
+                statustokens.Add("Corpse");
+            }
+        }
+        else {
+            if (statustokens.Contains("Corpse")) {
+                statustokens.Remove("Corpse");
+            }
+        }
+    }
+
+    private string[] AddToArray(string[] array, string value) {
+        List<string> list = array.ToList();
+        list.Add(value);
+        return list.ToArray();
+    }
 }
+
 
 public class MaleghastInterpreter {
 
@@ -182,6 +235,9 @@ public class MaleghastInterpreter {
     public static void Change(string tokenId, string value) {
         TokenData2 data = TokenData2.Find(tokenId);
         Debug.Log($"MaleghastInterpreter change registered for {data.Name}: {value}");
+        MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
+        sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
+        data.SystemData = JsonUtility.ToJson(sysdata);  
     }
 
     public static void UpdateTokenPanel(string tokenId, string elementName) {
@@ -243,16 +299,18 @@ public class MaleghastInterpreter {
         }
 
         panel.Q("Conditions").Clear();
-        panel.Q("Conditions").Add(new Label(){text = "Flight"});
-        panel.Q("Conditions").Add(new Label(){text = "Madness"});
     
         panel.Q("Tokens").Clear();
-        panel.Q("Tokens").Add(new Label(){text = "Strength"});
-        panel.Q("Tokens").Add(new Label(){text = "Strength"});
-        panel.Q("Tokens").Add(new Label(){text = "Vulnerable"});
+        foreach(string s in StringUtility.Arr("Strength", "Weak", "Vitality", "Vulnerability", "Speed", "Slow", "Mutation")) {
+            Label l = new() {
+                text = s
+            };
+            panel.Q("Tokens").Add(l);
+        }
 
         UI.ToggleDisplay(panel.Q("SOUL"), sysdata.Type == "Necromancer");
         UI.ToggleDisplay(panel.Q("SOULAbilities"), sysdata.Type == "Necromancer");
+        UI.ToggleDisplay(panel.Q("SOULAbilitiesLabel"), sysdata.Type == "Necromancer");
     }
 
 

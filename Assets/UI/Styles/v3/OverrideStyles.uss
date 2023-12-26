@@ -238,14 +238,9 @@
     flex-direction: row;
 }
 
-#SelectedTokenPanel #Conditions {
+#SelectedTokenPanel #Status,
+#SelectedTokenPanel #Configuration {
     min-width: 120px;
-}
-
-#SelectedTokenPanel #Vitals,
-#SelectedTokenPanel #Conditions {
-    margin-left: 8px;
-    margin-right: 0px; 
 }
 
 #FocusedTokenPanel #DataColumn {
@@ -279,6 +274,7 @@
 
 .maleghast-list .unity-label {
     margin: 0;
-    padding: 0;
+    padding: 2px 4px;
     margin-top: 2px;
+    background-color: #666;
 }
