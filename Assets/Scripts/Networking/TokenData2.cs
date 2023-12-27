@@ -162,7 +162,8 @@ public class TokenData2 : NetworkBehaviour
         UnitBarElement.Q("Portrait").style.width = width;
         UnitBarElement.Q("Portrait").style.height = height;
         UnitBarElement.Q("Portrait").style.backgroundImage = Graphic;
-        UnitBarElement.Q("Portrait").style.top = Length.Percent(49.9f); // unity won't re-center the image unless the position changes, seems like a bug
+        // UnitBarElement.Q("Portrait").style.top = Length.Percent(49.9f); // unity won't re-center the image unless the position changes, seems like a bug
+        UI.Redraw();
         UnitBarElement.Q("ClassBackground").style.borderTopColor = Color;
         UnitBarElement.Q("ClassBackground").style.borderRightColor = Color;
         UnitBarElement.Q("ClassBackground").style.borderBottomColor = Color;

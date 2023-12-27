@@ -37,9 +37,9 @@ public class Maleghast : GameSystem
         unitPanel.Q("Move").Q<Label>("Label").text = "MOVE";
         unitPanel.Q("Armor").Q<Label>("Label").text = "ARMOR";
         if (editable) {
-            // unitPanel.Q<Button>("AlterVitals").RegisterCallback<ClickEvent>(AlterVitalsModal);
+            unitPanel.Q<Button>("AlterVitals").RegisterCallback<ClickEvent>(AlterVitalsModal);
+            unitPanel.Q<Button>("EditConfig").RegisterCallback<ClickEvent>(ConfigModal);
             // unitPanel.Q<Button>("AddStatus").RegisterCallback<ClickEvent>(AddStatusModal);
-            // unitPanel.Q<Button>("Upgrades").RegisterCallback<ClickEvent>(UpgradesModal);
         }
         panel.Q("Data").Add(unitPanel);
         panel.Q("ExtraInfo").Add(new Label(){ name = "House" });
@@ -80,6 +80,117 @@ public class Maleghast : GameSystem
 
         Modal.AddSearchField("UnitType", "Unit Type", "", units.ToArray());
         Modal.AddDropdownField("PlayerColor", "Player Color", "House Default", houses.ToArray());
+    }
+
+    private void AlterVitalsModal(ClickEvent evt) {
+        Modal.Reset("Alter Vitals");
+        Modal.AddIntField("Number", "Value", 0);
+        UI.Modal.Q("Number").AddToClassList("big-number");
+        Modal.AddContentButton("Reduce HP", (evt) => AlterVitals("LoseHP"));
+        Modal.AddContentButton("Recover HP", (evt) => AlterVitals("GainHP"));
+        TokenData2 data = Token.GetSelected().Data;
+        MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
+        if (sysdata.Type == "Necromancer") {
+            Modal.AddContentButton("Reduce SOUL", (evt) => AlterVitals("LoseSOUL"));
+            Modal.AddContentButton("Gain SOUL", (evt) => AlterVitals("GainSOUL"));
+        }
+        Modal.AddButton("Done", Modal.CloseEvent);
+    }
+
+    private static void AlterVitals(string cmd) {
+        int val = UI.Modal.Q<IntegerField>("Number").value;
+        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, $"{cmd}|{val}");
+    }
+
+    private void ConfigModal(ClickEvent evt) {
+        Modal.Reset("Configure Unit");
+        TokenData2 data = Token.GetSelected().Data;
+        MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
+        ConfigModalSublist(sysdata.Upgrades, "Upgrade");
+        if (sysdata.Type == "Necromancer") {
+            Modal.AddColumns("NecroOptions", 3);
+            ConfigModalSublist(sysdata.Traits, "Trait", "NecroOptions_0");
+            ConfigModalSublist(sysdata.ActAbilities, "ACT", "NecroOptions_1");
+            ConfigModalSublist(sysdata.SoulAbilities, "SOUL", "NecroOptions_2");
+
+        }
+        
+        Modal.AddPreferredButton("Complete", Modal.CloseEvent);
+    }
+
+    private void ConfigModalSublist(string[] list, string listName, string reparent = "") {
+        foreach (string s in list) {
+            if (s.StartsWith("=")) {
+                continue;
+            }
+            string itemName = s;
+            bool enabled = true;
+            if (itemName.StartsWith("-")) {
+                itemName = itemName.Substring(1);
+                enabled = false;
+            }
+            string id = $"{listName}_{itemName}";
+            string label = $"{listName}: {itemName}";
+            Modal.AddToggleField(id, label, enabled, RebuildLists);
+            if (reparent.Length > 0) {
+                UI.Modal.Q(reparent).Add(UI.Modal.Q(id));
+            }
+            UI.Modal.Q(id).AddToClassList("reverse-toggle");
+        }
+    }
+
+    private void RebuildLists(ChangeEvent<Boolean> evt) {
+        TokenData2 data = Token.GetSelected().Data;
+        MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
+
+        Toggle t = evt.currentTarget as Toggle;
+        string[] split = t.name.Split("_");
+        List<string> list;
+        switch(split[0]) {
+            case "Upgrade":
+                list = sysdata.Upgrades.ToList();
+                break;
+            case "Trait":
+                list = sysdata.Traits.ToList();
+                break;
+            case "ACT":
+                list = sysdata.ActAbilities.ToList();
+                break;
+            case "SOUL":
+                list = sysdata.SoulAbilities.ToList();
+                break;
+            default:
+                list = new();
+                break;
+        }
+        string oldVal = split[1];
+        string newVal = split[1];
+        if (evt.newValue) {
+            oldVal = $"-{oldVal}";
+        }
+        else {
+            newVal = $"-{oldVal}";
+        }
+        list.Remove(oldVal);
+        list.Add(newVal);
+        switch(split[0]) {
+            case "Upgrade":
+                sysdata.Upgrades = list.ToArray();
+                break;
+            case "Trait":
+                sysdata.Traits = list.ToArray();
+                break;
+            case "ACT":
+                sysdata.ActAbilities = list.ToArray();
+                break;
+            case "SOUL":
+                sysdata.SoulAbilities = list.ToArray();
+                break;
+            default:
+                break;
+        }
+
+        data.SystemData = JsonUtility.ToJson(sysdata);
     }
 }
 
@@ -126,7 +237,33 @@ public class MaleghastData {
                 }
             }
             OnVitalChange(token);
-        }        
+        }   
+        if (value.StartsWith("GainSOUL")) {
+            int diff = int.Parse(value.Split("|")[1]);
+            if (Soul + diff > 6) {
+                diff = 6 - Soul;
+            }
+            if (diff > 0) {
+                Soul+=diff;
+                if (placed) {
+                    PopoverText.Create(token, $"/+{diff}|_SOUL", Color.white);
+                }
+            }
+            OnVitalChange(token);
+        }
+        if (value.StartsWith("LoseSOUL")) {
+            int diff = int.Parse(value.Split("|")[1]);
+            if (Soul - diff < 0) {
+                diff = Soul;
+            }
+            if (diff > 0) {
+                Soul-=diff;
+                if (placed) {
+                    PopoverText.Create(token, $"/-{diff}|_SOUL", Color.white);
+                }
+            }
+            OnVitalChange(token);
+        }               
     }
 
     private void OnVitalChange(Token token) {
@@ -143,12 +280,6 @@ public class MaleghastData {
                 statustokens.Remove("Corpse");
             }
         }
-    }
-
-    private string[] AddToArray(string[] array, string value) {
-        List<string> list = array.ToList();
-        list.Add(value);
-        return list.ToArray();
     }
 }
 
@@ -198,6 +329,10 @@ public class MaleghastInterpreter {
         data.CurrentHP = job["hp"];
         data.Defense = job["def"];
         data.Armor = job["armor"];
+        string upgrades = job["upgrades"];
+        if (upgrades != null) {
+            data.Upgrades = upgrades.Split("|");
+        }
         string traits = job["traits"];
         data.Traits = traits.Split("|");
         string actAbilities = job["actAbilities"];
@@ -280,37 +415,57 @@ public class MaleghastInterpreter {
         panel.Q("Traits").Clear();
         foreach (string s in sysdata.Traits) {
             if (!s.StartsWith("-")) {
-                panel.Q("Traits").Add(new Label(){text = s});
+                string s2 = s;
+                if (s2.StartsWith("=")) {
+                    s2 = s2.Substring(1);
+                }
+                panel.Q("Traits").Add(new Label(){text = s2});
             }
         }
 
         panel.Q("ACTAbilities").Clear();
         foreach (string s in sysdata.ActAbilities) {
             if (!s.StartsWith("-")) {
-                panel.Q("ACTAbilities").Add(new Label(){text = s});
+                string s2 = s;
+                if (s2.StartsWith("=")) {
+                    s2 = s2.Substring(1);
+                }
+                panel.Q("ACTAbilities").Add(new Label(){text = s2});
             }
         }
 
         panel.Q("SOULAbilities").Clear();
         foreach (string s in sysdata.SoulAbilities) {
             if (!s.StartsWith("-")) {
-                panel.Q("SOULAbilities").Add(new Label(){text = s});
+                string s2 = s;
+                if (s2.StartsWith("=")) {
+                    s2 = s2.Substring(1);
+                }
+                panel.Q("SOULAbilities").Add(new Label(){text = s2});
+            }
+        }
+
+        panel.Q("Upgrades").Clear();
+        foreach (string s in sysdata.Upgrades) {
+            if (!s.StartsWith("-")) {
+                string s2 = s;
+                if (s2.StartsWith("=")) {
+                    s2 = s2.Substring(1);
+                }
+                panel.Q("Upgrades").Add(new Label(){text = s2});
             }
         }
 
         panel.Q("Conditions").Clear();
-    
         panel.Q("Tokens").Clear();
-        foreach(string s in StringUtility.Arr("Strength", "Weak", "Vitality", "Vulnerability", "Speed", "Slow", "Mutation")) {
-            Label l = new() {
-                text = s
-            };
-            panel.Q("Tokens").Add(l);
-        }
+
 
         UI.ToggleDisplay(panel.Q("SOUL"), sysdata.Type == "Necromancer");
         UI.ToggleDisplay(panel.Q("SOULAbilities"), sysdata.Type == "Necromancer");
         UI.ToggleDisplay(panel.Q("SOULAbilitiesLabel"), sysdata.Type == "Necromancer");
+
+        UI.ToggleDisplay(panel.Q("Upgrades"), sysdata.Type != "Necromancer");
+        UI.ToggleDisplay(panel.Q("UpgradesLabel"), sysdata.Type != "Necromancer");
     }
 
 

@@ -83,7 +83,7 @@
                         <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Name" text="Token Name" style="padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; white-space: normal; -unity-text-align: upper-left; font-size: 20px; margin-top: 0; margin-right: 0; margin-bottom: 4px; margin-left: 12px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px;" />
                         <ui:VisualElement name="ExtraInfo" style="flex-grow: 1; flex-direction: row-reverse; align-items: flex-start; font-size: 12px; margin-right: -2px; margin-left: -2px;" />
                     </ui:VisualElement>
-                    <ui:VisualElement name="Data" class="panel" style="flex-direction: row-reverse; min-width: auto; min-height: auto;" />
+                    <ui:VisualElement name="Data" style="flex-direction: row-reverse; min-width: auto; min-height: auto;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="SelectedTokenPanel" class="panel edit-panel" style="position: absolute; display: flex; -unity-background-image-tint-color: rgba(255, 255, 255, 0); transition-property: left, opacity; transition-duration: 0.3s, 0.3s; bottom: 10px; transition-timing-function: ease-in-out, ease-in-out;">
                     <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.49); padding-top: 2px; padding-right: 10px; padding-bottom: 4px; padding-left: 34px; margin-left: 45px; margin-bottom: 4px;">
@@ -94,7 +94,7 @@
                         <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Name" text="Token Name" style="padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; white-space: normal; -unity-text-align: upper-left; font-size: 20px; margin-top: 0; margin-right: 0; margin-bottom: 4px; margin-left: 12px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px;" />
                         <ui:VisualElement name="ExtraInfo" style="flex-grow: 1; flex-direction: row; align-items: flex-start; font-size: 12px; margin-right: -2px; margin-left: -2px;" />
                     </ui:VisualElement>
-                    <ui:VisualElement name="Data" class="panel" style="flex-direction: row; min-width: auto; min-height: auto;" />
+                    <ui:VisualElement name="Data" style="flex-direction: row; min-width: auto; min-height: auto;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="FControlLocator" style="flex-grow: 1; width: 30px; height: 30px; background-color: rgba(0, 0, 0, 0.5); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/camera&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 0; position: absolute; left: 50%; translate: -50% 0;" />
                 <ui:VisualElement name="FloatingControls" style="flex-grow: 1; position: absolute; left: 50%; translate: -50% 0; top: 0; flex-direction: row; margin-left: -8px; display: flex; opacity: 0;">
@@ -365,7 +365,7 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="BottomBar" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.33); position: absolute; width: 100%; height: 90px; bottom: 0; background-image: resource(&apos;Textures/gradient 2&apos;); -unity-background-image-tint-color: rgba(0, 0, 0, 0.58); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 10px; border-top-width: 2px; border-left-color: rgba(0, 0, 0, 0.25); border-right-color: rgba(0, 0, 0, 0.25); border-top-color: rgba(0, 0, 0, 0.25); border-bottom-color: rgba(0, 0, 0, 0.25); display: flex;">
+        <ui:VisualElement name="BottomBar" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.33); position: absolute; width: 100%; height: 100px; bottom: 0; background-image: resource(&apos;Textures/gradient 2&apos;); -unity-background-image-tint-color: rgba(0, 0, 0, 0.58); padding-left: 0; padding-right: 0; padding-top: 10px; padding-bottom: 10px; border-top-width: 2px; border-left-color: rgba(0, 0, 0, 0.25); border-right-color: rgba(0, 0, 0, 0.25); border-top-color: rgba(0, 0, 0, 0.25); border-bottom-color: rgba(0, 0, 0, 0.25); display: flex;">
             <ui:ScrollView mode="Horizontal" name="UnitBar" style="height: 100%; margin-top: 0; margin-bottom: 0;">
                 <ui:Instance template="UnitTemplate" name="UnitTemplate" style="display: none;" />
                 <ui:VisualElement name="AddToken" style="position: relative; width: 80px; height: 100%; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0;">

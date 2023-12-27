@@ -12,7 +12,8 @@ public class UI : MonoBehaviour
 
     private static List<string> suspensions = new List<string>();
     private static bool hardSuspend = false;
-    
+    private bool uiFix = false; // compensate for unity bug
+
     void Start() {
     }
 
@@ -23,6 +24,14 @@ public class UI : MonoBehaviour
         }
         else  {
             hardSuspend = false;
+        }
+    }
+
+    void LateUpdate() {
+        if (uiFix) {
+            uiFix = false;
+            float x = GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale;
+            GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = x + .01f;
         }
     }
 
@@ -175,5 +184,11 @@ public class UI : MonoBehaviour
         VisualTreeAsset template = Resources.Load<VisualTreeAsset>(name);
         VisualElement element = template.Instantiate();
         return element;
+    }
+
+    public static void Redraw() {
+        float x = GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale;
+        GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = x - .01f;
+        GameObject.Find("Engine").GetComponent<UI>().uiFix = true;
     }
 }

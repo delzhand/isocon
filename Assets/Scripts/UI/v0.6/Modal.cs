@@ -144,6 +144,22 @@ public class Modal
         Modal.AddContents(v);
     }
 
+    public static void AddColumns(string name, int count) {
+        VisualElement v = new VisualElement();
+        v.name = name;
+        v.style.flexDirection = FlexDirection.Row;
+        v.style.marginLeft = -4;
+        v.style.marginRight = -4;
+        for (int i = 0; i < count; i++) {
+            VisualElement v2 = new();
+            v2.name = $"{name}_{i}";
+            v2.style.marginLeft = 4;
+            v2.style.marginRight = 4;
+            v.Add(v2);
+        }
+        Modal.AddContents(v);
+    }
+
     public static void AddTextField(string name, string label, string defaultValue, EventCallback<ChangeEvent<string>> onChange = null) {
         TextField field = new(label);
         field.value = defaultValue;

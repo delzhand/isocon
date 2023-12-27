@@ -252,3 +252,22 @@
     width: 340px;
     --unity-metrics-single_line-height: 500px;    
 }
+
+.reverse-toggle {
+    /* flex-direction: row-reverse; */
+}
+
+.reverse-toggle .unity-toggle__input {
+    /* width: 24px; */
+    flex-direction: row-reverse;
+}
+
+.reverse-toggle .unity-toggle__label {
+    /* flex-grow: 1;
+    margin-left: 6px;
+    -unity-text-align: upper-left;
+    min-width: 180px;
+    white-space: normal; */
+    white-space: normal;
+    width: 150px;
+}
