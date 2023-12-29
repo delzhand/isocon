@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f76a6d03-2171-4825-b4f6-c502cdbace61\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f6d648bd-a8ab-43b9-8b45-b60f4870d90b\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"0.5.11\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"c32751ee-14b9-4635-8bc1-62f8a8fa5d1b\"\r\n    },\r\n    \"rs\":
+    \"entityId\": \"1b2b2533-4361-4e4c-b496-0e8b25fc658a\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"0767e858-9805-42e4-a87a-191f37866c4f\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"e70e9b2e-c983-40e2-a729-a23a62d7ec59\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
     \"Stats\": {\r\n            \"Blue\": {\r\n              \"MaxHP\": 32,\r\n             
@@ -242,20 +242,24 @@ MonoBehaviour:
     },\r\n                {\r\n                  \"name\": \"Corpse\",\r\n                 
     \"type\": \"Object\",\r\n                  \"move\": 0,\r\n                 
     \"hp\": 0,\r\n                  \"def\": 0,\r\n                  \"armor\": \"none\"\r\n               
-    }\r\n              ]\r\n            }\r\n          ],\r\n          \"StatusEffects\":
-    [\r\n            \"Deathburst\",\r\n            \"Flight\",\r\n            \"Miracle\",\r\n           
+    }\r\n              ]\r\n            }\r\n          ],\r\n          \"StatusTokens\":
+    [\r\n            \"Strength\",\r\n            \"Weakness\",\r\n            \"Vulnerable\",\r\n           
+    \"Vitality\",\r\n            \"Speed\",\r\n            \"Slow\",\r\n           
+    \"Berserk\",\r\n            \"Plague\",\r\n            \"Doom\",\r\n           
+    \"Mutation\"\r\n          ],\r\n          \"StatusEffects\": [\r\n           
+    \"Deathburst\",\r\n            \"Flight\",\r\n            \"Miracle\",\r\n           
     \"Retaliation\",\r\n            \"Reload\",\r\n            \"Physical Armor\",\r\n           
     \"Magic Armor\",\r\n            \"Super Armor\"\r\n          ]\r\n        }\r\n     
     }\r\n    }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f76a6d03-2171-4825-b4f6-c502cdbace61\"\r\n   
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f6d648bd-a8ab-43b9-8b45-b60f4870d90b\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"0.5.11\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"c32751ee-14b9-4635-8bc1-62f8a8fa5d1b\"\r\n    },\r\n    \"rs\":
+    \"entityId\": \"1b2b2533-4361-4e4c-b496-0e8b25fc658a\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"0767e858-9805-42e4-a87a-191f37866c4f\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"e70e9b2e-c983-40e2-a729-a23a62d7ec59\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
     \"Stats\": {\r\n            \"Blue\": {\r\n              \"MaxHP\": 32,\r\n             
@@ -477,8 +481,12 @@ MonoBehaviour:
     },\r\n                {\r\n                  \"name\": \"Corpse\",\r\n                 
     \"type\": \"Object\",\r\n                  \"move\": 0,\r\n                 
     \"hp\": 0,\r\n                  \"def\": 0,\r\n                  \"armor\": \"none\"\r\n               
-    }\r\n              ]\r\n            }\r\n          ],\r\n          \"StatusEffects\":
-    [\r\n            \"Deathburst\",\r\n            \"Flight\",\r\n            \"Miracle\",\r\n           
+    }\r\n              ]\r\n            }\r\n          ],\r\n          \"StatusTokens\":
+    [\r\n            \"Strength\",\r\n            \"Weakness\",\r\n            \"Vulnerable\",\r\n           
+    \"Vitality\",\r\n            \"Speed\",\r\n            \"Slow\",\r\n           
+    \"Berserk\",\r\n            \"Plague\",\r\n            \"Doom\",\r\n           
+    \"Mutation\"\r\n          ],\r\n          \"StatusEffects\": [\r\n           
+    \"Deathburst\",\r\n            \"Flight\",\r\n            \"Miracle\",\r\n           
     \"Retaliation\",\r\n            \"Reload\",\r\n            \"Physical Armor\",\r\n           
     \"Magic Armor\",\r\n            \"Super Armor\"\r\n          ]\r\n        }\r\n     
     }\r\n    }\r\n  }\r\n]"
