@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"0433c310-f586-4376-8c70-51cbbcf1ea10\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f76a6d03-2171-4825-b4f6-c502cdbace61\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"0.5.11\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"16616f08-9ece-4765-823d-a198443b61fc\"\r\n    },\r\n    \"rs\":
+    \"entityId\": \"c32751ee-14b9-4635-8bc1-62f8a8fa5d1b\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"97c8cd34-47de-4616-9361-98e809180e6e\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"0767e858-9805-42e4-a87a-191f37866c4f\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
     \"Stats\": {\r\n            \"Blue\": {\r\n              \"MaxHP\": 32,\r\n             
@@ -138,7 +138,7 @@ MonoBehaviour:
     \"upgrades\": \"-Vomit Bullets|-Napalm Injector|-Hot Chamber\"\r\n               
     },\r\n                {\r\n                  \"name\": \"Enforcer\",\r\n                 
     \"type\": \"Scion\",\r\n                  \"move\": 3,\r\n                  \"hp\":
-    4,\r\n                  \"def\": 3,\r\n                  \"armor\": \"PHYS\",\r\n                 
+    4,\r\n                  \"def\": 3,\r\n                  \"armor\": \"Phys Armor\",\r\n                 
     \"traits\": \"=Formation\",\r\n                  \"actAbilities\": \"=Skull Crack|=Flashbang|=Shieldwall\",\r\n                 
     \"upgrades\": \"-Shield Charge|-Bulwark|-Bone Dust Napalm\"\r\n               
     },\r\n                {\r\n                  \"name\": \"Barrelform\",\r\n                 
@@ -149,17 +149,18 @@ MonoBehaviour:
     Barrel|-Caliber Up\"\r\n                },\r\n                {\r\n                 
     \"name\": \"EGIS Weapon\",\r\n                  \"type\": \"Tyrant\",\r\n                 
     \"move\": 3,\r\n                  \"hp\": 6,\r\n                  \"def\": 2,\r\n                 
-    \"armor\": \"PHYS\",\r\n                  \"traits\": \"=Formation|=Siege Shield|=Tyrant\",\r\n                 
-    \"actAbilities\": \"=Juggernaut|=Mortar|=Catechism Devil Cannon\",\r\n                 
-    \"upgrades\": \"-Fortify|-Heavy Caliber Cannon|-Gunner Pivot\"\r\n               
-    },\r\n                {\r\n                  \"name\": \"Operator\",\r\n                 
-    \"type\": \"Necromancer\",\r\n                  \"move\": 4,\r\n                 
-    \"hp\": 8,\r\n                  \"def\": 4,\r\n                  \"armor\": \"PHYS\",\r\n                 
-    \"traits\": \"=Formation|=Hot Clip|-Bone Wall|-Gun Kata|-Clutch Reload\",\r\n                 
-    \"actAbilities\": \"=Akimbo|-Grenade Jump|-Armor Lock|-Devil Bullet|-Superkick|-Lv4
-    Living Cannon|-SG88 Two Barrel Shotgun|-Unholy Sixgun\",\r\n                 
-    \"soulAbilities\": \"=Reload Slide (1)|=Bullet Time (3)|-Double Tap (1)|-Frag
-    Bullet (1)|-Bullet Hustle (2)|-Overwatch (3)|-Bullet Sonata (4)|-S.T.G. (6)\"\r\n               
+    \"armor\": \"Phys Armor\",\r\n                  \"traits\": \"=Formation|=Siege
+    Shield|=Tyrant\",\r\n                  \"actAbilities\": \"=Juggernaut|=Mortar|=Catechism
+    Devil Cannon\",\r\n                  \"upgrades\": \"-Fortify|-Heavy Caliber
+    Cannon|-Gunner Pivot\"\r\n                },\r\n                {\r\n                 
+    \"name\": \"Operator\",\r\n                  \"type\": \"Necromancer\",\r\n                 
+    \"move\": 4,\r\n                  \"hp\": 8,\r\n                  \"def\": 4,\r\n                 
+    \"armor\": \"Phys Armor\",\r\n                  \"traits\": \"=Formation|=Hot
+    Clip|-Bone Wall|-Gun Kata|-Clutch Reload\",\r\n                  \"actAbilities\":
+    \"=Akimbo|-Grenade Jump|-Armor Lock|-Devil Bullet|-Superkick|-Lv4 Living Cannon|-SG88
+    Two Barrel Shotgun|-Unholy Sixgun\",\r\n                  \"soulAbilities\":
+    \"=Reload Slide (1)|=Bullet Time (3)|-Double Tap (1)|-Frag Bullet (1)|-Bullet
+    Hustle (2)|-Overwatch (3)|-Bullet Sonata (4)|-S.T.G. (6)\"\r\n               
     }\r\n              ]\r\n            },\r\n            {\r\n              \"name\":
     \"Goregrinders\",\r\n              \"color\": \"ff7829\",\r\n              \"units\":
     [\r\n                {\r\n                  \"name\": \"Warhead\",\r\n                 
@@ -201,18 +202,18 @@ MonoBehaviour:
     \"Gargamox\",\r\n              \"color\": \"29ff3d\",\r\n              \"units\":
     [\r\n                {\r\n                  \"name\": \"Scum\",\r\n                 
     \"type\": \"Thrall\",\r\n                  \"move\": 3,\r\n                 
-    \"hp\": 1,\r\n                  \"def\": 4,\r\n                  \"armor\": \"phys\",\r\n                 
-    \"traits\": \"=Toxic Revenge|=Thrall\",\r\n                  \"actAbilities\":
-    \"=Pseudopod|=Shamble\",\r\n                  \"upgrades\": \"-Bloat|-Tentacle
-    Whip|-Aftermath\"\r\n                },\r\n                {\r\n                 
-    \"name\": \"Leech\",\r\n                  \"type\": \"Freak\",\r\n                 
+    \"hp\": 1,\r\n                  \"def\": 4,\r\n                  \"armor\": \"Phys
+    Armor\",\r\n                  \"traits\": \"=Toxic Revenge|=Thrall\",\r\n                 
+    \"actAbilities\": \"=Pseudopod|=Shamble\",\r\n                  \"upgrades\":
+    \"-Bloat|-Tentacle Whip|-Aftermath\"\r\n                },\r\n               
+    {\r\n                  \"name\": \"Leech\",\r\n                  \"type\": \"Freak\",\r\n                 
     \"move\": 4,\r\n                  \"hp\": 4,\r\n                  \"def\": 4,\r\n                 
-    \"armor\": \"MAG\",\r\n                  \"traits\": \"=Deathwash\",\r\n                 
+    \"armor\": \"Magic Armor\",\r\n                  \"traits\": \"=Deathwash\",\r\n                 
     \"actAbilities\": \"=Suppurate|=Evolve Strain|=Swell with Corruption\",\r\n                 
     \"upgrades\": \"-Massive Swell|-Spreading Strain|-Acid Blood\"\r\n               
     },\r\n                {\r\n                  \"name\": \"Rotten\",\r\n                 
     \"type\": \"Scion\",\r\n                  \"move\": 4,\r\n                  \"hp\":
-    4,\r\n                  \"def\": 3,\r\n                  \"armor\": \"PHYS\",\r\n                 
+    4,\r\n                  \"def\": 3,\r\n                  \"armor\": \"Phys Armor\",\r\n                 
     \"traits\": \"=Plaguebearer\",\r\n                  \"actAbilities\": \"=Pustulate|=Vomitous
     Mass|=Rothblade\",\r\n                  \"upgrades\": \"-Catalyze|-Invigorating
     Viscera|-Smog Shroud\"\r\n                },\r\n                {\r\n                 
@@ -242,38 +243,19 @@ MonoBehaviour:
     \"type\": \"Object\",\r\n                  \"move\": 0,\r\n                 
     \"hp\": 0,\r\n                  \"def\": 0,\r\n                  \"armor\": \"none\"\r\n               
     }\r\n              ]\r\n            }\r\n          ],\r\n          \"StatusEffects\":
-    [\r\n            {\r\n              \"Name\": \"Berserk\",\r\n              \"Color\":
-    \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Deathburst\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Doom\",\r\n              \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n           
-    },\r\n            {\r\n              \"Name\": \"Fate Debt\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Flight\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Lurk\",\r\n              \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n           
-    },\r\n            {\r\n              \"Name\": \"Madness\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Miracle\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Mutation\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Plague\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Soulbound\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Retaliation\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Reload\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            }\r\n         
-    ]\r\n        }\r\n      }\r\n    }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"0433c310-f586-4376-8c70-51cbbcf1ea10\"\r\n   
+    [\r\n            \"Deathburst\",\r\n            \"Flight\",\r\n            \"Miracle\",\r\n           
+    \"Retaliation\",\r\n            \"Reload\",\r\n            \"Physical Armor\",\r\n           
+    \"Magic Armor\",\r\n            \"Super Armor\"\r\n          ]\r\n        }\r\n     
+    }\r\n    }\r\n  }\r\n]"
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f76a6d03-2171-4825-b4f6-c502cdbace61\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"0.5.11\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"16616f08-9ece-4765-823d-a198443b61fc\"\r\n    },\r\n    \"rs\":
+    \"entityId\": \"c32751ee-14b9-4635-8bc1-62f8a8fa5d1b\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"97c8cd34-47de-4616-9361-98e809180e6e\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"0767e858-9805-42e4-a87a-191f37866c4f\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
     \"Stats\": {\r\n            \"Blue\": {\r\n              \"MaxHP\": 32,\r\n             
@@ -391,7 +373,7 @@ MonoBehaviour:
     \"upgrades\": \"-Vomit Bullets|-Napalm Injector|-Hot Chamber\"\r\n               
     },\r\n                {\r\n                  \"name\": \"Enforcer\",\r\n                 
     \"type\": \"Scion\",\r\n                  \"move\": 3,\r\n                  \"hp\":
-    4,\r\n                  \"def\": 3,\r\n                  \"armor\": \"PHYS\",\r\n                 
+    4,\r\n                  \"def\": 3,\r\n                  \"armor\": \"Phys Armor\",\r\n                 
     \"traits\": \"=Formation\",\r\n                  \"actAbilities\": \"=Skull Crack|=Flashbang|=Shieldwall\",\r\n                 
     \"upgrades\": \"-Shield Charge|-Bulwark|-Bone Dust Napalm\"\r\n               
     },\r\n                {\r\n                  \"name\": \"Barrelform\",\r\n                 
@@ -402,17 +384,18 @@ MonoBehaviour:
     Barrel|-Caliber Up\"\r\n                },\r\n                {\r\n                 
     \"name\": \"EGIS Weapon\",\r\n                  \"type\": \"Tyrant\",\r\n                 
     \"move\": 3,\r\n                  \"hp\": 6,\r\n                  \"def\": 2,\r\n                 
-    \"armor\": \"PHYS\",\r\n                  \"traits\": \"=Formation|=Siege Shield|=Tyrant\",\r\n                 
-    \"actAbilities\": \"=Juggernaut|=Mortar|=Catechism Devil Cannon\",\r\n                 
-    \"upgrades\": \"-Fortify|-Heavy Caliber Cannon|-Gunner Pivot\"\r\n               
-    },\r\n                {\r\n                  \"name\": \"Operator\",\r\n                 
-    \"type\": \"Necromancer\",\r\n                  \"move\": 4,\r\n                 
-    \"hp\": 8,\r\n                  \"def\": 4,\r\n                  \"armor\": \"PHYS\",\r\n                 
-    \"traits\": \"=Formation|=Hot Clip|-Bone Wall|-Gun Kata|-Clutch Reload\",\r\n                 
-    \"actAbilities\": \"=Akimbo|-Grenade Jump|-Armor Lock|-Devil Bullet|-Superkick|-Lv4
-    Living Cannon|-SG88 Two Barrel Shotgun|-Unholy Sixgun\",\r\n                 
-    \"soulAbilities\": \"=Reload Slide (1)|=Bullet Time (3)|-Double Tap (1)|-Frag
-    Bullet (1)|-Bullet Hustle (2)|-Overwatch (3)|-Bullet Sonata (4)|-S.T.G. (6)\"\r\n               
+    \"armor\": \"Phys Armor\",\r\n                  \"traits\": \"=Formation|=Siege
+    Shield|=Tyrant\",\r\n                  \"actAbilities\": \"=Juggernaut|=Mortar|=Catechism
+    Devil Cannon\",\r\n                  \"upgrades\": \"-Fortify|-Heavy Caliber
+    Cannon|-Gunner Pivot\"\r\n                },\r\n                {\r\n                 
+    \"name\": \"Operator\",\r\n                  \"type\": \"Necromancer\",\r\n                 
+    \"move\": 4,\r\n                  \"hp\": 8,\r\n                  \"def\": 4,\r\n                 
+    \"armor\": \"Phys Armor\",\r\n                  \"traits\": \"=Formation|=Hot
+    Clip|-Bone Wall|-Gun Kata|-Clutch Reload\",\r\n                  \"actAbilities\":
+    \"=Akimbo|-Grenade Jump|-Armor Lock|-Devil Bullet|-Superkick|-Lv4 Living Cannon|-SG88
+    Two Barrel Shotgun|-Unholy Sixgun\",\r\n                  \"soulAbilities\":
+    \"=Reload Slide (1)|=Bullet Time (3)|-Double Tap (1)|-Frag Bullet (1)|-Bullet
+    Hustle (2)|-Overwatch (3)|-Bullet Sonata (4)|-S.T.G. (6)\"\r\n               
     }\r\n              ]\r\n            },\r\n            {\r\n              \"name\":
     \"Goregrinders\",\r\n              \"color\": \"ff7829\",\r\n              \"units\":
     [\r\n                {\r\n                  \"name\": \"Warhead\",\r\n                 
@@ -454,18 +437,18 @@ MonoBehaviour:
     \"Gargamox\",\r\n              \"color\": \"29ff3d\",\r\n              \"units\":
     [\r\n                {\r\n                  \"name\": \"Scum\",\r\n                 
     \"type\": \"Thrall\",\r\n                  \"move\": 3,\r\n                 
-    \"hp\": 1,\r\n                  \"def\": 4,\r\n                  \"armor\": \"phys\",\r\n                 
-    \"traits\": \"=Toxic Revenge|=Thrall\",\r\n                  \"actAbilities\":
-    \"=Pseudopod|=Shamble\",\r\n                  \"upgrades\": \"-Bloat|-Tentacle
-    Whip|-Aftermath\"\r\n                },\r\n                {\r\n                 
-    \"name\": \"Leech\",\r\n                  \"type\": \"Freak\",\r\n                 
+    \"hp\": 1,\r\n                  \"def\": 4,\r\n                  \"armor\": \"Phys
+    Armor\",\r\n                  \"traits\": \"=Toxic Revenge|=Thrall\",\r\n                 
+    \"actAbilities\": \"=Pseudopod|=Shamble\",\r\n                  \"upgrades\":
+    \"-Bloat|-Tentacle Whip|-Aftermath\"\r\n                },\r\n               
+    {\r\n                  \"name\": \"Leech\",\r\n                  \"type\": \"Freak\",\r\n                 
     \"move\": 4,\r\n                  \"hp\": 4,\r\n                  \"def\": 4,\r\n                 
-    \"armor\": \"MAG\",\r\n                  \"traits\": \"=Deathwash\",\r\n                 
+    \"armor\": \"Magic Armor\",\r\n                  \"traits\": \"=Deathwash\",\r\n                 
     \"actAbilities\": \"=Suppurate|=Evolve Strain|=Swell with Corruption\",\r\n                 
     \"upgrades\": \"-Massive Swell|-Spreading Strain|-Acid Blood\"\r\n               
     },\r\n                {\r\n                  \"name\": \"Rotten\",\r\n                 
     \"type\": \"Scion\",\r\n                  \"move\": 4,\r\n                  \"hp\":
-    4,\r\n                  \"def\": 3,\r\n                  \"armor\": \"PHYS\",\r\n                 
+    4,\r\n                  \"def\": 3,\r\n                  \"armor\": \"Phys Armor\",\r\n                 
     \"traits\": \"=Plaguebearer\",\r\n                  \"actAbilities\": \"=Pustulate|=Vomitous
     Mass|=Rothblade\",\r\n                  \"upgrades\": \"-Catalyze|-Invigorating
     Viscera|-Smog Shroud\"\r\n                },\r\n                {\r\n                 
@@ -495,29 +478,10 @@ MonoBehaviour:
     \"type\": \"Object\",\r\n                  \"move\": 0,\r\n                 
     \"hp\": 0,\r\n                  \"def\": 0,\r\n                  \"armor\": \"none\"\r\n               
     }\r\n              ]\r\n            }\r\n          ],\r\n          \"StatusEffects\":
-    [\r\n            {\r\n              \"Name\": \"Berserk\",\r\n              \"Color\":
-    \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Deathburst\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Doom\",\r\n              \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n           
-    },\r\n            {\r\n              \"Name\": \"Fate Debt\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Flight\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Lurk\",\r\n              \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n           
-    },\r\n            {\r\n              \"Name\": \"Madness\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Miracle\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Mutation\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Plague\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Soulbound\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Retaliation\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Reload\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            }\r\n         
-    ]\r\n        }\r\n      }\r\n    }\r\n  }\r\n]"
+    [\r\n            \"Deathburst\",\r\n            \"Flight\",\r\n            \"Miracle\",\r\n           
+    \"Retaliation\",\r\n            \"Reload\",\r\n            \"Physical Armor\",\r\n           
+    \"Magic Armor\",\r\n            \"Super Armor\"\r\n          ]\r\n        }\r\n     
+    }\r\n    }\r\n  }\r\n]"
   _environments: "[\r\n  {\r\n    \"projectId\": \"84cc6114-4488-4698-9103-7c2948671b2e\",\r\n   
     \"name\": \"production\",\r\n    \"id\": \"b3e19d49-e656-4b78-b133-15a1b7d39d66\",\r\n   
     \"isDefault\": true,\r\n    \"createdAt\": \"2023-11-05T13:57:15Z\",\r\n    \"updatedAt\":

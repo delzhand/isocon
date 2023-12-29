@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using IsoconUILibrary;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -148,13 +150,13 @@ public class Modal
         VisualElement v = new VisualElement();
         v.name = name;
         v.style.flexDirection = FlexDirection.Row;
-        v.style.marginLeft = -4;
-        v.style.marginRight = -4;
+        v.style.marginLeft = -8;
+        v.style.marginRight = -8;
         for (int i = 0; i < count; i++) {
             VisualElement v2 = new();
             v2.name = $"{name}_{i}";
-            v2.style.marginLeft = 4;
-            v2.style.marginRight = 4;
+            v2.style.marginLeft = 8;
+            v2.style.marginRight = 8;
             v.Add(v2);
         }
         Modal.AddContents(v);
@@ -197,6 +199,19 @@ public class Modal
         field.AddToClassList("no-margin");
         field.focusable = false;
         Modal.AddContents(field);    
+    }
+
+    public static void AddNumberNudgerField(string name, string label, int defaultValue, Action<int> onChange = null) {
+        NumberNudger field = new();
+        field.label = label;
+        field.name = name;
+        field.value = defaultValue;
+        if (onChange != null) {
+            field.AddValueChangedCallback(onChange);
+        }
+        field.AddToClassList("no-margin");
+        field.focusable = false;
+        Modal.AddContents(field);
     }
 
     public static void AddIntField(string name, string label, int defaultValue, EventCallback<ChangeEvent<int>> onChange = null){

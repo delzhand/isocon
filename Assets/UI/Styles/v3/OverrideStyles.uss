@@ -278,3 +278,53 @@
     margin-top: 2px;
     background-color: #666;
 }
+
+#MaleghastStatus .unity-toggle__checkmark {
+    height: 40px;
+    width: 40px;
+}
+
+#MaleghastStatus .unity-toggle__input > .unity-toggle__checkmark {
+        -unity-background-image-tint-color: rgba(0, 0, 0, .5);
+}
+#MaleghastStatus .unity-toggle__input:checked > .unity-toggle__checkmark {
+        -unity-background-image-tint-color: rgba(255, 255, 255, 1);
+}
+
+#MaleghastStatus #StatusPhysicalArmor .unity-toggle__input > .unity-toggle__checkmark {
+    background-image: resource("Textures/GameSystem/Maleghast/MarkerArmorPHYS");
+}
+#MaleghastStatus #StatusMagicArmor .unity-toggle__input > .unity-toggle__checkmark {
+    background-image: resource("Textures/GameSystem/Maleghast/MarkerArmorMAG");
+}
+#MaleghastStatus #StatusSuperArmor .unity-toggle__input > .unity-toggle__checkmark {
+    background-image: resource("Textures/GameSystem/Maleghast/MarkerArmorSUPER");
+}
+#MaleghastStatus #StatusDeathburst .unity-toggle__input > .unity-toggle__checkmark {
+    background-image: resource("Textures/GameSystem/Maleghast/MarkerDeathburst");
+}
+#MaleghastStatus #StatusFlight .unity-toggle__input > .unity-toggle__checkmark {
+    background-image: resource("Textures/GameSystem/Maleghast/MarkerFlight");
+}
+#MaleghastStatus #StatusMiracle .unity-toggle__input > .unity-toggle__checkmark {
+    background-image: resource("Textures/GameSystem/Maleghast/MarkerMiracle");
+}
+#MaleghastStatus #StatusRetaliation .unity-toggle__input > .unity-toggle__checkmark {
+    background-image: resource("Textures/GameSystem/Maleghast/MarkerRetaliation");
+}
+#MaleghastStatus #StatusReload .unity-toggle__input > .unity-toggle__checkmark {
+    background-image: resource("Textures/GameSystem/Maleghast/MarkerReload");
+}
+
+#MaleghastStatus #StatusBerserk .unity-toggle__input > .unity-toggle__checkmark {
+    background-image: resource("Textures/GameSystem/Maleghast/MarkerBerserk");
+}
+#MaleghastStatus #StatusDoom .unity-toggle__input > .unity-toggle__checkmark {
+    background-image: resource("Textures/GameSystem/Maleghast/MarkerDoom");
+}
+#MaleghastStatus #StatusMutation .unity-toggle__input > .unity-toggle__checkmark {
+    background-image: resource("Textures/GameSystem/Maleghast/MarkerMutation");
+}
+#MaleghastStatus #StatusPlague .unity-toggle__input > .unity-toggle__checkmark {
+    background-image: resource("Textures/GameSystem/Maleghast/MarkerPlague");
+}

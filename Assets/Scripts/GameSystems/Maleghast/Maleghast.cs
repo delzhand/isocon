@@ -35,11 +35,10 @@ public class Maleghast : GameSystem
         unitPanel.Q("Type").Q<Label>("Label").text = "TYPE";
         unitPanel.Q("Defense").Q<Label>("Label").text = "DEFENSE";
         unitPanel.Q("Move").Q<Label>("Label").text = "MOVE";
-        unitPanel.Q("Armor").Q<Label>("Label").text = "ARMOR";
         if (editable) {
             unitPanel.Q<Button>("AlterVitals").RegisterCallback<ClickEvent>(AlterVitalsModal);
             unitPanel.Q<Button>("EditConfig").RegisterCallback<ClickEvent>(ConfigModal);
-            // unitPanel.Q<Button>("AddStatus").RegisterCallback<ClickEvent>(AddStatusModal);
+            unitPanel.Q<Button>("EditStatus").RegisterCallback<ClickEvent>(EditStatusModal);
         }
         panel.Q("Data").Add(unitPanel);
         panel.Q("ExtraInfo").Add(new Label(){ name = "House" });
@@ -132,10 +131,10 @@ public class Maleghast : GameSystem
             string id = $"{listName}_{itemName}";
             string label = $"{listName}: {itemName}";
             Modal.AddToggleField(id, label, enabled, RebuildLists);
+            UI.Modal.Q(id).AddToClassList("reverse-toggle");
             if (reparent.Length > 0) {
                 UI.Modal.Q(reparent).Add(UI.Modal.Q(id));
             }
-            UI.Modal.Q(id).AddToClassList("reverse-toggle");
         }
     }
 
@@ -192,6 +191,64 @@ public class Maleghast : GameSystem
 
         data.SystemData = JsonUtility.ToJson(sysdata);
     }
+
+    private void EditStatusModal(ClickEvent evt) {
+        TokenData2 data = Token.GetSelected().Data;
+        MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
+
+        Modal.Reset("Alter Status");
+        Modal.AddColumns("MaleghastStatus", 2);
+        int i = 0;
+        foreach (string s in GetTokens()) {
+            string s2 = s.Replace(" ", "");
+            Debug.Log($"Count of {s}: {CollectionUtility.CountInArray(sysdata.Tokens, s)}");
+            Modal.AddNumberNudgerField($"Status{s2}", s, CollectionUtility.CountInArray(sysdata.Tokens, s), (evt) => {
+                TokenChange(evt, s);
+            });
+            UI.Modal.Q($"MaleghastStatus_{i%2}").Add(UI.Modal.Q($"Status{s2}"));
+            i++;
+        }
+        foreach (string s in GetStatuses()) {
+            string s2 = s.Replace(" ", "");
+            Modal.AddToggleField($"Status{s2}", s, CollectionUtility.CountInArray(sysdata.Conditions, s) > 0, (evt) => {
+                StatusToggled(evt, s);
+            });
+            UI.Modal.Q($"MaleghastStatus_{i%2}").Add(UI.Modal.Q($"Status{s2}"));
+            i++;
+        }
+        Modal.AddPreferredButton("Complete", Modal.CloseEvent);
+    }
+
+    private void StatusToggled(ChangeEvent<Boolean> evt, string status) {
+        string value = $"GainStatus|{status}";
+        if (!evt.newValue) {
+            value = $"LoseStatus|{status}";
+        }
+        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, value);
+    }
+
+    private void TokenChange(int evt, string token) {
+        string value = $"SetToken|{token}|{evt}";
+        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, value);
+    }
+
+    private static string[] GetStatuses() {
+        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
+        List<string> statuses = new();
+        foreach (JSONNode status in gamedata["Maleghast"]["StatusEffects"]) {
+            statuses.Add(status);
+        }
+        return statuses.ToArray();
+    }    
+
+    private static string[] GetTokens() {
+        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
+        List<string> tokens = new();
+        foreach (JSONNode status in gamedata["Maleghast"]["StatusTokens"]) {
+            tokens.Add(status);
+        }
+        return tokens.ToArray();
+    }   
 }
 
 [Serializable]
@@ -204,12 +261,12 @@ public class MaleghastData {
     public string Job;
     public int Move;
     public int Defense;
-    public string Armor;
     public string[] Traits;
     public string[] ActAbilities;
     public string[] SoulAbilities;
     public string[] Upgrades;
-    public string[] StatusTokens;
+    public string[] Conditions;
+    public string[] Tokens;
 
     public void Change(string value, Token token, bool placed) {
         if (value.StartsWith("GainHP")) {
@@ -263,11 +320,58 @@ public class MaleghastData {
                 }
             }
             OnVitalChange(token);
+        }
+        if (value.StartsWith("GainStatus")) {
+            string[] parts = value.Split("|");
+            string status = parts[1];
+            Conditions = CollectionUtility.AddToArray(Conditions, status, true);
+            if (placed) {
+                PopoverText.Create(token, $"_+|_{status.ToUpper()}", Color.white);
+            }          
         }               
+        if (value.StartsWith("LoseStatus")) {
+            string[] parts = value.Split("|");
+            string status = parts[1];
+            Conditions = CollectionUtility.RemoveAllFromArray(Conditions, status);
+            if (placed) {
+                PopoverText.Create(token, $"_-|_{status.ToUpper()}", Color.white);
+            }
+        }
+        if (value.StartsWith("SetToken")) {
+            string[] parts = value.Split("|");
+            string tokenp = parts[1];
+            int count = int.Parse(parts[2]);
+            int diff = count - CollectionUtility.CountInArray(Tokens, tokenp);
+
+            for (int i = 0; i < Math.Abs(diff); i++) {
+                if (diff > 0) {
+                    Tokens = CollectionUtility.AddToArray(Tokens, tokenp);
+                }
+                else if (diff < 0) {
+                    Tokens = CollectionUtility.RemoveFromArray(Tokens, tokenp);
+                }
+            }
+            if (placed) {
+                if (diff > 0) {
+                    PopoverText.Create(token, $"/+{diff}|_{tokenp.ToUpper()}", Color.white);
+                }
+                else  if (diff < 0) {
+                    PopoverText.Create(token, $"/-{Math.Abs(diff)}|_{tokenp.ToUpper()}", Color.white);
+                }
+            }          
+        }               
+        if (value.StartsWith("LoseToken")) {
+            string[] parts = value.Split("|");
+            string status = parts[1];
+            Tokens = CollectionUtility.RemoveFromArray(Tokens, status);
+            if (placed) {
+                PopoverText.Create(token, $"_-|_{status.ToUpper()}", Color.white);
+            }
+        }
     }
 
     private void OnVitalChange(Token token) {
-        List<string> statustokens = StatusTokens.ToList();
+        List<string> statustokens = Conditions.ToList();
 
         token.SetDefeated(CurrentHP <= 0);
         if (CurrentHP <= 0) {
@@ -328,7 +432,8 @@ public class MaleghastInterpreter {
         data.MaxHP = job["hp"];
         data.CurrentHP = job["hp"];
         data.Defense = job["def"];
-        data.Armor = job["armor"];
+        data.Conditions = new string[]{};
+        data.Tokens = new string[]{};
         string upgrades = job["upgrades"];
         if (upgrades != null) {
             data.Upgrades = upgrades.Split("|");
@@ -340,6 +445,9 @@ public class MaleghastInterpreter {
         string soulAbilities = job["soulAbilities"];
         if (soulAbilities != null) {
             data.SoulAbilities = soulAbilities.Split("|");
+        }
+        if (job["armor"] != "none") {
+            data.Conditions = CollectionUtility.AddToArray<string>(data.Conditions, job["armor"]);
         }
     }
 
@@ -409,7 +517,6 @@ public class MaleghastInterpreter {
 
         panel.Q("Defense").Q<Label>("Value").text = $"{ sysdata.Defense }";
         panel.Q("Move").Q<Label>("Value").text = $"{ sysdata.Move }";
-        panel.Q("Armor").Q<Label>("Value").text = $"{ sysdata.Armor.ToUpper() }";
         panel.Q("Type").Q<Label>("Value").text = (sysdata.Type == "Necromancer") ? "NECRO" : sysdata.Type.ToUpper();
 
         panel.Q("Traits").Clear();
@@ -457,8 +564,25 @@ public class MaleghastInterpreter {
         }
 
         panel.Q("Conditions").Clear();
+        foreach (string s in sysdata.Conditions) {
+            panel.Q("Conditions").Add(new Label(){text = s}); 
+        }
+        
         panel.Q("Tokens").Clear();
-
+        Dictionary<string, int> combinedTokens = new();
+        foreach (string s in sysdata.Tokens) {
+            if (combinedTokens.Keys.Contains(s)) {
+                combinedTokens[s]++;
+            }
+            else {
+                combinedTokens.Add(s, 1);
+            }
+        }
+        foreach (KeyValuePair<string,int> pair in combinedTokens){
+            if (pair.Value != 0) {
+                panel.Q("Tokens").Add(new Label(){text = $"{pair.Key} ({pair.Value})"});
+            }
+        }
 
         UI.ToggleDisplay(panel.Q("SOUL"), sysdata.Type == "Necromancer");
         UI.ToggleDisplay(panel.Q("SOULAbilities"), sysdata.Type == "Necromancer");

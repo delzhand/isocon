@@ -13,7 +13,6 @@
                 <ui:Instance template="StatTemplate" name="Type" />
                 <ui:Instance template="StatTemplate" name="Move" />
                 <ui:Instance template="StatTemplate" name="Defense" />
-                <ui:Instance template="StatTemplate" name="Armor" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="Configuration" style="background-color: rgba(0, 0, 0, 0); padding-top: 4px; margin-right: 4px; margin-left: 4px; align-items: stretch; align-self: auto; min-width: 125px;">
@@ -29,13 +28,13 @@
                 <ui:VisualElement name="Upgrades" class="maleghast-list" style="flex-grow: 0; flex-shrink: 0;" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="Status" style="background-color: rgba(0, 0, 0, 0); padding-top: 4px; margin-right: 4px; margin-left: 4px; min-width: 125px;">
+        <ui:VisualElement name="Status" style="background-color: rgba(0, 0, 0, 0); padding-top: 4px; margin-right: 4px; margin-left: 4px; min-width: 125px; width: 136px;">
             <ui:Button text="Alter Status" parse-escape-sequences="true" display-tooltip-when-elided="true" name="EditStatus" style="margin-top: 0; margin-bottom: 4px;" />
             <ui:VisualElement name="List" style="flex-grow: 1; margin-top: -4px;">
-                <ui:Label text="CONDITIONS" style="font-size: 10px; color: rgb(176, 176, 176); margin-top: 4px; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
-                <ui:VisualElement name="Conditions" class="maleghast-list" style="flex-shrink: 0;" />
                 <ui:Label text="TOKENS" style="font-size: 10px; color: rgb(176, 176, 176); padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 4px; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
-                <ui:VisualElement name="Tokens" class="maleghast-list" style="flex-grow: 0; flex-shrink: 0;" />
+                <ui:VisualElement name="Tokens" class="maleghast-list" style="flex-grow: 0; flex-shrink: 0; flex-direction: row; flex-wrap: wrap;" />
+                <ui:Label text="CONDITIONS" style="font-size: 10px; color: rgb(176, 176, 176); margin-top: 4px; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                <ui:VisualElement name="Conditions" class="maleghast-list" style="flex-shrink: 0; flex-direction: row; flex-wrap: wrap;" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
