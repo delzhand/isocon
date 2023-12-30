@@ -370,17 +370,17 @@ public class MaleghastData {
     }
 
     private void OnVitalChange(Token token) {
-        List<string> statustokens = Conditions.ToList();
+        List<string> conditions = Conditions.ToList();
 
         token.SetDefeated(CurrentHP <= 0);
         if (CurrentHP <= 0) {
-            if (!statustokens.Contains("Corpse")) {
-                statustokens.Add("Corpse");
+            if (!conditions.Contains("Corpse")) {
+                conditions.Add("Corpse");
             }
         }
         else {
-            if (statustokens.Contains("Corpse")) {
-                statustokens.Remove("Corpse");
+            if (conditions.Contains("Corpse")) {
+                conditions.Remove("Corpse");
             }
         }
     }
@@ -438,15 +438,20 @@ public class MaleghastInterpreter {
             data.Upgrades = upgrades.Split("|");
         }
         string traits = job["traits"];
-        data.Traits = traits.Split("|");
+        if (traits != null) {
+            data.Traits = traits.Split("|");
+        }
         string actAbilities = job["actAbilities"];
-        data.ActAbilities = actAbilities.Split("|");
+        if (actAbilities != null) {
+            data.ActAbilities = actAbilities.Split("|");
+        }
         string soulAbilities = job["soulAbilities"];
         if (soulAbilities != null) {
             data.SoulAbilities = soulAbilities.Split("|");
         }
-        if (job["armor"] != "none") {
-            data.Conditions = CollectionUtility.AddToArray<string>(data.Conditions, job["armor"]);
+        string initConditions = job["conditions"];
+        if (initConditions != null && initConditions.Length > 0) {
+            data.Conditions = initConditions.Split("|");
         }
     }
 
@@ -589,6 +594,9 @@ public class MaleghastInterpreter {
 
         UI.ToggleDisplay(panel.Q("Upgrades"), sysdata.Type != "Necromancer");
         UI.ToggleDisplay(panel.Q("UpgradesLabel"), sysdata.Type != "Necromancer");
+
+        UI.ToggleDisplay(panel.Q("Configuration"), sysdata.Type != "Object");
+        UI.ToggleDisplay(panel.Q("Status"), sysdata.Type != "Object");
     }
 
 

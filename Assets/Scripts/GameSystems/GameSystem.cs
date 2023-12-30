@@ -14,8 +14,8 @@ public class GameSystem : MonoBehaviour
     public static GameSystem Current() {
         GameSystem system = GameObject.Find("GameSystem").GetComponent<GameSystem>();
         switch(system.SystemName()) {
-            // case "ICON 1.5":
-            //     return system as Icon_v1_5;
+            case "ICON 1.5":
+                return system as Icon_v1_5;
             case "Maleghast":
                 return system as Maleghast;
             case "Generic System":
@@ -89,9 +89,9 @@ public class GameSystem : MonoBehaviour
             case "Generic":
                 system = g.AddComponent<Generic>();
                 break;
-            // case "ICON 1.5":
-            //     system = g.AddComponent<Icon_v1_5>();
-            //     break;
+            case "ICON 1.5":
+                system = g.AddComponent<Icon_v1_5>();
+                break;
             case "Maleghast":
                 system = g.AddComponent<Maleghast>();
                 break;

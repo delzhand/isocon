@@ -359,8 +359,7 @@ public class Block : MonoBehaviour
         markerMaterial.SetInt("_Skull", 0);
         
         foreach (string effect in effects) {
-            string marker = effect.Split("|")[1];
-            switch (marker) {
+            switch (effect) {
                 case "Blocked":
                     markerMaterial.SetInt("_Impassable", 1);
                     break;
