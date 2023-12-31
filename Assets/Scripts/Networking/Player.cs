@@ -123,6 +123,7 @@ public class Player : NetworkBehaviour
         TokenData2 data = TokenData2.Find(tokenId);
         FileLogger.Write($"Client {connectionToClient.connectionId} requested to delete token {data.Name}");
         RpcDeleteToken(tokenId);
+        data.Destroyed = true;
     }
     [ClientRpc]
     public void RpcDeleteToken(string tokenId) {

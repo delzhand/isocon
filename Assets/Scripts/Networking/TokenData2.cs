@@ -24,6 +24,8 @@ public class TokenData2 : NetworkBehaviour
     public string SystemData;
 
     [SyncVar]
+    public bool Destroyed;
+    [SyncVar]
     public bool Placed;
     [SyncVar]
     public Vector3 LastKnownPosition;
@@ -36,21 +38,33 @@ public class TokenData2 : NetworkBehaviour
     private float GraphicSyncInterval = 0;
 
     void Start() {
+        if (Destroyed) {
+            return;
+        }
         CreateWorldToken();
         CreateUnitBarElement();
         CreateOverheadElement();
     }
 
     void Update() {
+        if (Destroyed) {
+            return;
+        }
+
         if (Graphic == null) {
             GraphicSync();
         }
 
-        OverheadElement.style.display = Placed ? DisplayStyle.Flex : DisplayStyle.None;
-        UI.FollowToken(WorldObject.GetComponent<Token>(), OverheadElement, Camera.main, Vector2.zero, true);
+        if (OverheadElement != null) {
+            OverheadElement.style.display = Placed ? DisplayStyle.Flex : DisplayStyle.None;
+            if (WorldObject != null) {
+                UI.FollowToken(WorldObject.GetComponent<Token>(), OverheadElement, Camera.main, Vector2.zero, true);
+            }
+        }
 
         if (GameSystem.Current() != null) {
-            GameSystem.Current().UpdateData(this);            
+            GameSystem.Current().UpdateData(this);   
+            gameObject.name = $"TokenData:{Name}";
         }
     }
 
@@ -85,7 +99,7 @@ public class TokenData2 : NetworkBehaviour
     }
     
     private void CreateOverheadElement() {
-        VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/GameSystem/SimpleOverhead");
+        VisualTreeAsset template = Resources.Load<VisualTreeAsset>(GameSystem.Current().GetOverheadAsset());
         VisualElement instance = template.Instantiate();
         OverheadElement = instance.Q("Overhead");
         UI.System.Q("Worldspace").Add(OverheadElement);
@@ -162,7 +176,6 @@ public class TokenData2 : NetworkBehaviour
         UnitBarElement.Q("Portrait").style.width = width;
         UnitBarElement.Q("Portrait").style.height = height;
         UnitBarElement.Q("Portrait").style.backgroundImage = Graphic;
-        // UnitBarElement.Q("Portrait").style.top = Length.Percent(49.9f); // unity won't re-center the image unless the position changes, seems like a bug
         UI.Redraw();
         UnitBarElement.Q("ClassBackground").style.borderTopColor = Color;
         UnitBarElement.Q("ClassBackground").style.borderRightColor = Color;

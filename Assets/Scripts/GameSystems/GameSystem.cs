@@ -24,6 +24,14 @@ public class GameSystem : MonoBehaviour
         return null;
     }
 
+    public virtual string GetOverheadAsset() {
+        return "UITemplates/GameSystem/SimpleOverhead";
+    }
+
+    public virtual string TurnAdvanceMessage() {
+        return "Increase the round counter?";
+    }
+
     public virtual void Setup()
     {
     }
@@ -59,23 +67,21 @@ public class GameSystem : MonoBehaviour
         return new string[]{"Wavy", "Spiky", "Hand", "Skull", "Hole", "Blocked", "Corners"};
     }
 
-    #region Interpreted Methods
-    public void CreateToken() {
-        InterpreterMethod("CreateToken", new object[]{});
+    public virtual void CreateToken() {
+        throw new NotImplementedException();
     }
 
     public virtual void UpdateData(TokenData2 data) {
-        InterpreterMethod("UpdateData", new object[]{data});
+        throw new NotImplementedException();
     }
 
-    public void TokenDataSetValue(string tokenId, string value) {
-        InterpreterMethod("Change", new object[]{tokenId, value});
+    public virtual void TokenDataSetValue(string tokenId, string value) {
+        throw new NotImplementedException();
     }
 
-    public void UpdateTokenPanel(string tokenId, string elementName) {
-        InterpreterMethod("UpdateTokenPanel", new object[]{tokenId, elementName});
+    public virtual void UpdateTokenPanel(string tokenId, string elementName) {
+        throw new NotImplementedException();
     }
-    #endregion
 
     public static void Set(string value) {
         GameSystem current = GameSystem.Current();

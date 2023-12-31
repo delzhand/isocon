@@ -525,9 +525,11 @@ public class TerrainController : MonoBehaviour
 
         Color color = Color.white;
         if (selected.Length > 0 && Cursor.Mode != CursorMode.Editing) {
-            color = ColorUtility.UIBlue;
+            color = ColorUtility.UISelectYellow;
             UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), true);
+            root.Q("Elev").Q("SelectedMarker").style.backgroundColor = color;
             UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), true);
+            root.Q("Pos").Q("SelectedMarker").style.backgroundColor = color;
             UI.ToggleDisplay(root.Q("ClearSelected"), true);
         }
  
@@ -554,7 +556,7 @@ public class TerrainController : MonoBehaviour
             if (block.Shape == BlockShape.Slope || block.Shape == BlockShape.Steps || block.Shape == BlockShape.SlopeInt || block.Shape == BlockShape.SlopeExt) {
                 height = height + ".5";
             }
-            coords = Block.GetAlpha(block.getY() + 1) + "" + (block.getX()+1);
+            coords = StringUtility.IntToAlpha(block.getY() + 1) + "" + (block.getX()+1);
         }
 
         root.Q<Label>("Height").text = $"{height}";
@@ -623,7 +625,7 @@ public class TerrainController : MonoBehaviour
         for (int i = 0; i < blocks.Length; i++) {
             Block b = blocks[i].GetComponent<Block>();
             TextMeshPro tm = blocks[i].transform.Find("Indicator").GetComponent<TextMeshPro>();
-            tm.text = Block.GetAlpha(b.getY() + 1) + (b.getX() + 1);
+            tm.text = StringUtility.IntToAlpha(b.getY() + 1) + (b.getX() + 1);
             blocks[i].name = "block " + b.getX() + "," + b.getY() + "," + b.getZ();
 
         }         

@@ -17,7 +17,7 @@ public class Generic : GameSystem
     }
 
     private void SetupPanel(string elementName, bool editable) {
-        VisualElement panel = UI.System.Q("elementName");
+        VisualElement panel = UI.System.Q(elementName);
         VisualElement hpBar = UI.CreateFromTemplate("UITemplates/GameSystem/SimpleHPBar");
         panel.Q("Data").Add(hpBar);
         if (editable) {
@@ -35,8 +35,8 @@ public class Generic : GameSystem
         Modal.Reset("Alter HP");
         Modal.AddIntField("Number", "Value", 0);
         UI.Modal.Q("Number").AddToClassList("big-number");
-        Modal.AddContentButton("Reduce HP", (evt) => AlterVitals("LoseHP"));
-        Modal.AddContentButton("Recover HP", (evt) => AlterVitals("GainHP"));
+        Modal.AddContentButton("ReduceHP", "Reduce HP", (evt) => AlterVitals("LoseHP"));
+        Modal.AddContentButton("RecoverHP", "Recover HP", (evt) => AlterVitals("GainHP"));
         Modal.AddButton("Done", Modal.CloseEvent);
     }
 
@@ -66,6 +66,68 @@ public class Generic : GameSystem
         Modal.AddDropdownField("SizeField", "Size", "1x1", new string[]{"1x1", "2x2", "3x3"});
         Modal.AddTextField("ExtraInfo", "Extra Info", "");
         Modal.AddIntField("HPField", "HP", 1);
+    }
+   public override void CreateToken() {
+        string name = UI.Modal.Q<TextField>("NameField").value;
+        Texture2D graphic = TextureSender.CopyLocalImage(UI.Modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
+        string graphicHash = TextureSender.GetTextureHash(graphic);
+        int size = int.Parse(UI.Modal.Q<DropdownField>("SizeField").value.Substring(0, 1));
+        int hp = UI.Modal.Q<IntegerField>("HPField").value;
+        string extraInfo = UI.Modal.Q<TextField>("ExtraInfo").value;
+
+        GenericData data = new(){
+            CurrentHP = hp,
+            MaxHP = hp,
+            ExtraInfo = extraInfo
+        };
+
+        Player.Self().CmdCreateToken("Generic", graphicHash, name, size, Color.black, JsonUtility.ToJson(data));
+    }
+
+    public override void UpdateData(TokenData2 data) {
+        GenericData mdata = JsonUtility.FromJson<GenericData>(data.SystemData);
+        data.OverheadElement.Q<ProgressBar>("HpBar").value = mdata.CurrentHP;
+        data.OverheadElement.Q<ProgressBar>("HpBar").highValue = mdata.MaxHP;        
+    }
+
+    public override void TokenDataSetValue(string tokenId, string value)
+    {
+        TokenData2 data = TokenData2.Find(tokenId);
+        Debug.Log($"GenericInterpreter change registered for {data.Name}: {value}");
+        GenericData sysdata = JsonUtility.FromJson<GenericData>(data.SystemData);
+        sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
+        data.SystemData = JsonUtility.ToJson(sysdata);
+    }
+
+    public override void UpdateTokenPanel(string tokenId, string elementName) {
+        TokenData2 data = TokenData2.Find(tokenId);
+        UI.ToggleActiveClass(elementName, data != null);
+        if (!data) {
+            return;
+        }
+
+        data.UpdateTokenPanel(elementName);
+        GenericData sysdata = JsonUtility.FromJson<GenericData>(data.SystemData);
+
+        VisualElement panel = UI.System.Q(elementName);
+
+        panel.Q("ClassBackground").style.borderTopColor = data.Color;
+        panel.Q("ClassBackground").style.borderRightColor = data.Color;
+        panel.Q("ClassBackground").style.borderBottomColor = data.Color;
+        panel.Q("ClassBackground").style.borderLeftColor = data.Color;
+
+        panel.Q("ExtraInfo").Clear();
+        Label l = new()
+        {
+            text = sysdata.ExtraInfo
+        };
+        panel.Q("ExtraInfo").Add(l);
+
+        panel.Q<ProgressBar>("HpBar").style.minWidth = 150;
+        panel.Q<Label>("CHP").text = $"{ sysdata.CurrentHP }";
+        panel.Q<Label>("MHP").text = $"/{ sysdata.MaxHP }";
+        panel.Q<ProgressBar>("HpBar").value = sysdata.CurrentHP;
+        panel.Q<ProgressBar>("HpBar").highValue = sysdata.MaxHP;
     }
 
 }
@@ -108,71 +170,4 @@ public class GenericData {
     private void OnVitalChange(Token token) {
         token.SetDefeated(CurrentHP <= 0);
     }
-}
-
-public class GenericInterpreter {
-
-    public static void CreateToken() {
-        string name = UI.Modal.Q<TextField>("NameField").value;
-        Texture2D graphic = TextureSender.CopyLocalImage(UI.Modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
-        string graphicHash = TextureSender.GetTextureHash(graphic);
-        int size = int.Parse(UI.Modal.Q<DropdownField>("SizeField").value.Substring(0, 1));
-        int hp = UI.Modal.Q<IntegerField>("HPField").value;
-        string extraInfo = UI.Modal.Q<TextField>("ExtraInfo").value;
-
-        GenericData data = new(){
-            CurrentHP = hp,
-            MaxHP = hp,
-            ExtraInfo = extraInfo
-        };
-
-        Player.Self().CmdCreateToken("Generic", graphicHash, name, size, Color.black, JsonUtility.ToJson(data));
-    }
-
-    public static void UpdateData(TokenData2 data) {
-        GenericData mdata = JsonUtility.FromJson<GenericData>(data.SystemData);
-        data.OverheadElement.Q<ProgressBar>("HpBar").value = mdata.CurrentHP;
-        data.OverheadElement.Q<ProgressBar>("HpBar").highValue = mdata.MaxHP;        
-    }
-
-    public static void Change(string tokenId, string value) {
-        TokenData2 data = TokenData2.Find(tokenId);
-        Debug.Log($"GenericInterpreter change registered for {data.Name}: {value}");
-        GenericData sysdata = JsonUtility.FromJson<GenericData>(data.SystemData);
-        sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
-        data.SystemData = JsonUtility.ToJson(sysdata);
-    }
-
-    public static void UpdateTokenPanel(string tokenId, string elementName) {
-        TokenData2 data = TokenData2.Find(tokenId);
-        UI.ToggleActiveClass(elementName, data != null);
-        if (!data) {
-            return;
-        }
-
-        data.UpdateTokenPanel(elementName);
-        GenericData sysdata = JsonUtility.FromJson<GenericData>(data.SystemData);
-
-        VisualElement panel = UI.System.Q(elementName);
-
-        panel.Q("ClassBackground").style.borderTopColor = data.Color;
-        panel.Q("ClassBackground").style.borderRightColor = data.Color;
-        panel.Q("ClassBackground").style.borderBottomColor = data.Color;
-        panel.Q("ClassBackground").style.borderLeftColor = data.Color;
-
-        panel.Q("ExtraInfo").Clear();
-        Label l = new()
-        {
-            text = sysdata.ExtraInfo
-        };
-        panel.Q("ExtraInfo").Add(l);
-
-        panel.Q<ProgressBar>("HpBar").style.minWidth = 150;
-        panel.Q<Label>("CHP").text = $"{ sysdata.CurrentHP }";
-        panel.Q<Label>("MHP").text = $"/{ sysdata.MaxHP }";
-        panel.Q<ProgressBar>("HpBar").value = sysdata.CurrentHP;
-        panel.Q<ProgressBar>("HpBar").highValue = sysdata.MaxHP;
-    }
-
-
 }

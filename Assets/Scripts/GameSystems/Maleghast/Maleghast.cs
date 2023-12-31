@@ -85,13 +85,13 @@ public class Maleghast : GameSystem
         Modal.Reset("Alter Vitals");
         Modal.AddIntField("Number", "Value", 0);
         UI.Modal.Q("Number").AddToClassList("big-number");
-        Modal.AddContentButton("Reduce HP", (evt) => AlterVitals("LoseHP"));
-        Modal.AddContentButton("Recover HP", (evt) => AlterVitals("GainHP"));
+        Modal.AddContentButton("ReduceHP", "Reduce HP", (evt) => AlterVitals("LoseHP"));
+        Modal.AddContentButton("RecoverHP", "Recover HP", (evt) => AlterVitals("GainHP"));
         TokenData2 data = Token.GetSelected().Data;
         MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
         if (sysdata.Type == "Necromancer") {
-            Modal.AddContentButton("Reduce SOUL", (evt) => AlterVitals("LoseSOUL"));
-            Modal.AddContentButton("Gain SOUL", (evt) => AlterVitals("GainSOUL"));
+            Modal.AddContentButton("ReduceSOUL", "Reduce SOUL", (evt) => AlterVitals("LoseSOUL"));
+            Modal.AddContentButton("GainSOUL", "Gain SOUL", (evt) => AlterVitals("GainSOUL"));
         }
         Modal.AddButton("Done", Modal.CloseEvent);
     }
@@ -133,7 +133,7 @@ public class Maleghast : GameSystem
             Modal.AddToggleField(id, label, enabled, RebuildLists);
             UI.Modal.Q(id).AddToClassList("reverse-toggle");
             if (reparent.Length > 0) {
-                UI.Modal.Q(reparent).Add(UI.Modal.Q(id));
+                Modal.MoveToColumn(reparent, id);
             }
         }
     }
@@ -247,7 +247,217 @@ public class Maleghast : GameSystem
             tokens.Add(status);
         }
         return tokens.ToArray();
-    }   
+    }  
+
+    public override void CreateToken() {
+        string name = UI.Modal.Q<TextField>("NameField").value;
+        Texture2D graphic = TextureSender.CopyLocalImage(UI.Modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
+        string graphicHash = TextureSender.GetTextureHash(graphic);
+
+        string houseJob = SearchField.GetValue(UI.Modal.Q("UnitType"));
+        string house = houseJob.Split("/")[0];
+        string job = houseJob.Split("/")[1];
+        string colorValue = UI.Modal.Q<DropdownField>("PlayerColor").value;
+
+        MaleghastData data = new(){
+            House = house,
+            Job = job
+        };
+        InitSystemData(data);
+        
+        int size = 1;
+        if (data.Type == "Tyrant") {
+            size = 2;
+        }
+
+        Color color = ColorUtility.ColorFromHex(FindHouse(house)["color"]);
+        if (colorValue != "House Default") {
+            color = ColorUtility.ColorFromHex(FindHouse(colorValue)["color"]);
+        }
+
+        Player.Self().CmdCreateToken("Maleghast", graphicHash, name, size, color, JsonUtility.ToJson(data));
+    }
+
+    public override void UpdateData(TokenData2 data) {
+        MaleghastData mdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
+        data.OverheadElement.Q<ProgressBar>("HpBar").value = mdata.CurrentHP;
+        data.OverheadElement.Q<ProgressBar>("HpBar").highValue = mdata.MaxHP;        
+    }
+
+    private static void InitSystemData(MaleghastData data) {
+        JSONNode job = FindJob(data.House, data.Job);
+        data.Type = job["type"];
+        data.Move = job["move"];
+        data.MaxHP = job["hp"];
+        data.CurrentHP = job["hp"];
+        data.Defense = job["def"];
+        data.Conditions = new string[]{};
+        data.Tokens = new string[]{};
+        string upgrades = job["upgrades"];
+        if (upgrades != null) {
+            data.Upgrades = upgrades.Split("|");
+        }
+        string traits = job["traits"];
+        if (traits != null) {
+            data.Traits = traits.Split("|");
+        }
+        string actAbilities = job["actAbilities"];
+        if (actAbilities != null) {
+            data.ActAbilities = actAbilities.Split("|");
+        }
+        string soulAbilities = job["soulAbilities"];
+        if (soulAbilities != null) {
+            data.SoulAbilities = soulAbilities.Split("|");
+        }
+        string initConditions = job["conditions"];
+        if (initConditions != null && initConditions.Length > 0) {
+            data.Conditions = initConditions.Split("|");
+        }
+    }
+
+    private static JSONNode FindHouse(string searchHouse) {
+        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
+        foreach (JSONNode house in gamedata["Maleghast"]["Houses"].AsArray) {
+            if (house["name"] == searchHouse) {
+                return house;
+            }
+        }
+        return null;
+    }
+
+    private static JSONNode FindJob(string searchHouse, string searchJob) {
+        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
+        foreach (JSONNode house in gamedata["Maleghast"]["Houses"].AsArray) {
+            if (house["name"] == searchHouse) {
+                foreach (JSONNode unit in house["units"].AsArray) {
+                    if (unit["name"] == searchJob) {
+                        return unit;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public override void TokenDataSetValue(string tokenId, string value) {
+        TokenData2 data = TokenData2.Find(tokenId);
+        Debug.Log($"MaleghastInterpreter change registered for {data.Name}: {value}");
+        MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
+        sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
+        data.SystemData = JsonUtility.ToJson(sysdata);  
+    }
+
+    public override void UpdateTokenPanel(string tokenId, string elementName) {
+        TokenData2 data = TokenData2.Find(tokenId);
+        UI.ToggleActiveClass(elementName, data != null);
+        if (!data) {
+            return;
+        }
+
+        data.UpdateTokenPanel(elementName);
+        MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
+
+        VisualElement panel = UI.System.Q(elementName);
+
+        panel.Q("ClassBackground").style.borderTopColor = data.Color;
+        panel.Q("ClassBackground").style.borderRightColor = data.Color;
+        panel.Q("ClassBackground").style.borderBottomColor = data.Color;
+        panel.Q("ClassBackground").style.borderLeftColor = data.Color;
+
+        panel.Q<Label>("House").text = sysdata.House;
+        panel.Q<Label>("House").style.backgroundColor = data.Color;
+        panel.Q<Label>("Job").text = sysdata.Job;
+        panel.Q<Label>("Job").style.backgroundColor = data.Color;
+
+        panel.Q("HP").Q<Label>("CHP").text = $"{ sysdata.CurrentHP }";
+        panel.Q("HP").Q<Label>("MHP").text = $"/{ sysdata.MaxHP }";
+        panel.Q("HP").Q<ProgressBar>("HpBar").value = sysdata.CurrentHP;
+        panel.Q("HP").Q<ProgressBar>("HpBar").highValue = sysdata.MaxHP;
+
+        panel.Q("SOUL").Q<Label>("CHP").text = $"{ sysdata.Soul }";
+        panel.Q("SOUL").Q<Label>("MHP").text = $"/6";
+        panel.Q("SOUL").Q<ProgressBar>("HpBar").value = sysdata.Soul;
+        panel.Q("SOUL").Q<ProgressBar>("HpBar").highValue = 6;
+
+        panel.Q("Defense").Q<Label>("Value").text = $"{ sysdata.Defense }";
+        panel.Q("Move").Q<Label>("Value").text = $"{ sysdata.Move }";
+        panel.Q("Type").Q<Label>("Value").text = (sysdata.Type == "Necromancer") ? "NECRO" : sysdata.Type.ToUpper();
+
+        panel.Q("Traits").Clear();
+        foreach (string s in sysdata.Traits) {
+            if (!s.StartsWith("-")) {
+                string s2 = s;
+                if (s2.StartsWith("=")) {
+                    s2 = s2.Substring(1);
+                }
+                panel.Q("Traits").Add(new Label(){text = s2});
+            }
+        }
+
+        panel.Q("ACTAbilities").Clear();
+        foreach (string s in sysdata.ActAbilities) {
+            if (!s.StartsWith("-")) {
+                string s2 = s;
+                if (s2.StartsWith("=")) {
+                    s2 = s2.Substring(1);
+                }
+                panel.Q("ACTAbilities").Add(new Label(){text = s2});
+            }
+        }
+
+        panel.Q("SOULAbilities").Clear();
+        foreach (string s in sysdata.SoulAbilities) {
+            if (!s.StartsWith("-")) {
+                string s2 = s;
+                if (s2.StartsWith("=")) {
+                    s2 = s2.Substring(1);
+                }
+                panel.Q("SOULAbilities").Add(new Label(){text = s2});
+            }
+        }
+
+        panel.Q("Upgrades").Clear();
+        foreach (string s in sysdata.Upgrades) {
+            if (!s.StartsWith("-")) {
+                string s2 = s;
+                if (s2.StartsWith("=")) {
+                    s2 = s2.Substring(1);
+                }
+                panel.Q("Upgrades").Add(new Label(){text = s2});
+            }
+        }
+
+        panel.Q("Conditions").Clear();
+        foreach (string s in sysdata.Conditions) {
+            panel.Q("Conditions").Add(new Label(){text = s}); 
+        }
+        
+        panel.Q("Tokens").Clear();
+        Dictionary<string, int> combinedTokens = new();
+        foreach (string s in sysdata.Tokens) {
+            if (combinedTokens.Keys.Contains(s)) {
+                combinedTokens[s]++;
+            }
+            else {
+                combinedTokens.Add(s, 1);
+            }
+        }
+        foreach (KeyValuePair<string,int> pair in combinedTokens){
+            if (pair.Value != 0) {
+                panel.Q("Tokens").Add(new Label(){text = $"{pair.Key} ({pair.Value})"});
+            }
+        }
+
+        UI.ToggleDisplay(panel.Q("SOUL"), sysdata.Type == "Necromancer");
+        UI.ToggleDisplay(panel.Q("SOULAbilities"), sysdata.Type == "Necromancer");
+        UI.ToggleDisplay(panel.Q("SOULAbilitiesLabel"), sysdata.Type == "Necromancer");
+
+        UI.ToggleDisplay(panel.Q("Upgrades"), sysdata.Type != "Necromancer");
+        UI.ToggleDisplay(panel.Q("UpgradesLabel"), sysdata.Type != "Necromancer");
+
+        UI.ToggleDisplay(panel.Q("Configuration"), sysdata.Type != "Object");
+        UI.ToggleDisplay(panel.Q("Status"), sysdata.Type != "Object");
+    } 
 }
 
 [Serializable]
@@ -384,220 +594,4 @@ public class MaleghastData {
             }
         }
     }
-}
-
-
-public class MaleghastInterpreter {
-
-    public static void CreateToken() {
-        string name = UI.Modal.Q<TextField>("NameField").value;
-        Texture2D graphic = TextureSender.CopyLocalImage(UI.Modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
-        string graphicHash = TextureSender.GetTextureHash(graphic);
-
-        string houseJob = SearchField.GetValue(UI.Modal.Q("UnitType"));
-        string house = houseJob.Split("/")[0];
-        string job = houseJob.Split("/")[1];
-        string colorValue = UI.Modal.Q<DropdownField>("PlayerColor").value;
-
-        MaleghastData data = new(){
-            House = house,
-            Job = job
-        };
-        InitSystemData(data);
-        
-        int size = 1;
-        if (data.Type == "Tyrant") {
-            size = 2;
-        }
-
-        Color color = ColorUtility.ColorFromHex(FindHouse(house)["color"]);
-        if (colorValue != "House Default") {
-            color = ColorUtility.ColorFromHex(FindHouse(colorValue)["color"]);
-        }
-
-        Player.Self().CmdCreateToken("Maleghast", graphicHash, name, size, color, JsonUtility.ToJson(data));
-    }
-
-    public static void UpdateData(TokenData2 data) {
-        MaleghastData mdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
-        data.OverheadElement.Q<ProgressBar>("HpBar").value = mdata.CurrentHP;
-        data.OverheadElement.Q<ProgressBar>("HpBar").highValue = mdata.MaxHP;        
-    }
-
-    private static void InitSystemData(MaleghastData data) {
-        JSONNode job = FindJob(data.House, data.Job);
-        data.Type = job["type"];
-        data.Move = job["move"];
-        data.MaxHP = job["hp"];
-        data.CurrentHP = job["hp"];
-        data.Defense = job["def"];
-        data.Conditions = new string[]{};
-        data.Tokens = new string[]{};
-        string upgrades = job["upgrades"];
-        if (upgrades != null) {
-            data.Upgrades = upgrades.Split("|");
-        }
-        string traits = job["traits"];
-        if (traits != null) {
-            data.Traits = traits.Split("|");
-        }
-        string actAbilities = job["actAbilities"];
-        if (actAbilities != null) {
-            data.ActAbilities = actAbilities.Split("|");
-        }
-        string soulAbilities = job["soulAbilities"];
-        if (soulAbilities != null) {
-            data.SoulAbilities = soulAbilities.Split("|");
-        }
-        string initConditions = job["conditions"];
-        if (initConditions != null && initConditions.Length > 0) {
-            data.Conditions = initConditions.Split("|");
-        }
-    }
-
-    private static JSONNode FindHouse(string searchHouse) {
-        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
-        foreach (JSONNode house in gamedata["Maleghast"]["Houses"].AsArray) {
-            if (house["name"] == searchHouse) {
-                return house;
-            }
-        }
-        return null;
-    }
-
-    private static JSONNode FindJob(string searchHouse, string searchJob) {
-        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
-        foreach (JSONNode house in gamedata["Maleghast"]["Houses"].AsArray) {
-            if (house["name"] == searchHouse) {
-                foreach (JSONNode unit in house["units"].AsArray) {
-                    if (unit["name"] == searchJob) {
-                        return unit;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    public static void Change(string tokenId, string value) {
-        TokenData2 data = TokenData2.Find(tokenId);
-        Debug.Log($"MaleghastInterpreter change registered for {data.Name}: {value}");
-        MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
-        sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
-        data.SystemData = JsonUtility.ToJson(sysdata);  
-    }
-
-    public static void UpdateTokenPanel(string tokenId, string elementName) {
-        TokenData2 data = TokenData2.Find(tokenId);
-        UI.ToggleActiveClass(elementName, data != null);
-        if (!data) {
-            return;
-        }
-
-        data.UpdateTokenPanel(elementName);
-        MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
-
-        VisualElement panel = UI.System.Q(elementName);
-
-        panel.Q("ClassBackground").style.borderTopColor = data.Color;
-        panel.Q("ClassBackground").style.borderRightColor = data.Color;
-        panel.Q("ClassBackground").style.borderBottomColor = data.Color;
-        panel.Q("ClassBackground").style.borderLeftColor = data.Color;
-
-        panel.Q<Label>("House").text = sysdata.House;
-        panel.Q<Label>("House").style.backgroundColor = data.Color;
-        panel.Q<Label>("Job").text = sysdata.Job;
-        panel.Q<Label>("Job").style.backgroundColor = data.Color;
-
-        panel.Q("HP").Q<Label>("CHP").text = $"{ sysdata.CurrentHP }";
-        panel.Q("HP").Q<Label>("MHP").text = $"/{ sysdata.MaxHP }";
-        panel.Q("HP").Q<ProgressBar>("HpBar").value = sysdata.CurrentHP;
-        panel.Q("HP").Q<ProgressBar>("HpBar").highValue = sysdata.MaxHP;
-
-        panel.Q("SOUL").Q<Label>("CHP").text = $"{ sysdata.Soul }";
-        panel.Q("SOUL").Q<Label>("MHP").text = $"/6";
-        panel.Q("SOUL").Q<ProgressBar>("HpBar").value = sysdata.Soul;
-        panel.Q("SOUL").Q<ProgressBar>("HpBar").highValue = 6;
-
-        panel.Q("Defense").Q<Label>("Value").text = $"{ sysdata.Defense }";
-        panel.Q("Move").Q<Label>("Value").text = $"{ sysdata.Move }";
-        panel.Q("Type").Q<Label>("Value").text = (sysdata.Type == "Necromancer") ? "NECRO" : sysdata.Type.ToUpper();
-
-        panel.Q("Traits").Clear();
-        foreach (string s in sysdata.Traits) {
-            if (!s.StartsWith("-")) {
-                string s2 = s;
-                if (s2.StartsWith("=")) {
-                    s2 = s2.Substring(1);
-                }
-                panel.Q("Traits").Add(new Label(){text = s2});
-            }
-        }
-
-        panel.Q("ACTAbilities").Clear();
-        foreach (string s in sysdata.ActAbilities) {
-            if (!s.StartsWith("-")) {
-                string s2 = s;
-                if (s2.StartsWith("=")) {
-                    s2 = s2.Substring(1);
-                }
-                panel.Q("ACTAbilities").Add(new Label(){text = s2});
-            }
-        }
-
-        panel.Q("SOULAbilities").Clear();
-        foreach (string s in sysdata.SoulAbilities) {
-            if (!s.StartsWith("-")) {
-                string s2 = s;
-                if (s2.StartsWith("=")) {
-                    s2 = s2.Substring(1);
-                }
-                panel.Q("SOULAbilities").Add(new Label(){text = s2});
-            }
-        }
-
-        panel.Q("Upgrades").Clear();
-        foreach (string s in sysdata.Upgrades) {
-            if (!s.StartsWith("-")) {
-                string s2 = s;
-                if (s2.StartsWith("=")) {
-                    s2 = s2.Substring(1);
-                }
-                panel.Q("Upgrades").Add(new Label(){text = s2});
-            }
-        }
-
-        panel.Q("Conditions").Clear();
-        foreach (string s in sysdata.Conditions) {
-            panel.Q("Conditions").Add(new Label(){text = s}); 
-        }
-        
-        panel.Q("Tokens").Clear();
-        Dictionary<string, int> combinedTokens = new();
-        foreach (string s in sysdata.Tokens) {
-            if (combinedTokens.Keys.Contains(s)) {
-                combinedTokens[s]++;
-            }
-            else {
-                combinedTokens.Add(s, 1);
-            }
-        }
-        foreach (KeyValuePair<string,int> pair in combinedTokens){
-            if (pair.Value != 0) {
-                panel.Q("Tokens").Add(new Label(){text = $"{pair.Key} ({pair.Value})"});
-            }
-        }
-
-        UI.ToggleDisplay(panel.Q("SOUL"), sysdata.Type == "Necromancer");
-        UI.ToggleDisplay(panel.Q("SOULAbilities"), sysdata.Type == "Necromancer");
-        UI.ToggleDisplay(panel.Q("SOULAbilitiesLabel"), sysdata.Type == "Necromancer");
-
-        UI.ToggleDisplay(panel.Q("Upgrades"), sysdata.Type != "Necromancer");
-        UI.ToggleDisplay(panel.Q("UpgradesLabel"), sysdata.Type != "Necromancer");
-
-        UI.ToggleDisplay(panel.Q("Configuration"), sysdata.Type != "Object");
-        UI.ToggleDisplay(panel.Q("Status"), sysdata.Type != "Object");
-    }
-
-
 }

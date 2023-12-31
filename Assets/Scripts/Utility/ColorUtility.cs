@@ -36,6 +36,10 @@ public class ColorUtility
         return $"#{r:X2}{g:X2}{b:X2}";
     }
 
+    public static Color NormalizeRGB(int red, int green, int blue) {
+        return new Color(red/255f, green/255f, blue/255f);
+    }
+
     public static Color ColorFromHex(string hex) {
         if (hex == null) {
             return Color.white;

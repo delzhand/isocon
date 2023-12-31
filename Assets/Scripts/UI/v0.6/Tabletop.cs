@@ -32,6 +32,11 @@ public class Tabletop : MonoBehaviour
 
             Token focused = Token.GetFocused();
             GameSystem.Current().UpdateTokenPanel(focused != null ? focused.Data.Id : null, "FocusedTokenPanel");
+
+            if (selected != null) {
+                UI.FollowToken(selected, UI.System.Q("SelectionMenu"), Camera.main, new Vector2(-100, 0), true);
+
+            }
         }
     }
 
@@ -115,7 +120,7 @@ public class Tabletop : MonoBehaviour
 
     private void TurnIndicatorSetup() {
         UI.System.Q<Button>("TurnAdvance").RegisterCallback<ClickEvent>((evt) => {
-            Modal.DoubleConfirm("Advance Turn", "Increase the turn counter?", () => {
+            Modal.DoubleConfirm("Advance Turn", GameSystem.Current().TurnAdvanceMessage(), () => {
                 Player.Self().CmdRequestGameDataSetValue("IncrementTurn");
             });
         });

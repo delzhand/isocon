@@ -210,22 +210,7 @@ public class Block : MonoBehaviour
     public List<string> GetEffects() {
         return effects;
     }
-
-    public static string GetAlpha(int x) {
-        const int Base = 26;
-        const int Offset = 64; // ASCII offset for uppercase letters
-        string column = "";
-        while (x > 0)
-        {
-            int remainder = x % Base;
-            char letter = (char)(remainder + Offset);
-            
-            column = letter + column;
-            x = (x - 1) / Base; // Adjust number for next iteration
-        }
-        return column;    
-    }
-
+    
     public void ShapeChange(BlockShape blocktype) {
         Shape = blocktype;
         Mesh m = null;

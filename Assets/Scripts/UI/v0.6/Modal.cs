@@ -42,8 +42,9 @@ public class Modal
         e.SendToBack();
     }
 
-    public static void AddContentButton(string label, EventCallback<ClickEvent> onClick) {
+    public static void AddContentButton(string name, string label, EventCallback<ClickEvent> onClick) {
         Button button = new Button();
+        button.name = name;
         button.text = label;
         button.RegisterCallback<ClickEvent>(onClick);
         UI.Modal.Q("Contents").Add(button);   
@@ -160,6 +161,10 @@ public class Modal
             v.Add(v2);
         }
         Modal.AddContents(v);
+    }
+
+    public static void MoveToColumn(string columnName, string elementName) {
+        UI.Modal.Q(columnName).Add(UI.Modal.Q(elementName));
     }
 
     public static void AddTextField(string name, string label, string defaultValue, EventCallback<ChangeEvent<string>> onChange = null) {

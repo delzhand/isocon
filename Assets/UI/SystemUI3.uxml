@@ -47,9 +47,13 @@
     <ui:VisualElement name="Tabletop" style="flex-grow: 1; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: none;">
         <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: flex;">
             <ui:VisualElement name="Gamespace" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; position: relative; margin-right: 0; flex-direction: column;">
+                <ui:VisualElement name="SelectionMenu" class="panel self-centered" style="position: absolute; display: none;">
+                    <ui:Label tabindex="-1" text="UNIT MENU" display-tooltip-when-elided="true" name="Label" class="panel-header" />
+                    <ui:VisualElement name="Contents" style="flex-grow: 1; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; margin-top: 0; overflow: hidden;" />
+                </ui:VisualElement>
                 <ui:VisualElement name="TopRight" style="flex-grow: 1; position: absolute; top: 0; right: 0; align-items: flex-end;">
                     <ui:VisualElement name="Turn" class="panel2" style="flex-direction: row; justify-content: flex-end; padding-right: 60px; right: -60px; padding-left: 10px; margin-bottom: 4px; overflow: hidden;">
-                        <ui:Label tabindex="-1" display-tooltip-when-elided="true" text="TURN" style="font-size: 14px; -unity-font-style: bold; color: rgb(255, 255, 255); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 8px; margin-top: 0; margin-bottom: 1px; -unity-text-align: lower-right;" />
+                        <ui:Label tabindex="-1" display-tooltip-when-elided="true" text="ROUND" style="font-size: 14px; -unity-font-style: bold; color: rgb(255, 255, 255); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 8px; margin-top: 0; margin-bottom: 1px; -unity-text-align: lower-right;" />
                         <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="TurnNumber" text="1" style="font-size: 32px; color: rgb(255, 255, 255); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 0; margin-top: -8px; margin-bottom: -5px; -unity-font-style: normal; -unity-text-align: lower-right;" />
                         <ui:Button text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" name="TurnAdvance" class="roundbutton" style="margin-left: 16px; align-self: center;" />
                     </ui:VisualElement>
@@ -75,7 +79,7 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="FocusedTokenPanel" class="panel edit-panel" style="position: absolute; display: flex; -unity-background-image-tint-color: rgba(255, 255, 255, 0); transition-property: right, opacity; bottom: 10px; transition-duration: 0.3s, 0.3s; transition-timing-function: ease-in-out, ease-in-out;">
-                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.49); padding-top: 2px; padding-right: 34px; padding-bottom: 4px; padding-left: 10px; margin-left: 0; margin-bottom: 4px; margin-right: 45px;">
+                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.49); padding-top: 2px; padding-right: 34px; padding-bottom: 4px; padding-left: 10px; margin-left: 0; margin-bottom: 4px; margin-right: 45px; border-top-left-radius: 20px; border-bottom-left-radius: 20px;">
                         <ui:VisualElement name="PortraitFrame" style="background-color: rgba(0, 0, 0, 0); width: 90px; height: 90px; position: absolute; bottom: -8px; left: auto; right: -45px;">
                             <ui:VisualElement name="ClassBackground" class="centered" style="flex-grow: 1; background-color: rgb(29, 27, 26); width: 70%; height: 70%; rotate: 45deg; translate: -50% -50%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-left-color: rgb(0, 131, 255); border-right-color: rgb(0, 131, 255); border-top-color: rgb(0, 131, 255); border-bottom-color: rgb(0, 131, 255); border-left-width: 8px; border-right-width: 8px; border-top-width: 8px; border-bottom-width: 8px;" />
                             <ui:VisualElement name="Portrait" class="self-centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: none; position: absolute; height: 90%; left: 50%; width: 90%; top: 50%; -unity-background-scale-mode: scale-to-fit;" />
@@ -85,8 +89,8 @@
                     </ui:VisualElement>
                     <ui:VisualElement name="Data" style="flex-direction: row-reverse; min-width: auto; min-height: auto;" />
                 </ui:VisualElement>
-                <ui:VisualElement name="SelectedTokenPanel" class="panel edit-panel" style="position: absolute; display: flex; -unity-background-image-tint-color: rgba(255, 255, 255, 0); transition-property: left, opacity; transition-duration: 0.3s, 0.3s; bottom: 10px; transition-timing-function: ease-in-out, ease-in-out;">
-                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.49); padding-top: 2px; padding-right: 10px; padding-bottom: 4px; padding-left: 34px; margin-left: 45px; margin-bottom: 4px;">
+                <ui:VisualElement name="SelectedTokenPanel" class="panel edit-panel" style="position: absolute; display: flex; -unity-background-image-tint-color: rgba(255, 255, 255, 0); transition-property: left, opacity; transition-duration: 0.3s, 0.3s; transition-timing-function: ease-in-out, ease-in-out; bottom: 10px;">
+                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.49); padding-top: 2px; padding-right: 10px; padding-bottom: 4px; padding-left: 34px; margin-left: 45px; margin-bottom: 4px; border-top-left-radius: 0; border-top-right-radius: 20px; border-bottom-right-radius: 20px;">
                         <ui:VisualElement name="PortraitFrame" style="background-color: rgba(0, 0, 0, 0); width: 90px; height: 90px; position: absolute; bottom: -8px; left: -45px;">
                             <ui:VisualElement name="ClassBackground" class="centered" style="flex-grow: 1; background-color: rgb(29, 27, 26); width: 70%; height: 70%; rotate: 45deg; translate: -50% -50%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-left-color: rgb(0, 131, 255); border-right-color: rgb(0, 131, 255); border-top-color: rgb(0, 131, 255); border-bottom-color: rgb(0, 131, 255); border-left-width: 8px; border-right-width: 8px; border-top-width: 8px; border-bottom-width: 8px;" />
                             <ui:VisualElement name="Portrait" class="self-centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: none; position: absolute; height: 90%; left: 50%; width: 90%; top: 50%; -unity-background-scale-mode: scale-to-fit;" />
@@ -358,10 +362,6 @@
                     </ui:VisualElement>
                     <ui:Label tabindex="-1" text="DICE LOG" display-tooltip-when-elided="true" class="panel-header" />
                     <ui:ScrollView name="DiceLog" style="flex-direction: column-reverse; margin-top: 0; margin-bottom: 0;" />
-                </ui:VisualElement>
-                <ui:VisualElement name="SelectionMenu" class="panel" style="position: absolute; left: 0; display: none; top: 0;">
-                    <ui:Label tabindex="-1" text="UNIT MENU" display-tooltip-when-elided="true" name="Label" class="panel-header" />
-                    <ui:VisualElement name="Contents" style="flex-grow: 1; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; margin-top: 0; overflow: hidden;" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
