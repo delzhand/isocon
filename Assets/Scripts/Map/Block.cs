@@ -343,29 +343,34 @@ public class Block : MonoBehaviour
         markerMaterial.SetInt("_Other", 0);
         markerMaterial.SetInt("_Skull", 0);
         
-        foreach (string effect in effects) {
-            switch (effect) {
-                case "Blocked":
-                    markerMaterial.SetInt("_Impassable", 1);
-                    break;
-                case "Spiky":
-                    markerMaterial.SetInt("_Dangerous", 1);
-                    break;
-                case "Wavy":
-                    markerMaterial.SetInt("_Difficult", 1);
-                    break;
-                case "Hand":
-                    markerMaterial.SetInt("_Interactive", 1);
-                    break;
-                case "Hole":
-                    markerMaterial.SetInt("_Pit", 1);
-                    break;
-                case "Corners":
-                    markerMaterial.SetInt("_Other", 1);
-                    break;
-                case "Skull":
-                    markerMaterial.SetInt("_Skull", 1);
-                    break;
+        foreach (string fullEffect in effects) {
+            string[] split = fullEffect.Split("|");
+            if (split.Length > 1) {
+                string marker = split[1];
+                switch (marker) {
+                    case "Blocked":
+                        markerMaterial.SetInt("_Impassable", 1);
+                        break;
+                    case "Spiky":
+                        markerMaterial.SetInt("_Dangerous", 1);
+                        break;
+                    case "Wavy":
+                        markerMaterial.SetInt("_Difficult", 1);
+                        break;
+                    case "Hand":
+                        markerMaterial.SetInt("_Interactive", 1);
+                        break;
+                    case "Hole":
+                        markerMaterial.SetInt("_Pit", 1);
+                        break;
+                    case "Corners":
+                        markerMaterial.SetInt("_Other", 1);
+                        break;
+                    case "Skull":
+                        markerMaterial.SetInt("_Skull", 1);
+                        break;
+                }
+
             }
         }
 
