@@ -207,6 +207,7 @@ public class MapEdit
 
     private static void StartEditing() {
         UI.ToggleDisplay("ToolsPanel", true);
+        UI.ToggleDisplay("DiceRoller", false);
         Block.DeselectAll();
         Token.DeselectAll();
         Token.UnfocusAll();

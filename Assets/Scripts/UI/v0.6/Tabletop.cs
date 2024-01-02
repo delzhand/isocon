@@ -38,6 +38,9 @@ public class Tabletop : MonoBehaviour
 
             }
         }
+        
+        UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Config"), Cursor.Mode != CursorMode.Editing);
+        UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Dice"), Cursor.Mode != CursorMode.Editing);
     }
 
     public void ConnectAsClient() {
