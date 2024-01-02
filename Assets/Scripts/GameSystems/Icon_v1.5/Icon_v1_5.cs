@@ -89,7 +89,8 @@ public class Icon_v1_5 : GameSystem {
 
     private static void AlterStatusModal(ClickEvent evt) {
         Modal.Reset("Add Status");
-        Modal.AddDropdownField("Type", "Type", "Predefined", StringUtility.Arr("Predefined", "Simple", "Number", "Detail"), (evt) => AddStatusModalEvaluateConditions());
+
+        Modal.AddDropdownField("Type", "Type", "ICON Preset", StringUtility.Arr("ICON Preset", "Custom"), (evt) => AddStatusModalEvaluateConditions());
 
         JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
         List<string> statuses = new();
@@ -99,8 +100,7 @@ public class Icon_v1_5 : GameSystem {
         Modal.AddSearchField("PregenStatuses", "Status", "", statuses.ToArray());
         Modal.AddTextField("Name", "Name", "");
         Modal.AddDropdownField("Color", "Color", "Gray", StringUtility.Arr("Gray", "Green", "Red", "Blue", "Purple", "Yellow", "Orange"));
-        Modal.AddIntField("Number", "Number", 0);
-        Modal.AddTextField("Detail", "Detail", "");
+        Modal.AddDropdownField("Modifier", "Modifier Type", "None", StringUtility.Arr("None", "Number"));
         Modal.AddPreferredButton("Add", AddStatus);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
@@ -108,46 +108,41 @@ public class Icon_v1_5 : GameSystem {
     }
 
     private static void AddStatusModalEvaluateConditions() {
-        bool pregenStatus = UI.Modal.Q<DropdownField>("Type").value == "Predefined";
+        bool pregenStatus = UI.Modal.Q<DropdownField>("Type").value == "ICON Preset";
         bool name = !pregenStatus;
         bool color = !pregenStatus;
-        bool number = UI.Modal.Q<DropdownField>("Type").value == "Number";
-        bool detail = UI.Modal.Q<DropdownField>("Type").value == "Detail";
+        bool modifier = !pregenStatus;
 
         UI.ToggleDisplay(UI.Modal.Q("PregenStatuses"), pregenStatus);
         UI.ToggleDisplay(UI.Modal.Q("Name"), name);
         UI.ToggleDisplay(UI.Modal.Q("Color"), color);
-        UI.ToggleDisplay(UI.Modal.Q("Number"), number);
-        UI.ToggleDisplay(UI.Modal.Q("Detail"), detail);
+        UI.ToggleDisplay(UI.Modal.Q("Modifier"), modifier);
     }
 
     private static void AddStatus(ClickEvent evt) {
-        // string type = UI.Modal.Q<DropdownField>("Type").value;
-        // string pregenStatus = SearchField.GetValue(UI.Modal.Q("PregenStatuses"));
-        // string customStatus = UI.Modal.Q<TextField>("Name").value;
-        // string color = UI.Modal.Q<DropdownField>("Color").value;
-        // // string detail = UI.Modal.Q<TextField>("Detail").value;
-        // int number = UI.Modal.Q<IntegerField>("Number").value;
-        // StatusEffect s;
-        // if (type == "Predefined") {
-        //     s = FindStatusEffect(pregenStatus);
-        // }
-        // else {
-        //     s = new StatusEffect() {
-        //         Name = customStatus,
-        //         Type = type,
-        //         Color = color,
-        //         Number = number
-        //     };
-        // }
+        Icon1_5Condition condition = new();
+        string type = UI.Modal.Q<DropdownField>("Type").value;
+        if (type == "ICON Preset") {
+            condition.Name = SearchField.GetValue(UI.Modal.Q("PregenStatuses"));
+            JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
+            foreach (JSONNode j in gamedata["Icon1_5"]["StatusEffects"]) {
+                if (j["Name"] == condition.Name) {
+                    condition.Color = j["Color"];
+                    condition.ModifierType = j["ModifierType"];
+                }
+            }
+            condition.NumValue = 0;
+        }
+        else {
+            // Get from parameters
+            condition.Name = UI.Modal.Q<TextField>("Name").value;
+            condition.Color = UI.Modal.Q<DropdownField>("Color").value;    
+            condition.ModifierType = UI.Modal.Q<DropdownField>("Modifier").value;
+            condition.NumValue = 0;
+        }
         
-        // // Strip characters that would break parse
-        // s.Name = s.Name.Replace("|", "");
-
-        // string statusData = $"{s.Name}|{s.Type}|{s.Color}|{s.Number}";
-
-        // Player.Self().CmdRequestTokenDataSetValue(Token.GetSelectedData().GetComponent<TokenData>(), $"GainStatus|{statusData}");        
-        // Modal.Close();
+        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, $"GainStatus|{JsonUtility.ToJson(condition)}");        
+        Modal.Close();
     }    
 
     public override void GameDataSetValue(string value) {
@@ -415,8 +410,42 @@ public class Icon_v1_5 : GameSystem {
         UI.ToggleDisplay(panel.Q("Stats"), sysdata.Type != "Object");
 
         panel.Q("Conditions").Q("List").Clear();
-        foreach (string s in sysdata.Conditions) {
-            panel.Q("Conditions").Q("List").Add(new Label(){text = s}); 
+        foreach (Icon1_5Condition condition in sysdata.Status) {
+            string label = $"{condition.Name}";
+            if (condition.ModifierType == "Number") {
+                label = $"{label} ({condition.NumValue})";
+            }
+            Label l = new Label(){text = label};
+            l.style.backgroundColor = condition.GetColorFromName();
+            panel.Q("Conditions").Q("List").Add(l); 
+        }
+    }
+}
+
+[Serializable]
+public class Icon1_5Condition {
+    public string Name;
+    public string ModifierType;
+    public string Color;
+    public int NumValue;
+    public bool Locked;
+
+    public Color GetColorFromName() {
+        switch (Color) {
+            case "Green":
+                return ColorUtility.ColorFromHex("339A2A");
+            case "Red":
+                return ColorUtility.ColorFromHex("A23431");
+            case "Blue":
+                return ColorUtility.ColorFromHex("4C4CD7");
+            case "Purple":
+                return ColorUtility.ColorFromHex("9E198D");
+            case "Yellow":
+                return ColorUtility.ColorFromHex("9A9939");
+            case "Orange":
+                return ColorUtility.ColorFromHex("BC840B");
+            default:
+                return ColorUtility.ColorFromHex("727272");
         }
     }
 }
@@ -439,7 +468,7 @@ public class Icon1_5Data {
     public int Speed;
     public int Dash;
     public int Defense;
-    public string[] Conditions;
+    public Icon1_5Condition[] Status;
     
     public void Change(string value, Token token, bool placed) {
         if (value.StartsWith("GainWound")) {
@@ -572,53 +601,67 @@ public class Icon1_5Data {
             }
             OnVitalChange(token);
         }
-        // if (value.StartsWith("LoseStatus")) {
-        //     string[] parts = value.Split("|");
-        //     Conditions.Remove(parts[1]);
-        //     PopoverText.Create(token, $"/-|_{parts[1].ToUpper()}", Color.white);
-        //     OnStatusChange();
-        // }
-        // if (value.StartsWith("GainStatus")) {
-        //     string[] parts = value.Split("|");
-        //     if (!Conditions.ContainsKey(parts[1])) {
-        //         Conditions.Add(parts[1], new StatusEffect(){Name = parts[1], Type = parts[2], Color = parts[3], Number = int.Parse(parts[4])});
-        //     }
-        //     else {
-        //         Toast.Add($"Condition { parts[1] } is already set on { Name }.");
-        //     }
-        //     PopoverText.Create(token, $"/+|_{parts[1].ToUpper()}", Color.white);
-        //     OnStatusChange();
-        // }
-        // if (value.StartsWith("IncrementStatus")) {
-        //     string status = value.Split("|")[1];
-        //     StatusEffect se = Conditions[status];
-        //     se.Number++;
-        //     Conditions[status] = se;
-        //     OnStatusChange();
-        // }
-        // if (value.StartsWith("DecrementStatus")) {
-        //     string status = value.Split("|")[1];
-        //     StatusEffect se = Conditions[status];
-        //     se.Number--;
-        //     Conditions[status] = se;
-        //     OnStatusChange();
-        // }
+        if (value.StartsWith("LoseStatus")) {
+            string[] parts = value.Split("|");
+            RemoveCondition(parts[1]);
+            if (placed) {
+                PopoverText.Create(token, $"/-|_{parts[1].ToUpper()}", Color.white);
+            }
+            // OnStatusChange();
+        }
+        if (value.StartsWith("GainStatus")) {
+            string[] parts = value.Split("|");
+            Icon1_5Condition condition = JsonUtility.FromJson<Icon1_5Condition>(parts[1]);
+            AddCondition(condition);
+            if (placed) {
+                PopoverText.Create(token, $"/+|_{condition.Name.ToUpper()}", Color.white);
+            }
+            // OnStatusChange();
+        }
     }
 
     private void OnVitalChange(Token token) {
         token.SetDefeated(CurrentHP <= 0);
         if (CurrentHP <= 0) {
-            Conditions = CollectionUtility.AddToArray(Conditions, "Defeated", true);
-            Conditions = CollectionUtility.RemoveAllFromArray(Conditions, "Bloodied");
+            RemoveCondition("Bloodied");
+            AddCondition(new Icon1_5Condition(){
+                Name = "Defeated",
+                ModifierType = "None",
+                Color = "Red",
+                Locked = true
+            });
         }
         else if (CurrentHP <= MaxHP/2) {
-            Conditions = CollectionUtility.AddToArray(Conditions, "Bloodied", true);
-            Conditions = CollectionUtility.RemoveAllFromArray(Conditions, "Defeated");
+            RemoveCondition("Defeated");
+            AddCondition(new Icon1_5Condition(){
+                Name = "Bloodied",
+                ModifierType = "None",
+                Color = "Red",
+                Locked = true
+            });
         }
         else {
-            Conditions = CollectionUtility.RemoveAllFromArray(Conditions, "Defeated");
-            Conditions = CollectionUtility.RemoveAllFromArray(Conditions, "Bloodied");
+            RemoveCondition("Bloodied");
+            RemoveCondition("Defeated");
         }
-    }    
+    }  
+
+    private void AddCondition(Icon1_5Condition c) {
+        RemoveCondition(c.Name);
+        List<Icon1_5Condition> statusList = Status.ToList();
+        statusList.Add(c);
+        Status = statusList.ToArray();
+    }
+
+    private void RemoveCondition(string name) {
+        List<Icon1_5Condition> statusList = Status.ToList();
+        List<Icon1_5Condition> newStatusList = new();
+        foreach (Icon1_5Condition condition in statusList) {
+            if (name != condition.Name) {
+                newStatusList.Add(condition);
+            }
+        }
+        Status = newStatusList.ToArray();
+    }
 }
 
