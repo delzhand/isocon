@@ -227,27 +227,37 @@ public class Icon_v1_5 : GameSystem {
         int size = int.Parse(UI.Modal.Q<DropdownField>("Size").value[..1]);
         int count = UI.Modal.Q<IntegerField>("CloneCount").value;
 
-        Icon1_5Data data = new();
+        int hpMultiplier = 1;
+        Debug.Log(objectHP);
+        Icon1_5Data data = new(){
+            Type = type
+        };
         
         if (type == "Player") {
             data.Class = playerJob.Split("/")[0];
             data.Job = playerJob.Split("/")[1];
-            legendHP = 1;
             data.Elite = false;
         }
         else if (type == "Foe") {
             data.Class = foeClass;
             data.Job = foeJob;
             data.Elite = elite;
+            if (elite) {
+                hpMultiplier = 2;
+            }
+            else if (foeClass == "Legend") {
+                hpMultiplier = legendHP;
+            }
         }
         else {
 
+            hpMultiplier = objectHP;
         }
-        InitSystemData(data, legendHP);
+        InitSystemData(data, hpMultiplier);
 
         Color color = GetColor(data.Class);
 
-        if (type == "Object" || foeClass == "Mob") {
+        if ((type == "Object" || foeClass == "Mob") && count > 1) {
             for(int i = 0; i < count; i++) {
                 string cloneName = $"{name} { StringUtility.IntToAlpha(i+1) }";
                 Player.Self().CmdCreateToken("Icon v1.5", graphicHash, cloneName, size, color, JsonUtility.ToJson(data));
@@ -319,17 +329,14 @@ public class Icon_v1_5 : GameSystem {
         UI.ToggleDisplay(data.OverheadElement.Q("HpBar"), mdata.CurrentHP > 0);    
     }
 
-    private static void InitSystemData(Icon1_5Data data, int legendHP) {
+    private static void InitSystemData(Icon1_5Data data, int hpMultiplier) {
 
         JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
         JSONNode stats = gamedata["Icon1_5"]["Stats"][GetStatColor(data.Class)];
 
-        data.MaxHP = stats["MaxHP"];
-        if (data.Elite) {
-            data.MaxHP *= 2;
-        }
-        else if (legendHP > 1) {
-            data.MaxHP *= legendHP;
+        data.MaxHP = stats["MaxHP"] * hpMultiplier;
+        if (data.Type == "Object") {
+            data.MaxHP = hpMultiplier;
         }
         data.CurrentHP = data.MaxHP;
         data.Vigor = 0;
@@ -372,6 +379,8 @@ public class Icon_v1_5 : GameSystem {
         panel.Q<Label>("Class").style.backgroundColor = data.Color;
         panel.Q<Label>("Job").text = sysdata.Job;
         panel.Q<Label>("Job").style.backgroundColor = data.Color;
+        UI.ToggleDisplay(panel.Q("ExtraInfo"), sysdata.Type != "Object");
+
 
         panel.Q("Elite").style.backgroundColor = ColorUtility.NormalizeRGB(202, 85, 239);
         UI.ToggleDisplay(panel.Q("Elite"), sysdata.Elite);
@@ -395,6 +404,7 @@ public class Icon_v1_5 : GameSystem {
         panel.Q("IconResolveBar").Q<ProgressBar>("ResolveBar").value = sysdata.Resolve;
         panel.Q("IconResolveBar").Q<Label>("PartyResolveNum").text = $"+{ Icon_v1_5.PartyResolve }";
         panel.Q("IconResolveBar").Q<ProgressBar>("PartyResolveBar").highValue = Icon_v1_5.PartyResolve;
+        UI.ToggleDisplay(panel.Q("IconResolveBar"), sysdata.Type == "Player");
         UI.ToggleDisplay(panel.Q("PartyResolveBar"), Icon_v1_5.PartyResolve > 0);
         UI.ToggleDisplay(panel.Q("PartyResolveNum"), Icon_v1_5.PartyResolve > 0);
 
@@ -402,6 +412,7 @@ public class Icon_v1_5 : GameSystem {
         panel.Q("Range").Q<Label>("Value").text = $"{ sysdata.Range }";
         panel.Q("Speed").Q<Label>("Value").text = $"{ sysdata.Speed }/{ sysdata.Dash }";
         panel.Q("Defense").Q<Label>("Value").text = $"{ sysdata.Defense }";
+        UI.ToggleDisplay(panel.Q("Stats"), sysdata.Type != "Object");
 
         panel.Q("Conditions").Q("List").Clear();
         foreach (string s in sysdata.Conditions) {
@@ -416,6 +427,7 @@ public class Icon1_5Data {
     public int MaxHP;
     public int Vigor;
     public int Resolve;
+    public string Type;
     public string Job;
     public string Class;
     public bool Elite;
