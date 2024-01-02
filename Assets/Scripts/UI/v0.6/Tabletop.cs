@@ -34,7 +34,15 @@ public class Tabletop : MonoBehaviour
             GameSystem.Current().UpdateTokenPanel(focused != null ? focused.Data.Id : null, "FocusedTokenPanel");
 
             if (selected != null) {
-                UI.FollowToken(selected, UI.System.Q("SelectionMenu"), Camera.main, new Vector2(-100, 0), true);
+                if (selected.Data.Placed) {
+                    UI.FollowToken(selected, UI.System.Q("SelectionMenu"), Camera.main, new Vector2(-100, 0), true);
+                    UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(Length.Percent(-50), Length.Percent(-50)));
+                }
+                else {
+                    UI.System.Q("SelectionMenu").style.top = 0;
+                    UI.System.Q("SelectionMenu").style.left = 0;
+                    UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, 0));
+                }
 
             }
         }
