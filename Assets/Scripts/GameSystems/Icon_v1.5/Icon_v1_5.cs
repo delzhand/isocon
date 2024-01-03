@@ -26,15 +26,6 @@ public class Icon_v1_5 : GameSystem {
         return "Increase the round counter, gain +1 group resolve, and reset ended turns?";
     }
 
-
-    public override void InterpreterMethod(string name, object[] args)
-    {
-        Type classType = Type.GetType("Icon_v1_5Interpreter");
-        Debug.Log(name);
-        MethodInfo method = classType.GetMethod(name, BindingFlags.Public | BindingFlags.Static);
-        method.Invoke(null, args);
-    }
-
     public override void Setup()
     {
         SetupPanel("SelectedTokenPanel", true);
@@ -223,7 +214,6 @@ public class Icon_v1_5 : GameSystem {
         int count = UI.Modal.Q<IntegerField>("CloneCount").value;
 
         int hpMultiplier = 1;
-        Debug.Log(objectHP);
         Icon1_5Data data = new(){
             Type = type
         };
@@ -350,7 +340,8 @@ public class Icon_v1_5 : GameSystem {
         Debug.Log($"Icon 1.5 Interpreter change registered for {data.Name}: {value}");
         Icon1_5Data sysdata = JsonUtility.FromJson<Icon1_5Data>(data.SystemData);
         sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
-        data.SystemData = JsonUtility.ToJson(sysdata);  
+        data.SystemData = JsonUtility.ToJson(sysdata); 
+        data.NeedsRedraw = true;
     }
 
     public override void UpdateTokenPanel(string tokenId, string elementName) {
@@ -409,15 +400,38 @@ public class Icon_v1_5 : GameSystem {
         panel.Q("Defense").Q<Label>("Value").text = $"{ sysdata.Defense }";
         UI.ToggleDisplay(panel.Q("Stats"), sysdata.Type != "Object");
 
-        panel.Q("Conditions").Q("List").Clear();
-        foreach (Icon1_5Condition condition in sysdata.Status) {
-            string label = $"{condition.Name}";
-            if (condition.ModifierType == "Number") {
-                label = $"{label} ({condition.NumValue})";
+        if (data.NeedsRedraw) {
+            data.NeedsRedraw = false;
+            panel.Q("Conditions").Q("List").Clear();
+            foreach (Icon1_5Condition condition in sysdata.Status) {
+                VisualElement template = UI.CreateFromTemplate("UITemplates/GameSystem/ConditionTemplate");
+                string label = $"{condition.Name}";
+                if (condition.ModifierType == "Number") {
+                    label = $"{label} ({condition.NumValue})";
+                }
+                template.Q<Label>("Name").text = label;
+                if (elementName == "SelectedTokenPanel") {
+                    template.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) => {
+                    Player.Self().CmdRequestTokenDataSetValue(tokenId, $"IncrementStatus|{ condition.Name }");
+                    });
+                    template.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) => {
+                    Player.Self().CmdRequestTokenDataSetValue(tokenId, $"DecrementStatus|{ condition.Name }");
+                    });
+                    template.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) => {
+                    Player.Self().CmdRequestTokenDataSetValue(tokenId, $"LoseStatus|{ condition.Name }");
+                    });
+                    UI.ToggleDisplay(template.Q("Increment"), condition.ModifierType == "Number");
+                    UI.ToggleDisplay(template.Q("Decrement"), condition.ModifierType == "Number");
+                    UI.ToggleDisplay(template.Q("Remove"), !condition.Locked);
+                }
+                else {
+                    UI.ToggleDisplay(template.Q("Increment"), false);
+                    UI.ToggleDisplay(template.Q("Decrement"), false);
+                    UI.ToggleDisplay(template.Q("Remove"), false);
+                }
+                template.Q("Wrapper").style.backgroundColor = condition.GetColorFromName();
+                panel.Q("Conditions").Q("List").Add(template); 
             }
-            Label l = new Label(){text = label};
-            l.style.backgroundColor = condition.GetColorFromName();
-            panel.Q("Conditions").Q("List").Add(l); 
         }
     }
 }
@@ -476,12 +490,10 @@ public class Icon1_5Data {
             Wounds = Math.Min(Wounds, 3);
             int woundMaxHP = MaxHP / 4 * (4 - Wounds);
             CurrentHP = Math.Min(CurrentHP, woundMaxHP);
-            OnVitalChange(token);
         }
         if (value.StartsWith("LoseWound")) {
             Wounds--;
             Wounds = Math.Max(Wounds, 0);
-            OnVitalChange(token);
         }
         if (value.StartsWith("GainHP")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -496,7 +508,6 @@ public class Icon1_5Data {
                 }
                 token.SetDefeated(CurrentHP <= 0);
             }
-            OnVitalChange(token);
         }
         if (value.StartsWith("LoseHP")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -510,7 +521,6 @@ public class Icon1_5Data {
                 }
                 token.SetDefeated(CurrentHP <= 0);
             }
-            OnVitalChange(token);
         }
         if (value.StartsWith("GainVIG")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -523,7 +533,6 @@ public class Icon1_5Data {
                     PopoverText.Create(token, $"/+{diff}|_VIG", Color.white);
                 }
             }
-            OnVitalChange(token);
         }
         if (value.StartsWith("LoseVIG")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -536,7 +545,6 @@ public class Icon1_5Data {
                     PopoverText.Create(token, $"/-{diff}|_VIG", Color.white);
                 }
             }
-            OnVitalChange(token);
         }
         if (value.StartsWith("GainRES")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -549,17 +557,14 @@ public class Icon1_5Data {
                     PopoverText.Create(token, $"/+{diff}|_RES", Color.white);
                 }
             }
-            OnVitalChange(token);
         }
         if (value.StartsWith("GainPRES")) {
             int diff = int.Parse(value.Split("|")[1]);
             Icon_v1_5.PartyResolve+=diff;
-            OnVitalChange(token);
         }
         if (value.StartsWith("LoseRES")) {
             int diff = int.Parse(value.Split("|")[1]);
             Resolve = Math.Max(0, Resolve - diff);
-            OnVitalChange(token);
         }
         if (value.StartsWith("LosePRES")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -567,7 +572,6 @@ public class Icon1_5Data {
                 diff = Icon_v1_5.PartyResolve;
             }
             Icon_v1_5.PartyResolve-=diff;
-            OnVitalChange(token);
         }
         if (value.StartsWith("Damage")) {
             int diff = int.Parse(value.Split("|")[1]);
@@ -599,7 +603,6 @@ public class Icon1_5Data {
                     PopoverText.Create(token, $"/-{diff}|_HP", Color.white);
                 }
             }
-            OnVitalChange(token);
         }
         if (value.StartsWith("LoseStatus")) {
             string[] parts = value.Split("|");
@@ -607,7 +610,6 @@ public class Icon1_5Data {
             if (placed) {
                 PopoverText.Create(token, $"/-|_{parts[1].ToUpper()}", Color.white);
             }
-            // OnStatusChange();
         }
         if (value.StartsWith("GainStatus")) {
             string[] parts = value.Split("|");
@@ -616,11 +618,25 @@ public class Icon1_5Data {
             if (placed) {
                 PopoverText.Create(token, $"/+|_{condition.Name.ToUpper()}", Color.white);
             }
-            // OnStatusChange();
         }
+        if (value.StartsWith("IncrementStatus")) {
+            string[] parts = value.Split("|");
+            CounterCondition(parts[1], 1);
+            if (placed) {
+                PopoverText.Create(token, $"/+1|_{parts[1].ToUpper()}", Color.white);
+            }
+        }
+        if (value.StartsWith("DecrementStatus")) {
+            string[] parts = value.Split("|");
+            CounterCondition(parts[1], -1);
+            if (placed) {
+                PopoverText.Create(token, $"/-1|_{parts[1].ToUpper()}", Color.white);
+            }
+        }
+        OnChange(token);
     }
 
-    private void OnVitalChange(Token token) {
+    private void OnChange(Token token) {
         token.SetDefeated(CurrentHP <= 0);
         if (CurrentHP <= 0) {
             RemoveCondition("Bloodied");
@@ -662,6 +678,16 @@ public class Icon1_5Data {
             }
         }
         Status = newStatusList.ToArray();
+    }
+
+    private void CounterCondition(string name, int num) {
+        List<Icon1_5Condition> statusList = Status.ToList();
+        foreach (Icon1_5Condition condition in statusList) {
+            if (name == condition.Name) {
+                condition.NumValue += num;
+            }
+        }
+        Status = statusList.ToArray();
     }
 }
 

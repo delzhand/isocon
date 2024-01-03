@@ -45,13 +45,6 @@ public class Generic : GameSystem
         Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, $"{cmd}|{val}");
     }
 
-    public override void InterpreterMethod(string name, object[] args)
-    {
-        Type classType = Type.GetType("GenericInterpreter");
-        MethodInfo method = classType.GetMethod(name, BindingFlags.Public | BindingFlags.Static);
-        method.Invoke(null, args);
-    }
-    
     public override void GameDataSetValue(string value) {
         FileLogger.Write($"Game system changed - {value}");
         if (value == "IncrementTurn") {

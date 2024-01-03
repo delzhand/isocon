@@ -45,10 +45,6 @@ public class GameSystem : MonoBehaviour
         return null;
     }
 
-    public virtual void InterpreterMethod(string name, object[] args) {
-        throw new NotImplementedException();
-    }
-
     public virtual void AddTokenModal() {
         Modal.AddTextField("NameField", "Token Name", "");
     }

@@ -13,13 +13,6 @@ public class Maleghast : GameSystem
         return "Maleghast";
     }
 
-    public override void InterpreterMethod(string name, object[] args)
-    {
-        Type classType = Type.GetType("MaleghastInterpreter");
-        MethodInfo method = classType.GetMethod(name, BindingFlags.Public | BindingFlags.Static);
-        method.Invoke(null, args);
-    }
-
     public override void Setup() {
         SetupPanel("SelectedTokenPanel", true);
         SetupPanel("FocusedTokenPanel", false);

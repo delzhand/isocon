@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"97d01e45-8b7e-4eca-a183-e8e88d03048d\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"e0e65fa0-2d4f-4bd2-b741-f459a0758e0c\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"0.5.11\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"353c74c5-375a-4383-9301-335eab6edf01\"\r\n    },\r\n    \"rs\":
+    \"entityId\": \"8d225f9d-1b9c-45e8-9741-04e9035bc09b\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"13d04d4a-c6d3-415c-b04e-57db0ef5490b\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"c48aed06-c618-43a1-9533-199d02c156dc\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
     \"Stats\": {\r\n            \"Blue\": {\r\n              \"MaxHP\": 32,\r\n             
@@ -52,83 +52,94 @@ MonoBehaviour:
     \"Skirmisher\",\r\n            \"Leader\",\r\n            \"Mob\",\r\n           
     \"Legend\"\r\n          ],\r\n          \"StatusEffects\": [\r\n            {\r\n             
     \"Name\": \"Aether\",\r\n              \"Color\": \"Blue\",\r\n             
-    \"Type\": \"Number\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Armor\",\r\n              \"Color\": \"Blue\",\r\n              \"Type\": \"Number\"\r\n           
-    },\r\n            {\r\n              \"Name\": \"Blessing\",\r\n             
-    \"Color\": \"Blue\",\r\n              \"Type\": \"Number\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Blind\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Blind+\",\r\n              \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n           
-    },\r\n            {\r\n              \"Name\": \"Counter\",\r\n             
-    \"Color\": \"Green\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Cover\",\r\n              \"Color\": \"Orange\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Dark Knight\",\r\n              \"Color\": \"Purple\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Dazed\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Dazed+\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Defiance\",\r\n              \"Color\": \"Green\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Dodge\",\r\n             
-    \"Color\": \"Green\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
+    \"ModifierType\": \"Number\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Armor\",\r\n              \"Color\": \"Blue\",\r\n              \"ModifierType\":
+    \"Number\"\r\n            },\r\n            {\r\n              \"Name\": \"Blessing\",\r\n             
+    \"Color\": \"Blue\",\r\n              \"ModifierType\": \"Number\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Blind\",\r\n              \"Color\":
+    \"Red\",\r\n              \"ModifierType\": \"None\"\r\n            },\r\n           
+    {\r\n              \"Name\": \"Blind+\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Counter\",\r\n              \"Color\": \"Green\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Cover\",\r\n              \"Color\": \"Orange\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Dark Knight\",\r\n              \"Color\": \"Purple\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Dazed\",\r\n              \"Color\": \"Red\",\r\n              \"ModifierType\":
+    \"None\"\r\n            },\r\n            {\r\n              \"Name\": \"Dazed+\",\r\n             
+    \"Color\": \"Red\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Defiance\",\r\n             
+    \"Color\": \"Green\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Dodge\",\r\n              \"Color\":
+    \"Green\",\r\n              \"ModifierType\": \"None\"\r\n            },\r\n           
     {\r\n              \"Name\": \"Endless Battlement\",\r\n              \"Color\":
-    \"Purple\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
+    \"Purple\",\r\n              \"ModifierType\": \"None\"\r\n            },\r\n           
     {\r\n              \"Name\": \"Evasion\",\r\n              \"Color\": \"Green\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Evasion+\",\r\n              \"Color\": \"\",\r\n              \"Type\": \"Simple\"\r\n           
-    },\r\n            {\r\n              \"Name\": \"Flying\",\r\n              \"Color\":
-    \"Green\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Gentleness\",\r\n              \"Color\": \"Purple\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Gravebirth\",\r\n              \"Color\": \"Purple\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Odinforce\",\r\n             
-    \"Color\": \"Purple\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Pacified\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Pacified+\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Phasing\",\r\n             
-    \"Color\": \"Green\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Regeneration\",\r\n              \"Color\": \"Green\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Riposte\",\r\n              \"Color\": \"Purple\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Sealed\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Evasion+\",\r\n              \"Color\": \"\",\r\n              \"ModifierType\":
+    \"None\"\r\n            },\r\n            {\r\n              \"Name\": \"Flying\",\r\n             
+    \"Color\": \"Green\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Gentleness\",\r\n             
+    \"Color\": \"Purple\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Gravebirth\",\r\n             
+    \"Color\": \"Purple\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Odinforce\",\r\n             
+    \"Color\": \"Purple\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Pacified\",\r\n             
+    \"Color\": \"Red\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Pacified+\",\r\n             
+    \"Color\": \"Red\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Phasing\",\r\n             
+    \"Color\": \"Green\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Regeneration\",\r\n             
+    \"Color\": \"Green\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Riposte\",\r\n             
+    \"Color\": \"Purple\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Sealed\",\r\n              \"Color\":
+    \"Red\",\r\n              \"ModifierType\": \"None\"\r\n            },\r\n           
     {\r\n              \"Name\": \"Sealed+\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Shattered\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Shattered+\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Slashed\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Slashed+\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Soul
-    Blade\",\r\n              \"Color\": \"Purple\",\r\n              \"Type\": \"Simple\"\r\n           
-    },\r\n            {\r\n              \"Name\": \"Stacked Dice\",\r\n             
-    \"Color\": \"Blue\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Stealth\",\r\n              \"Color\": \"Green\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Stunned\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Stunned+\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Sturdy\",\r\n              \"Color\": \"Green\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"The Saints\",\r\n              \"Color\": \"Purple\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Unstoppable\",\r\n             
-    \"Color\": \"Green\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Vigilance\",\r\n              \"Color\": \"Green\",\r\n             
-    \"Type\": \"Number\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Vulnerable\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Vulnerable+\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Weakened\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Weakened+\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            }\r\n          ]\r\n        },\r\n        \"Maleghast\":
-    {\r\n          \"Houses\": [\r\n            {\r\n              \"name\": \"CARCASS\",\r\n             
-    \"color\": \"AC0079\",\r\n              \"units\": [\r\n                {\r\n                 
-    \"name\": \"Gunwight\",\r\n                  \"type\": \"Thrall\",\r\n                 
-    \"move\": 2,\r\n                  \"hp\": 2,\r\n                  \"def\": 4,\r\n                 
-    \"conditions\": \"\",\r\n                  \"traits\": \"=Formation|=Thrall\",\r\n                 
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Shattered\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Shattered+\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Slashed\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Slashed+\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Soul Blade\",\r\n              \"Color\": \"Purple\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Stacked Dice\",\r\n              \"Color\": \"Blue\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Stealth\",\r\n              \"Color\": \"Green\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Stunned\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Stunned+\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Sturdy\",\r\n              \"Color\": \"Green\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"The Saints\",\r\n              \"Color\": \"Purple\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Unstoppable\",\r\n              \"Color\": \"Green\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Vigilance\",\r\n              \"Color\": \"Green\",\r\n             
+    \"ModifierType\": \"Number\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Vulnerable\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Vulnerable+\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Weakened\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Weakened+\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            }\r\n          ]\r\n        },\r\n       
+    \"Maleghast\": {\r\n          \"Houses\": [\r\n            {\r\n             
+    \"name\": \"CARCASS\",\r\n              \"color\": \"AC0079\",\r\n             
+    \"units\": [\r\n                {\r\n                  \"name\": \"Gunwight\",\r\n                 
+    \"type\": \"Thrall\",\r\n                  \"move\": 2,\r\n                 
+    \"hp\": 2,\r\n                  \"def\": 4,\r\n                  \"conditions\":
+    \"\",\r\n                  \"traits\": \"=Formation|=Thrall\",\r\n                 
     \"actAbilities\": \"=OL45|=Baton\",\r\n                  \"upgrades\": \"-Brace|-Tactical
     Reload|-Scavenge Ammo\"\r\n                },\r\n                {\r\n                 
     \"name\": \"Ammo Goblin\",\r\n                  \"type\": \"Freak\",\r\n                 
@@ -367,15 +378,15 @@ MonoBehaviour:
     \"Flight\",\r\n            \"Miracle\",\r\n            \"Retaliation\",\r\n           
     \"Reload\",\r\n            \"Physical Armor\",\r\n            \"Magic Armor\",\r\n           
     \"Super Armor\"\r\n          ]\r\n        }\r\n      }\r\n    }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"97d01e45-8b7e-4eca-a183-e8e88d03048d\"\r\n   
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"e0e65fa0-2d4f-4bd2-b741-f459a0758e0c\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"0.5.11\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"353c74c5-375a-4383-9301-335eab6edf01\"\r\n    },\r\n    \"rs\":
+    \"entityId\": \"8d225f9d-1b9c-45e8-9741-04e9035bc09b\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"13d04d4a-c6d3-415c-b04e-57db0ef5490b\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"c48aed06-c618-43a1-9533-199d02c156dc\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
     \"Stats\": {\r\n            \"Blue\": {\r\n              \"MaxHP\": 32,\r\n             
@@ -407,83 +418,94 @@ MonoBehaviour:
     \"Skirmisher\",\r\n            \"Leader\",\r\n            \"Mob\",\r\n           
     \"Legend\"\r\n          ],\r\n          \"StatusEffects\": [\r\n            {\r\n             
     \"Name\": \"Aether\",\r\n              \"Color\": \"Blue\",\r\n             
-    \"Type\": \"Number\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Armor\",\r\n              \"Color\": \"Blue\",\r\n              \"Type\": \"Number\"\r\n           
-    },\r\n            {\r\n              \"Name\": \"Blessing\",\r\n             
-    \"Color\": \"Blue\",\r\n              \"Type\": \"Number\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Blind\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Blind+\",\r\n              \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n           
-    },\r\n            {\r\n              \"Name\": \"Counter\",\r\n             
-    \"Color\": \"Green\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Cover\",\r\n              \"Color\": \"Orange\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Dark Knight\",\r\n              \"Color\": \"Purple\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Dazed\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Dazed+\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Defiance\",\r\n              \"Color\": \"Green\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Dodge\",\r\n             
-    \"Color\": \"Green\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
+    \"ModifierType\": \"Number\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Armor\",\r\n              \"Color\": \"Blue\",\r\n              \"ModifierType\":
+    \"Number\"\r\n            },\r\n            {\r\n              \"Name\": \"Blessing\",\r\n             
+    \"Color\": \"Blue\",\r\n              \"ModifierType\": \"Number\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Blind\",\r\n              \"Color\":
+    \"Red\",\r\n              \"ModifierType\": \"None\"\r\n            },\r\n           
+    {\r\n              \"Name\": \"Blind+\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Counter\",\r\n              \"Color\": \"Green\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Cover\",\r\n              \"Color\": \"Orange\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Dark Knight\",\r\n              \"Color\": \"Purple\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Dazed\",\r\n              \"Color\": \"Red\",\r\n              \"ModifierType\":
+    \"None\"\r\n            },\r\n            {\r\n              \"Name\": \"Dazed+\",\r\n             
+    \"Color\": \"Red\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Defiance\",\r\n             
+    \"Color\": \"Green\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Dodge\",\r\n              \"Color\":
+    \"Green\",\r\n              \"ModifierType\": \"None\"\r\n            },\r\n           
     {\r\n              \"Name\": \"Endless Battlement\",\r\n              \"Color\":
-    \"Purple\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
+    \"Purple\",\r\n              \"ModifierType\": \"None\"\r\n            },\r\n           
     {\r\n              \"Name\": \"Evasion\",\r\n              \"Color\": \"Green\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Evasion+\",\r\n              \"Color\": \"\",\r\n              \"Type\": \"Simple\"\r\n           
-    },\r\n            {\r\n              \"Name\": \"Flying\",\r\n              \"Color\":
-    \"Green\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Gentleness\",\r\n              \"Color\": \"Purple\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Gravebirth\",\r\n              \"Color\": \"Purple\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Odinforce\",\r\n             
-    \"Color\": \"Purple\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Pacified\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Pacified+\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Phasing\",\r\n             
-    \"Color\": \"Green\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Regeneration\",\r\n              \"Color\": \"Green\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Riposte\",\r\n              \"Color\": \"Purple\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Sealed\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Evasion+\",\r\n              \"Color\": \"\",\r\n              \"ModifierType\":
+    \"None\"\r\n            },\r\n            {\r\n              \"Name\": \"Flying\",\r\n             
+    \"Color\": \"Green\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Gentleness\",\r\n             
+    \"Color\": \"Purple\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Gravebirth\",\r\n             
+    \"Color\": \"Purple\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Odinforce\",\r\n             
+    \"Color\": \"Purple\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Pacified\",\r\n             
+    \"Color\": \"Red\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Pacified+\",\r\n             
+    \"Color\": \"Red\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Phasing\",\r\n             
+    \"Color\": \"Green\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Regeneration\",\r\n             
+    \"Color\": \"Green\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Riposte\",\r\n             
+    \"Color\": \"Purple\",\r\n              \"ModifierType\": \"None\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Sealed\",\r\n              \"Color\":
+    \"Red\",\r\n              \"ModifierType\": \"None\"\r\n            },\r\n           
     {\r\n              \"Name\": \"Sealed+\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Shattered\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Shattered+\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Slashed\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Slashed+\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Soul
-    Blade\",\r\n              \"Color\": \"Purple\",\r\n              \"Type\": \"Simple\"\r\n           
-    },\r\n            {\r\n              \"Name\": \"Stacked Dice\",\r\n             
-    \"Color\": \"Blue\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Stealth\",\r\n              \"Color\": \"Green\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Stunned\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Stunned+\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Sturdy\",\r\n              \"Color\": \"Green\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"The Saints\",\r\n              \"Color\": \"Purple\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Unstoppable\",\r\n             
-    \"Color\": \"Green\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Vigilance\",\r\n              \"Color\": \"Green\",\r\n             
-    \"Type\": \"Number\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Vulnerable\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            },\r\n            {\r\n              \"Name\": \"Vulnerable+\",\r\n             
-    \"Color\": \"Red\",\r\n              \"Type\": \"Simple\"\r\n            },\r\n           
-    {\r\n              \"Name\": \"Weakened\",\r\n              \"Color\": \"Red\",\r\n             
-    \"Type\": \"Simple\"\r\n            },\r\n            {\r\n              \"Name\":
-    \"Weakened+\",\r\n              \"Color\": \"Red\",\r\n              \"Type\":
-    \"Simple\"\r\n            }\r\n          ]\r\n        },\r\n        \"Maleghast\":
-    {\r\n          \"Houses\": [\r\n            {\r\n              \"name\": \"CARCASS\",\r\n             
-    \"color\": \"AC0079\",\r\n              \"units\": [\r\n                {\r\n                 
-    \"name\": \"Gunwight\",\r\n                  \"type\": \"Thrall\",\r\n                 
-    \"move\": 2,\r\n                  \"hp\": 2,\r\n                  \"def\": 4,\r\n                 
-    \"conditions\": \"\",\r\n                  \"traits\": \"=Formation|=Thrall\",\r\n                 
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Shattered\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Shattered+\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Slashed\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Slashed+\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Soul Blade\",\r\n              \"Color\": \"Purple\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Stacked Dice\",\r\n              \"Color\": \"Blue\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Stealth\",\r\n              \"Color\": \"Green\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Stunned\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Stunned+\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Sturdy\",\r\n              \"Color\": \"Green\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"The Saints\",\r\n              \"Color\": \"Purple\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Unstoppable\",\r\n              \"Color\": \"Green\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Vigilance\",\r\n              \"Color\": \"Green\",\r\n             
+    \"ModifierType\": \"Number\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Vulnerable\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Vulnerable+\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Weakened\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Weakened+\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"None\"\r\n            }\r\n          ]\r\n        },\r\n       
+    \"Maleghast\": {\r\n          \"Houses\": [\r\n            {\r\n             
+    \"name\": \"CARCASS\",\r\n              \"color\": \"AC0079\",\r\n             
+    \"units\": [\r\n                {\r\n                  \"name\": \"Gunwight\",\r\n                 
+    \"type\": \"Thrall\",\r\n                  \"move\": 2,\r\n                 
+    \"hp\": 2,\r\n                  \"def\": 4,\r\n                  \"conditions\":
+    \"\",\r\n                  \"traits\": \"=Formation|=Thrall\",\r\n                 
     \"actAbilities\": \"=OL45|=Baton\",\r\n                  \"upgrades\": \"-Brace|-Tactical
     Reload|-Scavenge Ammo\"\r\n                },\r\n                {\r\n                 
     \"name\": \"Ammo Goblin\",\r\n                  \"type\": \"Freak\",\r\n                 

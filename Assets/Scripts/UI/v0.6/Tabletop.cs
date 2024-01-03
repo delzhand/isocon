@@ -35,7 +35,7 @@ public class Tabletop : MonoBehaviour
 
             if (selected != null) {
                 if (selected.Data.Placed) {
-                    UI.FollowToken(selected, UI.System.Q("SelectionMenu"), Camera.main, new Vector2(-100, 0), true);
+                    UI.FollowToken(selected, UI.System.Q("SelectionMenu"), Camera.main, new Vector2(100, 0), true);
                     UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(Length.Percent(-50), Length.Percent(-50)));
                 }
                 else {

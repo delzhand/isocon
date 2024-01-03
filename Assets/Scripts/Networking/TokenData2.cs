@@ -30,6 +30,7 @@ public class TokenData2 : NetworkBehaviour
     [SyncVar]
     public Vector3 LastKnownPosition;
     
+    public bool NeedsRedraw;
     public Texture2D Graphic;
     public GameObject WorldObject;
     public VisualElement UnitBarElement;
@@ -194,11 +195,11 @@ public class TokenData2 : NetworkBehaviour
     }
 
     public void Select() {
-        // RedrawConditionsElement = true;
+        NeedsRedraw = true;
     }
 
     public void Focus() {
-        // RedrawConditionsElement = true;
+        NeedsRedraw = true;
     }
 
     public void Disconnect() {
