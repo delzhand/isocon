@@ -1,9 +1,8 @@
 # IsoCON
-
-IsoCON is a custom 3d virtual tabletop for RPGs that include tactical combat, such as ICON by Massif Press.
+Isocon is a virtual tabletop custom-made for games with turn-based combat where positioning, elevation, and line of sight matters. With a low learning curve and easy to use tools, you can create 3d terrain about as quickly as you could draw on a battlemat, or spend the time to really set the stage with painting and environmental controls.
 
 ## This Release
-This is the v0.5 beta release, the first release to include multiplayer support. Due to the complexity of adding networking, the feature in v0.4 that enabled token stat/status editing has been temporarily removed. Restoring it is the top priority for the next release!
+This is the v0.6 beta release, a major update. As such, please feel free to create issues in the queue or contact me (see below).
 
 ## Multiplayer
 Connections are made via P2P, which means no signups, no services, no costs! However, this comes at the cost of requiring a bit of networking know-how. If you are hosting a table online, you may need to enable port forwarding on port 7777. You'll need to find and share your global IP with your players. If you are hosting on a LAN, you only need to share your local IP address, which should be visible in the connection sidebar. You may also need to disable your VPN if you're using one.
@@ -20,4 +19,4 @@ Feel free to ask me questions or provide feedback in Discord (DM @delzhand or as
 ## Copyright
 IsoCON is open source. Licensed under Creative Commons CC BY-NC-SA.
 
-ICON is copyright Tom Bloom and Massif Press. IsoCON is not affiliated with either and is not an official ICON product.
+ICON is copyright Tom Bloom and Massif Press. Maleghast is copyright Tom Bloom and Chasm.  IsoCON is not affiliated with any of these entities and is not an official ICON/Maleghast product. 
