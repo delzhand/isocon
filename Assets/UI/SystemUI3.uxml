@@ -43,6 +43,9 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:Label tabindex="-1" text="v0.6.0" display-tooltip-when-elided="true" name="Version" style="position: absolute; right: auto; bottom: 0; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); font-size: 12px; left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 4px; padding-right: 0; padding-bottom: 4px; padding-left: 0; -unity-text-align: middle-center; width: 100%;" />
+        <ui:VisualElement class="panel" style="flex-grow: 1; position: absolute; -unity-background-image-tint-color: rgba(255, 255, 255, 0);">
+            <ui:Button text="Clear Cache" name="ClearCache" style="position: relative;" />
+        </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="Tabletop" style="flex-grow: 1; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: none;">
         <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: flex;">
@@ -309,7 +312,7 @@
                             <ui:Slider picking-mode="Ignore" label="Light Height" value="50" high-value="90" name="LightHeight" focusable="false" class="no-margin" />
                             <ui:Slider picking-mode="Ignore" label="Light Intensity" value="2" high-value="3" name="LightIntensity" focusable="false" class="no-margin" />
                         </ui:VisualElement>
-                        <ui:VisualElement name="TerrainEffectOptions" class="tool-options" style="flex-grow: 0; flex-direction: column; align-items: stretch; align-self: flex-start; justify-content: flex-start; display: none; margin-right: 0; margin-left: 0; margin-bottom: 0; width: 100%; margin-top: 0;">
+                        <ui:VisualElement name="TerrainEffectOptions" class="tool-options" style="flex-grow: 0; flex-direction: column; align-items: stretch; align-self: flex-start; justify-content: flex-start; display: flex; margin-right: 0; margin-left: 0; margin-bottom: 0; width: 100%; margin-top: 0;">
                             <ui:DropdownField label="Terrain Effect" index="0" choices="None,Wavy,Spiky,Hole,Hand,Blocked,Corners" name="BlockEffect" focusable="false" class="no-margin better-dropdown" style="display: flex; width: 340px;" />
                         </ui:VisualElement>
                         <ui:VisualElement name="DataOptions" class="tool-options" style="flex-grow: 0; flex-direction: row; align-items: stretch; align-self: flex-start; justify-content: flex-start; display: none; margin-right: -2px; margin-left: -2px; margin-bottom: -4px; width: 100%; margin-top: 0;">

@@ -49,6 +49,14 @@ public class MapSaver
         Toast.Add($"Map written to {fullPath.Replace("\\", "/")}");
     }
 
+    public static void RegSave(string fullPath) {
+        State state = State.GetStateFromScene();
+        string json = JsonUtility.ToJson(state);
+        fullPath = fullPath.Replace(".png", ".json");
+        System.IO.File.WriteAllText(fullPath, json);
+        Toast.Add($"Map written to {fullPath.Replace("\\", "/")}");
+    }
+
     private static Texture2D toTexture2D(RenderTexture rt) {
         Texture2D tex = new Texture2D(640, 480, TextureFormat.RGB24, false);
         RenderTexture.active = rt;

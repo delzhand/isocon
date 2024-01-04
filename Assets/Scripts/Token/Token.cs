@@ -27,9 +27,12 @@ public class Token : MonoBehaviour
     public bool Selected = false;
     public bool Focused = false;
 
+    public static float CutoutSize = 1;
+
     void Update()
     {
         alignToCamera();
+        UpdateScale();
         UpdateVisualEffect();
         Offset();
 
@@ -42,6 +45,10 @@ public class Token : MonoBehaviour
     private void alignToCamera() {
         Transform camera = GameObject.Find("CameraOrigin").transform;
         transform.Find("Offset").transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 90, 0);
+    }
+
+    private void UpdateScale() {
+        transform.Find("Offset/Avatar/Cutout").localScale = new Vector3(CutoutSize, CutoutSize, CutoutSize);
     }
 
     private void Offset() {

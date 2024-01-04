@@ -344,7 +344,7 @@ public class Block : MonoBehaviour
         markerMaterial.SetInt("_Skull", 0);
         
         foreach (string fullEffect in effects) {
-            string[] split = fullEffect.Split("|");
+            string[] split = fullEffect.Split("::");
             if (split.Length > 1) {
                 string marker = split[1];
                 switch (marker) {

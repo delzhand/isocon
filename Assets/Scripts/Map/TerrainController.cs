@@ -569,7 +569,7 @@ public class TerrainController : MonoBehaviour
             block.GetEffects().ForEach(effect => {
                 VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/TerrainEffect");
                 VisualElement instance = template.Instantiate();
-                instance.Q<Label>("Label").text = effect.ToUpper().Split("|")[0];
+                instance.Q<Label>("Label").text = effect.ToUpper().Split("::")[0];
                 VisualElement remove = instance.Q("Remove");
                 if (!singleSelected) {
                     UI.ToggleDisplay(remove, false);

@@ -231,6 +231,20 @@ public class Modal
         Modal.AddContents(field);    
     }
 
+    public static void AddFloatSlider(string name, string label, float defaultValue, float highValue, float lowValue, EventCallback<ChangeEvent<float>> onChange = null) {
+        Slider field = new(label);
+        field.lowValue = lowValue;
+        field.highValue = highValue;
+        field.value = defaultValue;
+
+        field.name = name;
+        if (onChange != null) {
+            field.RegisterValueChangedCallback<float>(onChange);
+        }
+        field.focusable = false;
+        field.AddToClassList("no-margin");
+        Modal.AddContents(field);      }
+
     public static void AddSearchField(string name, string label, string defaultValue, string[] options) {
         VisualElement field = SearchField.Create(options, label);
         field.name = name;

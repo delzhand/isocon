@@ -12,8 +12,8 @@ public class Launcher : MonoBehaviour
         public string LatestVersion;
     }
 
-    private string _version = "0.6.0";
-    private string _latestVersion = "0.6.0";
+    private string _version = "0.6.1";
+    private string _latestVersion = "0.6.1";
     private string _connectMode;
     private NetworkManager _manager;
     private bool _lastUpdateIsOnline = false;
@@ -112,6 +112,12 @@ public class Launcher : MonoBehaviour
     }
 
     private void SetCallbacks() {
+
+        UI.System.Q<Button>("ClearCache").RegisterCallback<ClickEvent>((evt) => {
+            Modal.DoubleConfirm("Clear Cache", "Clear cached settings?", () => {
+                PlayerPrefs.DeleteAll();
+            });
+        });
 
         // Exit selected
         UI.System.Q<Button>("ExitButton").RegisterCallback<ClickEvent>((evt) => {

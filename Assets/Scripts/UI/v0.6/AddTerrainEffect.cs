@@ -24,6 +24,6 @@ public class AddTerrainEffect
         selected.ForEach(block => {
             blockNames.Add(block.name);
         });
-        Player.Self().CmdRequestMapSetValue(blockNames.ToArray(), "Effect", $"{effect}|{marker}");
+        Player.Self().CmdRequestMapSetValue(blockNames.ToArray(), "Effect", $"{effect}::{marker}");
     }
 }

@@ -24,6 +24,11 @@ public class Config
             GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = value;
         });
         
+        float tokenScale = PlayerPrefs.GetFloat("TokenScale", 1f);
+        Modal.AddFloatSlider("TokenScaleField", "Token Scale", 1f, 2f, .5f, (evt) => {
+            Token.CutoutSize = evt.newValue;
+        });
+
         Modal.AddPreferredButton("Confirm", CloseModal);
     }
 
