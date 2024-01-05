@@ -50,6 +50,10 @@ public class Generic : GameSystem
         if (value == "IncrementTurn") {
             TurnNumber++;
             UI.System.Q<Label>("TurnNumber").text = TurnNumber.ToString();
+            foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
+                TokenData2 data = g.GetComponent<TokenData2>();
+                TokenDataSetValue(data.Id, "StartTurn");
+            }
         }
     }
 
@@ -85,6 +89,7 @@ public class Generic : GameSystem
 
     public override void TokenDataSetValue(string tokenId, string value)
     {
+        base.TokenDataSetValue(tokenId, value);
         TokenData2 data = TokenData2.Find(tokenId);
         Debug.Log($"GenericInterpreter change registered for {data.Name}: {value}");
         GenericData sysdata = JsonUtility.FromJson<GenericData>(data.SystemData);
@@ -157,7 +162,7 @@ public class GenericData {
                 }
             }
             OnVitalChange(token);
-        }        
+        }
     }
 
     private void OnVitalChange(Token token) {

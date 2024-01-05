@@ -72,7 +72,13 @@ public class GameSystem : MonoBehaviour
     }
 
     public virtual void TokenDataSetValue(string tokenId, string value) {
-        throw new NotImplementedException();
+        TokenData2 data = TokenData2.Find(tokenId);
+        if (value == "EndTurn") {
+            data.UnitBarElement.Q("Portrait").style.unityBackgroundImageTintColor = ColorUtility.ColorFromHex("#505050");
+        }
+        else if (value == "StartTurn") {
+            data.UnitBarElement.Q("Portrait").style.unityBackgroundImageTintColor = Color.white;
+        }
     }
 
     public virtual void UpdateTokenPanel(string tokenId, string elementName) {

@@ -107,6 +107,6 @@ public class TokenMenu
 
     public static void ClickEndTurn(ClickEvent evt) {
         TokenData2 data = Token.GetSelected().Data;
-        Player.Self().CmdRequestTokenDataSetValue(data.Id, "GainStatus|Turn Ended");
+        Player.Self().CmdRequestTokenDataSetValue(data.Id, "EndTurn");
     }
 }

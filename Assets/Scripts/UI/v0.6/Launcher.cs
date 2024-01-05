@@ -158,7 +158,7 @@ public class Launcher : MonoBehaviour
 
         if (_connectMode == "solo" || _connectMode == "host") {
             string system = PlayerPrefs.GetString("System", "Generic");
-            Modal.AddDropdownField("GameSystem", "Game System", system, new string[]{"Generic", "ICON 1.5", "Maleghast", "Lancer"}, (evt) => {
+            Modal.AddDropdownField("GameSystem", "Game System", system, new string[]{"Generic", "ICON 1.5", "Maleghast"/*, "Lancer"*/}, (evt) => {
                 PlayerPrefs.SetString("System", evt.newValue);
                 ConfigModalEvaluateConditions();
             });

@@ -143,7 +143,7 @@ public class Icon_v1_5 : GameSystem {
             UI.System.Q<Label>("TurnNumber").text = TurnNumber.ToString();
             foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
                 TokenData2 data = g.GetComponent<TokenData2>();
-                TokenDataSetValue(data.Id, "LoseStatus|Turn Ended");
+                TokenDataSetValue(data.Id, "StartTurn");
             }
         }
     }
@@ -336,6 +336,7 @@ public class Icon_v1_5 : GameSystem {
     }
 
     public override void TokenDataSetValue(string tokenId, string value) {
+        base.TokenDataSetValue(tokenId, value);
         TokenData2 data = TokenData2.Find(tokenId);
         Debug.Log($"Icon 1.5 Interpreter change registered for {data.Name}: {value}");
         Icon1_5Data sysdata = JsonUtility.FromJson<Icon1_5Data>(data.SystemData);
