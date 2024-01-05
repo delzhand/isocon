@@ -47,7 +47,7 @@
             <ui:Button text="Clear Cache" name="ClearCache" style="position: relative;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="Tabletop" style="flex-grow: 1; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: none;">
+    <ui:VisualElement name="Tabletop" style="flex-grow: 1; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex;">
         <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: flex;">
             <ui:VisualElement name="Gamespace" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; position: relative; margin-right: 0; flex-direction: column;">
                 <ui:VisualElement name="SelectionMenu" class="panel self-centered" style="position: absolute; display: none;">
@@ -138,7 +138,7 @@
                 </ui:VisualElement>
                 <ui:VisualElement name="ClickCatcher" style="flex-grow: 1; position: absolute; left: -20%; top: -20%; right: -20%; bottom: -20%; display: none;" />
                 <ui:VisualElement name="TopLeft" style="flex-grow: 1; position: absolute; left: 0; top: 0; flex-direction: row; align-items: flex-start;">
-                    <ui:VisualElement name="ToolsPanel" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: none; width: 66px; margin-right: 8px; padding-right: 10px; padding-top: 8px;">
+                    <ui:VisualElement name="ToolsPanel" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: flex; width: 66px; margin-right: 8px; padding-right: 10px; padding-top: 8px;">
                         <ui:VisualElement style="flex-grow: 1; flex-direction: row; margin-top: 0; margin-right: -2px; margin-bottom: -4px; margin-left: -2px; flex-wrap: wrap;">
                             <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="AddBlock" class="active tool" style="width: 48px; height: 48px; -unity-background-scale-mode: scale-to-fit; margin-top: 0; margin-right: 2px; margin-bottom: 4px; margin-left: 2px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; overflow: visible;">
                                 <ui:VisualElement name="Tooltip" style="flex-grow: 1; position: absolute; background-color: rgb(195, 195, 195); left: 52px; top: 32px; padding-top: 4px; padding-right: 10px; padding-bottom: 4px; padding-left: 10px; display: none;">
@@ -167,7 +167,7 @@
                                     <ui:Label tabindex="-1" text="Change Shape" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ToolName" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; color: rgb(0, 0, 0); -unity-font-style: bold; -unity-text-align: middle-left;" />
                                     <ui:Label tabindex="-1" text="Change block shape or rotate" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Description" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; color: rgb(96, 96, 96); -unity-text-align: middle-left; font-size: 12px;" />
                                 </ui:VisualElement>
-                                <ui:VisualElement name="Options" class="panel subtool-flyout" style="flex-grow: 0; flex-direction: column; align-items: stretch; align-self: flex-start; justify-content: flex-start; display: none; margin-right: 0; margin-left: 0; margin-top: 0; position: absolute; left: 50px; padding-top: 8px; padding-right: 10px; padding-bottom: 10px;">
+                                <ui:VisualElement name="Options" class="panel subtool-flyout" style="flex-grow: 0; flex-direction: column; align-items: stretch; align-self: flex-start; justify-content: flex-start; display: flex; margin-right: 0; margin-left: 0; margin-top: 0; position: absolute; left: 50px; padding-top: 8px; padding-right: 10px; padding-bottom: 10px;">
                                     <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="ShapeSolid" class="subtool" style="-unity-background-scale-mode: scale-to-fit; flex-direction: row; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 4px;">
                                         <ui:VisualElement name="Icon" style="width: 40px; height: 32px; background-image: resource(&apos;Textures/ToolIcons/shape-solid&apos;); -unity-background-scale-mode: scale-to-fit;" />
                                         <ui:Label tabindex="-1" text="Solid" parse-escape-sequences="true" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 4px; padding-bottom: 0; padding-left: 4px;" />
@@ -177,11 +177,11 @@
                                         <ui:Label tabindex="-1" text="Slope" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 4px; padding-bottom: 0; padding-left: 4px;" />
                                     </ui:Button>
                                     <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="ShapeSlopeInt" class="subtool" style="flex-direction: row; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 4px;">
-                                        <ui:VisualElement name="Icon" style="width: 40px; height: 32px; -unity-background-scale-mode: scale-to-fit;" />
+                                        <ui:VisualElement name="Icon" style="width: 40px; height: 32px; -unity-background-scale-mode: scale-to-fit; background-image: resource(&apos;Textures/ToolIcons/slope-corner-int&apos;);" />
                                         <ui:Label tabindex="-1" text="Slope Corner Inside" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 4px; padding-bottom: 0; padding-left: 4px;" />
                                     </ui:Button>
                                     <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="ShapeSlopeExt" class="subtool" style="flex-direction: row; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 4px;">
-                                        <ui:VisualElement name="Icon" style="width: 40px; height: 32px; -unity-background-scale-mode: scale-to-fit;" />
+                                        <ui:VisualElement name="Icon" style="width: 40px; height: 32px; -unity-background-scale-mode: scale-to-fit; background-image: resource(&apos;Textures/ToolIcons/slope-corner-ext&apos;);" />
                                         <ui:Label tabindex="-1" text="Slope Corner Outside" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 4px; padding-bottom: 0; padding-left: 4px;" />
                                     </ui:Button>
                                     <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="ShapeSteps" class="subtool" style="flex-direction: row; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 4px;">
@@ -193,7 +193,7 @@
                                         <ui:Label tabindex="-1" text="Round Corner" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 4px; padding-bottom: 0; padding-left: 4px;" />
                                     </ui:Button>
                                     <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="ShapeFlatCorner" class="subtool" style="flex-direction: row; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 4px;">
-                                        <ui:VisualElement name="Icon" style="width: 40px; height: 32px; background-image: none; -unity-background-scale-mode: scale-to-fit;" />
+                                        <ui:VisualElement name="Icon" style="width: 40px; height: 32px; background-image: resource(&apos;Textures/ToolIcons/straight-corner&apos;); -unity-background-scale-mode: scale-to-fit;" />
                                         <ui:Label tabindex="-1" text="Straight Corner" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 4px; padding-bottom: 0; padding-left: 4px;" />
                                     </ui:Button>
                                     <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="ShapeUpslope" class="subtool" style="-unity-background-scale-mode: scale-to-fit; flex-direction: row; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 4px;">
