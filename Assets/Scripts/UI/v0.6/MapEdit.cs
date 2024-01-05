@@ -53,7 +53,9 @@ public class MapEdit
                 // close flyouts
                 CloseSubtoolFlyouts(new ClickEvent());
                 if (toolButton.ClassListContains("has-subtools")) {
-                    LongPress.Add(tool.name);
+                    if (Input.GetMouseButtonDown(1)) {
+                        ShowSubtools(tool.name);
+                    }
                 }
                 if (toolButton.ClassListContains("has-options")) {
                     OpenOptions(toolButton.name);
@@ -62,11 +64,6 @@ public class MapEdit
                     OpenOptions(toolButton.name, true);
                 }
             });       
-            if (toolButton.ClassListContains("has-subtools")) {
-                toolButton.RegisterCallback<MouseUpEvent>((evt) => {
-                    LongPress.ClearAll();
-                });
-            }
         });
 
         toolsRoot.Query(null, "subtool").ForEach((tool) => {
@@ -93,7 +90,7 @@ public class MapEdit
         });
     }
 
-    public static void LongPressResult(string claim) {
+    public static void ShowSubtools(string claim) {
         UI.ToggleDisplay(UI.System.Q("ToolsPanel").Q(claim).Q("Tooltip"), false);
         OpenSubtoolFlyout(UI.System.Q("ToolsPanel").Q(claim).Q("Options"));
     }
