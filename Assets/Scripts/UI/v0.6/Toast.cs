@@ -19,6 +19,19 @@ public class Toast : MonoBehaviour
     void Start()
     {
         label = new Label();
+        label.style.backgroundColor = ColorUtility.ColorFromHex("#223A76");
+        label.style.paddingBottom = 4;
+        label.style.paddingTop = 4;
+        label.style.paddingLeft = 8;
+        label.style.paddingRight = 8;
+        label.style.borderTopWidth = 2;
+        label.style.borderBottomWidth = 2;
+        label.style.borderLeftWidth = 2;
+        label.style.borderRightWidth = 2;
+        label.style.borderTopColor = Color.white;
+        label.style.borderBottomColor = Color.white;
+        label.style.borderLeftColor = Color.white;
+        label.style.borderRightColor = Color.white;
         label.text = Message;     
         UI.System.Q("Toasts").Add(label);
         UI.System.Q("Toasts").style.display = DisplayStyle.Flex;
