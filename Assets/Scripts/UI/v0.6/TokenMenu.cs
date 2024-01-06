@@ -23,64 +23,18 @@ public class TokenMenu
     public static MenuItem[] GetTokenMenuItems(TokenData2 data)
     {
         List<MenuItem> items = new();
-        if (!data.Placed) {
-            items.Add(new MenuItem("Place", "Place", ClickPlace));
-        }
-        else {
+        if (data.Placed) {
             items.Add(new MenuItem("Remove", "Remove", ClickRemove));
-            items.Add(new MenuItem("Move", "Move", ClickMove));
             items.Add(new MenuItem("Flip", "Flip", ClickFlip));
         }
-        items.Add(new MenuItem("Clone", "Clone", ClickClone));
         items.Add(new MenuItem("EndTurn", "End Turn", ClickEndTurn));
+        items.Add(new MenuItem("Clone", "Clone", ClickClone));
         items.Add(new MenuItem("Delete", "Delete", ClickDelete));
         return items.ToArray();
     }
 
-    public static void ClickPlace(ClickEvent evt) {
-        // if (SelectionMenu.IsActive("Place")) {
-        //     EndCursorMode();
-        //     return;
-        // }
-        Block.DeselectAll();
-        Block.UnfocusAll();
-        Cursor.Mode = CursorMode.Placing;
-        BlockMesh.ToggleBorders(true);
-        SelectionMenu.ActivateItem("Place");
-    }
-
-    public static void DoPlace(Block b) {
-        Token.GetSelected().Place(b);
-        EndCursorMode();
-        Token.GetSelected().Data.Placed = true; // change this locally just so we can get updated menu options immediately
-        UI.ToggleDisplay("CurrentOp", false);
-        // ShowMenu();
-    }
-
-    public static void ClickMove(ClickEvent evt) {
-        // if (SelectionMenu.IsActive("Move")) {
-        //     EndCursorMode();
-        //     return;
-        // }
-        Block.DeselectAll();
-        Block.UnfocusAll();
-        Cursor.Mode = CursorMode.Moving;
-        BlockMesh.ToggleBorders(true);
-        SelectionMenu.ActivateItem("Move");
-    }
-
     public static void ClickFlip(ClickEvent evt) {
         Token.GetSelected().transform.Find("Offset/Avatar/Cutout/Cutout Quad").Rotate(new Vector3(0, 180, 0));
-    }
-
-    public static void DoMove(Block b) {
-        Token.GetSelected().Move(b);
-    }
-
-    public static void EndCursorMode() {
-        Block.DehighlightAll();
-        SelectionMenu.DeactivateItem();
-        // ShowMenu();
     }
 
     public static void ClickRemove(ClickEvent evt) {

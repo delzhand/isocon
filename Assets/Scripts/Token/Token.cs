@@ -106,57 +106,27 @@ public class Token : MonoBehaviour
     }
 
     public void LeftClick() {
-        if (!Data.Placed) {
-            Select();
-            StartPlacing();
+        if (Selected) {
+            Deselect();
             return;
         }
 
-        if (Selected) {
-            Deselect();
-        }
-        else {
-            Select();
+        Select();
+        if (Data.Placed) {
             StartMoving();
         }
-
-
-
-        // switch (Cursor.Mode) {
-        //     case CursorMode.Placing:
-        //         TokenMenu.ClickMove(null);
-        //         break;
-        //     case CursorMode.Moving:
-        //         TokenMenu.EndCursorMode();
-        //         break;
-        // }
-
-        // if (Selected) {
-        //     Deselect();
-        // }
-        // else {
-        //     Select(false);
-        // }
+        else {
+            StartPlacing();
+        }
     }
 
     public void RightClick() {
-        if (!Data.Placed) {
-            TokenMenu.ShowMenu();
+        if (Selected) {
+            Deselect();
+            return;
         }
-
-        // switch (Cursor.Mode) {
-        //     case CursorMode.Placing:
-        //     case CursorMode.Moving:
-        //         TokenMenu.EndCursorMode();
-        //         break;
-        // }
-
-        // if (Selected) {
-        //     Deselect();
-        // }
-        // else {
-        //     Select(true);
-        // }    
+        Select();
+        TokenMenu.ShowMenu();
     }
 
     private void StartPlacing(){
