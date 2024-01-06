@@ -16,7 +16,6 @@ public class Token : MonoBehaviour
     public int Size = 1;
     public Texture2D Image;
 
-    // public GameObject onlineDataObject;
     public TokenData2 Data;
 
     public float ShareOffsetX;
@@ -27,13 +26,45 @@ public class Token : MonoBehaviour
     public bool Selected = false;
     public bool Focused = false;
 
-    public static float CutoutSize = 1;
-
     void Update()
     {
+
         alignToCamera();
-        UpdateScale();
-        UpdateVisualEffect();
+
+        float CutoutSize = PlayerPrefs.GetFloat("TokenScale", 1f);
+        transform.Find("Offset/Avatar/Cutout").localScale = new Vector3(CutoutSize, CutoutSize, CutoutSize);
+
+        if (Selected && Cursor.Mode == CursorMode.Moving) {
+            SetVisualArrows();
+        }
+        else if (Selected) {
+            SetVisualSquareYellow();
+        }
+        else if (Focused) {
+            SetVisualSquareBlue();
+        }
+        else {
+            SetVisualNone();
+        }
+
+        string tokenOutline = PlayerPrefs.GetString("TokenOutline", "White");
+        switch(tokenOutline) {
+            case "Black":
+                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.black);
+                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 1);
+                break;
+            case "None":
+                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.black);
+                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 0);
+                break;
+            default:
+                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.white);
+                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 1);
+                break;
+        }
+
+
+
         Offset();
 
         if (Focused && this != LastFocused) {
@@ -48,6 +79,7 @@ public class Token : MonoBehaviour
     }
 
     private void UpdateScale() {
+        float CutoutSize = PlayerPrefs.GetFloat("TokenScale", 1f);
         transform.Find("Offset/Avatar/Cutout").localScale = new Vector3(CutoutSize, CutoutSize, CutoutSize);
     }
 
@@ -178,21 +210,6 @@ public class Token : MonoBehaviour
         Token t = GetFocused();
         if (t) {
             t.Unfocus();
-        }
-    }
-
-    public void UpdateVisualEffect() {
-        if (Selected && Cursor.Mode == CursorMode.Moving) {
-            SetVisualArrows();
-        }
-        else if (Selected) {
-            SetVisualSquareYellow();
-        }
-        else if (Focused) {
-            SetVisualSquareBlue();
-        }
-        else {
-            SetVisualNone();
         }
     }
 

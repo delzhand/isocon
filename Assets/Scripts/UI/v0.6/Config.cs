@@ -25,9 +25,13 @@ public class Config
         });
         
         float tokenScale = PlayerPrefs.GetFloat("TokenScale", 1f);
-        Modal.AddFloatSlider("TokenScaleField", "Token Scale", 1f, 2f, .5f, (evt) => {
+        Modal.AddFloatSlider("TokenScaleField", "Token Scale", tokenScale, 2f, .5f, (evt) => {
             PlayerPrefs.SetFloat("TokenScale", evt.newValue);
-            Token.CutoutSize = evt.newValue;
+        });
+
+        string tokenOutline = PlayerPrefs.GetString("TokenOutline", "White");
+        Modal.AddDropdownField("TokenOutlineField", "Token Outline", tokenOutline, StringUtility.Arr("White", "Black", "None"), (evt) => {
+            PlayerPrefs.SetString("TokenOutline", evt.newValue);
         });
 
         Modal.AddPreferredButton("Confirm", CloseModal);
