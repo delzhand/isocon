@@ -105,7 +105,7 @@ public class Player : NetworkBehaviour
     public void CmdCreateToken(string system, string graphicHash, string name, int size, Color color, string systemData) {
         string id = Guid.NewGuid().ToString();
         GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData2"));
-        TokenData2 data = g.GetComponent<TokenData2>();
+        TokenData data = g.GetComponent<TokenData>();
         data.Id = id;
         data.System = system;
         data.GraphicHash = graphicHash;
@@ -120,14 +120,14 @@ public class Player : NetworkBehaviour
     #region Delete Token
     [Command]
     public void CmdRequestDeleteToken(string tokenId) {
-        TokenData2 data = TokenData2.Find(tokenId);
+        TokenData data = TokenData.Find(tokenId);
         FileLogger.Write($"Client {connectionToClient.connectionId} requested to delete token {data.Name}");
         RpcDeleteToken(tokenId);
         data.Destroyed = true;
     }
     [ClientRpc]
     public void RpcDeleteToken(string tokenId) {
-        TokenData2 data = TokenData2.Find(tokenId);
+        TokenData data = TokenData.Find(tokenId);
         data.Delete();
         FileLogger.Write($"Token {data.Name} was deleted");
         Toast.Add($"{data.Name} deleted.");
@@ -154,7 +154,7 @@ public class Player : NetworkBehaviour
 
     [ClientRpc]
     private void RpcDoMoveToken(string tokenId, Vector3 v, bool immediate) {
-        TokenData2 data = TokenData2.Find(tokenId);
+        TokenData data = TokenData.Find(tokenId);
         data.LastKnownPosition = v;
         if (immediate) {
             data.WorldObject.transform.position = v;
@@ -166,7 +166,7 @@ public class Player : NetworkBehaviour
 
     [ClientRpc]
     private void RpcPlaceToken(string tokenId, bool place) {
-        TokenData2 data = TokenData2.Find(tokenId);
+        TokenData data = TokenData.Find(tokenId);
         data.Place(place);
     }
     #endregion

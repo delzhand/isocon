@@ -44,7 +44,7 @@ public class Maleghast : GameSystem
             TurnNumber++;
             UI.System.Q<Label>("TurnNumber").text = TurnNumber.ToString();
             foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
-                TokenData2 data = g.GetComponent<TokenData2>();
+                TokenData data = g.GetComponent<TokenData>();
                 TokenDataSetValue(data.Id, "StartTurn");
             }
         }
@@ -80,7 +80,7 @@ public class Maleghast : GameSystem
         UI.Modal.Q("Number").AddToClassList("big-number");
         Modal.AddContentButton("ReduceHP", "Reduce HP", (evt) => AlterVitals("LoseHP"));
         Modal.AddContentButton("RecoverHP", "Recover HP", (evt) => AlterVitals("GainHP"));
-        TokenData2 data = Token.GetSelected().Data;
+        TokenData data = Token.GetSelected().Data;
         MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
         if (sysdata.Type == "Necromancer") {
             Modal.AddContentButton("ReduceSOUL", "Reduce SOUL", (evt) => AlterVitals("LoseSOUL"));
@@ -96,7 +96,7 @@ public class Maleghast : GameSystem
 
     private void ConfigModal(ClickEvent evt) {
         Modal.Reset("Configure Unit");
-        TokenData2 data = Token.GetSelected().Data;
+        TokenData data = Token.GetSelected().Data;
         MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
         ConfigModalSublist(sysdata.Upgrades, "Upgrade");
         if (sysdata.Type == "Necromancer") {
@@ -132,7 +132,7 @@ public class Maleghast : GameSystem
     }
 
     private void RebuildLists(ChangeEvent<Boolean> evt) {
-        TokenData2 data = Token.GetSelected().Data;
+        TokenData data = Token.GetSelected().Data;
         MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
 
         Toggle t = evt.currentTarget as Toggle;
@@ -186,7 +186,7 @@ public class Maleghast : GameSystem
     }
 
     private void EditStatusModal(ClickEvent evt) {
-        TokenData2 data = Token.GetSelected().Data;
+        TokenData data = Token.GetSelected().Data;
         MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
 
         Modal.Reset("Alter Status");
@@ -271,7 +271,7 @@ public class Maleghast : GameSystem
         Player.Self().CmdCreateToken("Maleghast", graphicHash, name, size, color, JsonUtility.ToJson(data));
     }
 
-    public override void UpdateData(TokenData2 data) {
+    public override void UpdateData(TokenData data) {
         MaleghastData mdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
         data.OverheadElement.Q<ProgressBar>("HpBar").value = mdata.CurrentHP;
         data.OverheadElement.Q<ProgressBar>("HpBar").highValue = mdata.MaxHP;        
@@ -334,7 +334,7 @@ public class Maleghast : GameSystem
 
     public override void TokenDataSetValue(string tokenId, string value) {
         base.TokenDataSetValue(tokenId, value);
-        TokenData2 data = TokenData2.Find(tokenId);
+        TokenData data = TokenData.Find(tokenId);
         Debug.Log($"MaleghastInterpreter change registered for {data.Name}: {value}");
         MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
         sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
@@ -342,7 +342,7 @@ public class Maleghast : GameSystem
     }
 
     public override void UpdateTokenPanel(string tokenId, string elementName) {
-        TokenData2 data = TokenData2.Find(tokenId);
+        TokenData data = TokenData.Find(tokenId);
         UI.ToggleActiveClass(elementName, data != null);
         if (!data) {
             return;

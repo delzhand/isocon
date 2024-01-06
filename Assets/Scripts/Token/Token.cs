@@ -16,7 +16,7 @@ public class Token : MonoBehaviour
     public int Size = 1;
     public Texture2D Image;
 
-    public TokenData2 Data;
+    public TokenData Data;
 
     public float ShareOffsetX;
     public float ShareOffsetY;

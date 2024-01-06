@@ -51,7 +51,7 @@ public class Generic : GameSystem
             TurnNumber++;
             UI.System.Q<Label>("TurnNumber").text = TurnNumber.ToString();
             foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
-                TokenData2 data = g.GetComponent<TokenData2>();
+                TokenData data = g.GetComponent<TokenData>();
                 TokenDataSetValue(data.Id, "StartTurn");
             }
         }
@@ -81,7 +81,7 @@ public class Generic : GameSystem
         Player.Self().CmdCreateToken("Generic", graphicHash, name, size, Color.black, JsonUtility.ToJson(data));
     }
 
-    public override void UpdateData(TokenData2 data) {
+    public override void UpdateData(TokenData data) {
         GenericData mdata = JsonUtility.FromJson<GenericData>(data.SystemData);
         data.OverheadElement.Q<ProgressBar>("HpBar").value = mdata.CurrentHP;
         data.OverheadElement.Q<ProgressBar>("HpBar").highValue = mdata.MaxHP;        
@@ -90,7 +90,7 @@ public class Generic : GameSystem
     public override void TokenDataSetValue(string tokenId, string value)
     {
         base.TokenDataSetValue(tokenId, value);
-        TokenData2 data = TokenData2.Find(tokenId);
+        TokenData data = TokenData.Find(tokenId);
         Debug.Log($"GenericInterpreter change registered for {data.Name}: {value}");
         GenericData sysdata = JsonUtility.FromJson<GenericData>(data.SystemData);
         sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
@@ -98,7 +98,7 @@ public class Generic : GameSystem
     }
 
     public override void UpdateTokenPanel(string tokenId, string elementName) {
-        TokenData2 data = TokenData2.Find(tokenId);
+        TokenData data = TokenData.Find(tokenId);
         UI.ToggleActiveClass(elementName, data != null);
         if (!data) {
             return;

@@ -31,7 +31,7 @@ public class PlayerController : NetworkBehaviour
         Toast.Add("Disconnected.");
         GameObject[] objs = GameObject.FindGameObjectsWithTag("TokenData");
         for (int i = 0; i < objs.Length; i++) {
-            objs[i].GetComponent<TokenData2>().Disconnect();
+            objs[i].GetComponent<TokenData>().Disconnect();
         }
         TerrainController.DestroyAllBlocks();
     }

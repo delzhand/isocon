@@ -8,7 +8,7 @@ public class TokenMenu
     public static void ShowMenu() {
         Block.DeselectAll();
         Block.DehighlightAll();
-        TokenData2 data = Token.GetSelected().Data;
+        TokenData data = Token.GetSelected().Data;
         SelectionMenu.Reset("TOKEN MENU");
         MenuItem[] defaultItems = GetTokenMenuItems(data);
         foreach (MenuItem m in defaultItems) {
@@ -20,7 +20,7 @@ public class TokenMenu
         }
     }
 
-    public static MenuItem[] GetTokenMenuItems(TokenData2 data)
+    public static MenuItem[] GetTokenMenuItems(TokenData data)
     {
         List<MenuItem> items = new();
         if (data.Placed) {
@@ -44,7 +44,7 @@ public class TokenMenu
     }
 
     public static void ClickDelete(ClickEvent evt) {
-        TokenData2 data = Token.GetSelected().Data;
+        TokenData data = Token.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
         Modal.DoubleConfirm("Delete Token", $"Are you sure you want to delete {name}? This action cannot be undone.", () => {
             Token.DeselectAll();
@@ -53,7 +53,7 @@ public class TokenMenu
     }
 
     public static void ClickClone(ClickEvent evt) {
-        TokenData2 data = Token.GetSelected().Data;
+        TokenData data = Token.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
         Modal.DoubleConfirm("Clone Token", $"Are you sure you want to clone {name}?", () => {
             Player.Self().CmdCreateToken(data.System, data.GraphicHash, data.Name, data.Size, data.Color, data.SystemData);
@@ -61,7 +61,7 @@ public class TokenMenu
     }
 
     public static void ClickEndTurn(ClickEvent evt) {
-        TokenData2 data = Token.GetSelected().Data;
+        TokenData data = Token.GetSelected().Data;
         Player.Self().CmdRequestTokenDataSetValue(data.Id, "EndTurn");
     }
 }

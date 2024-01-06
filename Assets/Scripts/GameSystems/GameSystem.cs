@@ -49,7 +49,7 @@ public class GameSystem : MonoBehaviour
         Modal.AddTextField("NameField", "Token Name", "");
     }
 
-    public virtual MenuItem[] GetTokenMenuItems(TokenData2 data) {
+    public virtual MenuItem[] GetTokenMenuItems(TokenData data) {
         List<MenuItem> items = new();
         return items.ToArray();
     }
@@ -67,12 +67,12 @@ public class GameSystem : MonoBehaviour
         throw new NotImplementedException();
     }
 
-    public virtual void UpdateData(TokenData2 data) {
+    public virtual void UpdateData(TokenData data) {
         throw new NotImplementedException();
     }
 
     public virtual void TokenDataSetValue(string tokenId, string value) {
-        TokenData2 data = TokenData2.Find(tokenId);
+        TokenData data = TokenData.Find(tokenId);
         if (value == "EndTurn") {
             data.UnitBarElement.Q("Portrait").style.unityBackgroundImageTintColor = ColorUtility.ColorFromHex("#505050");
         }

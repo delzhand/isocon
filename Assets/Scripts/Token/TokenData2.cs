@@ -6,7 +6,7 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
-public class TokenData2 : NetworkBehaviour
+public class TokenData : NetworkBehaviour
 {
     [SyncVar]
     public string System;
@@ -190,9 +190,9 @@ public class TokenData2 : NetworkBehaviour
         UnitBarElement.Q("ClassBackground").style.borderLeftColor = Color;
     }
 
-    public static TokenData2 Find(string id) {
+    public static TokenData Find(string id) {
         foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
-            TokenData2 data = g.GetComponent<TokenData2>();
+            TokenData data = g.GetComponent<TokenData>();
             if (data.Id == id) {
                 return data;
             }

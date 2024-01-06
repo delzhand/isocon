@@ -142,7 +142,7 @@ public class Icon_v1_5 : GameSystem {
             TurnNumber++;
             UI.System.Q<Label>("TurnNumber").text = TurnNumber.ToString();
             foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
-                TokenData2 data = g.GetComponent<TokenData2>();
+                TokenData data = g.GetComponent<TokenData>();
                 TokenDataSetValue(data.Id, "StartTurn");
             }
         }
@@ -297,7 +297,7 @@ public class Icon_v1_5 : GameSystem {
         return statColor;     
     }
 
-    public override void UpdateData(TokenData2 data) {
+    public override void UpdateData(TokenData data) {
         Icon1_5Data mdata = JsonUtility.FromJson<Icon1_5Data>(data.SystemData);
 
         data.OverheadElement.Q<ProgressBar>("VigorBar").value = mdata.Vigor;
@@ -337,7 +337,7 @@ public class Icon_v1_5 : GameSystem {
 
     public override void TokenDataSetValue(string tokenId, string value) {
         base.TokenDataSetValue(tokenId, value);
-        TokenData2 data = TokenData2.Find(tokenId);
+        TokenData data = TokenData.Find(tokenId);
         Debug.Log($"Icon 1.5 Interpreter change registered for {data.Name}: {value}");
         Icon1_5Data sysdata = JsonUtility.FromJson<Icon1_5Data>(data.SystemData);
         sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
@@ -346,7 +346,7 @@ public class Icon_v1_5 : GameSystem {
     }
 
     public override void UpdateTokenPanel(string tokenId, string elementName) {
-        TokenData2 data = TokenData2.Find(tokenId);
+        TokenData data = TokenData.Find(tokenId);
         UI.ToggleActiveClass(elementName, data != null);
         if (!data) {
             return;
