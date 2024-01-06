@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
-using Mono.Cecil;
 using UnityEngine;
 
 public class DestinationRenderer : NetworkBehaviour
@@ -33,7 +32,8 @@ public class DestinationRenderer : NetworkBehaviour
         Line.endWidth = .05f;
         Line.numCapVertices = 4;
         Line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        Line.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
+        // Line.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
+        Line.material = Resources.Load<Material>("Materials/Line");
     }
 
     // Update is called once per frame
@@ -43,6 +43,8 @@ public class DestinationRenderer : NetworkBehaviour
         if (!Visible || !ValidTarget) {
             return;
         }
+
+
 
         TokenData data = TokenData.Find(TokenId);
         Vector3 origin = data.WorldObject.transform.position + new Vector3(0, .25f, 0);

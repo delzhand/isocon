@@ -81,9 +81,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b5de6693250a084da566c2b9ab64db3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
+  syncDirection: 1
   syncMode: 0
   syncInterval: 0
-  PlayerName: 
   TokenId: 
   Target: {x: 0, y: 0, z: 0}
+  Visible: 0
+  ValidTarget: 0
+  Op: 
