@@ -38,10 +38,10 @@ public class TokenMenu
     }
 
     public static void ClickPlace(ClickEvent evt) {
-        if (SelectionMenu.IsActive("Place")) {
-            EndCursorMode();
-            return;
-        }
+        // if (SelectionMenu.IsActive("Place")) {
+        //     EndCursorMode();
+        //     return;
+        // }
         Block.DeselectAll();
         Block.UnfocusAll();
         Cursor.Mode = CursorMode.Placing;
@@ -53,14 +53,15 @@ public class TokenMenu
         Token.GetSelected().Place(b);
         EndCursorMode();
         Token.GetSelected().Data.Placed = true; // change this locally just so we can get updated menu options immediately
-        ShowMenu();
+        UI.ToggleDisplay("CurrentOp", false);
+        // ShowMenu();
     }
 
     public static void ClickMove(ClickEvent evt) {
-        if (SelectionMenu.IsActive("Move")) {
-            EndCursorMode();
-            return;
-        }
+        // if (SelectionMenu.IsActive("Move")) {
+        //     EndCursorMode();
+        //     return;
+        // }
         Block.DeselectAll();
         Block.UnfocusAll();
         Cursor.Mode = CursorMode.Moving;
@@ -79,7 +80,7 @@ public class TokenMenu
     public static void EndCursorMode() {
         Block.DehighlightAll();
         SelectionMenu.DeactivateItem();
-        ShowMenu();
+        // ShowMenu();
     }
 
     public static void ClickRemove(ClickEvent evt) {

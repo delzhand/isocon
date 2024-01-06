@@ -47,7 +47,7 @@
             <ui:Button text="Clear Cache" name="ClearCache" style="position: relative;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="Tabletop" style="flex-grow: 1; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: none;">
+    <ui:VisualElement name="Tabletop" style="flex-grow: 1; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex;">
         <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 80px; display: flex;">
             <ui:VisualElement name="Gamespace" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; position: relative; margin-right: 0; flex-direction: column;">
                 <ui:VisualElement name="SelectionMenu" class="panel self-centered" style="position: absolute; display: none;">
@@ -365,6 +365,9 @@
                     </ui:VisualElement>
                     <ui:Label tabindex="-1" text="DICE LOG" display-tooltip-when-elided="true" class="panel-header" />
                     <ui:ScrollView name="DiceLog" style="flex-direction: column-reverse; margin-top: 0; margin-bottom: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="CurrentOp" class="panel self-centered" style="flex-grow: 1; left: 50%; position: absolute; top: 77px; display: none;">
+                    <ui:Label text="Label" name="Op" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>

@@ -143,9 +143,15 @@ public class TokenData2 : NetworkBehaviour
         UnitBarElement.style.display = DisplayStyle.Flex;
 
         Token t = WorldObject.GetComponent<Token>();
-        UnitBarElement.RegisterCallback<ClickEvent>((evt) => {
-            t.LeftClick();
-            t.Focus();
+        UnitBarElement.RegisterCallback<MouseDownEvent>((evt) => {
+            if (Cursor.IsLeftClick()) {
+                t.LeftClick();
+                t.Focus();
+            }
+            else if (Cursor.IsRightClick()) {
+                t.RightClick();
+                t.Focus();
+            }
         });
         UnitBarElement.RegisterCallback<MouseEnterEvent>((evt) => {
             Cursor.OverUnitBarElement = true;

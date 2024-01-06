@@ -110,6 +110,12 @@ public class CameraControl : MonoBehaviour
         }
     }
 
+    public static void GoToToken(Token token) {
+        if (token != null) {
+            CameraControl.CameraTransform.GetComponent<CameraControl>().Translate(token.transform.position);
+        }
+    }
+
     public void Translate(Vector3 value) {
         if (!IsLocked /*&& !overhead */) {
             initializeTransition(.25f);

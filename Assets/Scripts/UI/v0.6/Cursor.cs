@@ -144,13 +144,11 @@ public class Cursor : MonoBehaviour
         Token t = c.GetToken();
         switch (Mode) {
             case CursorMode.Default:
+            case CursorMode.Moving:
+            case CursorMode.Placing:
                 if (!t.Focused) {
                     t.Focus();
                 }
-                TokenClicks(t);
-                break;
-            case CursorMode.Moving:
-            case CursorMode.Placing:
                 TokenClicks(t);
                 break;
         }
@@ -172,10 +170,10 @@ public class Cursor : MonoBehaviour
         if (block == null) {
             return;
         }
-        if (Input.GetMouseButtonDown(0)) {
+        if (IsLeftClick()) {
             block.LeftClick();
         }
-        if (Input.GetMouseButtonDown(1)) {
+        if (IsRightClick()) {
             block.RightClick();
         }
     }
@@ -184,11 +182,19 @@ public class Cursor : MonoBehaviour
         if (token == null) {
             return;
         }
-        if (Input.GetMouseButtonDown(0)) {
+        if (IsLeftClick()) {
             token.LeftClick();
         }
-        if (Input.GetMouseButtonDown(1)) {
+        if (IsRightClick()) {
             token.RightClick();
         }
+    }
+
+    public static bool IsRightClick() {
+        return Input.GetMouseButtonDown(1);
+    }
+
+    public static bool IsLeftClick() {
+        return Input.GetMouseButtonDown(0);
     }
 }

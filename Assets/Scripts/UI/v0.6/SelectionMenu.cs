@@ -53,12 +53,18 @@ public class SelectionMenu
     }
 
     public static void ActivateItem(string name) {
+        UI.ToggleDisplay("CurrentOp", true);
+        UI.System.Q("CurrentOp").Q<Label>("Op").text = $"{Token.GetSelected().Data.Name}: {name}"; 
         ActiveItem = name;
-        SelectionMenu.Find().Q(ActiveItem).AddToClassList("active");
+        SelectionMenu.Hide();
+        // SelectionMenu.Find().Q(ActiveItem).AddToClassList("active");
     }
 
     public static void DeactivateItem() {
-        SelectionMenu.Find().Q(ActiveItem).RemoveFromClassList("active");
+        VisualElement e = SelectionMenu.Find().Q(ActiveItem);
+        if (e != null) {
+            e.RemoveFromClassList("active");
+        }
         ActiveItem = "";
     }
 

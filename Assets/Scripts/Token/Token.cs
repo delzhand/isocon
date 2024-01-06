@@ -106,11 +106,10 @@ public class Token : MonoBehaviour
     }
 
     public void LeftClick() {
-        switch (Cursor.Mode) {
-            case CursorMode.Placing:
-            case CursorMode.Moving:
-                TokenMenu.EndCursorMode();
-                break;
+        if (!Data.Placed) {
+            Select();
+            StartPlacing();
+            return;
         }
 
         if (Selected) {
@@ -118,27 +117,80 @@ public class Token : MonoBehaviour
         }
         else {
             Select();
+            StartMoving();
         }
+
+
+
+        // switch (Cursor.Mode) {
+        //     case CursorMode.Placing:
+        //         TokenMenu.ClickMove(null);
+        //         break;
+        //     case CursorMode.Moving:
+        //         TokenMenu.EndCursorMode();
+        //         break;
+        // }
+
+        // if (Selected) {
+        //     Deselect();
+        // }
+        // else {
+        //     Select(false);
+        // }
     }
 
     public void RightClick() {
+        if (!Data.Placed) {
+            TokenMenu.ShowMenu();
+        }
 
+        // switch (Cursor.Mode) {
+        //     case CursorMode.Placing:
+        //     case CursorMode.Moving:
+        //         TokenMenu.EndCursorMode();
+        //         break;
+        // }
+
+        // if (Selected) {
+        //     Deselect();
+        // }
+        // else {
+        //     Select(true);
+        // }    
+    }
+
+    private void StartPlacing(){
+        Block.DeselectAll();
+        Block.UnfocusAll();
+        BlockMesh.ToggleBorders(true);
+        Cursor.Mode = CursorMode.Placing;
+        UI.ToggleDisplay("CurrentOp", true);
+        UI.System.Q("CurrentOp").Q<Label>("Op").text = $"Placing {Data.Name}"; 
     }
 
     public void Place(Block block) {
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
         Player.Self().CmdRequestPlaceToken(Data.Id, v);
-        Cursor.Mode = CursorMode.Default;
-        BlockMesh.ToggleBorders(false);
+        StartMoving();
     }
 
-    public void Remove() {
-        Player.Self().CmdRequestRemoveToken(Data.Id);
+    private void StartMoving() {
+        SetVisualArrows();
+        Block.DeselectAll();
+        Block.UnfocusAll();
+        BlockMesh.ToggleBorders(true);
+        Cursor.Mode = CursorMode.Moving;
+        UI.ToggleDisplay("CurrentOp", true);
+        UI.System.Q("CurrentOp").Q<Label>("Op").text = $"Moving {Data.Name}"; 
     }
 
     public void Move(Block block) {
         Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
         Player.Self().CmdMoveToken(Data.Id, v, false);
+    }
+
+    public void Remove() {
+        Player.Self().CmdRequestRemoveToken(Data.Id);
     }
 
     public void Select() {
@@ -148,12 +200,13 @@ public class Token : MonoBehaviour
         Data.Select();
         UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
         Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
-        TokenMenu.ShowMenu();
     }
 
     public void Deselect() {
         Selected = false;
+        Block.DehighlightAll();
         UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), false);
+        UI.ToggleDisplay("CurrentOp", false);
         SelectionMenu.Hide();
         Cursor.Mode = CursorMode.Default;
         BlockMesh.ToggleBorders(false);
