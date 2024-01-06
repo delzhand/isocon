@@ -99,11 +99,14 @@ public class TokenData : NetworkBehaviour
         SetSize();
     }
     
-    private void CreateOverheadElement() {
-        VisualTreeAsset template = Resources.Load<VisualTreeAsset>(GameSystem.Current().GetOverheadAsset());
-        VisualElement instance = template.Instantiate();
-        OverheadElement = instance.Q("Overhead");
-        UI.System.Q("Worldspace").Add(OverheadElement);
+    public void CreateOverheadElement() {
+        if (GameSystem.Current() != null) {
+            string asset = GameSystem.Current().GetOverheadAsset();
+            VisualTreeAsset template = Resources.Load<VisualTreeAsset>(asset);
+            VisualElement instance = template.Instantiate();
+            OverheadElement = instance.Q("Overhead");
+            UI.System.Q("Worldspace").Add(OverheadElement);
+        }
     }
 
     public void Place(bool place = true) {

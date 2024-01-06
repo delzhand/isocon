@@ -152,6 +152,7 @@ public class Token : MonoBehaviour
         Cursor.Mode = CursorMode.Moving;
         UI.ToggleDisplay("CurrentOp", true);
         UI.System.Q("CurrentOp").Q<Label>("Op").text = $"Moving {Data.Name}"; 
+        Player.Self().GetComponent<DestinationRenderer>().Init(Data.Id, "Moving");
     }
 
     public void Move(Block block) {
@@ -180,6 +181,7 @@ public class Token : MonoBehaviour
         SelectionMenu.Hide();
         Cursor.Mode = CursorMode.Default;
         BlockMesh.ToggleBorders(false);
+        Player.Self().GetComponent<DestinationRenderer>().Deinit();
     }
 
     public static void DeselectAll() {

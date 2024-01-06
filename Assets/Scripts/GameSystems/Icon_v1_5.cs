@@ -298,6 +298,7 @@ public class Icon_v1_5 : GameSystem {
     }
 
     public override void UpdateData(TokenData data) {
+        base.UpdateData(data);
         Icon1_5Data mdata = JsonUtility.FromJson<Icon1_5Data>(data.SystemData);
 
         data.OverheadElement.Q<ProgressBar>("VigorBar").value = mdata.Vigor;

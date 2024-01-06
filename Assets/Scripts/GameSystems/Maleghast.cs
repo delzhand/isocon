@@ -272,6 +272,7 @@ public class Maleghast : GameSystem
     }
 
     public override void UpdateData(TokenData data) {
+        base.UpdateData(data);
         MaleghastData mdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
         data.OverheadElement.Q<ProgressBar>("HpBar").value = mdata.CurrentHP;
         data.OverheadElement.Q<ProgressBar>("HpBar").highValue = mdata.MaxHP;        

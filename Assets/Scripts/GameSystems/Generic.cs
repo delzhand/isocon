@@ -82,6 +82,7 @@ public class Generic : GameSystem
     }
 
     public override void UpdateData(TokenData data) {
+        base.UpdateData(data);
         GenericData mdata = JsonUtility.FromJson<GenericData>(data.SystemData);
         data.OverheadElement.Q<ProgressBar>("HpBar").value = mdata.CurrentHP;
         data.OverheadElement.Q<ProgressBar>("HpBar").highValue = mdata.MaxHP;        

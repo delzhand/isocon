@@ -68,7 +68,9 @@ public class GameSystem : MonoBehaviour
     }
 
     public virtual void UpdateData(TokenData data) {
-        throw new NotImplementedException();
+        if (data.OverheadElement == null) {
+            data.CreateOverheadElement();            
+        }
     }
 
     public virtual void TokenDataSetValue(string tokenId, string value) {

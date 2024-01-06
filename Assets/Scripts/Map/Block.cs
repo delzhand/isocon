@@ -447,6 +447,7 @@ public class Block : MonoBehaviour
         Focused = true;
         MaterialReset = true;
         TerrainController.SetInfo();
+        Player.Self().GetComponent<DestinationRenderer>().SetTarget(transform.position + new Vector3(0, .3f, 0));
     }
 
     public void Unfocus() {
@@ -469,6 +470,7 @@ public class Block : MonoBehaviour
 
 
     public static void UnfocusAll() {
+        Player.Self().GetComponent<DestinationRenderer>().UnsetTarget();
         foreach (Block b in GetFocused()) {
             b.Unfocus();
         }
