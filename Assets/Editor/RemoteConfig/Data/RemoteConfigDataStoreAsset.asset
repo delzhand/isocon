@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"a2824927-9657-426c-880c-5a489f541378\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f021756a-a19a-46f7-ba55-72f4c36434de\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
-    \"value\": \"0.6.0\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"2bce07b0-d705-486e-b784-e5c6e9f0c5b2\"\r\n    },\r\n    \"rs\":
+    \"value\": \"0.6.1\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
+    \"entityId\": \"b4d94c24-ea28-4199-876c-94fec4fadb72\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"b13f2e8d-df5b-43fb-813e-413c48041565\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"d1e72d5a-03e2-4ede-a1d7-6ef088953adf\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
     \"Stats\": {\r\n            \"Blue\": {\r\n              \"MaxHP\": 32,\r\n             
@@ -85,7 +85,7 @@ MonoBehaviour:
     },\r\n            {\r\n              \"Name\": \"Gravebirth\",\r\n             
     \"Color\": \"Purple\",\r\n              \"ModifierType\": \"None\"\r\n           
     },\r\n            {\r\n              \"Name\": \"Odinforce\",\r\n             
-    \"Color\": \"Purple\",\r\n              \"ModifierType\": \"None\"\r\n           
+    \"Color\": \"Purple\",\r\n              \"ModifierType\": \"Number\"\r\n           
     },\r\n            {\r\n              \"Name\": \"Pacified\",\r\n             
     \"Color\": \"Red\",\r\n              \"ModifierType\": \"None\"\r\n           
     },\r\n            {\r\n              \"Name\": \"Pacified+\",\r\n             
@@ -378,15 +378,15 @@ MonoBehaviour:
     \"Flight\",\r\n            \"Miracle\",\r\n            \"Retaliation\",\r\n           
     \"Reload\",\r\n            \"Physical Armor\",\r\n            \"Magic Armor\",\r\n           
     \"Super Armor\"\r\n          ]\r\n        }\r\n      }\r\n    }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"a2824927-9657-426c-880c-5a489f541378\"\r\n   
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f021756a-a19a-46f7-ba55-72f4c36434de\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
-    \"value\": \"0.6.0\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"2bce07b0-d705-486e-b784-e5c6e9f0c5b2\"\r\n    },\r\n    \"rs\":
+    \"value\": \"0.6.1\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
+    \"entityId\": \"b4d94c24-ea28-4199-876c-94fec4fadb72\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"b13f2e8d-df5b-43fb-813e-413c48041565\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"d1e72d5a-03e2-4ede-a1d7-6ef088953adf\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
     \"Stats\": {\r\n            \"Blue\": {\r\n              \"MaxHP\": 32,\r\n             
@@ -451,7 +451,7 @@ MonoBehaviour:
     },\r\n            {\r\n              \"Name\": \"Gravebirth\",\r\n             
     \"Color\": \"Purple\",\r\n              \"ModifierType\": \"None\"\r\n           
     },\r\n            {\r\n              \"Name\": \"Odinforce\",\r\n             
-    \"Color\": \"Purple\",\r\n              \"ModifierType\": \"None\"\r\n           
+    \"Color\": \"Purple\",\r\n              \"ModifierType\": \"Number\"\r\n           
     },\r\n            {\r\n              \"Name\": \"Pacified\",\r\n             
     \"Color\": \"Red\",\r\n              \"ModifierType\": \"None\"\r\n           
     },\r\n            {\r\n              \"Name\": \"Pacified+\",\r\n             

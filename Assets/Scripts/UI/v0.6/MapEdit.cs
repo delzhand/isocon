@@ -53,6 +53,7 @@ public class MapEdit
                 // close flyouts
                 CloseSubtoolFlyouts(new ClickEvent());
                 if (toolButton.ClassListContains("has-subtools")) {
+                    Tutorial.Init("subtools");
                     if (Input.GetMouseButtonDown(1)) {
                         ShowSubtools(tool.name);
                     }
@@ -216,6 +217,7 @@ public class MapEdit
     }
 
     private static void EndEditing() {
+        Tutorial.Init("end edit");
         Cursor.Mode = CursorMode.Default;
         BlockMesh.ToggleBorders(false);
         UI.ToggleDisplay("ToolsPanel", false);

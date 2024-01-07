@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using IsoconUILibrary;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -165,6 +166,16 @@ public class Modal
 
     public static void MoveToColumn(string columnName, string elementName) {
         UI.Modal.Q(columnName).Add(UI.Modal.Q(elementName));
+    }
+
+    public static void AddMarkup(string name, string contents) {
+        Label label = new Label(contents);
+        label.enableRichText = true;
+        label.style.whiteSpace = WhiteSpace.Normal;
+
+        label.name = name;
+        label.AddToClassList("no-margin");
+        Modal.AddContents(label);
     }
 
     public static void AddTextField(string name, string label, string defaultValue, EventCallback<ChangeEvent<string>> onChange = null) {

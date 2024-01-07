@@ -19,6 +19,17 @@ public class Tabletop : MonoBehaviour
         TurnIndicatorSetup();
 
         UI.System.Q("TerrainInfo").Q("AddEffectButton").RegisterCallback<ClickEvent>(AddTerrainEffect.OpenModal);
+
+        UI.System.Q("TurnAdvance").RegisterCallback<MouseEnterEvent>((evt) => {
+            Tutorial.Init("turn advance");
+        });
+        UI.System.Q("TopRight").RegisterCallback<MouseEnterEvent>((evt) => {
+            Tutorial.Init("terrain info");
+        });
+        UI.System.Q("ClearSelected").RegisterCallback<MouseEnterEvent>((evt) => {
+            Tutorial.Init("clear selected");
+        });
+
     }
 
     void Update()
@@ -52,11 +63,13 @@ public class Tabletop : MonoBehaviour
     }
 
     public void ConnectAsClient() {
+        Tutorial.Init("tabletop");
         UI.System.Q("FloatingControls").Q("Connection").Q<Label>("Message").text = "You are connected as a client.";
         UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Connection"), true);
     }
 
     public void ConnectAsHost() {
+        Tutorial.Init("tabletop");
         TerrainController.InitializeTerrain(8, 8, 1);
         Label message = UI.System.Q("FloatingControls").Q("Connection").Q<Label>("Message");
         message.text = "You are hosting. You need to have port forwarding for port 7777 TCP to your local IP. Other players will connect to your public IP, which appears to be <IP>. If you're unable to use port forwarding you can use a service like Ngrok or Hamachi.";
@@ -67,6 +80,7 @@ public class Tabletop : MonoBehaviour
     }
 
     public void ConnectAsSolo() {
+        Tutorial.Init("tabletop");
         TerrainController.InitializeTerrain(8, 8, 1);
         UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Connection"), false);
         BlockMesh.ToggleBorders(false);
@@ -108,6 +122,10 @@ public class Tabletop : MonoBehaviour
         UI.HoverSetup(root.Q("Indicators"));
         UI.HoverSetup(root.Q("Dice"));
 
+        UI.System.Q("FloatingControls").RegisterCallback<MouseEnterEvent>((evt) => {
+            Tutorial.Init("edit mode");
+        });
+
         root.Q("Dice").RegisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
         root.Q("EditMap").RegisterCallback<ClickEvent>(MapEdit.ToggleEditMode);
         root.Q("Config").RegisterCallback<ClickEvent>(Config.OpenModal);
@@ -124,6 +142,14 @@ public class Tabletop : MonoBehaviour
     }
 
     private void BottomBarSetup() {
+        UI.System.Q("BottomBar").RegisterCallback<MouseEnterEvent>((evt) => {
+            Tutorial.Init("token bar");
+        });
+
+        UI.System.Q("BottomBar").Q("AddToken").RegisterCallback<MouseEnterEvent>((evt) => {
+            Tutorial.Init("add token");
+        });
+
         UI.System.Q("BottomBar").Q("AddToken").RegisterCallback<ClickEvent>((evt) => {
             AddToken.OpenModal(evt);
         });
