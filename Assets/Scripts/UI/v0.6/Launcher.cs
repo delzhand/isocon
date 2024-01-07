@@ -28,10 +28,10 @@ public class Launcher : MonoBehaviour
         SetVersionText();
         SetCallbacks();
 
-        // Debug
-        UI.System.Q("Debug").RegisterCallback<ClickEvent>((evt) => {
-            IsoConsole.OpenModal(evt);
-        });
+        // // Debug
+        // UI.System.Q("Debug").RegisterCallback<ClickEvent>((evt) => {
+        //     IsoConsole.OpenModal(evt);
+        // });
     }
 
     void Update()
