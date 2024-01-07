@@ -31,6 +31,18 @@ public class Generic : GameSystem
         }
     }
 
+    public override void Teardown()
+    {
+        TeardownPanel("SelectedTokenPanel");
+        TeardownPanel("FocusedTokenPanel");
+    }
+
+    private void TeardownPanel(string elementName) {
+        VisualElement panel = UI.System.Q(elementName);
+        panel.Q("ExtraInfo").Clear();
+        panel.Q("Data").Clear();
+    }
+
     private void AlterHPModal(ClickEvent evt) {
         Modal.Reset("Alter HP");
         Modal.AddIntField("Number", "Value", 0);

@@ -94,7 +94,7 @@ public class DiceRoller
         visible = !visible;
         UI.ToggleDisplay("DiceRoller", visible);
         UI.ToggleActiveClass("Dice", visible);
-        UI.ToggleDisplay(UI.System.Q("Dice").Q("NewItems"), false);
+        UI.ToggleDisplay(UI.TopBar.Q("Dice").Q("NewItems"), false);
     }
 
     private static void reset() {

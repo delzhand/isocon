@@ -92,7 +92,6 @@ public class MapEdit
     }
 
     public static void ShowSubtools(string claim) {
-        Debug.Log(claim);
         UI.ToggleDisplay(UI.System.Q("ToolsPanel").Q(claim).Q("Tooltip"), false);
         OpenSubtoolFlyout(UI.System.Q("ToolsPanel").Q(claim).Q("Options"));
     }
@@ -213,7 +212,7 @@ public class MapEdit
         Block.ToggleSpacers(true);
         Cursor.Mode = CursorMode.Editing;
         BlockMesh.ToggleBorders(true);
-        UI.ToggleActiveClass(UI.System.Q("SystemMenu").Q("EditMap"), true);
+        UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), true);
         UI.ToggleDisplay("BottomBar", false);
     }
 
@@ -226,7 +225,7 @@ public class MapEdit
         Block.ToggleSpacers(false);
         State.SetCurrentJson();
         Player.Self().CmdMapSync();
-        UI.ToggleActiveClass(UI.System.Q("SystemMenu").Q("EditMap"), false);
+        UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), false);
         UI.ToggleDisplay("BottomBar", true);
     }
 

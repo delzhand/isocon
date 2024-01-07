@@ -22,7 +22,7 @@ public class CameraControl : MonoBehaviour
     private static Vector3 ReservePosition;
 
     private static bool IsLocked;
-    private static bool Overhead;
+    public static bool Overhead;
 
     void Start()
     {
@@ -33,15 +33,12 @@ public class CameraControl : MonoBehaviour
     }
 
     private static void registerCallbacks() {
-        UI.System.Q("RotateCCW").RegisterCallback<ClickEvent>(rotateLeft);
-        UI.System.Q("RotateCW").RegisterCallback<ClickEvent>(rotateRight);
-        UI.System.Q<Slider>("ZoomScale").RegisterValueChangedCallback(zoom);
-        // UI.System.Q("Tilt").Q("TiltUp").RegisterCallback<ClickEvent>(tiltUp);
-        // UI.System.Q("Tilt").Q("TiltDown").RegisterCallback<ClickEvent>(tiltDown);
+        UI.TopBar.Q("RotateCCW").RegisterCallback<ClickEvent>(rotateLeft);
+        UI.TopBar.Q("RotateCW").RegisterCallback<ClickEvent>(rotateRight);
+        UI.TopBar.Q<Slider>("ZoomSlider").RegisterValueChangedCallback(zoom);
+        UI.TopBar.Q<Slider>("TiltSlider").RegisterValueChangedCallback(tilt);
 
-        UI.System.Q<Slider>("TiltSlider").RegisterValueChangedCallback(tilt);
-
-        UI.System.Q("FixedView").RegisterCallback<ClickEvent>((evt) => {
+        UI.TopBar.Q("FixedView").RegisterCallback<ClickEvent>((evt) => {
             if (Overhead) {
                 disableOverhead();
             }
@@ -71,20 +68,20 @@ public class CameraControl : MonoBehaviour
             bool isOutside = view.x < 0 || view.x > 1 || view.y < 0 || view.y > 1;
             float scroll = Input.GetAxis("Mouse ScrollWheel");
             if (!isOutside && scroll != 0) {
-                float z = UI.System.Q<Slider>("ZoomScale").value;
+                float z = UI.System.Q<Slider>("ZoomSlider").value;
                 z += scroll;
                 Camera.main.GetComponent<Camera>().orthographicSize = z;
-                UI.System.Q<Slider>("ZoomScale").value = z;
+                UI.System.Q<Slider>("ZoomSlider").value = z;
             }
         }
     }
 
     private static void rotateLeft(ClickEvent evt) {
-        rotate(90);
+        rotate(15);
     }
 
     private static void rotateRight(ClickEvent evt) {
-        rotate(-90);
+        rotate(-15);
     }
 
     private static void rotate(float value) {
@@ -169,9 +166,7 @@ public class CameraControl : MonoBehaviour
         ReserveRotation = CameraTransform.rotation;
         initializeTransition(.25f);
         TargetRotation = Quaternion.Euler(0, 0, 30);
-        UI.System.Q("FixedView").AddToClassList("active");
-        UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Rotate"), false);
-        UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Tilt"), false);
+        UI.TopBar.Q("FixedView").AddToClassList("active");
     }
 
     private static void disableOverhead() {
@@ -180,9 +175,7 @@ public class CameraControl : MonoBehaviour
         if (ReserveRotation != null) {
             TargetRotation = ReserveRotation;
         }
-        UI.System.Q("FixedView").RemoveFromClassList("active");
-        UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Rotate"), true);
-        UI.ToggleDisplay(UI.System.Q("FloatingControls").Q("Tilt"), true);
+        UI.TopBar.Q("FixedView").RemoveFromClassList("active");
     }
 
     private static void initializeTransition(float duration) {

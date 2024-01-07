@@ -38,6 +38,18 @@ public class Maleghast : GameSystem
         panel.Q("ExtraInfo").Add(new Label(){ name = "Job" });
     }
 
+    public override void Teardown()
+    {
+        TeardownPanel("SelectedTokenPanel");
+        TeardownPanel("FocusedTokenPanel");
+    }
+
+    private void TeardownPanel(string elementName) {
+        VisualElement panel = UI.System.Q(elementName);
+        panel.Q("ExtraInfo").Clear();
+        panel.Q("Data").Clear();
+    }
+    
     public override void GameDataSetValue(string value) {
         FileLogger.Write($"Game system changed - {value}");
         if (value == "IncrementTurn") {

@@ -328,3 +328,14 @@
 #MaleghastStatus #StatusPlague .unity-toggle__input > .unity-toggle__checkmark {
     background-image: resource("Textures/GameSystem/Maleghast/MarkerPlague");
 }
+
+#TopBar .item {
+    background-color: rgba(0, 0, 0, .5);
+}
+#TopBar .item:hover {
+    background-color: rgba(156, 122, 25, 1);
+}
+
+#TopBar .item.active {
+    background-color: rgba(25, 130, 156, 1);
+}

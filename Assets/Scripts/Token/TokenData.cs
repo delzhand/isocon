@@ -212,8 +212,12 @@ public class TokenData : NetworkBehaviour
     }
 
     public void Disconnect() {
-        UI.System.Q("UnitBar").Remove(UnitBarElement);
-        UI.System.Q("Worldspace").Remove(OverheadElement);
+        if (UnitBarElement != null) {
+            UnitBarElement.RemoveFromHierarchy();
+        }
+        if (OverheadElement != null) {
+            OverheadElement.RemoveFromHierarchy();
+        }
         Destroy(WorldObject);
     }
 

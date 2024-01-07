@@ -48,6 +48,18 @@ public class Icon_v1_5 : GameSystem {
         panel.Q("ExtraInfo").Add(new Label(){ name = "Elite", text = "Elite" });
     }
 
+    public override void Teardown()
+    {
+        TeardownPanel("SelectedTokenPanel");
+        TeardownPanel("FocusedTokenPanel");
+    }
+
+    private void TeardownPanel(string elementName) {
+        VisualElement panel = UI.System.Q(elementName);
+        panel.Q("ExtraInfo").Clear();
+        panel.Q("Data").Clear();
+    }
+
     private static void AlterVitalsModal(ClickEvent evt) {
         Modal.Reset("Alter Vitals");
         Modal.AddIntField("Number", "Value", 0);

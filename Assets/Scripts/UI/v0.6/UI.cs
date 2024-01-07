@@ -56,6 +56,12 @@ public class UI : MonoBehaviour
         }
     }
 
+    public static VisualElement TopBar {
+        get {
+            return UI.System.Q("TopBar");
+        }
+    }
+
     public static VisualElement ToolsPanel {
         get {
             return UI.System.Q("ToolsPanel");

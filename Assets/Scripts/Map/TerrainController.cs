@@ -631,6 +631,17 @@ public class TerrainController : MonoBehaviour
         }         
     }
 
+    public static void ToggleIndicators(ClickEvent evt) {
+        bool val = !TerrainController.Indicators;
+        TerrainController.Indicators = val;
+        if (val) {
+            UI.TopBar.Q("Coordinates").AddToClassList("active");
+        }
+        else {
+            UI.TopBar.Q("Coordinates").RemoveFromClassList("active");
+        }
+    }
+
     private static void HideObscuredBlocks() {
         int count = 0;
         int hiding = 0;
