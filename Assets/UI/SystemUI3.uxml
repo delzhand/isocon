@@ -317,7 +317,7 @@
                             </ui:Button>
                         </ui:VisualElement>
                     </ui:VisualElement>
-                    <ui:VisualElement name="ToolOptions" class="panel" style="flex-grow: 1; align-items: stretch; justify-content: flex-start; display: flex; margin-bottom: 0; padding-bottom: 10px; padding-right: 10px; padding-top: 8px;">
+                    <ui:VisualElement name="ToolOptions" class="panel" style="flex-grow: 1; align-items: stretch; justify-content: flex-start; display: none; margin-bottom: 0; padding-bottom: 10px; padding-right: 10px; padding-top: 8px;">
                         <ui:VisualElement name="StylePaintOptions" class="tool-options" style="flex-grow: 0; flex-direction: column; align-items: stretch; align-self: flex-start; justify-content: flex-start; display: none; margin-right: 0; margin-left: 0; margin-bottom: 0; width: 100%; margin-top: 0;">
                             <ui:VisualElement name="PaintColors" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; margin-top: 0;">
                                 <ui:Label tabindex="-1" text="Tile Paint Colors" display-tooltip-when-elided="true" style="flex-grow: 1; margin-top: 10px; margin-bottom: 8px;" />
@@ -433,7 +433,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="Toasts" style="flex-grow: 1; position: absolute; left: auto; top: auto; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); color: rgb(255, 255, 255); -unity-text-align: middle-right; padding-left: 0; padding-right: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; display: flex; right: 10px; bottom: 10px; align-items: flex-end; max-width: 200px; padding-top: 0; padding-bottom: 0;" />
+    <ui:VisualElement name="Toasts" style="flex-grow: 1; position: absolute; left: auto; top: auto; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); color: rgb(255, 255, 255); -unity-text-align: middle-right; padding-left: 0; padding-right: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; display: flex; right: 10px; bottom: 10px; align-items: flex-end; padding-top: 0; padding-bottom: 0;" />
     <ui:VisualElement name="Fader" picking-mode="Ignore" style="flex-grow: 1; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); background-color: rgb(0, 0, 0); opacity: 0; display: none;" />
     <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="DebugText" class="self-centered" style="left: 50%; top: 20%; color: rgb(255, 255, 255); font-size: 24px; -unity-font-style: bold; display: none;" />
 </ui:UXML>
