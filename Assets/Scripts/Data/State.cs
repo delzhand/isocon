@@ -48,7 +48,7 @@ public class State
             blockStrings.Add(blocks[i].GetComponent<Block>().WriteOut());
         }
         State state = new State();
-        state.Version = "v1";
+        state.Version = "v2";
         state.TileTops = ColorUtility.ColorToHex(Environment.TileTopColor);
         state.TileSides = ColorUtility.ColorToHex(Environment.TileSideColor);
         state.BgBottom = ColorUtility.ColorToHex(Environment.BgBottomColor);
