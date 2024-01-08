@@ -46,8 +46,6 @@ public class Tutorial
                 return ("The Token Bar", "Hovering over a token in the token bar will <i>focus</i> the token, show its information in the bottom right. Left clicking it will <i>select</i> it and allow you to move it to or around the field. Right clicking will display a menu with additional options.");
             case ("flip"):
                 return ("Flipping Tokens", "Flipping tokens is purely visual, but useful for screenshots.");
-            case ("edit mode"):
-                return ("Edit Mode", "Click the pencil icon to enter or exit map editing mode. In this mode you can load, save, and edit maps.");
             case ("end edit"):
                 return ("Edit Mode", "Changes will be shared with other players on exiting edit mode.");
             case ("subtools"):
