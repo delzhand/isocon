@@ -40,7 +40,8 @@ public class Block : MonoBehaviour
     private Material PaintMaterialTop;
     private Material PaintMaterialSide;
 
-    private string Texture = "";
+    private string TextureTop = "";
+    private string TextureSide = "";
 
     private bool MaterialReset = true;
 
@@ -94,7 +95,8 @@ public class Block : MonoBehaviour
             Painted.ToString(),
             PaintColorTopHex,
             PaintColorSideHex,
-            Texture
+            TextureTop,
+            TextureSide,
         };
         return string.Join("|", bits);
     }  
@@ -104,6 +106,8 @@ public class Block : MonoBehaviour
         switch (version) {
             case "v1":
                 return parseV1(data);
+            case "v2":
+                return parseV2(data);
         }
         return null;
     }
@@ -157,7 +161,65 @@ public class Block : MonoBehaviour
             block.GetComponent<Block>().ApplyPaint(top, sides);
         }
         if (data.Length > 10) {
-            block.GetComponent<Block>().Texture = data[10];
+            (string,string) TextureStrings = BlockMesh.TextureMap(data[10]);
+            block.GetComponent<Block>().TextureTop = TextureStrings.Item2;
+            block.GetComponent<Block>().TextureSide = TextureStrings.Item1;
+        }
+
+        return block;
+    }
+
+    private static GameObject parseV2(string[] data) {
+        int x = int.Parse(data[0]);
+        int y = int.Parse(data[1]);
+        float z = float.Parse(data[2]);
+        float r = float.Parse(data[3]);
+        BlockShape type = (BlockShape)Enum.Parse(typeof(BlockShape), data[4], true);
+        bool destroyable = bool.Parse(data[5]);
+        string[] markersArray = data[6].Split(",");
+        List<string> markers = new List<string>();
+        for(int i = 0; i < markersArray.Length; i++) {
+            if (markersArray[i].Length > 0) {
+                markers.Add(markersArray[i]);
+            }
+        }
+        // Default to false here to not break older saves
+        bool painted = false;
+        if (data.Length > 7) {
+            painted = bool.Parse(data[7]);
+        }
+
+        GameObject map = GameObject.Find("Terrain");
+        GameObject column = GameObject.Find(x+","+y);
+        if (column == null) {
+            column = new GameObject();
+            column.name = x + "," + y;
+            column.tag = "Column";
+            column.transform.parent = map.transform;
+            column.transform.localPosition = new Vector3(x, 0, y);
+            column.transform.localScale = Vector3.one;
+            column.AddComponent<Column>().Set(x, y);
+        }
+
+        GameObject block = Instantiate(Resources.Load("Prefabs/Block") as GameObject);
+        block.name = "block-" + x + "," + z + "," + y;
+        block.transform.parent = column.transform;
+        block.transform.localScale = Vector3.one;
+        block.transform.localPosition = new Vector3(0, z, 0);
+        block.transform.localRotation = Quaternion.Euler(0, r, 0);
+        block.GetComponent<Block>().Destroyable = destroyable;
+        block.GetComponent<Block>().ShapeChange(type);
+        for (int i = 0; i < markers.Count; i++) {
+            block.GetComponent<Block>().EffectChange(markers[i]);
+        }
+        if (painted) {
+            Color top = ColorUtility.ColorFromHex(data[8]);
+            Color sides = ColorUtility.ColorFromHex(data[9]);
+            block.GetComponent<Block>().ApplyPaint(top, sides);
+        }
+        if (data.Length > 10) {
+            block.GetComponent<Block>().TextureTop = data[10];
+            block.GetComponent<Block>().TextureSide = data[11];
         }
 
         return block;
@@ -189,10 +251,10 @@ public class Block : MonoBehaviour
     }
 
     public static void SetColor(string id, Color color) {
-        if (BlockMesh.SharedMaterials.Count == 0) {
+        if (!BlockMesh.IsSetup) {
             BlockMesh.Setup();
         }
-        BlockMesh.SharedMaterials[id].SetColor("_Color", color);
+        BlockMesh.GetSharedMaterial(id).SetColor("_Color", color);
     }
 
     public int getX() {
@@ -266,7 +328,8 @@ public class Block : MonoBehaviour
         PaintColorSide = sides;
         PaintColorTop = top;
         Painted = true;
-        Texture = "";
+        TextureTop = "";
+        TextureSide = "";
         MaterialReset = true;
     }
 
@@ -282,19 +345,22 @@ public class Block : MonoBehaviour
         return null;
     }
 
-    public void ApplyTexture(string name) {
-        Texture = name;
+    public void ApplyTexture(string top, string side) {
+        TextureTop = top;
+        TextureSide = side;
         Painted = false;
         MaterialReset = true;
     }
 
     public void RemoveTexture() {
-        Texture = "";
+        TextureTop = "";
+        TextureSide = "";
         MaterialReset = true;
     }
 
-    public string SampleTexture() {
-        return Texture;
+    public (string,string) SampleTexture() {
+
+        return (BlockMesh.ReverseTextureMap(TextureTop),BlockMesh.ReverseTextureMap(TextureSide));
     }
 
     void SetMaterials() {
@@ -308,10 +374,9 @@ public class Block : MonoBehaviour
             mats[BlockMesh.MaterialSideIndex(Shape)] = PaintMaterialSide;
             mats[BlockMesh.MaterialTopIndex(Shape)] = PaintMaterialTop;
         }
-        else if (Texture.Length > 0) {
-            (string,string) styleMats = BlockMesh.StyleMaterials(Texture);
-            mats[BlockMesh.MaterialSideIndex(Shape)] = BlockMesh.SharedMaterials[styleMats.Item1];
-            mats[BlockMesh.MaterialTopIndex(Shape)] = BlockMesh.SharedMaterials[styleMats.Item2];
+        else if (TextureTop.Length > 0) {
+            mats[BlockMesh.MaterialSideIndex(Shape)] = BlockMesh.GetSharedMaterial(TextureSide);
+            mats[BlockMesh.MaterialTopIndex(Shape)] = BlockMesh.GetSharedMaterial(TextureTop);
         }
         else {
             // Checkerboard
@@ -325,13 +390,13 @@ public class Block : MonoBehaviour
                 altSides = ((x + y + z) % 2 == 0);
                 // altTop = ((x + y) % 2 == 0);
             }
-            mats[BlockMesh.MaterialSideIndex(Shape)] = BlockMesh.SharedMaterials["side" + (altSides ? "1" : "2")];
-            mats[BlockMesh.MaterialTopIndex(Shape)] = BlockMesh.SharedMaterials["top" + (altSides ? "1" : "2")];
+            mats[BlockMesh.MaterialSideIndex(Shape)] = BlockMesh.GetSharedMaterial("side" + (altSides ? "1" : "2"));
+            mats[BlockMesh.MaterialTopIndex(Shape)] = BlockMesh.GetSharedMaterial("top" + (altSides ? "1" : "2"));
         }
 
         // Overwrite checkerboard/paint if highlighted
         if (Highlighted) {
-            mats[BlockMesh.MaterialTopIndex(Shape)] = BlockMesh.SharedMaterials["highlighted"];
+            mats[BlockMesh.MaterialTopIndex(Shape)] = BlockMesh.GetSharedMaterial("highlighted");
         }
 
         // Markers
@@ -387,7 +452,7 @@ public class Block : MonoBehaviour
         else if (Selected && Focused) {
             focusState = "selectfocused";
         }
-        mats[BlockMesh.MaterialFocusIndex(Shape)] = BlockMesh.SharedMaterials[focusState];
+        mats[BlockMesh.MaterialFocusIndex(Shape)] = BlockMesh.GetSharedMaterial(focusState);
 
         // Apply
         mr.SetMaterials(mats.ToList());

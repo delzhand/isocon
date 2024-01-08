@@ -256,10 +256,10 @@ public class TerrainController : MonoBehaviour
         });
     }
 
-    public static void StyleBlocks(string style) {
+    public static void StyleBlocks(string styleTop, string styleSide) {
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block => {
-            block.ApplyTexture(style);
+            block.ApplyTexture(styleTop, styleSide);
         });
     }
 
@@ -285,9 +285,10 @@ public class TerrainController : MonoBehaviour
                 UI.ToggleDisplay(UI.System.Q("ToolOptions").Q("StyleTextureOptions"), false);
                 return;
             }
-            String texture = block.SampleTexture();
-            if (texture.Length > 0) {
-                UI.System.Q("ToolOptions").Q<DropdownField>("BlockTexture").value = texture;
+            (string,string) textures = block.SampleTexture();
+            if (textures.Item1.Length > 0) {
+                UI.System.Q("ToolOptions").Q<DropdownField>("BlockTopTexture").value = textures.Item1;
+                UI.System.Q("ToolOptions").Q<DropdownField>("BlockSideTexture").value = textures.Item2;
                 UI.ToggleDisplay(UI.System.Q("ToolOptions"), true);
                 UI.ToggleDisplay(UI.System.Q("ToolOptions").Q("StylePaintOptions"), false);
                 UI.ToggleDisplay(UI.System.Q("ToolOptions").Q("StyleTextureOptions"), true);
@@ -457,8 +458,11 @@ public class TerrainController : MonoBehaviour
                 PaintBlocks();
                 break;
             case "StyleTexture":
-                string style = UI.System.Q<DropdownField>("BlockTexture").value;
-                StyleBlocks(style);
+                string styleTop = UI.System.Q<DropdownField>("BlockTopTexture").value;
+                string styleSide = UI.System.Q<DropdownField>("BlockSideTexture").value;
+                string matTop = BlockMesh.TextureMaterialName(styleTop, true);
+                string matSide = BlockMesh.TextureMaterialName(styleSide, false);
+                StyleBlocks(matTop, matSide);
                 break;
             case "StyleEraser":
                 DepaintBlocks();

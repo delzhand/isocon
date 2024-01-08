@@ -7,7 +7,7 @@ public class BlockMesh: MonoBehaviour
 {
     public static Mesh Hex;
     public static Dictionary<BlockShape, Mesh> Shapes = new();
-    public static Dictionary<string, Material> SharedMaterials = new();
+    private static Dictionary<string, Material> SharedMaterials = new();
 
     public static bool IsSetup = false;
 
@@ -45,6 +45,14 @@ public class BlockMesh: MonoBehaviour
         foreach(string s in TextureMaterials()) {
             SharedMaterials.Add($"{s}", new Material(Resources.Load<Material>($"Materials/Block/Artistic/{s}")));
         }
+    }
+
+    public static Material GetSharedMaterial(string key) {
+        if (SharedMaterials.ContainsKey(key)) {
+            return SharedMaterials[key];
+        }
+        Debug.Log($"Material with key {key} not found");
+        return null;
     }
 
     public static void ToggleBorders(bool show) {
@@ -103,7 +111,12 @@ public class BlockMesh: MonoBehaviour
         return 3;
     }
 
-    public static (string,string) StyleMaterials(string style) {
+    public static string TextureMaterialName(string style, bool top) {
+        (string,string) materials = TextureMap(style);
+        return top ? materials.Item2 : materials.Item1;    
+    }
+
+    public static (string,string) TextureMap(string style) {
         switch (style) {
             case "Acid Flow":
                 return ("AcidSide", "AcidTopFlow");
@@ -141,6 +154,58 @@ public class BlockMesh: MonoBehaviour
                 return ("Brick3Side", "Brick3Top");
             default:
                 return ($"{style}Side", $"{style}Top");
+        }
+    }
+
+    public static string ReverseTextureMap(string texture) {
+        switch (texture) {
+            case "AcidTopFlow":
+                return "Acid Flow";
+            case "AcidSide":
+            case "AcidTopStill":
+                return "Acid";
+            case "Brick2Side":
+            case "Brick2Top":
+                return "Old Brick";
+            case "DryGrassTop":
+                return "Dry Grass";
+            case "GrassTop":
+                return "Grass";
+            case "LavaTopFlow":
+                return "Lava Flow";
+            case "LavaSide":
+            case "LavaTopStill":
+                return "Lava";
+            case "PoisonTopFlow":
+                return "Poison Flow";
+            case "PoisonSide":
+            case "PoisonTopStill":
+                return "Poison";
+            case "WaterSideFlow":
+            case "WaterTopFlow":
+                return "Water Flow";
+            case "WaterSideStill":
+            case "WaterTopStill":
+                return "Water";
+            case "Wood2Side":
+            case "Wood2Top":
+                return "Old Wood";
+            case "GrayMetalSide":
+            case "GrayMetalTop":
+                return "Gray Metal";
+            case "GrayBrickSide":
+            case "GrayBrickTop":
+                return "Gray Brick";
+            case "Brick3Side":
+            case "SmallTileTop":
+                return "Small Tile";
+            case "BigTileTop":
+                return "Big Tile";
+            case "Brick3Top":
+                return "White Brick";
+            default:
+                // If the input doesn't match any known texture, return it as is.
+                return texture;
         }
     }
 }

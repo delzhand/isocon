@@ -16,7 +16,7 @@ public class MapEdit
 
     public static void Setup()
     {
-        UI.SetBlocking(UI.System, "ToolsPanel");
+        UI.SetBlocking(UI.System, StringUtility.Arr("ToolsPanel", "ToolOptions"));
 
         VisualElement toolsRoot = UI.System.Q("ToolsPanel");
         VisualElement optionsRoot = UI.System.Q("ToolOptions");
