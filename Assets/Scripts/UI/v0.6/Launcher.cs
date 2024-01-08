@@ -12,8 +12,8 @@ public class Launcher : MonoBehaviour
         public string LatestVersion;
     }
 
-    private string _version = "0.6.1";
-    private string _latestVersion = "0.6.1";
+    private string _version = "0.6.2";
+    private string _latestVersion = "0.6.2";
     private string _connectMode;
     private NetworkManager _manager;
     private bool _lastUpdateIsOnline = false;
