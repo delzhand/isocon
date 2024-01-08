@@ -113,13 +113,13 @@ public class Modal
     }
 
     private static void DoubleConfirmConfirmed(ClickEvent evt) {
-        _doubleConfirm?.Invoke();
         VisualElement dcModal = FindDoubleConfirm();
         UI.ToggleDisplay(UI.Modal, false);
         UI.ToggleDisplay(dcModal, false);
         UI.ToggleDisplay("Backdrop", false);
         isModalOpen = false;
         isConfirmOpen = false;
+        _doubleConfirm?.Invoke();
     }
 
     private static void DoubleConfirmCancelled(ClickEvent evt) {

@@ -240,8 +240,19 @@ public class MapEdit
 
     private static void ResetMap() {
         CurrentFile = "";
-        TerrainController.ResetTerrain();
-        Toast.Add("Map reset.");
+        Modal.Reset("Map Size");
+        Modal.AddIntField("NewMapSizeX", "Map Width", 8);
+        Modal.AddIntField("NewMapSizeY", "Map Length", 8);
+        Modal.AddIntField("NewMapSizeZ", "Map Height", 1);
+        Modal.AddPreferredButton("Reset Map", (evt) => {
+            int x = UI.Modal.Q<IntegerField>("NewMapSizeX").value;
+            int y = UI.Modal.Q<IntegerField>("NewMapSizeY").value;
+            int z = UI.Modal.Q<IntegerField>("NewMapSizeZ").value;
+            TerrainController.ResetTerrain(x, y, z);
+            Toast.Add("Map reset.");
+            Modal.Close();
+        });
+        Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
     private static void OpenSaveModal(ClickEvent evt) {

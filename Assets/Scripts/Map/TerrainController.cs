@@ -101,9 +101,9 @@ public class TerrainController : MonoBehaviour
         Environment.SetBackgroundColors(Environment.BgBottomColor, Environment.BgTopColor);
     }
 
-    public static void ResetTerrain() {
+    public static void ResetTerrain(int width, int length, int height) {
         DestroyAllBlocks();
-        InitializeTerrain(8, 8, 1);
+        InitializeTerrain(width, length, height);
         MapDirty = false;
     }
 
