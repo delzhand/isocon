@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -28,7 +30,6 @@ public class IPFinder
                 if (response.IsSuccessStatusCode)
                 {
                     string json = await response.Content.ReadAsStringAsync();
-                    Debug.Log(json);
 
                     // Parse the JSON response to get the IP address
                     IpifyResponse ipifyResponse = JsonUtility.FromJson<IpifyResponse>(json);
@@ -51,11 +52,22 @@ public class IPFinder
             _publicIP = "[unknown]";
         }
     }
+    
+    private static string LocalIP() {
+        #if UNITY_WEBGL
+            return "";
+        #endif
 
-    public static async void GetPublic(Label label) {
+        return Dns.GetHostEntry(Dns.GetHostName()).AddressList.First(
+            f => f.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+        .ToString();
+    }
+
+    public static async void ReplaceTokens(Label label) {
+        label.text = label.text.Replace("<LocalIP>", LocalIP());
         string original = label.text;
-        label.text = original.Replace("<IP>", "(checking...)");
+        label.text = original.Replace("<GlobalIP>", "(checking...)");
         await AsyncGetIP();
-        label.text = original.Replace("<IP>", _publicIP);
+        label.text = original.Replace("<GlobalIP>", _publicIP);
     }
 }

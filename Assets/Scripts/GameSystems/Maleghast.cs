@@ -14,6 +14,7 @@ public class Maleghast : GameSystem
     }
 
     public override void Setup() {
+        base.Setup();
         SetupPanel("SelectedTokenPanel", true);
         SetupPanel("FocusedTokenPanel", false);
     }
@@ -49,7 +50,7 @@ public class Maleghast : GameSystem
         panel.Q("ExtraInfo").Clear();
         panel.Q("Data").Clear();
     }
-    
+
     public override void GameDataSetValue(string value) {
         FileLogger.Write($"Game system changed - {value}");
         if (value == "IncrementTurn") {

@@ -28,6 +28,7 @@ public class Icon_v1_5 : GameSystem {
 
     public override void Setup()
     {
+        base.Setup();
         SetupPanel("SelectedTokenPanel", true);
         SetupPanel("FocusedTokenPanel", false);
     }

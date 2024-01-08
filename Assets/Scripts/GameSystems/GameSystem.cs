@@ -34,6 +34,7 @@ public class GameSystem : MonoBehaviour
 
     public virtual void Setup()
     {
+        UI.System.Q<Label>("SystemInfo").text = SystemName();
     }
 
     public virtual void Teardown()

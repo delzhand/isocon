@@ -67,6 +67,25 @@
             <ui:VisualElement name="Info" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; display: none; height: 30px;">
                 <ui:VisualElement style="flex-grow: 1; width: 24px; height: 24px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/info&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;" />
                 <ui:Label text="Info" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;" />
+                <ui:VisualElement name="InfoWindow" class="panel" style="flex-grow: 1; display: none; position: absolute; top: 100%; left: 0;">
+                    <ui:VisualElement style="flex-grow: 1;">
+                        <ui:Label tabindex="-1" text="SYSTEM" display-tooltip-when-elided="true" class="panel-header" />
+                        <ui:Label text="Game system name" name="SystemInfo" class="no-margin" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-grow: 1; margin-top: 8px;">
+                        <ui:Label tabindex="-1" text="CONNECTION" display-tooltip-when-elided="true" class="panel-header" />
+                        <ui:Label text="Connection details" name="ConnectionMessage" class="no-margin" style="white-space: normal; max-width: 240px;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-grow: 1; margin-top: 8px;">
+                        <ui:Label tabindex="-1" text="PLAYERS" display-tooltip-when-elided="true" class="panel-header" />
+                        <ui:VisualElement style="align-items: center; flex-direction: row;">
+                            <ui:VisualElement name="VisualElement" style="background-image: resource(&apos;Textures/players&apos;); -unity-background-scale-mode: scale-to-fit; width: 20px; height: 20px; margin-right: 8px;" />
+                            <ui:Label text="Connected:" class="no-margin" />
+                            <ui:Label text="1/4" name="PlayerCount" class="no-margin" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="PlayerList" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="FixedView" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px;">
                 <ui:VisualElement style="flex-grow: 1; width: 24px; height: 24px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/fixedview&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;" />

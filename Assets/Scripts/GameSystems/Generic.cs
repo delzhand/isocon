@@ -12,6 +12,7 @@ public class Generic : GameSystem
     }
 
     public override void Setup() {
+        base.Setup();
         SetupPanel("SelectedTokenPanel", true);
         SetupPanel("FocusedTokenPanel", false);
     }
