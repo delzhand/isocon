@@ -281,7 +281,7 @@ public class MapEdit
         Modal.AddTextField("Filename", "Filename", CurrentFile.Length > 0 ? CurrentFile : "");
         UI.Modal.Q("Filename").style.minWidth = 400;
 
-        Modal.AddDropdownField("SaveType", "Save Type", "Encoded Screenshot", StringUtility.Arr("Encoded Screenshot", "Plaintext JSON"));
+        Modal.AddDropdownField("SaveType", "Save Type", "Plaintext JSON", StringUtility.Arr("Encoded Screenshot", "Plaintext JSON"));
 
         Modal.AddPreferredButton("Confirm", ConfirmMapSave);
         Modal.AddButton("Cancel", Modal.CloseEvent);
