@@ -86,6 +86,10 @@
                         <ui:VisualElement name="PlayerList" />
                     </ui:VisualElement>
                     <ui:VisualElement style="flex-grow: 1; margin-top: 8px;">
+                        <ui:Label tabindex="-1" text="MAP TITLE" display-tooltip-when-elided="true" class="panel-header" />
+                        <ui:Label name="MapTitle" class="no-margin" style="white-space: normal; max-width: 240px;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-grow: 1; margin-top: 8px;">
                         <ui:Label tabindex="-1" text="MAP DESCRIPTION" display-tooltip-when-elided="true" class="panel-header" />
                         <ui:Label text="Connection details" name="Description" class="no-margin" style="white-space: normal; max-width: 240px;" />
                     </ui:VisualElement>
@@ -367,10 +371,12 @@
                                 <ui:Button text="Reset" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Reset" style="margin-top: 0; margin-right: 2px; margin-left: 2px; margin-bottom: 4px;" />
                             </ui:VisualElement>
                             <ui:Label text="MAP METADATA" class="panel-header" style="margin-top: 8px;" />
+                            <ui:Label text="Title" class="no-margin" />
+                            <ui:TextField name="MapTitle" class="no-margin" />
                             <ui:Label text="Description" class="no-margin" />
-                            <ui:TextField multiline="true" name="Description" class="no-margin" style="min-height: 90px; width: 240px;" />
+                            <ui:TextField multiline="true" name="Description" class="no-margin" style="min-height: 90px; width: 240px; white-space: normal;" />
                             <ui:Label text="Objective" class="no-margin" style="margin-top: 4px;" />
-                            <ui:TextField multiline="true" name="Objective" class="no-margin" style="min-height: 90px; width: 240px;" />
+                            <ui:TextField multiline="true" name="Objective" class="no-margin" style="min-height: 90px; width: 240px; white-space: normal;" />
                             <ui:Label text="Creator Name" class="no-margin" style="margin-top: 4px;" />
                             <ui:TextField name="Author" class="no-margin" style="width: 240px;" />
                             <ui:Label text="System" class="no-margin" style="margin-top: 4px;" />

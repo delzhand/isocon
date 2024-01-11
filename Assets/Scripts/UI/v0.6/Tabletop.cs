@@ -78,6 +78,7 @@ public class Tabletop : MonoBehaviour
         }
 
         // Map Meta
+        UI.System.Q("InfoWindow").Q<Label>("MapTitle").text = MapMeta.Title;
         UI.System.Q("InfoWindow").Q<Label>("Description").text = MapMeta.Description;
         UI.System.Q("InfoWindow").Q<Label>("Objective").text = MapMeta.Objective;
         UI.System.Q("InfoWindow").Q<Label>("Author").text = MapMeta.CreatorName;

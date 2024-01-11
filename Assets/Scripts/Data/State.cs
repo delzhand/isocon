@@ -22,6 +22,7 @@ public class State
     public string Description;
     public string Objective;
     public string System;
+    public string Title;
 
     public static string CurrentStateJson;
 
@@ -65,6 +66,7 @@ public class State
         state.Description = MapMeta.Description;
         state.Objective = MapMeta.Objective;
         state.System = MapMeta.System;
+        state.Title = MapMeta.Title;
         return state;
     }
 
@@ -83,10 +85,12 @@ public class State
         TerrainController.MapDirty = false;
         MapMeta.CreatorName = state.CreatorName;
         MapMeta.Description = state.Description;
-        MapMeta.Objective = state.Description;
+        MapMeta.Objective = state.Objective;
         MapMeta.System = state.System;        
+        MapMeta.Title = state.Title;
 
         VisualElement optionsRoot = UI.System.Q("ToolOptions");
+        optionsRoot.Q("DataOptions").Q<TextField>("MapTitle").value = MapMeta.Title;
         optionsRoot.Q("DataOptions").Q<TextField>("Description").value = MapMeta.Description;
         optionsRoot.Q("DataOptions").Q<TextField>("Objective").value = MapMeta.Objective;
         optionsRoot.Q("DataOptions").Q<TextField>("Author").value = MapMeta.CreatorName;

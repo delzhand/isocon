@@ -121,6 +121,10 @@ public class MapEdit
         optionsRoot.Q("DataOptions").Q("Reset").RegisterCallback<ClickEvent>((evt) => {
             ResetConfirm(new ClickEvent());
         });
+        optionsRoot.Q("DataOptions").Q<TextField>("MapTitle").value = MapMeta.Title;
+        optionsRoot.Q("DataOptions").Q<TextField>("MapTitle").RegisterValueChangedCallback((evt) => {
+            MapMeta.Title = evt.newValue;
+        });
         optionsRoot.Q("DataOptions").Q<TextField>("Description").value = MapMeta.Description;
         optionsRoot.Q("DataOptions").Q<TextField>("Description").RegisterValueChangedCallback((evt) => {
             MapMeta.Description = evt.newValue;
