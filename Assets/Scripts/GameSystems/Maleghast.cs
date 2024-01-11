@@ -13,6 +13,10 @@ public class Maleghast : GameSystem
         return "Maleghast";
     }
 
+    public override string TurnAdvanceMessage() {
+        return "Increase the round counter? Turns will be reset and Necromancers will gain 1 SOUL.";
+    }
+
     public override void Setup() {
         base.Setup();
         SetupPanel("SelectedTokenPanel", true);
@@ -59,6 +63,7 @@ public class Maleghast : GameSystem
             foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
                 TokenData data = g.GetComponent<TokenData>();
                 TokenDataSetValue(data.Id, "StartTurn");
+                TokenDataSetValue(data.Id, "GainSOUL|1");
             }
         }
     }
@@ -513,6 +518,9 @@ public class MaleghastData {
             OnVitalChange(token);
         }   
         if (value.StartsWith("GainSOUL")) {
+            if (Type != "Necromancer") {
+                return;
+            }
             int diff = int.Parse(value.Split("|")[1]);
             if (Soul + diff > 6) {
                 diff = 6 - Soul;
@@ -526,6 +534,9 @@ public class MaleghastData {
             OnVitalChange(token);
         }
         if (value.StartsWith("LoseSOUL")) {
+            if (Type != "Necromancer") {
+                return;
+            }
             int diff = int.Parse(value.Split("|")[1]);
             if (Soul - diff < 0) {
                 diff = Soul;
