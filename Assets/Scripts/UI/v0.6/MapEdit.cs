@@ -121,6 +121,22 @@ public class MapEdit
         optionsRoot.Q("DataOptions").Q("Reset").RegisterCallback<ClickEvent>((evt) => {
             ResetConfirm(new ClickEvent());
         });
+        optionsRoot.Q("DataOptions").Q<TextField>("Description").value = MapMeta.Description;
+        optionsRoot.Q("DataOptions").Q<TextField>("Description").RegisterValueChangedCallback((evt) => {
+            MapMeta.Description = evt.newValue;
+        });
+        optionsRoot.Q("DataOptions").Q<TextField>("Objective").value = MapMeta.Objective;
+        optionsRoot.Q("DataOptions").Q<TextField>("Objective").RegisterValueChangedCallback((evt) => {
+            MapMeta.Objective = evt.newValue;
+        });
+        optionsRoot.Q("DataOptions").Q<TextField>("Author").value = MapMeta.CreatorName;
+        optionsRoot.Q("DataOptions").Q<TextField>("Author").RegisterValueChangedCallback((evt) => {
+            MapMeta.CreatorName = evt.newValue;
+        });
+        optionsRoot.Q("DataOptions").Q<DropdownField>("System").value = MapMeta.System;
+        optionsRoot.Q("DataOptions").Q<DropdownField>("System").RegisterValueChangedCallback((evt) => {
+            MapMeta.System = evt.newValue;
+        });
 
         // Environment
         optionsRoot.Q("EnvironmentOptions").Q("LightAngle").RegisterCallback<ChangeEvent<float>>((evt) => {

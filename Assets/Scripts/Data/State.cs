@@ -18,6 +18,10 @@ public class State
     public float LightAngle;
     public float LightHeight;
     public string[] Blocks;
+    public string CreatorName;
+    public string Description;
+    public string Objective;
+    public string System;
 
     public static string CurrentStateJson;
 
@@ -57,6 +61,10 @@ public class State
         state.LightHeight = TerrainController.LightHeight;
         state.LightIntensity = TerrainController.LightIntensity;
         state.Blocks = blockStrings.ToArray();
+        state.CreatorName = MapMeta.CreatorName;
+        state.Description = MapMeta.Description;
+        state.Objective = MapMeta.Objective;
+        state.System = MapMeta.System;
         return state;
     }
 
@@ -73,6 +81,16 @@ public class State
         TerrainController.UpdateLight();
         TerrainController.ReorgNeeded = true;
         TerrainController.MapDirty = false;
+        MapMeta.CreatorName = state.CreatorName;
+        MapMeta.Description = state.Description;
+        MapMeta.Objective = state.Description;
+        MapMeta.System = state.System;        
+
+        VisualElement optionsRoot = UI.System.Q("ToolOptions");
+        optionsRoot.Q("DataOptions").Q<TextField>("Description").value = MapMeta.Description;
+        optionsRoot.Q("DataOptions").Q<TextField>("Objective").value = MapMeta.Objective;
+        optionsRoot.Q("DataOptions").Q<TextField>("Author").value = MapMeta.CreatorName;
+        optionsRoot.Q("DataOptions").Q<DropdownField>("System").value = MapMeta.System;
     }
 
     public static void SetCurrentJson() {

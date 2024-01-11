@@ -69,8 +69,6 @@ public class Tabletop : MonoBehaviour
         UI.System.Q("InfoWindow").Q<Label>("PlayerCount").text = $"{NetworkServer.connections.Count}/{netman.maxConnections}";
         VisualElement playerList = UI.System.Q("PlayerList");
         playerList.Clear();
-
-        
         foreach(GameObject g in GameObject.FindGameObjectsWithTag("Player")) {
             string name = g.GetComponent<Player>().Name;
             Label l = new(name);
@@ -78,6 +76,11 @@ public class Tabletop : MonoBehaviour
             l.AddToClassList("no-margin");
             playerList.Add(l);
         }
+
+        // Map Meta
+        UI.System.Q("InfoWindow").Q<Label>("Description").text = MapMeta.Description;
+        UI.System.Q("InfoWindow").Q<Label>("Objective").text = MapMeta.Objective;
+        UI.System.Q("InfoWindow").Q<Label>("Author").text = MapMeta.CreatorName;
     }
 
     public void ConnectAsClient() {
