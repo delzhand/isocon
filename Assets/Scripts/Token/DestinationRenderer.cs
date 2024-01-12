@@ -44,9 +44,12 @@ public class DestinationRenderer : NetworkBehaviour
             return;
         }
 
-
-
         TokenData data = TokenData.Find(TokenId);
+        // Don't show while token is moving
+        if (data.WorldObject.GetComponent<MoveLerp>()) {
+            return;
+        }
+
         Vector3 origin = data.WorldObject.transform.position + new Vector3(0, .25f, 0);
         List<Vector3> points = GenerateParabolaPoints(origin, Target, Density, 1f);
         Line.positionCount = points.Count;
