@@ -48,8 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Size: 1
   Image: {fileID: 0}
-  offlineDataObject: {fileID: 0}
-  onlineDataObject: {fileID: 0}
+  Data: {fileID: 0}
   ShareOffsetX: 0
   ShareOffsetY: 0
   LastFocused: {fileID: 0}
@@ -113,6 +112,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -196,6 +197,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -308,7 +311,7 @@ MonoBehaviour:
   m_UVBias: {x: 0, y: 0}
   m_DecalLayerMask: 1
   m_ScaleMode: 1
-  m_Offset: {x: 0, y: 0, z: 2}
+  m_Offset: {x: 0, y: 0, z: 1.5}
   m_Size: {x: 0.7, y: 0.7, z: 4}
   m_FadeFactor: 1
 --- !u!1001 &2174893363689088739
@@ -321,7 +324,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 361665813255702047, guid: 9c66dfa9f53455e4e979f3b7941f6c26,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 348dd401b0c38174398277b1d13359b6, type: 2}
     - target: {fileID: 850831578956137971, guid: 9c66dfa9f53455e4e979f3b7941f6c26,

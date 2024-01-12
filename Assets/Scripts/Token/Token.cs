@@ -74,8 +74,8 @@ public class Token : MonoBehaviour
     }
 
     private void alignToCamera() {
-        Transform camera = GameObject.Find("CameraOrigin").transform;
-        transform.Find("Offset").transform.rotation = Quaternion.Euler(0, camera.eulerAngles.y + 90, 0);
+        Transform t = transform.Find("Offset/Avatar/Cutout/Cutout Quad").transform;
+        t.rotation = Camera.main.transform.rotation;
     }
 
     private void UpdateScale() {
@@ -139,7 +139,7 @@ public class Token : MonoBehaviour
     }
 
     public void Place(Block block) {
-        Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
+        Vector3 v = block.getMidpoint();
         Player.Self().CmdRequestPlaceToken(Data.Id, v);
         StartMoving();
     }
@@ -156,7 +156,7 @@ public class Token : MonoBehaviour
     }
 
     public void Move(Block block) {
-        Vector3 v = block.transform.position + new Vector3(0, .25f, 0);
+        Vector3 v = block.getMidpoint();
         Player.Self().CmdMoveToken(Data.Id, v, false);
     }
 
@@ -239,7 +239,8 @@ public class Token : MonoBehaviour
     }
 
     private void SetVisualArrows() {
-        SetVisual(false, true, false, false);
+        // I don't really like this effect now that we have movement parabolas
+        SetVisual(false, false, false, false);
     }
 
     private void SetVisualSquareYellow() {

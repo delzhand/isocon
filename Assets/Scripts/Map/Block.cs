@@ -269,6 +269,14 @@ public class Block : MonoBehaviour
         return (int)(this.transform.position.y/.5f)+2;
     }
 
+    public Vector3 getMidpoint() {
+        Vector3 v = transform.position + new Vector3(0, .25f, 0);
+        if (Shape == BlockShape.Slope || Shape == BlockShape.SlopeExt || Shape == BlockShape.SlopeInt || Shape == BlockShape.Steps) {
+            v -= new Vector3(0, .5f, 0);
+        }
+        return v;
+    }
+
     public List<string> GetEffects() {
         return effects;
     }
@@ -512,7 +520,7 @@ public class Block : MonoBehaviour
         Focused = true;
         MaterialReset = true;
         TerrainController.SetInfo();
-        Player.Self().GetComponent<DestinationRenderer>().SetTarget(transform.position + new Vector3(0, .3f, 0));
+        Player.Self().GetComponent<DestinationRenderer>().SetTarget(getMidpoint());
     }
 
     public void Unfocus() {
