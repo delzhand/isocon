@@ -61,8 +61,6 @@ public class Tabletop : MonoBehaviour
         UI.ToggleDisplay(UI.TopBar.Q("Config"), Cursor.Mode != CursorMode.Editing);
         UI.ToggleDisplay(UI.TopBar.Q("Dice"), Cursor.Mode != CursorMode.Editing);
         UI.ToggleDisplay(UI.TopBar.Q("Info"), Cursor.Mode != CursorMode.Editing);
-        UI.ToggleDisplay(UI.TopBar.Q("Rotate"), CameraControl.Overhead == false);
-        UI.ToggleDisplay(UI.TopBar.Q("Tilt"), CameraControl.Overhead == false);
 
         // Update Player List
         NetworkManager netman = GameObject.Find("NetworkController").GetComponent<NetworkManager>();

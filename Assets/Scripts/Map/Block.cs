@@ -247,7 +247,7 @@ public class Block : MonoBehaviour
     }
 
     public void RightClick() {
-        CameraControl.GoToBlock(this);
+        // CameraControl.GoToBlock(this);
     }
 
     public static void SetColor(string id, Color color) {

@@ -190,6 +190,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b3709319bab0114a8a7fec75d108f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Drag: 0
+  PanMode: 1
+  Origin: {x: 0, y: 0, z: 0}
+  Difference: {x: 0, y: 0, z: 0}
+  OriginRY: 315
+  OriginRZ: 0
+  OriginR: {x: 0, y: 0, z: 0, w: 0}
+  MouseOrigin: {x: 0, y: 0, z: 0}
+  MouseDifference: {x: 0, y: 0, z: 0}
+  TargetZ: 0
 --- !u!114 &266922317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -682,8 +692,8 @@ GameObject:
   - component: {fileID: 726269903}
   - component: {fileID: 726269910}
   - component: {fileID: 726269908}
-  - component: {fileID: 726269911}
   - component: {fileID: 726269912}
+  - component: {fileID: 726269913}
   m_Layer: 0
   m_Name: Engine
   m_TagString: Untagged
@@ -730,18 +740,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71599662fb5267c468649f6ca270754e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &726269911
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 726269901}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13ea3ffd172141f45a04c7f26ec313fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &726269912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -752,6 +750,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c8ebccd54a06524db78ca2d8763cf00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &726269913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 726269901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13ea3ffd172141f45a04c7f26ec313fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &747926459

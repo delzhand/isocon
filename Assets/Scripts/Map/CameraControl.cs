@@ -23,6 +23,7 @@ public class CameraControl : MonoBehaviour
 
     private static bool IsLocked;
     public static bool Overhead;
+    public static bool PanMode = true;
 
     void Start()
     {
@@ -33,10 +34,10 @@ public class CameraControl : MonoBehaviour
     }
 
     private static void registerCallbacks() {
-        UI.TopBar.Q("RotateCCW").RegisterCallback<ClickEvent>(rotateLeft);
-        UI.TopBar.Q("RotateCW").RegisterCallback<ClickEvent>(rotateRight);
-        UI.TopBar.Q<Slider>("ZoomSlider").RegisterValueChangedCallback(zoom);
-        UI.TopBar.Q<Slider>("TiltSlider").RegisterValueChangedCallback(tilt);
+        // UI.TopBar.Q("RotateCCW").RegisterCallback<ClickEvent>(rotateLeft);
+        // UI.TopBar.Q("RotateCW").RegisterCallback<ClickEvent>(rotateRight);
+        // UI.TopBar.Q<Slider>("ZoomSlider").RegisterValueChangedCallback(zoom);
+        // UI.TopBar.Q<Slider>("TiltSlider").RegisterValueChangedCallback(tilt);
 
         UI.TopBar.Q("FixedView").RegisterCallback<ClickEvent>((evt) => {
             if (Overhead) {
@@ -44,6 +45,15 @@ public class CameraControl : MonoBehaviour
             }
             else {
                 enableOverhead();
+            }
+        });
+
+        UI.TopBar.Q("DragMode").RegisterCallback<ClickEvent>((evt) => {
+            if (PanMode) {
+                disablePanMode();
+            }
+            else {
+                enablePanMode();
             }
         });
     }
@@ -188,4 +198,13 @@ public class CameraControl : MonoBehaviour
         IsLocked = true;
     }
 
+    private static void disablePanMode() {
+        PanMode = false;
+        UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Rotate Camera";
+    }
+
+    private static void enablePanMode() {
+        PanMode = true;
+        UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Pan Camera";
+    }
 }
