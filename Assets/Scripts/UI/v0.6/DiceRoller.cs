@@ -79,7 +79,7 @@ public class DiceRoller
             for (int i = 0; i < d4count; i++) {
                 rolls.Add(new DiceRoll(4));
             }
-            DiceTray tray = new DiceTray(Player.Self().Name, rolls.ToArray());
+            DiceTray tray = new DiceTray(Player.Self().Name, rolls.ToArray(), 0);
             Player.Self().CmdRequestDiceRoll(tray);
             reset();
         });
@@ -127,7 +127,7 @@ public class DiceRoller
         resultElement.style.display = DisplayStyle.Flex;
         resultElement.name = tray.id;
 
-        int sum = 0;
+        int sum = tray.modifier;
         int highest = int.MinValue;
         int lowest = int.MaxValue;
         for (int i = 0; i < tray.rolls.Length; i++) {

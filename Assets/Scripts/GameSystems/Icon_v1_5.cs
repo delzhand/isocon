@@ -310,6 +310,16 @@ public class Icon_v1_5 : GameSystem {
         return statColor;     
     }
 
+    public override MenuItem[] GetTokenMenuItems(TokenData data) {
+        List<MenuItem> items = new();
+        items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRoll));
+        return items.ToArray();
+    }
+
+    private void AttackRoll(ClickEvent evt) {
+        Player.Self().CmdRequestDiceRoll(new DiceTray(Player.Self().Name, "1d20+2"));
+    }
+
     public override void UpdateData(TokenData data) {
         base.UpdateData(data);
         Icon1_5Data mdata = JsonUtility.FromJson<Icon1_5Data>(data.SystemData);

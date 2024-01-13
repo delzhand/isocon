@@ -74,7 +74,7 @@ public class Token : MonoBehaviour
     }
 
     private void alignToCamera() {
-        Transform t = transform.Find("Offset/Avatar/Cutout/Cutout Quad").transform;
+        Transform t = transform.Find("Offset/Avatar/Cutout").transform;
         t.rotation = Camera.main.transform.rotation;
     }
 
@@ -94,8 +94,8 @@ public class Token : MonoBehaviour
             x = 0;
             y = 0;
         }
-        transform.Find("Offset").transform.localPosition = new Vector3(x, .2f, y);
-        transform.Find("Base").transform.localPosition = new Vector3(x, .2f,y);
+        transform.Find("Offset").transform.localPosition = new Vector3(x, 0, y);
+        transform.Find("Base").transform.localPosition = new Vector3(x, 0, y);
     }
 
     public void SetImage(Texture2D image) {
@@ -121,10 +121,6 @@ public class Token : MonoBehaviour
     }
 
     public void RightClick() {
-        if (Selected) {
-            Deselect();
-            return;
-        }
         Select();
         TokenMenu.ShowMenu();
     }
@@ -240,7 +236,10 @@ public class Token : MonoBehaviour
 
     private void SetVisualArrows() {
         // I don't really like this effect now that we have movement parabolas
-        SetVisual(false, false, false, false);
+        // SetVisual(false, true, false, false);
+
+        // Use this one instead
+        SetVisual(true, false, false, false);
     }
 
     private void SetVisualSquareYellow() {

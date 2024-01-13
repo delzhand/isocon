@@ -27,8 +27,8 @@ public class TokenMenu
             items.Add(new MenuItem("Remove", "Remove", ClickRemove));
             items.Add(new MenuItem("Flip", "Flip", ClickFlip));
         }
-        items.Add(new MenuItem("MoveLeft", "Move Up in Order", ClickMoveUp));
-        items.Add(new MenuItem("MoveLeft", "Move Down in Order", ClickMoveDown));
+        // items.Add(new MenuItem("MoveLeft", "Move Up in Order", ClickMoveUp));
+        // items.Add(new MenuItem("MoveLeft", "Move Down in Order", ClickMoveDown));
         items.Add(new MenuItem("EndTurn", "End Turn", ClickEndTurn));
         items.Add(new MenuItem("Clone", "Clone", ClickClone));
         items.Add(new MenuItem("Delete", "Delete", ClickDelete));
@@ -41,8 +41,7 @@ public class TokenMenu
 
     public static void ClickRemove(ClickEvent evt) {
         Token.GetSelected().Remove();
-        Token.GetSelected().Data.Placed = false; // change this locally just so we can get updated menu options immediately
-        ShowMenu();
+        Token.DeselectAll();
     }
 
     public static void ClickDelete(ClickEvent evt) {

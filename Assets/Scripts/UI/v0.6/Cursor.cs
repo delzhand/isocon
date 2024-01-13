@@ -22,7 +22,28 @@ public class Cursor : MonoBehaviour
     private bool firstTokenHit = false;
     private bool firstHit = false;
 
+    public Vector3 Origin;
+    public Vector3 Difference;
+    public bool Drag = false;
+
     public static bool OverUnitBarElement = false;
+
+    void LateUpdate() {
+        if (Input.GetMouseButton(1)) {
+            Difference = (Camera.main.ScreenToWorldPoint(Input.mousePosition)) - Camera.main.transform.position;
+            if (Drag == false) {
+                Drag = true;
+                Origin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            }
+        }
+        else {
+            Drag = false;
+        }
+
+        if (Drag) {
+            Camera.main.transform.position = Origin - Difference;
+        }
+    }
 
     void Update()
     {
