@@ -58,6 +58,10 @@ public class Cursor : MonoBehaviour
             return;
         }
 
+        if (Drag) {
+            return;
+        }
+
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         RaycastHit[] hits = Physics.RaycastAll(ray, 100f); // use an array so we can hit the block behind a token
