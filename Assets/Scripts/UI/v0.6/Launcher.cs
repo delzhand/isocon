@@ -73,7 +73,7 @@ public class Launcher : MonoBehaviour
         bool isConnecting = NetworkClient.active && !NetworkClient.isConnected;
 
         if (isIdle && _lastUpdateIsConnecting) {
-            Toast.Add("Could not establish a connection.");
+            Toast.AddError("Could not establish a connection.");
         }
         _lastUpdateIsConnecting = isConnecting;
     }
@@ -144,7 +144,7 @@ public class Launcher : MonoBehaviour
 
         UI.System.Q<Button>("CancelConnecting").RegisterCallback<ClickEvent>((evt) => {
             GameObject.Find("NetworkController").GetComponent<NetworkManager>().StopClient();
-            Toast.Add("Connection attempt cancelled.");
+            Toast.AddSimple("Connection attempt cancelled.");
         });
     }
 

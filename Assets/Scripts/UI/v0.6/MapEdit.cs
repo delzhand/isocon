@@ -269,7 +269,7 @@ public class MapEdit
             int y = UI.Modal.Q<IntegerField>("NewMapSizeY").value;
             int z = UI.Modal.Q<IntegerField>("NewMapSizeZ").value;
             TerrainController.ResetTerrain(x, y, z);
-            Toast.Add("Map reset.");
+            Toast.AddSimple("Map reset.");
             Modal.Close();
         });
         Modal.AddButton("Cancel", Modal.CloseEvent);
@@ -321,7 +321,7 @@ public class MapEdit
     private static void ConfirmMapSave(ClickEvent evt) {
         string value = UI.Modal.Q<TextField>("Filename").value;
         if (value.Length == 0) {
-            Toast.Add("Not a valid filename.", ToastType.Error);
+            Toast.AddError("Not a valid filename.");
         }
         else {
             string saveType = UI.Modal.Q<DropdownField>("SaveType").value;

@@ -107,7 +107,7 @@ public class GameSystem : MonoBehaviour
                 system = g.AddComponent<Maleghast>();
                 break;
         }
-        Toast.Add(system.SystemName() + " initialized.");
+        Toast.AddSimple(system.SystemName() + " initialized.");
         system.Teardown();
         system.Setup();
     }

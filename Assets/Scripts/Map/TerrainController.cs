@@ -170,7 +170,7 @@ public class TerrainController : MonoBehaviour
                 GameObject.DestroyImmediate(block.gameObject);
             }
             else {
-                Toast.Add("Foundation blocks cannot be deleted (but can be hidden).", ToastType.Error);
+                Toast.AddError("Foundation blocks cannot be deleted (but can be hidden).");
             }
         });
         ReorgNeeded = true;
@@ -294,7 +294,7 @@ public class TerrainController : MonoBehaviour
                 UI.ToggleDisplay(UI.System.Q("ToolOptions").Q("StyleTextureOptions"), true);
                 return;
             }
-            Toast.Add("Nothing sampled.");
+            Toast.AddSimple("Nothing sampled.");
         });
     }
 

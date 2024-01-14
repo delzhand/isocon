@@ -6,34 +6,48 @@ using UnityEngine.UIElements;
 public enum ToastType {
     Standard,
     Error,
-    Success
+    Success,
+    Custom
 }
 
 public class Toast : MonoBehaviour
 {
     public string Message = "";
     private float duration = 5;
-    private Label label;
+    private VisualElement element;
+    private ToastType type;
 
     // Start is called before the first frame update
     void Start()
     {
-        label = new Label();
-        label.style.backgroundColor = ColorUtility.ColorFromHex("#223A76");
-        label.style.paddingBottom = 4;
-        label.style.paddingTop = 4;
-        label.style.paddingLeft = 8;
-        label.style.paddingRight = 8;
-        label.style.borderTopWidth = 2;
-        label.style.borderBottomWidth = 2;
-        label.style.borderLeftWidth = 2;
-        label.style.borderRightWidth = 2;
-        label.style.borderTopColor = Color.white;
-        label.style.borderBottomColor = Color.white;
-        label.style.borderLeftColor = Color.white;
-        label.style.borderRightColor = Color.white;
-        label.text = Message;     
-        UI.System.Q("Toasts").Add(label);
+        if (type != ToastType.Custom) {
+            element = new Label();
+            element.style.paddingBottom = 4;
+            element.style.paddingTop = 4;
+            element.style.paddingLeft = 8;
+            element.style.paddingRight = 8;
+            element.style.borderTopWidth = 2;
+            element.style.borderBottomWidth = 2;
+            element.style.borderLeftWidth = 2;
+            element.style.borderRightWidth = 2;
+            element.style.borderTopColor = Color.white;
+            element.style.borderBottomColor = Color.white;
+            element.style.borderLeftColor = Color.white;
+            element.style.borderRightColor = Color.white;
+            (element as Label).text = Message;     
+            switch (type) {
+                case ToastType.Standard:
+                    element.style.backgroundColor = ColorUtility.UIBlue;
+                    break;
+                case ToastType.Error:
+                    element.style.backgroundColor = ColorUtility.UIErrorRed;
+                    break;
+                case ToastType.Success:
+                    element.style.backgroundColor = ColorUtility.UISuccessGreen;
+                    break;
+            }
+        }
+        UI.System.Q("Toasts").Add(element);
         UI.System.Q("Toasts").style.display = DisplayStyle.Flex;
     }
 
@@ -42,7 +56,7 @@ public class Toast : MonoBehaviour
     {
         duration -= Time.deltaTime;
         if (duration <= 0) {
-            UI.System.Q("Toasts").Remove(label);
+            UI.System.Q("Toasts").Remove(element);
             if (UI.System.Q("Toasts").childCount == 0) {
                 UI.System.Q("Toasts").style.display = DisplayStyle.None;
             }
@@ -50,14 +64,31 @@ public class Toast : MonoBehaviour
         }
     }
 
-    public static void Add(string message, ToastType type = ToastType.Standard) {
+    public static void AddSimple(string message) {
         FileLogger.Write(message);
         Toast t = GameObject.Find("Engine").AddComponent<Toast>();
         t.Message = message;
-        // switch(type) {
-        //     case ToastType.Error:
-        //         t
-        //         break;
-        // }
+        t.type = ToastType.Standard;
     }
+
+    public static void AddSuccess(string message) {
+        FileLogger.Write(message);
+        Toast t = GameObject.Find("Engine").AddComponent<Toast>();
+        t.Message = message;
+        t.type = ToastType.Success;
+    }
+
+    public static void AddError(string message) {
+        FileLogger.Write(message);
+        Toast t = GameObject.Find("Engine").AddComponent<Toast>();
+        t.Message = message;
+        t.type = ToastType.Error;
+    }
+
+    public static void AddCustom(VisualElement v) {
+        Toast t = GameObject.Find("Engine").AddComponent<Toast>();
+        t.type = ToastType.Custom;
+        t.element = v;
+    }
+    // public static void Add()
 }

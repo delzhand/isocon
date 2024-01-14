@@ -13,14 +13,14 @@ public class MapSaver
         string json = Decode(texture);
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
-        Toast.Add("Map loaded.");
+        Toast.AddSuccess("Map loaded.");
     }
 
     public static void LegacyLoad(string fullPath) {
         string json = File.ReadAllText(fullPath);
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
-        Toast.Add("Map loaded.");
+        Toast.AddSuccess("Map loaded.");
     }
 
     public static void StegSave(string fullPath) {
@@ -46,7 +46,7 @@ public class MapSaver
         Texture2D encoded = Encode(destination, json);
         byte[] bytes = encoded.EncodeToPNG();
         System.IO.File.WriteAllBytes(fullPath, bytes);
-        Toast.Add($"Map written to {fullPath.Replace("\\", "/")}");
+        Toast.AddSuccess($"Map written to {fullPath.Replace("\\", "/")}");
     }
 
     public static void RegSave(string fullPath) {
@@ -54,7 +54,7 @@ public class MapSaver
         string json = JsonUtility.ToJson(state);
         fullPath = fullPath.Replace(".png", ".json");
         System.IO.File.WriteAllText(fullPath, json);
-        Toast.Add($"Map written to {fullPath.Replace("\\", "/")}");
+        Toast.AddSuccess($"Map written to {fullPath.Replace("\\", "/")}");
     }
 
     private static Texture2D toTexture2D(RenderTexture rt) {

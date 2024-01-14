@@ -22,13 +22,13 @@ public class PlayerController : NetworkBehaviour
     public override void OnStopServer()
     {
         base.OnStopServer();
-        Toast.Add("Host disconnected.");
+        Toast.AddSimple("Host disconnected.");
         FileLogger.Write("Host disconnected");
     }
 
     public static void Disconnect() {
         FileLogger.Write("Disconnected");
-        Toast.Add("Disconnected.");
+        Toast.AddSimple("Disconnected.");
         GameObject[] objs = GameObject.FindGameObjectsWithTag("TokenData");
         for (int i = 0; i < objs.Length; i++) {
             objs[i].GetComponent<TokenData>().Disconnect();

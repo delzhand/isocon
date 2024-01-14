@@ -27,6 +27,18 @@ public class ColorUtility
         }
     }
 
+    public static Color UISuccessGreen {
+        get {
+            return ColorFromHex("2c811b");
+        }
+    }
+
+    public static Color UIErrorRed {
+        get {
+            return ColorFromHex("c05050");
+        }
+    }
+
     public static string ColorToHex(Color color)
     {
         int r = Mathf.RoundToInt(color.r * 255);

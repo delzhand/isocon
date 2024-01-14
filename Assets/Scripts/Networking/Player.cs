@@ -49,7 +49,7 @@ public class Player : NetworkBehaviour
             }
         } 
 
-        Toast.Add(Name + " connected.");
+        Toast.AddSimple(Name + " connected.");
     }
 
     public static bool IsHost() {
@@ -130,7 +130,7 @@ public class Player : NetworkBehaviour
         TokenData data = TokenData.Find(tokenId);
         data.Delete();
         FileLogger.Write($"Token {data.Name} was deleted");
-        Toast.Add($"{data.Name} deleted.");
+        Toast.AddSuccess($"{data.Name} deleted.");
     }
     #endregion 
 
@@ -246,7 +246,7 @@ public class Player : NetworkBehaviour
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
         Block.ToggleSpacers(false);
-        Toast.Add("Map synced.");
+        Toast.AddSimple("Map synced.");
     }
 
     [ClientRpc]
@@ -259,7 +259,7 @@ public class Player : NetworkBehaviour
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
         Block.ToggleSpacers(false);
-        Toast.Add("Map synced.");
+        Toast.AddSimple("Map synced.");
     }
     #endregion
 

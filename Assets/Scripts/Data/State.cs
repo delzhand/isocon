@@ -35,7 +35,7 @@ public class State
         string json = JsonUtility.ToJson(state);
         string fullPath = path + "/maps/" + fileName;
         File.WriteAllText(fullPath, json);
-        Toast.Add("Map saved to " + fullPath);
+        Toast.AddSuccess("Map saved to " + fullPath);
     }
 
     public static void LoadState(string fileName) {
@@ -43,7 +43,7 @@ public class State
         string json = File.ReadAllText(path + "/maps/" + fileName);
         State state = JsonUtility.FromJson<State>(json);
         SetSceneFromState(state);
-        Toast.Add("Map loaded.");
+        Toast.AddSuccess("Map loaded.");
     }
 
     public static State GetStateFromScene() {
