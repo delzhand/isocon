@@ -212,7 +212,7 @@ public class Maleghast : GameSystem
         int i = 0;
         foreach (string s in GetTokens()) {
             string s2 = s.Replace(" ", "");
-            Modal.AddNumberNudgerField($"Status{s2}", s, CollectionUtility.CountInArray(sysdata.Tokens, s), (evt) => {
+            Modal.AddNumberNudgerField($"Status{s2}", s, -100, CollectionUtility.CountInArray(sysdata.Tokens, s), (evt) => {
                 TokenChange(evt, s);
             });
             UI.Modal.Q($"MaleghastStatus_{i%2}").Add(UI.Modal.Q($"Status{s2}"));

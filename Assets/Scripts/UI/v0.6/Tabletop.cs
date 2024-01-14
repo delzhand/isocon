@@ -125,13 +125,6 @@ public class Tabletop : MonoBehaviour
         UI.TopBar.Q("Info").RegisterCallback<MouseLeaveEvent>((evt) => {
             UI.ToggleDisplay(UI.System.Q("InfoWindow"), false);
         });
-        UI.TopBar.Q("Dice").RegisterCallback<MouseEnterEvent>((evt) => {
-            UI.ToggleDisplay(UI.System.Q("DiceLog"), true);
-            UI.ToggleDisplay(UI.TopBar.Q("Dice").Q("NewItems"), false);
-        });
-        UI.TopBar.Q("Dice").RegisterCallback<MouseLeaveEvent>((evt) => {
-            UI.ToggleDisplay(UI.System.Q("DiceLog"), false);
-        });        
     }
     
     private void BottomBarSetup() {

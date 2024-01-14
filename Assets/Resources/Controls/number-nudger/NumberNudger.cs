@@ -49,6 +49,16 @@ namespace IsoconUILibrary {
             }
         }
 
+        private int m_MinValueInt;
+        public int minValue 
+        {
+            get => m_MinValueInt;
+            set 
+            {
+                m_MinValueInt = value;
+            }
+        }
+
         // Implementation of INotifyValueChanged<int>
         private List<Action<int>> valueChangedCallbacks;
 
@@ -120,6 +130,9 @@ namespace IsoconUILibrary {
         public void downClick(ClickEvent evt)
         {
             value = value - 1;
+            if (value < minValue) {
+                value = minValue;
+            }
         }
 
         public void upClick(ClickEvent evt)

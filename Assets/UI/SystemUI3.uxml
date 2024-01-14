@@ -60,11 +60,6 @@
             <ui:VisualElement name="Dice" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; overflow: visible; height: 30px;">
                 <ui:VisualElement style="flex-grow: 1; width: 20px; height: 20px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/die_icon&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;" />
                 <ui:Label text="Dice Roller" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;" />
-                <ui:VisualElement name="NewItems" style="flex-grow: 1; position: absolute; top: 0; right: 0; width: 10px; height: 10px; background-color: rgb(44, 93, 135); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; display: none;" />
-                <ui:VisualElement name="DiceLog" class="panel" style="flex-grow: 1; position: absolute; top: 100%; left: 0; display: none;">
-                    <ui:Label text="DICE LOG" class="panel-header" />
-                    <ui:ScrollView name="Rolls" style="flex-direction: column-reverse; margin-top: 0; margin-bottom: 0;" />
-                </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="Info" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; display: flex; height: 30px;">
                 <ui:VisualElement style="flex-grow: 1; width: 24px; height: 24px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/info&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;" />
@@ -374,7 +369,7 @@
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="DiceRoller" class="panel" style="position: relative; left: auto; top: auto; display: flex; margin-bottom: 4px; padding-bottom: 4px; width: auto; padding-right: 10px;">
+                <ui:VisualElement name="DiceRoller" class="panel" style="position: relative; left: auto; top: auto; display: none; margin-bottom: 4px; padding-bottom: 4px; width: auto; padding-right: 10px;">
                     <ui:Label tabindex="-1" text="DICE ROLLER" display-tooltip-when-elided="true" class="panel-header" />
                     <ui:VisualElement name="DiceSelection" style="align-self: flex-start; margin-top: 0; margin-right: -4px; margin-left: -4px; align-items: center; width: 80px;">
                         <ui:VisualElement name="d20" style="flex-direction: row; align-items: center; margin-top: 0; margin-right: 4px; margin-bottom: 4px; margin-left: 4px;">

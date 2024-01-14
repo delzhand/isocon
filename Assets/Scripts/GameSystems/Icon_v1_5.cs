@@ -322,16 +322,16 @@ public class Icon_v1_5 : GameSystem {
 
     private void AttackRollClicked(ClickEvent evt) {
         Modal.Reset("Attack Roll");
-        Modal.AddNumberNudgerField("BoonField", "Boons", 0);
-        Modal.AddNumberNudgerField("CurseField", "Curses", 0);
+        Modal.AddNumberNudgerField("BoonField", "Boons", 0, 0);
+        Modal.AddNumberNudgerField("CurseField", "Curses", 0, 0);
         Modal.AddPreferredButton("Roll", AttackRoll);
         Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
     private void SaveRollClicked(ClickEvent evt) {
         Modal.Reset("Save Roll");
-        Modal.AddNumberNudgerField("BoonField", "Boons", 0);
-        Modal.AddNumberNudgerField("CurseField", "Curses", 0);
+        Modal.AddNumberNudgerField("BoonField", "Boons", 0, 0);
+        Modal.AddNumberNudgerField("CurseField", "Curses", 0, 0);
         Modal.AddPreferredButton("Roll", SaveRoll);
         Modal.AddButton("Cancel", Modal.CloseEvent);
     }
