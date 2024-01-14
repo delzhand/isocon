@@ -159,6 +159,7 @@ public class Icon_v1_5 : GameSystem {
             foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
                 TokenData data = g.GetComponent<TokenData>();
                 TokenDataSetValue(data.Id, "StartTurn");
+                TokenDataSetValue(data.Id, "GainRES|1");
             }
         }
     }
