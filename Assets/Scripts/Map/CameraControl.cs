@@ -39,14 +39,14 @@ public class CameraControl : MonoBehaviour
         // UI.TopBar.Q<Slider>("ZoomSlider").RegisterValueChangedCallback(zoom);
         // UI.TopBar.Q<Slider>("TiltSlider").RegisterValueChangedCallback(tilt);
 
-        UI.TopBar.Q("FixedView").RegisterCallback<ClickEvent>((evt) => {
-            if (Overhead) {
-                disableOverhead();
-            }
-            else {
-                enableOverhead();
-            }
-        });
+        // UI.TopBar.Q("FixedView").RegisterCallback<ClickEvent>((evt) => {
+        //     if (Overhead) {
+        //         disableOverhead();
+        //     }
+        //     else {
+        //         enableOverhead();
+        //     }
+        // });
 
         UI.TopBar.Q("DragMode").RegisterCallback<ClickEvent>((evt) => {
             if (PanMode) {
@@ -78,10 +78,12 @@ public class CameraControl : MonoBehaviour
             bool isOutside = view.x < 0 || view.x > 1 || view.y < 0 || view.y > 1;
             float scroll = Input.GetAxis("Mouse ScrollWheel");
             if (!isOutside && scroll != 0) {
-                float z = UI.System.Q<Slider>("ZoomSlider").value;
+                float z = Camera.main.GetComponent<Camera>().orthographicSize;
+                // float z = UI.System.Q<Slider>("ZoomSlider").value;
                 z += scroll;
+                z = Mathf.Clamp(z, 1.5f, 8f);
                 Camera.main.GetComponent<Camera>().orthographicSize = z;
-                UI.System.Q<Slider>("ZoomSlider").value = z;
+                // UI.System.Q<Slider>("ZoomSlider").value = z;
             }
         }
     }

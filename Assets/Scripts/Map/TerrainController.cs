@@ -620,7 +620,7 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void Reorg() {
-        UpdateIndicators();
+        // UpdateIndicators();
         HideObscuredBlocks();
     }
 

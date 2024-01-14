@@ -115,19 +115,10 @@ public class Tabletop : MonoBehaviour
 
     private void TopBarSetup() {
         UI.SetBlocking(UI.System, "TopBar");
-        UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
-        UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>(MapEdit.ToggleEditMode);
-        UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(Config.OpenModal);
-        UI.TopBar.Q("Coordinates").RegisterCallback<ClickEvent>(TerrainController.ToggleIndicators);
-        UI.TopBar.RegisterCallback<MouseEnterEvent>((evt) => {
-            UI.TopBar.style.opacity = 1;
-        });
-        UI.TopBar.RegisterCallback<MouseLeaveEvent>((evt) => {
-            UI.TopBar.style.opacity = 0;
-        });
-
         UI.TopBar.Q("Isocon").RegisterCallback<ClickEvent>(Tabletop.IsoconMenu);
-
+        UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>(MapEdit.ToggleEditMode);
+        UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
+        UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(Config.OpenModal);
         UI.TopBar.Q("Info").RegisterCallback<MouseEnterEvent>((evt) => {
             UI.ToggleDisplay(UI.System.Q("InfoWindow"), true);
         });
@@ -137,6 +128,7 @@ public class Tabletop : MonoBehaviour
     }
     
     private void BottomBarSetup() {
+        UI.SetBlocking(UI.System, "BottomBar");
         UI.System.Q("BottomBar").RegisterCallback<MouseEnterEvent>((evt) => {
             Tutorial.Init("token bar");
         });

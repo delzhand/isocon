@@ -272,7 +272,7 @@ public class Block : MonoBehaviour
     public Vector3 getMidpoint() {
         Vector3 v = transform.position + new Vector3(0, .25f, 0);
         if (Shape == BlockShape.Slope || Shape == BlockShape.SlopeExt || Shape == BlockShape.SlopeInt || Shape == BlockShape.Steps) {
-            v -= new Vector3(0, .5f, 0);
+            v -= new Vector3(0, .25f, 0);
         }
         return v;
     }
