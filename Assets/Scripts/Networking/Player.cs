@@ -215,9 +215,17 @@ public class Player : NetworkBehaviour
         }
         RpcDiceRoll(tray);
     }
+    [Command]
+    public void CmdShareDiceRoll(string description, string result, string rolls, int die) {
+        RpcDiceRoll(description, result, rolls, die);
+    }
     [ClientRpc]
     public void RpcDiceRoll(DiceTray tray) {
         DiceRoller.AddOutcome(tray);
+    }
+    [ClientRpc]
+    public void RpcDiceRoll(string description, string result, string rolls, int die) {
+        DiceRoller.AddOutcome(description, result, rolls, die);
     }
     #endregion
 

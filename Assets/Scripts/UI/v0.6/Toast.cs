@@ -85,10 +85,11 @@ public class Toast : MonoBehaviour
         t.type = ToastType.Error;
     }
 
-    public static void AddCustom(VisualElement v) {
+    public static void AddCustom(VisualElement v, float duration = 5) {
         Toast t = GameObject.Find("Engine").AddComponent<Toast>();
         t.type = ToastType.Custom;
         t.element = v;
+        t.duration = duration;
     }
     // public static void Add()
 }

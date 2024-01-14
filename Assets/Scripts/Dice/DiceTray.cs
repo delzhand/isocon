@@ -8,20 +8,24 @@ using UnityEngine;
 public struct DiceTray
 {
     public DiceRoll[] rolls;
+    public int modifier;
     public string playerName;
     public string id;
-    public int modifier;
     public DateTime time;
+    public string op;
+    public string description;
 
-    public DiceTray(string playerName, DiceRoll[] rolls, int mod) {
+    public DiceTray(string playerName, DiceRoll[] rolls, int modifier, string op, string description) {
         this.playerName = playerName;
         this.rolls = rolls;
+        this.modifier = modifier;
+        this.op = op;
+        this.description = description;
         time = DateTime.Now;
         id = Guid.NewGuid().ToString();
-        modifier = mod;
     }
 
-    public DiceTray(string playerName, string roll) {
+    public DiceTray(string playerName, string roll, string op, string description) {
         this.playerName = playerName;
         List<DiceRoll> rolls = new();
         (int[],int) dice = ParseDiceSizes(roll);
@@ -35,6 +39,9 @@ public struct DiceTray
         string[] split = roll.Split("+");
         string mod = split.Last<string>();
         modifier = dice.Item2;
+
+        this.op = op;
+        this.description = description;
     }
 
     private static (int[], int) ParseDiceSizes(string input)

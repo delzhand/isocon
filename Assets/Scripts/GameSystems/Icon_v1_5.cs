@@ -8,6 +8,8 @@ using System.Data.Common;
 using IsoconUILibrary;
 using SimpleJSON;
 using System.Reflection;
+using Random = UnityEngine.Random;
+using Unity.Mathematics;
 
 public class Icon_v1_5 : GameSystem {
 
@@ -312,12 +314,59 @@ public class Icon_v1_5 : GameSystem {
 
     public override MenuItem[] GetTokenMenuItems(TokenData data) {
         List<MenuItem> items = new();
-        items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRoll));
+        items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRollClicked));
+        items.Add(new MenuItem("SaveRoll", "Save Roll", SaveRollClicked));
         return items.ToArray();
     }
 
+    private void AttackRollClicked(ClickEvent evt) {
+        Modal.Reset("Attack Roll");
+        Modal.AddNumberNudgerField("BoonField", "Boons", 0);
+        Modal.AddNumberNudgerField("CurseField", "Curses", 0);
+        Modal.AddPreferredButton("Roll", AttackRoll);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+    }
+
+    private void SaveRollClicked(ClickEvent evt) {
+        Modal.Reset("Save Roll");
+        Modal.AddNumberNudgerField("BoonField", "Boons", 0);
+        Modal.AddNumberNudgerField("CurseField", "Curses", 0);
+        Modal.AddPreferredButton("Roll", SaveRoll);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+    }
+
     private void AttackRoll(ClickEvent evt) {
-        Player.Self().CmdRequestDiceRoll(new DiceTray(Player.Self().Name, "1d20+2"));
+        BoonCurseRoll("Attack");
+    }
+
+    private void SaveRoll(ClickEvent evt) {
+        BoonCurseRoll("Save");
+    }
+
+    private void BoonCurseRoll(string label) {
+        string name = Token.GetSelected().Data.Name;
+        int boon = UI.Modal.Q<NumberNudger>("BoonField").value;
+        int curse = UI.Modal.Q<NumberNudger>("CurseField").value;
+        int balance = boon - curse;
+        int x = 1 + Random.Range(0, 20);
+        string rollString = $"{x}";
+        int mod = 0 ;
+        List<int> mods = new();
+        for(int i = 0; i < math.abs(balance); i++) {
+            int y = 1 + Random.Range(0, 6);
+            mods.Add(y);
+            mod = math.max(mod, y);
+        }
+        if (mod > 0 && balance > 0) {
+            x += mod;
+            rollString += $"+boon({String.Join(",", mods.ToArray())})";
+        }
+        if (mod > 0 && balance < 0) {
+            x -= mod;
+            rollString += $"-curse({String.Join(",", mods.ToArray())})";
+        }
+        Player.Self().CmdShareDiceRoll($"{name}'s {label} ({Player.Self().Name})", $"{x}", rollString, 20);
+        Modal.Close();
     }
 
     public override void UpdateData(TokenData data) {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -80,10 +81,9 @@ public class DiceRoller
         UI.ToggleDisplay(root.Q("Highest"), true);
     }
 
-    private static void DieRoll(string func) {
+    private static void DieRoll(string op) {
         string rollString = GetRollString();
-        Debug.Log($"{func}: {rollString}");
-        Player.Self().CmdRequestDiceRoll(new DiceTray(Player.Self().Name, rollString));
+        Player.Self().CmdRequestDiceRoll(new DiceTray(Player.Self().Name, rollString, op, null));
         reset();
     }
 
@@ -108,11 +108,16 @@ public class DiceRoller
         if (d4count > 0) {
             rolls.Add($"{d4count}d4");
         }
+        string rollString = String.Join("+", rolls.ToArray());
+               
         int mod = root.Q<IntegerField>("Number").value;
-        if (mod != 0) {
-            rolls.Add($"{mod}");
+        if (mod < 0) {
+            rollString += $"{mod}";
         }
-        return String.Join("+", rolls.ToArray());
+        else if (mod > 0) {
+            rollString += $"+{mod}";
+        }
+        return rollString;
     }
 
     public static void ToggleVisible(ClickEvent evt) {
@@ -142,44 +147,85 @@ public class DiceRoller
     }
 
     public static void AddOutcome(DiceTray tray) {
-        if (!visible) {
-            UI.ToggleDisplay(UI.System.Q("Dice").Q("NewItems"), true);
-        }
         VisualTreeAsset resultTemplate = Resources.Load<VisualTreeAsset>("UITemplates/DiceResult");
-        VisualTreeAsset rollTemplate = Resources.Load<VisualTreeAsset>("UITemplates/Roll");
-
         VisualElement resultElement = resultTemplate.Instantiate();
-        resultElement.style.display = DisplayStyle.Flex;
-        resultElement.name = tray.id;
-
-        int sum = tray.modifier;
-        int highest = int.MinValue;
-        int lowest = int.MaxValue;
+        
+        List<int> rolls = new();
+        int sum = 0;
+        int max = int.MinValue;
+        int min = int.MaxValue;
+        int largestDie = 2;
         for (int i = 0; i < tray.rolls.Length; i++) {
+            largestDie = math.max(largestDie, tray.rolls[i].Die);
+            max = Math.Max(max, tray.rolls[i].Rolled);
+            min = Math.Min(min, tray.rolls[i].Rolled);
             sum += tray.rolls[i].Rolled;
-            highest = Math.Max(highest, tray.rolls[i].Rolled);
-            lowest = Math.Min(lowest, tray.rolls[i].Rolled);
-
-            VisualElement rollElement = rollTemplate.Instantiate();
-            rollElement.Q<Label>("Value").text = $"{tray.rolls[i].Rolled}";
-            rollElement.Q<Label>("Die").text = $"{tray.rolls[i].Die}";
-            resultElement.Q("Rolls").Add(rollElement);
-            if (i < tray.rolls.Length - 1) {
-                VisualElement plusElement = new Label("+");
-                plusElement.AddToClassList("dice-plus");
-                resultElement.Q("Rolls").Add(plusElement);
-            }
+            rolls.Add(tray.rolls[i].Rolled);
         }
 
-        resultElement.Q<Label>("Sum").text = $"{sum}";
-        resultElement.Q<Label>("Fns").text = $" (▲{highest} ▼{lowest} μ{Math.Floor(sum/(float)tray.rolls.Length)})";
+        if (tray.description != null) {
+            resultElement.Q<Label>("Label").text = $"{tray.description} ({tray.playerName})";
+        }
+        else {
+            resultElement.Q<Label>("Label").text = tray.playerName;
+        }
 
-        Toast.AddCustom(resultElement);
+        switch (largestDie) {
+            case 4:
+            case 6:
+            case 8:
+            case 10:
+            case 12:
+            case 20:
+                resultElement.Q("Icon").style.backgroundImage = Resources.Load<Texture2D>($"Textures/die_{largestDie}");
+                break;
+            default:
+                UI.ToggleDisplay(resultElement.Q("Icon"), false);
+                break;
+        }
+
+        string modString = "";
+        if (tray.modifier < 0) {
+            modString += $"{tray.modifier}";
+        }
+        if (tray.modifier > 0) {
+            modString += $"+{tray.modifier}";
+        }
+
+        switch(tray.op) {
+            case "sum":
+                resultElement.Q<Label>("Result").text = $"{sum+tray.modifier}";
+                resultElement.Q<Label>("Rolls").text = $"{string.Join("+", rolls.ToArray())}{modString}";
+                break;
+            case "max":
+                resultElement.Q<Label>("Result").text = $"{max+tray.modifier}";
+                resultElement.Q<Label>("Rolls").text = $"({string.Join(", ", rolls.ToArray())}){modString}";
+                break;
+            default:
+                resultElement.Q<Label>("Result").text = $"({string.Join(", ", rolls.ToArray())}){modString}";
+                UI.ToggleDisplay(resultElement.Q<Label>("Rolls"), false);
+                break;
+        }
+
+        // resultElement.Q<Label>("Sum").text = $"{sum}";
+        // resultElement.Q<Label>("Fns").text = $" (▲{highest} ▼{lowest} μ{Math.Floor(sum/(float)tray.rolls.Length)})";
+
+        Toast.AddCustom(resultElement, 15);
 
         // UI.System.Q("DiceLog").Q("Rolls").Add(resultElement);
 
         // DiceOutcome diceOutcome = GameObject.Find("UI").AddComponent<DiceOutcome>();
         // diceOutcome.Tray = tray;
+    }
+
+    public static void AddOutcome(string description, string result, string rolls, int die) {
+        VisualTreeAsset resultTemplate = Resources.Load<VisualTreeAsset>("UITemplates/DiceResult");
+        VisualElement resultElement = resultTemplate.Instantiate();
+        resultElement.Q<Label>("Label").text = description;
+        resultElement.Q("Icon").style.backgroundImage = Resources.Load<Texture2D>($"Textures/die_{die}");
+        resultElement.Q<Label>("Result").text = $"{result}";
+        resultElement.Q<Label>("Rolls").text = $"{rolls}";
+        Toast.AddCustom(resultElement, 15);
     }
 
 
