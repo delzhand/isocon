@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:VisualElement name="DiceResult" class="panel-text" style="background-color: rgb(0, 106, 255); align-items: center; margin-top: 8px; margin-right: 0; margin-bottom: 0; margin-left: 0;">
+    <ui:VisualElement name="DiceResult" class="panel-text" style="background-color: rgb(44, 93, 135); align-items: center; margin-top: 8px; margin-right: 0; margin-bottom: 0; margin-left: 0;">
         <ui:Label text="Ada&apos;s Attack (Swallowtail)" name="Label" style="margin-top: 8px; margin-right: 8px; margin-bottom: 0; margin-left: 8px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
         <ui:VisualElement style="flex-direction: row; align-items: center; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 8px; margin-right: 8px; margin-bottom: 8px; margin-left: 8px;">
             <ui:VisualElement name="Icon" style="width: 24px; height: 24px; background-image: resource(&apos;Textures/die_20&apos;);" />
