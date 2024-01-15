@@ -42,8 +42,8 @@ public class Environment : MonoBehaviour
             bgmats.Add(BackgroundMat);
             mr.SetMaterials(bgmats);
         }
-        mr.material.SetColor("_Color1", bottom);
-        mr.material.SetColor("_Color2", top);
+        mr.material.SetColor("_Color1", top);
+        mr.material.SetColor("_Color2", bottom);
         UI.System.Q("BotBgColor").style.backgroundColor = BgBottomColor;
         UI.System.Q("TopBgColor").style.backgroundColor = BgTopColor;
     }
