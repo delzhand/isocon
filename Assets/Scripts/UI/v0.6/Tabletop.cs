@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ public class Tabletop : MonoBehaviour
 {
     void Start()
     {
+        UI.SetBlocking(UI.System, StringUtility.Arr("SelectedTokenPanel", "FocusedTokenPanel"));
+
         Modal.Setup();
         MapEdit.Setup();
         SelectionMenu.Setup();
@@ -84,8 +87,6 @@ public class Tabletop : MonoBehaviour
 
     public void ConnectAsClient() {
         Tutorial.Init("tabletop");
-        UI.System.Q("FloatingControls").Q("Connection").Q<Label>("Message").text = "You are connected as a client.";
-
         Label message = UI.System.Q<Label>("ConnectionMessage");
         message.text = $"You are connected to {PlayerPrefs.GetString("HostIP", "an uUnknown address")} as a client.";
         IPFinder.ReplaceTokens(message);

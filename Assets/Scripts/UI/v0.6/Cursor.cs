@@ -38,6 +38,17 @@ public class Cursor : MonoBehaviour
     public static bool OverUnitBarElement = false;
 
     void LateUpdate() {
+        if (Modal.IsOpen()) {
+            return;
+        }
+        if (UI.ClicksSuspended) {
+            return;
+        }
+
+        if (!Player.IsOnline()) {
+            return;
+        }
+
         if (Input.GetMouseButton(1)) {
             Difference = (Camera.main.ScreenToWorldPoint(Input.mousePosition)) - Camera.main.transform.position;
             MouseDifference = MouseOrigin - Input.mousePosition;

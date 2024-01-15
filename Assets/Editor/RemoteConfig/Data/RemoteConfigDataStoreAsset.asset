@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"b5b9ed14-a554-47b3-9b9c-20e59e21998d\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"ab1fd891-cc08-42c9-a094-81845c96326a\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
-    \"value\": \"0.6.2\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"e78d9cde-1101-418c-aafe-731c7e1940d8\"\r\n    },\r\n    \"rs\":
+    \"value\": \"0.6.3\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
+    \"entityId\": \"4d09d223-c199-4980-8169-473c2a679f85\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"35a39545-1615-4922-9552-9b322459d9a5\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f64582d5-81ae-4cce-bfb9-3905de5b9a3b\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
     \"Stats\": {\r\n            \"Blue\": {\r\n              \"MaxHP\": 32,\r\n             
@@ -378,15 +378,15 @@ MonoBehaviour:
     \"Flight\",\r\n            \"Miracle\",\r\n            \"Retaliation\",\r\n           
     \"Reload\",\r\n            \"Physical Armor\",\r\n            \"Magic Armor\",\r\n           
     \"Super Armor\"\r\n          ]\r\n        }\r\n      }\r\n    }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"b5b9ed14-a554-47b3-9b9c-20e59e21998d\"\r\n   
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"ab1fd891-cc08-42c9-a094-81845c96326a\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
-    \"value\": \"0.6.2\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"e78d9cde-1101-418c-aafe-731c7e1940d8\"\r\n    },\r\n    \"rs\":
+    \"value\": \"0.6.3\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
+    \"entityId\": \"4d09d223-c199-4980-8169-473c2a679f85\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"35a39545-1615-4922-9552-9b322459d9a5\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f64582d5-81ae-4cce-bfb9-3905de5b9a3b\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
     \"Stats\": {\r\n            \"Blue\": {\r\n              \"MaxHP\": 32,\r\n             

@@ -212,7 +212,7 @@ public class Maleghast : GameSystem
         int i = 0;
         foreach (string s in GetTokens()) {
             string s2 = s.Replace(" ", "");
-            Modal.AddNumberNudgerField($"Status{s2}", s, -100, CollectionUtility.CountInArray(sysdata.Tokens, s), (evt) => {
+            Modal.AddNumberNudgerField($"Status{s2}", s, CollectionUtility.CountInArray(sysdata.Tokens, s), -100, (evt) => {
                 TokenChange(evt, s);
             });
             UI.Modal.Q($"MaleghastStatus_{i%2}").Add(UI.Modal.Q($"Status{s2}"));
@@ -354,7 +354,9 @@ public class Maleghast : GameSystem
     public override void TokenDataSetValue(string tokenId, string value) {
         base.TokenDataSetValue(tokenId, value);
         TokenData data = TokenData.Find(tokenId);
-        Debug.Log($"MaleghastInterpreter change registered for {data.Name}: {value}");
+        if (data.Destroyed) {
+            return;
+        }
         MaleghastData sysdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);
         sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
         data.SystemData = JsonUtility.ToJson(sysdata);  

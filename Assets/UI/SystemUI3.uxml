@@ -444,15 +444,18 @@
             <ui:VisualElement name="Contents" style="flex-grow: 1; flex-direction: column-reverse;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="DoubleConfirmModal" class="modal panel" style="position: absolute; left: 50%; top: 50%; background-image: resource(&apos;Textures/9slice_modal&apos;); -unity-slice-left: 28; -unity-slice-top: 103; -unity-slice-right: 34; -unity-slice-bottom: 30; translate: -50% -50%; display: none; -unity-slice-scale: 0.5px;">
-        <ui:Label tabindex="-1" text="Double Confirm" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="-unity-text-align: upper-center; margin-top: 0; margin-right: 0; margin-bottom: 4px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+    <ui:VisualElement name="DoubleConfirmModal" class="modal panel-text" style="position: absolute; left: 50%; top: 50%; -unity-slice-left: 28; -unity-slice-top: 46; -unity-slice-right: 34; -unity-slice-bottom: 30; translate: -50% -50%; display: none; max-width: 600px; -unity-slice-scale: 0.5px; background-color: rgb(71, 65, 63); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px;">
+        <ui:VisualElement name="Top" style="flex-grow: 1; background-color: rgb(74, 113, 178); border-top-left-radius: 4px; border-top-right-radius: 4px; padding-top: 4px; padding-right: 24px; padding-bottom: 4px; padding-left: 8px;">
+            <ui:Label tabindex="-1" text="Load Map" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="-unity-text-align: upper-center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+            <ui:Button text="×" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Exit" class="roundbutton" style="margin-left: 0; align-self: center; position: absolute; right: 4px; top: 4px; margin-top: 0; margin-right: 0; margin-bottom: 0; color: rgb(255, 255, 255); font-size: 20px; -unity-text-align: middle-center; background-color: rgba(255, 255, 255, 0);" />
+        </ui:VisualElement>
         <ui:VisualElement name="Wrapper" style="flex-grow: 1; min-width: 0; min-height: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; flex-direction: column-reverse;">
-            <ui:VisualElement name="Buttons" style="flex-grow: 1; flex-direction: row; justify-content: center; margin-top: 24px; background-color: rgba(0, 0, 0, 0.67); padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;">
+            <ui:VisualElement name="Buttons" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; margin-top: 24px; background-color: rgba(0, 0, 0, 0.67); padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;">
                 <ui:Button text="Confirm" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Confirm" class="preferred" />
                 <ui:Button text="Cancel" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Cancel" style="margin-left: 4px;" />
             </ui:VisualElement>
-            <ui:VisualElement name="Contents" style="flex-grow: 1;">
-                <ui:Label tabindex="-1" text="Are you sure you want to do this?" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Message" style="-unity-text-align: upper-center;" />
+            <ui:VisualElement name="Contents" style="flex-grow: 1; flex-direction: column-reverse;">
+                <ui:Label text="Label" name="Message" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

@@ -412,7 +412,9 @@ public class Icon_v1_5 : GameSystem {
     public override void TokenDataSetValue(string tokenId, string value) {
         base.TokenDataSetValue(tokenId, value);
         TokenData data = TokenData.Find(tokenId);
-        Debug.Log($"Icon 1.5 Interpreter change registered for {data.Name}: {value}");
+        if (data.Destroyed) {
+            return;
+        }
         Icon1_5Data sysdata = JsonUtility.FromJson<Icon1_5Data>(data.SystemData);
         sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
         data.SystemData = JsonUtility.ToJson(sysdata); 
