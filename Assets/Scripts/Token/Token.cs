@@ -26,6 +26,24 @@ public class Token : MonoBehaviour
     public bool Selected = false;
     public bool Focused = false;
 
+    void LateUpdate() {
+        if (Selected && Cursor.Mode == CursorMode.Moving && Input.GetMouseButtonUp(0)) {
+            Block[] focused = Block.GetFocused();
+            if (focused.Length > 0) {
+                if (Vector3.Distance(focused[0].transform.position, transform.position) < .1f) {
+                    // If up on the same tile, keep selected
+
+                }
+                else {
+                    // Otherwise move to focused block
+                    Move(Block.GetFocused()[0]);
+                }
+                Deselect();
+            }
+
+        }
+    }
+
     void Update()
     {
 
@@ -66,8 +84,6 @@ public class Token : MonoBehaviour
                 transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 1);
                 break;
         }
-
-
 
         Offset();
 
@@ -146,7 +162,7 @@ public class Token : MonoBehaviour
     public void Place(Block block) {
         Vector3 v = block.getMidpoint();
         Player.Self().CmdRequestPlaceToken(Data.Id, v);
-        StartMoving();
+        Deselect();
     }
 
     private void StartMoving() {

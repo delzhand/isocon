@@ -92,15 +92,6 @@ public class Cursor : MonoBehaviour
         }
     }
 
-    private float ClosestIfBetween(float val, float low, float high) {
-        if (val > low && val < high)
-        {
-            float mid = (high - low) / 2 + low;
-            return val < mid ? low : high;
-        }
-        return val;
-    }
-
     void Update()
     {
         if (Modal.IsOpen()) {

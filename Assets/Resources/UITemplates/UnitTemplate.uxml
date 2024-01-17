@@ -2,6 +2,6 @@
     <ui:VisualElement name="UnitTemplate" style="position: relative; width: 70px; height: 70px; display: flex; padding-top: 0; padding-bottom: 0; padding-left: 0; padding-right: 0; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 0;">
         <ui:VisualElement name="ClassBackground" class="centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.72); width: 50px; height: 50px; rotate: 45deg; translate: -50% -50%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0); border-left-width: 3px; border-right-width: 3px; border-top-width: 3px; border-bottom-width: 3px; left: 50%; top: 50%; position: absolute;" />
         <ui:VisualElement name="Portrait" class="self-centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: resource(&apos;Textures/qmark&apos;); position: absolute; height: 60px; left: 50%; width: 60px; top: 50%; translate: -50% -50%;" />
-        <ui:VisualElement name="Selected" style="background-color: rgb(44, 93, 135); height: 5px; position: absolute; bottom: 0; flex-direction: row; width: 50%; display: flex; left: 25%;" />
+        <ui:VisualElement name="Selected" style="background-color: rgba(44, 93, 135, 0); height: 5px; position: absolute; bottom: 0; flex-direction: row; width: 50%; display: flex; left: 25%;" />
     </ui:VisualElement>
 </ui:UXML>

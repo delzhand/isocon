@@ -419,7 +419,7 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="CurrentOp" class="panel self-centered" style="flex-grow: 1; left: 50%; position: absolute; top: 77px; display: none;">
+            <ui:VisualElement name="CurrentOp" class="self-centered panel-text" style="flex-grow: 1; left: 50%; position: absolute; top: 77px; display: none; font-size: 24px; background-color: rgb(44, 93, 135); padding-top: 4px; padding-right: 16px; padding-bottom: 4px; padding-left: 16px; border-top-left-radius: 24px; border-top-right-radius: 24px; border-bottom-right-radius: 24px; border-bottom-left-radius: 24px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px;">
                 <ui:Label text="Label" name="Op" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
             </ui:VisualElement>
         </ui:VisualElement>

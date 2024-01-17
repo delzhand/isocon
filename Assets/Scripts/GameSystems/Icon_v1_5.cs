@@ -442,6 +442,7 @@ public class Icon_v1_5 : GameSystem {
         panel.Q<Label>("Class").style.backgroundColor = data.Color;
         panel.Q<Label>("Job").text = sysdata.Job;
         panel.Q<Label>("Job").style.backgroundColor = data.Color;
+        UI.ToggleDisplay(panel.Q("Job"), sysdata.Job.Length > 0);
         UI.ToggleDisplay(panel.Q("ExtraInfo"), sysdata.Type != "Object");
 
 
