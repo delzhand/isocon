@@ -155,7 +155,7 @@ public class Tabletop : MonoBehaviour
     }
 
     private static void IsoconMenu(ClickEvent evt) {
-        Modal.DoubleConfirm("Exit Tabletop", "Exit the tabletop and return to the main menu?", Quit);
+        Modal.DoubleConfirm("Exit Tabletop", "Exit the tabletop and return to the Isocon Launcher?", Quit);
     }
 
     private static void Quit() {
