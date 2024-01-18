@@ -30,19 +30,26 @@ public class DestinationRenderer : NetworkBehaviour
         Line.endColor = Color.white;
         Line.startWidth = .05f;
         Line.endWidth = .05f;
-        Line.numCapVertices = 4;
+        Line.numCapVertices = 0;
         Line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        // Line.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
         Line.material = Resources.Load<Material>("Materials/Line");
+        Line.startWidth = .2f;
+        Line.endWidth = .2f;
+        Line.textureMode = LineTextureMode.Tile;
+        Line.textureScale = new Vector2(30f, 1f);
     }
 
     // Update is called once per frame
     void Update()
     {
+        Line.textureMode = LineTextureMode.Tile;
+        Line.textureScale = new Vector2(5f, 1f);
+
         Line.positionCount = 0;
         if (!Visible || !ValidTarget) {
             return;
         }
+
 
         TokenData data = TokenData.Find(TokenId);
         // Don't show while token is moving
