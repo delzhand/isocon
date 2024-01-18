@@ -36,15 +36,12 @@ public class DestinationRenderer : NetworkBehaviour
         Line.startWidth = .2f;
         Line.endWidth = .2f;
         Line.textureMode = LineTextureMode.Tile;
-        Line.textureScale = new Vector2(30f, 1f);
+        Line.textureScale = new Vector2(5f, 1f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Line.textureMode = LineTextureMode.Tile;
-        Line.textureScale = new Vector2(5f, 1f);
-
         Line.positionCount = 0;
         if (!Visible || !ValidTarget) {
             return;
