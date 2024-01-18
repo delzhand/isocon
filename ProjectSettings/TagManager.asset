@@ -11,6 +11,7 @@ TagManager:
   - TokenData
   - OfflineData
   - OnlineData
+  - TokenCollider
   layers:
   - Default
   - TransparentFX

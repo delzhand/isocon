@@ -21,13 +21,11 @@ public class CameraControl : MonoBehaviour
     }
 
     private static void registerCallbacks() {
+        UI.TopBar.Q("DragMode").RegisterCallback<MouseEnterEvent>((evt) => {
+            Tutorial.Init("camera modes");
+        });
         UI.TopBar.Q("DragMode").RegisterCallback<ClickEvent>((evt) => {
-            if (PanMode) {
-                disablePanMode();
-            }
-            else {
-                enablePanMode();
-            }
+            TogglePanMode();
         });
     }
 
@@ -98,6 +96,15 @@ public class CameraControl : MonoBehaviour
                 z = Mathf.Clamp(z, 1.5f, 8f);
                 Camera.main.GetComponent<Camera>().orthographicSize = z;
             }
+        }
+    }
+
+    public static void TogglePanMode() {
+        if (PanMode) {
+            disablePanMode();
+        }
+        else {
+            enablePanMode();
         }
     }
 

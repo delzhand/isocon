@@ -56,6 +56,8 @@ public class Tutorial
                 return ("Terrain Info", "Hovering over a tile will display its coordinates, elevation, and terrain effects. Clicking on a single tile will select it, allowing you to apply or clear terrain effects. Selecting multiple tiles will allow you to apply terrain effects to all tiles.");
             case ("clear selected"):
                 return ("Clear Selected", "This button will deselect all currently selected tiles.");
+            case "camera modes":
+                return ("Camera Modes", "By holding down the right mouse button, you can either drag or rotate the map. Clicking the button in the top bar will toggle between modes, or you can press C.");
         }
         throw new System.Exception("No such tutorial");
     }

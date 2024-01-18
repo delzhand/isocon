@@ -14,5 +14,9 @@ public class Keyboard : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Return) && Modal.IsOpen()) {
             Modal.Activate();
         }
+
+        if (Input.GetKeyUp(KeyCode.C)) {
+            CameraControl.TogglePanMode();
+        }
     }
 }

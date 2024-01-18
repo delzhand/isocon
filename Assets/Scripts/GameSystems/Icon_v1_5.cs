@@ -338,10 +338,12 @@ public class Icon_v1_5 : GameSystem {
 
     private void AttackRoll(ClickEvent evt) {
         BoonCurseRoll("Attack");
+        Token.DeselectAll();
     }
 
     private void SaveRoll(ClickEvent evt) {
         BoonCurseRoll("Save");
+        Token.DeselectAll();
     }
 
     private void BoonCurseRoll(string label) {
@@ -432,6 +434,8 @@ public class Icon_v1_5 : GameSystem {
         Icon1_5Data sysdata = JsonUtility.FromJson<Icon1_5Data>(data.SystemData);
 
         VisualElement panel = UI.System.Q(elementName);
+
+        UI.ToggleDisplay(panel.Q("Data"), data.WorldObject.GetComponent<Token>().State == TokenState.Inspecting);
 
         panel.Q("ClassBackground").style.borderTopColor = data.Color;
         panel.Q("ClassBackground").style.borderRightColor = data.Color;

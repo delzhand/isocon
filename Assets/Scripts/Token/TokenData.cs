@@ -148,11 +148,21 @@ public class TokenData : NetworkBehaviour
         Token t = WorldObject.GetComponent<Token>();
         UnitBarElement.RegisterCallback<MouseDownEvent>((evt) => {
             if (Cursor.IsLeftClick()) {
-                t.LeftClick();
+                t.LeftClickDown();
                 t.Focus();
             }
             else if (Cursor.IsRightClick()) {
-                t.RightClick();
+                t.RightClickDown();
+                t.Focus();
+            }
+        });
+        UnitBarElement.RegisterCallback<MouseUpEvent>((evt) => {
+            if (Cursor.IsLeftClick()) {
+                t.LeftClickDown();
+                t.Focus();
+            }
+            else if (Cursor.IsRightClick()) {
+                t.RightClickDown();
                 t.Focus();
             }
         });

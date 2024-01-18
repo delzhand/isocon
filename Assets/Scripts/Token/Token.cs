@@ -11,6 +11,15 @@ using UnityEngine.Networking;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 
+public enum TokenState {
+    Neutral, // neither
+    Focused, // right
+    Pending, // neither
+    Dragging, // left partial
+    MenuOpen, // left partial
+    Inspecting, // left full
+}
+
 public class Token : MonoBehaviour
 {
     public int Size = 1;
@@ -23,24 +32,25 @@ public class Token : MonoBehaviour
 
     public Token LastFocused;
 
-    public bool Selected = false;
-    public bool Focused = false;
+    // public bool Selected = false;
+    // public bool SoftSelect = true;
+    // public bool Focused = false;
+
+    private Vector3 DragOrigin;
+
+    public TokenState State = TokenState.Neutral;
 
     void LateUpdate() {
-        if (Selected && Cursor.Mode == CursorMode.Moving && Input.GetMouseButtonUp(0)) {
-            Block[] focused = Block.GetFocused();
-            if (focused.Length > 0) {
-                if (Vector3.Distance(focused[0].transform.position, transform.position) < .1f) {
-                    // If up on the same tile, keep selected
-
-                }
-                else {
-                    // Otherwise move to focused block
-                    Move(Block.GetFocused()[0]);
-                }
-                Deselect();
-            }
-
+        if (!Input.GetMouseButtonUp(0)) {
+            return;
+        }
+        switch (State) {
+            case TokenState.Pending:
+                StartInspecting();
+                break;
+            case TokenState.Dragging:
+                StopDragging();
+                break;
         }
     }
 
@@ -52,17 +62,16 @@ public class Token : MonoBehaviour
         float CutoutSize = PlayerPrefs.GetFloat("TokenScale", 1f);
         transform.Find("Offset/Avatar/Cutout").localScale = new Vector3(CutoutSize, CutoutSize, CutoutSize);
 
-        if (Selected && Cursor.Mode == CursorMode.Moving) {
-            SetVisualArrows();
-        }
-        else if (Selected) {
-            SetVisualSquareYellow();
-        }
-        else if (Focused) {
-            SetVisualSquareBlue();
-        }
-        else {
-            SetVisualNone();
+        switch(State) {
+            case TokenState.Neutral:
+                SetVisualNone();
+                break;
+            case TokenState.Focused:
+                SetVisualSquareBlue();
+                break;
+            default:
+                SetVisualSquareYellow();
+                break;
         }
 
         string tokenOutline = PlayerPrefs.GetString("TokenOutline", "White");
@@ -87,10 +96,15 @@ public class Token : MonoBehaviour
 
         Offset();
 
-        if (Focused && this != LastFocused) {
+        if (State == TokenState.Focused && this != LastFocused) {
             Unfocus();
         }
 
+        if (State == TokenState.Pending) {
+            if (Input.mousePosition != DragOrigin) {
+                StartDragging();
+            }
+        }
     }
 
     private void alignToCamera() {
@@ -125,77 +139,137 @@ public class Token : MonoBehaviour
         transform.Find("Offset/Avatar/Cutout/Cutout Quad").transform.localScale = new Vector3(aspectRatio, 1f, 1f);
     }
 
-    public void LeftClick() {
-        if (Selected) {
+    public void LeftClickDown() {
+        switch (State) {
+            case TokenState.Neutral:
+            case TokenState.Focused:
+            case TokenState.MenuOpen:
+                StartPending();
+                break;
+            case TokenState.Inspecting:
+                Deselect();
+                break;
+        }
+    }
+
+    public void RightClickDown() {
+        // if (Selected) {
+        //     Deselect();
+        //     return;
+        // }
+
+        // Select();
+        // TokenMenu.ShowMenu();
+    }
+
+    // public void AnyClickUp() {
+    //     Debug.Log("any click up");
+    // }
+
+    private void StartPending() {
+        DeselectAll();
+        State = TokenState.Pending;
+        DragOrigin = Input.mousePosition;
+        Cursor.Mode = CursorMode.Dragging;
+    }
+
+    private void StartDragging() {
+        State = TokenState.Dragging;
+        Cursor.Mode = CursorMode.Dragging;
+        Block.DeselectAll();
+        Block.UnfocusAll();
+        BlockMesh.ToggleBorders(true);
+        UI.ToggleDisplay("CurrentOp", true);
+        string op = Data.Placed ? "Moving" : "Placing";
+        UI.System.Q("CurrentOp").Q<Label>("Op").text = $"{op} {Data.Name}"; 
+        Player.Self().GetComponent<DestinationRenderer>().Init(Data.Id, op);
+        UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
+        Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
+    }
+
+    private void StopDragging() {
+        Block[] focused = Block.GetFocused();
+        if (focused.Length == 0) {
+            // Release outside map
             Deselect();
             return;
         }
-
-        Select();
-        if (Data.Placed) {
-            StartMoving();
+        Block b = focused[0];
+        if (b != GetBlock()) {
+            // Release on new block
+            Move(b);
         }
         else {
-            StartPlacing();
-        }
-    }
-
-    public void RightClick() {
-        if (Selected) {
+            // Release on same block
             Deselect();
-            return;
         }
-
-        Select();
-        TokenMenu.ShowMenu();
     }
 
-    private void StartPlacing(){
-        Block.DeselectAll();
-        Block.UnfocusAll();
-        BlockMesh.ToggleBorders(true);
-        Cursor.Mode = CursorMode.Placing;
+    private void StartInspecting() {
+        State = TokenState.Inspecting;
+        Cursor.Mode = CursorMode.Default;
+        BlockMesh.ToggleBorders(false);
         UI.ToggleDisplay("CurrentOp", true);
-        UI.System.Q("CurrentOp").Q<Label>("Op").text = $"Placing {Data.Name}"; 
+        UI.System.Q("CurrentOp").Q<Label>("Op").text = $"Inspecting {Data.Name}"; 
+        Player.Self().GetComponent<DestinationRenderer>().Deinit();
     }
 
-    public void Place(Block block) {
-        Vector3 v = block.getMidpoint();
-        Player.Self().CmdRequestPlaceToken(Data.Id, v);
-        Deselect();
-    }
+    // private void StartPlacing(){
+    //     Block.DeselectAll();
+    //     Block.UnfocusAll();
+    //     BlockMesh.ToggleBorders(true);
+    //     Cursor.Mode = CursorMode.Placing;
+    //     UI.ToggleDisplay("CurrentOp", true);
+    //     UI.System.Q("CurrentOp").Q<Label>("Op").text = $"Placing {Data.Name}"; 
+    //     Player.Self().GetComponent<DestinationRenderer>().Init(Data.Id, "Placing");
+    // }
 
-    private void StartMoving() {
-        SetVisualArrows();
-        Block.DeselectAll();
-        Block.UnfocusAll();
-        BlockMesh.ToggleBorders(true);
-        Cursor.Mode = CursorMode.Moving;
-        UI.ToggleDisplay("CurrentOp", true);
-        UI.System.Q("CurrentOp").Q<Label>("Op").text = $"Moving {Data.Name}"; 
-        Player.Self().GetComponent<DestinationRenderer>().Init(Data.Id, "Moving");
-    }
+    // public void Place(Block block) {
+    //     Vector3 v = block.getMidpoint();
+    //     Player.Self().CmdRequestPlaceToken(Data.Id, v);
+    //     Deselect();
+    // }
+
+    // private void StartMoving() {
+    //     SetVisualArrows();
+    //     Block.DeselectAll();
+    //     Block.UnfocusAll();
+    //     BlockMesh.ToggleBorders(true);
+    //     Cursor.Mode = CursorMode.Moving;
+    //     UI.ToggleDisplay("CurrentOp", true);
+    //     UI.System.Q("CurrentOp").Q<Label>("Op").text = $"Moving {Data.Name}"; 
+    //     Player.Self().GetComponent<DestinationRenderer>().Init(Data.Id, "Moving");
+    // }
 
     public void Move(Block block) {
+        Deselect();
         Vector3 v = block.getMidpoint();
-        Player.Self().CmdMoveToken(Data.Id, v, false);
+        if (Data.Placed) {
+            Player.Self().CmdMoveToken(Data.Id, v, false);
+        }
+        else {
+            Player.Self().CmdRequestPlaceToken(Data.Id, v);
+        }
     }
 
     public void Remove() {
         Player.Self().CmdRequestRemoveToken(Data.Id);
     }
 
-    public void Select() {
-        UnfocusAll();
-        DeselectAll();
-        Selected = true;
-        Data.Select();
-        UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
-        Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
-    }
+    // public void Select() {
+    //     SoftSelect = true;
+    //     UnfocusAll();
+    //     DeselectAll();
+    //     Selected = true;
+    //     Data.Select();
+    //     UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
+    //     Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
+    // }
 
     public void Deselect() {
-        Selected = false;
+        State = TokenState.Neutral;
+        // Selected = false;
+        // SoftSelect = true;
         Block.DehighlightAll();
         UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), false);
         UI.ToggleDisplay("CurrentOp", false);
@@ -215,7 +289,8 @@ public class Token : MonoBehaviour
     public static Token GetSelected() {
         GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
         for (int i = 0; i < tokens.Length; i++) {
-            if (tokens[i].GetComponent<Token>().Selected) {
+            TokenState ts = tokens[i].GetComponent<Token>().State;
+            if (ts == TokenState.Dragging || ts == TokenState.Pending || ts == TokenState.MenuOpen || ts == TokenState.Inspecting) {
                 return tokens[i].GetComponent<Token>();
             }
         }
@@ -231,20 +306,29 @@ public class Token : MonoBehaviour
         UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
         Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UIFocusBlue;
         LastFocused = this;
-        Focused = true;
+        State = TokenState.Focused;
+        // Focused = true;
     }
 
     public void Unfocus() {
-        Focused = false;
-        if (Selected == false) {
-            UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), false);
+        if (State != TokenState.Focused) {
+            return;
         }
+
+        State = TokenState.Neutral;
+        UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), false);
+
+        // State = TokenState.Neutral;
+        // // Focused = false;
+        // if (State != TokenState.Inspecting) {
+        //     UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), false);
+        // }
     }
 
     public static Token GetFocused() {
         GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
         for (int i = 0; i < tokens.Length; i++) {
-            if (tokens[i].GetComponent<Token>().Focused) {
+            if (tokens[i].GetComponent<Token>().State == TokenState.Focused) {
 
                 return tokens[i].GetComponent<Token>();
             }
@@ -257,6 +341,18 @@ public class Token : MonoBehaviour
         if (t) {
             t.Unfocus();
         }
+    }
+
+    public Block GetBlock() {
+        return Block.GetClosest(transform.position);
+    }
+
+    public static Token GetAtBlock(Block b) {
+        List<Token> nearby = TileShare.TokensNearby(b.transform.position, .5f);
+        if (nearby.Count > 0) {
+            return nearby[0];
+        }
+        return null;
     }
 
     private void SetVisualArrows() {

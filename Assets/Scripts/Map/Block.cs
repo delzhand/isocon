@@ -227,6 +227,9 @@ public class Block : MonoBehaviour
 
     public void LeftClick() {
         switch (Cursor.Mode) {
+            case CursorMode.TerrainEffecting:
+                Select();
+                break;
             case CursorMode.Editing:
                 Block.DeselectAll();
                 Select();
@@ -235,12 +238,9 @@ public class Block : MonoBehaviour
                 Block.DeselectAll();
                 break;
             case CursorMode.Default:
-                Select();
+                Token.DeselectAll();
                 break;
-            case CursorMode.Placing:
-                Token.GetSelected().Place(this);
-                break;
-            case CursorMode.Moving:
+            case CursorMode.Dragging:
                 Token.GetSelected().Move(this);
                 break;
         }
@@ -588,5 +588,26 @@ public class Block : MonoBehaviour
             b.PaintMaterialSide.SetInt("_ShowOutline", show ? 1 : 0);            
             b.PaintMaterialTop.SetInt("_ShowOutline", show ? 1 : 0);            
         }
+    }
+
+    public static Block GetClosest(Vector3 targetPosition)
+    {
+        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Block");
+        GameObject closestObject = null;
+        float closestDistance = float.MaxValue;
+        for (int i = 0; i < gameObjects.Length; i++)
+        {
+            float distance = Vector3.Distance(gameObjects[i].transform.position, targetPosition);
+            if (distance < closestDistance)
+            {
+                closestObject = gameObjects[i];
+                closestDistance = distance;
+            }
+        }
+        return closestObject.GetComponent<Block>();
+    }
+
+    public Token GetToken() {
+        return Token.GetAtBlock(this);    
     }
 }

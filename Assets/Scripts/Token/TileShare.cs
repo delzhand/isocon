@@ -38,13 +38,13 @@ public class TileShare
         }
     }
 
-    private static List<Token> TokensNearby(Vector3 v) {
+    public static List<Token> TokensNearby(Vector3 v, float threshold = .1f) {
         List<Token> sharing = new();
         GameObject[] tokenObjects = GameObject.FindGameObjectsWithTag("Token");
         for(int i = 0; i < tokenObjects.Length; i++) {
             Token t = tokenObjects[i].GetComponent<Token>();
             float distance = Vector3.Distance(t.transform.localPosition, v);
-            if (distance < .1f) {
+            if (distance < threshold) {
                 sharing.Add(t);
             }
         }

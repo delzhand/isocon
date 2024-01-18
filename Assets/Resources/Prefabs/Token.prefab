@@ -457,6 +457,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Avatar
       objectReference: {fileID: 0}
+    - target: {fileID: 8135515316449660026, guid: 9c66dfa9f53455e4e979f3b7941f6c26,
+        type: 3}
+      propertyPath: m_TagString
+      value: TokenCollider
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -7,18 +7,14 @@ using UnityEngine.UIElements;
 public enum CursorMode {
     Editing,
     Default,
-    Placing,
-    Moving
+    Dragging,
+    TerrainEffecting
 }
 
 public class Cursor : MonoBehaviour
 {  
     public static CursorMode Mode = CursorMode.Default;
     private static Ray ray;
-    private bool firstBlockHit = false;
-    private bool firstTokenHit = false;
-    private bool firstHit = false;
-
     public static bool OverUnitBarElement = false;
 
 
@@ -41,73 +37,37 @@ public class Cursor : MonoBehaviour
 
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        RaycastHit[] hits = Physics.RaycastAll(ray, 100f); // use an array so we can hit the block behind a token
-        System.Array.Sort(hits, (x,y) => x.distance.CompareTo(y.distance));
-        firstHit = false;
-        firstBlockHit = false;
-        firstTokenHit = false;
-        if (hits.Length > 0) {
-            foreach (RaycastHit hit in hits) {    
-                TokenHitCheck(hit);
-                BlockHitCheck(hit);
+        RaycastHit hit;
+        bool isHit = Physics.Raycast(ray, out hit, 100f);
+        if (isHit && hit.collider.tag == "Block") {
+            Block b = hit.collider.GetComponent<Block>();
+            Token t = Token.GetAtBlock(b);
+            if (t != null) {
+                TokenHit(t);
+                b.Focus();
+            }
+            else {
+                BlockHit(b);
+                Token.UnfocusAll();
             }
         }
-
-        if (!firstHit) {
+        else if (isHit && hit.collider.tag == "TokenCollider") {
+            Token t = hit.collider.GetComponent<Cutout>().GetToken();
+            t.GetBlock().Focus();
+            TokenHit(t);
+        }
+        else if (!isHit) {
+            Token.UnfocusAll();
             Block.UnfocusAll();
             Block.DehighlightAll();
-            if (Block.GetSelected().Length == 0) {
-                TerrainController.SetInfo();
-            }
         }
 
-        if (!firstTokenHit && !OverUnitBarElement) {
-            Token.UnfocusAll();
-        }
-
-        if (Block.GetSelected().Length == 0) {
-            TerrainController.SetInfo();
-        }
-
-        if (!firstHit && Block.GetSelected().Length == 0) {
-            // Debug.Log("foo");
-            Block.UnfocusAll();
-            TerrainController.SetInfo();
-        }
-
-        // else {
-        //     Block.UnfocusAll();
-        //     Block.DehighlightAll();
-        //     Token.UnfocusAll();
-        //     if (Block.GetSelected().Length == 0) {
-        //         TerrainController.SetInfo();
-        //     }
-        // }
+        TerrainController.SetInfo();
     }
 
-    private void BlockHitCheck(RaycastHit hit) {
-        if (firstBlockHit) {
-            // Ignore blocks past the first one on the ray
-            return;
-        }
-
-        if (!hit.collider || !hit.collider.gameObject) {
-            // Block.UnfocusAll();
-            // Block.DehighlightAll();
-            return;
-        }
-
-        Block b = hit.collider.GetComponent<Block>();
-        if (!b) {
-            // Block.UnfocusAll();
-            // Block.DehighlightAll();
-            return;
-        }
-
-
+    private void BlockHit(Block b) {
         switch (Mode) {
-            case CursorMode.Moving:
-            case CursorMode.Placing:
+            case CursorMode.Dragging:
                 Block.DehighlightAll();
                 HighlightSizeArea(b);
                 break;
@@ -117,46 +77,20 @@ public class Cursor : MonoBehaviour
             b.Focus();
         }
         
-        if (!firstTokenHit) {
-            BlockClicks(b);
-        }
-
-        firstHit = true;
-        firstBlockHit = true;
+        BlockClicks(b);
     }
 
-    private void TokenHitCheck(RaycastHit hit) {
-        if (firstHit) {
-            return;
-        }
-
-        if (!hit.collider || !hit.collider.gameObject) {
-            // Token.UnfocusAll();
-            return;
-        }
-
-
-        Cutout c = hit.collider.GetComponent<Cutout>();
-        if (!c) {
-            // if the hit was a block, don't do this
-            // Token.UnfocusAll();
-            return;
-        }
-
-        Token t = c.GetToken();
+    private void TokenHit(Token t) {
         switch (Mode) {
             case CursorMode.Default:
-            case CursorMode.Moving:
-            case CursorMode.Placing:
-                if (!t.Focused) {
+            case CursorMode.Dragging:
+                if (t.State != TokenState.Focused) {
                     t.Focus();
                 }
                 TokenClicks(t);
+                Block.DehighlightAll();
                 break;
         }
-
-        firstHit = true;
-        firstTokenHit = true;
     }
 
     private void HighlightSizeArea(Block block) {
@@ -185,10 +119,10 @@ public class Cursor : MonoBehaviour
             return;
         }
         if (IsLeftClick()) {
-            token.LeftClick();
+            token.LeftClickDown();
         }
         if (IsRightClick()) {
-            token.RightClick();
+            token.RightClickDown();
         }
     }
 

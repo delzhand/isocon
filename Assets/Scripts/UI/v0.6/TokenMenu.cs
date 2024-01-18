@@ -37,6 +37,7 @@ public class TokenMenu
 
     public static void ClickFlip(ClickEvent evt) {
         Token.GetSelected().transform.Find("Offset/Avatar/Cutout/Cutout Quad").Rotate(new Vector3(0, 180, 0));
+        Token.DeselectAll();
     }
 
     public static void ClickRemove(ClickEvent evt) {
@@ -58,12 +59,14 @@ public class TokenMenu
         string name = data.Name.Length == 0 ? "this token" : data.Name;
         Modal.DoubleConfirm("Clone Token", $"Are you sure you want to clone {name}?", () => {
             Player.Self().CmdCreateToken(data.System, data.GraphicHash, data.Name, data.Size, data.Color, data.SystemData);
+            Token.DeselectAll();
         });
     }
 
     public static void ClickEndTurn(ClickEvent evt) {
         TokenData data = Token.GetSelected().Data;
         Player.Self().CmdRequestTokenDataSetValue(data.Id, "EndTurn");
+        Token.DeselectAll();
     }
 
     public static void ClickMoveUp(ClickEvent evt) {

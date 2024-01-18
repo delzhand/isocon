@@ -22,6 +22,11 @@ public class Launcher : MonoBehaviour
     void Awake() {
         _manager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
 
+        string uiScale = PlayerPrefs.GetString("UIScale", "100%");
+        float value = float.Parse(uiScale.Replace("%", "")) / 100f;
+        GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = value;
+
+
         UI.ToggleDisplay("StartupPanel", true);
         UI.ToggleDisplay("Launcher", true);
 

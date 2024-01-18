@@ -51,6 +51,13 @@ public class DestinationRenderer : NetworkBehaviour
         }
 
         Vector3 origin = data.WorldObject.transform.position + new Vector3(0, .25f, 0);
+        if (!data.Placed) {
+            Vector2 v = data.UnitBarElement.worldBound.center;
+            string uiScale = PlayerPrefs.GetString("UIScale", "100%");
+            float value = float.Parse(uiScale.Replace("%", "")) / 100f;
+            v *= value;
+            origin = Camera.main.ScreenToWorldPoint(new Vector3(v.x, Screen.height-v.y, 0));
+        }
         List<Vector3> points = GenerateParabolaPoints(origin, Target, Density, 1f);
         Line.positionCount = points.Count;
         for (int i = 0; i < points.Count; i++) {
