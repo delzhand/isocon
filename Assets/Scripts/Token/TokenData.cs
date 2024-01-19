@@ -156,16 +156,6 @@ public class TokenData : NetworkBehaviour
                 t.Focus();
             }
         });
-        UnitBarElement.RegisterCallback<MouseUpEvent>((evt) => {
-            if (Cursor.IsLeftClick()) {
-                t.LeftClickDown();
-                t.Focus();
-            }
-            else if (Cursor.IsRightClick()) {
-                t.RightClickDown();
-                t.Focus();
-            }
-        });
         UnitBarElement.RegisterCallback<MouseEnterEvent>((evt) => {
             Cursor.OverUnitBarElement = true;
             t.Focus();

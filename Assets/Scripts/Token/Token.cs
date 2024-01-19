@@ -152,24 +152,36 @@ public class Token : MonoBehaviour
     }
 
     public void RightClickDown() {
-        // if (Selected) {
-        //     Deselect();
-        //     return;
-        // }
-
-        // Select();
-        // TokenMenu.ShowMenu();
+        switch (State) {
+            case TokenState.Neutral:
+            case TokenState.Inspecting:
+            case TokenState.Focused:
+                StartMenu();
+                break;
+            case TokenState.MenuOpen:
+                Deselect();
+                break;
+        }
     }
-
-    // public void AnyClickUp() {
-    //     Debug.Log("any click up");
-    // }
 
     private void StartPending() {
         DeselectAll();
         State = TokenState.Pending;
         DragOrigin = Input.mousePosition;
         Cursor.Mode = CursorMode.Dragging;
+    }
+
+    private void StartMenu() {
+        DeselectAll();
+        State = TokenState.MenuOpen;
+        TokenMenu.ShowMenu();
+        Cursor.Mode = CursorMode.Default;
+        Block.DeselectAll();
+        Block.UnfocusAll();
+        BlockMesh.ToggleBorders(false);
+        UI.ToggleDisplay("CurrentOp", false);
+        UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
+        Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
     }
 
     private void StartDragging() {

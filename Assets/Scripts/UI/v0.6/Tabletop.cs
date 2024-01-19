@@ -48,13 +48,23 @@ public class Tabletop : MonoBehaviour
 
             if (selected != null) {
                 if (selected.Data.Placed) {
-                    UI.FollowToken(selected, UI.System.Q("SelectionMenu"), Camera.main, new Vector2(100, 0), true);
-                    UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(Length.Percent(-50), Length.Percent(-50)));
+                    UI.FollowToken(selected, UI.System.Q("SelectionMenu"), Camera.main, new Vector2(30, 50), true);
+                    UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, Length.Percent(-100)));
                 }
                 else {
-                    UI.System.Q("SelectionMenu").style.top = 0;
-                    UI.System.Q("SelectionMenu").style.left = 0;
+                    UI.System.Q("SelectionMenu").style.top = 10;
+                    UI.System.Q("SelectionMenu").style.left = 10;
                     UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, 0));
+
+
+                    // Vector2 v = UI.System.Q("Frame").worldBound.center;
+                    // string uiScale = PlayerPrefs.GetString("UIScale", "100%");
+                    // float value = float.Parse(uiScale.Replace("%", "")) / 100f;
+                    // v *= value;
+                    // v.y = Screen.height - v.y;
+                    // UI.System.Q("SelectionMenu").style.left = v.x;
+                    // UI.System.Q("SelectionMenu").style.top = v.y;
+                    // UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(Length.Percent(0), Length.Percent(0)));
                 }
 
             }

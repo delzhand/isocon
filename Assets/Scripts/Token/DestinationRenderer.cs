@@ -53,6 +53,13 @@ public class DestinationRenderer : NetworkBehaviour
             return;
         }
 
+        if (Op == "Placing") {
+            Line.textureScale = new Vector2(1f, 1f);
+        }
+        else {
+            Line.textureScale = new Vector2(5f, 1f);
+        }
+
         Vector3 origin = data.WorldObject.transform.position + new Vector3(0, .25f, 0);
         if (!data.Placed) {
             Vector2 v = data.UnitBarElement.worldBound.center;
