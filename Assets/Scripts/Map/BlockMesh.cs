@@ -205,7 +205,7 @@ public class BlockMesh: MonoBehaviour
                 return "White Brick";
             default:
                 // If the input doesn't match any known texture, return it as is.
-                return texture;
+                return texture.Replace("Top", "").Replace("Side", "");
         }
     }
 }
