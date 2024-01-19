@@ -1,5 +1,9 @@
+![Showcase Image](https://isocon.app/images/showcase3.png)
+
 # IsoCON
 Isocon is a virtual tabletop custom-made for games with turn-based combat where positioning, elevation, and line of sight matters. With a low learning curve and easy to use tools, you can create 3d terrain about as quickly as you could draw on a battlemat, or spend the time to really set the stage with painting and environmental controls.
+
+[https://isocon.app](https://isocon.app) | [youtube](https://www.youtube.com/watch?v=9NhfO6uk7lY)
 
 ## This Release
 This is the v0.6 beta release, a major update. As such, please feel free to create issues in the queue or contact me (see below).
