@@ -92,7 +92,7 @@ public class CameraControl : MonoBehaviour
             float scroll = Input.GetAxis("Mouse ScrollWheel");
             if (!isOutside && scroll != 0) {
                 float z = Camera.main.GetComponent<Camera>().orthographicSize;
-                z += scroll;
+                z -= scroll;
                 z = Mathf.Clamp(z, 1.5f, 8f);
                 Camera.main.GetComponent<Camera>().orthographicSize = z;
             }
@@ -110,11 +110,11 @@ public class CameraControl : MonoBehaviour
 
     private static void disablePanMode() {
         PanMode = false;
-        UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Rotate Camera";
+        UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Rotate <u>C</u>amera";
     }
 
     private static void enablePanMode() {
         PanMode = true;
-        UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Pan Camera";
+        UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Pan <u>C</u>amera";
     }
 }

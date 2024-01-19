@@ -69,14 +69,24 @@ public class Icon_v1_5 : GameSystem {
         UI.Modal.Q("Number").AddToClassList("big-number");
         Modal.AddContentButton("Damage", "Damage HP/VIG", (evt) => AlterVitals("Damage"));
         Modal.AddColumns("VitalColumns", 2);
+
         Modal.AddContentButton("ReduceHP", "Reduce HP", (evt) => AlterVitals("LoseHP"));
         Modal.AddContentButton("ReduceVIG", "Reduce VIG", (evt) => AlterVitals("LoseVIG"));
+        Modal.AddContentButton("ReduceRES", "Reduce RES", (evt) => AlterVitals("LoseRES"));
+        Modal.AddContentButton("ReducePRES", "Reduce P-RES", (evt) => AlterVitals("LosePRES"));
         Modal.MoveToColumn("VitalColumns_0", "ReduceHP");
         Modal.MoveToColumn("VitalColumns_0", "ReduceVIG");
+        Modal.MoveToColumn("VitalColumns_0", "ReduceRES");
+        Modal.MoveToColumn("VitalColumns_0", "ReducePRES");
+
         Modal.AddContentButton("RecoverHP", "Recover HP", (evt) => AlterVitals("GainHP"));
         Modal.AddContentButton("RecoverVIG", "Recover VIG", (evt) => AlterVitals("GainVIG"));
+        Modal.AddContentButton("RecoverRES", "Recover RES", (evt) => AlterVitals("GainRES"));
+        Modal.AddContentButton("RecoverPRES", "Recover P-RES", (evt) => AlterVitals("GainPRES"));
         Modal.MoveToColumn("VitalColumns_1", "RecoverHP");
         Modal.MoveToColumn("VitalColumns_1", "RecoverVIG");
+        Modal.MoveToColumn("VitalColumns_1", "RecoverRES");
+        Modal.MoveToColumn("VitalColumns_1", "RecoverPRES");
 
         Modal.AddSeparator();
 
@@ -155,11 +165,11 @@ public class Icon_v1_5 : GameSystem {
         FileLogger.Write($"Game system changed - {value}");
         if (value == "IncrementTurn") {
             TurnNumber++;
+            PartyResolve++;
             UI.System.Q<Label>("TurnNumber").text = TurnNumber.ToString();
             foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
                 TokenData data = g.GetComponent<TokenData>();
                 TokenDataSetValue(data.Id, "StartTurn");
-                TokenDataSetValue(data.Id, "GainRES|1");
             }
         }
     }
@@ -630,9 +640,9 @@ public class Icon1_5Data {
         }
         if (value.StartsWith("GainRES")) {
             int diff = int.Parse(value.Split("|")[1]);
-            if (diff + Resolve > 6) {
-                diff = 6 - Resolve;
-            }
+            // if (diff + Resolve > 6) {
+            //     diff = 6 - Resolve;
+            // }
             if (diff > 0) {
                 Resolve+=diff;
                 if (placed) {

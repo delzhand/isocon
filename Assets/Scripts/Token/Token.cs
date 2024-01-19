@@ -32,10 +32,6 @@ public class Token : MonoBehaviour
 
     public Token LastFocused;
 
-    // public bool Selected = false;
-    // public bool SoftSelect = true;
-    // public bool Focused = false;
-
     private Vector3 DragOrigin;
 
     public TokenState State = TokenState.Neutral;
@@ -111,11 +107,6 @@ public class Token : MonoBehaviour
         t.rotation = Camera.main.transform.rotation;
     }
 
-    private void UpdateScale() {
-        float CutoutSize = PlayerPrefs.GetFloat("TokenScale", 1f);
-        transform.Find("Offset/Avatar/Cutout").localScale = new Vector3(CutoutSize, CutoutSize, CutoutSize);
-    }
-
     private void Offset() {
         float x = ShareOffsetX;
         float y = ShareOffsetY;
@@ -179,7 +170,7 @@ public class Token : MonoBehaviour
         Block.DeselectAll();
         Block.UnfocusAll();
         BlockMesh.ToggleBorders(false);
-        UI.ToggleDisplay("CurrentOp", false);
+        ClearCurrentOp();
         UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
         Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
     }
@@ -190,9 +181,8 @@ public class Token : MonoBehaviour
         Block.DeselectAll();
         Block.UnfocusAll();
         BlockMesh.ToggleBorders(true);
-        UI.ToggleDisplay("CurrentOp", true);
         string op = Data.Placed ? "Moving" : "Placing";
-        UI.System.Q("CurrentOp").Q<Label>("Op").text = $"{op} {Data.Name}"; 
+        SetCurrentOp(op);
         Player.Self().GetComponent<DestinationRenderer>().Init(Data.Id, op);
         UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
         Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
@@ -220,37 +210,9 @@ public class Token : MonoBehaviour
         State = TokenState.Inspecting;
         Cursor.Mode = CursorMode.Default;
         BlockMesh.ToggleBorders(false);
-        UI.ToggleDisplay("CurrentOp", true);
-        UI.System.Q("CurrentOp").Q<Label>("Op").text = $"Inspecting {Data.Name}"; 
+        SetCurrentOp("Inspecting");
         Player.Self().GetComponent<DestinationRenderer>().Deinit();
     }
-
-    // private void StartPlacing(){
-    //     Block.DeselectAll();
-    //     Block.UnfocusAll();
-    //     BlockMesh.ToggleBorders(true);
-    //     Cursor.Mode = CursorMode.Placing;
-    //     UI.ToggleDisplay("CurrentOp", true);
-    //     UI.System.Q("CurrentOp").Q<Label>("Op").text = $"Placing {Data.Name}"; 
-    //     Player.Self().GetComponent<DestinationRenderer>().Init(Data.Id, "Placing");
-    // }
-
-    // public void Place(Block block) {
-    //     Vector3 v = block.getMidpoint();
-    //     Player.Self().CmdRequestPlaceToken(Data.Id, v);
-    //     Deselect();
-    // }
-
-    // private void StartMoving() {
-    //     SetVisualArrows();
-    //     Block.DeselectAll();
-    //     Block.UnfocusAll();
-    //     BlockMesh.ToggleBorders(true);
-    //     Cursor.Mode = CursorMode.Moving;
-    //     UI.ToggleDisplay("CurrentOp", true);
-    //     UI.System.Q("CurrentOp").Q<Label>("Op").text = $"Moving {Data.Name}"; 
-    //     Player.Self().GetComponent<DestinationRenderer>().Init(Data.Id, "Moving");
-    // }
 
     public void Move(Block block) {
         Deselect();
@@ -267,23 +229,11 @@ public class Token : MonoBehaviour
         Player.Self().CmdRequestRemoveToken(Data.Id);
     }
 
-    // public void Select() {
-    //     SoftSelect = true;
-    //     UnfocusAll();
-    //     DeselectAll();
-    //     Selected = true;
-    //     Data.Select();
-    //     UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
-    //     Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
-    // }
-
-    public void Deselect() {
+     public void Deselect() {
         State = TokenState.Neutral;
-        // Selected = false;
-        // SoftSelect = true;
         Block.DehighlightAll();
         UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), false);
-        UI.ToggleDisplay("CurrentOp", false);
+        ClearCurrentOp();
         SelectionMenu.Hide();
         Cursor.Mode = CursorMode.Default;
         BlockMesh.ToggleBorders(false);
@@ -366,12 +316,13 @@ public class Token : MonoBehaviour
         return null;
     }
 
-    private void SetVisualArrows() {
-        // I don't really like this effect now that we have movement parabolas
-        // SetVisual(false, true, false, false);
+    public void SetCurrentOp(string op) {
+        UI.ToggleDisplay("CurrentOp", true);
+        UI.System.Q("CurrentOp").Q<Label>("Op").text = $"{Player.Self().Name}: {op} {Data.Name}"; 
+    }
 
-        // Use this one instead
-        SetVisual(true, false, false, false);
+    public static void ClearCurrentOp() {
+        UI.ToggleDisplay("CurrentOp", false);
     }
 
     private void SetVisualSquareYellow() {
@@ -392,7 +343,6 @@ public class Token : MonoBehaviour
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Selected", blueSquare ? 1:0);
         transform.Find("Offset/Focus").GetComponent<MeshRenderer>().material.SetInt("_Moving", blueArrows ? 1:0);
     }
-
 
     public void SetDefeated(bool defeated) {
         transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetInt("_Dead", defeated ? 1 : 0);

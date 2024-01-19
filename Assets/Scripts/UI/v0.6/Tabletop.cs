@@ -130,12 +130,17 @@ public class Tabletop : MonoBehaviour
         UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>(MapEdit.ToggleEditMode);
         UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(Config.OpenModal);
-        UI.TopBar.Q("Info").RegisterCallback<MouseEnterEvent>((evt) => {
-            UI.ToggleDisplay(UI.System.Q("InfoWindow"), true);
-        });
-        UI.TopBar.Q("Info").RegisterCallback<MouseLeaveEvent>((evt) => {
-            UI.ToggleDisplay(UI.System.Q("InfoWindow"), false);
-        });
+        UI.TopBar.Q("Info").RegisterCallback<ClickEvent>(ToggleInfo);
+        // UI.TopBar.Q("Info").RegisterCallback<MouseEnterEvent>((evt) => {
+        //     UI.ToggleDisplay(UI.System.Q("InfoWindow"), true);
+        // });
+        // UI.TopBar.Q("Info").RegisterCallback<MouseLeaveEvent>((evt) => {
+        //     UI.ToggleDisplay(UI.System.Q("InfoWindow"), false);
+        // });
+    }
+
+    public static void ToggleInfo(ClickEvent evt) {
+        UI.ToggleDisplay("InfoWindow");
     }
     
     private void BottomBarSetup() {
