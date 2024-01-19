@@ -52,6 +52,14 @@ public class Launcher : MonoBehaviour
 
         UI.ToggleDisplay("StartupOptions", isIdle);
         UI.ToggleDisplay("ConnectingMessage", isConnecting);
+
+        if (!NetworkClient.isConnected) {
+            foreach(Transform child in GameObject.Find("Tokens").transform) {
+                DestroyImmediate(child.gameObject);
+            }
+            UI.System.Q("Worldspace").Clear();            
+            UI.System.Q("UnitBar").Clear();
+        }
     }
 
     private async void SetVersionText() {

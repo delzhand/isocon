@@ -47,7 +47,6 @@ public class DestinationRenderer : NetworkBehaviour
             return;
         }
 
-
         TokenData data = TokenData.Find(TokenId);
         // Don't show while token is moving
         if (data.WorldObject.GetComponent<MoveLerp>()) {

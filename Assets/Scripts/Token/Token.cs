@@ -56,7 +56,6 @@ public class Token : MonoBehaviour
 
     void Update()
     {
-
         alignToCamera();
 
         float CutoutSize = PlayerPrefs.GetFloat("TokenScale", 1f);
