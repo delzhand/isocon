@@ -31,6 +31,7 @@ public class TokenMenu
         // items.Add(new MenuItem("MoveLeft", "Move Down in Order", ClickMoveDown));
         items.Add(new MenuItem("EndTurn", "End Turn", ClickEndTurn));
         items.Add(new MenuItem("Clone", "Clone", ClickClone));
+        items.Add(new MenuItem("EditName", "Edit Name", ClickEditName));
         items.Add(new MenuItem("Delete", "Delete", ClickDelete));
         return items.ToArray();
     }
@@ -61,6 +62,18 @@ public class TokenMenu
             Player.Self().CmdCreateToken(data.System, data.GraphicHash, data.Name, data.Size, data.Color, data.SystemData);
             Token.DeselectAll();
         });
+    }
+
+    public static void ClickEditName(ClickEvent evt) {
+        TokenData data = Token.GetSelected().Data;
+        Modal.Reset("Edit Name");
+        Modal.AddTextField("Name", "Name", data.Name);
+        Modal.AddPreferredButton("Confirm", (evt) => {
+            string newName = UI.Modal.Q<TextField>("Name").value.Trim();
+            Player.Self().CmdRequestTokenDataSetValue(data.Id, $"Name|{newName}");
+            Modal.Close();
+        });
+        Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
     public static void ClickEndTurn(ClickEvent evt) {

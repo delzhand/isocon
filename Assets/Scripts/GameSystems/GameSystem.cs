@@ -82,6 +82,9 @@ public class GameSystem : MonoBehaviour
         else if (value == "StartTurn") {
             data.UnitBarElement.Q("Portrait").style.unityBackgroundImageTintColor = Color.white;
         }
+        if (value.StartsWith("Name")) {
+            data.Name = value.Split("|")[1];
+        }
     }
 
     public virtual void UpdateTokenPanel(string tokenId, string elementName) {
