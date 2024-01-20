@@ -42,8 +42,6 @@ public class CameraControl : MonoBehaviour
         }
 
         if (Input.GetMouseButton(1)) {
-            Difference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.transform.position;
-            MouseDifference = MouseOrigin - Input.mousePosition;
             if (Drag == false) {
                 Drag = true;
                 Origin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -52,6 +50,8 @@ public class CameraControl : MonoBehaviour
                 OriginRZ = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.z;
                 OriginR = GameObject.Find("CameraOrigin").transform.rotation;
             }
+            Difference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.transform.position;
+            MouseDifference = MouseOrigin - Input.mousePosition;
         }
         else {
             Drag = false;
