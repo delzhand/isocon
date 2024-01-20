@@ -83,13 +83,15 @@ public class Player : NetworkBehaviour
     public void CmdRequestClientInit() {
         FileLogger.Write($"Client {connectionToClient.connectionId} requested game system");
         string system = PlayerPrefs.GetString("System", "Generic");
-        TargetGameSystem(connectionToClient, system);
+        string systemVars = GameSystem.Current().GetSystemVars();
+        TargetGameSystem(connectionToClient, system, systemVars);
         TargetGridType(connectionToClient, TerrainController.GridType);
     }
     [TargetRpc]
-    public void TargetGameSystem(NetworkConnectionToClient target, string system) {
+    public void TargetGameSystem(NetworkConnectionToClient target, string system, string systemVars) {
         FileLogger.Write($"Local game system set to {system}");
         GameSystem.Set(system);
+        GameSystem.Current().SetSystemVars(systemVars);
     }
     [TargetRpc]
     public void TargetGridType(NetworkConnectionToClient target, string grid) {

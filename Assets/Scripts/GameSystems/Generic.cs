@@ -61,8 +61,8 @@ public class Generic : GameSystem
     public override void GameDataSetValue(string value) {
         FileLogger.Write($"Game system changed - {value}");
         if (value == "IncrementTurn") {
-            TurnNumber++;
-            UI.System.Q<Label>("TurnNumber").text = TurnNumber.ToString();
+            RoundNumber++;
+            UI.System.Q<Label>("TurnNumber").text = RoundNumber.ToString();
             foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
                 TokenData data = g.GetComponent<TokenData>();
                 TokenDataSetValue(data.Id, "StartTurn");

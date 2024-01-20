@@ -9,7 +9,7 @@ public class GameSystem : MonoBehaviour
 {
     public static string DataJson = "{}";
 
-    protected int TurnNumber = 1;
+    protected int RoundNumber = 1;
 
     public static GameSystem Current() {
         GameSystem system = GameObject.Find("GameSystem").GetComponent<GameSystem>();
@@ -44,6 +44,15 @@ public class GameSystem : MonoBehaviour
     public virtual string SystemName()
     {
         return null;
+    }
+
+    public virtual string GetSystemVars() {
+        return $"{RoundNumber}";
+    }
+
+    public virtual void SetSystemVars(string vars) {
+        RoundNumber = int.Parse(vars);
+        UI.System.Q<Label>("TurnNumber").text = RoundNumber.ToString();
     }
 
     public virtual void AddTokenModal() {

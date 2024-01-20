@@ -20,6 +20,18 @@ public class Icon_v1_5 : GameSystem {
         return "ICON 1.5";
     }
 
+    public override string GetSystemVars()
+    {
+        return $"{RoundNumber}|{PartyResolve}";
+    }
+
+    public override void SetSystemVars(string vars)
+    {
+        RoundNumber = int.Parse(vars.Split("|")[0]);
+        UI.System.Q<Label>("TurnNumber").text = RoundNumber.ToString();
+        PartyResolve = int.Parse(vars.Split("|")[1]);
+    }
+
     public override string GetOverheadAsset() {
         return "UITemplates/GameSystem/IconOverhead";
     }
@@ -164,9 +176,9 @@ public class Icon_v1_5 : GameSystem {
     public override void GameDataSetValue(string value) {
         FileLogger.Write($"Game system changed - {value}");
         if (value == "IncrementTurn") {
-            TurnNumber++;
+            RoundNumber++;
             PartyResolve++;
-            UI.System.Q<Label>("TurnNumber").text = TurnNumber.ToString();
+            UI.System.Q<Label>("TurnNumber").text = RoundNumber.ToString();
             foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
                 TokenData data = g.GetComponent<TokenData>();
                 TokenDataSetValue(data.Id, "StartTurn");
