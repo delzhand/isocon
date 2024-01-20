@@ -19,8 +19,7 @@ public class Tabletop : MonoBehaviour
         TopBarSetup();
         BottomBarSetup();
         TurnIndicatorSetup();
-
-        UI.System.Q("TerrainInfo").Q("AddEffectButton").RegisterCallback<ClickEvent>(AddTerrainEffect.OpenModal);
+        TerrainEffectSetup();
 
         UI.System.Q("TurnAdvance").RegisterCallback<MouseEnterEvent>((evt) => {
             Tutorial.Init("turn advance");
@@ -128,15 +127,10 @@ public class Tabletop : MonoBehaviour
         UI.SetBlocking(UI.System, "TopBar");
         UI.TopBar.Q("Isocon").RegisterCallback<ClickEvent>(Tabletop.IsoconMenu);
         UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>(MapEdit.ToggleEditMode);
+        UI.TopBar.Q("MarkerMode").RegisterCallback<ClickEvent>(TerrainController.ToggleTerrainEffectMode);
         UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(Config.OpenModal);
         UI.TopBar.Q("Info").RegisterCallback<ClickEvent>(ToggleInfo);
-        // UI.TopBar.Q("Info").RegisterCallback<MouseEnterEvent>((evt) => {
-        //     UI.ToggleDisplay(UI.System.Q("InfoWindow"), true);
-        // });
-        // UI.TopBar.Q("Info").RegisterCallback<MouseLeaveEvent>((evt) => {
-        //     UI.ToggleDisplay(UI.System.Q("InfoWindow"), false);
-        // });
     }
 
     public static void ToggleInfo(ClickEvent evt) {
@@ -164,9 +158,25 @@ public class Tabletop : MonoBehaviour
                 Player.Self().CmdRequestGameDataSetValue("IncrementTurn");
             });
         });
-         UI.System.Q("TerrainInfo").Q<Button>("ClearSelected").RegisterCallback<ClickEvent>((evt) => {
+    }
+
+    private void TerrainEffectSetup() {
+        VisualElement root = UI.System.Q("TopRight").Q("Effects");
+        
+        UI.HoverSetup(root.Q("ClearSelected"));
+        root.Q("ClearSelected").RegisterCallback<ClickEvent>((evt) => {
             Block.DeselectAll();
-         });
+        });
+
+        UI.HoverSetup(root.Q("AddEffect"));
+        root.Q("AddEffect").RegisterCallback<ClickEvent>((evt) => {
+            AddTerrainEffect.OpenModal(evt);
+        });
+
+        UI.HoverSetup(root.Q("RemoveEffects"));
+        root.Q("RemoveEffects").RegisterCallback<ClickEvent>((evt) => {
+            AddTerrainEffect.ClearAll();
+        });
     }
 
     private static void IsoconMenu(ClickEvent evt) {

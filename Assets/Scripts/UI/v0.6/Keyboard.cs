@@ -26,6 +26,10 @@ public class Keyboard : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.M) && !Modal.IsOpen()) {
             MapEdit.ToggleEditMode(new ClickEvent());
         }
+        
+        if (Input.GetKeyUp(KeyCode.T) && !Modal.IsOpen()) {
+            TerrainController.ToggleTerrainEffectMode(new ClickEvent());
+        }
 
         if (Input.GetKeyUp(KeyCode.I) && Cursor.Mode == CursorMode.Default && !Modal.IsOpen()) {
             Tabletop.ToggleInfo(new ClickEvent());

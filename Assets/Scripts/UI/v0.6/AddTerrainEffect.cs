@@ -8,7 +8,7 @@ public class AddTerrainEffect
 {
     public static void OpenModal(ClickEvent evt) {
         Modal.Reset("Add Terrain Effect");
-        Modal.AddSearchField("SearchField", "Add Terrain Effect", "", GameSystem.Current().GetEffectList());
+        Modal.AddSearchField("SearchField", "Effect Name", "", GameSystem.Current().GetEffectList());
         Modal.AddDropdownField("VisualMarker", "Visual Marker", "None", StringUtility.Arr("None", "Spiky", "Wavy", "Hole", "Hand", "Skull", "Blocked", "Corners"));
         Modal.AddPreferredButton("Confirm", ConfirmAddEffect);
         Modal.AddButton("Cancel", Modal.CloseEvent);
@@ -25,5 +25,14 @@ public class AddTerrainEffect
             blockNames.Add(block.name);
         });
         Player.Self().CmdRequestMapSetValue(blockNames.ToArray(), "Effect", $"{effect}::{marker}");
+    }
+
+    public static void ClearAll() {
+        List<string> blocks = new();
+        foreach(Block b in Block.GetSelected()) {
+            blocks.Add(b.name);
+        }
+        Player.Self().CmdRequestMapSetValue(blocks.ToArray(), "Effect", "None");
+
     }
 }

@@ -215,6 +215,11 @@ public class MapEdit
     }
 
     public static void ToggleEditMode(ClickEvent evt) {
+        // Disable terrain effect mode if necessary
+        if (Cursor.Mode == CursorMode.TerrainEffecting) {
+            TerrainController.ToggleTerrainEffectMode(evt);
+        }
+
         if (Cursor.Mode != CursorMode.Editing) {
             StartEditing();
         }
@@ -269,6 +274,7 @@ public class MapEdit
             int y = UI.Modal.Q<IntegerField>("NewMapSizeY").value;
             int z = UI.Modal.Q<IntegerField>("NewMapSizeZ").value;
             TerrainController.ResetTerrain(x, y, z);
+            MapMeta.Reset();
             Toast.AddSimple("Map reset.");
             Modal.Close();
         });

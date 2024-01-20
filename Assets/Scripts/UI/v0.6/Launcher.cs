@@ -5,6 +5,7 @@ using Unity.Services.RemoteConfig;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 public class Launcher : MonoBehaviour
 {
@@ -77,6 +78,11 @@ public class Launcher : MonoBehaviour
         // We just went offline, do cleanup
         if (_lastUpdateIsOnline != NetworkClient.isConnected && !NetworkClient.isConnected) {
             PlayerController.Disconnect();
+            MeshRenderer mr = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
+            Material launcherBg = Resources.Load<Material>($"Materials/SpecialBg");
+            List<Material> bgmats = new();
+            bgmats.Add(launcherBg);
+            mr.SetMaterials(bgmats);
         }
         _lastUpdateIsOnline = NetworkClient.isConnected;
     }

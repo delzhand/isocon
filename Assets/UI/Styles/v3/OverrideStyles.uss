@@ -83,6 +83,13 @@
     margin-left: 4px;
 }
 
+#Effects .item {
+    background-color: rgba(0, 0, 0, .5);
+}
+#Effects .item:hover {
+    background-color: rgba(156, 122, 25, 1);
+}
+
 #ToolsSidebar > * {
     margin-bottom: 4px;
 }

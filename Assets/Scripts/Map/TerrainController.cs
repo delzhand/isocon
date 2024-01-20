@@ -452,6 +452,13 @@ public class TerrainController : MonoBehaviour
         });
     }
 
+    public static void ClearEffects() {
+        List<Block> selected = Block.GetSelected().ToList();
+        selected.ForEach(block => {
+            block.EffectChange("None");
+        });
+    }
+
     public static void ApplyStyle() {
         switch (MapEdit.StyleOp) {
             case "StylePaint":
@@ -513,6 +520,7 @@ public class TerrainController : MonoBehaviour
         UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), false);
         UI.ToggleDisplay(root.Q("AddEffect"), false);
         UI.ToggleDisplay(root.Q("ClearSelected"), false);
+        UI.ToggleDisplay(root.Q("RemoveEffects"), false);
         UI.ToggleDisplay(root, false);
 
         Block[] selected = Block.GetSelected();
@@ -589,6 +597,7 @@ public class TerrainController : MonoBehaviour
         }
         if (selected.Length > 0) {
             UI.ToggleDisplay(root.Q("AddEffect"), true);
+            UI.ToggleDisplay(root.Q("RemoveEffects"), true);
         }
 
     }
@@ -705,5 +714,22 @@ public class TerrainController : MonoBehaviour
         Light l = GameObject.Find("Light").GetComponent<Light>();
         l.intensity = LightIntensity;
         l.transform.eulerAngles = new Vector3(LightHeight, LightAngle, 0);
+    }
+
+    public static void ToggleTerrainEffectMode(ClickEvent evt) {
+        // Disable map edit mode if necessary
+        if (Cursor.Mode == CursorMode.Editing) {
+            MapEdit.ToggleEditMode(evt);
+        }
+
+        if (Cursor.Mode != CursorMode.TerrainEffecting) {
+            Cursor.Mode = CursorMode.TerrainEffecting;
+            UI.ToggleActiveClass("MarkerMode", true);
+        }
+        else {
+            Cursor.Mode = CursorMode.Default;
+            UI.ToggleActiveClass("MarkerMode", false);
+            Block.DeselectAll();
+        }
     }
 }
