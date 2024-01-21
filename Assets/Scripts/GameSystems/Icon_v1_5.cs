@@ -345,9 +345,9 @@ public class Icon_v1_5 : GameSystem {
     public override MenuItem[] GetTileMenuItems() {
         List<MenuItem> items = new();
         if (Block.GetSelected().Length > 0) {
-            items.Add(new MenuItem("SelectSmallBlast", "Select Small Blast", SelectSmallBlastClicked));
-            items.Add(new MenuItem("SelectMedBlast", "Select Medium Blast", SelectMedBlastClicked));
-            items.Add(new MenuItem("SelectLargeBlast", "Select Large Blast", SelectLargeBlastClicked));
+            items.Add(new MenuItem("SelectSmallBlast", "To Small Blast", SelectSmallBlastClicked));
+            items.Add(new MenuItem("SelectMedBlast", "To Medium Blast", SelectMedBlastClicked));
+            items.Add(new MenuItem("SelectLargeBlast", "To Large Blast", SelectLargeBlastClicked));
         }
         return items.ToArray();
     }
