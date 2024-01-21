@@ -26,13 +26,17 @@ public class TileMenu
             items.Add(new MenuItem("DeselectAll", "Deselect All", ClickDeselectAll));
             items.Add(new MenuItem("ClearEffects", "Clear Effects", ClickClearEffects));
 
+            List<string> effects = new();
             foreach (var block in Block.GetSelected()) {
                 block.GetEffects().ForEach(effect => {
                     string effectName = effect.Split("::")[0];
-                    items.Add(new MenuItem($"Remove_{effectName}", $"Remove {effectName}", (evt) => {
-                        Player.Self().CmdRequestMapSetValue(SelectedBlockNames(), "RemoveEffect", effect);
-                        SelectionMenu.Hide();
-                    }));
+                    if (!effects.Contains(effectName)) {
+                        items.Add(new MenuItem($"Remove_{effectName}", $"Remove {effectName}", (evt) => {
+                            Player.Self().CmdRequestMapSetValue(SelectedBlockNames(), "RemoveEffect", effect);
+                            SelectionMenu.Hide();
+                        }));
+                        effects.Add(effectName);
+                    }
                 });
             }
         }
