@@ -31,4 +31,8 @@ public class Column : MonoBehaviour
         }
         transform.localPosition = v;
     }
+
+    public Block GetTopBlock() {
+        return transform.GetChild(transform.childCount - 1).GetComponent<Block>();
+    }
 }
