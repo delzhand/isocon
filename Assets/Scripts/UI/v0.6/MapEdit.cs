@@ -245,6 +245,7 @@ public class MapEdit
     private static void EndEditing() {
         Tutorial.Init("end edit");
         Cursor.Mode = CursorMode.Default;
+        Cursor.FocusMode = FocusMode.Single;
         BlockMesh.ToggleBorders(false);
         UI.ToggleDisplay("ToolsPanel", false);
         UI.ToggleDisplay("ToolOptions", false);

@@ -11,9 +11,16 @@ public enum CursorMode {
     TerrainEffecting
 }
 
+public enum FocusMode {
+    Single,
+    Row,
+    Column,
+}
+
 public class Cursor : MonoBehaviour
 {  
     public static CursorMode Mode = CursorMode.Default;
+    public static FocusMode FocusMode { get; set; } = FocusMode.Single;
     private static Ray ray;
     public static bool OverUnitBarElement = false;
 
@@ -35,6 +42,7 @@ public class Cursor : MonoBehaviour
             return;
         }
 
+        SetFocusMode();
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         RaycastHit hit;
@@ -44,7 +52,7 @@ public class Cursor : MonoBehaviour
             Token t = Token.GetAtBlock(b);
             if (t != null) {
                 TokenHit(t);
-                b.Focus();
+                Focus(b);
             }
             else {
                 BlockHit(b);
@@ -53,7 +61,7 @@ public class Cursor : MonoBehaviour
         }
         else if (isHit && hit.collider.tag == "TokenCollider") {
             Token t = hit.collider.GetComponent<Cutout>().GetToken();
-            t.GetBlock().Focus();
+            Focus(t.GetBlock());
             TokenHit(t);
         }
         else if (!isHit) {
@@ -74,10 +82,37 @@ public class Cursor : MonoBehaviour
         }
 
         if (!b.Focused) {
-            b.Focus();
+            Focus(b);
         }
         
         BlockClicks(b);
+    }
+
+    private void Focus(Block b)
+    {
+        switch (FocusMode)
+        {
+            case FocusMode.Single:
+                b.Focus();
+                break;
+            case FocusMode.Row:
+                Block.UnfocusAll();
+                foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetRow(new Vector2Int(b.getX(), b.getY()))))
+                {
+                    block.Focused = true;
+                }
+                break;
+            case FocusMode.Column:
+                Block.UnfocusAll();
+                foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetColumn(new Vector2Int(b.getX(), b.getY()))))
+                {
+                    block.Focused = true;
+                }
+                break;
+            default:
+                Debug.LogError($"Unsupported Focus Mode {FocusMode}");
+                break;
+        }
     }
 
     private void TokenHit(Token t) {
@@ -132,5 +167,33 @@ public class Cursor : MonoBehaviour
 
     public static bool IsLeftClick() {
         return Input.GetMouseButtonDown(0);
+    }
+
+    private void SetFocusMode() {
+        if (Mode == CursorMode.Editing) {
+            switch (MapEdit.EditOp)
+            {
+                case "ResizeMap":
+                    switch (MapEdit.ResizeOp)
+                    {
+                        case "ResizeCloneRow":
+                        case "ResizeDeleteRow":
+                            FocusMode = FocusMode.Row;
+                            break;
+                        case "ResizeCloneCol":
+                        case "ResizeDeleteCol":
+                            FocusMode = FocusMode.Column;
+                            break;
+                        default:
+                            FocusMode = FocusMode.Single;
+                            break;
+                    }
+                    break;
+                default:
+                    FocusMode = FocusMode.Single;
+                    break;
+
+            }
+        }
     }
 }

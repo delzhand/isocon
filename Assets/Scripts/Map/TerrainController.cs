@@ -536,7 +536,7 @@ public class TerrainController : MonoBehaviour
         UI.ToggleDisplay(root, false);
 
         Block[] selected = Block.GetSelected();
-        Block focused = Block.LastFocused;
+        Block focused = Block.AllFocusedBlocks.FirstOrDefault();
         Block block = null;
 
         if (selected.Length == 0 && focused == null) {

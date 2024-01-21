@@ -21,11 +21,26 @@ public enum BlockShape
 
 public class Block : MonoBehaviour
 {
-    public static Block LastFocused;
+    // public static Block LastFocused;
 
     // Focus State
-    public bool Selected = false;
-    public bool Focused = false;
+    public bool Selected { get; private set; } = false;
+    private bool _focused = false;
+    public bool Focused
+    {
+        get => _focused;
+        set
+        {
+            if (value == _focused)
+                return;
+            _focused = value;
+            _allFocused.Add(this);
+            MaterialReset = true;
+        }
+    }
+    static private HashSet<Block> _allFocused = new();// HashSet<Block>();
+    static public IEnumerable<Block> AllFocusedBlocks => _allFocused;
+
     public bool Highlighted = false;
 
     public BlockShape Shape = BlockShape.Solid;
@@ -66,9 +81,6 @@ public class Block : MonoBehaviour
             indicator.SetActive(false);
         }
 
-        if (Focused && this != LastFocused) {
-            Unfocus();
-        }
 
         if (MaterialReset) {
             MaterialReset = false;
@@ -569,37 +581,28 @@ public class Block : MonoBehaviour
 
     #region Focus
     public void Focus() {
-        LastFocused = this;
+        UnfocusAll();
         Focused = true;
-        MaterialReset = true;
         TerrainController.SetInfo();
         Player.Self().GetComponent<DestinationRenderer>().SetTarget(getMidpoint());
     }
 
     public void Unfocus() {
         Focused = false;
-        LastFocused = null;
-        MaterialReset = true;
+        _allFocused.Remove(this);
     }
 
     public static Block[] GetFocused() {
-        List<Block> focused = new();
-        GameObject[] gos = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < gos.Length; i++) {
-            Block block = gos[i].GetComponent<Block>();
-            if (block.Focused) {
-                focused.Add(block);
-            }
-        }
-        return focused.ToArray();
-    }
+        return _allFocused.ToArray();
 
+    }
 
     public static void UnfocusAll() {
         Player.Self().GetComponent<DestinationRenderer>().UnsetTarget();
         foreach (Block b in GetFocused()) {
             b.Unfocus();
         }
+        _allFocused.Clear();
     }
     #endregion
     
@@ -662,5 +665,51 @@ public class Block : MonoBehaviour
 
     public Token GetToken() {
         return Token.GetAtBlock(this);    
+    }
+
+    /// <summary>
+    /// Get the top blocks at the given coordinates
+    /// </summary>
+    /// <param name="coordinates"></param>
+    /// <returns></returns>
+    public static Block[] GetTopBlocks(Vector2Int[] coordinates)
+    {
+        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Block");
+        List<Block> blocks = new List<Block>();
+        List<Vector2Int> v2is = new List<Vector2Int>(coordinates);
+        foreach (var gameObject in gameObjects)
+        {
+            Block block = gameObject.GetComponent<Block>();
+            Vector2Int blockCoords = new Vector2Int(block.getX(), block.getY());
+            if (v2is.Contains(blockCoords))
+            {
+                Block topBlock = block.transform.parent.GetComponent<Column>().GetTopBlock();
+                blocks.Add(topBlock);
+            }
+            v2is.Remove(blockCoords);
+            if (v2is.Count() == 0)
+                return blocks.ToArray();
+        }
+        return blocks.ToArray();
+    }
+
+    /// <summary>
+    /// Gets the top block at a given coordinate, returns null if it would be out of bounds.
+    /// </summary>
+    /// <param name="coordinate"></param>
+    /// <returns></returns>
+    public static Block GetTopBlock(Vector2Int coordinate)
+    {
+        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Block");
+        foreach(var gameObject in gameObjects)
+        {
+            Block block = gameObject.GetComponent<Block>();
+            if(block.getX() == coordinate.x && block.getY() == coordinate.y)
+            {
+                Block topBlock = block.transform.parent.GetComponent<Column>().GetTopBlock();
+                return topBlock;
+            }
+        }
+        return null;
     }
 }
