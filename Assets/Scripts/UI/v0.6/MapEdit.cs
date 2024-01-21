@@ -239,6 +239,7 @@ public class MapEdit
         BlockMesh.ToggleBorders(true);
         UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), true);
         UI.ToggleDisplay("BottomBar", false);
+        UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
     }
 
     private static void EndEditing() {
@@ -252,6 +253,7 @@ public class MapEdit
         Player.Self().CmdMapSync();
         UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), false);
         UI.ToggleDisplay("BottomBar", true);
+        UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
     }
 
     private static void ResetConfirm(ClickEvent evt) {

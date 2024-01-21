@@ -9,7 +9,7 @@ public class TokenMenu
         Block.DeselectAll();
         Block.DehighlightAll();
         TokenData data = Token.GetSelected().Data;
-        SelectionMenu.Reset("TOKEN MENU");
+        SelectionMenu.Reset("TOKEN MENU", Token.GetSelected().transform);
         MenuItem[] defaultItems = GetTokenMenuItems(data);
         foreach (MenuItem m in defaultItems) {
             SelectionMenu.AddItem(m.Name, m.Label, m.OnClick);

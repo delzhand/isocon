@@ -93,12 +93,16 @@ public class UI : MonoBehaviour
         GameObject.Find(element).GetComponent<UIDocument>().panelSettings.scale = value;
     }
 
-    public static void FollowToken(Token token, VisualElement element, Camera camera, Vector2 offset, bool useAnchor = true) {
-        Vector3 worldPos = token.transform.Find("Offset/Avatar/Cutout/Cutout Quad").position;
-        if (useAnchor) {
-            worldPos = token.transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").position;
-        }
-        Vector3 viewportPos = camera.WorldToViewportPoint(worldPos);
+    // public static void FollowToken(Token token, VisualElement element, Camera camera, Vector2 offset, bool useAnchor = true) {
+    //     Transform t = token.transform.Find("Offset/Avatar/Cutout/Cutout Quad");
+    //     if (useAnchor) {
+    //         t = token.transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor");
+    //     }
+    //     FollowTransform(t, element, camera, offset);
+    // }
+
+    public static void FollowTransform(Transform transform, VisualElement element, Camera camera, Vector2 offset) {
+        Vector3 viewportPos = camera.WorldToViewportPoint(transform.position);
         if (element.resolvedStyle.width != float.NaN) {
             Vector2 screenPos = new Vector2(
                 Mathf.RoundToInt((viewportPos.x * UI.System.resolvedStyle.width)),

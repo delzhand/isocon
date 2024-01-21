@@ -133,7 +133,7 @@ public class Launcher : MonoBehaviour
     private void SetCallbacks() {
 
         UI.System.Q<Button>("ClearCache").RegisterCallback<ClickEvent>((evt) => {
-            Modal.DoubleConfirm("Clear Cache", "Clear cached settings?", () => {
+            Modal.DoubleConfirm("Clear Cache", "Clear cached settings? This will reset player preferences like name, last system used, and data directory.", () => {
                 PlayerPrefs.DeleteAll();
             });
         });

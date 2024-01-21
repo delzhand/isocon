@@ -146,15 +146,6 @@
                     </ui:VisualElement>
                     <ui:VisualElement name="Effects" class="effect" style="align-items: flex-end;">
                         <ui:VisualElement name="CurrentEffects" style="flex-grow: 1; align-items: flex-end;" />
-                        <ui:VisualElement name="ClearSelected" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 0; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px; background-color: rgba(0, 0, 0, 0.49); margin-bottom: 4px;">
-                            <ui:Label text="Clear Selection" class="panel-text" style="padding-top: 0; padding-right: 6px; padding-bottom: 0; padding-left: 6px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; translate: 0 -1px;" />
-                        </ui:VisualElement>
-                        <ui:VisualElement name="AddEffect" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 0; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px; background-color: rgba(0, 0, 0, 0.49); margin-bottom: 4px;">
-                            <ui:Label text="Add Effect" class="panel-text" style="padding-top: 0; padding-right: 6px; padding-bottom: 0; padding-left: 6px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; translate: 0 -1px;" />
-                        </ui:VisualElement>
-                        <ui:VisualElement name="RemoveEffects" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 0; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px; background-color: rgba(0, 0, 0, 0.49); margin-bottom: 4px;">
-                            <ui:Label text="Remove All Effects" class="panel-text" style="padding-top: 0; padding-right: 6px; padding-bottom: 0; padding-left: 6px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; translate: 0 -1px;" />
-                        </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

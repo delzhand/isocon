@@ -342,6 +342,25 @@ public class Icon_v1_5 : GameSystem {
         return items.ToArray();
     }
 
+    public override MenuItem[] GetTileMenuItems() {
+        List<MenuItem> items = new();
+        // items.Add(new MenuItem("SelectSmallBlast", "Select Small Blast", SelectSmallBlastClicked));
+        // items.Add(new MenuItem("SelectMedBlast", "Select Medium Blast", SelectMedBlastClicked));
+        // items.Add(new MenuItem("SelectLargeBlast", "Select Large Blast", SelectLargeBlastClicked));
+        return items.ToArray();
+    }
+
+    public static void SelectSmallBlastClicked(ClickEvent evt) {
+
+    }
+    public static void SelectMedBlastClicked(ClickEvent evt) {
+
+    }
+    public static void SelectLargeBlastClicked(ClickEvent evt) {
+
+    }
+
+
     private void AttackRollClicked(ClickEvent evt) {
         Modal.Reset("Attack Roll");
         Modal.AddNumberNudgerField("BoonField", "Boons", 0, 0);
