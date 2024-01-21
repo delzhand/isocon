@@ -313,6 +313,12 @@ public class TerrainController : MonoBehaviour
                     clone.transform.localPosition += new Vector3(1, 0, 0);
                     clone.name = (x+1) + "," + y;
                     clone.GetComponent<Column>().Set(x + 1, y);
+                    for(int b = 0; b < column.transform.childCount; b++)
+                    {
+                        var new_block = clone.transform.GetChild(b).GetComponent<Block>();
+                        var old_block = column.transform.GetChild(b).GetComponent<Block>();
+                        new_block.CopyStyle(old_block);
+                    }
                 }
                 if (x > selectedBlock.transform.parent.GetComponent<Column>().X) {
                     column.transform.localPosition += new Vector3(1, 0, 0);
@@ -361,6 +367,12 @@ public class TerrainController : MonoBehaviour
                     clone.transform.localPosition += new Vector3(0, 0, 1);
                     clone.name = x + "," + (y+1);
                     clone.GetComponent<Column>().Set(x, y + 1);
+                    for (int b = 0; b < column.transform.childCount; b++)
+                    {
+                        var new_block = clone.transform.GetChild(b).GetComponent<Block>();
+                        var old_block = column.transform.GetChild(b).GetComponent<Block>();
+                        new_block.CopyStyle(old_block);
+                    }
                 }
                 if (y > selectedBlock.transform.parent.GetComponent<Column>().Y) {
                     column.transform.localPosition += new Vector3(0, 0, 1);
@@ -670,33 +682,29 @@ public class TerrainController : MonoBehaviour
                 blks[b.getX(), b.getY(), b.getZ()] = b.gameObject;
             }
         }
+        bool isEdgePiece(int x, int y, int z) => (x >= 0 && x < size.x && y >= 0 && y < size.y && z < 30); 
+        bool isObscured(int x, int y, int z) {
+            return solids[x, y, z + 1] && // obscured above
+                solids[x + 1, y, z] && // obscured west
+                solids[x - 1, y, z] && // obscured east
+                solids[x, y - 1, z] && // obscured south
+                solids[x, y + 1, z];    //obscured north
+        }
         for (int i = 0; i < blocks.Length; i++) {
             Block b = blocks[i].GetComponent<Block>();
             int x = b.getX();
             int y = b.getY();
             int z = b.getZ();
-            try {
-                if (
-                    solids[x,y,z+1] && // obscured above
-                    solids[x+1,y,z] && // obscured west
-                    solids[x-1,y,z] && // obscured east
-                    solids[x,y-1,z] && // obscured south
-                    solids[x,y+1,z]    //obscured north
-                ) {
-                    hiding++;
-                    hideBlock(b);
-                }
-                else {
-                    showBlock(b);
-                }
-            }
-            #pragma warning disable
-            catch(Exception e) {
-                // Exceptions are fine, it means there's no block because it's out of bounds
+            if (isEdgePiece(x, y, z)) {
                 showBlock(b);
             }
-            #pragma warning restore
-
+            else if (isObscured(x, y, z)) {
+                hiding++;
+                hideBlock(b);
+            }
+            else {
+                showBlock(b);
+            }
         }
     }
 
