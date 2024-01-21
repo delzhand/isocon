@@ -205,6 +205,13 @@ public class Player : NetworkBehaviour
                 target.EffectChange(value);
             }
         }
+        else if (label == "RemoveEffect") {
+            for (int i = 0; i < blocks.Length; i++) {
+                Block target = GameObject.Find(blocks[i]).GetComponent<Block>();
+                target.EffectRemove(value);
+            }
+        }
+
         TerrainController.SetInfo();
     }
     #endregion

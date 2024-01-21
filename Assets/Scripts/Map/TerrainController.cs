@@ -561,25 +561,23 @@ public class TerrainController : MonoBehaviour
 
         string height;
         string coords;
-        // bool singleSelected = false;
 
         if (selected.Length > 1) {
-            height = "*";
-            coords = "*";
+            (float,float) lowHigh = Block.GetElevationRange();
+            height = $"{lowHigh.Item1}";
+            if (lowHigh.Item1 != lowHigh.Item2) {
+                height = $"{lowHigh.Item1}~{lowHigh.Item2}";
+            }
+            coords = $"({selected.Length})";
         }
         else {
             if (selected.Length == 1) {
                 block = selected[0];
-                // singleSelected = true;
-                // UI.ToggleDisplay(root.Q("AddObject"), true);
             }
             else if (focused) {
                 block = focused;
             }
-            height = (block.transform.localPosition.y + 1).ToString();
-            if (block.Shape == BlockShape.Slope || block.Shape == BlockShape.Steps || block.Shape == BlockShape.SlopeInt || block.Shape == BlockShape.SlopeExt) {
-                height = height + ".5";
-            }
+            height = $"{block.getHeight()}";
             coords = StringUtility.IntToAlpha(block.getY() + 1) + "" + (block.getX()+1);
         }
 
@@ -725,12 +723,14 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void ToggleTerrainEffectMode(ClickEvent evt) {
+
         // Disable map edit mode if necessary
         if (Cursor.Mode == CursorMode.Editing) {
             MapEdit.ToggleEditMode(evt);
         }
 
         if (Cursor.Mode != CursorMode.TerrainEffecting) {
+            Tutorial.Init("terrain effect mode");
             Cursor.Mode = CursorMode.TerrainEffecting;
             BlockMesh.ToggleBorders(true);
             UI.ToggleActiveClass("MarkerMode", true);

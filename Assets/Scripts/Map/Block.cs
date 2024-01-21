@@ -290,6 +290,14 @@ public class Block : MonoBehaviour
         return (int)(this.transform.position.y/.5f)+2;
     }
 
+    public float getHeight() {
+        float height = transform.localPosition.y + 1;
+        if (Shape == BlockShape.Slope || Shape == BlockShape.Steps || Shape == BlockShape.SlopeInt || Shape == BlockShape.SlopeExt) {
+            height += .5f;
+        }
+        return height;
+    }
+
     public Vector3 getMidpoint() {
         Vector3 v = transform.position + new Vector3(0, .25f, 0);
         if (Shape == BlockShape.Slope || Shape == BlockShape.SlopeExt || Shape == BlockShape.SlopeInt || Shape == BlockShape.Steps) {
@@ -351,6 +359,13 @@ public class Block : MonoBehaviour
                 break;
         }
         MaterialReset = true;
+    }
+
+    public void EffectRemove(string effect) {
+        if (effects.Contains(effect)) {
+            effects.Remove(effect);
+        }
+        MaterialReset = true;        
     }
 
     public void ApplyPaint(Color top, Color sides) {
@@ -542,9 +557,9 @@ public class Block : MonoBehaviour
     }
 
     #region Select
-    public void Select() {
+    public void Select(bool append = false) {
         SelectionMenu.Hide();
-        if (Selected) {
+        if (Selected && !append) {
             Deselect();
         }
         else {
@@ -711,5 +726,14 @@ public class Block : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public static (float,float) GetElevationRange() {
+        (float,float) lowHigh = (float.MaxValue, float.MinValue);
+        foreach(Block b in GetSelected()) {
+            lowHigh.Item1 = Mathf.Min(lowHigh.Item1, b.getHeight());
+            lowHigh.Item2 = Mathf.Max(lowHigh.Item2, b.getHeight());
+        }
+        return lowHigh;
     }
 }

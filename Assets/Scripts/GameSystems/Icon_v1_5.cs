@@ -344,20 +344,46 @@ public class Icon_v1_5 : GameSystem {
 
     public override MenuItem[] GetTileMenuItems() {
         List<MenuItem> items = new();
-        // items.Add(new MenuItem("SelectSmallBlast", "Select Small Blast", SelectSmallBlastClicked));
-        // items.Add(new MenuItem("SelectMedBlast", "Select Medium Blast", SelectMedBlastClicked));
-        // items.Add(new MenuItem("SelectLargeBlast", "Select Large Blast", SelectLargeBlastClicked));
+        if (Block.GetSelected().Length > 0) {
+            items.Add(new MenuItem("SelectSmallBlast", "Select Small Blast", SelectSmallBlastClicked));
+            items.Add(new MenuItem("SelectMedBlast", "Select Medium Blast", SelectMedBlastClicked));
+            items.Add(new MenuItem("SelectLargeBlast", "Select Large Blast", SelectLargeBlastClicked));
+        }
         return items.ToArray();
     }
 
-    public static void SelectSmallBlastClicked(ClickEvent evt) {
-
+    public static void SelectSmallBlastClicked(ClickEvent evt) {    
+        List<Block> blocksToAppend = new();
+        foreach (var b in Block.GetSelected()) {
+            foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetCardinallyAdjacent(new Vector2Int(b.getX(), b.getY())))) {
+                blocksToAppend.Add(block);
+            }
+        }
+        foreach (var b in blocksToAppend) {
+            b.Select(true);
+        }
+        SelectionMenu.Hide();
     }
+
     public static void SelectMedBlastClicked(ClickEvent evt) {
-
+        List<Block> blocksToAppend = new();
+        foreach (var b in Block.GetSelected()) {
+            foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetCardinallyAdjacent(new Vector2Int(b.getX(), b.getY())))) {
+                blocksToAppend.Add(block);
+            }
+            foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetDiagonallyAdjacent(new Vector2Int(b.getX(), b.getY())))) {
+                blocksToAppend.Add(block);
+            }
+        }
+        foreach (var b in blocksToAppend) {
+            b.Select(true);
+        }
+        SelectionMenu.Hide();
     }
-    public static void SelectLargeBlastClicked(ClickEvent evt) {
 
+    public static void SelectLargeBlastClicked(ClickEvent evt) {
+        SelectSmallBlastClicked(evt);
+        SelectSmallBlastClicked(evt);
     }
 
 

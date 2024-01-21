@@ -39,4 +39,14 @@ static public class CoordinateUtility
     {
         return OffsetCoordinates(center, new Vector2Int[]{Vector2Int.left, Vector2Int.up, Vector2Int.right, Vector2Int.down });
     }
+
+    static public Vector2Int[] GetDiagonallyAdjacent(Vector2Int center)
+    {
+        return OffsetCoordinates(center, new Vector2Int[]{
+            new Vector2Int(-1, -1),
+            new Vector2Int(-1, 1),
+            new Vector2Int(1, 1),
+            new Vector2Int(1, -1)
+        });
+    }
 }

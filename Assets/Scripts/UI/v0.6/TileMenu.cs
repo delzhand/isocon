@@ -25,6 +25,16 @@ public class TileMenu
             items.Add(new MenuItem("AddEffect", "Add Effect", ClickAddEffect));
             items.Add(new MenuItem("DeselectAll", "Deselect All", ClickDeselectAll));
             items.Add(new MenuItem("ClearEffects", "Clear Effects", ClickClearEffects));
+
+            foreach (var block in Block.GetSelected()) {
+                block.GetEffects().ForEach(effect => {
+                    string effectName = effect.Split("::")[0];
+                    items.Add(new MenuItem($"Remove_{effectName}", $"Remove {effectName}", (evt) => {
+                        Player.Self().CmdRequestMapSetValue(SelectedBlockNames(), "RemoveEffect", effect);
+                        SelectionMenu.Hide();
+                    }));
+                });
+            }
         }
         items.Add(new MenuItem("ClearMap", "Clear Map", ClickClearMap));
         return items.ToArray();
@@ -41,23 +51,29 @@ public class TileMenu
     }
 
     public static void ClickClearEffects(ClickEvent evt) {
-        List<string> blocks = new();
-        foreach(Block b in Block.GetSelected()) {
-            blocks.Add(b.name);
-        }
-        Player.Self().CmdRequestMapSetValue(blocks.ToArray(), "Effect", "None");
+        Player.Self().CmdRequestMapSetValue(SelectedBlockNames(), "Effect", "None");
         SelectionMenu.Hide();
     }
 
     public static void ClickClearMap(ClickEvent evt) {
+        Player.Self().CmdRequestMapSetValue(AllBlockNames(), "Effect", "None");
+        SelectionMenu.Hide();
+    }    
+
+    private static string[] AllBlockNames() {
         List<string> blocks = new List<string>();
         GameObject[] objects = GameObject.FindGameObjectsWithTag("Block");
         for (int i = 0; i < objects.Length; i++) {
             blocks.Add(objects[i].name);
         }
-        Player.Self().CmdRequestMapSetValue(blocks.ToArray(), "Effect", "None");
-        SelectionMenu.Hide();
-    }    
+        return blocks.ToArray();
+    }
 
-
+    public static string[] SelectedBlockNames() {
+        List<string> blocks = new();
+        foreach(Block b in Block.GetSelected()) {
+            blocks.Add(b.name);
+        }
+        return blocks.ToArray();
+    }
 }
