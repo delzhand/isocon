@@ -110,7 +110,7 @@ public class Tabletop : MonoBehaviour
     public void ConnectAsClient() {
         Tutorial.Init("tabletop");
         Label message = UI.System.Q<Label>("ConnectionMessage");
-        message.text = $"You are connected to {PlayerPrefs.GetString("HostIP", "an uUnknown address")} as a client.";
+        message.text = $"You are connected to {PlayerPrefs.GetString("HostIP", "an unknown address")} as a client.";
         IPFinder.ReplaceTokens(message);
     }
 
@@ -193,7 +193,12 @@ public class Tabletop : MonoBehaviour
     // }
 
     private static void IsoconMenu(ClickEvent evt) {
-        Modal.DoubleConfirm("Exit Tabletop", "Exit the tabletop and return to the Isocon Launcher?", Quit);
+        if (NetworkClient.activeHost) {
+            Modal.DoubleConfirm("Exit Tabletop", "You are hosting. <b>Disconnecting from the table will end the session!</b> Exit the tabletop and return to the Isocon Launcher?", Quit);
+        }
+        else {
+            Modal.DoubleConfirm("Exit Tabletop", "Exit the tabletop and return to the Isocon Launcher?", Quit);
+        }
     }
 
     private static void Quit() {

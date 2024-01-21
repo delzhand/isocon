@@ -458,7 +458,7 @@
                 <ui:Button text="Cancel" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Cancel" style="margin-left: 4px;" />
             </ui:VisualElement>
             <ui:VisualElement name="Contents" style="flex-grow: 1; flex-direction: column-reverse;">
-                <ui:Label text="Label" name="Message" />
+                <ui:Label text="Label" name="Message" style="white-space: normal;" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
