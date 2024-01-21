@@ -346,6 +346,23 @@ public class Block : MonoBehaviour
         MaterialReset = true;
     }
 
+    /// <summary>
+    /// Copies texture and colour from another block.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <param name="copyShape">Also copy the shape</param>
+    public void CopyStyle(Block other, bool copyShape = false)
+    {
+        Painted = other.Painted;
+        TextureTop = other.TextureTop;
+        TextureSide = other.TextureSide;
+        PaintColorTop = other.PaintColorTop;
+        PaintColorSide = other.PaintColorSide;
+        if(copyShape)
+            ShapeChange(other.Shape);
+        MaterialReset = true;
+    }
+
     public Color[] SamplePaint() {
         if (Painted) {
             return new Color[]{PaintColorTop, PaintColorSide};

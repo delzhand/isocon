@@ -313,6 +313,12 @@ public class TerrainController : MonoBehaviour
                     clone.transform.localPosition += new Vector3(1, 0, 0);
                     clone.name = (x+1) + "," + y;
                     clone.GetComponent<Column>().Set(x + 1, y);
+                    for(int b = 0; b < column.transform.childCount; b++)
+                    {
+                        var new_block = clone.transform.GetChild(b).GetComponent<Block>();
+                        var old_block = column.transform.GetChild(b).GetComponent<Block>();
+                        new_block.CopyStyle(old_block);
+                    }
                 }
                 if (x > selectedBlock.transform.parent.GetComponent<Column>().X) {
                     column.transform.localPosition += new Vector3(1, 0, 0);
@@ -361,6 +367,12 @@ public class TerrainController : MonoBehaviour
                     clone.transform.localPosition += new Vector3(0, 0, 1);
                     clone.name = x + "," + (y+1);
                     clone.GetComponent<Column>().Set(x, y + 1);
+                    for (int b = 0; b < column.transform.childCount; b++)
+                    {
+                        var new_block = clone.transform.GetChild(b).GetComponent<Block>();
+                        var old_block = column.transform.GetChild(b).GetComponent<Block>();
+                        new_block.CopyStyle(old_block);
+                    }
                 }
                 if (y > selectedBlock.transform.parent.GetComponent<Column>().Y) {
                     column.transform.localPosition += new Vector3(0, 0, 1);
