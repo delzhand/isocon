@@ -64,6 +64,11 @@ public class GameSystem : MonoBehaviour
         return items.ToArray();
     }
 
+    public virtual MenuItem[] GetTileMenuItems() {
+        List<MenuItem> items = new();
+        return items.ToArray();
+    }
+
     public virtual void GameDataSetValue(string value) {
         throw new NotImplementedException();
     }

@@ -259,7 +259,16 @@ public class Block : MonoBehaviour
     }
 
     public void RightClick() {
-        // CameraControl.GoToBlock(this);
+        switch (Cursor.Mode) {
+            case CursorMode.TerrainEffecting:
+                if (SelectionMenu.Visible) {
+                    SelectionMenu.Hide();
+                }
+                else {
+                    TileMenu.ShowMenu(this);
+                }
+                break;
+        }
     }
 
     public static void SetColor(string id, Color color) {
@@ -370,8 +379,9 @@ public class Block : MonoBehaviour
         TextureSide = other.TextureSide;
         PaintColorTop = other.PaintColorTop;
         PaintColorSide = other.PaintColorSide;
-        if(copyShape)
+        if (copyShape) {
             ShapeChange(other.Shape);
+        }
         MaterialReset = true;
     }
 
@@ -533,8 +543,9 @@ public class Block : MonoBehaviour
 
     #region Select
     public void Select() {
+        SelectionMenu.Hide();
         if (Selected) {
-            Selected = false;
+            Deselect();
         }
         else {
             Selected = true;
@@ -546,6 +557,7 @@ public class Block : MonoBehaviour
     public void Deselect() {
         Selected = false;
         MaterialReset = true;
+        SelectionMenu.Hide();
     }
 
     public static Block[] GetSelected() {
@@ -563,7 +575,7 @@ public class Block : MonoBehaviour
     public static void DeselectAll() {
         foreach (Block b in GetSelected()) {
             b.Deselect();
-        }
+        }        
     }
     #endregion
 

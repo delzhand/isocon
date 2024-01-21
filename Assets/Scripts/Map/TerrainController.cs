@@ -530,9 +530,9 @@ public class TerrainController : MonoBehaviour
         UI.ToggleDisplay(root.Q("Pos"), false);
         UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), false);
         UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), false);
-        UI.ToggleDisplay(root.Q("AddEffect"), false);
-        UI.ToggleDisplay(root.Q("ClearSelected"), false);
-        UI.ToggleDisplay(root.Q("RemoveEffects"), false);
+        // UI.ToggleDisplay(root.Q("AddEffect"), false);
+        // UI.ToggleDisplay(root.Q("ClearSelected"), false);
+        // UI.ToggleDisplay(root.Q("RemoveEffects"), false);
         UI.ToggleDisplay(root, false);
 
         Block[] selected = Block.GetSelected();
@@ -554,14 +554,14 @@ public class TerrainController : MonoBehaviour
             root.Q("Elev").Q("SelectedMarker").style.backgroundColor = color;
             UI.ToggleDisplay(root.Q("Pos").Q("SelectedMarker"), true);
             root.Q("Pos").Q("SelectedMarker").style.backgroundColor = color;
-            UI.ToggleDisplay(root.Q("ClearSelected"), true);
+            // UI.ToggleDisplay(root.Q("ClearSelected"), true);
         }
  
         UI.ToggleDisplay(root, true);
 
         string height;
         string coords;
-        bool singleSelected = false;
+        // bool singleSelected = false;
 
         if (selected.Length > 1) {
             height = "*";
@@ -570,7 +570,7 @@ public class TerrainController : MonoBehaviour
         else {
             if (selected.Length == 1) {
                 block = selected[0];
-                singleSelected = true;
+                // singleSelected = true;
                 // UI.ToggleDisplay(root.Q("AddObject"), true);
             }
             else if (focused) {
@@ -594,23 +594,23 @@ public class TerrainController : MonoBehaviour
                 VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/TerrainEffect");
                 VisualElement instance = template.Instantiate();
                 instance.Q<Label>("Label").text = effect.ToUpper().Split("::")[0];
-                VisualElement remove = instance.Q("Remove");
-                if (!singleSelected) {
-                    UI.ToggleDisplay(remove, false);
-                }
-                else {
-                    remove.RegisterCallback<ClickEvent>((evt) => {
-                        Player.Self().CmdRequestMapSetValue(new string[]{block.name}, "Effect", effect);
-                    });
-                }
+                // VisualElement remove = instance.Q("Remove");
+                // if (!singleSelected) {
+                //     UI.ToggleDisplay(remove, false);
+                // }
+                // else {
+                //     remove.RegisterCallback<ClickEvent>((evt) => {
+                //         Player.Self().CmdRequestMapSetValue(new string[]{block.name}, "Effect", effect);
+                //     });
+                // }
                 root.Q("CurrentEffects").Add(instance);
             });
 
         }
-        if (selected.Length > 0) {
-            UI.ToggleDisplay(root.Q("AddEffect"), true);
-            UI.ToggleDisplay(root.Q("RemoveEffects"), true);
-        }
+        // if (selected.Length > 0) {
+        //     UI.ToggleDisplay(root.Q("AddEffect"), true);
+        //     UI.ToggleDisplay(root.Q("RemoveEffects"), true);
+        // }
 
     }
     
@@ -732,12 +732,19 @@ public class TerrainController : MonoBehaviour
 
         if (Cursor.Mode != CursorMode.TerrainEffecting) {
             Cursor.Mode = CursorMode.TerrainEffecting;
+            BlockMesh.ToggleBorders(true);
             UI.ToggleActiveClass("MarkerMode", true);
+            UI.ToggleDisplay("BottomBar", false);
+            UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
         }
         else {
             Cursor.Mode = CursorMode.Default;
+            BlockMesh.ToggleBorders(false);
             UI.ToggleActiveClass("MarkerMode", false);
             Block.DeselectAll();
+            UI.ToggleDisplay("BottomBar", true);
+            UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
+            SelectionMenu.Hide();
         }
     }
 }

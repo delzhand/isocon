@@ -19,7 +19,7 @@ public class Tabletop : MonoBehaviour
         TopBarSetup();
         BottomBarSetup();
         TurnIndicatorSetup();
-        TerrainEffectSetup();
+        // TerrainEffectSetup();
 
         UI.System.Q("TurnAdvance").RegisterCallback<MouseEnterEvent>((evt) => {
             Tutorial.Init("turn advance");
@@ -27,9 +27,9 @@ public class Tabletop : MonoBehaviour
         UI.System.Q("TopRight").RegisterCallback<MouseEnterEvent>((evt) => {
             Tutorial.Init("terrain info");
         });
-        UI.System.Q("ClearSelected").RegisterCallback<MouseEnterEvent>((evt) => {
-            Tutorial.Init("clear selected");
-        });
+        // UI.System.Q("ClearSelected").RegisterCallback<MouseEnterEvent>((evt) => {
+        //     Tutorial.Init("clear selected");
+        // });
 
     }
 
@@ -45,31 +45,44 @@ public class Tabletop : MonoBehaviour
             Token focused = Token.GetFocused();
             GameSystem.Current().UpdateTokenPanel(focused != null ? focused.Data.Id : null, "FocusedTokenPanel");
 
-            if (selected != null) {
-                if (selected.Data.Placed) {
-                    UI.FollowToken(selected, UI.System.Q("SelectionMenu"), Camera.main, new Vector2(30, 50), true);
+            UI.ToggleDisplay(UI.System.Q("SelectionMenu"), SelectionMenu.Visible);
+            if (SelectionMenu.Visible) {
+                if (SelectionMenu.FollowTransform != null) {
+                    UI.FollowTransform(SelectionMenu.FollowTransform, UI.System.Q("SelectionMenu"), Camera.main, new Vector2(30, 50));
                     UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, Length.Percent(-100)));
                 }
                 else {
-                    UI.System.Q("SelectionMenu").style.top = 10;
-                    UI.System.Q("SelectionMenu").style.left = 10;
-                    UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, 0));
-
-
-                    // Vector2 v = UI.System.Q("Frame").worldBound.center;
-                    // string uiScale = PlayerPrefs.GetString("UIScale", "100%");
-                    // float value = float.Parse(uiScale.Replace("%", "")) / 100f;
-                    // v *= value;
-                    // v.y = Screen.height - v.y;
-                    // UI.System.Q("SelectionMenu").style.left = v.x;
-                    // UI.System.Q("SelectionMenu").style.top = v.y;
-                    // UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(Length.Percent(0), Length.Percent(0)));
+                        UI.System.Q("SelectionMenu").style.top = 10;
+                        UI.System.Q("SelectionMenu").style.left = 10;
+                        UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, 0));
                 }
-
             }
+
+            // if (selected != null) {
+            //     if (selected.Data.Placed) {
+            //         UI.FollowToken(selected, UI.System.Q("SelectionMenu"), Camera.main, new Vector2(30, 50), true);
+            //         UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, Length.Percent(-100)));
+            //     }
+            //     else {
+            //         UI.System.Q("SelectionMenu").style.top = 10;
+            //         UI.System.Q("SelectionMenu").style.left = 10;
+            //         UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, 0));
+
+
+            //         // Vector2 v = UI.System.Q("Frame").worldBound.center;
+            //         // string uiScale = PlayerPrefs.GetString("UIScale", "100%");
+            //         // float value = float.Parse(uiScale.Replace("%", "")) / 100f;
+            //         // v *= value;
+            //         // v.y = Screen.height - v.y;
+            //         // UI.System.Q("SelectionMenu").style.left = v.x;
+            //         // UI.System.Q("SelectionMenu").style.top = v.y;
+            //         // UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(Length.Percent(0), Length.Percent(0)));
+            //     }
+
+            // }
+
         }
 
-        UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), Cursor.Mode != CursorMode.Editing);
         UI.ToggleDisplay(UI.TopBar.Q("Config"), Cursor.Mode != CursorMode.Editing);
         UI.ToggleDisplay(UI.TopBar.Q("Dice"), Cursor.Mode != CursorMode.Editing);
         UI.ToggleDisplay(UI.TopBar.Q("Info"), Cursor.Mode != CursorMode.Editing);
@@ -97,7 +110,7 @@ public class Tabletop : MonoBehaviour
     public void ConnectAsClient() {
         Tutorial.Init("tabletop");
         Label message = UI.System.Q<Label>("ConnectionMessage");
-        message.text = $"You are connected to {PlayerPrefs.GetString("HostIP", "an uUnknown address")} as a client.";
+        message.text = $"You are connected to {PlayerPrefs.GetString("HostIP", "an unknown address")} as a client.";
         IPFinder.ReplaceTokens(message);
     }
 
@@ -160,27 +173,32 @@ public class Tabletop : MonoBehaviour
         });
     }
 
-    private void TerrainEffectSetup() {
-        VisualElement root = UI.System.Q("TopRight").Q("Effects");
+    // private void TerrainEffectSetup() {
+    //     VisualElement root = UI.System.Q("TopRight").Q("Effects");
         
-        UI.HoverSetup(root.Q("ClearSelected"));
-        root.Q("ClearSelected").RegisterCallback<ClickEvent>((evt) => {
-            Block.DeselectAll();
-        });
+    //     UI.HoverSetup(root.Q("ClearSelected"));
+    //     root.Q("ClearSelected").RegisterCallback<ClickEvent>((evt) => {
+    //         Block.DeselectAll();
+    //     });
 
-        UI.HoverSetup(root.Q("AddEffect"));
-        root.Q("AddEffect").RegisterCallback<ClickEvent>((evt) => {
-            AddTerrainEffect.OpenModal(evt);
-        });
+    //     UI.HoverSetup(root.Q("AddEffect"));
+    //     root.Q("AddEffect").RegisterCallback<ClickEvent>((evt) => {
+    //         AddTerrainEffect.OpenModal(evt);
+    //     });
 
-        UI.HoverSetup(root.Q("RemoveEffects"));
-        root.Q("RemoveEffects").RegisterCallback<ClickEvent>((evt) => {
-            AddTerrainEffect.ClearAll();
-        });
-    }
+    //     UI.HoverSetup(root.Q("RemoveEffects"));
+    //     root.Q("RemoveEffects").RegisterCallback<ClickEvent>((evt) => {
+    //         AddTerrainEffect.ClearAll();
+    //     });
+    // }
 
     private static void IsoconMenu(ClickEvent evt) {
-        Modal.DoubleConfirm("Exit Tabletop", "Exit the tabletop and return to the Isocon Launcher?", Quit);
+        if (NetworkClient.activeHost) {
+            Modal.DoubleConfirm("Exit Tabletop", "You are hosting. <b>Disconnecting from the table will end the session!</b> Exit the tabletop and return to the Isocon Launcher?", Quit);
+        }
+        else {
+            Modal.DoubleConfirm("Exit Tabletop", "Exit the tabletop and return to the Isocon Launcher?", Quit);
+        }
     }
 
     private static void Quit() {

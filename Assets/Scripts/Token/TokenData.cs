@@ -59,7 +59,7 @@ public class TokenData : NetworkBehaviour
         if (OverheadElement != null) {
             OverheadElement.style.display = Placed ? DisplayStyle.Flex : DisplayStyle.None;
             if (WorldObject != null) {
-                UI.FollowToken(WorldObject.GetComponent<Token>(), OverheadElement, Camera.main, Vector2.zero, true);
+                UI.FollowTransform(WorldObject.GetComponent<Token>().transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").transform, OverheadElement, Camera.main, Vector2.zero);
             }
         }
 

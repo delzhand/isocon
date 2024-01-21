@@ -133,7 +133,7 @@ public class Launcher : MonoBehaviour
     private void SetCallbacks() {
 
         UI.System.Q<Button>("ClearCache").RegisterCallback<ClickEvent>((evt) => {
-            Modal.DoubleConfirm("Clear Cache", "Clear cached settings?", () => {
+            Modal.DoubleConfirm("Clear Cache", "Clear cached settings? This will reset player preferences like name, last system used, and data directory.", () => {
                 PlayerPrefs.DeleteAll();
             });
         });
@@ -186,6 +186,7 @@ public class Launcher : MonoBehaviour
             Modal.AddDropdownField("GridType", "Grid Type", gridType, new string[]{"Square", "Hex"}, (evt) => {
                 PlayerPrefs.SetString("Grid", evt.newValue);
             });
+            Modal.AddMarkup("HexMessage", "Warning! Hex support is experimental. Some visual effects may not display correctly.");
         }
 
         if (_connectMode == "host") {
@@ -237,6 +238,7 @@ public class Launcher : MonoBehaviour
         if (UI.Modal.Q("GameSystem") != null) {
             bool grid = StringUtility.InList(UI.Modal.Q<DropdownField>("GameSystem").value, "Generic", "Lancer");
             UI.ToggleDisplay(UI.Modal.Q("GridType"), grid);
+            UI.ToggleDisplay("HexMessage", grid);
         }
     }
 

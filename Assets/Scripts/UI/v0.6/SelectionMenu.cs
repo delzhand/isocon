@@ -9,6 +9,7 @@ public struct MenuItem {
     public string Label;
     public Action<ClickEvent> OnClick;
 
+
     public MenuItem(string name, string label, Action<ClickEvent> onClick) {
         Name = name;
         Label = label;
@@ -18,7 +19,9 @@ public struct MenuItem {
 
 public class SelectionMenu
 {
-    private static string ActiveItem;
+    // private static string ActiveItem;
+    public static Transform FollowTransform;
+    public static bool Visible;
 
     public static void Setup() {
         UI.SetBlocking(UI.System, "SelectionMenu");
@@ -28,16 +31,17 @@ public class SelectionMenu
         return UI.System.Q("SelectionMenu");
     }
 
-    public static void Reset(string title) {
+    public static void Reset(string title, Transform follow = null) {
         VisualElement menu = Find();
-        UI.ToggleDisplay(menu, true);
         menu.Q<Label>("Label").text = title;
         menu.Q("Contents").Clear();
+        FollowTransform = follow;
+        Visible = true;
     }
 
     public static void Hide() {
-        VisualElement menu = Find();
-        UI.ToggleDisplay(menu, false);
+        Visible = false;
+        FollowTransform = null;
     }
 
     public static void AddItem(string name, string label, Action<ClickEvent> clickHandler) {

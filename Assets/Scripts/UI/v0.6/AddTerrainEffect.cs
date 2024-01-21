@@ -29,13 +29,4 @@ public class AddTerrainEffect
         });
         Player.Self().CmdRequestMapSetValue(blockNames.ToArray(), "Effect", $"{effect}::{marker}::{color}");
     }
-
-    public static void ClearAll() {
-        List<string> blocks = new();
-        foreach(Block b in Block.GetSelected()) {
-            blocks.Add(b.name);
-        }
-        Player.Self().CmdRequestMapSetValue(blocks.ToArray(), "Effect", "None");
-
-    }
 }
