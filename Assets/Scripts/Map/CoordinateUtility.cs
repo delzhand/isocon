@@ -5,7 +5,7 @@ using UnityEngine;
 static public class CoordinateUtility
 {
 
-    static public Vector2Int[] GetRow(Vector2Int v2)
+    static public Vector2Int[] GetColumn(Vector2Int v2)
     {
         var coords = new Vector2Int[99];
         for(int x = 0; x < 99; x++)
@@ -14,8 +14,8 @@ static public class CoordinateUtility
         } 
         return coords;
     }
-
-    static public Vector2Int[] GetColumn(Vector2Int v2)
+    
+    static public Vector2Int[] GetRow(Vector2Int v2)
     {
         var coords = new Vector2Int[99];
         for (int y = 0; y < 99; y++)

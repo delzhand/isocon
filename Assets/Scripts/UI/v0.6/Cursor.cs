@@ -42,6 +42,7 @@ public class Cursor : MonoBehaviour
             return;
         }
 
+        SetFocusMode();
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         RaycastHit hit;
@@ -166,5 +167,33 @@ public class Cursor : MonoBehaviour
 
     public static bool IsLeftClick() {
         return Input.GetMouseButtonDown(0);
+    }
+
+    private void SetFocusMode() {
+        if (Mode == CursorMode.Editing) {
+            switch (MapEdit.EditOp)
+            {
+                case "ResizeMap":
+                    switch (MapEdit.ResizeOp)
+                    {
+                        case "ResizeCloneRow":
+                        case "ResizeDeleteRow":
+                            FocusMode = FocusMode.Row;
+                            break;
+                        case "ResizeCloneCol":
+                        case "ResizeDeleteCol":
+                            FocusMode = FocusMode.Column;
+                            break;
+                        default:
+                            FocusMode = FocusMode.Single;
+                            break;
+                    }
+                    break;
+                default:
+                    FocusMode = FocusMode.Single;
+                    break;
+
+            }
+        }
     }
 }
