@@ -432,7 +432,9 @@ public class Block : MonoBehaviour
         markerMaterial.SetInt("_Pit", 0);
         markerMaterial.SetInt("_Other", 0);
         markerMaterial.SetInt("_Skull", 0);
-        
+        markerMaterial.SetInt("_Border", 0);
+        markerMaterial.SetColor("_Color", Color.black);
+
         foreach (string fullEffect in effects) {
             string[] split = fullEffect.Split("::");
             if (split.Length > 1) {
@@ -459,8 +461,30 @@ public class Block : MonoBehaviour
                     case "Skull":
                         markerMaterial.SetInt("_Skull", 1);
                         break;
+                    case "Border":
+                        markerMaterial.SetInt("_Border", 1);
+                        break;
                 }
-
+            }
+            if (split.Length > 2) {
+                string color = split[2];
+                switch (color) {
+                    case "Red":
+                        markerMaterial.SetColor("_Color", new Color(1.5f, 0, 0));
+                        break;
+                    case "Green":
+                        markerMaterial.SetColor("_Color", new Color(0, 1.5f, .2f));
+                        break;
+                    case "Blue":
+                        markerMaterial.SetColor("_Color", new Color(0, .2f, 1.5f));
+                        break;
+                    case "Yellow":
+                        markerMaterial.SetColor("_Color", new Color(1.5f, 1.2f, 0f));
+                        break;
+                    case "White":
+                        markerMaterial.SetColor("_Color", new Color(1.5f, 1.5f, 1.5f));
+                        break;
+                }
             }
         }
 
