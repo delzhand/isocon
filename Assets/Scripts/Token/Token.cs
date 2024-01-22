@@ -183,7 +183,7 @@ public class Token : MonoBehaviour
         BlockMesh.ToggleBorders(true);
         string op = Data.Placed ? "Moving" : "Placing";
         SetCurrentOp(op);
-        Player.Self().GetComponent<DestinationRenderer>().Init(Data.Id, op);
+        Player.Self().GetComponent<DirectionalLine>().Init(Data.Id, op);
         UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
         Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
     }
@@ -211,7 +211,7 @@ public class Token : MonoBehaviour
         Cursor.Mode = CursorMode.Default;
         BlockMesh.ToggleBorders(false);
         SetCurrentOp("Inspecting");
-        Player.Self().GetComponent<DestinationRenderer>().Deinit();
+        Player.Self().GetComponent<DirectionalLine>().Deinit();
     }
 
     public void Move(Block block) {
@@ -237,7 +237,7 @@ public class Token : MonoBehaviour
         SelectionMenu.Hide();
         Cursor.Mode = CursorMode.Default;
         BlockMesh.ToggleBorders(false);
-        Player.Self().GetComponent<DestinationRenderer>().Deinit();
+        Player.Self().GetComponent<DirectionalLine>().Deinit();
     }
 
     public static void DeselectAll() {

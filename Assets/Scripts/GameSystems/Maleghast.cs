@@ -289,6 +289,28 @@ public class Maleghast : GameSystem
         Player.Self().CmdCreateToken("Maleghast", graphicHash, name, size, color, JsonUtility.ToJson(data));
     }
 
+    public override MenuItem[] GetTileMenuItems() {
+        List<MenuItem> items = new();
+        if (Block.GetSelected().Length > 0) {
+            // items.Add(new MenuItem("CreateWall", "Create Wall", CreateWallClicked));
+            // items.Add(new MenuItem("DamageWall", "Damage Wall", DamageWallClicked));
+            // items.Add(new MenuItem("DestroyWall", "Destroy Wall", DestroyWallClicked));
+        }
+        return items.ToArray();
+    }
+
+    private static void CreateWallClicked(ClickEvent evt) {
+        
+    }
+
+    private static void DamageWallClicked(ClickEvent evt) {
+        
+    }
+
+    private static void DestroyWallClicked(ClickEvent evt) {
+        
+    }
+
     public override void UpdateData(TokenData data) {
         base.UpdateData(data);
         MaleghastData mdata = JsonUtility.FromJson<MaleghastData>(data.SystemData);

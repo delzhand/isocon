@@ -8,7 +8,8 @@ public enum CursorMode {
     Editing,
     Default,
     Dragging,
-    TerrainEffecting
+    TerrainEffecting,
+    Targeting,
 }
 
 public enum FocusMode {

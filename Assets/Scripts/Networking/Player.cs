@@ -199,6 +199,7 @@ public class Player : NetworkBehaviour
     }
     [ClientRpc]
     public void RpcMapSetValue(string[] blocks, string label, string value) {
+        FileLogger.Write($"{label}: {value}");
         if (label == "Effect") {
             for (int i = 0; i < blocks.Length; i++) {
                 Block target = GameObject.Find(blocks[i]).GetComponent<Block>();

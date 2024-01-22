@@ -26,6 +26,7 @@ public class TokenMenu
         if (data.Placed) {
             items.Add(new MenuItem("Remove", "Remove", ClickRemove));
             items.Add(new MenuItem("Flip", "Flip", ClickFlip));
+            // items.Add(new MenuItem("LineCheck", "LOS/Distance Check", LineCheckClicked));
         }
         // items.Add(new MenuItem("MoveLeft", "Move Up in Order", ClickMoveUp));
         // items.Add(new MenuItem("MoveLeft", "Move Down in Order", ClickMoveDown));
@@ -33,7 +34,15 @@ public class TokenMenu
         items.Add(new MenuItem("Clone", "Clone", ClickClone));
         items.Add(new MenuItem("EditName", "Edit Name", ClickEditName));
         items.Add(new MenuItem("Delete", "Delete", ClickDelete));
+        
         return items.ToArray();
+    }
+
+    private static void LineCheckClicked(ClickEvent evt) {
+        Cursor.Mode = CursorMode.Targeting;
+        TokenData data = Token.GetSelected().Data;
+        Player.Self().GetComponent<DirectionalLine>().Init(data.Id, "Attacking");
+        SelectionMenu.Hide();
     }
 
     public static void ClickFlip(ClickEvent evt) {

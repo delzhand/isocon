@@ -639,19 +639,17 @@ public class TerrainController : MonoBehaviour
     }
 
     public static void Reorg() {
-        // UpdateIndicators();
-        HideObscuredBlocks();
-    }
-
-    private static void UpdateIndicators() {
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
         for (int i = 0; i < blocks.Length; i++) {
             Block b = blocks[i].GetComponent<Block>();
-            TextMeshPro tm = blocks[i].transform.Find("Indicator").GetComponent<TextMeshPro>();
-            tm.text = StringUtility.IntToAlpha(b.getY() + 1) + (b.getX() + 1);
+            // Rename
             blocks[i].name = "block " + b.getX() + "," + b.getY() + "," + b.getZ();
-
+            // Redraw materials to fix checkerboard effect for clones
+            b.MarkForRedraw();
         }         
+
+
+        HideObscuredBlocks();
     }
 
     public static void ToggleIndicators(ClickEvent evt) {
@@ -732,6 +730,8 @@ public class TerrainController : MonoBehaviour
         if (Cursor.Mode != CursorMode.TerrainEffecting) {
             Tutorial.Init("terrain effect mode");
             Cursor.Mode = CursorMode.TerrainEffecting;
+            Token.DeselectAll();
+            Token.UnfocusAll();
             BlockMesh.ToggleBorders(true);
             UI.ToggleActiveClass("MarkerMode", true);
             UI.ToggleDisplay("BottomBar", false);

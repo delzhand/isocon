@@ -599,7 +599,7 @@ public class Block : MonoBehaviour
         UnfocusAll();
         Focused = true;
         TerrainController.SetInfo();
-        Player.Self().GetComponent<DestinationRenderer>().SetTarget(getMidpoint());
+        Player.Self().GetComponent<DirectionalLine>().SetTarget(getMidpoint());
     }
 
     public void Unfocus() {
@@ -613,7 +613,7 @@ public class Block : MonoBehaviour
     }
 
     public static void UnfocusAll() {
-        Player.Self().GetComponent<DestinationRenderer>().UnsetTarget();
+        Player.Self().GetComponent<DirectionalLine>().UnsetTarget();
         foreach (Block b in GetFocused()) {
             b.Unfocus();
         }
@@ -735,5 +735,9 @@ public class Block : MonoBehaviour
             lowHigh.Item2 = Mathf.Max(lowHigh.Item2, b.getHeight());
         }
         return lowHigh;
+    }
+
+    public void MarkForRedraw() {
+        MaterialReset = true;
     }
 }

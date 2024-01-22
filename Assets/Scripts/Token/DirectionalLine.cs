@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
-public class DestinationRenderer : NetworkBehaviour
+public class DirectionalLine : NetworkBehaviour
 {
     [SyncVar]
     public string TokenId;
@@ -20,14 +20,10 @@ public class DestinationRenderer : NetworkBehaviour
     [SyncVar]
     public string Op;
 
-    public static float Density = .25f;
-
     private LineRenderer Line;
 
     void Start() {
         Line = gameObject.AddComponent<LineRenderer>();
-        Line.startColor = ColorUtility.UISelectYellow;
-        Line.endColor = Color.white;
         Line.startWidth = .05f;
         Line.endWidth = .05f;
         Line.numCapVertices = 0;
@@ -53,14 +49,27 @@ public class DestinationRenderer : NetworkBehaviour
             return;
         }
 
+        float density = .25f;
+        float amplitude = 1f;
+        Color color = ColorUtility.UISelectYellow;
+        Line.textureScale = new Vector2(5f, 1f);
+        Vector3 originOffset = new Vector3(0, .25f, 0);
+        Vector3 targetOffset = new Vector3(0, .25f, 0);
+
         if (Op == "Placing") {
             Line.textureScale = new Vector2(1f, 1f);
         }
-        else {
-            Line.textureScale = new Vector2(5f, 1f);
-        }
 
-        Vector3 origin = data.WorldObject.transform.position + new Vector3(0, .25f, 0);
+        if (Op == "Attacking") {
+            amplitude = 0f;
+            color = Color.red;
+            originOffset = new Vector3(0, .5f, 0);
+            targetOffset = new Vector3(0, .5f, 0);
+        }
+        
+        Line.colorGradient = GetGradient(color);
+
+        Vector3 origin = data.WorldObject.transform.position + originOffset;
         if (!data.Placed) {
             Vector2 v = data.UnitBarElement.worldBound.center;
             string uiScale = PlayerPrefs.GetString("UIScale", "100%");
@@ -68,7 +77,9 @@ public class DestinationRenderer : NetworkBehaviour
             v *= value;
             origin = Camera.main.ScreenToWorldPoint(new Vector3(v.x, Screen.height-v.y, 0));
         }
-        List<Vector3> points = GenerateParabolaPoints(origin, Target, Density, 1f);
+
+
+        List<Vector3> points = GenerateParabolaPoints(origin, Target + targetOffset, density, amplitude);
         Line.positionCount = points.Count;
         for (int i = 0; i < points.Count; i++) {
             Line.SetPosition(i, points[i]);
@@ -130,5 +141,25 @@ public class DestinationRenderer : NetworkBehaviour
         float sineWave = amplitude * Mathf.Sin(Mathf.PI * t);
 
         return straightLine + sineWave;
+    }
+
+    private Gradient GetGradient(Color c) {
+        var gradient = new Gradient();
+
+        // Blend color from red at 0% to blue at 100%
+        var colors = new GradientColorKey[2];
+        colors[0] = new GradientColorKey(c, 0f);
+        colors[1] = new GradientColorKey(c, 1f);
+
+        // Blend alpha from opaque at 0% to transparent at 100%
+        var alphas = new GradientAlphaKey[4];
+        alphas[0] = new GradientAlphaKey(0f, 0f);
+        alphas[1] = new GradientAlphaKey(1f, .33f);
+        alphas[2] = new GradientAlphaKey(1f, .67f);
+        alphas[3] = new GradientAlphaKey(0f, 1f);
+
+        gradient.SetKeys(colors, alphas);
+
+        return gradient;
     }
 }
