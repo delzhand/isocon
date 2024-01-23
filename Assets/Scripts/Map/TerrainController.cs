@@ -667,8 +667,8 @@ public class TerrainController : MonoBehaviour
         int count = 0;
         int hiding = 0;
         Vector2 size = Size();
-        bool[,,] solids = new bool[(int)size.x,(int)size.y,MaxElevation()];
-        GameObject[,,] blks = new GameObject[(int)size.x,(int)size.y,MaxElevation()];
+        bool[,,] solids = new bool[(int)size.x,(int)size.y,MaxElevation()+1];
+        GameObject[,,] blks = new GameObject[(int)size.x,(int)size.y,MaxElevation()+1];
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
         for (int i = 0; i < blocks.Length; i++) {
             Block b = blocks[i].GetComponent<Block>();
