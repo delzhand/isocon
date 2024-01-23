@@ -667,8 +667,8 @@ public class TerrainController : MonoBehaviour
         int count = 0;
         int hiding = 0;
         Vector2 size = Size();
-        bool[,,] solids = new bool[(int)size.x,(int)size.y,30];
-        GameObject[,,] blks = new GameObject[(int)size.x,(int)size.y,30];
+        bool[,,] solids = new bool[(int)size.x,(int)size.y,MaxElevation()+1];
+        GameObject[,,] blks = new GameObject[(int)size.x,(int)size.y,MaxElevation()+1];
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
         for (int i = 0; i < blocks.Length; i++) {
             Block b = blocks[i].GetComponent<Block>();
@@ -748,5 +748,13 @@ public class TerrainController : MonoBehaviour
             SelectionMenu.Hide();
             Player.Self().ClearOp();
         }
+    }
+
+    private static int MaxElevation() {
+        int max = 0;
+        foreach (var gameObject in GameObject.FindGameObjectsWithTag("Block")) {
+            max = Math.Max(max, (int)Math.Ceiling(gameObject.GetComponent<Block>().getHeight()));
+        }
+        return max;
     }
 }
