@@ -87,8 +87,10 @@ public class Modal
             UI.ToggleDisplay(UI.Modal, false);
             UI.ToggleDisplay("Backdrop", false);
             isModalOpen = false;
-            cancelAction.Invoke(new ClickEvent());
-            cancelAction = null;
+            if (cancelAction != null) {
+                cancelAction.Invoke(new ClickEvent());
+                cancelAction = null;
+            }
         }
     }
 
