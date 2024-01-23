@@ -258,6 +258,7 @@ public class MapEdit
         UI.ToggleDisplay("BottomBar", true);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
         Player.Self().ClearOp();
+        MoveTokensToOptimalLocations();
     }
 
     private static void ResetConfirm(ClickEvent evt) {
@@ -457,4 +458,21 @@ public class MapEdit
         }
     }
 
+    private static void MoveTokensToOptimalLocations() {
+        foreach (var gameObject in GameObject.FindGameObjectsWithTag("Token")) {
+            var token = gameObject.GetComponent<Token>();
+            Transform columnTransform = token.GetBlock().transform.parent;
+            float height = float.MinValue;
+            foreach (Transform blockTransform in columnTransform) {
+                BlockShape shape = blockTransform.GetComponent<Block>().Shape;
+                float z = blockTransform.GetComponent<Block>().getMidpoint().y;
+                if (shape != BlockShape.Hidden && shape != BlockShape.Spacer) {
+                    height = Mathf.Max(height, z);
+                }
+            }
+            Vector3 position = columnTransform.position;
+            position.y = height;
+            Player.Self().CmdMoveToken(token.Data.Id, position, false);
+        }
+    }
 }
