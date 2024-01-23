@@ -48,8 +48,6 @@ public class Player : NetworkBehaviour
                 CmdRequestClientInit();
             }
         } 
-
-        Toast.AddSimple(Name + " connected.");
     }
 
     public static bool IsHost() {

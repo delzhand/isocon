@@ -123,6 +123,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px; display: flex; min-height: 0; min-width: 0;">
+            <ui:VisualElement name="CurrentOps" class="panel-text" style="flex-grow: 1; top: 10px; position: absolute; left: 0; translate: 0 0; flex-direction: row; margin-left: -4px; margin-right: -4px; width: 100%; justify-content: center; align-items: center; align-self: center;" />
             <ui:VisualElement name="SelectionMenu" class="panel self-centered" style="position: absolute; display: none;">
                 <ui:Label tabindex="-1" text="UNIT MENU" display-tooltip-when-elided="true" name="Label" class="panel-header" />
                 <ui:VisualElement name="Contents" style="flex-grow: 1; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 2px; margin-top: 0; overflow: hidden;" />
@@ -422,7 +423,6 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="CurrentOps" class="panel-text" style="flex-grow: 1; top: 10px; position: absolute; left: 0; translate: 0 0; flex-direction: row; margin-left: -4px; margin-right: -4px; width: 100%; justify-content: center; align-items: center; align-self: center;" />
         </ui:VisualElement>
         <ui:VisualElement name="BottomBar" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0.5); position: relative; width: 100%; height: auto; bottom: 0; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; border-top-width: 0; border-left-color: rgba(0, 0, 0, 0.25); border-right-color: rgba(0, 0, 0, 0.25); border-top-color: rgba(0, 0, 0, 0.25); border-bottom-color: rgba(0, 0, 0, 0.25); display: flex; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; flex-direction: row;">
             <ui:VisualElement name="AddToken" style="position: relative; width: 70px; height: 70px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0;">

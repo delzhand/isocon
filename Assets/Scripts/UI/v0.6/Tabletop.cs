@@ -87,29 +87,6 @@ public class Tabletop : MonoBehaviour
         UI.ToggleDisplay(UI.TopBar.Q("Dice"), Cursor.Mode != CursorMode.Editing);
         UI.ToggleDisplay(UI.TopBar.Q("Info"), Cursor.Mode != CursorMode.Editing);
 
-        // Update Player List
-        
-        NetworkManager netman = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
-        VisualElement playerList = UI.System.Q("PlayerList");
-        playerList.Clear();
-        int connections = 0;
-        foreach(GameObject g in GameObject.FindGameObjectsWithTag("Player")) {
-            connections++;
-            string name = g.GetComponent<Player>().Name;
-            Label l = new(name);
-            l.AddToClassList("playerlist-item");
-            l.AddToClassList("no-margin");
-            playerList.Add(l);
-        }
-        if (Player.Self()) {
-            if (Player.Self().Role == PlayerRole.GM) {
-                UI.System.Q("InfoWindow").Q<Label>("PlayerCount").text = $"{connections}/{netman.maxConnections}";
-            }
-            else {
-                UI.System.Q("InfoWindow").Q<Label>("PlayerCount").text = $"{connections}";
-            }
-        }
-
         // Map Meta
         UI.System.Q("InfoWindow").Q<Label>("MapTitle").text = MapMeta.Title;
         UI.System.Q("InfoWindow").Q<Label>("Description").text = MapMeta.Description;
