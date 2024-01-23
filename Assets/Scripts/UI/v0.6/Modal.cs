@@ -17,6 +17,7 @@ public class Modal
     private static ConfirmCallback _doubleConfirm;
 
     private static EventCallback<ClickEvent> preferredAction;
+    private static EventCallback<ClickEvent> cancelAction;
 
     public static void Setup() {
         UI.Modal.Q("Top").Q("Exit").RegisterCallback<ClickEvent>(Modal.CloseEvent);
@@ -34,6 +35,7 @@ public class Modal
         UI.Modal.Q("Contents").Clear();
         UI.Modal.Q("Buttons").Clear();
         preferredAction = null;
+        cancelAction = null;
 
         UI.ToggleDisplay("Backdrop", true);
         isModalOpen = true;
@@ -69,6 +71,10 @@ public class Modal
         UI.Modal.Q("Buttons").Add(button);
     }
 
+    public static void AddCloseCallback(EventCallback<ClickEvent> onClick) {
+        cancelAction = onClick;
+    }
+
     public static void Close() {
         if (isConfirmOpen) {
             DoubleConfirmCancelled(new ClickEvent());
@@ -81,9 +87,8 @@ public class Modal
             UI.ToggleDisplay(UI.Modal, false);
             UI.ToggleDisplay("Backdrop", false);
             isModalOpen = false;
-            if (Player.Self()) {
-                Player.Self().ClearOp();
-            }
+            cancelAction.Invoke(new ClickEvent());
+            cancelAction = null;
         }
     }
 

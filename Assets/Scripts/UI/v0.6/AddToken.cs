@@ -22,13 +22,17 @@ public class AddToken
         }
         Modal.AddButton("Cancel", (evt) => {
             Modal.Close();
-            Player.Self().ClearOp();
-         });
+        });
+        Modal.AddCloseCallback(CancelAddToken);
     }   
 
     private static void ConfirmAddToken(ClickEvent evt) {
         GameSystem.Current().CreateToken();
         Modal.Close();
+        Player.Self().ClearOp();
+    }
+
+    private static void CancelAddToken(ClickEvent evt) {
         Player.Self().ClearOp();
     }
 
