@@ -736,6 +736,7 @@ public class TerrainController : MonoBehaviour
             UI.ToggleActiveClass("MarkerMode", true);
             UI.ToggleDisplay("BottomBar", false);
             UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
+            Player.Self().SetOp("Editing Terrain Effects");
         }
         else {
             Cursor.Mode = CursorMode.Default;
@@ -745,6 +746,7 @@ public class TerrainController : MonoBehaviour
             UI.ToggleDisplay("BottomBar", true);
             UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
             SelectionMenu.Hide();
+            Player.Self().ClearOp();
         }
     }
 }

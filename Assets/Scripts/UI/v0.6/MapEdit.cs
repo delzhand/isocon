@@ -240,6 +240,7 @@ public class MapEdit
         UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), true);
         UI.ToggleDisplay("BottomBar", false);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
+        Player.Self().SetOp("Editing Map");
     }
 
     private static void EndEditing() {
@@ -255,6 +256,7 @@ public class MapEdit
         UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), false);
         UI.ToggleDisplay("BottomBar", true);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
+        Player.Self().ClearOp();
     }
 
     private static void ResetConfirm(ClickEvent evt) {

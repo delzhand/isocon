@@ -81,6 +81,7 @@ public class Modal
             UI.ToggleDisplay(UI.Modal, false);
             UI.ToggleDisplay("Backdrop", false);
             isModalOpen = false;
+            Player.Self().ClearOp();
         }
     }
 

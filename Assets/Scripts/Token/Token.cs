@@ -170,7 +170,7 @@ public class Token : MonoBehaviour
         Block.DeselectAll();
         Block.UnfocusAll();
         BlockMesh.ToggleBorders(false);
-        ClearCurrentOp();
+        Player.Self().ClearOp();
         UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
         Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
     }
@@ -182,7 +182,7 @@ public class Token : MonoBehaviour
         Block.UnfocusAll();
         BlockMesh.ToggleBorders(true);
         string op = Data.Placed ? "Moving" : "Placing";
-        SetCurrentOp(op);
+        Player.Self().SetOp($"{op} {Data.Name}");
         Player.Self().GetComponent<DirectionalLine>().Init(Data.Id, op);
         UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
         Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
@@ -210,7 +210,7 @@ public class Token : MonoBehaviour
         State = TokenState.Inspecting;
         Cursor.Mode = CursorMode.Default;
         BlockMesh.ToggleBorders(false);
-        SetCurrentOp("Inspecting");
+        Player.Self().SetOp($"Inspecting {Data.Name}");
         Player.Self().GetComponent<DirectionalLine>().Deinit();
     }
 
@@ -233,7 +233,7 @@ public class Token : MonoBehaviour
         State = TokenState.Neutral;
         Block.DehighlightAll();
         UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), false);
-        ClearCurrentOp();
+        Player.Self().ClearOp();
         SelectionMenu.Hide();
         Cursor.Mode = CursorMode.Default;
         BlockMesh.ToggleBorders(false);
@@ -314,15 +314,6 @@ public class Token : MonoBehaviour
             return nearby[0];
         }
         return null;
-    }
-
-    public void SetCurrentOp(string op) {
-        UI.ToggleDisplay("CurrentOp", true);
-        UI.System.Q("CurrentOp").Q<Label>("Op").text = $"{Player.Self().Name}: {op} {Data.Name}"; 
-    }
-
-    public static void ClearCurrentOp() {
-        UI.ToggleDisplay("CurrentOp", false);
     }
 
     private void SetVisualSquareYellow() {

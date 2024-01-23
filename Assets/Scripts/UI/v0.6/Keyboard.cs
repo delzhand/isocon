@@ -9,6 +9,7 @@ public class Keyboard : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.Escape)) {
             Modal.Close();
+            Player.Self().ClearOp();
         }
 
         if (Input.GetKeyUp(KeyCode.Return) && Modal.IsOpen()) {

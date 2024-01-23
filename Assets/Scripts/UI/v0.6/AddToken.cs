@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 public class AddToken
 {
     public static void OpenModal(ClickEvent evt) {
+        Player.Self().SetOp("Adding a Token");
         Token.DeselectAll();
         Modal.Reset("Add Token");
         string[] imageOptions = GetImageOptions();
@@ -19,12 +20,16 @@ public class AddToken
             string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
             Modal.AddLabel($"No images were found. Token images must be added to { path }/tokens (this can be changed in configuration).", "error-message");
         }
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        Modal.AddButton("Cancel", (evt) => {
+            Modal.Close();
+            Player.Self().ClearOp();
+         });
     }   
 
     private static void ConfirmAddToken(ClickEvent evt) {
         GameSystem.Current().CreateToken();
         Modal.Close();
+        Player.Self().ClearOp();
     }
 
     private static bool FileExists(string filename) {

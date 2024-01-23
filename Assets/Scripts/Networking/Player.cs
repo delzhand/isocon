@@ -78,6 +78,14 @@ public class Player : NetworkBehaviour
         return null;
     }
 
+    public void SetOp(string op) {
+        GetComponent<CurrentOp>().Show(op);
+    }
+
+    public void ClearOp() {
+        GetComponent<CurrentOp>().Hide();
+    }
+
     #region Client Kickoff
     [Command]
     public void CmdRequestClientInit() {

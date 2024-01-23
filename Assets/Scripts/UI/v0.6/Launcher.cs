@@ -60,6 +60,7 @@ public class Launcher : MonoBehaviour
             }
             UI.System.Q("Worldspace").Clear();            
             UI.System.Q("UnitBar").Clear();
+            UI.System.Q("CurrentOps").Clear();
         }
     }
 
