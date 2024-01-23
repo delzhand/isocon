@@ -336,10 +336,12 @@ public class Icon_v1_5 : GameSystem {
     }
 
     public override MenuItem[] GetTokenMenuItems(TokenData data) {
+        MenuItem[] baseItems = base.GetTokenMenuItems(data);
+
         List<MenuItem> items = new();
         items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRollClicked));
         items.Add(new MenuItem("SaveRoll", "Save Roll", SaveRollClicked));
-        return items.ToArray();
+        return baseItems.Concat(items.ToArray()).ToArray();
     }
 
     public override MenuItem[] GetTileMenuItems() {
