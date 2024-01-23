@@ -100,6 +100,8 @@ public class Token : MonoBehaviour
                 StartDragging();
             }
         }
+
+        transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<BoxCollider>().enabled = !Cursor.IgnoreTokens();
     }
 
     private void alignToCamera() {
@@ -338,5 +340,4 @@ public class Token : MonoBehaviour
     public void SetDefeated(bool defeated) {
         transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetInt("_Dead", defeated ? 1 : 0);
     }
-    
 }

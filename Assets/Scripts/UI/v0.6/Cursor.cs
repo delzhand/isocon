@@ -51,7 +51,7 @@ public class Cursor : MonoBehaviour
         if (isHit && hit.collider.tag == "Block") {
             Block b = hit.collider.GetComponent<Block>();
             Token t = Token.GetAtBlock(b);
-            if (t != null) {
+            if (t != null && Cursor.Mode != CursorMode.Editing) {
                 TokenHit(t);
                 Focus(b);
             }
@@ -196,5 +196,9 @@ public class Cursor : MonoBehaviour
 
             }
         }
+    }
+
+    public static bool IgnoreTokens() {
+        return Mode == CursorMode.Editing || Mode == CursorMode.TerrainEffecting;
     }
 }

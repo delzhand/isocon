@@ -241,7 +241,6 @@ public class MapEdit
         UI.ToggleDisplay("BottomBar", false);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
         Player.Self().SetOp("Editing Map");
-
         UI.ToggleDisplay(UI.ToolsPanel.Q("ChangeShape"), TerrainController.GridType == "Square");
     }
 
