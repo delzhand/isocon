@@ -246,15 +246,14 @@ public class Player : NetworkBehaviour
     #endregion
 
     #region Session Init
+    // Used by anyone after completing a map edit
     [Command]
-    public void CmdMapSync() {
+    public void CmdMapSync(string json) {
         FileLogger.Write("Map sent to all clients");
-        State state = State.GetStateFromScene();
-        string json = JsonUtility.ToJson(state);
-        byte[] compressedJson = Compression.CompressString(json);
-        // Debug.Log($"Original data size: {Encoding.UTF8.GetBytes(json).Length}, compressed data size: {compressedJson.Length}");
-        RpcMapSync(compressedJson);
+        byte[] bytes = Compression.CompressString(json);
+        RpcMapSync(bytes);
     }
+    // Used by new players to request data from host
     [Command]
     public void CmdRequestMapSync() {
         FileLogger.Write($"Client {connectionToClient.connectionId} requested a map sync");
@@ -275,9 +274,6 @@ public class Player : NetworkBehaviour
 
     [ClientRpc]
     public void RpcMapSync(byte[] bytes) {
-        if (Player.IsGM()) {
-            return; // GM already has current state
-        }
         string json = Compression.DecompressString(bytes);
         FileLogger.Write($"Map received from host by everyone");
         State state = JsonUtility.FromJson<State>(json);

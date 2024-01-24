@@ -253,12 +253,18 @@ public class MapEdit
         UI.ToggleDisplay("ToolOptions", false);
         Block.ToggleSpacers(false);
         State.SetCurrentJson();
-        Player.Self().CmdMapSync();
+        MapSync();
         UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), false);
         UI.ToggleDisplay("BottomBar", true);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
         Player.Self().ClearOp();
         MoveTokensToOptimalLocations();
+    }
+
+    private static void MapSync() {
+        State state = State.GetStateFromScene();
+        string json = JsonUtility.ToJson(state);
+        Player.Self().CmdMapSync(json);
     }
 
     private static void ResetConfirm(ClickEvent evt) {

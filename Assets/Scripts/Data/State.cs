@@ -83,6 +83,7 @@ public class State
         TerrainController.UpdateLight();
         TerrainController.ReorgNeeded = true;
         TerrainController.MapDirty = false;
+        Block.ToggleBorders(false);
         MapMeta.CreatorName = state.CreatorName;
         MapMeta.Description = state.Description;
         MapMeta.Objective = state.Objective;
