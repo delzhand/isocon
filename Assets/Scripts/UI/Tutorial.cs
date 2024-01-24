@@ -29,6 +29,7 @@ public class Tutorial
         Modal.AddPreferredButton("Close", Modal.CloseEvent);
         Modal.AddButton("Skip All Tutorials", (evt) => {
             PlayerPrefs.SetInt("SkipTutorials", 1);
+            Modal.Close();
         });
     }
 
