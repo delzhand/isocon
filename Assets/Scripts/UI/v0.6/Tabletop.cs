@@ -48,7 +48,7 @@ public class Tabletop : MonoBehaviour
             UI.ToggleDisplay(UI.System.Q("SelectionMenu"), SelectionMenu.Visible);
             if (SelectionMenu.Visible) {
                 if (SelectionMenu.FollowTransform != null) {
-                    UI.FollowTransform(SelectionMenu.FollowTransform, UI.System.Q("SelectionMenu"), Camera.main, new Vector2(30, 50));
+                    UI.FollowTransform(SelectionMenu.FollowTransform, UI.System.Q("SelectionMenu"), Camera.main, SelectionMenu.Offset);
                     UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, Length.Percent(-100)));
                 }
                 else {

@@ -21,8 +21,6 @@ public enum BlockShape
 
 public class Block : MonoBehaviour
 {
-    // public static Block LastFocused;
-
     // Focus State
     public bool Selected { get; private set; } = false;
     private bool _focused = false;
@@ -38,7 +36,7 @@ public class Block : MonoBehaviour
             MaterialReset = true;
         }
     }
-    static private HashSet<Block> _allFocused = new();// HashSet<Block>();
+    static private HashSet<Block> _allFocused = new();
     static public IEnumerable<Block> AllFocusedBlocks => _allFocused;
 
     public bool Highlighted = false;
@@ -60,6 +58,9 @@ public class Block : MonoBehaviour
 
     private bool MaterialReset = true;
 
+    private Vector3 DragOrigin;
+    private bool Dragging;
+
     void Awake() {
         if (!BlockMesh.IsSetup) {
             BlockMesh.Setup();
@@ -68,6 +69,16 @@ public class Block : MonoBehaviour
         PaintMaterialTop = Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopC"));
         markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));
         ShapeChange(Shape);
+    }
+
+    void LateUpdate() {
+        if (!Input.GetMouseButtonUp(1)) {
+            return;
+        }
+        if (Dragging && Input.mousePosition == DragOrigin) {
+            // Mouse up where clicked
+            TileMenu.ShowMenu(this);
+        }
     }
 
     void Update()
@@ -237,7 +248,7 @@ public class Block : MonoBehaviour
         return block;
     }
 
-    public void LeftClick() {
+    public void LeftClickDown() {
         switch (Cursor.Mode) {
             case CursorMode.TerrainEffecting:
                 Select();
@@ -258,14 +269,15 @@ public class Block : MonoBehaviour
         }
     }
 
-    public void RightClick() {
+    public void RightClickDown() {
         switch (Cursor.Mode) {
             case CursorMode.TerrainEffecting:
                 if (SelectionMenu.Visible) {
                     SelectionMenu.Hide();
                 }
                 else {
-                    TileMenu.ShowMenu(this);
+                    Dragging = true;
+                    DragOrigin = Input.mousePosition;
                 }
                 break;
         }

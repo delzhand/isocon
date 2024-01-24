@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 public class TileMenu
 {
     public static void ShowMenu(Block b) {
-        SelectionMenu.Reset("TILE MENU", b.transform);
+        SelectionMenu.Reset("TILE MENU", new Vector2(30, 0), b.transform);
         MenuItem[] defaultItems = GetTileMenuItems();
         foreach (MenuItem m in defaultItems) {
             SelectionMenu.AddItem(m.Name, m.Label, m.OnClick);

@@ -143,10 +143,10 @@ public class Cursor : MonoBehaviour
             return;
         }
         if (IsLeftClick()) {
-            block.LeftClick();
+            block.LeftClickDown();
         }
         if (IsRightClick()) {
-            block.RightClick();
+            block.RightClickDown();
         }
     }
 

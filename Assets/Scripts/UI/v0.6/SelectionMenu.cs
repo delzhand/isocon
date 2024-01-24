@@ -23,6 +23,8 @@ public class SelectionMenu
     public static Transform FollowTransform;
     public static bool Visible;
 
+    public static Vector2 Offset;
+
     public static void Setup() {
         UI.SetBlocking(UI.System, "SelectionMenu");
     }
@@ -31,7 +33,8 @@ public class SelectionMenu
         return UI.System.Q("SelectionMenu");
     }
 
-    public static void Reset(string title, Transform follow = null) {
+    public static void Reset(string title, Vector2 offset, Transform follow = null) {
+        Offset = offset;
         VisualElement menu = Find();
         menu.Q<Label>("Label").text = title;
         menu.Q("Contents").Clear();
