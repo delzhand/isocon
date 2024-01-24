@@ -35,6 +35,8 @@ public class Tabletop : MonoBehaviour
 
     void Update()
     {
+        ImageSyncStatus();
+
         UI.ToggleDisplay("Tabletop", NetworkClient.isConnected);
         TileShare.Offsets();
 
@@ -129,12 +131,28 @@ public class Tabletop : MonoBehaviour
         UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>(MapEdit.ToggleEditMode);
         UI.TopBar.Q("MarkerMode").RegisterCallback<ClickEvent>(TerrainController.ToggleTerrainEffectMode);
         UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
+        UI.HoverSetup(UI.TopBar.Q("Dice"));
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(Config.OpenModal);
+        UI.HoverSetup(UI.TopBar.Q("Config"));
         UI.TopBar.Q("Info").RegisterCallback<ClickEvent>(ToggleInfo);
+        UI.HoverSetup(UI.TopBar.Q("Info"));
+        UI.TopBar.Q("Sync").RegisterCallback<ClickEvent>(ToggleSync);
+        UI.HoverSetup(UI.TopBar.Q("Sync"));
     }
 
+    private static bool showInfo = false;
     public static void ToggleInfo(ClickEvent evt) {
-        UI.ToggleDisplay("InfoWindow");
+        showInfo = !showInfo;
+        UI.ToggleDisplay("InfoWindow", showInfo);
+        UI.ToggleActiveClass(UI.TopBar.Q("Info"), showInfo);
+
+    }
+
+    private static bool showSync = false;
+    public static void ToggleSync(ClickEvent evt) {
+        showSync = !showSync;
+        UI.ToggleDisplay("SyncPanel", showSync);
+        UI.ToggleActiveClass(UI.TopBar.Q("Sync"), showSync);
     }
     
     private void BottomBarSetup() {
@@ -200,5 +218,9 @@ public class Tabletop : MonoBehaviour
             manager.StopClient();
         }
         PlayerController.Disconnect();
+    }
+
+    private void ImageSyncStatus() {
+
     }
 }

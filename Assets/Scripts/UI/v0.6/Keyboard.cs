@@ -35,6 +35,10 @@ public class Keyboard : MonoBehaviour
             Tabletop.ToggleInfo(new ClickEvent());
         }
 
+        if (Input.GetKeyUp(KeyCode.S) && Cursor.Mode == CursorMode.Default && !Modal.IsOpen()) {
+            Tabletop.ToggleSync(new ClickEvent());
+        }
+
         if (Input.GetKeyUp(KeyCode.F) && Cursor.Mode == CursorMode.Default && !Modal.IsOpen()) {
             Config.OpenModal(new ClickEvent());
         }

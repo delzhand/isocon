@@ -105,6 +105,16 @@
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
+                <ui:VisualElement name="Sync" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; display: flex; height: 30px;">
+                    <ui:VisualElement style="flex-grow: 1; width: 24px; height: 24px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/sync&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;" />
+                    <ui:Label text="&lt;u&gt;S&lt;/u&gt;ync" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;" />
+                    <ui:VisualElement name="SyncPanel" class="panel" style="flex-grow: 1; display: none; position: absolute; top: 100%; left: 0;">
+                        <ui:VisualElement style="flex-grow: 1;">
+                            <ui:Label tabindex="-1" text="TOKENS" display-tooltip-when-elided="true" class="panel-header" />
+                            <ui:VisualElement name="SyncStatus" style="flex-grow: 1;" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
                 <ui:VisualElement name="Config" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px;">
                     <ui:VisualElement style="flex-grow: 1; width: 20px; height: 20px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/config&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;" />
                     <ui:Label text="Con&lt;u&gt;f&lt;/u&gt;ig" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;" />

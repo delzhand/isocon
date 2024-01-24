@@ -346,3 +346,16 @@
 #TopBar .item.active {
     background-color: rgba(25, 130, 156, 1);
 }
+
+#SyncStatus .unity-progress-bar {
+    height: 28px;
+    margin-top: 4px;
+}
+
+#SyncStatus .unity-progress-bar__background {
+    background-color: rgb(67, 67, 67);
+}
+
+#SyncStatus .unity-progress-bar__progress {
+    background-color: rgb(10, 129, 26);
+}

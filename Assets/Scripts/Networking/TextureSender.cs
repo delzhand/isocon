@@ -45,6 +45,7 @@ public class TextureSender : MonoBehaviour
     }
 
     public static void Receive(string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height) {
+        SyncStatus.Receive(hash, chunkIndex / (float)chunkTotal);
         if (chunkIndex == 0) {
             FileLogger.Write($"Receiving first chunk of image {TruncatedHash(hash)}");
         }
@@ -176,11 +177,13 @@ public class TextureSender : MonoBehaviour
     }
 
     private static Texture2D HandleRemote(string hash) {
+        SyncStatus.Receive(hash, 0);
         FileLogger.Write($"Loading remote file {TruncatedHash(hash)}");
 
         string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
         path = $"{path}/remote-tokens/{hash}.png";
         if (File.Exists(path)) {
+            SyncStatus.Receive(hash, 1);
             openRequests.Remove(hash);
             byte[] imageData = File.ReadAllBytes(path);
             Texture2D texture = new Texture2D(2, 2);
