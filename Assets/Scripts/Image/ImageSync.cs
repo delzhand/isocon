@@ -8,41 +8,51 @@ public class ImageSync : MonoBehaviour
 {
     private Dictionary<string, Texture2D> database = new();
 
-    public static ImageSync Find() {
+    public static ImageSync Find()
+    {
         return GameObject.Find("Engine").GetComponent<ImageSync>();
     }
 
-    public Texture2D GetImage(string filename) {
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+    public Texture2D GetImage(string filename)
+    {
+        string path = Preferences.Current.DataPath;
         string filepath = "file://" + path + "/tokens/" + filename;
         return LoadImageFromFile(filepath);
     }
 
-    public void ApplyLocal(Token t, string filename) {
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+    public void ApplyLocal(Token t, string filename)
+    {
+        string path = Preferences.Current.DataPath;
         string filepath = "file://" + path + "/tokens/" + filename;
         StartCoroutine(LoadAndApply(t, filepath));
     }
 
-    public void Apply(Token t, string hash) {
-        if (database.ContainsKey(hash)) {
+    public void Apply(Token t, string hash)
+    {
+        if (database.ContainsKey(hash))
+        {
             // The image file is known and loaded
-            if (database[hash] != null) {
+            if (database[hash] != null)
+            {
                 t.SetImage(database[hash]);
             }
-            else {
+            else
+            {
                 // The image file is known but not yet loaded
-                string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+                string path = Preferences.Current.DataPath;
                 string filename = "file://" + path + "/remote-tokens/" + hash + ".png";
                 StartCoroutine(LoadAndApply(t, filename));
             }
         }
-        else {
+        else
+        {
             // The image is not known, retrieve from the host
-            if (Player.IsOnline()) {
+            if (Player.IsOnline())
+            {
                 // Get from host
             }
-            else {
+            else
+            {
                 // Offline, can't get image
                 throw new System.Exception("Cannot load image from remote host");
                 // Toast.Add("Cannot load image from remote host.");
@@ -59,10 +69,12 @@ public class ImageSync : MonoBehaviour
         {
             Texture2D loadedImage = (Texture2D)loadTextureCoroutine.Current;
             string hash = TextureSender.GetTextureHash(loadedImage);
-            if (database.ContainsKey(hash)) {
+            if (database.ContainsKey(hash))
+            {
                 database[hash] = loadedImage;
             }
-            else {
+            else
+            {
                 database.Add(hash, loadedImage);
             }
             t.SetImage(loadedImage);
@@ -90,7 +102,8 @@ public class ImageSync : MonoBehaviour
     }
 
 
-    private IEnumerator LoadTexture(string filename) {
+    private IEnumerator LoadTexture(string filename)
+    {
         using UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(filename);
         yield return uwr.SendWebRequest();
         if (uwr.result != UnityWebRequest.Result.Success)

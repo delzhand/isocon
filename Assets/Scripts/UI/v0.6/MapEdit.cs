@@ -383,7 +383,7 @@ public class MapEdit
     private static void OpenFile()
     {
         string filename = UI.Modal.Q("SearchField").Q<TextField>("SearchInput").value;
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        string path = Preferences.Current.DataPath;
         string fullPath = path + "/maps/" + filename;
         CurrentFile = filename.Replace(".png", "").Replace(".json", "");
         if (fullPath.EndsWith(".png"))
@@ -445,7 +445,7 @@ public class MapEdit
     {
         string saveType = UI.Modal.Q<DropdownField>("SaveType").value;
         string filename = UI.Modal.Q<TextField>("Filename").value;
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        string path = Preferences.Current.DataPath;
         string fullPath = path + "/maps/" + filename;
         if (saveType == "Encoded Screenshot")
         {
@@ -459,7 +459,7 @@ public class MapEdit
 
     private static bool FileExists(string filename)
     {
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        string path = Preferences.Current.DataPath;
         string fullPath = path + "/maps/" + filename;
         return File.Exists(fullPath);
     }
@@ -481,7 +481,7 @@ public class MapEdit
 
     public static string[] GetAllMapFiles()
     {
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        string path = Preferences.Current.DataPath;
         List<string> mapFiles = new List<string>();
 
         if (!Directory.Exists(path + "/maps"))

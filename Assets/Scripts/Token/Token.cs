@@ -28,7 +28,7 @@ public class Token : MonoBehaviour
 	{
 		AlignToCamera();
 
-		float CutoutSize = PlayerPrefs.GetFloat("TokenScale", 1f);
+		float CutoutSize = Preferences.Current.TokenScale;
 		transform.Find("Offset/Avatar/Cutout").localScale = new Vector3(CutoutSize, CutoutSize, CutoutSize);
 
 		switch (State)
@@ -44,7 +44,7 @@ public class Token : MonoBehaviour
 				break;
 		}
 
-		string tokenOutline = PlayerPrefs.GetString("TokenOutline", "White");
+		string tokenOutline = Preferences.Current.TokenOutline;
 		switch (tokenOutline)
 		{
 			case "Black":

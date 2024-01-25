@@ -26,7 +26,7 @@ public class Player : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            Name = PlayerPrefs.GetString("PlayerName", "New Player");
+            Name = Preferences.Current.PlayerName;
 
             if (GameObject.FindGameObjectsWithTag("Player").Length == 1)
             {
@@ -94,7 +94,7 @@ public class Player : NetworkBehaviour
     public void CmdRequestClientInit()
     {
         FileLogger.Write($"Client {connectionToClient.connectionId} requested game system");
-        string system = PlayerPrefs.GetString("System", "Generic");
+        string system = Preferences.Current.System;
         string systemVars = GameSystem.Current().GetSystemVars();
         TargetGameSystem(connectionToClient, system, systemVars);
         TargetGridType(connectionToClient, TerrainController.GridType);

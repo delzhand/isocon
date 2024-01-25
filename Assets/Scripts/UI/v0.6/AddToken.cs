@@ -6,38 +6,45 @@ using UnityEngine.UIElements;
 
 public class AddToken
 {
-    public static void OpenModal(ClickEvent evt) {
+    public static void OpenModal(ClickEvent evt)
+    {
         Player.Self().SetOp("Adding a Token");
         Token.DeselectAll();
         Modal.Reset("Add Token");
         string[] imageOptions = GetImageOptions();
-        if (imageOptions.Length > 0) {
+        if (imageOptions.Length > 0)
+        {
             Modal.AddSearchField("ImageSearchField", "Add Token", "", GetImageOptions());
             GameSystem.Current().AddTokenModal();
             Modal.AddPreferredButton("Confirm", ConfirmAddToken);
         }
-        else {
-            string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
-            Modal.AddLabel($"No images were found. Token images must be added to { path }/tokens (this can be changed in configuration).", "error-message");
+        else
+        {
+            string path = Preferences.Current.DataPath;
+            Modal.AddLabel($"No images were found. Token images must be added to {path}/tokens (this can be changed in configuration).", "error-message");
         }
-        Modal.AddButton("Cancel", (evt) => {
+        Modal.AddButton("Cancel", (evt) =>
+        {
             Modal.Close();
         });
         Modal.AddCloseCallback(CancelAddToken);
-    }   
+    }
 
-    private static void ConfirmAddToken(ClickEvent evt) {
+    private static void ConfirmAddToken(ClickEvent evt)
+    {
         GameSystem.Current().CreateToken();
         Modal.Close();
         Player.Self().ClearOp();
     }
 
-    private static void CancelAddToken(ClickEvent evt) {
+    private static void CancelAddToken(ClickEvent evt)
+    {
         Player.Self().ClearOp();
     }
 
-    private static bool FileExists(string filename) {
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+    private static bool FileExists(string filename)
+    {
+        string path = Preferences.Current.DataPath;
         string fullPath = path + "/tokens/" + filename;
         return File.Exists(fullPath);
     }
@@ -47,7 +54,8 @@ public class AddToken
         string[] files = Directory.GetFiles(basePath + relativePath);
         foreach (string file in files)
         {
-            if (file.EndsWith(".png")) {
+            if (file.EndsWith(".png"))
+            {
                 fileList.Add(relativePath + "/" + Path.GetFileName(file));
             }
         }
@@ -61,7 +69,7 @@ public class AddToken
 
     public static string[] GetImageOptions()
     {
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        string path = Preferences.Current.DataPath;
         List<string> mapFiles = new List<string>();
 
         if (!Directory.Exists(path + "/tokens"))

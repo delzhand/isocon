@@ -77,7 +77,7 @@ public class DirectionalLine : NetworkBehaviour
         if (!data.Placed)
         {
             Vector2 v = data.UnitBarElement.worldBound.center;
-            string uiScale = PlayerPrefs.GetString("UIScale", "100%");
+            string uiScale = Preferences.Current.UIScale;
             float value = float.Parse(uiScale.Replace("%", "")) / 100f;
             v *= value;
             origin = Camera.main.ScreenToWorldPoint(new Vector3(v.x, Screen.height - v.y, 0));

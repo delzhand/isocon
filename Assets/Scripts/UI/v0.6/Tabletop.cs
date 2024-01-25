@@ -78,7 +78,7 @@ public class Tabletop : MonoBehaviour
 
 
             //         // Vector2 v = UI.System.Q("Frame").worldBound.center;
-            //         // string uiScale = PlayerPrefs.GetString("UIScale", "100%");
+            //         // string uiScale = Preferences.Current.UIScale;
             //         // float value = float.Parse(uiScale.Replace("%", "")) / 100f;
             //         // v *= value;
             //         // v.y = Screen.height - v.y;
@@ -106,7 +106,7 @@ public class Tabletop : MonoBehaviour
     {
         Tutorial.Init("tabletop");
         Label message = UI.System.Q<Label>("ConnectionMessage");
-        message.text = $"You are connected to {PlayerPrefs.GetString("HostIP", "an unknown address")} as a client.";
+        message.text = $"You are connected to {Preferences.Current.HostIP} as a client.";
         IPFinder.ReplaceTokens(message);
     }
 

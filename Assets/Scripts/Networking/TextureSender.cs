@@ -109,7 +109,7 @@ public class TextureSender : MonoBehaviour
             Complete = true;
 
             // Save image to disk
-            string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+            string path = Preferences.Current.DataPath;
             if (!Directory.Exists(path + "/remote-tokens"))
             {
                 Directory.CreateDirectory(path + "/remote-tokens");
@@ -167,7 +167,7 @@ public class TextureSender : MonoBehaviour
         FileLogger.Write($"Loading local file {filename}");
 
         // Load Image
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        string path = Preferences.Current.DataPath;
         path = $"{path}/tokens/{filename}";
         byte[] imageData = File.ReadAllBytes(path);
         Texture2D texture = new Texture2D(2, 2);
@@ -175,7 +175,7 @@ public class TextureSender : MonoBehaviour
 
         // Copy to remote-images if necessary
         string hash = GetTextureHash(texture);
-        path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        path = Preferences.Current.DataPath;
         if (!Directory.Exists($"{path}/remote-tokens"))
         {
             Directory.CreateDirectory($"{path}/remote-tokens");
@@ -199,7 +199,7 @@ public class TextureSender : MonoBehaviour
         SyncStatus.Receive(hash, 0);
         FileLogger.Write($"Loading remote file {TruncateHash(hash)}");
 
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        string path = Preferences.Current.DataPath;
         path = $"{path}/remote-tokens/{hash}.png";
         if (File.Exists(path))
         {
@@ -230,7 +230,7 @@ public class TextureSender : MonoBehaviour
     {
         Texture2D graphic = LoadImageFromFile(filename, false);
         string hash = GetTextureHash(graphic);
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        string path = Preferences.Current.DataPath;
         string remotefilepath = path + "/remote-tokens/" + hash + ".png";
         byte[] pngData = graphic.EncodeToPNG();
         File.WriteAllBytes(remotefilepath, pngData);

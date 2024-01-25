@@ -6,7 +6,7 @@ public class FileLogger : MonoBehaviour
 {
     public static void Write(string message)
     {
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+        string path = Preferences.Current.DataPath;
         if (!Directory.Exists(path + "/logs"))
         {
             Directory.CreateDirectory(path + "/logs");
