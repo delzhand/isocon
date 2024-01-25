@@ -11,10 +11,11 @@ using System.Reflection;
 using Random = UnityEngine.Random;
 using Unity.Mathematics;
 
-public class Icon_v1_5 : GameSystem {
+public class Icon_v1_5 : GameSystem
+{
 
     public static int PartyResolve = 0;
-    
+
     public override string SystemName()
     {
         return "ICON 1.5";
@@ -32,11 +33,13 @@ public class Icon_v1_5 : GameSystem {
         PartyResolve = int.Parse(vars.Split("|")[1]);
     }
 
-    public override string GetOverheadAsset() {
+    public override string GetOverheadAsset()
+    {
         return "UITemplates/GameSystem/IconOverhead";
     }
 
-    public override string TurnAdvanceMessage() {
+    public override string TurnAdvanceMessage()
+    {
         return "Increase the round counter, gain +1 group resolve, and reset ended turns?";
     }
 
@@ -47,7 +50,8 @@ public class Icon_v1_5 : GameSystem {
         SetupPanel("FocusedTokenPanel", false);
     }
 
-    private void SetupPanel(string elementName, bool editable) {
+    private void SetupPanel(string elementName, bool editable)
+    {
         VisualElement panel = UI.System.Q(elementName);
         VisualElement unitPanel = UI.CreateFromTemplate("UITemplates/GameSystem/IconUnitPanel");
 
@@ -58,9 +62,9 @@ public class Icon_v1_5 : GameSystem {
         unitPanel.Q<Button>("AlterVitals").RegisterCallback<ClickEvent>(AlterVitalsModal);
         unitPanel.Q<Button>("AlterStatus").RegisterCallback<ClickEvent>(AlterStatusModal);
         panel.Q("Data").Add(unitPanel);
-        panel.Q("ExtraInfo").Add(new Label(){ name = "Class" });
-        panel.Q("ExtraInfo").Add(new Label(){ name = "Job" });
-        panel.Q("ExtraInfo").Add(new Label(){ name = "Elite", text = "Elite" });
+        panel.Q("ExtraInfo").Add(new Label() { name = "Class" });
+        panel.Q("ExtraInfo").Add(new Label() { name = "Job" });
+        panel.Q("ExtraInfo").Add(new Label() { name = "Elite", text = "Elite" });
     }
 
     public override void Teardown()
@@ -69,13 +73,15 @@ public class Icon_v1_5 : GameSystem {
         TeardownPanel("FocusedTokenPanel");
     }
 
-    private void TeardownPanel(string elementName) {
+    private void TeardownPanel(string elementName)
+    {
         VisualElement panel = UI.System.Q(elementName);
         panel.Q("ExtraInfo").Clear();
         panel.Q("Data").Clear();
     }
 
-    private static void AlterVitalsModal(ClickEvent evt) {
+    private static void AlterVitalsModal(ClickEvent evt)
+    {
         Modal.Reset("Alter Vitals");
         Modal.AddIntField("Number", "Value", 0);
         UI.Modal.Q("Number").AddToClassList("big-number");
@@ -110,32 +116,36 @@ public class Icon_v1_5 : GameSystem {
         Modal.AddPreferredButton("Complete", Modal.CloseEvent);
     }
 
-    private static void AlterVitals(string cmd) {
+    private static void AlterVitals(string cmd)
+    {
         int val = UI.Modal.Q<IntegerField>("Number").value;
         Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, $"{cmd}|{val}");
     }
 
-    private static void AlterStatusModal(ClickEvent evt) {
+    private static void AlterStatusModal(ClickEvent evt)
+    {
         Modal.Reset("Add Status");
 
-        Modal.AddDropdownField("Type", "Type", "ICON Preset", StringUtility.Arr("ICON Preset", "Custom"), (evt) => AddStatusModalEvaluateConditions());
+        Modal.AddDropdownField("Type", "Type", "ICON Preset", StringUtility.CreateArray("ICON Preset", "Custom"), (evt) => AddStatusModalEvaluateConditions());
 
         JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
         List<string> statuses = new();
-        foreach (JSONNode s in gamedata["Icon1_5"]["StatusEffects"].AsArray) {
+        foreach (JSONNode s in gamedata["Icon1_5"]["StatusEffects"].AsArray)
+        {
             statuses.Add(s["Name"]);
         }
         Modal.AddSearchField("PregenStatuses", "Status", "", statuses.ToArray());
         Modal.AddTextField("Name", "Name", "");
-        Modal.AddDropdownField("Color", "Color", "Gray", StringUtility.Arr("Gray", "Green", "Red", "Blue", "Purple", "Yellow", "Orange"));
-        Modal.AddDropdownField("Modifier", "Modifier Type", "None", StringUtility.Arr("None", "Number"));
+        Modal.AddDropdownField("Color", "Color", "Gray", StringUtility.CreateArray("Gray", "Green", "Red", "Blue", "Purple", "Yellow", "Orange"));
+        Modal.AddDropdownField("Modifier", "Modifier Type", "None", StringUtility.CreateArray("None", "Number"));
         Modal.AddPreferredButton("Add", AddStatus);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         AddStatusModalEvaluateConditions();
     }
 
-    private static void AddStatusModalEvaluateConditions() {
+    private static void AddStatusModalEvaluateConditions()
+    {
         bool pregenStatus = UI.Modal.Q<DropdownField>("Type").value == "ICON Preset";
         bool name = !pregenStatus;
         bool color = !pregenStatus;
@@ -147,80 +157,92 @@ public class Icon_v1_5 : GameSystem {
         UI.ToggleDisplay(UI.Modal.Q("Modifier"), modifier);
     }
 
-    private static void AddStatus(ClickEvent evt) {
+    private static void AddStatus(ClickEvent evt)
+    {
         Icon1_5Condition condition = new();
         string type = UI.Modal.Q<DropdownField>("Type").value;
-        if (type == "ICON Preset") {
+        if (type == "ICON Preset")
+        {
             condition.Name = SearchField.GetValue(UI.Modal.Q("PregenStatuses"));
             JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
-            foreach (JSONNode j in gamedata["Icon1_5"]["StatusEffects"]) {
-                if (j["Name"] == condition.Name) {
+            foreach (JSONNode j in gamedata["Icon1_5"]["StatusEffects"])
+            {
+                if (j["Name"] == condition.Name)
+                {
                     condition.Color = j["Color"];
                     condition.ModifierType = j["ModifierType"];
                 }
             }
             condition.NumValue = 0;
         }
-        else {
+        else
+        {
             // Get from parameters
             condition.Name = UI.Modal.Q<TextField>("Name").value;
-            condition.Color = UI.Modal.Q<DropdownField>("Color").value;    
+            condition.Color = UI.Modal.Q<DropdownField>("Color").value;
             condition.ModifierType = UI.Modal.Q<DropdownField>("Modifier").value;
             condition.NumValue = 0;
         }
-        
-        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, $"GainStatus|{JsonUtility.ToJson(condition)}");        
-        Modal.Close();
-    }    
 
-    public override void GameDataSetValue(string value) {
+        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, $"GainStatus|{JsonUtility.ToJson(condition)}");
+        Modal.Close();
+    }
+
+    public override void GameDataSetValue(string value)
+    {
         FileLogger.Write($"Game system changed - {value}");
-        if (value == "IncrementTurn") {
+        if (value == "IncrementTurn")
+        {
             RoundNumber++;
             PartyResolve++;
             UI.System.Q<Label>("TurnNumber").text = RoundNumber.ToString();
-            foreach(GameObject g in GameObject.FindGameObjectsWithTag("TokenData")) {
+            foreach (GameObject g in GameObject.FindGameObjectsWithTag("TokenData"))
+            {
                 TokenData data = g.GetComponent<TokenData>();
                 TokenDataSetValue(data.Id, "StartTurn");
             }
         }
     }
 
-    public override string[] GetEffectList() {
-        return new string[]{"Difficult", "Pit", "Dangerous", "Impassable", "Interactive", "Demon Slayer/Flash Step - Afterimage", "Demon Slayer/Six Hells Trigram", "Demon Slayer/Heroic Six Hells Trigram", "Fool/Party Favor", "Freelancer/Showdown - Quench", "Freelancer/Warding Bolts", "Shade/Shadow Cloud (Blinded+ exc Caster)", "Harvester/Plant", "Harvester/Blood Grove", "Harvester/Mote of Life (Blessing))", "Harvester/Mote of Life (Regen)", "Spellblade/Lightning Spike 1", "Spellblade/Lightning Spike 2", "Spellblade/Lightning Spike 3", "Spellblade/Lightning Spike 4", "Spellblade/Lightning Spike 5", "Spellblade/Lightning Spike 6", "Stormbender/Selkie", "Stormbender/Salt Sprite", "Stormbender/Pit", "Stormbender/Tsunami", "Stormbender/Tsunami - Stormlash", "Stormbender/Dangerous", "Stormbender/Geyser I", "Stormbender/Gust", "Stormbender/Gust I", "Stormbender/Gust II", "Stormbender/Waterspout", "Stormbender/Waterspout - Hurricane", "Stormbender/Waterspout I", "Stormbender/Waterspout I - Hurricane", "Stormbender/Waterspout II", "Stormbender/Waterspout II - Hurricane"};
-    }    
+    public override string[] GetEffectList()
+    {
+        return new string[] { "Difficult", "Pit", "Dangerous", "Impassable", "Interactive", "Demon Slayer/Flash Step - Afterimage", "Demon Slayer/Six Hells Trigram", "Demon Slayer/Heroic Six Hells Trigram", "Fool/Party Favor", "Freelancer/Showdown - Quench", "Freelancer/Warding Bolts", "Shade/Shadow Cloud (Blinded+ exc Caster)", "Harvester/Plant", "Harvester/Blood Grove", "Harvester/Mote of Life (Blessing))", "Harvester/Mote of Life (Regen)", "Spellblade/Lightning Spike 1", "Spellblade/Lightning Spike 2", "Spellblade/Lightning Spike 3", "Spellblade/Lightning Spike 4", "Spellblade/Lightning Spike 5", "Spellblade/Lightning Spike 6", "Stormbender/Selkie", "Stormbender/Salt Sprite", "Stormbender/Pit", "Stormbender/Tsunami", "Stormbender/Tsunami - Stormlash", "Stormbender/Dangerous", "Stormbender/Geyser I", "Stormbender/Gust", "Stormbender/Gust I", "Stormbender/Gust II", "Stormbender/Waterspout", "Stormbender/Waterspout - Hurricane", "Stormbender/Waterspout I", "Stormbender/Waterspout I - Hurricane", "Stormbender/Waterspout II", "Stormbender/Waterspout II - Hurricane" };
+    }
 
     public override void AddTokenModal()
     {
         JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
         List<string> playerJobs = new();
-        foreach (JSONNode pjob in gamedata["Icon1_5"]["PlayerJobs"].AsArray) {
+        foreach (JSONNode pjob in gamedata["Icon1_5"]["PlayerJobs"].AsArray)
+        {
             playerJobs.Add(pjob);
         }
         List<string> foeClasses = new();
-        foreach (JSONNode fclass in gamedata["Icon1_5"]["FoeClasses"].AsArray) {
+        foreach (JSONNode fclass in gamedata["Icon1_5"]["FoeClasses"].AsArray)
+        {
             foeClasses.Add(fclass);
         }
 
         base.AddTokenModal();
-        Modal.AddDropdownField("Type", "Type", "Player", new string[]{"Player", "Foe", "Object"}, (evt) => AddTokenModalEvaluateConditions());
+        Modal.AddDropdownField("Type", "Type", "Player", new string[] { "Player", "Foe", "Object" }, (evt) => AddTokenModalEvaluateConditions());
         Modal.AddSearchField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs.ToArray());
         Modal.AddDropdownField("FoeClass", "Class", foeClasses[0], foeClasses.ToArray(), (evt) => AddTokenModalEvaluateConditions());
         Modal.AddTextField("FoeJob", "Job", "");
         Modal.AddToggleField("Elite", "Elite", false);
-        Modal.AddDropdownField("LegendHP", "Legend HP Multiplier", "x4", new string[]{"x2", "x3", "x4", "x5", "x6", "x7", "x8"});
-        Modal.AddDropdownField("Size", "Size", "1x1", new string[]{"1x1", "2x2", "3x3"});
+        Modal.AddDropdownField("LegendHP", "Legend HP Multiplier", "x4", new string[] { "x2", "x3", "x4", "x5", "x6", "x7", "x8" });
+        Modal.AddDropdownField("Size", "Size", "1x1", new string[] { "1x1", "2x2", "3x3" });
         Modal.AddIntField("ObjectHP", "Object HP", 1);
         Modal.AddIntField("CloneCount", "Clone Count", 1);
 
         AddTokenModalEvaluateConditions();
     }
 
-    private static void AddTokenModalEvaluateConditions() {
+    private static void AddTokenModalEvaluateConditions()
+    {
         bool playerJob = UI.Modal.Q<DropdownField>("Type").value == "Player";
         bool foeClass = UI.Modal.Q<DropdownField>("Type").value == "Foe";
         bool foeJob = UI.Modal.Q<DropdownField>("Type").value == "Foe";
-        bool elite = foeClass && !StringUtility.InList(UI.Modal.Q<DropdownField>("FoeClass").value, "Legend", "Mob");
+        bool elite = foeClass && !StringUtility.CheckInList(UI.Modal.Q<DropdownField>("FoeClass").value, "Legend", "Mob");
         bool legendHP = foeClass && UI.Modal.Q<DropdownField>("FoeClass").value == "Legend";
         bool size = foeClass;
         bool objectHP = UI.Modal.Q<DropdownField>("Type").value == "Object";
@@ -236,11 +258,12 @@ public class Icon_v1_5 : GameSystem {
         UI.ToggleDisplay(UI.Modal.Q("CloneCount"), cloneCount);
     }
 
-    public override void CreateToken() {
+    public override void CreateToken()
+    {
         string name = UI.Modal.Q<TextField>("NameField").value;
         Texture2D graphic = TextureSender.CopyLocalImage(UI.Modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
         string graphicHash = TextureSender.GetTextureHash(graphic);
-        
+
         string type = UI.Modal.Q<DropdownField>("Type").value;
         string playerJob = SearchField.GetValue(UI.Modal.Q("PlayerJob"));
         string foeClass = UI.Modal.Q<DropdownField>("FoeClass").value;
@@ -252,27 +275,33 @@ public class Icon_v1_5 : GameSystem {
         int count = UI.Modal.Q<IntegerField>("CloneCount").value;
 
         int hpMultiplier = 1;
-        Icon1_5Data data = new(){
+        Icon1_5Data data = new()
+        {
             Type = type
         };
-        
-        if (type == "Player") {
+
+        if (type == "Player")
+        {
             data.Class = playerJob.Split("/")[0];
             data.Job = playerJob.Split("/")[1];
             data.Elite = false;
         }
-        else if (type == "Foe") {
+        else if (type == "Foe")
+        {
             data.Class = foeClass;
             data.Job = foeJob;
             data.Elite = elite;
-            if (elite) {
+            if (elite)
+            {
                 hpMultiplier = 2;
             }
-            else if (foeClass == "Legend") {
+            else if (foeClass == "Legend")
+            {
                 hpMultiplier = legendHP;
             }
         }
-        else {
+        else
+        {
 
             hpMultiplier = objectHP;
         }
@@ -280,19 +309,24 @@ public class Icon_v1_5 : GameSystem {
 
         Color color = GetColor(data.Class);
 
-        if ((type == "Object" || foeClass == "Mob") && count > 1) {
-            for(int i = 0; i < count; i++) {
-                string cloneName = $"{name} { StringUtility.IntToAlpha(i+1) }";
+        if ((type == "Object" || foeClass == "Mob") && count > 1)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                string cloneName = $"{name} {StringUtility.ConvertIntToAlpha(i + 1)}";
                 Player.Self().CmdCreateToken("Icon v1.5", graphicHash, cloneName, size, color, JsonUtility.ToJson(data));
             }
         }
-        else {
+        else
+        {
             Player.Self().CmdCreateToken("Icon v1.5", graphicHash, name, size, color, JsonUtility.ToJson(data));
         }
     }
 
-    private static Color GetColor(string job) {
-        switch (GetStatColor(job)) {
+    private static Color GetColor(string job)
+    {
+        switch (GetStatColor(job))
+        {
             case "Red":
                 return ColorUtility.NormalizeRGB(238, 34, 12);
             case "Blue":
@@ -309,9 +343,11 @@ public class Icon_v1_5 : GameSystem {
         return Color.black;
     }
 
-    private static string GetStatColor(string job) {
+    private static string GetStatColor(string job)
+    {
         string statColor = "Gray";
-        switch (job) {
+        switch (job)
+        {
             case "Wright":
             case "Artillery":
                 statColor = "Blue";
@@ -331,11 +367,12 @@ public class Icon_v1_5 : GameSystem {
             case "Legend":
                 statColor = "Purple";
                 break;
-        }   
-        return statColor;     
+        }
+        return statColor;
     }
 
-    public override MenuItem[] GetTokenMenuItems(TokenData data) {
+    public override MenuItem[] GetTokenMenuItems(TokenData data)
+    {
         MenuItem[] baseItems = base.GetTokenMenuItems(data);
 
         List<MenuItem> items = new();
@@ -344,9 +381,11 @@ public class Icon_v1_5 : GameSystem {
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
-    public override MenuItem[] GetTileMenuItems() {
+    public override MenuItem[] GetTileMenuItems()
+    {
         List<MenuItem> items = new();
-        if (Block.GetSelected().Length > 0) {
+        if (Block.GetSelected().Length > 0)
+        {
             items.Add(new MenuItem("SelectSmallBlast", "To Small Blast", SelectSmallBlastClicked));
             items.Add(new MenuItem("SelectMedBlast", "To Medium Blast", SelectMedBlastClicked));
             items.Add(new MenuItem("SelectLargeBlast", "To Large Blast", SelectLargeBlastClicked));
@@ -354,42 +393,53 @@ public class Icon_v1_5 : GameSystem {
         return items.ToArray();
     }
 
-    public static void SelectSmallBlastClicked(ClickEvent evt) {    
+    public static void SelectSmallBlastClicked(ClickEvent evt)
+    {
         List<Block> blocksToAppend = new();
-        foreach (var b in Block.GetSelected()) {
-            foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetCardinallyAdjacent(new Vector2Int(b.getX(), b.getY())))) {
+        foreach (var b in Block.GetSelected())
+        {
+            foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetCardinallyAdjacent(new Vector2Int(b.GetX(), b.GetY()))))
+            {
                 blocksToAppend.Add(block);
             }
         }
-        foreach (var b in blocksToAppend) {
+        foreach (var b in blocksToAppend)
+        {
             b.Select(true);
         }
         SelectionMenu.Hide();
     }
 
-    public static void SelectMedBlastClicked(ClickEvent evt) {
+    public static void SelectMedBlastClicked(ClickEvent evt)
+    {
         List<Block> blocksToAppend = new();
-        foreach (var b in Block.GetSelected()) {
-            foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetCardinallyAdjacent(new Vector2Int(b.getX(), b.getY())))) {
+        foreach (var b in Block.GetSelected())
+        {
+            foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetCardinallyAdjacent(new Vector2Int(b.GetX(), b.GetY()))))
+            {
                 blocksToAppend.Add(block);
             }
-            foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetDiagonallyAdjacent(new Vector2Int(b.getX(), b.getY())))) {
+            foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetDiagonallyAdjacent(new Vector2Int(b.GetX(), b.GetY()))))
+            {
                 blocksToAppend.Add(block);
             }
         }
-        foreach (var b in blocksToAppend) {
+        foreach (var b in blocksToAppend)
+        {
             b.Select(true);
         }
         SelectionMenu.Hide();
     }
 
-    public static void SelectLargeBlastClicked(ClickEvent evt) {
+    public static void SelectLargeBlastClicked(ClickEvent evt)
+    {
         SelectSmallBlastClicked(evt);
         SelectSmallBlastClicked(evt);
     }
 
 
-    private void AttackRollClicked(ClickEvent evt) {
+    private void AttackRollClicked(ClickEvent evt)
+    {
         Modal.Reset("Attack Roll");
         Modal.AddNumberNudgerField("BoonField", "Boons", 0, 0);
         Modal.AddNumberNudgerField("CurseField", "Curses", 0, 0);
@@ -397,7 +447,8 @@ public class Icon_v1_5 : GameSystem {
         Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
-    private void SaveRollClicked(ClickEvent evt) {
+    private void SaveRollClicked(ClickEvent evt)
+    {
         Modal.Reset("Save Roll");
         Modal.AddNumberNudgerField("BoonField", "Boons", 0, 0);
         Modal.AddNumberNudgerField("CurseField", "Curses", 0, 0);
@@ -405,35 +456,41 @@ public class Icon_v1_5 : GameSystem {
         Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
-    private void AttackRoll(ClickEvent evt) {
+    private void AttackRoll(ClickEvent evt)
+    {
         BoonCurseRoll("Attack");
         Token.DeselectAll();
     }
 
-    private void SaveRoll(ClickEvent evt) {
+    private void SaveRoll(ClickEvent evt)
+    {
         BoonCurseRoll("Save");
         Token.DeselectAll();
     }
 
-    private void BoonCurseRoll(string label) {
+    private void BoonCurseRoll(string label)
+    {
         string name = Token.GetSelected().Data.Name;
         int boon = UI.Modal.Q<NumberNudger>("BoonField").value;
         int curse = UI.Modal.Q<NumberNudger>("CurseField").value;
         int balance = boon - curse;
         int x = 1 + Random.Range(0, 20);
         string rollString = $"{x}";
-        int mod = 0 ;
+        int mod = 0;
         List<int> mods = new();
-        for(int i = 0; i < math.abs(balance); i++) {
+        for (int i = 0; i < math.abs(balance); i++)
+        {
             int y = 1 + Random.Range(0, 6);
             mods.Add(y);
             mod = math.max(mod, y);
         }
-        if (mod > 0 && balance > 0) {
+        if (mod > 0 && balance > 0)
+        {
             x += mod;
             rollString += $"+boon({String.Join(",", mods.ToArray())})";
         }
-        if (mod > 0 && balance < 0) {
+        if (mod > 0 && balance < 0)
+        {
             x -= mod;
             rollString += $"-curse({String.Join(",", mods.ToArray())})";
         }
@@ -441,7 +498,8 @@ public class Icon_v1_5 : GameSystem {
         Modal.Close();
     }
 
-    public override void UpdateData(TokenData data) {
+    public override void UpdateData(TokenData data)
+    {
         base.UpdateData(data);
         Icon1_5Data mdata = JsonUtility.FromJson<Icon1_5Data>(data.SystemData);
 
@@ -455,17 +513,19 @@ public class Icon_v1_5 : GameSystem {
         UI.ToggleDisplay(data.OverheadElement.Q("Wound1"), mdata.Wounds >= 1);
         UI.ToggleDisplay(data.OverheadElement.Q("Wound2"), mdata.Wounds >= 2);
         UI.ToggleDisplay(data.OverheadElement.Q("Wound3"), mdata.Wounds >= 3);
-        
-        UI.ToggleDisplay(data.OverheadElement.Q("HpBar"), mdata.CurrentHP > 0);    
+
+        UI.ToggleDisplay(data.OverheadElement.Q("HpBar"), mdata.CurrentHP > 0);
     }
 
-    private static void InitSystemData(Icon1_5Data data, int hpMultiplier) {
+    private static void InitSystemData(Icon1_5Data data, int hpMultiplier)
+    {
 
         JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
         JSONNode stats = gamedata["Icon1_5"]["Stats"][GetStatColor(data.Class)];
 
         data.MaxHP = stats["MaxHP"] * hpMultiplier;
-        if (data.Type == "Object") {
+        if (data.Type == "Object")
+        {
             data.MaxHP = hpMultiplier;
         }
         data.CurrentHP = data.MaxHP;
@@ -477,25 +537,29 @@ public class Icon_v1_5 : GameSystem {
         data.Range = stats["Range"];
         data.Speed = stats["Speed"];
         data.Dash = stats["Dash"];
-        data.Defense = stats["Defense"];        
+        data.Defense = stats["Defense"];
     }
 
-    public override void TokenDataSetValue(string tokenId, string value) {
+    public override void TokenDataSetValue(string tokenId, string value)
+    {
         base.TokenDataSetValue(tokenId, value);
         TokenData data = TokenData.Find(tokenId);
-        if (data.Destroyed) {
+        if (data.Destroyed)
+        {
             return;
         }
         Icon1_5Data sysdata = JsonUtility.FromJson<Icon1_5Data>(data.SystemData);
         sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
-        data.SystemData = JsonUtility.ToJson(sysdata); 
+        data.SystemData = JsonUtility.ToJson(sysdata);
         data.NeedsRedraw = true;
     }
 
-    public override void UpdateTokenPanel(string tokenId, string elementName) {
+    public override void UpdateTokenPanel(string tokenId, string elementName)
+    {
         TokenData data = TokenData.Find(tokenId);
         UI.ToggleActiveClass(elementName, data != null);
-        if (!data) {
+        if (!data)
+        {
             return;
         }
 
@@ -522,12 +586,12 @@ public class Icon_v1_5 : GameSystem {
         panel.Q("Elite").style.backgroundColor = ColorUtility.NormalizeRGB(202, 85, 239);
         UI.ToggleDisplay(panel.Q("Elite"), sysdata.Elite);
 
-        panel.Q("IconHPBar").Q<Label>("CHP").text = $"{ sysdata.CurrentHP }";
-        panel.Q("IconHPBar").Q<Label>("MHP").text = $"/{ sysdata.MaxHP }";
+        panel.Q("IconHPBar").Q<Label>("CHP").text = $"{sysdata.CurrentHP}";
+        panel.Q("IconHPBar").Q<Label>("MHP").text = $"/{sysdata.MaxHP}";
         panel.Q("IconHPBar").Q<ProgressBar>("HpBar").value = sysdata.CurrentHP;
         panel.Q("IconHPBar").Q<ProgressBar>("HpBar").highValue = sysdata.MaxHP;
 
-        panel.Q("IconHPBar").Q<Label>("VIG").text = $"+{ sysdata.Vigor }";
+        panel.Q("IconHPBar").Q<Label>("VIG").text = $"+{sysdata.Vigor}";
         panel.Q("IconHPBar").Q<ProgressBar>("VigorBar").value = sysdata.Vigor;
         panel.Q("IconHPBar").Q<ProgressBar>("VigorBar").highValue = sysdata.MaxHP;
         UI.ToggleDisplay(panel.Q("VigorBar"), sysdata.Vigor > 0);
@@ -537,86 +601,98 @@ public class Icon_v1_5 : GameSystem {
         UI.ToggleDisplay(panel.Q("Wound2"), sysdata.Wounds >= 2);
         UI.ToggleDisplay(panel.Q("Wound3"), sysdata.Wounds >= 3);
 
-        panel.Q("IconResolveBar").Q<Label>("ResolveNum").text = $"{ sysdata.Resolve }";
+        panel.Q("IconResolveBar").Q<Label>("ResolveNum").text = $"{sysdata.Resolve}";
         panel.Q("IconResolveBar").Q<ProgressBar>("ResolveBar").value = sysdata.Resolve;
-        panel.Q("IconResolveBar").Q<Label>("PartyResolveNum").text = $"+{ Icon_v1_5.PartyResolve }";
+        panel.Q("IconResolveBar").Q<Label>("PartyResolveNum").text = $"+{Icon_v1_5.PartyResolve}";
         panel.Q("IconResolveBar").Q<ProgressBar>("PartyResolveBar").highValue = Icon_v1_5.PartyResolve;
         UI.ToggleDisplay(panel.Q("IconResolveBar"), sysdata.Type == "Player");
         UI.ToggleDisplay(panel.Q("PartyResolveBar"), Icon_v1_5.PartyResolve > 0);
         UI.ToggleDisplay(panel.Q("PartyResolveNum"), Icon_v1_5.PartyResolve > 0);
 
-        panel.Q("Damage").Q<Label>("Value").text = $"{ sysdata.Defense }/{ sysdata.Fray}";
-        panel.Q("Range").Q<Label>("Value").text = $"{ sysdata.Range }";
-        panel.Q("Speed").Q<Label>("Value").text = $"{ sysdata.Speed }/{ sysdata.Dash }";
-        panel.Q("Defense").Q<Label>("Value").text = $"{ sysdata.Defense }";
+        panel.Q("Damage").Q<Label>("Value").text = $"{sysdata.Defense}/{sysdata.Fray}";
+        panel.Q("Range").Q<Label>("Value").text = $"{sysdata.Range}";
+        panel.Q("Speed").Q<Label>("Value").text = $"{sysdata.Speed}/{sysdata.Dash}";
+        panel.Q("Defense").Q<Label>("Value").text = $"{sysdata.Defense}";
         UI.ToggleDisplay(panel.Q("Stats"), sysdata.Type != "Object");
 
-        if (data.NeedsRedraw) {
+        if (data.NeedsRedraw)
+        {
             data.NeedsRedraw = false;
             panel.Q("Conditions").Q("List").Clear();
-            foreach (Icon1_5Condition condition in sysdata.Status) {
+            foreach (Icon1_5Condition condition in sysdata.Status)
+            {
                 VisualElement template = UI.CreateFromTemplate("UITemplates/GameSystem/ConditionTemplate");
                 string label = $"{condition.Name}";
-                if (condition.ModifierType == "Number") {
+                if (condition.ModifierType == "Number")
+                {
                     label = $"{label} ({condition.NumValue})";
                 }
                 template.Q<Label>("Name").text = label;
-                if (elementName == "SelectedTokenPanel") {
-                    template.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) => {
-                    Player.Self().CmdRequestTokenDataSetValue(tokenId, $"IncrementStatus|{ condition.Name }");
+                if (elementName == "SelectedTokenPanel")
+                {
+                    template.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) =>
+                    {
+                        Player.Self().CmdRequestTokenDataSetValue(tokenId, $"IncrementStatus|{condition.Name}");
                     });
-                    template.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) => {
-                    Player.Self().CmdRequestTokenDataSetValue(tokenId, $"DecrementStatus|{ condition.Name }");
+                    template.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) =>
+                    {
+                        Player.Self().CmdRequestTokenDataSetValue(tokenId, $"DecrementStatus|{condition.Name}");
                     });
-                    template.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) => {
-                    Player.Self().CmdRequestTokenDataSetValue(tokenId, $"LoseStatus|{ condition.Name }");
+                    template.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) =>
+                    {
+                        Player.Self().CmdRequestTokenDataSetValue(tokenId, $"LoseStatus|{condition.Name}");
                     });
                     UI.ToggleDisplay(template.Q("Increment"), condition.ModifierType == "Number");
                     UI.ToggleDisplay(template.Q("Decrement"), condition.ModifierType == "Number");
                     UI.ToggleDisplay(template.Q("Remove"), !condition.Locked);
                 }
-                else {
+                else
+                {
                     UI.ToggleDisplay(template.Q("Increment"), false);
                     UI.ToggleDisplay(template.Q("Decrement"), false);
                     UI.ToggleDisplay(template.Q("Remove"), false);
                 }
                 template.Q("Wrapper").style.backgroundColor = condition.GetColorFromName();
-                panel.Q("Conditions").Q("List").Add(template); 
+                panel.Q("Conditions").Q("List").Add(template);
             }
         }
     }
 }
 
 [Serializable]
-public class Icon1_5Condition {
+public class Icon1_5Condition
+{
     public string Name;
     public string ModifierType;
     public string Color;
     public int NumValue;
     public bool Locked;
 
-    public Color GetColorFromName() {
-        switch (Color) {
+    public Color GetColorFromName()
+    {
+        switch (Color)
+        {
             case "Green":
-                return ColorUtility.ColorFromHex("339A2A");
+                return ColorUtility.GetColor("339A2A");
             case "Red":
-                return ColorUtility.ColorFromHex("A23431");
+                return ColorUtility.GetColor("A23431");
             case "Blue":
-                return ColorUtility.ColorFromHex("4C4CD7");
+                return ColorUtility.GetColor("4C4CD7");
             case "Purple":
-                return ColorUtility.ColorFromHex("9E198D");
+                return ColorUtility.GetColor("9E198D");
             case "Yellow":
-                return ColorUtility.ColorFromHex("9A9939");
+                return ColorUtility.GetColor("9A9939");
             case "Orange":
-                return ColorUtility.ColorFromHex("BC840B");
+                return ColorUtility.GetColor("BC840B");
             default:
-                return ColorUtility.ColorFromHex("727272");
+                return ColorUtility.GetColor("727272");
         }
     }
 }
 
 [Serializable]
-public class Icon1_5Data {
+public class Icon1_5Data
+{
     public int CurrentHP;
     public int MaxHP;
     public int Vigor;
@@ -634,207 +710,263 @@ public class Icon1_5Data {
     public int Dash;
     public int Defense;
     public Icon1_5Condition[] Status;
-    
-    public void Change(string value, Token token, bool placed) {
-        if (value.StartsWith("GainWound")) {
+
+    public void Change(string value, Token token, bool placed)
+    {
+        if (value.StartsWith("GainWound"))
+        {
             Wounds++;
             Wounds = Math.Min(Wounds, 3);
             int woundMaxHP = MaxHP / 4 * (4 - Wounds);
             CurrentHP = Math.Min(CurrentHP, woundMaxHP);
         }
-        if (value.StartsWith("LoseWound")) {
+        if (value.StartsWith("LoseWound"))
+        {
             Wounds--;
             Wounds = Math.Max(Wounds, 0);
         }
-        if (value.StartsWith("GainHP")) {
+        if (value.StartsWith("GainHP"))
+        {
             int diff = int.Parse(value.Split("|")[1]);
             int woundMaxHP = MaxHP / 4 * (4 - Wounds);
-            if (CurrentHP + diff > woundMaxHP) {
+            if (CurrentHP + diff > woundMaxHP)
+            {
                 diff = woundMaxHP - CurrentHP;
             }
-            if (diff > 0) {
-                CurrentHP+=diff;
-                if (placed) {
+            if (diff > 0)
+            {
+                CurrentHP += diff;
+                if (placed)
+                {
                     PopoverText.Create(token, $"/+{diff}|_HP", Color.white);
                 }
                 token.SetDefeated(CurrentHP <= 0);
             }
         }
-        if (value.StartsWith("LoseHP")) {
+        if (value.StartsWith("LoseHP"))
+        {
             int diff = int.Parse(value.Split("|")[1]);
-            if (CurrentHP - diff < 0) {
+            if (CurrentHP - diff < 0)
+            {
                 diff = CurrentHP;
             }
-            if (diff > 0) {
-                CurrentHP-=diff;
-                if (placed) {
+            if (diff > 0)
+            {
+                CurrentHP -= diff;
+                if (placed)
+                {
                     PopoverText.Create(token, $"/-{diff}|_HP", Color.white);
                 }
                 token.SetDefeated(CurrentHP <= 0);
             }
         }
-        if (value.StartsWith("GainVIG")) {
+        if (value.StartsWith("GainVIG"))
+        {
             int diff = int.Parse(value.Split("|")[1]);
-            if (Vigor + diff > MaxHP/4) {
-                diff = MaxHP/4 - Vigor;
+            if (Vigor + diff > MaxHP / 4)
+            {
+                diff = MaxHP / 4 - Vigor;
             }
-            if (diff > 0) {
-                Vigor+=diff;
-                if (placed) {
+            if (diff > 0)
+            {
+                Vigor += diff;
+                if (placed)
+                {
                     PopoverText.Create(token, $"/+{diff}|_VIG", Color.white);
                 }
             }
         }
-        if (value.StartsWith("LoseVIG")) {
+        if (value.StartsWith("LoseVIG"))
+        {
             int diff = int.Parse(value.Split("|")[1]);
-            if (Vigor - diff < 0) {
+            if (Vigor - diff < 0)
+            {
                 diff = Vigor;
             }
-            if (diff > 0) {
-                Vigor-=diff;
-                if (placed) {
+            if (diff > 0)
+            {
+                Vigor -= diff;
+                if (placed)
+                {
                     PopoverText.Create(token, $"/-{diff}|_VIG", Color.white);
                 }
             }
         }
-        if (value.StartsWith("GainRES")) {
+        if (value.StartsWith("GainRES"))
+        {
             int diff = int.Parse(value.Split("|")[1]);
             // if (diff + Resolve > 6) {
             //     diff = 6 - Resolve;
             // }
-            if (diff > 0) {
-                Resolve+=diff;
-                if (placed) {
+            if (diff > 0)
+            {
+                Resolve += diff;
+                if (placed)
+                {
                     PopoverText.Create(token, $"/+{diff}|_RES", Color.white);
                 }
             }
         }
-        if (value.StartsWith("GainPRES")) {
+        if (value.StartsWith("GainPRES"))
+        {
             int diff = int.Parse(value.Split("|")[1]);
-            Icon_v1_5.PartyResolve+=diff;
+            Icon_v1_5.PartyResolve += diff;
         }
-        if (value.StartsWith("LoseRES")) {
+        if (value.StartsWith("LoseRES"))
+        {
             int diff = int.Parse(value.Split("|")[1]);
             Resolve = Math.Max(0, Resolve - diff);
         }
-        if (value.StartsWith("LosePRES")) {
+        if (value.StartsWith("LosePRES"))
+        {
             int diff = int.Parse(value.Split("|")[1]);
-            if (diff > Icon_v1_5.PartyResolve) {
+            if (diff > Icon_v1_5.PartyResolve)
+            {
                 diff = Icon_v1_5.PartyResolve;
             }
-            Icon_v1_5.PartyResolve-=diff;
+            Icon_v1_5.PartyResolve -= diff;
         }
-        if (value.StartsWith("Damage")) {
+        if (value.StartsWith("Damage"))
+        {
             int diff = int.Parse(value.Split("|")[1]);
-            if (Vigor + CurrentHP - diff < 0) {
-                diff = Vigor+CurrentHP;
+            if (Vigor + CurrentHP - diff < 0)
+            {
+                diff = Vigor + CurrentHP;
             }
-            if (diff <= 0) {
+            if (diff <= 0)
+            {
                 return;
             }
-            if (diff < Vigor) {
+            if (diff < Vigor)
+            {
                 // Vig damage only
                 Vigor -= diff;
-                if (placed) {
+                if (placed)
+                {
                     PopoverText.Create(token, $"/-{diff}|_VIG", Color.white);
                 }
             }
-            else if (diff > Vigor && Vigor > 0) {
+            else if (diff > Vigor && Vigor > 0)
+            {
                 // Vig zeroed and HP damage
                 CurrentHP -= (diff - Vigor);
                 Vigor = 0;
-                if (placed) {
+                if (placed)
+                {
                     PopoverText.Create(token, $"/-{diff}|_HP/VIG", Color.white);
                 }
             }
-            else if (Vigor <= 0) {
+            else if (Vigor <= 0)
+            {
                 // HP damage only
                 CurrentHP -= diff;
-                if (placed) {
+                if (placed)
+                {
                     PopoverText.Create(token, $"/-{diff}|_HP", Color.white);
                 }
             }
         }
-        if (value.StartsWith("LoseStatus")) {
+        if (value.StartsWith("LoseStatus"))
+        {
             string[] parts = value.Split("|");
             RemoveCondition(parts[1]);
-            if (placed) {
+            if (placed)
+            {
                 PopoverText.Create(token, $"/-|_{parts[1].ToUpper()}", Color.white);
             }
         }
-        if (value.StartsWith("GainStatus")) {
+        if (value.StartsWith("GainStatus"))
+        {
             string[] parts = value.Split("|");
             Icon1_5Condition condition = JsonUtility.FromJson<Icon1_5Condition>(parts[1]);
             AddCondition(condition);
-            if (placed) {
+            if (placed)
+            {
                 PopoverText.Create(token, $"/+|_{condition.Name.ToUpper()}", Color.white);
             }
         }
-        if (value.StartsWith("IncrementStatus")) {
+        if (value.StartsWith("IncrementStatus"))
+        {
             string[] parts = value.Split("|");
             CounterCondition(parts[1], 1);
-            if (placed) {
+            if (placed)
+            {
                 PopoverText.Create(token, $"/+1|_{parts[1].ToUpper()}", Color.white);
             }
         }
-        if (value.StartsWith("DecrementStatus")) {
+        if (value.StartsWith("DecrementStatus"))
+        {
             string[] parts = value.Split("|");
             CounterCondition(parts[1], -1);
-            if (placed) {
+            if (placed)
+            {
                 PopoverText.Create(token, $"/-1|_{parts[1].ToUpper()}", Color.white);
             }
         }
         OnChange(token);
     }
 
-    private void OnChange(Token token) {
+    private void OnChange(Token token)
+    {
         token.SetDefeated(CurrentHP <= 0);
-        if (CurrentHP <= 0) {
+        if (CurrentHP <= 0)
+        {
             RemoveCondition("Bloodied");
-            AddCondition(new Icon1_5Condition(){
+            AddCondition(new Icon1_5Condition()
+            {
                 Name = "Defeated",
                 ModifierType = "None",
                 Color = "Red",
                 Locked = true
             });
         }
-        else if (CurrentHP <= MaxHP/2) {
+        else if (CurrentHP <= MaxHP / 2)
+        {
             RemoveCondition("Defeated");
-            AddCondition(new Icon1_5Condition(){
+            AddCondition(new Icon1_5Condition()
+            {
                 Name = "Bloodied",
                 ModifierType = "None",
                 Color = "Red",
                 Locked = true
             });
         }
-        else {
+        else
+        {
             RemoveCondition("Bloodied");
             RemoveCondition("Defeated");
         }
-    }  
+    }
 
-    private void AddCondition(Icon1_5Condition c) {
+    private void AddCondition(Icon1_5Condition c)
+    {
         RemoveCondition(c.Name);
         List<Icon1_5Condition> statusList = Status.ToList();
         statusList.Add(c);
         Status = statusList.ToArray();
     }
 
-    private void RemoveCondition(string name) {
+    private void RemoveCondition(string name)
+    {
         List<Icon1_5Condition> statusList = Status.ToList();
         List<Icon1_5Condition> newStatusList = new();
-        foreach (Icon1_5Condition condition in statusList) {
-            if (name != condition.Name) {
+        foreach (Icon1_5Condition condition in statusList)
+        {
+            if (name != condition.Name)
+            {
                 newStatusList.Add(condition);
             }
         }
         Status = newStatusList.ToArray();
     }
 
-    private void CounterCondition(string name, int num) {
+    private void CounterCondition(string name, int num)
+    {
         List<Icon1_5Condition> statusList = Status.ToList();
-        foreach (Icon1_5Condition condition in statusList) {
-            if (name == condition.Name) {
+        foreach (Icon1_5Condition condition in statusList)
+        {
+            if (name == condition.Name)
+            {
                 condition.NumValue += num;
             }
         }

@@ -1,47 +1,37 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using UnityEngine;
 
 public struct DiceTray
 {
-    public DiceRoll[] rolls;
-    public int modifier;
-    public string playerName;
-    public string id;
-    public DateTime time;
-    public string op;
-    public string description;
+    public DiceRoll[] Rolls;
+    public int Modifier;
+    public string PlayerName;
+    public string Id;
+    public DateTime Time;
+    public string Op;
+    public string Description;
 
-    public DiceTray(string playerName, DiceRoll[] rolls, int modifier, string op, string description) {
-        this.playerName = playerName;
-        this.rolls = rolls;
-        this.modifier = modifier;
-        this.op = op;
-        this.description = description;
-        time = DateTime.Now;
-        id = Guid.NewGuid().ToString();
-    }
-
-    public DiceTray(string playerName, string roll, string op, string description) {
-        this.playerName = playerName;
+    public DiceTray(string playerName, string roll, string op, string description)
+    {
+        this.PlayerName = playerName;
         List<DiceRoll> rolls = new();
-        (int[],int) dice = ParseDiceSizes(roll);
-        foreach (int die in dice.Item1) {
+        (int[], int) dice = ParseDiceSizes(roll);
+        foreach (int die in dice.Item1)
+        {
             rolls.Add(new DiceRoll(die));
         }
-        this.rolls = rolls.ToArray();
-        time = DateTime.Now;
-        id = Guid.NewGuid().ToString();
+        this.Rolls = rolls.ToArray();
+        Time = DateTime.Now;
+        Id = Guid.NewGuid().ToString();
 
         string[] split = roll.Split("+");
         string mod = split.Last<string>();
-        modifier = dice.Item2;
+        Modifier = dice.Item2;
 
-        this.op = op;
-        this.description = description;
+        this.Op = op;
+        this.Description = description;
     }
 
     private static (int[], int) ParseDiceSizes(string input)

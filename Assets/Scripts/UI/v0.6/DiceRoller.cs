@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class DiceRoller 
+public class DiceRoller
 {
     private static Boolean visible;
 
@@ -18,55 +18,65 @@ public class DiceRoller
 
     public static bool newItems = false;
 
-    public static void Setup() {
+    public static void Setup()
+    {
         UI.ToggleDisplay("DiceRoller", false);
         VisualElement root = UI.System.Q("DiceRoller");
 
-        root.Q("d20").RegisterCallback<ClickEvent>((evt) =>  {
+        root.Q("d20").RegisterCallback<ClickEvent>((evt) =>
+        {
             d20count++;
             root.Q("d20").Q<Label>("count").text = d20count.ToString();
             DieAdd("d20");
         });
 
-        root.Q("d12").RegisterCallback<ClickEvent>((evt) =>  {
+        root.Q("d12").RegisterCallback<ClickEvent>((evt) =>
+        {
             d12count++;
             root.Q("d12").Q<Label>("count").text = d12count.ToString();
             DieAdd("d12");
         });
 
-        root.Q("d10").RegisterCallback<ClickEvent>((evt) =>  {
+        root.Q("d10").RegisterCallback<ClickEvent>((evt) =>
+        {
             d10count++;
             root.Q("d10").Q<Label>("count").text = d10count.ToString();
             DieAdd("d10");
         });
 
-        root.Q("d8").RegisterCallback<ClickEvent>((evt) =>  {
+        root.Q("d8").RegisterCallback<ClickEvent>((evt) =>
+        {
             d8count++;
             root.Q("d8").Q<Label>("count").text = d8count.ToString();
             DieAdd("d8");
         });
 
-        root.Q("d6").RegisterCallback<ClickEvent>((evt) =>  {
+        root.Q("d6").RegisterCallback<ClickEvent>((evt) =>
+        {
             d6count++;
             root.Q("d6").Q<Label>("count").text = d6count.ToString();
             DieAdd("d6");
         });
 
-        root.Q("d4").RegisterCallback<ClickEvent>((evt) =>  {
+        root.Q("d4").RegisterCallback<ClickEvent>((evt) =>
+        {
             d4count++;
             root.Q("d4").Q<Label>("count").text = d4count.ToString();
             DieAdd("d4");
         });
 
-        root.Q<Button>("Reset").RegisterCallback<ClickEvent>((evt) =>  {
+        root.Q<Button>("Reset").RegisterCallback<ClickEvent>((evt) =>
+        {
             reset();
         });
 
-        root.Q<Button>("Total").RegisterCallback<ClickEvent>((evt) => {
+        root.Q<Button>("Total").RegisterCallback<ClickEvent>((evt) =>
+        {
             DieRoll("sum");
         });
 
-        root.Q<Button>("Highest").RegisterCallback<ClickEvent>((evt) => {
+        root.Q<Button>("Highest").RegisterCallback<ClickEvent>((evt) =>
+        {
             DieRoll("max");
         });
 
@@ -74,59 +84,72 @@ public class DiceRoller
         UI.ToggleDisplay(root.Q("Highest"), false);
     }
 
-    private static void DieAdd(string die) {
+    private static void DieAdd(string die)
+    {
         VisualElement root = UI.System.Q("DiceRoller");
         UI.ToggleDisplay(root.Q(die).Q<Label>("count"), true);
         UI.ToggleDisplay(root.Q("Total"), true);
         UI.ToggleDisplay(root.Q("Highest"), true);
     }
 
-    private static void DieRoll(string op) {
+    private static void DieRoll(string op)
+    {
         string rollString = GetRollString();
         Player.Self().CmdRequestDiceRoll(new DiceTray(Player.Self().Name, rollString, op, null));
         reset();
     }
 
-    private static string GetRollString() {
+    private static string GetRollString()
+    {
         VisualElement root = UI.System.Q("DiceRoller");
         List<string> rolls = new();
-        if (d20count > 0) {
+        if (d20count > 0)
+        {
             rolls.Add($"{d20count}d20");
         }
-        if (d12count > 0) {
+        if (d12count > 0)
+        {
             rolls.Add($"{d12count}d12");
         }
-        if (d10count > 0) {
+        if (d10count > 0)
+        {
             rolls.Add($"{d10count}d10");
         }
-        if (d8count > 0) {
+        if (d8count > 0)
+        {
             rolls.Add($"{d8count}d8");
         }
-        if (d6count > 0) {
+        if (d6count > 0)
+        {
             rolls.Add($"{d6count}d6");
         }
-        if (d4count > 0) {
+        if (d4count > 0)
+        {
             rolls.Add($"{d4count}d4");
         }
         string rollString = String.Join("+", rolls.ToArray());
-               
+
         int mod = root.Q<IntegerField>("Number").value;
-        if (mod < 0) {
+        if (mod < 0)
+        {
             rollString += $"{mod}";
         }
-        else if (mod > 0) {
+        else if (mod > 0)
+        {
             rollString += $"+{mod}";
         }
         return rollString;
     }
 
-    public static void ToggleVisible(ClickEvent evt) {
+    public static void ToggleVisible(ClickEvent evt)
+    {
         visible = !visible;
         UI.ToggleDisplay("DiceRoller", visible);
         UI.ToggleActiveClass("Dice", visible);
     }
 
-    private static void reset() {
+    private static void reset()
+    {
         d20count = 0;
         d12count = 0;
         d10count = 0;
@@ -146,31 +169,36 @@ public class DiceRoller
         UI.ToggleDisplay(root.Q("Highest"), false);
     }
 
-    public static void AddOutcome(DiceTray tray) {
+    public static void AddOutcome(DiceTray tray)
+    {
         VisualTreeAsset resultTemplate = Resources.Load<VisualTreeAsset>("UITemplates/DiceResult");
         VisualElement resultElement = resultTemplate.Instantiate();
-        
+
         List<int> rolls = new();
         int sum = 0;
         int max = int.MinValue;
         int min = int.MaxValue;
         int largestDie = 2;
-        for (int i = 0; i < tray.rolls.Length; i++) {
-            largestDie = math.max(largestDie, tray.rolls[i].Die);
-            max = Math.Max(max, tray.rolls[i].Rolled);
-            min = Math.Min(min, tray.rolls[i].Rolled);
-            sum += tray.rolls[i].Rolled;
-            rolls.Add(tray.rolls[i].Rolled);
+        for (int i = 0; i < tray.Rolls.Length; i++)
+        {
+            largestDie = math.max(largestDie, tray.Rolls[i].Die);
+            max = Math.Max(max, tray.Rolls[i].Rolled);
+            min = Math.Min(min, tray.Rolls[i].Rolled);
+            sum += tray.Rolls[i].Rolled;
+            rolls.Add(tray.Rolls[i].Rolled);
         }
 
-        if (tray.description != null) {
-            resultElement.Q<Label>("Label").text = $"{tray.description} ({tray.playerName})";
+        if (tray.Description != null)
+        {
+            resultElement.Q<Label>("Label").text = $"{tray.Description} ({tray.PlayerName})";
         }
-        else {
-            resultElement.Q<Label>("Label").text = tray.playerName;
+        else
+        {
+            resultElement.Q<Label>("Label").text = tray.PlayerName;
         }
 
-        switch (largestDie) {
+        switch (largestDie)
+        {
             case 4:
             case 6:
             case 8:
@@ -185,20 +213,23 @@ public class DiceRoller
         }
 
         string modString = "";
-        if (tray.modifier < 0) {
-            modString += $"{tray.modifier}";
+        if (tray.Modifier < 0)
+        {
+            modString += $"{tray.Modifier}";
         }
-        if (tray.modifier > 0) {
-            modString += $"+{tray.modifier}";
+        if (tray.Modifier > 0)
+        {
+            modString += $"+{tray.Modifier}";
         }
 
-        switch(tray.op) {
+        switch (tray.Op)
+        {
             case "sum":
-                resultElement.Q<Label>("Result").text = $"{sum+tray.modifier}";
+                resultElement.Q<Label>("Result").text = $"{sum + tray.Modifier}";
                 resultElement.Q<Label>("Rolls").text = $"{string.Join("+", rolls.ToArray())}{modString}";
                 break;
             case "max":
-                resultElement.Q<Label>("Result").text = $"{max+tray.modifier}";
+                resultElement.Q<Label>("Result").text = $"{max + tray.Modifier}";
                 resultElement.Q<Label>("Rolls").text = $"({string.Join(", ", rolls.ToArray())}){modString}";
                 break;
             default:
@@ -218,7 +249,8 @@ public class DiceRoller
         // diceOutcome.Tray = tray;
     }
 
-    public static void AddOutcome(string description, string result, string rolls, int die) {
+    public static void AddOutcome(string description, string result, string rolls, int die)
+    {
         VisualTreeAsset resultTemplate = Resources.Load<VisualTreeAsset>("UITemplates/DiceResult");
         VisualElement resultElement = resultTemplate.Instantiate();
         resultElement.Q<Label>("Label").text = description;

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveLerp : MonoBehaviour
@@ -20,7 +18,7 @@ public class MoveLerp : MonoBehaviour
     {
         Timer -= Time.deltaTime;
 
-        float percentage = 1-(Timer/Duration);
+        float percentage = 1 - (Timer / Duration);
 
         // Ground translation
         Vector3 lerpPos = Vector3.Lerp(Origin, Destination, percentage);
@@ -31,21 +29,23 @@ public class MoveLerp : MonoBehaviour
 
         gameObject.transform.position = lerpPos;
 
-        if (Timer <= 0) {
+        if (Timer <= 0)
+        {
             gameObject.transform.position = Destination;
             Destroy(this);
         }
     }
 
-    public static void Create(GameObject g, Vector3 destination) {
+    public static void Create(GameObject g, Vector3 destination)
+    {
         float distance = Vector3.Distance(destination, g.transform.position);
-        if (distance < .01f) {
+        if (distance < .01f)
+        {
             return;
         }
         MoveLerp ml = g.AddComponent<MoveLerp>();
         ml.Origin = g.transform.position;
         ml.Destination = destination;
-        // ml.Duration = Mathf.Min(1f, Vector3.Distance(ml.Origin, ml.Destination)/3f);
         ml.Duration = .35f;
     }
 }

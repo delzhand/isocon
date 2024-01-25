@@ -3,43 +3,55 @@ using UnityEngine;
 
 public class ColorUtility
 {
-    public static Color UIBlue {
-        get {
-            return ColorFromHex("2c5d87");
+    public static Color UIBlue
+    {
+        get
+        {
+            return GetColor("2c5d87");
         }
     }
 
-    public static Color UIOrange {
-        get {
-            return ColorFromHex("B78E1A");
+    public static Color UIOrange
+    {
+        get
+        {
+            return GetColor("B78E1A");
         }
     }
 
-    public static Color UIFocusBlue {
-        get {
+    public static Color UIFocusBlue
+    {
+        get
+        {
             return new Color(0, .445f, 1);
         }
     }
 
-    public static Color UISelectYellow {
-        get {
+    public static Color UISelectYellow
+    {
+        get
+        {
             return new Color(.914f, 1, 0);
         }
     }
 
-    public static Color UISuccessGreen {
-        get {
-            return ColorFromHex("2c811b");
+    public static Color UISuccessGreen
+    {
+        get
+        {
+            return GetColor("2c811b");
         }
     }
 
-    public static Color UIErrorRed {
-        get {
-            return ColorFromHex("c05050");
+    public static Color UIErrorRed
+    {
+        get
+        {
+            return GetColor("c05050");
         }
     }
 
-    public static string ColorToHex(Color color)
+    public static string GetHex(Color color)
     {
         int r = Mathf.RoundToInt(color.r * 255);
         int g = Mathf.RoundToInt(color.g * 255);
@@ -48,12 +60,15 @@ public class ColorUtility
         return $"#{r:X2}{g:X2}{b:X2}";
     }
 
-    public static Color NormalizeRGB(int red, int green, int blue) {
-        return new Color(red/255f, green/255f, blue/255f);
+    public static Color NormalizeRGB(int red, int green, int blue)
+    {
+        return new Color(red / 255f, green / 255f, blue / 255f);
     }
 
-    public static Color ColorFromHex(string hex) {
-        if (hex == null) {
+    public static Color GetColor(string hex)
+    {
+        if (hex == null)
+        {
             return Color.white;
         }
         hex = hex.Replace("#", "").ToUpper();

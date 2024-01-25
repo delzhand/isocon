@@ -1,11 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Cutout : MonoBehaviour
 {
-    public Token GetToken() {
+    public Token GetToken()
+    {
         Transform t = transform;
         while (t.parent != null)
         {

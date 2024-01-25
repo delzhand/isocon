@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -24,40 +21,20 @@ public class State
     public string System;
     public string Title;
 
-    public static string CurrentStateJson;
-
-    public static void SaveState(string fileName) {
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
-        if (fileName.IndexOf(".json") < 0) {
-            fileName += ".json";
-        }
-        State state = State.GetStateFromScene();
-        string json = JsonUtility.ToJson(state);
-        string fullPath = path + "/maps/" + fileName;
-        File.WriteAllText(fullPath, json);
-        Toast.AddSuccess("Map saved to " + fullPath);
-    }
-
-    public static void LoadState(string fileName) {
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
-        string json = File.ReadAllText(path + "/maps/" + fileName);
-        State state = JsonUtility.FromJson<State>(json);
-        SetSceneFromState(state);
-        Toast.AddSuccess("Map loaded.");
-    }
-
-    public static State GetStateFromScene() {
+    public static State GetStateFromScene()
+    {
         List<string> blockStrings = new List<string>();
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < blocks.Length; i++) {
+        for (int i = 0; i < blocks.Length; i++)
+        {
             blockStrings.Add(blocks[i].GetComponent<Block>().WriteOut());
         }
         State state = new State();
         state.Version = "v2";
-        state.TileTops = ColorUtility.ColorToHex(Environment.TileTopColor);
-        state.TileSides = ColorUtility.ColorToHex(Environment.TileSideColor);
-        state.BgBottom = ColorUtility.ColorToHex(Environment.BgBottomColor);
-        state.BgTop = ColorUtility.ColorToHex(Environment.BgTopColor);
+        state.TileTops = ColorUtility.GetHex(Environment.TileTopColor);
+        state.TileSides = ColorUtility.GetHex(Environment.TileSideColor);
+        state.BgBottom = ColorUtility.GetHex(Environment.BgBottomColor);
+        state.BgTop = ColorUtility.GetHex(Environment.BgTopColor);
         state.LightAngle = TerrainController.LightAngle;
         state.LightHeight = TerrainController.LightHeight;
         state.LightIntensity = TerrainController.LightIntensity;
@@ -70,11 +47,13 @@ public class State
         return state;
     }
 
-    public static void SetSceneFromState(State state) {
+    public static void SetSceneFromState(State state)
+    {
         TerrainController.DestroyAllBlocks();
-        Environment.SetTileColors(ColorUtility.ColorFromHex(state.TileTops), ColorUtility.ColorFromHex(state.TileSides));
-        Environment.SetBackgroundColors(ColorUtility.ColorFromHex(state.BgBottom), ColorUtility.ColorFromHex(state.BgTop));
-        foreach (string s in state.Blocks) {
+        Environment.SetTileColors(ColorUtility.GetColor(state.TileTops), ColorUtility.GetColor(state.TileSides));
+        Environment.SetBackgroundColors(ColorUtility.GetColor(state.BgBottom), ColorUtility.GetColor(state.BgTop));
+        foreach (string s in state.Blocks)
+        {
             Block.ReadIn(state.Version, s);
         }
         TerrainController.LightAngle = state.LightAngle;
@@ -87,7 +66,7 @@ public class State
         MapMeta.CreatorName = state.CreatorName;
         MapMeta.Description = state.Description;
         MapMeta.Objective = state.Objective;
-        MapMeta.System = state.System;        
+        MapMeta.System = state.System;
         MapMeta.Title = state.Title;
 
         VisualElement optionsRoot = UI.System.Q("ToolOptions");
@@ -96,9 +75,5 @@ public class State
         optionsRoot.Q("DataOptions").Q<TextField>("Objective").value = MapMeta.Objective;
         optionsRoot.Q("DataOptions").Q<TextField>("Author").value = MapMeta.CreatorName;
         optionsRoot.Q("DataOptions").Q<DropdownField>("System").value = MapMeta.System;
-    }
-
-    public static void SetCurrentJson() {
-        CurrentStateJson = JsonUtility.ToJson(State.GetStateFromScene());
     }
 }

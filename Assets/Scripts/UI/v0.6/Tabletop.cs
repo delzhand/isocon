@@ -10,7 +10,7 @@ public class Tabletop : MonoBehaviour
 {
     void Start()
     {
-        UI.SetBlocking(UI.System, StringUtility.Arr("SelectedTokenPanel", "FocusedTokenPanel"));
+        UI.SetBlocking(UI.System, StringUtility.CreateArray("SelectedTokenPanel", "FocusedTokenPanel"));
 
         Modal.Setup();
         MapEdit.Setup();
@@ -21,10 +21,12 @@ public class Tabletop : MonoBehaviour
         TurnIndicatorSetup();
         // TerrainEffectSetup();
 
-        UI.System.Q("TurnAdvance").RegisterCallback<MouseEnterEvent>((evt) => {
+        UI.System.Q("TurnAdvance").RegisterCallback<MouseEnterEvent>((evt) =>
+        {
             Tutorial.Init("turn advance");
         });
-        UI.System.Q("TopRight").RegisterCallback<MouseEnterEvent>((evt) => {
+        UI.System.Q("TopRight").RegisterCallback<MouseEnterEvent>((evt) =>
+        {
             Tutorial.Init("terrain info");
         });
         // UI.System.Q("ClearSelected").RegisterCallback<MouseEnterEvent>((evt) => {
@@ -40,7 +42,8 @@ public class Tabletop : MonoBehaviour
         UI.ToggleDisplay("Tabletop", NetworkClient.isConnected);
         TileShare.Offsets();
 
-        if (GameSystem.Current() != null) {
+        if (GameSystem.Current() != null)
+        {
             Token selected = Token.GetSelected();
             GameSystem.Current().UpdateTokenPanel(selected != null ? selected.Data.Id : null, "SelectedTokenPanel");
 
@@ -48,15 +51,18 @@ public class Tabletop : MonoBehaviour
             GameSystem.Current().UpdateTokenPanel(focused != null ? focused.Data.Id : null, "FocusedTokenPanel");
 
             UI.ToggleDisplay(UI.System.Q("SelectionMenu"), SelectionMenu.Visible);
-            if (SelectionMenu.Visible) {
-                if (SelectionMenu.FollowTransform != null) {
+            if (SelectionMenu.Visible)
+            {
+                if (SelectionMenu.FollowTransform != null)
+                {
                     UI.FollowTransform(SelectionMenu.FollowTransform, UI.System.Q("SelectionMenu"), Camera.main, SelectionMenu.Offset);
                     UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, Length.Percent(-100)));
                 }
-                else {
-                        UI.System.Q("SelectionMenu").style.top = 10;
-                        UI.System.Q("SelectionMenu").style.left = 10;
-                        UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, 0));
+                else
+                {
+                    UI.System.Q("SelectionMenu").style.top = 10;
+                    UI.System.Q("SelectionMenu").style.left = 10;
+                    UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, 0));
                 }
             }
 
@@ -96,14 +102,16 @@ public class Tabletop : MonoBehaviour
         UI.System.Q("InfoWindow").Q<Label>("Author").text = MapMeta.CreatorName;
     }
 
-    public void ConnectAsClient() {
+    public void ConnectAsClient()
+    {
         Tutorial.Init("tabletop");
         Label message = UI.System.Q<Label>("ConnectionMessage");
         message.text = $"You are connected to {PlayerPrefs.GetString("HostIP", "an unknown address")} as a client.";
         IPFinder.ReplaceTokens(message);
     }
 
-    public void ConnectAsHost() {
+    public void ConnectAsHost()
+    {
         Tutorial.Init("tabletop");
         TerrainController.InitializeTerrain(8, 8, 1);
 
@@ -114,7 +122,8 @@ public class Tabletop : MonoBehaviour
         BlockMesh.ToggleBorders(false);
     }
 
-    public void ConnectAsSolo() {
+    public void ConnectAsSolo()
+    {
         Tutorial.Init("tabletop");
         TerrainController.InitializeTerrain(8, 8, 1);
 
@@ -125,7 +134,8 @@ public class Tabletop : MonoBehaviour
         BlockMesh.ToggleBorders(false);
     }
 
-    private void TopBarSetup() {
+    private void TopBarSetup()
+    {
         UI.SetBlocking(UI.System, "TopBar");
         UI.TopBar.Q("Isocon").RegisterCallback<ClickEvent>(Tabletop.IsoconMenu);
         UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>(MapEdit.ToggleEditMode);
@@ -141,7 +151,8 @@ public class Tabletop : MonoBehaviour
     }
 
     private static bool showInfo = false;
-    public static void ToggleInfo(ClickEvent evt) {
+    public static void ToggleInfo(ClickEvent evt)
+    {
         showInfo = !showInfo;
         UI.ToggleDisplay("InfoWindow", showInfo);
         UI.ToggleActiveClass(UI.TopBar.Q("Info"), showInfo);
@@ -149,30 +160,38 @@ public class Tabletop : MonoBehaviour
     }
 
     private static bool showSync = false;
-    public static void ToggleSync(ClickEvent evt) {
+    public static void ToggleSync(ClickEvent evt)
+    {
         showSync = !showSync;
         UI.ToggleDisplay("SyncPanel", showSync);
         UI.ToggleActiveClass(UI.TopBar.Q("Sync"), showSync);
     }
-    
-    private void BottomBarSetup() {
+
+    private void BottomBarSetup()
+    {
         UI.SetBlocking(UI.System, "BottomBar");
-        UI.System.Q("BottomBar").RegisterCallback<MouseEnterEvent>((evt) => {
+        UI.System.Q("BottomBar").RegisterCallback<MouseEnterEvent>((evt) =>
+        {
             Tutorial.Init("token bar");
         });
 
-        UI.System.Q("BottomBar").Q("AddToken").RegisterCallback<MouseEnterEvent>((evt) => {
+        UI.System.Q("BottomBar").Q("AddToken").RegisterCallback<MouseEnterEvent>((evt) =>
+        {
             Tutorial.Init("add token");
         });
 
-        UI.System.Q("BottomBar").Q("AddToken").RegisterCallback<ClickEvent>((evt) => {
+        UI.System.Q("BottomBar").Q("AddToken").RegisterCallback<ClickEvent>((evt) =>
+        {
             AddToken.OpenModal(evt);
         });
     }
 
-    private void TurnIndicatorSetup() {
-        UI.System.Q<Button>("TurnAdvance").RegisterCallback<ClickEvent>((evt) => {
-            Modal.DoubleConfirm("Advance Turn", GameSystem.Current().TurnAdvanceMessage(), () => {
+    private void TurnIndicatorSetup()
+    {
+        UI.System.Q<Button>("TurnAdvance").RegisterCallback<ClickEvent>((evt) =>
+        {
+            Modal.DoubleConfirm("Advance Turn", GameSystem.Current().TurnAdvanceMessage(), () =>
+            {
                 Player.Self().CmdRequestGameDataSetValue("IncrementTurn");
             });
         });
@@ -180,7 +199,7 @@ public class Tabletop : MonoBehaviour
 
     // private void TerrainEffectSetup() {
     //     VisualElement root = UI.System.Q("TopRight").Q("Effects");
-        
+
     //     UI.HoverSetup(root.Q("ClearSelected"));
     //     root.Q("ClearSelected").RegisterCallback<ClickEvent>((evt) => {
     //         Block.DeselectAll();
@@ -197,16 +216,20 @@ public class Tabletop : MonoBehaviour
     //     });
     // }
 
-    private static void IsoconMenu(ClickEvent evt) {
-        if (NetworkClient.activeHost) {
+    private static void IsoconMenu(ClickEvent evt)
+    {
+        if (NetworkClient.activeHost)
+        {
             Modal.DoubleConfirm("Exit Tabletop", "You are hosting. <b>Disconnecting from the table will end the session!</b> Exit the tabletop and return to the Isocon Launcher?", Quit);
         }
-        else {
+        else
+        {
             Modal.DoubleConfirm("Exit Tabletop", "Exit the tabletop and return to the Isocon Launcher?", Quit);
         }
     }
 
-    private static void Quit() {
+    private static void Quit()
+    {
         NetworkManager manager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
         if (NetworkServer.active && NetworkClient.isConnected)
         {
@@ -220,7 +243,8 @@ public class Tabletop : MonoBehaviour
         PlayerController.Disconnect();
     }
 
-    private void ImageSyncStatus() {
+    private void ImageSyncStatus()
+    {
 
     }
 }

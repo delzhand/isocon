@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Mirror;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class PlayerController : NetworkBehaviour
 {
@@ -26,9 +25,11 @@ public class PlayerController : NetworkBehaviour
         FileLogger.Write("Host disconnected");
     }
 
-    public static void Disconnect() {
+    public static void Disconnect()
+    {
         GameObject[] objs = GameObject.FindGameObjectsWithTag("TokenData");
-        for (int i = 0; i < objs.Length; i++) {
+        for (int i = 0; i < objs.Length; i++)
+        {
             objs[i].GetComponent<TokenData>().Disconnect();
         }
         TerrainController.DestroyAllBlocks();

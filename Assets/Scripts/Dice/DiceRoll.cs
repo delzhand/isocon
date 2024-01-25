@@ -1,13 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public struct DiceRoll
 {
     public int Rolled;
     public int Die;
 
-    public DiceRoll(int die) {
+    public DiceRoll(int die)
+    {
         Rolled = 0;
         Die = die;
     }

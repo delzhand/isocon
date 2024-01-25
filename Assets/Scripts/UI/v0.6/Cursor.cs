@@ -4,7 +4,8 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public enum CursorMode {
+public enum CursorMode
+{
     Editing,
     Default,
     Dragging,
@@ -12,14 +13,15 @@ public enum CursorMode {
     Targeting,
 }
 
-public enum FocusMode {
+public enum FocusMode
+{
     Single,
     Row,
     Column,
 }
 
 public class Cursor : MonoBehaviour
-{  
+{
     public static CursorMode Mode = CursorMode.Default;
     public static FocusMode FocusMode { get; set; } = FocusMode.Single;
     private static Ray ray;
@@ -28,18 +30,22 @@ public class Cursor : MonoBehaviour
 
     void Update()
     {
-        if (Modal.IsOpen()) {
+        if (Modal.IsOpen())
+        {
             return;
         }
-        if (UI.ClicksSuspended) {
+        if (UI.ClicksSuspended)
+        {
             return;
         }
 
-        if (!Player.IsOnline()) {
+        if (!Player.IsOnline())
+        {
             return;
         }
 
-        if (CameraControl.Drag) {
+        if (CameraControl.Drag)
+        {
             return;
         }
 
@@ -48,24 +54,29 @@ public class Cursor : MonoBehaviour
 
         RaycastHit hit;
         bool isHit = Physics.Raycast(ray, out hit, 100f);
-        if (isHit && hit.collider.tag == "Block") {
+        if (isHit && hit.collider.tag == "Block")
+        {
             Block b = hit.collider.GetComponent<Block>();
             Token t = Token.GetAtBlock(b);
-            if (t != null && Cursor.Mode != CursorMode.Editing) {
+            if (t != null && Cursor.Mode != CursorMode.Editing)
+            {
                 TokenHit(t);
                 Focus(b);
             }
-            else {
+            else
+            {
                 BlockHit(b);
                 Token.UnfocusAll();
             }
         }
-        else if (isHit && hit.collider.tag == "TokenCollider") {
+        else if (isHit && hit.collider.tag == "TokenCollider")
+        {
             Token t = hit.collider.GetComponent<Cutout>().GetToken();
             Focus(t.GetBlock());
             TokenHit(t);
         }
-        else if (!isHit) {
+        else if (!isHit)
+        {
             Token.UnfocusAll();
             Block.UnfocusAll();
             Block.DehighlightAll();
@@ -74,18 +85,21 @@ public class Cursor : MonoBehaviour
         TerrainController.SetInfo();
     }
 
-    private void BlockHit(Block b) {
-        switch (Mode) {
+    private void BlockHit(Block b)
+    {
+        switch (Mode)
+        {
             case CursorMode.Dragging:
                 Block.DehighlightAll();
                 HighlightSizeArea(b);
                 break;
         }
 
-        if (!b.Focused) {
+        if (!b.Focused)
+        {
             Focus(b);
         }
-        
+
         BlockClicks(b);
     }
 
@@ -98,14 +112,14 @@ public class Cursor : MonoBehaviour
                 break;
             case FocusMode.Row:
                 Block.UnfocusAll();
-                foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetRow(new Vector2Int(b.getX(), b.getY()))))
+                foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetRow(new Vector2Int(b.GetX(), b.GetY()))))
                 {
                     block.Focused = true;
                 }
                 break;
             case FocusMode.Column:
                 Block.UnfocusAll();
-                foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetColumn(new Vector2Int(b.getX(), b.getY()))))
+                foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetColumn(new Vector2Int(b.GetX(), b.GetY()))))
                 {
                     block.Focused = true;
                 }
@@ -116,11 +130,14 @@ public class Cursor : MonoBehaviour
         }
     }
 
-    private void TokenHit(Token t) {
-        switch (Mode) {
+    private void TokenHit(Token t)
+    {
+        switch (Mode)
+        {
             case CursorMode.Default:
             case CursorMode.Dragging:
-                if (t.State != TokenState.Focused) {
+                if (t.State != TokenState.Focused)
+                {
                     t.Focus();
                 }
                 TokenClicks(t);
@@ -129,49 +146,63 @@ public class Cursor : MonoBehaviour
         }
     }
 
-    private void HighlightSizeArea(Block block) {
+    private void HighlightSizeArea(Block block)
+    {
         block.Highlight();
         int size = Token.GetSelected().Size;
         Block[] neighbors = TerrainController.FindNeighbors(block, size);
-        for(int i = 0; i < neighbors.Length; i++) {
+        for (int i = 0; i < neighbors.Length; i++)
+        {
             neighbors[i].Highlight();
         }
     }
 
-    private void BlockClicks(Block block) {
-        if (block == null) {
+    private void BlockClicks(Block block)
+    {
+        if (block == null)
+        {
             return;
         }
-        if (IsLeftClick()) {
+        if (IsLeftClick())
+        {
             block.LeftClickDown();
         }
-        if (IsRightClick()) {
+        if (IsRightClick())
+        {
             block.RightClickDown();
         }
     }
 
-    private void TokenClicks(Token token) {
-        if (token == null) {
+    private void TokenClicks(Token token)
+    {
+        if (token == null)
+        {
             return;
         }
-        if (IsLeftClick()) {
+        if (IsLeftClick())
+        {
             token.LeftClickDown();
         }
-        if (IsRightClick()) {
+        if (IsRightClick())
+        {
             token.RightClickDown();
         }
     }
 
-    public static bool IsRightClick() {
+    public static bool IsRightClick()
+    {
         return Input.GetMouseButtonDown(1);
     }
 
-    public static bool IsLeftClick() {
+    public static bool IsLeftClick()
+    {
         return Input.GetMouseButtonDown(0);
     }
 
-    private void SetFocusMode() {
-        if (Mode == CursorMode.Editing) {
+    private void SetFocusMode()
+    {
+        if (Mode == CursorMode.Editing)
+        {
             switch (MapEdit.EditOp)
             {
                 case "ResizeMap":
@@ -198,7 +229,8 @@ public class Cursor : MonoBehaviour
         }
     }
 
-    public static bool IgnoreTokens() {
+    public static bool IgnoreTokens()
+    {
         return Mode == CursorMode.Editing || Mode == CursorMode.TerrainEffecting;
     }
 }

@@ -1,17 +1,15 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlockMesh: MonoBehaviour
+public class BlockMesh : MonoBehaviour
 {
     public static Mesh Hex;
     public static Dictionary<BlockShape, Mesh> Shapes = new();
-    private static Dictionary<string, Material> SharedMaterials = new();
-
+    private static Dictionary<string, Material> _sharedMaterials = new();
     public static bool IsSetup = false;
 
-    public static void Setup() {
+    public static void Setup()
+    {
         IsSetup = true;
 
         Hex = Resources.Load<Mesh>("Models/Hex");
@@ -25,99 +23,115 @@ public class BlockMesh: MonoBehaviour
         Shapes.Add(BlockShape.SlopeInt, Resources.Load<Mesh>("Models/SlopeIntCorner"));
         Shapes.Add(BlockShape.SlopeExt, Resources.Load<Mesh>("Models/SlopeExtCorner"));
 
-        SharedMaterials.Add("side1", new Material(Resources.Load<Material>("Materials/Block/Checker/SideA")));
-        SharedMaterials.Add("side2", new Material(Resources.Load<Material>("Materials/Block/Checker/SideB")));
-        SharedMaterials.Add("top1", new Material(Resources.Load<Material>("Materials/Block/Checker/TopA")));
-        SharedMaterials.Add("top2", new Material(Resources.Load<Material>("Materials/Block/Checker/TopB")));
-        SharedMaterials.Add("highlighted", new Material(Resources.Load<Material>("Materials/Block/Highlighted")));
+        _sharedMaterials.Add("side1", new Material(Resources.Load<Material>("Materials/Block/Checker/SideA")));
+        _sharedMaterials.Add("side2", new Material(Resources.Load<Material>("Materials/Block/Checker/SideB")));
+        _sharedMaterials.Add("top1", new Material(Resources.Load<Material>("Materials/Block/Checker/TopA")));
+        _sharedMaterials.Add("top2", new Material(Resources.Load<Material>("Materials/Block/Checker/TopB")));
+        _sharedMaterials.Add("highlighted", new Material(Resources.Load<Material>("Materials/Block/Highlighted")));
 
-        SharedMaterials.Add("unfocused", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")));
-        SharedMaterials.Add("focused", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")));
-        SharedMaterials["focused"].SetInt("_Focused", 1);
+        _sharedMaterials.Add("unfocused", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+        _sharedMaterials.Add("focused", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+        _sharedMaterials["focused"].SetInt("_Focused", 1);
 
-        SharedMaterials.Add("selectfocused", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")));
-        SharedMaterials["selectfocused"].SetInt("_Selected", 1);
-        SharedMaterials["selectfocused"].SetInt("_Focused", 1);
+        _sharedMaterials.Add("selectfocused", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+        _sharedMaterials["selectfocused"].SetInt("_Selected", 1);
+        _sharedMaterials["selectfocused"].SetInt("_Focused", 1);
 
-        SharedMaterials.Add("selected", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")));
-        SharedMaterials["selected"].SetInt("_Selected", 1);
+        _sharedMaterials.Add("selected", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+        _sharedMaterials["selected"].SetInt("_Selected", 1);
 
-        foreach(string s in TextureMaterials()) {
-            SharedMaterials.Add($"{s}", new Material(Resources.Load<Material>($"Materials/Block/Artistic/{s}")));
+        foreach (string s in TextureMaterials())
+        {
+            _sharedMaterials.Add($"{s}", new Material(Resources.Load<Material>($"Materials/Block/Artistic/{s}")));
         }
     }
 
-    public static Material GetSharedMaterial(string key) {
-        if (SharedMaterials.ContainsKey(key)) {
-            return SharedMaterials[key];
+    public static Material GetSharedMaterial(string key)
+    {
+        if (_sharedMaterials.ContainsKey(key))
+        {
+            return _sharedMaterials[key];
         }
         Debug.Log($"Material with key {key} not found");
         return null;
     }
 
-    public static void ToggleBorders(bool show) {
-        foreach(string s in TextureMaterials()) {
-            SharedMaterials[s].SetInt("_ShowOutline", show ? 1 : 0);
+    public static void ToggleBorders(bool show)
+    {
+        foreach (string s in TextureMaterials())
+        {
+            _sharedMaterials[s].SetInt("_ShowOutline", show ? 1 : 0);
         }
-        foreach(string s in StringUtility.Arr("side1", "side2", "top1", "top2")) {
-            SharedMaterials[s].SetInt("_ShowOutline", show ? 1 : 0);
+        foreach (string s in StringUtility.CreateArray("side1", "side2", "top1", "top2"))
+        {
+            _sharedMaterials[s].SetInt("_ShowOutline", show ? 1 : 0);
         }
         Block.ToggleBorders(show);
     }
 
-    private static string[] TextureMaterials() {
-        return StringUtility.Arr("Brick3Side", "Brick3Top", "SmallTileTop", "BigTileTop", "AcidSide","AcidTopFlow","AcidTopStill","Brick2Side","Brick2Top","BrickSide","BrickTop","DryGrassTop","GoldSide","GoldTop","GrassTop","LavaSide","LavaTopFlow","LavaTopStill","MetalSide","MetalTop","PoisonSide","PoisonTopFlow","PoisonTopStill","SandSide","SandTop","SnowSide","SnowTop","SoilSide","SoilTop","StoneSide","StoneTop","WaterSideFlow", "WaterSideStill","WaterTopFlow","WaterTopStill","Wood2Side","Wood2Top","WoodSide","WoodTop", "GrayBrickSide", "GrayBrickTop", "GrayMetalSide", "GrayMetalTop");
-    }
-
-    private static Material Instantiate(Material material)
+    private static string[] TextureMaterials()
     {
-        throw new NotImplementedException();
+        return StringUtility.CreateArray("Brick3Side", "Brick3Top", "SmallTileTop", "BigTileTop", "AcidSide", "AcidTopFlow", "AcidTopStill", "Brick2Side", "Brick2Top", "BrickSide", "BrickTop", "DryGrassTop", "GoldSide", "GoldTop", "GrassTop", "LavaSide", "LavaTopFlow", "LavaTopStill", "MetalSide", "MetalTop", "PoisonSide", "PoisonTopFlow", "PoisonTopStill", "SandSide", "SandTop", "SnowSide", "SnowTop", "SoilSide", "SoilTop", "StoneSide", "StoneTop", "WaterSideFlow", "WaterSideStill", "WaterTopFlow", "WaterTopStill", "Wood2Side", "Wood2Top", "WoodSide", "WoodTop", "GrayBrickSide", "GrayBrickTop", "GrayMetalSide", "GrayMetalTop");
     }
 
-    public static int MaterialTopIndex(BlockShape shape) {
-        if (TerrainController.GridType == "Hex") {
+    public static int MaterialTopIndex(BlockShape shape)
+    {
+        if (TerrainController.GridType == "Hex")
+        {
             return 1;
         }
-        if (shape == BlockShape.Steps) {
-            return 3; 
+        if (shape == BlockShape.Steps)
+        {
+            return 3;
         }
-        if (shape == BlockShape.Corner || shape == BlockShape.FlatCorner) {
+        if (shape == BlockShape.Corner || shape == BlockShape.FlatCorner)
+        {
             return 1;
         }
         return 0;
     }
 
-    public static int MaterialSideIndex(BlockShape shape) {
-        if (TerrainController.GridType == "Hex") {
+    public static int MaterialSideIndex(BlockShape shape)
+    {
+        if (TerrainController.GridType == "Hex")
+        {
             return 0;
         }
-        if (shape == BlockShape.Steps) {
-            return 1; 
+        if (shape == BlockShape.Steps)
+        {
+            return 1;
         }
-        if (shape == BlockShape.Corner || shape == BlockShape.FlatCorner) {
+        if (shape == BlockShape.Corner || shape == BlockShape.FlatCorner)
+        {
             return 0;
         }
         return 1;
     }
 
-    public static int MaterialMarkerIndex(BlockShape shape) {
+    public static int MaterialMarkerIndex(BlockShape shape)
+    {
         return 2;
     }
 
-    public static int MaterialFocusIndex(BlockShape shape) {
-        if (shape == BlockShape.Steps) {
-            return 0; 
+    public static int MaterialFocusIndex(BlockShape shape)
+    {
+        if (shape == BlockShape.Steps)
+        {
+            return 0;
         }
         return 3;
     }
 
-    public static string TextureMaterialName(string style, bool top) {
-        (string,string) materials = TextureMap(style);
-        return top ? materials.Item2 : materials.Item1;    
+    public static string TextureMaterialName(string style, bool top)
+    {
+        (string, string) materials = TextureMap(style);
+        return top ? materials.Item2 : materials.Item1;
     }
 
-    public static (string,string) TextureMap(string style) {
-        switch (style) {
+    public static (string, string) TextureMap(string style)
+    {
+        switch (style)
+        {
             case "Acid Flow":
                 return ("AcidSide", "AcidTopFlow");
             case "Acid":
@@ -157,8 +171,10 @@ public class BlockMesh: MonoBehaviour
         }
     }
 
-    public static string ReverseTextureMap(string texture) {
-        switch (texture) {
+    public static string ReverseTextureMap(string texture)
+    {
+        switch (texture)
+        {
             case "AcidTopFlow":
                 return "Acid Flow";
             case "AcidSide":

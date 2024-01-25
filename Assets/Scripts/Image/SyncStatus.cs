@@ -13,10 +13,12 @@ public class SyncStatus : MonoBehaviour
     {
         VisualElement root = UI.TopBar.Q("SyncStatus");
         root.Clear();
-        foreach(KeyValuePair<string, float> kvp in HashPercentages) {
+        foreach (KeyValuePair<string, float> kvp in HashPercentages)
+        {
             ProgressBar bar = new();
-            bar.title = TextureSender.TruncatedHash(kvp.Key);
-            if (HashTokens.ContainsKey(kvp.Key)) {
+            bar.title = TextureSender.TruncateHash(kvp.Key);
+            if (HashTokens.ContainsKey(kvp.Key))
+            {
                 bar.title = HashTokens[kvp.Key];
             }
             bar.value = kvp.Value * 100;
@@ -24,17 +26,22 @@ public class SyncStatus : MonoBehaviour
         }
     }
 
-    public static void Receive(string hash, float percentage) {
-        if (!HashPercentages.ContainsKey(hash)) {
+    public static void Receive(string hash, float percentage)
+    {
+        if (!HashPercentages.ContainsKey(hash))
+        {
             FindMatchingToken(hash);
         }
         HashPercentages[hash] = percentage;
     }
 
-    private static void FindMatchingToken(string hash) {
-        foreach(var gameObject in GameObject.FindGameObjectsWithTag("Token")) {
+    private static void FindMatchingToken(string hash)
+    {
+        foreach (var gameObject in GameObject.FindGameObjectsWithTag("Token"))
+        {
             var tokenData = gameObject.GetComponent<Token>().Data;
-            if (tokenData.GraphicHash == hash) {
+            if (tokenData.GraphicHash == hash)
+            {
                 HashTokens[hash] = tokenData.Name;
             }
         }

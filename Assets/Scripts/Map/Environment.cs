@@ -1,16 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class Environment : MonoBehaviour
 {
-    public static Color TileTopColor = ColorUtility.ColorFromHex("#3E713E");
-    public static Color TileSideColor = ColorUtility.ColorFromHex("#6F5A3C");
-    public static Color BgBottomColor = ColorUtility.ColorFromHex("#474571");
-    public static Color BgTopColor = ColorUtility.ColorFromHex("#001022");
-    public static Color CurrentPaintTop = ColorUtility.ColorFromHex("#000000");
-    public static Color CurrentPaintSide = ColorUtility.ColorFromHex("#000000");
+    public static Color TileTopColor = ColorUtility.GetColor("#3E713E");
+    public static Color TileSideColor = ColorUtility.GetColor("#6F5A3C");
+    public static Color BgBottomColor = ColorUtility.GetColor("#474571");
+    public static Color BgTopColor = ColorUtility.GetColor("#001022");
+    public static Color CurrentPaintTop = ColorUtility.GetColor("#000000");
+    public static Color CurrentPaintSide = ColorUtility.GetColor("#000000");
 
     private static Material BackgroundMat;
 
@@ -21,7 +20,8 @@ public class Environment : MonoBehaviour
         return darkenedColor;
     }
 
-    public static void SetTileColors(Color top, Color sides) {
+    public static void SetTileColors(Color top, Color sides)
+    {
         TileTopColor = top;
         TileSideColor = sides;
         Block.SetColor("top1", top);
@@ -32,11 +32,13 @@ public class Environment : MonoBehaviour
         UI.System.Q("SideBlockColor").style.backgroundColor = TileSideColor;
     }
 
-    public static void SetBackgroundColors(Color bottom, Color top) {
+    public static void SetBackgroundColors(Color bottom, Color top)
+    {
         BgBottomColor = bottom;
         BgTopColor = top;
         MeshRenderer mr = Camera.main.transform.Find("Background").GetComponent<MeshRenderer>();
-        if (BackgroundMat == null) {
+        if (BackgroundMat == null)
+        {
             BackgroundMat = Resources.Load<Material>($"Materials/Environment/Gradient");
             List<Material> bgmats = new();
             bgmats.Add(BackgroundMat);

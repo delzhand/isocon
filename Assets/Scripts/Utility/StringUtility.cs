@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 public class StringUtility
 {
-    public static bool InList(string first, params string[] rest)
+    public static bool CheckInList(string first, params string[] rest)
     {
         foreach (var str in rest)
         {
@@ -14,15 +14,18 @@ public class StringUtility
         return false;
     }
 
-    public static string[] Arr(params string[] items) {
+    public static string[] CreateArray(params string[] items)
+    {
         List<string> list = new();
-        foreach (var str in items) {
+        foreach (var str in items)
+        {
             list.Add(str);
         }
         return list.ToArray();
     }
 
-    public static string IntToAlpha(int x) {
+    public static string ConvertIntToAlpha(int x)
+    {
         const int Base = 26;
         const int Offset = 64; // ASCII offset for uppercase letters
         string column = "";
@@ -30,11 +33,11 @@ public class StringUtility
         {
             int remainder = x % Base;
             char letter = (char)(remainder + Offset);
-            
+
             column = letter + column;
             x = (x - 1) / Base; // Adjust number for next iteration
         }
-        return column;    
+        return column;
     }
 
 }

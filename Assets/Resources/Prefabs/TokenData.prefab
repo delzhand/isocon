@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7936977207174457304}
   - component: {fileID: 7071721080883694331}
   m_Layer: 0
-  m_Name: TokenData2
+  m_Name: TokenData
   m_TagString: TokenData
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

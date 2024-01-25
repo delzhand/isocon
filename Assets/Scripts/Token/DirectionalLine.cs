@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
@@ -20,100 +19,112 @@ public class DirectionalLine : NetworkBehaviour
     [SyncVar]
     public string Op;
 
-    private LineRenderer Line;
+    private LineRenderer _line;
 
-    void Start() {
-        Line = gameObject.AddComponent<LineRenderer>();
-        Line.startWidth = .05f;
-        Line.endWidth = .05f;
-        Line.numCapVertices = 0;
-        Line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        Line.material = Resources.Load<Material>("Materials/Line");
-        Line.startWidth = .2f;
-        Line.endWidth = .2f;
-        Line.textureMode = LineTextureMode.Tile;
-        Line.textureScale = new Vector2(5f, 1f);
+    void Start()
+    {
+        _line = gameObject.AddComponent<LineRenderer>();
+        _line.startWidth = .05f;
+        _line.endWidth = .05f;
+        _line.numCapVertices = 0;
+        _line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        _line.material = Resources.Load<Material>("Materials/Line");
+        _line.startWidth = .2f;
+        _line.endWidth = .2f;
+        _line.textureMode = LineTextureMode.Tile;
+        _line.textureScale = new Vector2(5f, 1f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Line.positionCount = 0;
-        if (!Visible || !ValidTarget) {
+        _line.positionCount = 0;
+        if (!Visible || !ValidTarget)
+        {
             return;
         }
 
         TokenData data = TokenData.Find(TokenId);
         // Don't show while token is moving
-        if (data.WorldObject.GetComponent<MoveLerp>()) {
+        if (data.WorldObject.GetComponent<MoveLerp>())
+        {
             return;
         }
 
         float density = .25f;
         float amplitude = 1f;
         Color color = ColorUtility.UISelectYellow;
-        Line.textureScale = new Vector2(5f, 1f);
+        _line.textureScale = new Vector2(5f, 1f);
         Vector3 originOffset = new Vector3(0, .25f, 0);
         Vector3 targetOffset = new Vector3(0, .25f, 0);
 
-        if (Op == "Placing") {
-            Line.textureScale = new Vector2(1f, 1f);
+        if (Op == "Placing")
+        {
+            _line.textureScale = new Vector2(1f, 1f);
         }
 
-        if (Op == "Attacking") {
+        if (Op == "Attacking")
+        {
             amplitude = 0f;
             color = Color.red;
             originOffset = new Vector3(0, .5f, 0);
             targetOffset = new Vector3(0, .5f, 0);
         }
-        
-        Line.colorGradient = GetGradient(color);
+
+        _line.colorGradient = GetGradient(color);
 
         Vector3 origin = data.WorldObject.transform.position + originOffset;
-        if (!data.Placed) {
+        if (!data.Placed)
+        {
             Vector2 v = data.UnitBarElement.worldBound.center;
             string uiScale = PlayerPrefs.GetString("UIScale", "100%");
             float value = float.Parse(uiScale.Replace("%", "")) / 100f;
             v *= value;
-            origin = Camera.main.ScreenToWorldPoint(new Vector3(v.x, Screen.height-v.y, 0));
+            origin = Camera.main.ScreenToWorldPoint(new Vector3(v.x, Screen.height - v.y, 0));
         }
 
 
         List<Vector3> points = GenerateParabolaPoints(origin, Target + targetOffset, density, amplitude);
-        Line.positionCount = points.Count;
-        for (int i = 0; i < points.Count; i++) {
-            Line.SetPosition(i, points[i]);
+        _line.positionCount = points.Count;
+        for (int i = 0; i < points.Count; i++)
+        {
+            _line.SetPosition(i, points[i]);
         }
     }
 
-    public void Init(string id, string op) {
+    public void Init(string id, string op)
+    {
         TokenId = id;
         Visible = true;
         Op = op;
     }
 
-    public void Deinit() {
+    public void Deinit()
+    {
         TokenId = null;
         Visible = false;
         Op = null;
     }
 
-    public void SetTarget(Vector3 v) {
+    public void SetTarget(Vector3 v)
+    {
         Target = v;
         ValidTarget = true;
     }
 
-    public void UnsetTarget() {
+    public void UnsetTarget()
+    {
         ValidTarget = false;
     }
-    
+
     public List<Vector3> GenerateParabolaPoints(Vector3 origin, Vector3 target, float density, float parabolaHeight)
     {
         List<Vector3> points = new List<Vector3>();
 
         // Calculate the distance between origin and target
         float distance = Vector3.Distance(origin, target);
-        if (distance < .9f) {
+        if (distance < .9f)
+        {
             return points;
         }
 
@@ -143,7 +154,8 @@ public class DirectionalLine : NetworkBehaviour
         return straightLine + sineWave;
     }
 
-    private Gradient GetGradient(Color c) {
+    private Gradient GetGradient(Color c)
+    {
         var gradient = new Gradient();
 
         // Blend color from red at 0% to blue at 100%

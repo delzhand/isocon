@@ -1,22 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public enum BlockShape
 {
-  Solid,
-  Slope,
-  SlopeInt,
-  SlopeExt,
-  Steps,
-  Corner,
-  FlatCorner,
-  Upslope,
-  Spacer,
-  Hidden
+    Solid,
+    Slope,
+    SlopeInt,
+    SlopeExt,
+    Steps,
+    Corner,
+    FlatCorner,
+    Upslope,
+    Spacer,
+    Hidden
 }
 
 public class Block : MonoBehaviour
@@ -33,49 +31,53 @@ public class Block : MonoBehaviour
                 return;
             _focused = value;
             _allFocused.Add(this);
-            MaterialReset = true;
+            _materialReset = true;
         }
     }
     static private HashSet<Block> _allFocused = new();
     static public IEnumerable<Block> AllFocusedBlocks => _allFocused;
 
     public bool Highlighted = false;
-
     public BlockShape Shape = BlockShape.Solid;
     public bool Destroyable = true;
 
-    private List<string> effects = new();
-    private Material markerMaterial;
+    private List<string> _effects = new();
+    private Material _markerMaterial;
 
-    private bool Painted = false;
-    private Color PaintColorTop;
-    private Color PaintColorSide;
-    private Material PaintMaterialTop;
-    private Material PaintMaterialSide;
+    private bool _painted = false;
+    private Color _paintColorTop;
+    private Color _paintColorSide;
+    private Material _paintMaterialTop;
+    private Material _paintMaterialSide;
 
-    private string TextureTop = "";
-    private string TextureSide = "";
+    private string _textureTop = "";
+    private string _textureSide = "";
 
-    private bool MaterialReset = true;
+    private bool _materialReset = true;
 
-    private Vector3 DragOrigin;
-    private bool Dragging;
+    private Vector3 _dragOrigin;
+    private bool _dragging;
 
-    void Awake() {
-        if (!BlockMesh.IsSetup) {
+    void Awake()
+    {
+        if (!BlockMesh.IsSetup)
+        {
             BlockMesh.Setup();
         }
-        PaintMaterialSide = Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideC"));
-        PaintMaterialTop = Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopC"));
-        markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));
+        _paintMaterialSide = Instantiate(Resources.Load<Material>("Materials/Block/Checker/SideC"));
+        _paintMaterialTop = Instantiate(Resources.Load<Material>("Materials/Block/Checker/TopC"));
+        _markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));
         ShapeChange(Shape);
     }
 
-    void LateUpdate() {
-        if (!Input.GetMouseButtonUp(1)) {
+    void LateUpdate()
+    {
+        if (!Input.GetMouseButtonUp(1))
+        {
             return;
         }
-        if (Dragging && Input.mousePosition == DragOrigin) {
+        if (_dragging && Input.mousePosition == _dragOrigin)
+        {
             // Mouse up where clicked
             TileMenu.ShowMenu(this);
         }
@@ -84,28 +86,33 @@ public class Block : MonoBehaviour
     void Update()
     {
         GameObject indicator = transform.Find("Indicator").gameObject;
-        if (Shape == BlockShape.Solid || Shape == BlockShape.Slope) {
+        if (Shape == BlockShape.Solid || Shape == BlockShape.Slope)
+        {
             indicator.transform.eulerAngles = new Vector3(90, -90, 0);
             indicator.SetActive(TerrainController.Indicators);
         }
-        else {
+        else
+        {
             indicator.SetActive(false);
         }
 
 
-        if (MaterialReset) {
-            MaterialReset = false;
+        if (_materialReset)
+        {
+            _materialReset = false;
             SetMaterials();
         }
     }
 
-    public string WriteOut(){
+    public string WriteOut()
+    {
         Column c = transform.parent.GetComponent<Column>();
         string PaintColorTopHex = "";
         string PaintColorSideHex = "";
-        if (Painted) {
-            PaintColorTopHex = ColorUtility.ColorToHex(PaintColorTop);
-            PaintColorSideHex = ColorUtility.ColorToHex(PaintColorSide);
+        if (_painted)
+        {
+            PaintColorTopHex = ColorUtility.GetHex(_paintColorTop);
+            PaintColorSideHex = ColorUtility.GetHex(_paintColorSide);
         }
         string[] bits = new string[]{
             c.X.ToString(),
@@ -114,28 +121,31 @@ public class Block : MonoBehaviour
             transform.localEulerAngles.y.ToString(),
             Shape.ToString(),
             Destroyable.ToString(),
-            string.Join(",", effects.ToArray()),
-            Painted.ToString(),
+            string.Join(",", _effects.ToArray()),
+            _painted.ToString(),
             PaintColorTopHex,
             PaintColorSideHex,
-            TextureTop,
-            TextureSide,
+            _textureTop,
+            _textureSide,
         };
         return string.Join("|", bits);
-    }  
+    }
 
-    public static GameObject ReadIn(string version, string block) {
+    public static GameObject ReadIn(string version, string block)
+    {
         string[] data = block.Split("|");
-        switch (version) {
+        switch (version)
+        {
             case "v1":
-                return parseV1(data);
+                return ParseV1(data);
             case "v2":
-                return parseV2(data);
+                return ParseV2(data);
         }
         return null;
     }
 
-    private static GameObject parseV1(string[] data) {
+    private static GameObject ParseV1(string[] data)
+    {
         int x = int.Parse(data[0]);
         int y = int.Parse(data[1]);
         float z = float.Parse(data[2]);
@@ -144,20 +154,24 @@ public class Block : MonoBehaviour
         bool destroyable = bool.Parse(data[5]);
         string[] markersArray = data[6].Split(",");
         List<string> markers = new List<string>();
-        for(int i = 0; i < markersArray.Length; i++) {
-            if (markersArray[i].Length > 0) {
+        for (int i = 0; i < markersArray.Length; i++)
+        {
+            if (markersArray[i].Length > 0)
+            {
                 markers.Add(markersArray[i]);
             }
         }
         // Default to false here to not break older saves
         bool painted = false;
-        if (data.Length > 7) {
+        if (data.Length > 7)
+        {
             painted = bool.Parse(data[7]);
         }
 
         GameObject map = GameObject.Find("Terrain");
-        GameObject column = GameObject.Find(x+","+y);
-        if (column == null) {
+        GameObject column = GameObject.Find(x + "," + y);
+        if (column == null)
+        {
             column = new GameObject();
             column.name = x + "," + y;
             column.tag = "Column";
@@ -175,24 +189,28 @@ public class Block : MonoBehaviour
         block.transform.localRotation = Quaternion.Euler(0, r, 0);
         block.GetComponent<Block>().Destroyable = destroyable;
         block.GetComponent<Block>().ShapeChange(type);
-        for (int i = 0; i < markers.Count; i++) {
+        for (int i = 0; i < markers.Count; i++)
+        {
             block.GetComponent<Block>().EffectChange(markers[i]);
         }
-        if (painted) {
-            Color top = ColorUtility.ColorFromHex(data[8]);
-            Color sides = ColorUtility.ColorFromHex(data[9]);
+        if (painted)
+        {
+            Color top = ColorUtility.GetColor(data[8]);
+            Color sides = ColorUtility.GetColor(data[9]);
             block.GetComponent<Block>().ApplyPaint(top, sides);
         }
-        if (data.Length > 10) {
-            (string,string) TextureStrings = BlockMesh.TextureMap(data[10]);
-            block.GetComponent<Block>().TextureTop = TextureStrings.Item2;
-            block.GetComponent<Block>().TextureSide = TextureStrings.Item1;
+        if (data.Length > 10)
+        {
+            (string, string) TextureStrings = BlockMesh.TextureMap(data[10]);
+            block.GetComponent<Block>()._textureTop = TextureStrings.Item2;
+            block.GetComponent<Block>()._textureSide = TextureStrings.Item1;
         }
 
         return block;
     }
 
-    private static GameObject parseV2(string[] data) {
+    private static GameObject ParseV2(string[] data)
+    {
         int x = int.Parse(data[0]);
         int y = int.Parse(data[1]);
         float z = float.Parse(data[2]);
@@ -201,20 +219,24 @@ public class Block : MonoBehaviour
         bool destroyable = bool.Parse(data[5]);
         string[] markersArray = data[6].Split(",");
         List<string> markers = new List<string>();
-        for(int i = 0; i < markersArray.Length; i++) {
-            if (markersArray[i].Length > 0) {
+        for (int i = 0; i < markersArray.Length; i++)
+        {
+            if (markersArray[i].Length > 0)
+            {
                 markers.Add(markersArray[i]);
             }
         }
         // Default to false here to not break older saves
         bool painted = false;
-        if (data.Length > 7) {
+        if (data.Length > 7)
+        {
             painted = bool.Parse(data[7]);
         }
 
         GameObject map = GameObject.Find("Terrain");
-        GameObject column = GameObject.Find(x+","+y);
-        if (column == null) {
+        GameObject column = GameObject.Find(x + "," + y);
+        if (column == null)
+        {
             column = new GameObject();
             column.name = x + "," + y;
             column.tag = "Column";
@@ -232,24 +254,29 @@ public class Block : MonoBehaviour
         block.transform.localRotation = Quaternion.Euler(0, r, 0);
         block.GetComponent<Block>().Destroyable = destroyable;
         block.GetComponent<Block>().ShapeChange(type);
-        for (int i = 0; i < markers.Count; i++) {
+        for (int i = 0; i < markers.Count; i++)
+        {
             block.GetComponent<Block>().EffectChange(markers[i]);
         }
-        if (painted) {
-            Color top = ColorUtility.ColorFromHex(data[8]);
-            Color sides = ColorUtility.ColorFromHex(data[9]);
+        if (painted)
+        {
+            Color top = ColorUtility.GetColor(data[8]);
+            Color sides = ColorUtility.GetColor(data[9]);
             block.GetComponent<Block>().ApplyPaint(top, sides);
         }
-        if (data.Length > 10) {
-            block.GetComponent<Block>().TextureTop = data[10];
-            block.GetComponent<Block>().TextureSide = data[11];
+        if (data.Length > 10)
+        {
+            block.GetComponent<Block>()._textureTop = data[10];
+            block.GetComponent<Block>()._textureSide = data[11];
         }
 
         return block;
     }
 
-    public void LeftClickDown() {
-        switch (Cursor.Mode) {
+    public void LeftClickDown()
+    {
+        switch (Cursor.Mode)
+        {
             case CursorMode.TerrainEffecting:
                 Select();
                 break;
@@ -269,64 +296,81 @@ public class Block : MonoBehaviour
         }
     }
 
-    public void RightClickDown() {
-        switch (Cursor.Mode) {
+    public void RightClickDown()
+    {
+        switch (Cursor.Mode)
+        {
             case CursorMode.TerrainEffecting:
-                if (SelectionMenu.Visible) {
+                if (SelectionMenu.Visible)
+                {
                     SelectionMenu.Hide();
                 }
-                else {
-                    Dragging = true;
-                    DragOrigin = Input.mousePosition;
+                else
+                {
+                    _dragging = true;
+                    _dragOrigin = Input.mousePosition;
                 }
                 break;
         }
     }
 
-    public static void SetColor(string id, Color color) {
-        if (!BlockMesh.IsSetup) {
+    public static void SetColor(string id, Color color)
+    {
+        if (!BlockMesh.IsSetup)
+        {
             BlockMesh.Setup();
         }
         BlockMesh.GetSharedMaterial(id).SetColor("_Color", color);
     }
 
-    public int getX() {
+    public int GetX()
+    {
         return this.transform.parent.GetComponent<Column>().X;
     }
 
-    public int getY() {
+    public int GetY()
+    {
         return this.transform.parent.GetComponent<Column>().Y;
     }
 
-    public int getZ() {
-        return (int)(this.transform.position.y/.5f)+2;
+    public int GetZ()
+    {
+        return (int)(this.transform.position.y / .5f) + 2;
     }
 
-    public float getHeight() {
+    public float GetHeight()
+    {
         float height = transform.localPosition.y + 1;
-        if (Shape == BlockShape.Slope || Shape == BlockShape.Steps || Shape == BlockShape.SlopeInt || Shape == BlockShape.SlopeExt) {
+        if (Shape == BlockShape.Slope || Shape == BlockShape.Steps || Shape == BlockShape.SlopeInt || Shape == BlockShape.SlopeExt)
+        {
             height += .5f;
         }
         return height;
     }
 
-    public Vector3 getMidpoint() {
+    public Vector3 GetMidpoint()
+    {
         Vector3 v = transform.position + new Vector3(0, .25f, 0);
-        if (Shape == BlockShape.Slope || Shape == BlockShape.SlopeExt || Shape == BlockShape.SlopeInt || Shape == BlockShape.Steps) {
+        if (Shape == BlockShape.Slope || Shape == BlockShape.SlopeExt || Shape == BlockShape.SlopeInt || Shape == BlockShape.Steps)
+        {
             v -= new Vector3(0, .25f, 0);
         }
         return v;
     }
 
-    public List<string> GetEffects() {
-        return effects;
+    public List<string> GetEffects()
+    {
+        return _effects;
     }
-    
-    public void ShapeChange(BlockShape blocktype) {
+
+    public void ShapeChange(BlockShape blocktype)
+    {
         Shape = blocktype;
         Mesh m = null;
-        if (TerrainController.GridType == "Square") {
-            switch (Shape) {
+        if (TerrainController.GridType == "Square")
+        {
+            switch (Shape)
+            {
                 case BlockShape.Spacer:
                     m = BlockMesh.Shapes[BlockShape.Solid];
                     transform.localScale = new Vector3(.3f, .3f, .3f);
@@ -336,62 +380,73 @@ public class Block : MonoBehaviour
                     transform.localScale = Vector3.zero;
                     break;
                 default:
-                    try {
+                    try
+                    {
                         m = BlockMesh.Shapes[Shape];
                         transform.localScale = Vector3.one;
                         break;
                     }
-                    catch (Exception e) {
+                    catch (Exception e)
+                    {
                         Debug.LogError(e.Message);
                         throw new Exception($"No such shape {blocktype.ToString()}");
                     }
 
             }
         }
-        else if (TerrainController.GridType == "Hex") {
+        else if (TerrainController.GridType == "Hex")
+        {
             m = BlockMesh.Hex;
             transform.localScale = Vector3.one;
         }
         GetComponent<MeshFilter>().mesh = m;
-        MaterialReset = true;
+        _materialReset = true;
     }
 
-    public void EffectChange(string effect) {
-        switch (effect) {
+    public void EffectChange(string effect)
+    {
+        switch (effect)
+        {
             case "None":
-                effects.Clear();
+                _effects.Clear();
                 break;
             default:
-                if (effects.Contains(effect)) {
-                    effects.Remove(effect);
+                if (_effects.Contains(effect))
+                {
+                    _effects.Remove(effect);
                 }
-                else {
-                    effects.Add(effect);
+                else
+                {
+                    _effects.Add(effect);
                 }
                 break;
         }
-        MaterialReset = true;
+        _materialReset = true;
     }
 
-    public void EffectRemove(string effect) {
-        if (effects.Contains(effect)) {
-            effects.Remove(effect);
+    public void EffectRemove(string effect)
+    {
+        if (_effects.Contains(effect))
+        {
+            _effects.Remove(effect);
         }
-        MaterialReset = true;        
+        _materialReset = true;
     }
 
-    public void ApplyPaint(Color top, Color sides) {
-        PaintColorSide = sides;
-        PaintColorTop = top;
-        Painted = true;
-        TextureTop = "";
-        TextureSide = "";
-        MaterialReset = true;
+    public void ApplyPaint(Color top, Color sides)
+    {
+        _paintColorSide = sides;
+        _paintColorTop = top;
+        _painted = true;
+        _textureTop = "";
+        _textureSide = "";
+        _materialReset = true;
     }
 
-    public void RemovePaint() {
-        Painted = false;
-        MaterialReset = true;
+    public void RemovePaint()
+    {
+        _painted = false;
+        _materialReset = true;
     }
 
     /// <summary>
@@ -401,62 +456,73 @@ public class Block : MonoBehaviour
     /// <param name="copyShape">Also copy the shape</param>
     public void CopyStyle(Block other, bool copyShape = false)
     {
-        Painted = other.Painted;
-        TextureTop = other.TextureTop;
-        TextureSide = other.TextureSide;
-        PaintColorTop = other.PaintColorTop;
-        PaintColorSide = other.PaintColorSide;
-        if (copyShape) {
+        _painted = other._painted;
+        _textureTop = other._textureTop;
+        _textureSide = other._textureSide;
+        _paintColorTop = other._paintColorTop;
+        _paintColorSide = other._paintColorSide;
+        if (copyShape)
+        {
             ShapeChange(other.Shape);
         }
-        MaterialReset = true;
+        _materialReset = true;
     }
 
-    public Color[] SamplePaint() {
-        if (Painted) {
-            return new Color[]{PaintColorTop, PaintColorSide};
+    public Color[] SamplePaint()
+    {
+        if (_painted)
+        {
+            return new Color[] { _paintColorTop, _paintColorSide };
         }
         return null;
     }
 
-    public void ApplyTexture(string top, string side) {
-        TextureTop = top;
-        TextureSide = side;
-        Painted = false;
-        MaterialReset = true;
+    public void ApplyTexture(string top, string side)
+    {
+        _textureTop = top;
+        _textureSide = side;
+        _painted = false;
+        _materialReset = true;
     }
 
-    public void RemoveTexture() {
-        TextureTop = "";
-        TextureSide = "";
-        MaterialReset = true;
+    public void RemoveTexture()
+    {
+        _textureTop = "";
+        _textureSide = "";
+        _materialReset = true;
     }
 
-    public (string,string) SampleTexture() {
+    public (string, string) SampleTexture()
+    {
 
-        return (BlockMesh.ReverseTextureMap(TextureTop),BlockMesh.ReverseTextureMap(TextureSide));
+        return (BlockMesh.ReverseTextureMap(_textureTop), BlockMesh.ReverseTextureMap(_textureSide));
     }
 
-    void SetMaterials() {
+    void SetMaterials()
+    {
         MeshRenderer mr = GetComponent<MeshRenderer>();
 
         Material[] mats = mr.materials;
 
-        if (Painted) {
-            PaintMaterialSide.color = PaintColorSide;
-            PaintMaterialTop.color = PaintColorTop;
-            mats[BlockMesh.MaterialSideIndex(Shape)] = PaintMaterialSide;
-            mats[BlockMesh.MaterialTopIndex(Shape)] = PaintMaterialTop;
+        if (_painted)
+        {
+            _paintMaterialSide.color = _paintColorSide;
+            _paintMaterialTop.color = _paintColorTop;
+            mats[BlockMesh.MaterialSideIndex(Shape)] = _paintMaterialSide;
+            mats[BlockMesh.MaterialTopIndex(Shape)] = _paintMaterialTop;
         }
-        else if (TextureTop.Length > 0) {
-            mats[BlockMesh.MaterialSideIndex(Shape)] = BlockMesh.GetSharedMaterial(TextureSide);
-            mats[BlockMesh.MaterialTopIndex(Shape)] = BlockMesh.GetSharedMaterial(TextureTop);
+        else if (_textureTop.Length > 0)
+        {
+            mats[BlockMesh.MaterialSideIndex(Shape)] = BlockMesh.GetSharedMaterial(_textureSide);
+            mats[BlockMesh.MaterialTopIndex(Shape)] = BlockMesh.GetSharedMaterial(_textureTop);
         }
-        else {
+        else
+        {
             // Checkerboard
             bool altSides = false;
             // bool altTop = false;
-            if (transform.parent != null) {
+            if (transform.parent != null)
+            {
                 // Checkerboard
                 float x = transform.parent.GetComponent<Column>().X;
                 float y = transform.parent.GetComponent<Column>().Y;
@@ -469,85 +535,94 @@ public class Block : MonoBehaviour
         }
 
         // Overwrite checkerboard/paint if highlighted
-        if (Highlighted) {
+        if (Highlighted)
+        {
             mats[BlockMesh.MaterialTopIndex(Shape)] = BlockMesh.GetSharedMaterial("highlighted");
         }
 
         // Markers
-        markerMaterial.SetInt("_Impassable", 0);
-        markerMaterial.SetInt("_Dangerous", 0);
-        markerMaterial.SetInt("_Difficult", 0);
-        markerMaterial.SetInt("_Interactive", 0);
-        markerMaterial.SetInt("_Pit", 0);
-        markerMaterial.SetInt("_Other", 0);
-        markerMaterial.SetInt("_Skull", 0);
-        markerMaterial.SetInt("_Border", 0);
-        markerMaterial.SetColor("_Color", Color.black);
+        _markerMaterial.SetInt("_Impassable", 0);
+        _markerMaterial.SetInt("_Dangerous", 0);
+        _markerMaterial.SetInt("_Difficult", 0);
+        _markerMaterial.SetInt("_Interactive", 0);
+        _markerMaterial.SetInt("_Pit", 0);
+        _markerMaterial.SetInt("_Other", 0);
+        _markerMaterial.SetInt("_Skull", 0);
+        _markerMaterial.SetInt("_Border", 0);
+        _markerMaterial.SetColor("_Color", Color.black);
 
-        foreach (string fullEffect in effects) {
+        foreach (string fullEffect in _effects)
+        {
             string[] split = fullEffect.Split("::");
-            if (split.Length > 1) {
+            if (split.Length > 1)
+            {
                 string marker = split[1];
-                switch (marker) {
+                switch (marker)
+                {
                     case "Blocked":
-                        markerMaterial.SetInt("_Impassable", 1);
+                        _markerMaterial.SetInt("_Impassable", 1);
                         break;
                     case "Spiky":
-                        markerMaterial.SetInt("_Dangerous", 1);
+                        _markerMaterial.SetInt("_Dangerous", 1);
                         break;
                     case "Wavy":
-                        markerMaterial.SetInt("_Difficult", 1);
+                        _markerMaterial.SetInt("_Difficult", 1);
                         break;
                     case "Hand":
-                        markerMaterial.SetInt("_Interactive", 1);
+                        _markerMaterial.SetInt("_Interactive", 1);
                         break;
                     case "Hole":
-                        markerMaterial.SetInt("_Pit", 1);
+                        _markerMaterial.SetInt("_Pit", 1);
                         break;
                     case "Corners":
-                        markerMaterial.SetInt("_Other", 1);
+                        _markerMaterial.SetInt("_Other", 1);
                         break;
                     case "Skull":
-                        markerMaterial.SetInt("_Skull", 1);
+                        _markerMaterial.SetInt("_Skull", 1);
                         break;
                     case "Border":
-                        markerMaterial.SetInt("_Border", 1);
+                        _markerMaterial.SetInt("_Border", 1);
                         break;
                 }
             }
-            if (split.Length > 2) {
+            if (split.Length > 2)
+            {
                 string color = split[2];
-                switch (color) {
+                switch (color)
+                {
                     case "Red":
-                        markerMaterial.SetColor("_Color", new Color(1.5f, 0, 0));
+                        _markerMaterial.SetColor("_Color", new Color(1.5f, 0, 0));
                         break;
                     case "Green":
-                        markerMaterial.SetColor("_Color", new Color(0, 1.5f, .2f));
+                        _markerMaterial.SetColor("_Color", new Color(0, 1.5f, .2f));
                         break;
                     case "Blue":
-                        markerMaterial.SetColor("_Color", new Color(0, .2f, 1.5f));
+                        _markerMaterial.SetColor("_Color", new Color(0, .2f, 1.5f));
                         break;
                     case "Yellow":
-                        markerMaterial.SetColor("_Color", new Color(1.5f, 1.2f, 0f));
+                        _markerMaterial.SetColor("_Color", new Color(1.5f, 1.2f, 0f));
                         break;
                     case "White":
-                        markerMaterial.SetColor("_Color", new Color(1.5f, 1.5f, 1.5f));
+                        _markerMaterial.SetColor("_Color", new Color(1.5f, 1.5f, 1.5f));
                         break;
                 }
             }
         }
 
-        mats[BlockMesh.MaterialMarkerIndex(Shape)] = markerMaterial;
+        mats[BlockMesh.MaterialMarkerIndex(Shape)] = _markerMaterial;
 
         // Selected/Focused
         string focusState = "unfocused";
-        if (Selected && !Focused) {
+        if (Selected && !Focused)
+        {
             focusState = "selected";
         }
-        else if (!Selected && Focused) {
+        else if (!Selected && Focused)
+        {
             focusState = "focused";
         }
-        else if (Selected && Focused) {
+        else if (Selected && Focused)
+        {
             focusState = "selectfocused";
         }
         mats[BlockMesh.MaterialFocusIndex(Shape)] = BlockMesh.GetSharedMaterial(focusState);
@@ -556,120 +631,141 @@ public class Block : MonoBehaviour
         mr.SetMaterials(mats.ToList());
     }
 
-    public static void ToggleSpacers(bool show) {
+    public static void ToggleSpacers(bool show)
+    {
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
-        for(int i = 0; i < blocks.Length; i++) {
-            if (!show && blocks[i].GetComponent<Block>().Shape == BlockShape.Spacer) {
+        for (int i = 0; i < blocks.Length; i++)
+        {
+            if (!show && blocks[i].GetComponent<Block>().Shape == BlockShape.Spacer)
+            {
                 blocks[i].GetComponent<Block>().ShapeChange(BlockShape.Hidden);
             }
-            if (show && blocks[i].GetComponent<Block>().Shape == BlockShape.Hidden) {
+            if (show && blocks[i].GetComponent<Block>().Shape == BlockShape.Hidden)
+            {
                 blocks[i].GetComponent<Block>().ShapeChange(BlockShape.Spacer);
             }
         }
     }
 
-    #region Select
-    public void Select(bool append = false) {
+    public void Select(bool append = false)
+    {
         SelectionMenu.Hide();
-        if (Selected && !append) {
+        if (Selected && !append)
+        {
             Deselect();
         }
-        else {
+        else
+        {
             Selected = true;
         }
-        MaterialReset = true;
+        _materialReset = true;
         TerrainController.SetInfo();
     }
 
-    public void Deselect() {
+    public void Deselect()
+    {
         Selected = false;
-        MaterialReset = true;
+        _materialReset = true;
         SelectionMenu.Hide();
     }
 
-    public static Block[] GetSelected() {
+    public static Block[] GetSelected()
+    {
         List<Block> selected = new();
         GameObject[] gos = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < gos.Length; i++) {
+        for (int i = 0; i < gos.Length; i++)
+        {
             Block block = gos[i].GetComponent<Block>();
-            if (block.Selected) {
+            if (block.Selected)
+            {
                 selected.Add(block);
             }
         }
         return selected.ToArray();
     }
 
-    public static void DeselectAll() {
-        foreach (Block b in GetSelected()) {
+    public static void DeselectAll()
+    {
+        foreach (Block b in GetSelected())
+        {
             b.Deselect();
-        }        
+        }
     }
-    #endregion
 
-    #region Focus
-    public void Focus() {
+    public void Focus()
+    {
         UnfocusAll();
         Focused = true;
         TerrainController.SetInfo();
-        Player.Self().GetComponent<DirectionalLine>().SetTarget(getMidpoint());
+        Player.Self().GetComponent<DirectionalLine>().SetTarget(GetMidpoint());
     }
 
-    public void Unfocus() {
+    public void Unfocus()
+    {
         Focused = false;
         _allFocused.Remove(this);
     }
 
-    public static Block[] GetFocused() {
+    public static Block[] GetFocused()
+    {
         return _allFocused.ToArray();
 
     }
 
-    public static void UnfocusAll() {
+    public static void UnfocusAll()
+    {
         Player.Self().GetComponent<DirectionalLine>().UnsetTarget();
-        foreach (Block b in GetFocused()) {
+        foreach (Block b in GetFocused())
+        {
             b.Unfocus();
         }
         _allFocused.Clear();
     }
-    #endregion
-    
-    #region Highlight
-    public void Highlight() {
+
+    public void Highlight()
+    {
         Highlighted = true;
-        MaterialReset = true;
+        _materialReset = true;
         TerrainController.SetInfo();
     }
 
-    public void Dehighlight() {
+    public void Dehighlight()
+    {
         Highlighted = false;
-        MaterialReset = true;
+        _materialReset = true;
     }
 
-    public static Block[] GetHighlighted() {
+    public static Block[] GetHighlighted()
+    {
         List<Block> highlighted = new();
         GameObject[] gos = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < gos.Length; i++) {
+        for (int i = 0; i < gos.Length; i++)
+        {
             Block block = gos[i].GetComponent<Block>();
-            if (block.Highlighted) {
+            if (block.Highlighted)
+            {
                 highlighted.Add(block);
             }
         }
         return highlighted.ToArray();
     }
 
-    public static void DehighlightAll() {
-        foreach (Block b in GetHighlighted()) {
+    public static void DehighlightAll()
+    {
+        foreach (Block b in GetHighlighted())
+        {
             b.Dehighlight();
         }
     }
-    #endregion
 
-    public static void ToggleBorders(bool show) {
+    public static void ToggleBorders(bool show)
+    {
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < blocks.Length; i++) {
+        for (int i = 0; i < blocks.Length; i++)
+        {
             Block b = blocks[i].GetComponent<Block>();
-            b.PaintMaterialSide.SetInt("_ShowOutline", show ? 1 : 0);            
-            b.PaintMaterialTop.SetInt("_ShowOutline", show ? 1 : 0);            
+            b._paintMaterialSide.SetInt("_ShowOutline", show ? 1 : 0);
+            b._paintMaterialTop.SetInt("_ShowOutline", show ? 1 : 0);
         }
     }
 
@@ -690,8 +786,9 @@ public class Block : MonoBehaviour
         return closestObject.GetComponent<Block>();
     }
 
-    public Token GetToken() {
-        return Token.GetAtBlock(this);    
+    public Token GetToken()
+    {
+        return Token.GetAtBlock(this);
     }
 
     /// <summary>
@@ -707,7 +804,7 @@ public class Block : MonoBehaviour
         foreach (var gameObject in gameObjects)
         {
             Block block = gameObject.GetComponent<Block>();
-            Vector2Int blockCoords = new Vector2Int(block.getX(), block.getY());
+            Vector2Int blockCoords = new Vector2Int(block.GetX(), block.GetY());
             if (v2is.Contains(blockCoords))
             {
                 Block topBlock = block.transform.parent.GetComponent<Column>().GetTopBlock();
@@ -728,10 +825,10 @@ public class Block : MonoBehaviour
     public static Block GetTopBlock(Vector2Int coordinate)
     {
         GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Block");
-        foreach(var gameObject in gameObjects)
+        foreach (var gameObject in gameObjects)
         {
             Block block = gameObject.GetComponent<Block>();
-            if(block.getX() == coordinate.x && block.getY() == coordinate.y)
+            if (block.GetX() == coordinate.x && block.GetY() == coordinate.y)
             {
                 Block topBlock = block.transform.parent.GetComponent<Column>().GetTopBlock();
                 return topBlock;
@@ -740,16 +837,19 @@ public class Block : MonoBehaviour
         return null;
     }
 
-    public static (float,float) GetElevationRange() {
-        (float,float) lowHigh = (float.MaxValue, float.MinValue);
-        foreach(Block b in GetSelected()) {
-            lowHigh.Item1 = Mathf.Min(lowHigh.Item1, b.getHeight());
-            lowHigh.Item2 = Mathf.Max(lowHigh.Item2, b.getHeight());
+    public static (float, float) GetElevationRange()
+    {
+        (float, float) lowHigh = (float.MaxValue, float.MinValue);
+        foreach (Block b in GetSelected())
+        {
+            lowHigh.Item1 = Mathf.Min(lowHigh.Item1, b.GetHeight());
+            lowHigh.Item2 = Mathf.Max(lowHigh.Item2, b.GetHeight());
         }
         return lowHigh;
     }
 
-    public void MarkForRedraw() {
-        MaterialReset = true;
+    public void MarkForRedraw()
+    {
+        _materialReset = true;
     }
 }

@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,9 +9,11 @@ public class GameSystem : MonoBehaviour
 
     protected int RoundNumber = 1;
 
-    public static GameSystem Current() {
+    public static GameSystem Current()
+    {
         GameSystem system = GameObject.Find("GameSystem").GetComponent<GameSystem>();
-        switch(system.SystemName()) {
+        switch (system.SystemName())
+        {
             case "ICON 1.5":
                 return system as Icon_v1_5;
             case "Maleghast":
@@ -24,11 +24,13 @@ public class GameSystem : MonoBehaviour
         return null;
     }
 
-    public virtual string GetOverheadAsset() {
+    public virtual string GetOverheadAsset()
+    {
         return "UITemplates/GameSystem/SimpleOverhead";
     }
 
-    public virtual string TurnAdvanceMessage() {
+    public virtual string TurnAdvanceMessage()
+    {
         return "Increase the round counter?";
     }
 
@@ -46,22 +48,27 @@ public class GameSystem : MonoBehaviour
         return null;
     }
 
-    public virtual string GetSystemVars() {
+    public virtual string GetSystemVars()
+    {
         return $"{RoundNumber}";
     }
 
-    public virtual void SetSystemVars(string vars) {
+    public virtual void SetSystemVars(string vars)
+    {
         RoundNumber = int.Parse(vars);
         UI.System.Q<Label>("TurnNumber").text = RoundNumber.ToString();
     }
 
-    public virtual void AddTokenModal() {
+    public virtual void AddTokenModal()
+    {
         Modal.AddTextField("NameField", "Token Name", "");
     }
 
-    public virtual MenuItem[] GetTokenMenuItems(TokenData data) {
+    public virtual MenuItem[] GetTokenMenuItems(TokenData data)
+    {
         List<MenuItem> items = new();
-        if (data.Placed) {
+        if (data.Placed)
+        {
             items.Add(new MenuItem("Remove", "Remove", ClickRemove));
             items.Add(new MenuItem("Flip", "Flip", ClickFlip));
             // items.Add(new MenuItem("LineCheck", "LOS/Distance Check", LineCheckClicked));
@@ -73,46 +80,55 @@ public class GameSystem : MonoBehaviour
         return items.ToArray();
     }
 
-    private static void LineCheckClicked(ClickEvent evt) {
+    private static void LineCheckClicked(ClickEvent evt)
+    {
         Cursor.Mode = CursorMode.Targeting;
         TokenData data = Token.GetSelected().Data;
         Player.Self().GetComponent<DirectionalLine>().Init(data.Id, "Attacking");
         SelectionMenu.Hide();
     }
 
-    private static void ClickFlip(ClickEvent evt) {
+    private static void ClickFlip(ClickEvent evt)
+    {
         Token.GetSelected().transform.Find("Offset/Avatar/Cutout/Cutout Quad").Rotate(new Vector3(0, 180, 0));
         Token.DeselectAll();
     }
 
-    private static void ClickRemove(ClickEvent evt) {
+    private static void ClickRemove(ClickEvent evt)
+    {
         Token.GetSelected().Remove();
         Token.DeselectAll();
     }
 
-    private static void ClickDelete(ClickEvent evt) {
+    private static void ClickDelete(ClickEvent evt)
+    {
         TokenData data = Token.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
-        Modal.DoubleConfirm("Delete Token", $"Are you sure you want to delete {name}? This action cannot be undone.", () => {
+        Modal.DoubleConfirm("Delete Token", $"Are you sure you want to delete {name}? This action cannot be undone.", () =>
+        {
             Token.DeselectAll();
             Player.Self().CmdRequestDeleteToken(data.Id);
         });
     }
 
-    private static void ClickClone(ClickEvent evt) {
+    private static void ClickClone(ClickEvent evt)
+    {
         TokenData data = Token.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
-        Modal.DoubleConfirm("Clone Token", $"Are you sure you want to clone {name}?", () => {
+        Modal.DoubleConfirm("Clone Token", $"Are you sure you want to clone {name}?", () =>
+        {
             Player.Self().CmdCreateToken(data.System, data.GraphicHash, data.Name, data.Size, data.Color, data.SystemData);
             Token.DeselectAll();
         });
     }
 
-    private static void ClickEditName(ClickEvent evt) {
+    private static void ClickEditName(ClickEvent evt)
+    {
         TokenData data = Token.GetSelected().Data;
         Modal.Reset("Edit Name");
         Modal.AddTextField("Name", "Name", data.Name);
-        Modal.AddPreferredButton("Confirm", (evt) => {
+        Modal.AddPreferredButton("Confirm", (evt) =>
+        {
             string newName = UI.Modal.Q<TextField>("Name").value.Trim();
             Player.Self().CmdRequestTokenDataSetValue(data.Id, $"Name|{newName}");
             Modal.Close();
@@ -120,70 +136,86 @@ public class GameSystem : MonoBehaviour
         Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
-    private static void ClickEndTurn(ClickEvent evt) {
+    private static void ClickEndTurn(ClickEvent evt)
+    {
         TokenData data = Token.GetSelected().Data;
         Player.Self().CmdRequestTokenDataSetValue(data.Id, "EndTurn");
         Token.DeselectAll();
     }
 
-    private static void ClickMoveUp(ClickEvent evt) {
+    private static void ClickMoveUp(ClickEvent evt)
+    {
         TokenData data = Token.GetSelected().Data;
     }
 
-    private static void ClickMoveDown(ClickEvent evt) {
+    private static void ClickMoveDown(ClickEvent evt)
+    {
         TokenData data = Token.GetSelected().Data;
     }
 
-    public virtual MenuItem[] GetTileMenuItems() {
+    public virtual MenuItem[] GetTileMenuItems()
+    {
         List<MenuItem> items = new();
         return items.ToArray();
     }
 
-    public virtual void GameDataSetValue(string value) {
+    public virtual void GameDataSetValue(string value)
+    {
         throw new NotImplementedException();
     }
 
     public virtual string[] GetEffectList()
     {
-        return new string[]{"Wavy", "Spiky", "Hand", "Skull", "Hole", "Blocked", "Corners"};
+        return new string[] { "Wavy", "Spiky", "Hand", "Skull", "Hole", "Blocked", "Corners" };
     }
 
-    public virtual void CreateToken() {
+    public virtual void CreateToken()
+    {
         throw new NotImplementedException();
     }
 
-    public virtual void UpdateData(TokenData data) {
-        if (data.OverheadElement == null) {
-            data.CreateOverheadElement();            
+    public virtual void UpdateData(TokenData data)
+    {
+        if (data.OverheadElement == null)
+        {
+            data.CreateOverheadElement();
         }
     }
 
-    public virtual void TokenDataSetValue(string tokenId, string value) {
+    public virtual void TokenDataSetValue(string tokenId, string value)
+    {
         TokenData data = TokenData.Find(tokenId);
-        if (value == "EndTurn") {
-            data.UnitBarElement.Q("Portrait").style.unityBackgroundImageTintColor = ColorUtility.ColorFromHex("#505050");
+        if (value == "EndTurn")
+        {
+            data.UnitBarElement.Q("Portrait").style.unityBackgroundImageTintColor = ColorUtility.GetColor("#505050");
         }
-        else if (value == "StartTurn") {
+        else if (value == "StartTurn")
+        {
             data.UnitBarElement.Q("Portrait").style.unityBackgroundImageTintColor = Color.white;
         }
-        if (value.StartsWith("Name")) {
+        if (value.StartsWith("Name"))
+        {
             data.Name = value.Split("|")[1];
         }
     }
 
-    public virtual void UpdateTokenPanel(string tokenId, string elementName) {
+    public virtual void UpdateTokenPanel(string tokenId, string elementName)
+    {
         throw new NotImplementedException();
     }
 
-    public static void Set(string value) {
+    public static void Set(string value)
+    {
         GameSystem current = GameSystem.Current();
-        if (current) {
+        if (current)
+        {
             current.Teardown();
         }
         GameObject g = GameObject.Find("GameSystem");
         GameSystem system = g.GetComponent<GameSystem>();
         DestroyImmediate(system);
-        switch(value) {
+        switch (value)
+        {
             case "Generic":
                 system = g.AddComponent<Generic>();
                 break;
