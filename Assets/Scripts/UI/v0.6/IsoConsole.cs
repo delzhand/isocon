@@ -23,9 +23,9 @@ public class IsoConsole
     {
         string command = UI.Modal.Q<TextField>("Console").value;
         UI.Modal.Q<TextField>("Console").Focus();
-        if (command.StartsWith("mmm"))
+        if (command.Contains("maleghast/map"))
         {
-            MMMImporter.CreateFromURL(command.Substring(4));
+            MMMImporter.CreateFromURL(command);
         }
         // if (command == "gun")
         // {
