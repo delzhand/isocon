@@ -6,23 +6,31 @@ using UnityEngine.UIElements;
 
 public class IsoConsole
 {
-    public static void OpenModal(ClickEvent evt) {
+    public static void OpenModal(ClickEvent evt)
+    {
         Modal.Reset("IsoConsole");
         Modal.AddTextField("Console", "Console", "");
         Modal.AddPreferredButton("Execute", ConsoleExecute);
         Modal.AddButton("Close", CloseModal);
     }
 
-    private static void CloseModal(ClickEvent evt) {
+    private static void CloseModal(ClickEvent evt)
+    {
         Modal.Close();
     }
 
-    private static void ConsoleExecute(ClickEvent evt) {
+    private static void ConsoleExecute(ClickEvent evt)
+    {
         string command = UI.Modal.Q<TextField>("Console").value;
         UI.Modal.Q<TextField>("Console").Focus();
-        if (command == "gun") {
-            Player.Self().CmdCreateToken("Maleghast", "8b3627c36b26c32aaa2997d2ed422253e9f0e19f896978cd22514514545f3830", "", 1, Color.red, "");
+        if (command.StartsWith("mmm"))
+        {
+            MMMImporter.CreateFromURL(command.Substring(4));
         }
+        // if (command == "gun")
+        // {
+        //     Player.Self().CmdCreateToken("Maleghast", "8b3627c36b26c32aaa2997d2ed422253e9f0e19f896978cd22514514545f3830", "", 1, Color.red, "");
+        // }
         // if (command == "MGSample") {
         //     string json = "{\"Name\":\"\",\"GraphicHash\":\"8b3627c36b26c32aaa2997d2ed422253e9f0e19f896978cd22514514545f3830\",\"Size\":0,\"HouseJob\":\"CARCASS/Gunwight\"}";
         //     json = "{\"Name\":\"\",\"GraphicHash\":\"8b3627c36b26c32aaa2997d2ed422253e9f0e19f896978cd22514514545f3830\",\"Size\":0,\"HouseJob\":\"CARCASS/Gunwight\"}";

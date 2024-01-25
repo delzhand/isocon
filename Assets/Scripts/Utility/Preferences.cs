@@ -133,11 +133,9 @@ public class Preferences
 
 	private static string GetConfigFileName()
 	{
-		string path = Preferences.Current.DataPath;
-		if (path.Length == 0)
-		{
-			// On startup we don't have preferences to we still need to get this from playerprefs
-			PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+		string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
+		if (Preferences.Current != null) {
+			path = Preferences.Current.DataPath;
 		}
 		return $"{path}/config.dat";
 	}
