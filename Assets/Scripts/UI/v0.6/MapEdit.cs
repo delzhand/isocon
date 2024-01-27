@@ -131,15 +131,19 @@ public class MapEdit
         // Data
         optionsRoot.Q("DataOptions").Q("Save").RegisterCallback<ClickEvent>((evt) =>
         {
-            OpenSaveModal(new ClickEvent());
+            OpenSaveModal(evt);
         });
         optionsRoot.Q("DataOptions").Q("Open").RegisterCallback<ClickEvent>((evt) =>
         {
-            OpenOpenModal(new ClickEvent());
+            OpenOpenModal(evt);
         });
         optionsRoot.Q("DataOptions").Q("Reset").RegisterCallback<ClickEvent>((evt) =>
         {
-            ResetConfirm(new ClickEvent());
+            ResetConfirm(evt);
+        });
+        optionsRoot.Q("DataOptions").Q("MaleghastImport").RegisterCallback<ClickEvent>((evt) =>
+        {
+            OpenMMMImportModal(evt);
         });
         optionsRoot.Q("DataOptions").Q<TextField>("MapTitle").value = MapMeta.Title;
         optionsRoot.Q("DataOptions").Q<TextField>("MapTitle").RegisterValueChangedCallback((evt) =>
@@ -343,6 +347,28 @@ public class MapEdit
             Modal.Close();
         });
         Modal.AddButton("Cancel", Modal.CloseEvent);
+    }
+
+    private static void OpenMMMImportModal(ClickEvent evt)
+    {
+        Modal.Reset("Import Map by URL");
+
+        Modal.AddMarkup("Description", "Maps from https://alessandrominali.github.io/maleghast/map.html can be imported by entering the Permalink. Maps that use custom brushes are not supported.");
+        Modal.AddTextField("UrlField", "URL", "");
+        Modal.AddPreferredButton("Confirm", (evt) =>
+        {
+            string url = UI.Modal.Q<TextField>("UrlField").value;
+            if (!url.Contains("https://alessandrominali.github.io/maleghast/map.html"))
+            {
+                Toast.AddError("Does not appear to be a valid URL.");
+            }
+            else
+            {
+                MMMImporter.CreateFromURL(url);
+                Modal.Close();
+            }
+        });
+        Modal.AddButton("Close", Modal.CloseEvent);
     }
 
     private static void OpenSaveModal(ClickEvent evt)

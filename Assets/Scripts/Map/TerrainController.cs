@@ -268,7 +268,7 @@ public class TerrainController : MonoBehaviour
                 Environment.CurrentPaintSide = ColorUtility.GetColor(styles.Item2.Split("::")[1]);
                 UI.System.Q("ToolOptions").Q("SideBlockPaint").style.backgroundColor = Environment.CurrentPaintSide;
 
-                // Simulate click on paint subtool to switch after sampling				
+                // Simulate click on paint subtool to switch after sampling
                 var e = new NavigationSubmitEvent() { target = UI.System.Q("ToolsPanel").Q<Button>("StylePaint") };
                 UI.System.Q("ToolsPanel").Q("StylePaint").SendEvent(e);
                 return;
