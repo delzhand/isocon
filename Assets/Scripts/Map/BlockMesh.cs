@@ -65,6 +65,7 @@ public class BlockMesh : MonoBehaviour
             Color tint = ColorUtility.GetColor(tintHex);
             var material = new Material(Resources.Load<Material>($"Materials/Block/Artistic/{texture}"));
             material.SetColor("_Tint", tint);
+            material.SetInt("_ShowOutline", Cursor.Mode == CursorMode.Editing ? 1 : 0);
             _customMaterials.Add(key, material);
             return material;
         }
