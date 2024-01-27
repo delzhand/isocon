@@ -118,7 +118,7 @@ public class MapSaver
         Color[] imagePixels = image.GetPixels();
 
         //Go Through the First 32 Pixels and create a 4 byte array. 
-        //This array should give us the message's length.	
+        //This array should give us the message's length.
         BitArray newBits = new BitArray(32);
         for (int i = 0; i < 32; i++)
         {
