@@ -119,7 +119,7 @@ public class Tabletop : MonoBehaviour
         message.text = "You are hosting on port <LocalIP> (local) and <GlobalIP> (global).<br><br>You must either have port forwarding for port 7777 TCP to your local IP with no active VPN, or use a 3rd party service like Ngrok or Hamachi.";
         IPFinder.ReplaceTokens(message);
 
-        BlockMesh.ToggleBorders(false);
+        BlockMesh.ToggleAllBorders(false);
     }
 
     public void ConnectAsSolo()
@@ -131,7 +131,7 @@ public class Tabletop : MonoBehaviour
         message.text = "You are in solo mode. Other users cannot connect to this table.";
         IPFinder.ReplaceTokens(message);
 
-        BlockMesh.ToggleBorders(false);
+        BlockMesh.ToggleAllBorders(false);
     }
 
     private void TopBarSetup()

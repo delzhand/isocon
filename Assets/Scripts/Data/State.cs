@@ -30,7 +30,7 @@ public class State
             blockStrings.Add(blocks[i].GetComponent<Block>().WriteOut());
         }
         State state = new State();
-        state.Version = "v2";
+        state.Version = "v3";
         state.TileTops = ColorUtility.GetHex(Environment.TileTopColor);
         state.TileSides = ColorUtility.GetHex(Environment.TileSideColor);
         state.BgBottom = ColorUtility.GetHex(Environment.BgBottomColor);
@@ -62,7 +62,7 @@ public class State
         TerrainController.UpdateLight();
         TerrainController.ReorgNeeded = true;
         TerrainController.MapDirty = false;
-        Block.ToggleBorders(false);
+        BlockMesh.ToggleAllBorders(false);
         MapMeta.CreatorName = state.CreatorName;
         MapMeta.Description = state.Description;
         MapMeta.Objective = state.Objective;

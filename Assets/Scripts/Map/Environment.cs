@@ -8,8 +8,8 @@ public class Environment : MonoBehaviour
     public static Color TileSideColor = ColorUtility.GetColor("#6F5A3C");
     public static Color BgBottomColor = ColorUtility.GetColor("#474571");
     public static Color BgTopColor = ColorUtility.GetColor("#001022");
-    public static Color CurrentPaintTop = ColorUtility.GetColor("#000000");
-    public static Color CurrentPaintSide = ColorUtility.GetColor("#000000");
+    public static Color CurrentPaintTop = ColorUtility.GetColor("#CCBCA7");
+    public static Color CurrentPaintSide = ColorUtility.GetColor("#CCBCA7");
 
     private static Material BackgroundMat;
 

@@ -178,7 +178,7 @@ public class Token : MonoBehaviour
 		Cursor.Mode = CursorMode.Default;
 		Block.DeselectAll();
 		Block.UnfocusAll();
-		BlockMesh.ToggleBorders(false);
+		BlockMesh.ToggleAllBorders(false);
 		Player.Self().ClearOp();
 		UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true); // selected indicator in unit bar
 		Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
@@ -190,7 +190,7 @@ public class Token : MonoBehaviour
 		Cursor.Mode = CursorMode.Dragging;
 		Block.DeselectAll();
 		Block.UnfocusAll();
-		BlockMesh.ToggleBorders(true);
+		BlockMesh.ToggleAllBorders(true);
 		string op = Data.Placed ? "Moving" : "Placing";
 		Player.Self().SetOp($"{op} {Data.Name}");
 		Player.Self().GetComponent<DirectionalLine>().Init(Data.Id, op);
@@ -224,7 +224,7 @@ public class Token : MonoBehaviour
 	{
 		State = TokenState.Inspecting;
 		Cursor.Mode = CursorMode.Default;
-		BlockMesh.ToggleBorders(false);
+		BlockMesh.ToggleAllBorders(false);
 		Player.Self().SetOp($"Inspecting {Data.Name}");
 		Player.Self().GetComponent<DirectionalLine>().Deinit();
 	}
@@ -256,7 +256,7 @@ public class Token : MonoBehaviour
 		Player.Self().ClearOp();
 		SelectionMenu.Hide();
 		Cursor.Mode = CursorMode.Default;
-		BlockMesh.ToggleBorders(false);
+		BlockMesh.ToggleAllBorders(false);
 		Player.Self().GetComponent<DirectionalLine>().Deinit();
 	}
 

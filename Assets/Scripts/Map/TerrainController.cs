@@ -13,9 +13,6 @@ public class TerrainController : MonoBehaviour
     public static float LightHeight = 50f;
     public static float LightIntensity = 2;
 
-    public static bool Indicators = false;
-    public static bool Editing = false;
-
     public static bool ReorgNeeded = false;
 
     public static bool MapDirty = false;
@@ -119,41 +116,7 @@ public class TerrainController : MonoBehaviour
         MapDirty = false;
     }
 
-    public static Vector3 Center()
-    {
-        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
-        float lowX = float.MaxValue;
-        float highX = float.MinValue;
-        float lowZ = float.MaxValue;
-        float highZ = float.MinValue;
-        for (int i = 0; i < blocks.Length; i++)
-        {
-            float x = blocks[i].transform.position.x;
-            float z = blocks[i].transform.position.z;
-            if (x < lowX)
-            {
-                lowX = x;
-            }
-            if (x > highX)
-            {
-                highX = x;
-            }
-            if (z < lowZ)
-            {
-                lowZ = z;
-            }
-            if (z > highZ)
-            {
-                highZ = z;
-            }
-        }
-        float centerX = (highX - lowX) / 2f;
-        float centerZ = (highZ - lowZ) / 2f;
-        return new Vector3(lowX + centerX, 0, lowZ + centerZ);
-
-    }
-
-    public static Vector2Int Size()
+    public static Vector2Int GetDimensions()
     {
         Vector2Int size = Vector2Int.zero;
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
@@ -268,30 +231,15 @@ public class TerrainController : MonoBehaviour
         }
     }
 
-    public static void PaintBlocks()
+    public static void StyleBlocks(string styleTop, string styleSide, Color colorTop, Color colorSide)
     {
         List<Block> selected = Block.GetSelected().ToList();
-        selected.ForEach(block =>
-        {
-            block.ApplyPaint(Environment.CurrentPaintTop, Environment.CurrentPaintSide);
-        });
-    }
+        string top = $"{BlockMesh.MaterialName(styleTop, true)}::{ColorUtility.GetHex(colorTop)}";
+        string side = $"{BlockMesh.MaterialName(styleSide, false)}::{ColorUtility.GetHex(colorSide)}";
 
-    public static void DepaintBlocks()
-    {
-        List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block =>
         {
-            block.RemovePaint();
-        });
-    }
-
-    public static void StyleBlocks(string styleTop, string styleSide)
-    {
-        List<Block> selected = Block.GetSelected().ToList();
-        selected.ForEach(block =>
-        {
-            block.ApplyTexture(styleTop, styleSide);
+            block.ApplyStyle(top, side);
         });
     }
 
@@ -300,8 +248,7 @@ public class TerrainController : MonoBehaviour
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block =>
         {
-            block.RemoveTexture();
-            block.RemovePaint();
+            block.RemoveStyle();
         });
     }
 
@@ -310,29 +257,23 @@ public class TerrainController : MonoBehaviour
         List<Block> selected = Block.GetSelected().ToList();
         selected.ForEach(block =>
         {
-            Color[] colors = block.SamplePaint();
-            if (colors != null)
+            (string, string) styles = block.SampleStyles();
+            if (styles.Item1.Length > 0)
             {
-                Environment.CurrentPaintTop = colors[0];
-                Environment.CurrentPaintSide = colors[1];
-                UI.System.Q("ToolOptions").Q("TopBlockPaint").style.backgroundColor = colors[0];
-                UI.System.Q("ToolOptions").Q("SideBlockPaint").style.backgroundColor = colors[1];
-                UI.ToggleDisplay(UI.System.Q("ToolOptions"), true);
-                UI.ToggleDisplay(UI.System.Q("ToolOptions").Q("StylePaintOptions"), true);
-                UI.ToggleDisplay(UI.System.Q("ToolOptions").Q("StyleTextureOptions"), false);
+                UI.System.Q("ToolOptions").Q<DropdownField>("TopTexture").value = BlockMesh.ReverseTextureMap(styles.Item1.Split("::")[0]);
+                Environment.CurrentPaintTop = ColorUtility.GetColor(styles.Item1.Split("::")[1]);
+                UI.System.Q("ToolOptions").Q("TopBlockPaint").style.backgroundColor = Environment.CurrentPaintTop;
+
+                UI.System.Q("ToolOptions").Q<DropdownField>("SideTexture").value = BlockMesh.ReverseTextureMap(styles.Item2.Split("::")[0]);
+                Environment.CurrentPaintSide = ColorUtility.GetColor(styles.Item2.Split("::")[1]);
+                UI.System.Q("ToolOptions").Q("SideBlockPaint").style.backgroundColor = Environment.CurrentPaintSide;
+
+                // Simulate click on paint subtool to switch after sampling				
+                var e = new NavigationSubmitEvent() { target = UI.System.Q("ToolsPanel").Q<Button>("StylePaint") };
+                UI.System.Q("ToolsPanel").Q("StylePaint").SendEvent(e);
                 return;
             }
-            (string, string) textures = block.SampleTexture();
-            if (textures.Item1.Length > 0)
-            {
-                UI.System.Q("ToolOptions").Q<DropdownField>("BlockTopTexture").value = textures.Item1;
-                UI.System.Q("ToolOptions").Q<DropdownField>("BlockSideTexture").value = textures.Item2;
-                UI.ToggleDisplay(UI.System.Q("ToolOptions"), true);
-                UI.ToggleDisplay(UI.System.Q("ToolOptions").Q("StylePaintOptions"), false);
-                UI.ToggleDisplay(UI.System.Q("ToolOptions").Q("StyleTextureOptions"), true);
-                return;
-            }
-            Toast.AddSimple("Nothing sampled.");
+            Toast.AddSimple("Block is using default material, nothing sampled.");
         });
     }
 
@@ -544,17 +485,13 @@ public class TerrainController : MonoBehaviour
         switch (MapEdit.StyleOp)
         {
             case "StylePaint":
-                PaintBlocks();
-                break;
-            case "StyleTexture":
-                string styleTop = UI.System.Q<DropdownField>("BlockTopTexture").value;
-                string styleSide = UI.System.Q<DropdownField>("BlockSideTexture").value;
-                string matTop = BlockMesh.TextureMaterialName(styleTop, true);
-                string matSide = BlockMesh.TextureMaterialName(styleSide, false);
-                StyleBlocks(matTop, matSide);
+                string textureTop = UI.System.Q<DropdownField>("TopTexture").value;
+                string textureSide = UI.System.Q<DropdownField>("SideTexture").value;
+                Color colorTop = Environment.CurrentPaintTop;
+                Color colorSide = Environment.CurrentPaintSide;
+                StyleBlocks(textureTop, textureSide, colorTop, colorSide);
                 break;
             case "StyleEraser":
-                DepaintBlocks();
                 DestyleBlocks();
                 break;
             case "StyleSample":
@@ -723,7 +660,7 @@ public class TerrainController : MonoBehaviour
     {
         int count = 0;
         int hiding = 0;
-        Vector2 size = Size();
+        Vector2 size = GetDimensions();
         bool[,,] solids = new bool[(int)size.x, (int)size.y, MaxElevation() + 1];
         GameObject[,,] blks = new GameObject[(int)size.x, (int)size.y, MaxElevation() + 1];
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
@@ -801,7 +738,7 @@ public class TerrainController : MonoBehaviour
             Cursor.Mode = CursorMode.TerrainEffecting;
             Token.DeselectAll();
             Token.UnfocusAll();
-            BlockMesh.ToggleBorders(true);
+            BlockMesh.ToggleAllBorders(true);
             UI.ToggleActiveClass("MarkerMode", true);
             UI.ToggleDisplay("BottomBar", false);
             UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
@@ -810,7 +747,7 @@ public class TerrainController : MonoBehaviour
         else
         {
             Cursor.Mode = CursorMode.Default;
-            BlockMesh.ToggleBorders(false);
+            BlockMesh.ToggleAllBorders(false);
             UI.ToggleActiveClass("MarkerMode", false);
             Block.DeselectAll();
             UI.ToggleDisplay("BottomBar", true);

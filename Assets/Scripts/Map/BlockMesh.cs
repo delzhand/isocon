@@ -6,6 +6,7 @@ public class BlockMesh : MonoBehaviour
     public static Mesh Hex;
     public static Dictionary<BlockShape, Mesh> Shapes = new();
     private static Dictionary<string, Material> _sharedMaterials = new();
+    private static Dictionary<string, Material> _customMaterials = new();
     public static bool IsSetup = false;
 
     public static void Setup()
@@ -39,11 +40,6 @@ public class BlockMesh : MonoBehaviour
 
         _sharedMaterials.Add("selected", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")));
         _sharedMaterials["selected"].SetInt("_Selected", 1);
-
-        foreach (string s in TextureMaterials())
-        {
-            _sharedMaterials.Add($"{s}", new Material(Resources.Load<Material>($"Materials/Block/Artistic/{s}")));
-        }
     }
 
     public static Material GetSharedMaterial(string key)
@@ -56,22 +52,34 @@ public class BlockMesh : MonoBehaviour
         return null;
     }
 
-    public static void ToggleBorders(bool show)
+    public static Material GetCustomMaterial(string key, bool top)
     {
-        foreach (string s in TextureMaterials())
+        if (_customMaterials.ContainsKey(key))
         {
-            _sharedMaterials[s].SetInt("_ShowOutline", show ? 1 : 0);
+            return _customMaterials[key];
+        }
+        else
+        {
+            string texture = key.Split("::")[0];
+            string tintHex = key.Split("::")[1];
+            Color tint = ColorUtility.GetColor(tintHex);
+            var material = new Material(Resources.Load<Material>($"Materials/Block/Artistic/{texture}"));
+            material.SetColor("_Tint", tint);
+            _customMaterials.Add(key, material);
+            return material;
+        }
+    }
+
+    public static void ToggleAllBorders(bool show)
+    {
+        foreach (string s in _customMaterials.Keys)
+        {
+            _customMaterials[s].SetInt("_ShowOutline", show ? 1 : 0);
         }
         foreach (string s in StringUtility.CreateArray("side1", "side2", "top1", "top2"))
         {
             _sharedMaterials[s].SetInt("_ShowOutline", show ? 1 : 0);
         }
-        Block.ToggleBorders(show);
-    }
-
-    private static string[] TextureMaterials()
-    {
-        return StringUtility.CreateArray("Brick3Side", "Brick3Top", "SmallTileTop", "BigTileTop", "AcidSide", "AcidTopFlow", "AcidTopStill", "Brick2Side", "Brick2Top", "BrickSide", "BrickTop", "DryGrassTop", "GoldSide", "GoldTop", "GrassTop", "LavaSide", "LavaTopFlow", "LavaTopStill", "MetalSide", "MetalTop", "PoisonSide", "PoisonTopFlow", "PoisonTopStill", "SandSide", "SandTop", "SnowSide", "SnowTop", "SoilSide", "SoilTop", "StoneSide", "StoneTop", "WaterSideFlow", "WaterSideStill", "WaterTopFlow", "WaterTopStill", "Wood2Side", "Wood2Top", "WoodSide", "WoodTop", "GrayBrickSide", "GrayBrickTop", "GrayMetalSide", "GrayMetalTop");
     }
 
     public static int MaterialTopIndex(BlockShape shape)
@@ -122,16 +130,18 @@ public class BlockMesh : MonoBehaviour
         return 3;
     }
 
-    public static string TextureMaterialName(string style, bool top)
+    public static string MaterialName(string styleName, bool top)
     {
-        (string, string) materials = TextureMap(style);
-        return top ? materials.Item2 : materials.Item1;
+        (string, string) topSidePair = TextureMap(styleName);
+        return top ? topSidePair.Item2 : topSidePair.Item1;
     }
 
-    public static (string, string) TextureMap(string style)
+    private static (string, string) TextureMap(string style)
     {
         switch (style)
         {
+            case "Color Only":
+                return ("ColorOnly", "ColorOnly");
             case "Acid Flow":
                 return ("AcidSide", "AcidTopFlow");
             case "Acid":
@@ -175,6 +185,8 @@ public class BlockMesh : MonoBehaviour
     {
         switch (texture)
         {
+            case "ColorOnly":
+                return "Color Only";
             case "AcidTopFlow":
                 return "Acid Flow";
             case "AcidSide":

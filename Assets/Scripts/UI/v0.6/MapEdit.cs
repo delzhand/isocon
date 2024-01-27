@@ -281,7 +281,7 @@ public class MapEdit
         Token.UnfocusAll();
         Block.ToggleSpacers(true);
         Cursor.Mode = CursorMode.Editing;
-        BlockMesh.ToggleBorders(true);
+        BlockMesh.ToggleAllBorders(true);
         UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), true);
         UI.ToggleDisplay("BottomBar", false);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
@@ -294,7 +294,7 @@ public class MapEdit
         Tutorial.Init("end edit");
         Cursor.Mode = CursorMode.Default;
         Cursor.FocusMode = FocusMode.Single;
-        BlockMesh.ToggleBorders(false);
+        BlockMesh.ToggleAllBorders(false);
         UI.ToggleDisplay("ToolsPanel", false);
         UI.ToggleDisplay("ToolOptions", false);
         Block.ToggleSpacers(false);
