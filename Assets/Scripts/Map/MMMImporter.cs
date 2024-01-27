@@ -40,7 +40,7 @@ public class MMMImporter
                 break;
             case 1:
                 // adverse terrain
-                blocks.Add($"{x}|{y}|0|0|Solid|False|Adverse Terrain::Wavy::White|BigTileTop::#A0A0A0|ColorOnly::#000000");
+                blocks.Add($"{x}|{y}|0|90|Solid|False|Adverse Terrain::Wavy::White|BigTileTop::#A0A0A0|ColorOnly::#000000");
                 break;
             case 2:
                 // elevation
