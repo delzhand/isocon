@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3326459346945091228}
   - component: {fileID: 1443309407859687425}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Token
   m_TagString: Token
   m_Icon: {fileID: 0}
@@ -52,8 +52,7 @@ MonoBehaviour:
   ShareOffsetX: 0
   ShareOffsetY: 0
   LastFocused: {fileID: 0}
-  Selected: 0
-  Focused: 0
+  State: 0
 --- !u!1 &1094405166687101626
 GameObject:
   m_ObjectHideFlags: 0
@@ -65,7 +64,7 @@ GameObject:
   - component: {fileID: 3640681060197051072}
   - component: {fileID: 1939879641854971604}
   - component: {fileID: 2242975486741823708}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Select
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -150,7 +149,7 @@ GameObject:
   - component: {fileID: 2679928070183752986}
   - component: {fileID: 3332214075055938770}
   - component: {fileID: 5691176467107880023}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Focus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -233,7 +232,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6628532978905311490}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Offset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -268,7 +267,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5690685943529760590}
   - component: {fileID: 6427488681320701495}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -331,6 +330,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Cutout
+      objectReference: {fileID: 0}
+    - target: {fileID: 850831578956137971, guid: 9c66dfa9f53455e4e979f3b7941f6c26,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1619330653993821352, guid: 9c66dfa9f53455e4e979f3b7941f6c26,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2160974411622687656, guid: 9c66dfa9f53455e4e979f3b7941f6c26,
         type: 3}
@@ -456,6 +465,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Avatar
+      objectReference: {fileID: 0}
+    - target: {fileID: 5469278938180405905, guid: 9c66dfa9f53455e4e979f3b7941f6c26,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8135515316449660026, guid: 9c66dfa9f53455e4e979f3b7941f6c26,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8135515316449660026, guid: 9c66dfa9f53455e4e979f3b7941f6c26,
         type: 3}
