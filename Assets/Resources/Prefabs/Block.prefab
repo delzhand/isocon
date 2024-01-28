@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8185435902366544664}
   - component: {fileID: 194906470983031178}
   - component: {fileID: 2515258050420513577}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 4110329766916996031}
   - component: {fileID: 1117994371727169991}
   - component: {fileID: 8782708746327882312}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Block
   m_TagString: Block
   m_Icon: {fileID: 0}
@@ -223,8 +223,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3770daac72b074c458f3341fd185f8bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Selected: 0
-  Focused: 0
   Highlighted: 0
   Shape: 0
   Destroyable: 1

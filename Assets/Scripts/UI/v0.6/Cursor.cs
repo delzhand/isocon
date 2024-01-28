@@ -22,11 +22,10 @@ public enum FocusMode
 
 public class Cursor : MonoBehaviour
 {
-    public static CursorMode Mode = CursorMode.Default;
+    public static CursorMode Mode { get; set; } = CursorMode.Default;
     public static FocusMode FocusMode { get; set; } = FocusMode.Single;
     private static Ray ray;
     public static bool OverUnitBarElement = false;
-
 
     void Update()
     {
@@ -34,7 +33,7 @@ public class Cursor : MonoBehaviour
         {
             return;
         }
-        if (UI.ClicksSuspended)
+        if (UI.ClicksSuspended &&  Mode != CursorMode.Dragging)
         {
             return;
         }
@@ -51,9 +50,7 @@ public class Cursor : MonoBehaviour
 
         SetFocusMode();
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        RaycastHit hit;
-        bool isHit = Physics.Raycast(ray, out hit, 100f);
+        bool isHit = Physics.Raycast(ray, out RaycastHit hit, 9999f, GetMaskForCursorMode(Mode));
         if (isHit && hit.collider.tag == "Block")
         {
             Block b = hit.collider.GetComponent<Block>();
@@ -224,7 +221,6 @@ public class Cursor : MonoBehaviour
                 default:
                     FocusMode = FocusMode.Single;
                     break;
-
             }
         }
     }
@@ -232,5 +228,23 @@ public class Cursor : MonoBehaviour
     public static bool IgnoreTokens()
     {
         return Mode == CursorMode.Editing || Mode == CursorMode.TerrainEffecting;
+    }
+
+    private static LayerMask GetMaskForCursorMode(CursorMode mode)
+    {
+        // Set the raycast filter to suit the cursor mode we are using
+        switch(mode)
+        {
+            case CursorMode.Default:
+            case CursorMode.Targeting:
+                return LayerMask.GetMask("Block", "Token");
+            case CursorMode.Dragging:
+            case CursorMode.TerrainEffecting:
+            case CursorMode.Editing:
+                return LayerMask.GetMask("Block");
+            default:
+                Debug.LogError($"{mode} does not have an explicitly defined raycast filter yet");
+                return LayerMask.GetMask("Block", "Token");
+        }   
     }
 }
