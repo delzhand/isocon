@@ -2,33 +2,24 @@ using UnityEngine;
 
 public class Column : MonoBehaviour
 {
-    private int _x;
-    public int X
-    {
-        get { return _x; }
-        private set { _x = value; }
-    }
-
-    private int _y;
-    public int Y
-    {
-        get { return _y; }
-        private set { _y = value; }
-    }
+    public int X { get; private set; }
+    public int Y { get; private set; }
+    public Vector2Int Coordinate => new Vector2Int(X, Y);
+    public Vector3Int Coordinate3 => new Vector3Int(X, Y, 0);
 
     public void Set(int x, int y)
     {
-        this._x = x;
-        this._y = y;
+        X = x;
+        Y = y;
     }
 
     void Update()
     {
-        Vector3 v = new(_x, 0, _y);
+        Vector3 v = new Vector3(X, 0, Y);
         if (TerrainController.GridType == "Hex")
         {
             v.z *= .866f;
-            if (_y % 2 == 1)
+            if (Y % 2 == 1)
             {
                 v.x += .5f;
             }
