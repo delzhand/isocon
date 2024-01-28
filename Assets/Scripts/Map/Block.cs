@@ -294,6 +294,7 @@ public class Block : MonoBehaviour
         return block;
     }
 
+    static int editZ = 0;
     public void LeftClickDown()
     {
         switch (Cursor.Mode)
@@ -305,6 +306,7 @@ public class Block : MonoBehaviour
             case CursorMode.Editing:
                 Block.DeselectAll();
                 Select();
+                editZ = GetZ();
                 TerrainController.Edit(this);
                 Select();
                 Block.DeselectAll();
@@ -314,6 +316,36 @@ public class Block : MonoBehaviour
                 break;
             case CursorMode.Dragging:
                 Token.GetSelected().Move(this);
+                break;
+        }
+    }
+
+    public void LeftClickHeld()
+    {
+        switch (Cursor.Mode)
+        {
+            case CursorMode.Editing:
+                switch (MapEdit.EditOp)
+                {
+                    case "RotateBlock":
+                    case "ChangeShape":
+                    case "TerrainEffect":
+                        return;
+                    case "AddBlock":
+                    case "RemoveBlock":
+                        if (editZ != GetZ())
+                            return;
+                        if (GetTopBlock(new Vector2Int(GetX(), GetY())) != this)
+                            return;
+                        goto case "StyleBlock";
+                    case "StyleBlock":
+                        Block.DeselectAll();
+                        Select();
+                        TerrainController.Edit(this);
+                        Select();
+                        Block.DeselectAll();
+                        break;
+                }
                 break;
         }
     }
