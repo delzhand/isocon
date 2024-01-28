@@ -156,6 +156,7 @@ public class Cursor : MonoBehaviour
 
     private void BlockClicks(Block block)
     {
+
         if (block == null)
         {
             return;
@@ -163,6 +164,10 @@ public class Cursor : MonoBehaviour
         if (IsLeftClick())
         {
             block.LeftClickDown();
+        }
+        else if (IsLeftHeld())
+        {
+            block.LeftClickHeld();
         }
         if (IsRightClick())
         {
@@ -195,6 +200,8 @@ public class Cursor : MonoBehaviour
     {
         return Input.GetMouseButtonDown(0);
     }
+
+    public static bool IsLeftHeld() => Input.GetMouseButton(0);
 
     private void SetFocusMode()
     {
