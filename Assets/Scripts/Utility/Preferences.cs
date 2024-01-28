@@ -70,6 +70,12 @@ public class Preferences
         Save();
     }
 
+    public static float GetUIScale()
+    {
+        string uiScale = Preferences.Current.UIScale;
+        return float.Parse(uiScale.Replace("%", "")) / 100f;
+    }
+
     public static void SetTokenScale(float value)
     {
         _current.TokenScale = value;

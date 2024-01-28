@@ -14,72 +14,95 @@ public class UI : MonoBehaviour
     private static bool hardSuspend = false;
     private bool uiFix = false; // compensate for unity bug
 
-    void Start() {
+    void Start()
+    {
     }
 
-    void Update() {
+    void Update()
+    {
         List<VisualElement> dropdowns = UI.System.parent.Query(null, "unity-base-dropdown__container-outer").ToList();
-        if (dropdowns.Count > 0) {
+        if (dropdowns.Count > 0)
+        {
             hardSuspend = true;
         }
-        else  {
+        else
+        {
             hardSuspend = false;
         }
     }
 
-    void LateUpdate() {
-        if (uiFix) {
+    void LateUpdate()
+    {
+        if (uiFix)
+        {
             uiFix = false;
             float x = GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale;
             GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = x + .01f;
         }
     }
 
-    public static bool ClicksSuspended {
-        get {
+    public static bool ClicksSuspended
+    {
+        get
+        {
             return suspensions.Count > 0 || hardSuspend;
         }
     }
 
-    public static VisualElement System {
-        get {
-            if (systemUI == null) {
+    public static VisualElement System
+    {
+        get
+        {
+            if (systemUI == null)
+            {
                 systemUI = GameObject.Find("SystemUI").GetComponent<UIDocument>().rootVisualElement;
             }
             return systemUI;
         }
     }
 
-    public static VisualElement Modal {
-        get {
+    public static VisualElement Modal
+    {
+        get
+        {
             return UI.System.Q("GeneralModal");
         }
     }
 
-    public static VisualElement TopBar {
-        get {
+    public static VisualElement TopBar
+    {
+        get
+        {
             return UI.System.Q("TopBar");
         }
     }
 
-    public static VisualElement ToolsPanel {
-        get {
+    public static VisualElement ToolsPanel
+    {
+        get
+        {
             return UI.System.Q("ToolsPanel");
         }
     }
 
-    public static void SetBlocking(VisualElement root, string blockingElement) {
-        SetBlocking(root, new string[]{blockingElement});
+    public static void SetBlocking(VisualElement root, string blockingElement)
+    {
+        SetBlocking(root, new string[] { blockingElement });
     }
 
-    public static void SetBlocking(VisualElement root, string[] blockingElements) {
-        foreach(string s in blockingElements) {
-            root.Q(s).RegisterCallback<MouseEnterEvent>((evt) => {
-                if (!suspensions.Contains(s)) {
+    public static void SetBlocking(VisualElement root, string[] blockingElements)
+    {
+        foreach (string s in blockingElements)
+        {
+            root.Q(s).RegisterCallback<MouseEnterEvent>((evt) =>
+            {
+                if (!suspensions.Contains(s))
+                {
                     suspensions.Add(s);
                 }
-            });            
-            root.Q(s).RegisterCallback<MouseLeaveEvent>((evt) => {
+            });
+            root.Q(s).RegisterCallback<MouseLeaveEvent>((evt) =>
+            {
                 suspensions.Remove(s);
             });
         }
@@ -89,8 +112,9 @@ public class UI : MonoBehaviour
     //     hardSuspend = val;
     // }
 
-    public static void SetScale(string element, float value) {
-        GameObject.Find(element).GetComponent<UIDocument>().panelSettings.scale = value;
+    public static void SetScale()
+    {
+        GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = Preferences.GetUIScale();
     }
 
     // public static void FollowToken(Token token, VisualElement element, Camera camera, Vector2 offset, bool useAnchor = true) {
@@ -101,9 +125,11 @@ public class UI : MonoBehaviour
     //     FollowTransform(t, element, camera, offset);
     // }
 
-    public static void FollowTransform(Transform transform, VisualElement element, Camera camera, Vector2 offset) {
+    public static void FollowTransform(Transform transform, VisualElement element, Camera camera, Vector2 offset)
+    {
         Vector3 viewportPos = camera.WorldToViewportPoint(transform.position);
-        if (element.resolvedStyle.width != float.NaN) {
+        if (element.resolvedStyle.width != float.NaN)
+        {
             Vector2 screenPos = new Vector2(
                 Mathf.RoundToInt((viewportPos.x * UI.System.resolvedStyle.width)),
                 Mathf.RoundToInt((1f - viewportPos.y) * UI.System.resolvedStyle.height)
@@ -115,88 +141,112 @@ public class UI : MonoBehaviour
         }
     }
 
-    public static bool InElement(string elementName) {
+    public static bool InElement(string elementName)
+    {
         VisualElement v = UI.System.Q(elementName);
-        if (v == null) {
+        if (v == null)
+        {
             return false;
         }
         Vector2 mp = Input.mousePosition;
         Vector2 min = UI.System.Q(elementName).layout.min;
         Vector2 max = UI.System.Q(elementName).layout.max;
-        return (mp.x >= min.x && mp.x <= max.x && mp.y >= min.y && mp.y <= max.y);   
+        return (mp.x >= min.x && mp.x <= max.x && mp.y >= min.y && mp.y <= max.y);
     }
 
-    public static void ToggleDisplay(string name) {
+    public static void ToggleDisplay(string name)
+    {
         bool isShown = (System.Q(name).resolvedStyle.display != DisplayStyle.None);
         ToggleDisplay(name, !isShown);
     }
 
-    public static void ToggleDisplay(string name, bool shown) {
-        try {
+    public static void ToggleDisplay(string name, bool shown)
+    {
+        try
+        {
             ToggleDisplay(System.Q(name), shown);
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
             Debug.Log(e.Message);
             throw new Exception($"Could not find element {name}");
         }
     }
 
-    public static void ToggleDisplay(VisualElement e, bool shown) {
-        if (shown) {
+    public static void ToggleDisplay(VisualElement e, bool shown)
+    {
+        if (shown)
+        {
             e.style.display = DisplayStyle.Flex;
         }
-        else {
+        else
+        {
             e.style.display = DisplayStyle.None;
         }
     }
 
-    public static void ToggleHidden(string name) {
+    public static void ToggleHidden(string name)
+    {
         bool isHidden = System.Q(name).GetClasses().ToArray().Contains<string>("hidden");
-        if (isHidden) {
+        if (isHidden)
+        {
             ToggleHidden(name, false);
         }
-        else {
+        else
+        {
             ToggleHidden(name, true);
         }
     }
-    public static void ToggleHidden(string name, bool on) {
-        if (on) {
+    public static void ToggleHidden(string name, bool on)
+    {
+        if (on)
+        {
             System.Q(name).AddToClassList("hidden");
         }
-        else {
+        else
+        {
             System.Q(name).RemoveFromClassList("hidden");
         }
     }
 
-    public static void ToggleActiveClass(string name, bool active) {
+    public static void ToggleActiveClass(string name, bool active)
+    {
         ToggleActiveClass(UI.System.Q(name), active);
     }
 
-    public static void ToggleActiveClass(VisualElement e, bool active) {
-        if (active) {
+    public static void ToggleActiveClass(VisualElement e, bool active)
+    {
+        if (active)
+        {
             e.AddToClassList("active");
         }
-        else {
+        else
+        {
             e.RemoveFromClassList("active");
         }
     }
 
-    public static void HoverSetup(VisualElement e) {
-        e.RegisterCallback<MouseEnterEvent>((evt) => {
+    public static void HoverSetup(VisualElement e)
+    {
+        e.RegisterCallback<MouseEnterEvent>((evt) =>
+        {
             e.AddToClassList("hover");
         });
-        e.RegisterCallback<MouseLeaveEvent>((evt) => {
+        e.RegisterCallback<MouseLeaveEvent>((evt) =>
+        {
             e.RemoveFromClassList("hover");
         });
     }
 
-    public static VisualElement CreateFromTemplate(string name) {
+    public static VisualElement CreateFromTemplate(string name)
+    {
         VisualTreeAsset template = Resources.Load<VisualTreeAsset>(name);
         VisualElement element = template.Instantiate();
         return element;
     }
 
-    public static void Redraw() {
+    public static void Redraw()
+    {
         float x = GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale;
         GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = x - .01f;
         GameObject.Find("Engine").GetComponent<UI>().uiFix = true;
