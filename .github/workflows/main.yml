@@ -18,15 +18,20 @@ jobs:
         channel:
           - windows
     steps:
-      - name: 'Get Latest Tag'
-        id: latest_tag
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+
+      - name: Get the latest release
+        id: latest_release
+        run: echo "{tag}={$(git describe --tags `git rev-list --tags --max-count=1`)}" >> $GITHUB_OUTPUT
 
       - name: Fetch the latest release asset
         uses: dsaltares/fetch-gh-release-asset@master
         with:
           repo: 'delzhand/isocon'
-          version: ${{ steps.latest_tag.outputs.tag }}
+          version: ${{ steps.latest_release.outputs.tag }}
           file: 'isocon_win.zip'
           target: 'build/isocon_win.zip'
           token: ${{ secrets.GITHUB_TOKEN }}
