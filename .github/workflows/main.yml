@@ -25,7 +25,7 @@ jobs:
 
       - name: Get the latest release
         id: latest_release
-        run: echo "tag=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_OUTPUT
+        run: echo "tag=$(git describe --tags --match "v*" --abbrev=0)" >> $GITHUB_OUTPUT
 
       - name: Fetch the latest release asset
         uses: dsaltares/fetch-gh-release-asset@master
