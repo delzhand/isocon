@@ -7,7 +7,7 @@ env:
   ITCH_GAME_ID: isocon
 jobs:
   deploy:
-    name: Upload to Itch
+    name: Upload to Itch.io
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
@@ -15,16 +15,18 @@ jobs:
         channel:
           - windows
     runs-on: ubuntu-latest
-    name: Deploy - Itch.io ${{ matrix.template }}
     steps:
-      - uses: actions/download-artifact@v2.0.8
+      - uses: dsaltares/fetch-gh-release-asset@master
         with:
-          name: ${{ matrix.channel }}
-          path: build/${{ matrix.channel }}
+          repo: 'delzhand/isocon'
+          version: 'tags/v0.6.8'
+          file: 'isocon_win.zip'
+          target: 'build/isocon_win.zip'
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: KikimoraGames/itch-publish@v0.0.3
         with:
-          butlerApiKey: ${{secrets.BUTLER_API_KEY}}
-          gameData: ./build/${{ matrix.template }}
+          butlerApiKey: ${{secrets.BUTLER_CREDENTIALS}}
+          gameData: ./build/isocon_win.zip
           itchUsername: ${{env.ITCH_USERNAME}}
           itchGameId: ${{ env.ITCH_GAME_ID }}
           buildChannel: ${{ matrix.channel }}
