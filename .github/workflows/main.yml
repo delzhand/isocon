@@ -2,9 +2,12 @@ name: Deploy
 on:
   release:
     types: [ published ]
+  workflow_dispatch:
+
 env:
   ITCH_USERNAME: delzhand
   ITCH_GAME_ID: isocon
+
 jobs:
   deploy:
     name: Upload to Itch.io
@@ -15,13 +18,19 @@ jobs:
         channel:
           - windows
     steps:
-      - uses: dsaltares/fetch-gh-release-asset@master
+      - name: Get the latest release
+        id: latest_release
+        run: echo ::set-output name=tag::$(git describe --tags `git rev-list --tags --max-count=1`)
+
+      - name: Fetch the latest release asset
+        uses: dsaltares/fetch-gh-release-asset@master
         with:
           repo: 'delzhand/isocon'
-          version: 'tags/v0.6.8'
+          version: ${{ steps.latest_release.outputs.tag }}
           file: 'isocon_win.zip'
           target: 'build/isocon_win.zip'
           token: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: KikimoraGames/itch-publish@v0.0.3
         with:
           butlerApiKey: ${{secrets.BUTLER_CREDENTIALS}}
@@ -29,4 +38,4 @@ jobs:
           itchUsername: ${{env.ITCH_USERNAME}}
           itchGameId: ${{ env.ITCH_GAME_ID }}
           buildChannel: ${{ matrix.channel }}
-          buildNumber: ${{ needs.version.outputs.version_hash }}
+          buildNumber: ${{ steps.latest_release.outputs.tag }}
