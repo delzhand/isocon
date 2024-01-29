@@ -25,7 +25,7 @@ jobs:
 
       - name: Get the latest release
         id: latest_release
-        run: echo "{tag}={$(git describe --tags `git rev-list --tags --max-count=1`)}" >> $GITHUB_OUTPUT
+        run: echo "tag=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_OUTPUT
 
       - name: Fetch the latest release asset
         uses: dsaltares/fetch-gh-release-asset@master
@@ -39,7 +39,7 @@ jobs:
       - uses: KikimoraGames/itch-publish@v0.0.3
         with:
           butlerApiKey: ${{secrets.BUTLER_CREDENTIALS}}
-          gameData: ./build/isocon_win.zip
+          gameData: ./build/isocon_win_{{ steps.latest_release.outputs.tag }}.zip
           itchUsername: ${{env.ITCH_USERNAME}}
           itchGameId: ${{ env.ITCH_GAME_ID }}
           buildChannel: ${{ matrix.channel }}
