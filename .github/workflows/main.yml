@@ -1,0 +1,26 @@
+name: CI - Build All Platforms
+on:
+  release:
+    types: [ published ]
+jobs:
+  release-win-itchio:
+    name: Upload windows build to itch.io
+    runs-on: ubuntu-latest
+    if: github.event.action == 'published'
+    steps:
+      - name: download windows
+        id: download-windows
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          version: "latest"
+          file: "isocon_win.zip"
+          token: "${{ secrets.GH_CREDENTIALS }}"
+      - name: deploy to itch.io (WINDOWS)
+        uses: josephbmanley/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+          CHANNEL: html
+          ITCH_GAME: isocon
+          ITCH_USER: delzhand
+          PACKAGE: isocon_win.zip
+          VERSION: ${{ steps.download-win.outputs.version }}
