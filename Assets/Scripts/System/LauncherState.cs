@@ -8,19 +8,12 @@ using UnityEngine.UIElements;
 
 public class LauncherState : BaseState
 {
-    private bool _initializationRequired = true;
-    private string _version = "0.6.6";
-    private string _latestVersion = "0.6.6";
-    private ConnectMode _pendingMode;
-    private bool _lastUpdateIsConnecting = false;
+    private ConnectMode _mode;
+    private bool _attemptingToConnect = false;
 
     public override void OnEnter(StateManager sm)
     {
         base.OnEnter(sm);
-        if (_initializationRequired)
-        {
-            InitializeApplication();
-        }
         EnableInterface();
         SetLauncherBackground();
         DestroyLeftoverNetworkData();
@@ -29,7 +22,6 @@ public class LauncherState : BaseState
 
     public override void OnExit()
     {
-        base.OnExit();
         DisableInterface();
         UnbindCallbacks();
     }
@@ -37,83 +29,17 @@ public class LauncherState : BaseState
     public override void UpdateState()
     {
         base.UpdateState();
-        if (_lastUpdateIsConnecting)
+        if (_attemptingToConnect)
         {
             DetectConnectionAttemptOutcome();
         }
     }
 
-
-    #region App Initialization
-    private void InitializeApplication()
-    {
-        Preferences.Init();
-        UI.SetScale();
-        SetVersionText();
-        Modal.Setup();
-    }
-
-    private async void SetVersionText()
-    {
-        await AsyncAwake();
-        if (_version != _latestVersion)
-        {
-            UI.System.Q<Label>("Version").text = $"v{_version} (version {_latestVersion} available)";
-            UI.System.Q<Label>("Version").style.backgroundColor = ColorUtility.UIBlue;
-        }
-        else
-        {
-            UI.System.Q<Label>("Version").text = $"v{_version}";
-        }
-    }
-
-    async Task AsyncAwake()
-    {
-        if (Utilities.CheckForInternetConnection())
-        {
-            await InitializeRemoteConfigAsync();
-        }
-        RemoteConfigService.Instance.FetchCompleted += ApplyRemoteConfig;
-        await RemoteConfigService.Instance.FetchConfigsAsync(new AppAttributes(), new AppAttributes());
-    }
-
-    async Task InitializeRemoteConfigAsync()
-    {
-        await UnityServices.InitializeAsync();
-        if (!AuthenticationService.Instance.IsSignedIn)
-        {
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        }
-    }
-
-    void ApplyRemoteConfig(ConfigResponse configResponse)
-    {
-        switch (configResponse.requestOrigin)
-        {
-            case ConfigOrigin.Default:
-                Debug.Log("No settings loaded this session and no local cache file exists; using default values.");
-                break;
-            case ConfigOrigin.Cached:
-                Debug.Log("No settings loaded this session; using cached values from a previous session.");
-                break;
-            case ConfigOrigin.Remote:
-                Debug.Log("New settings loaded this session; update values accordingly.");
-                break;
-        }
-        _latestVersion = RemoteConfigService.Instance.appConfig.GetString("LatestVersion");
-        GameSystem.DataJson = RemoteConfigService.Instance.appConfig.GetJson("GameSystem");
-    }
-
-    public struct AppAttributes
-    {
-        public string LatestVersion;
-    }
-    #endregion
-
     #region Interface
     private void EnableInterface()
     {
         UI.ToggleDisplay("StartupPanel", true);
+        UI.ToggleDisplay("StartupOptions", true);
         UI.ToggleDisplay("Launcher", true);
     }
 
@@ -138,6 +64,8 @@ public class LauncherState : BaseState
         UI.System.Q<Button>("SoloModeButton").RegisterCallback<ClickEvent>(SoloModeClicked);
         UI.System.Q<Button>("HostModeButton").RegisterCallback<ClickEvent>(HostModeClicked);
         UI.System.Q<Button>("ClientModeButton").RegisterCallback<ClickEvent>(ClientModeClicked);
+        UI.System.Q<Button>("CancelConnecting").RegisterCallback<ClickEvent>(CancelConnectionAttemptClicked);
+
     }
 
     private void UnbindCallbacks()
@@ -146,6 +74,7 @@ public class LauncherState : BaseState
         UI.System.Q<Button>("SoloModeButton").UnregisterCallback<ClickEvent>(SoloModeClicked);
         UI.System.Q<Button>("HostModeButton").UnregisterCallback<ClickEvent>(HostModeClicked);
         UI.System.Q<Button>("ClientModeButton").UnregisterCallback<ClickEvent>(ClientModeClicked);
+        UI.System.Q<Button>("CancelConnecting").UnregisterCallback<ClickEvent>(CancelConnectionAttemptClicked);
     }
 
     private void ExitClicked(ClickEvent evt)
@@ -168,11 +97,17 @@ public class LauncherState : BaseState
         OpenConfigModal(evt, ConnectMode.Client);
     }
 
+    private void CancelConnectionAttemptClicked(ClickEvent evt)
+    {
+        GameObject.Find("NetworkController").GetComponent<NetworkManager>().StopClient();
+        Toast.AddSimple("Connection attempt cancelled.");
+    }
+
     private void OpenConfigModal(ClickEvent evt, ConnectMode mode)
     {
-        _pendingMode = mode;
+        _mode = mode;
 
-        Modal.Reset($"Configure {_pendingMode.ToString()} Mode");
+        Modal.Reset($"Configure {_mode.ToString()} Mode");
 
         string name = Preferences.Current.PlayerName;
         Modal.AddTextField("PlayerName", "Player Name", name, (evt) =>
@@ -180,7 +115,7 @@ public class LauncherState : BaseState
             Preferences.SetPlayerName(evt.newValue);
         });
 
-        if (_pendingMode == ConnectMode.Solo || _pendingMode == ConnectMode.Host)
+        if (_mode == ConnectMode.Solo || _mode == ConnectMode.Host)
         {
             string system = Preferences.Current.System;
             Modal.AddDropdownField("GameSystem", "Game System", system, new string[] { "Generic", "ICON 1.5", "Maleghast"/*, "Lancer"*/}, (evt) =>
@@ -197,7 +132,7 @@ public class LauncherState : BaseState
             Modal.AddMarkup("HexMessage", "Warning! Hex support is experimental. Some visual effects may not display correctly.");
         }
 
-        if (_pendingMode == ConnectMode.Host)
+        if (_mode == ConnectMode.Host)
         {
             int maxPlayers = Preferences.Current.PlayerCount;
             Modal.AddIntField("PlayerCount", "Max Player Count", maxPlayers, (evt) =>
@@ -206,7 +141,7 @@ public class LauncherState : BaseState
             });
         }
 
-        if (_pendingMode == ConnectMode.Client)
+        if (_mode == ConnectMode.Client)
         {
             string hostIP = Preferences.Current.HostIP;
             Modal.AddTextField("HostIP", "Host IP", hostIP, (evt) =>
@@ -236,7 +171,7 @@ public class LauncherState : BaseState
     {
         TerrainController.GridType = DefaultGridType();
         NetworkManager netManager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
-        switch (_pendingMode)
+        switch (_mode)
         {
             case ConnectMode.Solo:
                 GameSystem.Set(Preferences.Current.System);
@@ -253,7 +188,10 @@ public class LauncherState : BaseState
                 netManager.StartClient();
                 break;
         }
+        _attemptingToConnect = true;
         Modal.Close();
+        UI.ToggleDisplay("StartupOptions", false);
+        UI.ToggleDisplay("ConnectingMessage", true);
     }
 
     private string DefaultGridType()
@@ -287,17 +225,26 @@ public class LauncherState : BaseState
     {
         if (NetworkClient.isConnected)
         {
-            SM.ChangeState(new NeutralState(_pendingMode));
-            _lastUpdateIsConnecting = false;
+            _attemptingToConnect = false;
+            UI.ToggleDisplay("StartupOptions", false);
+            UI.ToggleDisplay("ConnectingMessage", false);
+            Fader.StartFade(Color.black, .5f, GoToNeutralState);
             return;
         }
 
         bool isIdle = !NetworkServer.active && !NetworkClient.active && !NetworkClient.isConnected;
         bool isConnecting = NetworkClient.active && !NetworkClient.isConnected;
-        if (isIdle && _lastUpdateIsConnecting)
+        if (isIdle && _attemptingToConnect)
         {
+            UI.ToggleDisplay("StartupOptions", true);
+            UI.ToggleDisplay("ConnectingMessage", false);
             Toast.AddError("Could not establish a connection.");
         }
-        _lastUpdateIsConnecting = isConnecting;
+        _attemptingToConnect = isConnecting;
+    }
+
+    private void GoToNeutralState()
+    {
+        SM.ChangeState(new TabletopState(_mode));
     }
 }

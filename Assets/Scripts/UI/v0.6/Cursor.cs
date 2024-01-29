@@ -9,7 +9,7 @@ public enum CursorMode
     Editing,
     Default,
     Dragging,
-    TerrainEffecting,
+    Marking,
     Targeting,
 }
 
@@ -231,6 +231,6 @@ public class Cursor : MonoBehaviour
 
     public static bool IgnoreTokens()
     {
-        return Mode == CursorMode.Editing || Mode == CursorMode.TerrainEffecting;
+        return Mode == CursorMode.Editing || Mode == CursorMode.Marking;
     }
 }

@@ -261,7 +261,7 @@ public class MapEdit
     public static void ToggleEditMode(ClickEvent evt)
     {
         // Disable terrain effect mode if necessary
-        if (Cursor.Mode == CursorMode.TerrainEffecting)
+        if (Cursor.Mode == CursorMode.Marking)
         {
             TerrainController.ToggleTerrainEffectMode(evt);
         }

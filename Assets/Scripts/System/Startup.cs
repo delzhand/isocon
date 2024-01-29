@@ -1,0 +1,82 @@
+using System.Threading.Tasks;
+using Mirror;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
+using Unity.Services.RemoteConfig;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public class Startup
+{
+    private static string _version = "0.6.6";
+    private static string _latestVersion = "0.6.6";
+
+    public static void RunTasks()
+    {
+        SetVersionText();
+
+        Preferences.Init();
+        UI.SetScale();
+        Modal.Setup();
+        BlockMesh.Setup();
+
+        // Useful during development when editing UI
+        UI.ToggleDisplay("Tabletop", false);
+    }
+
+    private static async void SetVersionText()
+    {
+        await AsyncAwake();
+        if (_version != _latestVersion)
+        {
+            UI.System.Q<Label>("Version").text = $"v{_version} (version {_latestVersion} available)";
+            UI.System.Q<Label>("Version").style.backgroundColor = ColorUtility.UIBlue;
+        }
+        else
+        {
+            UI.System.Q<Label>("Version").text = $"v{_version}";
+        }
+    }
+
+    private static async Task AsyncAwake()
+    {
+        if (Utilities.CheckForInternetConnection())
+        {
+            await InitializeRemoteConfigAsync();
+        }
+        RemoteConfigService.Instance.FetchCompleted += ApplyRemoteConfig;
+        await RemoteConfigService.Instance.FetchConfigsAsync(new AppAttributes(), new AppAttributes());
+    }
+
+    private static async Task InitializeRemoteConfigAsync()
+    {
+        await UnityServices.InitializeAsync();
+        if (!AuthenticationService.Instance.IsSignedIn)
+        {
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
+    }
+
+    private static void ApplyRemoteConfig(ConfigResponse configResponse)
+    {
+        switch (configResponse.requestOrigin)
+        {
+            case ConfigOrigin.Default:
+                Debug.Log("No settings loaded this session and no local cache file exists; using default values.");
+                break;
+            case ConfigOrigin.Cached:
+                Debug.Log("No settings loaded this session; using cached values from a previous session.");
+                break;
+            case ConfigOrigin.Remote:
+                Debug.Log("New settings loaded this session; update values accordingly.");
+                break;
+        }
+        _latestVersion = RemoteConfigService.Instance.appConfig.GetString("LatestVersion");
+        GameSystem.DataJson = RemoteConfigService.Instance.appConfig.GetJson("GameSystem");
+    }
+
+    public struct AppAttributes
+    {
+        public string LatestVersion;
+    }
+}

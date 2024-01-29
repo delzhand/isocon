@@ -3,93 +3,47 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class NeutralState : BaseState
+public class NeutralState : TabletopSubstate
 {
-    private ConnectMode _mode;
-
-    public NeutralState(ConnectMode mode)
-    {
-        _mode = mode;
-    }
-
     public override void OnEnter(StateManager sm)
     {
         base.OnEnter(sm);
-        Tutorial.Init("tabletop");
-        SetConnectionMessage();
-        BlockMesh.ToggleAllBorders(false);
-        EnableInterface();
+        Cursor.Mode = CursorMode.Default;
     }
 
-    public override void OnExit()
+    protected override void HandleKeypresses()
     {
-        base.OnExit();
-        DisableInterface();
-
-    }
-
-    public override void UpdateState()
-    {
-        base.UpdateState();
-        HandleKeypresses();
-        CheckForDisconnect();
-    }
-
-    #region Interface
-    private void EnableInterface()
-    {
-        UI.ToggleDisplay("Tabletop", true);
-    }
-
-    private void DisableInterface()
-    {
-        UI.ToggleDisplay("Tabletop", false);
-    }
-    #endregion
-
-    private void HandleKeypresses()
-    {
-        if (Input.GetKeyUp(KeyCode.M) && !Modal.IsOpen())
+        if (Input.GetKeyUp(KeyCode.M))
         {
-            SM.ChangeState(new MapEditingState());
+            GoToEditing(new ClickEvent());
             return;
         }
 
-        if (Input.GetKeyUp(KeyCode.T) && !Modal.IsOpen())
+        if (Input.GetKeyUp(KeyCode.T))
         {
-            SM.ChangeState(new MapMarkingState());
-            return;
+            GoToMarking(new ClickEvent());
+        }
+
+        if (Input.GetKeyUp(KeyCode.C))
+        {
+            ChangeDragMode(new ClickEvent());
         }
     }
 
-    #region Setup
-    private void SetConnectionMessage()
+    #region Callbacks
+    protected override void BindCallbacks()
     {
-        Label message = UI.System.Q<Label>("ConnectionMessage");
-        string text = "";
-        switch (_mode)
-        {
-            case ConnectMode.Client:
-                text = $"You are connected to {Preferences.Current.HostIP} as a client.";
-                break;
-            case ConnectMode.Host:
-                text = "You are hosting on port <LocalIP> (local) and <GlobalIP> (global).<br><br>You must either have port forwarding for port 7777 TCP to your local IP with no active VPN, or use a 3rd party service like Ngrok or Hamachi.";
-                break;
-            case ConnectMode.Solo:
-                text = "You are in solo mode. Other users cannot connect to this table.";
-                break;
-
-        }
-        message.text = text;
-        IPFinder.ReplaceTokens(message);
+        UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>(GoToEditing);
+        UI.TopBar.Q("MarkerMode").RegisterCallback<ClickEvent>(GoToMarking);
+        UI.TopBar.Q("DragMode").RegisterCallback<ClickEvent>(ChangeDragMode);
     }
+
+    protected override void UnbindCallbacks()
+    {
+        UI.TopBar.Q("EditMap").UnregisterCallback<ClickEvent>(GoToEditing);
+        UI.TopBar.Q("MarkerMode").UnregisterCallback<ClickEvent>(GoToMarking);
+        UI.TopBar.Q("DragMode").UnregisterCallback<ClickEvent>(ChangeDragMode);
+    }
+
     #endregion
-
-    private void CheckForDisconnect()
-    {
-        if (!NetworkClient.isConnected)
-        {
-            SM.ChangeState(SM.LauncherState);
-        }
-    }
 }

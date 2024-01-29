@@ -732,10 +732,10 @@ public class TerrainController : MonoBehaviour
             MapEdit.ToggleEditMode(evt);
         }
 
-        if (Cursor.Mode != CursorMode.TerrainEffecting)
+        if (Cursor.Mode != CursorMode.Marking)
         {
             Tutorial.Init("terrain effect mode");
-            Cursor.Mode = CursorMode.TerrainEffecting;
+            Cursor.Mode = CursorMode.Marking;
             Token.DeselectAll();
             Token.UnfocusAll();
             BlockMesh.ToggleAllBorders(true);

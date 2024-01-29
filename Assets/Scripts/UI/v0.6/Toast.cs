@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public enum ToastType {
+public enum ToastType
+{
     Standard,
     Error,
     Success,
@@ -12,6 +13,8 @@ public enum ToastType {
 
 public class Toast : MonoBehaviour
 {
+    private static GameObject obj;
+
     public string Message = "";
     private float duration = 5;
     private VisualElement element;
@@ -20,7 +23,8 @@ public class Toast : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (type != ToastType.Custom) {
+        if (type != ToastType.Custom)
+        {
             element = new Label();
             element.style.paddingBottom = 4;
             element.style.paddingTop = 4;
@@ -34,8 +38,9 @@ public class Toast : MonoBehaviour
             element.style.borderBottomColor = Color.white;
             element.style.borderLeftColor = Color.white;
             element.style.borderRightColor = Color.white;
-            (element as Label).text = Message;     
-            switch (type) {
+            (element as Label).text = Message;
+            switch (type)
+            {
                 case ToastType.Standard:
                     element.style.backgroundColor = ColorUtility.UIBlue;
                     break;
@@ -55,41 +60,54 @@ public class Toast : MonoBehaviour
     void Update()
     {
         duration -= Time.deltaTime;
-        if (duration <= 0) {
+        if (duration <= 0)
+        {
             UI.System.Q("Toasts").Remove(element);
-            if (UI.System.Q("Toasts").childCount == 0) {
+            if (UI.System.Q("Toasts").childCount == 0)
+            {
                 UI.System.Q("Toasts").style.display = DisplayStyle.None;
             }
             Destroy(this);
         }
     }
 
-    public static void AddSimple(string message) {
+    private static void Add(string message, ToastType type)
+    {
         FileLogger.Write(message);
-        Toast t = GameObject.Find("Engine").AddComponent<Toast>();
+        Toast t = GetAttachmentObject().AddComponent<Toast>();
         t.Message = message;
-        t.type = ToastType.Standard;
+        t.type = type;
     }
 
-    public static void AddSuccess(string message) {
-        FileLogger.Write(message);
-        Toast t = GameObject.Find("Engine").AddComponent<Toast>();
-        t.Message = message;
-        t.type = ToastType.Success;
+    public static void AddSimple(string message)
+    {
+        Add(message, ToastType.Standard);
     }
 
-    public static void AddError(string message) {
-        FileLogger.Write(message);
-        Toast t = GameObject.Find("Engine").AddComponent<Toast>();
-        t.Message = message;
-        t.type = ToastType.Error;
+    public static void AddSuccess(string message)
+    {
+        Add(message, ToastType.Success);
     }
 
-    public static void AddCustom(VisualElement v, float duration = 5) {
-        Toast t = GameObject.Find("Engine").AddComponent<Toast>();
+    public static void AddError(string message)
+    {
+        Add(message, ToastType.Error);
+    }
+
+    public static void AddCustom(VisualElement v, float duration = 5)
+    {
+        Toast t = GetAttachmentObject().AddComponent<Toast>();
         t.type = ToastType.Custom;
         t.element = v;
         t.duration = duration;
     }
-    // public static void Add()
+
+    private static GameObject GetAttachmentObject()
+    {
+        if (obj == null)
+        {
+            obj = GameObject.Find("AppState");
+        }
+        return obj;
+    }
 }

@@ -42,4 +42,16 @@ public class CollectionUtility
         }
         return i;
     }
+
+    public static bool CheckInList<T>(T first, params T[] rest)
+    {
+        foreach (T t in rest)
+        {
+            if (t.Equals(first))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

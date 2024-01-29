@@ -4,42 +4,56 @@ using UnityEngine;
 public class BlockMesh : MonoBehaviour
 {
     public static Mesh Hex;
-    public static Dictionary<BlockShape, Mesh> Shapes = new();
-    private static Dictionary<string, Material> _sharedMaterials = new();
-    private static Dictionary<string, Material> _customMaterials = new();
+    public static Dictionary<BlockShape, Mesh> Shapes;
+    private static Dictionary<string, Material> _sharedMaterials;
+    private static Dictionary<string, Material> _customMaterials;
     public static bool IsSetup = false;
 
     public static void Setup()
     {
+        if (IsSetup)
+        {
+            return;
+        }
+
         IsSetup = true;
 
         Hex = Resources.Load<Mesh>("Models/Hex");
 
-        Shapes.Add(BlockShape.Solid, Resources.Load<Mesh>("Models/Block"));
-        Shapes.Add(BlockShape.Slope, Resources.Load<Mesh>("Models/Slope"));
-        Shapes.Add(BlockShape.Steps, Resources.Load<Mesh>("Models/Steps"));
-        Shapes.Add(BlockShape.Corner, Resources.Load<Mesh>("Models/Corner"));
-        Shapes.Add(BlockShape.FlatCorner, Resources.Load<Mesh>("Models/FlatCorner"));
-        Shapes.Add(BlockShape.Upslope, Resources.Load<Mesh>("Models/Upslope"));
-        Shapes.Add(BlockShape.SlopeInt, Resources.Load<Mesh>("Models/SlopeIntCorner"));
-        Shapes.Add(BlockShape.SlopeExt, Resources.Load<Mesh>("Models/SlopeExtCorner"));
+        Shapes = new()
+        {
+            { BlockShape.Solid, Resources.Load<Mesh>("Models/Block") },
+            { BlockShape.Slope, Resources.Load<Mesh>("Models/Slope") },
+            { BlockShape.Steps, Resources.Load<Mesh>("Models/Steps") },
+            { BlockShape.Corner, Resources.Load<Mesh>("Models/Corner") },
+            { BlockShape.FlatCorner, Resources.Load<Mesh>("Models/FlatCorner") },
+            { BlockShape.Upslope, Resources.Load<Mesh>("Models/Upslope") },
+            { BlockShape.SlopeInt, Resources.Load<Mesh>("Models/SlopeIntCorner") },
+            { BlockShape.SlopeExt, Resources.Load<Mesh>("Models/SlopeExtCorner") }
+        };
 
-        _sharedMaterials.Add("side1", new Material(Resources.Load<Material>("Materials/Block/Checker/SideA")));
-        _sharedMaterials.Add("side2", new Material(Resources.Load<Material>("Materials/Block/Checker/SideB")));
-        _sharedMaterials.Add("top1", new Material(Resources.Load<Material>("Materials/Block/Checker/TopA")));
-        _sharedMaterials.Add("top2", new Material(Resources.Load<Material>("Materials/Block/Checker/TopB")));
-        _sharedMaterials.Add("highlighted", new Material(Resources.Load<Material>("Materials/Block/Highlighted")));
+        _sharedMaterials = new()
+        {
+            { "side1", new Material(Resources.Load<Material>("Materials/Block/Checker/SideA")) },
+            { "side2", new Material(Resources.Load<Material>("Materials/Block/Checker/SideB")) },
+            { "top1", new Material(Resources.Load<Material>("Materials/Block/Checker/TopA")) },
+            { "top2", new Material(Resources.Load<Material>("Materials/Block/Checker/TopB")) },
+            { "highlighted", new Material(Resources.Load<Material>("Materials/Block/Highlighted")) },
+            { "unfocused", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")) },
+            { "focused", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")) },
+            { "selectfocused", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")) },
+            { "selected", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")) }
+        };
 
-        _sharedMaterials.Add("unfocused", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")));
-        _sharedMaterials.Add("focused", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")));
+        // Set some runtime params on shared materials using the same base material        
         _sharedMaterials["focused"].SetInt("_Focused", 1);
-
-        _sharedMaterials.Add("selectfocused", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")));
         _sharedMaterials["selectfocused"].SetInt("_Selected", 1);
         _sharedMaterials["selectfocused"].SetInt("_Focused", 1);
-
-        _sharedMaterials.Add("selected", new Material(Resources.Load<Material>("Materials/Block/Marker/Focused")));
         _sharedMaterials["selected"].SetInt("_Selected", 1);
+
+        _customMaterials = new();
+
+        ToggleAllBorders(false);
     }
 
     public static Material GetSharedMaterial(string key)

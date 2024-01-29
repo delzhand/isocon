@@ -298,7 +298,7 @@ public class Block : MonoBehaviour
     {
         switch (Cursor.Mode)
         {
-            case CursorMode.TerrainEffecting:
+            case CursorMode.Marking:
                 Debug.Log(WriteOut());
                 Select();
                 break;
@@ -322,7 +322,7 @@ public class Block : MonoBehaviour
     {
         switch (Cursor.Mode)
         {
-            case CursorMode.TerrainEffecting:
+            case CursorMode.Marking:
                 if (SelectionMenu.Visible)
                 {
                     SelectionMenu.Hide();
@@ -614,6 +614,8 @@ public class Block : MonoBehaviour
 
         // Apply
         mr.SetMaterials(mats.ToList());
+
+        mr.enabled = true;
     }
 
     public static void ToggleSpacers(bool show)

@@ -6,8 +6,8 @@ public class Environment : MonoBehaviour
 {
     public static Color TileTopColor = ColorUtility.GetColor("#3E713E");
     public static Color TileSideColor = ColorUtility.GetColor("#6F5A3C");
-    public static Color BgBottomColor = ColorUtility.GetColor("#474571");
-    public static Color BgTopColor = ColorUtility.GetColor("#001022");
+    public static Color BgBottomColor = ColorUtility.GetColor("#6d6d6d");
+    public static Color BgTopColor = ColorUtility.GetColor("#989898");
     public static Color CurrentPaintTop = ColorUtility.GetColor("#CCBCA7");
     public static Color CurrentPaintSide = ColorUtility.GetColor("#CCBCA7");
 
@@ -40,10 +40,10 @@ public class Environment : MonoBehaviour
         if (BackgroundMat == null)
         {
             BackgroundMat = Resources.Load<Material>($"Materials/Environment/Gradient");
-            List<Material> bgmats = new();
-            bgmats.Add(BackgroundMat);
-            mr.SetMaterials(bgmats);
         }
+        List<Material> bgmats = new() { BackgroundMat };
+        mr.SetMaterials(bgmats);
+
         mr.material.SetColor("_Color1", top);
         mr.material.SetColor("_Color2", bottom);
         UI.System.Q("BotBgColor").style.backgroundColor = BgBottomColor;
