@@ -1,26 +1,31 @@
-name: CI - Build All Platforms
+name: Deploy
 on:
   release:
     types: [ published ]
+env:
+  ITCH_USERNAME: delzhand
+  ITCH_GAME_ID: isocon
 jobs:
-  release-win-itchio:
-    name: Upload windows build to itch.io
+  deploy:
+    name: Upload to Itch
     runs-on: ubuntu-latest
-    if: github.event.action == 'published'
+    strategy:
+      fail-fast: true
+      matrix:
+        channel:
+          - windows
+    runs-on: ubuntu-latest
+    name: Deploy - Itch.io ${{ matrix.template }}
     steps:
-      - name: download windows
-        id: download-windows
-        uses: dsaltares/fetch-gh-release-asset@master
+      - uses: actions/download-artifact@v2.0.8
         with:
-          version: "latest"
-          file: "isocon_win.zip"
-          token: "${{ secrets.GH_CREDENTIALS }}"
-      - name: deploy to itch.io (WINDOWS)
-        uses: josephbmanley/butler-publish-itchio-action@master
-        env:
-          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
-          CHANNEL: html
-          ITCH_GAME: isocon
-          ITCH_USER: delzhand
-          PACKAGE: isocon_win.zip
-          VERSION: ${{ steps.download-win.outputs.version }}
+          name: ${{ matrix.channel }}
+          path: build/${{ matrix.channel }}
+      - uses: KikimoraGames/itch-publish@v0.0.3
+        with:
+          butlerApiKey: ${{secrets.BUTLER_API_KEY}}
+          gameData: ./build/${{ matrix.template }}
+          itchUsername: ${{env.ITCH_USERNAME}}
+          itchGameId: ${{ env.ITCH_GAME_ID }}
+          buildChannel: ${{ matrix.channel }}
+          buildNumber: ${{ needs.version.outputs.version_hash }}
