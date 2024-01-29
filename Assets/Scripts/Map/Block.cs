@@ -303,7 +303,6 @@ public class Block : MonoBehaviour
         switch (Cursor.Mode)
         {
             case CursorMode.TerrainEffecting:
-                Debug.Log(WriteOut());
                 Select();
                 break;
             case CursorMode.Editing:
