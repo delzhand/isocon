@@ -358,7 +358,7 @@ public class MapEdit
         Modal.AddPreferredButton("Confirm", (evt) =>
         {
             string url = UI.Modal.Q<TextField>("UrlField").value;
-            if (!url.Contains("https://alessandrominali.github.io/maleghast/map.html"))
+            if (!url.Contains("https://alessandrominali.github.io/maleghast/map"))
             {
                 Toast.AddError("Does not appear to be a valid URL.");
             }
