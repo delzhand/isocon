@@ -7,6 +7,11 @@ public class Keyboard : MonoBehaviour
 {
     void Update()
     {
+        if (UI.System.panel.focusController.focusedElement != null)
+        {
+            return;
+        }
+
         if (Modal.IsOpen())
         {
             if (Input.GetKeyUp(KeyCode.Escape) && Modal.IsOpen())
