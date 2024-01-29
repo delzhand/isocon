@@ -33,7 +33,7 @@ jobs:
           repo: 'delzhand/isocon'
           version: ${{ steps.latest_release.outputs.tag }}
           file: 'isocon_win.zip'
-          target: 'build/isocon_win.zip'
+          target: 'build/isocon_win_${{ steps.latest_release.outputs.tag }}.zip'
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: KikimoraGames/itch-publish@v0.0.3
