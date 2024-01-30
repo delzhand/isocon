@@ -37,6 +37,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: KikimoraGames/itch-publish@v0.0.3
+        run: echo "${{ steps.latest_release.outputs.tag }}"
         with:
           butlerApiKey: ${{secrets.BUTLER_CREDENTIALS}}
           gameData: ./build/isocon_win.zip
@@ -44,4 +45,3 @@ jobs:
           itchGameId: ${{ env.ITCH_GAME_ID }}
           buildChannel: ${{ matrix.channel }}
           buildNumber: 'v0.6.x'
-        run: echo "${{ steps.latest_release.outputs.tag }}"
