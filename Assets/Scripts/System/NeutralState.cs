@@ -11,6 +11,13 @@ public class NeutralState : TabletopSubstate
         Cursor.Mode = CursorMode.Default;
     }
 
+    public override void UpdateState()
+    {
+        base.UpdateState();
+        Pointer.Point();
+    }
+
+
     protected override void HandleKeypresses()
     {
         if (Input.GetKeyUp(KeyCode.M))

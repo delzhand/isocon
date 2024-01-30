@@ -25,6 +25,13 @@ public class MapEditingState : TabletopSubstate
         MapSync();
     }
 
+    public override void UpdateState()
+    {
+        base.UpdateState();
+        Pointer.PointAtBlocks(BlockFocusMode.Single);
+    }
+
+
     protected override void EnableInterface()
     {
         base.EnableInterface();
@@ -84,4 +91,11 @@ public class MapEditingState : TabletopSubstate
             return;
         }
     }
+}
+
+public enum BlockFocusMode
+{
+    Single,
+    Row,
+    Column
 }

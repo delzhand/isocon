@@ -22,6 +22,12 @@ public class MapMarkingState : TabletopSubstate
         Player.Self().ClearOp();
     }
 
+    public override void UpdateState()
+    {
+        base.UpdateState();
+        Pointer.PointAtBlocks(BlockFocusMode.Single);
+    }
+
     protected override void EnableInterface()
     {
         base.EnableInterface();

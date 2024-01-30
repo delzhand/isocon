@@ -23,6 +23,7 @@ public abstract class TabletopSubstate : BaseState
     {
         base.UpdateState();
         HandleKeypresses();
+        Viewport.HandleInput();
     }
 
     #region Interface
@@ -82,7 +83,7 @@ public abstract class TabletopSubstate : BaseState
 
     protected void ChangeDragMode(ClickEvent evt)
     {
-        CameraControl.TogglePanMode();
+        Viewport.TogglePanMode();
     }
 
     #endregion
