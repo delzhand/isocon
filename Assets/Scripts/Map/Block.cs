@@ -49,6 +49,9 @@ public class Block : MonoBehaviour
 
     private bool _materialReset = true;
 
+    public Vector3Int Coordinate => transform.parent.GetComponent<Column>().Coordinate3 + new Vector3Int(0, 0, (int)(transform.position.y / .5f) + 2);
+    public Vector2Int Coordinate2 => transform.parent.GetComponent<Column>().Coordinate;
+
     private Vector3 _dragOrigin;
     private bool _dragging;
 
@@ -294,17 +297,18 @@ public class Block : MonoBehaviour
         return block;
     }
 
+    static int editZ = 0;
     public void LeftClickDown()
     {
         switch (Cursor.Mode)
         {
             case CursorMode.Marking:
-                Debug.Log(WriteOut());
                 Select();
                 break;
             case CursorMode.Editing:
                 Block.DeselectAll();
                 Select();
+                editZ = GetZ();
                 TerrainController.Edit(this);
                 Select();
                 Block.DeselectAll();
@@ -314,6 +318,36 @@ public class Block : MonoBehaviour
                 break;
             case CursorMode.Dragging:
                 Token.GetSelected().Move(this);
+                break;
+        }
+    }
+
+    public void LeftClickHeld()
+    {
+        switch (Cursor.Mode)
+        {
+            case CursorMode.Editing:
+                switch (MapEdit.EditOp)
+                {
+                    case "RotateBlock":
+                    case "ChangeShape":
+                    case "TerrainEffect":
+                        return;
+                    case "AddBlock":
+                    case "RemoveBlock":
+                        if (editZ != GetZ())
+                            return;
+                        if (GetTopBlock(Coordinate2) != this)
+                            return;
+                        goto case "StyleBlock";
+                    case "StyleBlock":
+                        Block.DeselectAll();
+                        Select();
+                        TerrainController.Edit(this);
+                        Select();
+                        Block.DeselectAll();
+                        break;
+                }
                 break;
         }
     }
@@ -345,20 +379,18 @@ public class Block : MonoBehaviour
         BlockMesh.GetSharedMaterial(id).SetColor("_Color", color);
     }
 
-    public int GetX()
-    {
-        return this.transform.parent.GetComponent<Column>().X;
-    }
-
-    public int GetY()
-    {
-        return this.transform.parent.GetComponent<Column>().Y;
-    }
-
-    public int GetZ()
-    {
-        return (int)(this.transform.position.y / .5f) + 2;
-    }
+    /// <summary>
+    /// (depriciated) Use Coordinate.x instead.
+    /// </summary>
+    public int GetX() => Coordinate.x;
+    /// <summary>
+    /// (depriciated) Use Coordinate.y instead.
+    /// </summary>
+    public int GetY() => Coordinate.y;
+    /// <summary>
+    /// (depriciated) Use Coordinate.z instead.
+    /// </summary>
+    public int GetZ() => Coordinate.z;
 
     public float GetHeight()
     {
@@ -780,7 +812,7 @@ public class Block : MonoBehaviour
         foreach (var gameObject in gameObjects)
         {
             Block block = gameObject.GetComponent<Block>();
-            Vector2Int blockCoords = new Vector2Int(block.GetX(), block.GetY());
+            Vector2Int blockCoords = block.Coordinate2;
             if (v2is.Contains(blockCoords))
             {
                 Block topBlock = block.transform.parent.GetComponent<Column>().GetTopBlock();
@@ -804,7 +836,7 @@ public class Block : MonoBehaviour
         foreach (var gameObject in gameObjects)
         {
             Block block = gameObject.GetComponent<Block>();
-            if (block.GetX() == coordinate.x && block.GetY() == coordinate.y)
+            if (block.Coordinate2 == coordinate)
             {
                 Block topBlock = block.transform.parent.GetComponent<Column>().GetTopBlock();
                 return topBlock;
