@@ -1,7 +1,7 @@
 name: Deploy
 on:
   release:
-    types: [ published ]
+    types: [published]
   workflow_dispatch:
 
 env:
@@ -25,21 +25,22 @@ jobs:
 
       - name: Get the latest release
         id: latest_release
-        run: echo "{tag}={$(git describe --tags `git rev-list --tags --max-count=1`)}" >> $GITHUB_OUTPUT
+        run: echo "tag=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_ENV
 
       - name: Fetch the latest release asset
         uses: dsaltares/fetch-gh-release-asset@master
         with:
           repo: 'delzhand/isocon'
-          version: ${{ steps.latest_release.outputs.tag }}
+          version: ${{ env.tag }}
           file: 'isocon_win.zip'
           target: 'build/isocon_win.zip'
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: KikimoraGames/itch-publish@v0.0.3
         with:
-          butlerApiKey: ${{secrets.BUTLER_CREDENTIALS}}
+          butlerApiKey: ${{ secrets.BUTLER_CREDENTIALS }}
           gameData: ./build/isocon_win.zip
-          itchUsername: ${{env.ITCH_USERNAME}}
+          itchUsername: ${{ env.ITCH_USERNAME }}
           itchGameId: ${{ env.ITCH_GAME_ID }}
           buildChannel: ${{ matrix.channel }}
+          buildNumber: ${{ env.tag }}
