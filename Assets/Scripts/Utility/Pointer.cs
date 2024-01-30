@@ -18,14 +18,9 @@ public class Pointer
 
     private static void PointWithMask(LayerMask mask, BlockFocusMode focusMode)
     {
-        if (Viewport.IsDragging)
-        {
-            return;
-        }
-
         _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         bool isHit = Physics.Raycast(_ray, out RaycastHit hit, 9999f, mask);
-        if (isHit && hit.collider.tag == "Block")
+        if (isHit && hit.collider.CompareTag("Block"))
         {
             Block b = hit.collider.GetComponent<Block>();
             Token t = Token.GetAtBlock(b);
@@ -40,7 +35,7 @@ public class Pointer
                 Token.UnfocusAll();
             }
         }
-        else if (isHit && hit.collider.tag == "TokenCollider")
+        else if (isHit && hit.collider.CompareTag("TokenCollider"))
         {
             Token t = hit.collider.GetComponent<Cutout>().GetToken();
             FocusBlocks(t.GetBlock(), focusMode);
@@ -80,7 +75,7 @@ public class Pointer
         {
             token.LeftClickDown();
         }
-        if (IsRightClick())
+        if (IsRightHeld())
         {
             token.RightClickDown();
         }
@@ -134,28 +129,35 @@ public class Pointer
 
     private static void BlockClicks(Block block)
     {
-
         if (block == null)
         {
             return;
         }
+
         if (IsLeftClick())
         {
             block.LeftClickDown();
         }
         else if (IsLeftHeld())
         {
-            // block.LeftClickHeld();
+            block.LeftClickHeld();
         }
         if (IsRightClick())
         {
             block.RightClickDown();
         }
+        if (IsRightUp())
+        {
+            block.RightClickUp();
+        }
     }
 
     #region Helpers
-    public static bool IsRightClick() => Input.GetMouseButtonDown(1);
-    public static bool IsLeftClick() => Input.GetMouseButtonDown(0);
-    public static bool IsLeftHeld() => Input.GetMouseButton(0);
+    private static bool IsLeftClick() => Input.GetMouseButtonDown(0);
+    private static bool IsRightClick() => Input.GetMouseButtonDown(1);
+    private static bool IsLeftUp() => Input.GetMouseButtonUp(0);
+    private static bool IsRightUp() => Input.GetMouseButtonUp(1);
+    private static bool IsLeftHeld() => Input.GetMouseButton(0);
+    private static bool IsRightHeld() => Input.GetMouseButton(1);
     #endregion 
 }

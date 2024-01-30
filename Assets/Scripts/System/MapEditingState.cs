@@ -90,6 +90,13 @@ public class MapEditingState : TabletopSubstate
             GoToMarking(new ClickEvent());
             return;
         }
+
+        if (Input.GetKeyUp(KeyCode.C))
+        {
+            ChangeDragMode(new ClickEvent());
+            return;
+        }
+
     }
 }
 

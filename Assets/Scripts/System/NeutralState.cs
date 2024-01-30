@@ -15,11 +15,13 @@ public class NeutralState : TabletopSubstate
     {
         base.UpdateState();
         Pointer.Point();
+        SelectionMenu.Update();
     }
 
 
     protected override void HandleKeypresses()
     {
+        base.HandleKeypresses();
         if (Input.GetKeyUp(KeyCode.M))
         {
             GoToEditing(new ClickEvent());

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class MapMarkingState : TabletopSubstate
+public class TileMarkingState : TabletopSubstate
 {
     public override void OnEnter(StateManager sm)
     {
@@ -18,6 +18,7 @@ public class MapMarkingState : TabletopSubstate
     public override void OnExit()
     {
         base.OnExit();
+        Block.DeselectAll();
         BlockMesh.ToggleAllBorders(false);
         Player.Self().ClearOp();
     }
@@ -26,6 +27,7 @@ public class MapMarkingState : TabletopSubstate
     {
         base.UpdateState();
         Pointer.PointAtBlocks(BlockFocusMode.Single);
+        SelectionMenu.Update();
     }
 
     protected override void EnableInterface()
@@ -77,5 +79,12 @@ public class MapMarkingState : TabletopSubstate
             GoToNeutral(new ClickEvent());
             return;
         }
+
+        if (Input.GetKeyUp(KeyCode.C))
+        {
+            ChangeDragMode(new ClickEvent());
+            return;
+        }
+
     }
 }

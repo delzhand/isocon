@@ -49,12 +49,10 @@ public abstract class TabletopSubstate : BaseState
 
     protected virtual void HandleKeypresses()
     {
-        if (Input.GetKeyUp(KeyCode.C))
+        if (UI.System.panel.focusController.focusedElement != null)
         {
-            ChangeDragMode(new ClickEvent());
             return;
         }
-
     }
 
     #region Callbacks
@@ -73,12 +71,17 @@ public abstract class TabletopSubstate : BaseState
 
     protected void GoToMarking(ClickEvent evt)
     {
-        SM.ChangeSubState(new MapMarkingState());
+        SM.ChangeSubState(new TileMarkingState());
     }
 
     protected void GoToNeutral(ClickEvent evt)
     {
         SM.ChangeSubState(new NeutralState());
+    }
+
+    protected void GoToModal(ClickEvent evt)
+    {
+        SM.ChangeSubState(new ModalState());
     }
 
     protected void ChangeDragMode(ClickEvent evt)

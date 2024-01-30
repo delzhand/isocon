@@ -33,7 +33,7 @@ public class Cursor : MonoBehaviour
         {
             return;
         }
-        if (UI.ClicksSuspended &&  Mode != CursorMode.Dragging)
+        if (UI.ClicksSuspended && Mode != CursorMode.Dragging)
         {
             return;
         }
@@ -240,18 +240,18 @@ public class Cursor : MonoBehaviour
     private static LayerMask GetMaskForCursorMode(CursorMode mode)
     {
         // Set the raycast filter to suit the cursor mode we are using
-        switch(mode)
+        switch (mode)
         {
             case CursorMode.Default:
             case CursorMode.Targeting:
                 return LayerMask.GetMask("Block", "Token");
             case CursorMode.Dragging:
-            case CursorMode.TerrainEffecting:
+            case CursorMode.Marking:
             case CursorMode.Editing:
                 return LayerMask.GetMask("Block");
             default:
                 Debug.LogError($"{mode} does not have an explicitly defined raycast filter yet");
                 return LayerMask.GetMask("Block", "Token");
-        }   
+        }
     }
 }

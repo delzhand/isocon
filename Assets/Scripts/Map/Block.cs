@@ -65,18 +65,18 @@ public class Block : MonoBehaviour
         ShapeChange(Shape);
     }
 
-    void LateUpdate()
-    {
-        if (!Input.GetMouseButtonUp(1))
-        {
-            return;
-        }
-        if (_dragging && Input.mousePosition == _dragOrigin)
-        {
-            // Mouse up where clicked
-            TileMenu.ShowMenu(this);
-        }
-    }
+    // void LateUpdate()
+    // {
+    //     if (!Input.GetMouseButtonUp(1))
+    //     {
+    //         return;
+    //     }
+    //     if (_dragging && Input.mousePosition == _dragOrigin)
+    //     {
+    //         // Mouse up where clicked
+    //         TileMenu.ShowMenu(this);
+    //     }
+    // }
 
     void Update()
     {
@@ -354,19 +354,23 @@ public class Block : MonoBehaviour
 
     public void RightClickDown()
     {
-        switch (Cursor.Mode)
+        _dragging = true;
+        _dragOrigin = Input.mousePosition;
+    }
+
+    public void RightClickUp()
+    {
+        // Mouse up where clicked
+        if (_dragging && Input.mousePosition == _dragOrigin)
         {
-            case CursorMode.Marking:
-                if (SelectionMenu.Visible)
-                {
-                    SelectionMenu.Hide();
-                }
-                else
-                {
-                    _dragging = true;
-                    _dragOrigin = Input.mousePosition;
-                }
-                break;
+            if (SelectionMenu.Visible)
+            {
+                SelectionMenu.Hide();
+            }
+            else
+            {
+                TileMenu.ShowMenu(this);
+            }
         }
     }
 
@@ -709,6 +713,7 @@ public class Block : MonoBehaviour
         {
             b.Deselect();
         }
+        TerrainController.SetInfo();
     }
 
     public void Focus()
@@ -739,6 +744,7 @@ public class Block : MonoBehaviour
             b.Unfocus();
         }
         _allFocused.Clear();
+        TerrainController.SetInfo();
     }
 
     public void Highlight()
