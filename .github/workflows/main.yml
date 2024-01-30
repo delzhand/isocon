@@ -25,10 +25,7 @@ jobs:
 
       - name: Get the latest release
         id: latest_release
-        run: |
-          echo "tag='$(git describe --tags --match "v*" --abbrev=0)'"
-          echo "tag='$(git describe --tags --match "v*" --abbrev=0)'" >> $GITHUB_OUTPUT
-          echo "tag='v0.6.8'" >> $GITHUB_OUTPUT
+        run: echo "{tag}={$(git describe --tags `git rev-list --tags --max-count=1`)}" >> $GITHUB_OUTPUT
 
       - name: Fetch the latest release asset
         uses: dsaltares/fetch-gh-release-asset@master
@@ -36,14 +33,14 @@ jobs:
           repo: 'delzhand/isocon'
           version: ${{ steps.latest_release.outputs.tag }}
           file: 'isocon_win.zip'
-          target: 'build/isocon_win_${{ steps.latest_release.outputs.tag }}.zip'
+          target: 'build/isocon_win.zip'
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: KikimoraGames/itch-publish@v0.0.3
         with:
           butlerApiKey: ${{secrets.BUTLER_CREDENTIALS}}
-          gameData: ./build/isocon_win_{{ steps.latest_release.outputs.tag }}.zip
+          gameData: ./build/isocon_win.zip
           itchUsername: ${{env.ITCH_USERNAME}}
           itchGameId: ${{ env.ITCH_GAME_ID }}
           buildChannel: ${{ matrix.channel }}
-          buildNumber: ${{ steps.latest_release.outputs.tag }}
+          buildNumber: 'v0.6.x'
