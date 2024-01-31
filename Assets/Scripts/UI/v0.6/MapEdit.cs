@@ -10,11 +10,10 @@ public class MapEdit
     public static string ShapeOp = "ShapeSolid";
     public static string ResizeOp = "ResizeCloneCol";
     public static string StyleOp = "StylePaint";
+    public static BlockFocusMode FocusMode = BlockFocusMode.Single;
 
     public static void Setup()
     {
-        UI.SetBlocking(UI.System, StringUtility.CreateArray("ToolsPanel", "ToolOptions"));
-
         VisualElement toolsRoot = UI.System.Q("ToolsPanel");
         VisualElement optionsRoot = UI.System.Q("ToolOptions");
 
@@ -27,6 +26,7 @@ public class MapEdit
 
         toolsRoot.Query(null, "tool").ForEach((tool) =>
         {
+            FocusMode = BlockFocusMode.Single;
             Button toolButton = tool as Button;
             // Clear handler that eats mousedown
             toolButton.clickable.activators.Clear();
@@ -260,55 +260,55 @@ public class MapEdit
 
     public static void ToggleEditMode(ClickEvent evt)
     {
-        // Disable terrain effect mode if necessary
-        if (Cursor.Mode == CursorMode.Marking)
-        {
-            TerrainController.ToggleTerrainEffectMode(evt);
-        }
+        // // Disable terrain effect mode if necessary
+        // if (Cursor.Mode == CursorMode.Marking)
+        // {
+        //     TerrainController.ToggleTerrainEffectMode(evt);
+        // }
 
-        if (Cursor.Mode != CursorMode.Editing)
-        {
-            StartEditing();
-        }
-        else
-        {
-            EndEditing();
-        }
+        // if (Cursor.Mode != CursorMode.Editing)
+        // {
+        //     StartEditing();
+        // }
+        // else
+        // {
+        //     EndEditing();
+        // }
     }
 
-    private static void StartEditing()
-    {
-        UI.ToggleDisplay("ToolsPanel", true);
-        UI.ToggleDisplay("DiceRoller", false);
-        Block.DeselectAll();
-        Token.DeselectAll();
-        Token.UnfocusAll();
-        Block.ToggleSpacers(true);
-        Cursor.Mode = CursorMode.Editing;
-        BlockMesh.ToggleAllBorders(true);
-        UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), true);
-        UI.ToggleDisplay("BottomBar", false);
-        UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
-        Player.Self().SetOp("Editing Map");
-        UI.ToggleDisplay(UI.ToolsPanel.Q("ChangeShape"), TerrainController.GridType == "Square");
-    }
+    // private static void StartEditing()
+    // {
+    //     UI.ToggleDisplay("ToolsPanel", true);
+    //     UI.ToggleDisplay("DiceRoller", false);
+    //     Block.DeselectAll();
+    //     Token.DeselectAll();
+    //     Token.UnfocusAll();
+    //     Block.ToggleSpacers(true);
+    //     Cursor.Mode = CursorMode.Editing;
+    //     BlockMesh.ToggleAllBorders(true);
+    //     UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), true);
+    //     UI.ToggleDisplay("BottomBar", false);
+    //     UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
+    //     Player.Self().SetOp("Editing Map");
+    //     UI.ToggleDisplay(UI.ToolsPanel.Q("ChangeShape"), TerrainController.GridType == "Square");
+    // }
 
-    private static void EndEditing()
-    {
-        Tutorial.Init("end edit");
-        Cursor.Mode = CursorMode.Default;
-        Cursor.FocusMode = FocusMode.Single;
-        BlockMesh.ToggleAllBorders(false);
-        UI.ToggleDisplay("ToolsPanel", false);
-        UI.ToggleDisplay("ToolOptions", false);
-        Block.ToggleSpacers(false);
-        MapSync();
-        UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), false);
-        UI.ToggleDisplay("BottomBar", true);
-        UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
-        Player.Self().ClearOp();
-        MoveTokensToOptimalLocations();
-    }
+    // private static void EndEditing()
+    // {
+    //     Tutorial.Init("end edit");
+    //     Cursor.Mode = CursorMode.Default;
+    //     Cursor.FocusMode = FocusMode.Single;
+    //     BlockMesh.ToggleAllBorders(false);
+    //     UI.ToggleDisplay("ToolsPanel", false);
+    //     UI.ToggleDisplay("ToolOptions", false);
+    //     Block.ToggleSpacers(false);
+    //     MapSync();
+    //     UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), false);
+    //     UI.ToggleDisplay("BottomBar", true);
+    //     UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
+    //     Player.Self().ClearOp();
+    //     MoveTokensToOptimalLocations();
+    // }
 
     private static void MapSync()
     {

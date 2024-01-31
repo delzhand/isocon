@@ -6,7 +6,6 @@ public class TileMarkingState : TabletopSubstate
     public override void OnEnter(StateManager sm)
     {
         base.OnEnter(sm);
-        Block.DeselectAll();
         Token.DeselectAll();
         Token.UnfocusAll();
         BlockMesh.ToggleAllBorders(true);
@@ -15,18 +14,10 @@ public class TileMarkingState : TabletopSubstate
         Tutorial.Init("Marking Mode");
     }
 
-    public override void OnExit()
-    {
-        base.OnExit();
-        Block.DeselectAll();
-        BlockMesh.ToggleAllBorders(false);
-        Player.Self().ClearOp();
-    }
-
     public override void UpdateState()
     {
         base.UpdateState();
-        Pointer.PointAtBlocks(BlockFocusMode.Single);
+        Pointer.PointAtBlocks();
         SelectionMenu.Update();
     }
 
@@ -37,8 +28,10 @@ public class TileMarkingState : TabletopSubstate
         UI.ToggleDisplay(UI.TopBar.Q("Info"), false);
         UI.ToggleDisplay(UI.TopBar.Q("Sync"), false);
         UI.ToggleDisplay(UI.TopBar.Q("Config"), false);
+        UI.ToggleDisplay(UI.TopBar.Q("Isocon"), false);
         UI.ToggleDisplay("DiceRoller", false);
         UI.ToggleDisplay("BottomBar", false);
+        UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
         UI.ToggleActiveClass(UI.TopBar.Q("MarkerMode"), true);
         UI.TopBar.Q("MarkerMode").Q<Label>("Label").text = "Stop Marking <u>T</u>iles";
     }
@@ -46,6 +39,7 @@ public class TileMarkingState : TabletopSubstate
     protected override void DisableInterface()
     {
         base.DisableInterface();
+        UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
         UI.ToggleActiveClass(UI.TopBar.Q("MarkerMode"), false);
         UI.TopBar.Q("MarkerMode").Q<Label>("Label").text = "Mark <u>T</u>iles";
     }
@@ -87,4 +81,20 @@ public class TileMarkingState : TabletopSubstate
         }
 
     }
+
+    protected override void GoToNeutral(ClickEvent evt)
+    {
+        base.GoToNeutral(evt);
+        Block.DeselectAll();
+        BlockMesh.ToggleAllBorders(false);
+        Player.Self().ClearOp();
+    }
+
+    protected override void GoToEditing(ClickEvent evt)
+    {
+        base.GoToEditing(evt);
+        Block.DeselectAll();
+    }
+
+
 }

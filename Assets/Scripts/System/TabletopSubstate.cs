@@ -31,7 +31,7 @@ public abstract class TabletopSubstate : BaseState
     {
         UI.ToggleDisplay("BottomBar", true);
         UI.ToggleDisplay("TopBar", true);
-        UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
+        UI.ToggleDisplay(UI.System.Q("TopRight"), true);
 
         UI.ToggleDisplay(UI.TopBar.Q("EditMap"), true);
         UI.ToggleDisplay(UI.TopBar.Q("DragMode"), true);
@@ -64,24 +64,26 @@ public abstract class TabletopSubstate : BaseState
     {
     }
 
-    protected void GoToEditing(ClickEvent evt)
+    protected virtual void GoToEditing(ClickEvent evt)
     {
         SM.ChangeSubState(new MapEditingState());
     }
 
-    protected void GoToMarking(ClickEvent evt)
+    protected virtual void GoToMarking(ClickEvent evt)
     {
         SM.ChangeSubState(new TileMarkingState());
     }
 
-    protected void GoToNeutral(ClickEvent evt)
+    protected virtual void GoToNeutral(ClickEvent evt)
     {
         SM.ChangeSubState(new NeutralState());
     }
 
-    protected void GoToModal(ClickEvent evt)
+    protected virtual void GoToConfig(ClickEvent evt)
     {
+        Config.OpenModal(evt);
         SM.ChangeSubState(new ModalState());
+        Modal.AddCloseCallback(GoToNeutral);
     }
 
     protected void ChangeDragMode(ClickEvent evt)

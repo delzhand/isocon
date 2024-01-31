@@ -1,10 +1,17 @@
+using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class MapEditingState : TabletopSubstate
 {
+    private static bool NeedsInit = true;
+    private string _currentFile;
+    private string _editOp;
+
     public override void OnEnter(StateManager sm)
     {
+        BindTools();
         base.OnEnter(sm);
         Block.DeselectAll();
         Token.DeselectAll();
@@ -20,15 +27,13 @@ public class MapEditingState : TabletopSubstate
     {
         base.OnExit();
         Block.ToggleSpacers(false);
-        BlockMesh.ToggleAllBorders(false);
-        Player.Self().ClearOp();
         MapSync();
     }
 
     public override void UpdateState()
     {
         base.UpdateState();
-        Pointer.PointAtBlocks(BlockFocusMode.Single);
+        Pointer.PointAtBlocks();
     }
 
 
@@ -39,6 +44,7 @@ public class MapEditingState : TabletopSubstate
         UI.ToggleDisplay(UI.TopBar.Q("Info"), false);
         UI.ToggleDisplay(UI.TopBar.Q("Sync"), false);
         UI.ToggleDisplay(UI.TopBar.Q("Config"), false);
+        UI.ToggleDisplay(UI.TopBar.Q("Isocon"), false);
         UI.ToggleDisplay("ToolsPanel", true);
         UI.ToggleDisplay("DiceRoller", false);
         UI.ToggleDisplay("BottomBar", false);
@@ -51,6 +57,8 @@ public class MapEditingState : TabletopSubstate
     {
         base.DisableInterface();
         UI.ToggleDisplay("ToolsPanel", false);
+        UI.ToggleDisplay("ToolOptions", false);
+        UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
         UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), false);
         UI.TopBar.Q("EditMap").Q<Label>("Label").text = "Edit <u>M</u>ap";
     }
@@ -98,6 +106,26 @@ public class MapEditingState : TabletopSubstate
         }
 
     }
+
+    protected override void GoToNeutral(ClickEvent evt)
+    {
+        base.GoToNeutral(evt);
+        Player.Self().ClearOp();
+        BlockMesh.ToggleAllBorders(false);
+    }
+
+    #region Tools
+    private void BindTools()
+    {
+        if (!NeedsInit)
+        {
+            return;
+        }
+        NeedsInit = false;
+        MapEdit.Setup();
+    }
+    #endregion
+
 }
 
 public enum BlockFocusMode

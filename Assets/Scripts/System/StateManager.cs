@@ -4,26 +4,26 @@ public class StateManager : MonoBehaviour
 {
     private IState _current;
     private IState _substate;
+    public IState SubState { get => _substate; }
 
     public string Debug;
-
-    // This LauncherState should be persisted because it tracks whether initial setup
-    // has been done. Should that be tracked in this class instead?
-    public LauncherState LauncherState = new();
+    public string Debug2;
 
     void Start()
     {
         Startup.RunTasks();
-        ChangeState(LauncherState);
+        ChangeState(new LauncherState());
     }
 
     void Update()
     {
+        Debug2 = MapEdit.EditOp;
         Debug = $"{_current.GetType()}";
         if (_substate != null)
         {
             Debug = $"{_current.GetType()} ({_substate.GetType()})";
         }
+
         _current.UpdateState();
         _substate?.UpdateState();
     }
@@ -39,7 +39,7 @@ public class StateManager : MonoBehaviour
     {
         _substate?.OnExit();
         _substate = newState;
-        _substate.OnEnter(this);
+        _substate?.OnEnter(this);
     }
 }
 

@@ -18,6 +18,7 @@ public class LauncherState : BaseState
         SetLauncherBackground();
         DestroyLeftoverNetworkData();
         BindCallbacks();
+        sm.ChangeSubState(null);
     }
 
     public override void OnExit()
@@ -41,6 +42,11 @@ public class LauncherState : BaseState
         UI.ToggleDisplay("StartupPanel", true);
         UI.ToggleDisplay("StartupOptions", true);
         UI.ToggleDisplay("Launcher", true);
+
+#if (UNITY_WEBGL) && !UNITY_EDITOR
+        UI.ToggleDisplay("SoloModeButton", false);
+        UI.ToggleDisplay("HostModeButton", false);
+#endif
     }
 
     private void SetLauncherBackground()

@@ -7,6 +7,7 @@ public class Viewport
 {
 
     private static bool _dragMode = true;
+    private static bool _dragCheck = false;
     private static bool _isDragging = false;
     public static bool IsDragging { get => _isDragging; }
     private static Vector3 _panOrigin;
@@ -27,14 +28,27 @@ public class Viewport
     {
         if (Input.GetMouseButton(1))
         {
-            if (_isDragging == false)
+            if (!_isDragging)
             {
-                _isDragging = true;
-                _panOrigin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                _mouseOrigin = Input.mousePosition;
-                _originRY = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.y;
-                _originRZ = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.z;
-                _originR = GameObject.Find("CameraOrigin").transform.rotation;
+                if (!_dragCheck)
+                {
+                    _dragCheck = true;
+                    _mouseOrigin = Input.mousePosition;
+                }
+                if (_dragCheck)
+                {
+                    if (Input.mousePosition != _mouseOrigin)
+                    {
+                        _isDragging = true;
+                    }
+                }
+                if (_isDragging)
+                {
+                    _panOrigin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    _originRY = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.y;
+                    _originRZ = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.z;
+                    _originR = GameObject.Find("CameraOrigin").transform.rotation;
+                }
             }
             _panDifference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.transform.position;
             _mouseDifference = _mouseOrigin - Input.mousePosition;
@@ -42,6 +56,7 @@ public class Viewport
         else
         {
             _isDragging = false;
+            _dragCheck = false;
         }
 
         if (_isDragging)

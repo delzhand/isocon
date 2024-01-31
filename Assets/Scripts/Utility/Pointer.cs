@@ -11,13 +11,27 @@ public class Pointer
         PointWithMask(LayerMask.GetMask("Block", "Token"), BlockFocusMode.Single);
     }
 
-    public static void PointAtBlocks(BlockFocusMode mode)
+    public static void PointAtBlocks()
     {
-        PointWithMask(LayerMask.GetMask("Block"), mode);
+        var focusMode = BlockFocusMode.Single;
+        if (MapEdit.EditOp == "ResizeMap" && MapEdit.ResizeOp.EndsWith("Col"))
+        {
+            focusMode = BlockFocusMode.Column;
+        }
+        else if (MapEdit.EditOp == "ResizeMap" && MapEdit.ResizeOp.EndsWith("Row"))
+        {
+            focusMode = BlockFocusMode.Row;
+        }
+        PointWithMask(LayerMask.GetMask("Block"), focusMode);
     }
 
     private static void PointWithMask(LayerMask mask, BlockFocusMode focusMode)
     {
+        if (Viewport.IsDragging)
+        {
+            return;
+        }
+
         _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         bool isHit = Physics.Raycast(_ray, out RaycastHit hit, 9999f, mask);
         if (isHit && hit.collider.CompareTag("Block"))
@@ -51,22 +65,21 @@ public class Pointer
 
     private static void TokenHit(Token t)
     {
-        // switch (Mode)
-        // {
-        //     case CursorMode.Default:
-        //     case CursorMode.Dragging:
-        //         if (t.State != TokenState.Focused)
-        //         {
-        //             t.Focus();
-        //         }
-        //         TokenClicks(t);
-        //         Block.DehighlightAll();
-        //         break;
-        // }
+        if (t.State != TokenState.Focused)
+        {
+            t.Focus();
+        }
+        TokenClicks(t);
+        Block.DehighlightAll();
     }
 
     private static void TokenClicks(Token token)
     {
+        if (UI.ClicksSuspended)
+        {
+            return;
+        }
+
         if (token == null)
         {
             return;
@@ -129,6 +142,11 @@ public class Pointer
 
     private static void BlockClicks(Block block)
     {
+        if (UI.ClicksSuspended)
+        {
+            return;
+        }
+
         if (block == null)
         {
             return;

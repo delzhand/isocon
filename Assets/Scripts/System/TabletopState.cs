@@ -92,7 +92,7 @@ public class TabletopState : BaseState
 
     private void GoToLauncherState()
     {
-        SM.ChangeState(SM.LauncherState);
+        SM.ChangeState(new LauncherState());
     }
 
     #region Callbacks

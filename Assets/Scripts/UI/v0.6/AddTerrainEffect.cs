@@ -15,6 +15,8 @@ public class AddTerrainEffect
 
         Modal.AddPreferredButton("Confirm", ConfirmAddEffect);
         Modal.AddButton("Cancel", Modal.CloseEvent);
+
+        ModalState.Activate();
     }
 
     private static void ConfirmAddEffect(ClickEvent evt)

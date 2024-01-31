@@ -20,6 +20,10 @@ public class Startup
         Modal.Setup();
         BlockMesh.Setup();
 
+        Debug.Log(GetArguments());
+
+        UI.SetBlocking(UI.System, StringUtility.CreateArray("SelectionMenu", "TopBar", "BottomBar", "ToolsPanel", "ToolOptions", "SelectedTokenPanel", "FocusedTokenPanel", "Backdrop"));
+
         // Useful during development when editing UI
         UI.ToggleDisplay("Tabletop", false);
     }
@@ -79,4 +83,17 @@ public class Startup
     {
         public string LatestVersion;
     }
+
+    public static string[] GetArguments()
+    {
+#if (UNITY_WEBGL) && !UNITY_EDITOR
+            if (Application.absoluteURL.Contains("isocon.app"))
+            {
+                string parameters = Application.absoluteURL.Substring(Application.absoluteURL.IndexOf("?")+1);
+                return parameters.Split(new char[] { '&', '=' });
+            }
+#endif
+        return new string[] { };
+    }
+
 }
