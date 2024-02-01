@@ -107,6 +107,8 @@ public class TabletopState : BaseState
     private void UnbindCallbacks()
     {
         UI.TopBar.Q("Isocon").UnregisterCallback<ClickEvent>(ConfirmReturnToLauncher);
+        Dragger.RightClickStart -= Viewport.InitializeDrag;
+        Dragger.RightDragUpdate -= Viewport.UpdateDrag;
     }
 
     private void ConfirmReturnToLauncher(ClickEvent evt)

@@ -22,7 +22,9 @@ public class Viewport
 
     public static void InitializeDrag()
     {
-        _panOrigin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Debug.Log("init drag");
+        _mouseOrigin = Input.mousePosition;
+        _panOrigin = Camera.main.ScreenToWorldPoint(_mouseOrigin);
         _originRY = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.y;
         _originRZ = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.z;
     }

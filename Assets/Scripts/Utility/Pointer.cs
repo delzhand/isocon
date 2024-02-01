@@ -6,6 +6,19 @@ public class Pointer
 {
     private static Ray _ray;
 
+    public static Block PickBlock() {
+        if (UI.ClicksSuspended || Modal.IsOpen()) {
+            return null;
+        }
+        _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        bool isHit = Physics.Raycast(_ray, out RaycastHit hit, 9999f, LayerMask.GetMask("Block"));
+        if (isHit && hit.collider.CompareTag("Block"))
+        {
+            return hit.collider.GetComponent<Block>();
+        }        
+        return null;
+    }
+
     public static void PointAtBlocks()
     {
         var focusMode = BlockFocusMode.Single;

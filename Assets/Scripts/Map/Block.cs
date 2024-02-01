@@ -283,11 +283,11 @@ public class Block : MonoBehaviour
     static int editZ = 0;
     public void LeftClickDown()
     {
-        IState state = StateManager.Find().SubState;
-        if (state is TileMarkingState)
-        {
-            Dragger.LeftClickRelease += Select;
-        }
+        // IState state = StateManager.Find().SubState;
+        // if (state is TileMarkingState)
+        // {
+        //     Dragger.LeftClickRelease += Select;
+        // }
         // else if (state is MapEditingState)
         // {
         //     DeselectAll();
@@ -376,14 +376,8 @@ public class Block : MonoBehaviour
         // }
     }
 
-    public void RightClickDown()
-    {
-        Dragger.RightClickRelease += ToggleMenu;
-        // _dragging = true;
-        // _dragOrigin = Input.mousePosition;
-    }
 
-    private void ToggleMenu()
+    public void ToggleMenu()
     {
         if (SelectionMenu.Visible)
         {
@@ -393,24 +387,6 @@ public class Block : MonoBehaviour
         {
             TileMenu.ShowMenu(this);
         }
-    }
-
-    public void RightClickUp()
-    {
-
-
-        // // Mouse up where clicked
-        // if (_dragging && Input.mousePosition == _dragOrigin)
-        // {
-        //     if (SelectionMenu.Visible)
-        //     {
-        //         SelectionMenu.Hide();
-        //     }
-        //     else
-        //     {
-        //         TileMenu.ShowMenu(this);
-        //     }
-        // }
     }
 
     public static void SetColor(string id, Color color)
@@ -423,15 +399,15 @@ public class Block : MonoBehaviour
     }
 
     /// <summary>
-    /// (depriciated) Use Coordinate.x instead.
+    /// (deprecated) Use Coordinate.x instead.
     /// </summary>
     public int GetX() => Coordinate.x;
     /// <summary>
-    /// (depriciated) Use Coordinate.y instead.
+    /// (deprecated) Use Coordinate.y instead.
     /// </summary>
     public int GetY() => Coordinate.y;
     /// <summary>
-    /// (depriciated) Use Coordinate.z instead.
+    /// (deprecated) Use Coordinate.z instead.
     /// </summary>
     public int GetZ() => Coordinate.z;
 

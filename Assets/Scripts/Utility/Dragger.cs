@@ -15,6 +15,8 @@ public class Dragger : MonoBehaviour
 
     private static ClickState _left = ClickState.Up;
     private static Vector3 _leftMouseOrigin;
+    public static DraggerCallback LeftClickStart;
+    public static DraggerCallback LeftDragUpdate;
     public static DraggerCallback LeftClickRelease;
     public static DraggerCallback LeftDragRelease;
 
@@ -33,6 +35,7 @@ public class Dragger : MonoBehaviour
         {
             if (_left == ClickState.Up)
             {
+                LeftClickStart?.Invoke();
                 _left = ClickState.Checking;
                 _leftMouseOrigin = Input.mousePosition;
             }
@@ -42,6 +45,10 @@ public class Dragger : MonoBehaviour
                 {
                     _left = ClickState.Dragging;
                 }
+            }
+            if (_left == ClickState.Dragging)
+            {
+                LeftDragUpdate?.Invoke();
             }
         }
         else
@@ -54,8 +61,6 @@ public class Dragger : MonoBehaviour
             {
                 LeftDragRelease?.Invoke();
             }
-            LeftClickRelease = null;
-            LeftDragRelease = null;
             _left = ClickState.Up;
         }
 
@@ -89,8 +94,6 @@ public class Dragger : MonoBehaviour
             {
                 RightDragRelease?.Invoke();
             }
-            RightClickRelease = null;
-            RightDragRelease = null;
             _right = ClickState.Up;
         }
     }
