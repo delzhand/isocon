@@ -26,6 +26,24 @@ public class Modal
         FindDoubleConfirm().Q<Button>("Cancel").RegisterCallback<ClickEvent>(DoubleConfirmCancelled);
     }
 
+    public static void HandleKeypresses()
+    {
+        if (!Modal.IsOpen())
+        {
+            return;
+        }
+
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            Modal.Close();
+        }
+
+        if (Input.GetKeyUp(KeyCode.Return))
+        {
+            Modal.Activate();
+        }
+    }
+
     private static VisualElement FindDoubleConfirm()
     {
         return UI.System.Q("DoubleConfirmModal");

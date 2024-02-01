@@ -6,11 +6,6 @@ public class Pointer
 {
     private static Ray _ray;
 
-    public static void Point()
-    {
-        PointWithMask(LayerMask.GetMask("Block", "Token"), BlockFocusMode.Single);
-    }
-
     public static void PointAtBlocks()
     {
         var focusMode = BlockFocusMode.Single;
@@ -25,9 +20,19 @@ public class Pointer
         PointWithMask(LayerMask.GetMask("Block"), focusMode);
     }
 
+    public static void PointAtTokens()
+    {
+        PointWithMask(LayerMask.GetMask("Token"), BlockFocusMode.Single);
+    }
+
+    private static bool MaskContainsLayer(LayerMask layermask, string layer)
+    {
+        return layermask == (layermask | (1 << LayerMask.NameToLayer(layer)));
+    }
+
     private static void PointWithMask(LayerMask mask, BlockFocusMode focusMode)
     {
-        if (Viewport.IsDragging)
+        if (Viewport.IsDragging || UI.ClicksSuspended || Modal.IsOpen())
         {
             return;
         }
@@ -38,7 +43,7 @@ public class Pointer
         {
             Block b = hit.collider.GetComponent<Block>();
             Token t = Token.GetAtBlock(b);
-            if (t != null && Cursor.Mode != CursorMode.Editing)
+            if (t != null && MaskContainsLayer(mask, "Token"))
             {
                 TokenHit(t);
                 FocusBlocks(b, focusMode);
@@ -123,13 +128,11 @@ public class Pointer
 
     private static void BlockHit(Block b, BlockFocusMode mode)
     {
-        // switch (Mode)
-        // {
-        //     case CursorMode.Dragging:
-        //         Block.DehighlightAll();
-        //         HighlightSizeArea(b);
-        //         break;
-        // }
+        if (StateManager.IsDraggingToken)
+        {
+            Block.DehighlightAll();
+            HighlightSizeArea(b);
+        }
 
         if (!b.Focused)
         {
@@ -139,6 +142,16 @@ public class Pointer
         BlockClicks(b);
     }
 
+    private static void HighlightSizeArea(Block block)
+    {
+        block.Highlight();
+        int size = Token.GetSelected().Size;
+        Block[] neighbors = TerrainController.FindNeighbors(block, size);
+        for (int i = 0; i < neighbors.Length; i++)
+        {
+            neighbors[i].Highlight();
+        }
+    }
 
     private static void BlockClicks(Block block)
     {
@@ -156,18 +169,18 @@ public class Pointer
         {
             block.LeftClickDown();
         }
-        else if (IsLeftHeld())
-        {
-            block.LeftClickHeld();
-        }
+        // else if (IsLeftHeld())
+        // {
+        //     block.LeftClickHeld();
+        // }
         if (IsRightClick())
         {
             block.RightClickDown();
         }
-        if (IsRightUp())
-        {
-            block.RightClickUp();
-        }
+        // if (IsRightUp())
+        // {
+        //     block.RightClickUp();
+        // }
     }
 
     #region Helpers

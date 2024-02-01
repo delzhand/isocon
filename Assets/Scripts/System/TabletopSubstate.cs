@@ -49,10 +49,12 @@ public abstract class TabletopSubstate : BaseState
 
     protected virtual void HandleKeypresses()
     {
-        if (UI.System.panel.focusController.focusedElement != null)
-        {
-            return;
-        }
+        Modal.HandleKeypresses();
+    }
+
+    protected bool DisallowShortcutKeys()
+    {
+        return UI.System.panel.focusController.focusedElement is TextField;
     }
 
     #region Callbacks
@@ -82,8 +84,6 @@ public abstract class TabletopSubstate : BaseState
     protected virtual void GoToConfig(ClickEvent evt)
     {
         Config.OpenModal(evt);
-        SM.ChangeSubState(new ModalState());
-        Modal.AddCloseCallback(GoToNeutral);
     }
 
     protected void ChangeDragMode(ClickEvent evt)

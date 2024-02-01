@@ -405,7 +405,7 @@ public class Icon_v1_5 : GameSystem
         }
         foreach (var b in blocksToAppend)
         {
-            b.Select(true);
+            b.SelectAppend(true);
         }
         SelectionMenu.Hide();
     }
@@ -426,7 +426,7 @@ public class Icon_v1_5 : GameSystem
         }
         foreach (var b in blocksToAppend)
         {
-            b.Select(true);
+            b.SelectAppend(true);
         }
         SelectionMenu.Hide();
     }

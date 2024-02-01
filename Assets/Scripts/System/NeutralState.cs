@@ -1,10 +1,14 @@
 using System.Collections.Generic;
+using System.Drawing;
 using Mirror;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class NeutralState : TabletopSubstate
 {
+    private bool _showSync = false;
+    private bool _showInfo = false;
+
     public override void OnEnter(StateManager sm)
     {
         base.OnEnter(sm);
@@ -13,16 +17,28 @@ public class NeutralState : TabletopSubstate
     public override void UpdateState()
     {
         base.UpdateState();
-        Pointer.Point();
         SelectionMenu.Update();
         TileShare.Offsets();
         ShowTokenPanels();
+        if (StateManager.IsDraggingToken)
+        {
+            Pointer.PointAtBlocks();
+        }
+        else
+        {
+            Pointer.PointAtTokens();
+        }
     }
 
 
     protected override void HandleKeypresses()
     {
         base.HandleKeypresses();
+        if (DisallowShortcutKeys())
+        {
+            return;
+        }
+
         if (Input.GetKeyUp(KeyCode.M))
         {
             GoToEditing(new ClickEvent());
@@ -66,6 +82,10 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("MarkerMode").RegisterCallback<ClickEvent>(GoToMarking);
         UI.TopBar.Q("DragMode").RegisterCallback<ClickEvent>(ChangeDragMode);
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(GoToConfig);
+        UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
+        UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(Config.OpenModal);
+        UI.TopBar.Q("Info").RegisterCallback<ClickEvent>(ToggleInfo);
+        UI.TopBar.Q("Sync").RegisterCallback<ClickEvent>(ToggleSync);
         UI.System.Q("BottomBar").Q("AddToken").RegisterCallback<ClickEvent>(ShowAddTokenModal);
     }
 
@@ -75,13 +95,31 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("MarkerMode").UnregisterCallback<ClickEvent>(GoToMarking);
         UI.TopBar.Q("DragMode").UnregisterCallback<ClickEvent>(ChangeDragMode);
         UI.TopBar.Q("Config").UnregisterCallback<ClickEvent>(GoToConfig);
+        UI.TopBar.Q("Dice").UnregisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
+        UI.TopBar.Q("Config").UnregisterCallback<ClickEvent>(Config.OpenModal);
+        UI.TopBar.Q("Info").UnregisterCallback<ClickEvent>(ToggleInfo);
+        UI.TopBar.Q("Sync").UnregisterCallback<ClickEvent>(ToggleSync);
         UI.System.Q("BottomBar").Q("AddToken").UnregisterCallback<ClickEvent>(ShowAddTokenModal);
     }
 
     private void ShowAddTokenModal(ClickEvent evt)
     {
         AddToken.OpenModal(new ClickEvent());
-        ModalState.Activate();
+    }
+
+    public void ToggleInfo(ClickEvent evt)
+    {
+        _showInfo = !_showInfo;
+        UI.ToggleDisplay("InfoWindow", _showInfo);
+        UI.ToggleActiveClass(UI.TopBar.Q("Info"), _showInfo);
+
+    }
+
+    public void ToggleSync(ClickEvent evt)
+    {
+        _showSync = !_showSync;
+        UI.ToggleDisplay("SyncPanel", _showSync);
+        UI.ToggleActiveClass(UI.TopBar.Q("Sync"), _showSync);
     }
 
     #endregion

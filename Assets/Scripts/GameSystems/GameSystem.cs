@@ -80,13 +80,13 @@ public class GameSystem : MonoBehaviour
         return items.ToArray();
     }
 
-    private static void LineCheckClicked(ClickEvent evt)
-    {
-        Cursor.Mode = CursorMode.Targeting;
-        TokenData data = Token.GetSelected().Data;
-        Player.Self().GetComponent<DirectionalLine>().Init(data.Id, "Attacking");
-        SelectionMenu.Hide();
-    }
+    // private static void LineCheckClicked(ClickEvent evt)
+    // {
+    //     Cursor.Mode = CursorMode.Targeting;
+    //     TokenData data = Token.GetSelected().Data;
+    //     Player.Self().GetComponent<DirectionalLine>().Init(data.Id, "Attacking");
+    //     SelectionMenu.Hide();
+    // }
 
     private static void ClickFlip(ClickEvent evt)
     {

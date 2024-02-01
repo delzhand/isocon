@@ -31,39 +31,39 @@ public class Token : MonoBehaviour
         float CutoutSize = Preferences.Current.TokenScale;
         transform.Find("Offset/Avatar/Cutout").localScale = new Vector3(CutoutSize, CutoutSize, CutoutSize);
 
-        switch (State)
-        {
-            case TokenState.Neutral:
-                SetVisualNone();
-                break;
-            case TokenState.Focused:
-                SetVisualSquareBlue();
-                break;
-            default:
-                SetVisualSquareYellow();
-                break;
-        }
+        // switch (State)
+        // {
+        //     case TokenState.Neutral:
+        //         SetVisualNone();
+        //         break;
+        //     case TokenState.Focused:
+        //         SetVisualSquareBlue();
+        //         break;
+        //     default:
+        //         SetVisualSquareYellow();
+        //         break;
+        // }
 
-        string tokenOutline = Preferences.Current.TokenOutline;
-        switch (tokenOutline)
-        {
-            case "Black":
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.black);
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 1);
-                break;
-            case "White":
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.white);
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 1);
-                break;
-            case "None":
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.black);
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 0);
-                break;
-            default:
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.white);
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 1);
-                break;
-        }
+        // string tokenOutline = Preferences.Current.TokenOutline;
+        // switch (tokenOutline)
+        // {
+        //     case "Black":
+        //         transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.black);
+        //         transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 1);
+        //         break;
+        //     case "White":
+        //         transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.white);
+        //         transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 1);
+        //         break;
+        //     case "None":
+        //         transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.black);
+        //         transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 0);
+        //         break;
+        //     default:
+        //         transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.white);
+        //         transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 1);
+        //         break;
+        // }
 
         Offset();
 
@@ -72,32 +72,30 @@ public class Token : MonoBehaviour
             Unfocus();
         }
 
-        if (State == TokenState.Pending)
-        {
-            if (Input.mousePosition != _dragOrigin)
-            {
-                StartDragging();
-            }
-        }
-
-        transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<BoxCollider>().enabled = !Cursor.IgnoreTokens();
+        // if (State == TokenState.Pending)
+        // {
+        //     if (Input.mousePosition != _dragOrigin)
+        //     {
+        //         StartDragging();
+        //     }
+        // }
     }
 
     void LateUpdate()
     {
-        if (!Input.GetMouseButtonUp(0))
-        {
-            return;
-        }
-        switch (State)
-        {
-            case TokenState.Pending:
-                StartInspecting();
-                break;
-            case TokenState.Dragging:
-                StopDragging();
-                break;
-        }
+        // if (!Input.GetMouseButtonUp(0))
+        // {
+        //     return;
+        // }
+        // switch (State)
+        // {
+        //     case TokenState.Pending:
+        //         StartInspecting();
+        //         break;
+        //     case TokenState.Dragging:
+        //         StopDragging();
+        //         break;
+        // }
     }
 
     private void AlignToCamera()
@@ -167,7 +165,7 @@ public class Token : MonoBehaviour
         DeselectAll();
         State = TokenState.Pending;
         _dragOrigin = Input.mousePosition;
-        Cursor.Mode = CursorMode.Dragging;
+        // Cursor.Mode = CursorMode.Dragging;
     }
 
     private void StartMenu()
@@ -175,7 +173,7 @@ public class Token : MonoBehaviour
         DeselectAll();
         State = TokenState.MenuOpen;
         TokenMenu.ShowMenu();
-        Cursor.Mode = CursorMode.Default;
+        // Cursor.Mode = CursorMode.Default;
         Block.DeselectAll();
         Block.UnfocusAll();
         BlockMesh.ToggleAllBorders(false);
@@ -187,7 +185,8 @@ public class Token : MonoBehaviour
     private void StartDragging()
     {
         State = TokenState.Dragging;
-        Cursor.Mode = CursorMode.Dragging;
+        // Cursor.Mode = CursorMode.Dragging;
+        StateManager.IsDraggingToken = true;
         Block.DeselectAll();
         Block.UnfocusAll();
         BlockMesh.ToggleAllBorders(true);
@@ -200,6 +199,7 @@ public class Token : MonoBehaviour
 
     private void StopDragging()
     {
+        StateManager.IsDraggingToken = false;
         Block[] focused = Block.GetFocused();
         if (focused.Length == 0)
         {
@@ -223,7 +223,7 @@ public class Token : MonoBehaviour
     private void StartInspecting()
     {
         State = TokenState.Inspecting;
-        Cursor.Mode = CursorMode.Default;
+        // Cursor.Mode = CursorMode.Default;
         BlockMesh.ToggleAllBorders(false);
         Player.Self().SetOp($"Inspecting {Data.Name}");
         Player.Self().GetComponent<DirectionalLine>().Deinit();
@@ -255,7 +255,7 @@ public class Token : MonoBehaviour
         UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), false);
         Player.Self().ClearOp();
         SelectionMenu.Hide();
-        Cursor.Mode = CursorMode.Default;
+        // Cursor.Mode = CursorMode.Default;
         BlockMesh.ToggleAllBorders(false);
         Player.Self().GetComponent<DirectionalLine>().Deinit();
     }

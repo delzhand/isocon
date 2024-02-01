@@ -9,7 +9,7 @@ public class TileMarkingState : TabletopSubstate
         Token.DeselectAll();
         Token.UnfocusAll();
         BlockMesh.ToggleAllBorders(true);
-        Cursor.Mode = CursorMode.Marking;
+        // Cursor.Mode = CursorMode.Marking;
         Player.Self().SetOp("Marking Tiles");
         Tutorial.Init("Marking Mode");
     }
@@ -62,6 +62,11 @@ public class TileMarkingState : TabletopSubstate
     protected override void HandleKeypresses()
     {
         base.HandleKeypresses();
+        if (DisallowShortcutKeys())
+        {
+            return;
+        }
+
         if (Input.GetKeyUp(KeyCode.M))
         {
             GoToEditing(new ClickEvent());

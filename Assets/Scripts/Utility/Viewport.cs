@@ -7,87 +7,112 @@ public class Viewport
 {
 
     private static bool _dragMode = true;
-    private static bool _dragCheck = false;
-    private static bool _isDragging = false;
-    public static bool IsDragging { get => _isDragging; }
+
     private static Vector3 _panOrigin;
-    private static Vector3 _panDifference;
     private static Vector3 _mouseOrigin;
-    private static Vector3 _mouseDifference;
     private static float _originRY = 315;
     private static float _originRZ = 0;
-    private static Quaternion _originR;
+
+    public static bool IsDragging = false;
 
     public static void HandleInput()
     {
-        HandleDragging();
         HandleScrolling();
+    }
+
+    public static void InitializeDrag()
+    {
+        _panOrigin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        _originRY = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.y;
+        _originRZ = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.z;
+    }
+
+    public static void UpdateDrag()
+    {
+
+        if (_dragMode)
+        {
+            Vector3 panDifference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.transform.position;
+            Camera.main.transform.position = _panOrigin - panDifference;
+        }
+        else
+        {
+            Vector3 mouseDifference = _mouseOrigin - Input.mousePosition;
+            Quaternion q = Quaternion.identity;
+            float targetY = _originRY - mouseDifference.x / 2;
+            Quaternion qy = Quaternion.Euler(0f, targetY, 0f);
+            q *= qy;
+
+            float targetZ = _originRZ + mouseDifference.y / 2;
+            while (targetZ < -180)
+            {
+                targetZ += 360;
+            }
+            while (targetZ > 180)
+            {
+                targetZ -= 360;
+            }
+            targetZ = Mathf.Clamp(targetZ, -20, 20);
+            Quaternion qz = Quaternion.Euler(0f, 0f, targetZ);
+            q *= qz;
+
+            GameObject.Find("CameraOrigin").transform.rotation = q;
+        }
     }
 
     private static void HandleDragging()
     {
-        if (Input.GetMouseButton(1))
-        {
-            if (!_isDragging)
-            {
-                if (!_dragCheck)
-                {
-                    _dragCheck = true;
-                    _mouseOrigin = Input.mousePosition;
-                }
-                if (_dragCheck)
-                {
-                    if (Input.mousePosition != _mouseOrigin)
-                    {
-                        _isDragging = true;
-                    }
-                }
-                if (_isDragging)
-                {
-                    _panOrigin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                    _originRY = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.y;
-                    _originRZ = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.z;
-                    _originR = GameObject.Find("CameraOrigin").transform.rotation;
-                }
-            }
-            _panDifference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.transform.position;
-            _mouseDifference = _mouseOrigin - Input.mousePosition;
-        }
-        else
-        {
-            _isDragging = false;
-            _dragCheck = false;
-        }
+        // if (Input.GetMouseButton(1))
+        // {
+        //     if (!Dragger.IsRightDown)
+        //     {
+        //         Debug.Log("viewport drag init");
+        //         _panOrigin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //         _originRY = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.y;
+        //         _originRZ = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.z;
+        //         _originR = GameObject.Find("CameraOrigin").transform.rotation;
+        //     }
+        //     _panDifference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.transform.position;
+        //     _mouseDifference = _mouseOrigin - Input.mousePosition;
 
-        if (_isDragging)
-        {
-            if (_dragMode)
-            {
-                Camera.main.transform.position = _panOrigin - _panDifference;
-            }
-            else
-            {
-                Quaternion q = Quaternion.identity;
-                float targetY = _originRY - _mouseDifference.x / 2;
-                Quaternion qy = Quaternion.Euler(0f, targetY, 0f);
-                q *= qy;
+        //     // if (Dragger.IsRightDragging)
+        //     // {
+        //     //     if (_dragMode)
+        //     //     {
+        //     //         Camera.main.transform.position = _panOrigin - _panDifference;
+        //     //     }
+        //     // }
+        // }
 
-                float targetZ = _originRZ + _mouseDifference.y / 2;
-                while (targetZ < -180)
-                {
-                    targetZ += 360;
-                }
-                while (targetZ > 180)
-                {
-                    targetZ -= 360;
-                }
-                targetZ = Mathf.Clamp(targetZ, -20, 20);
-                Quaternion qz = Quaternion.Euler(0f, 0f, targetZ);
-                q *= qz;
+        // if (_isDragging)
+        // {
+        //     if (_dragMode)
+        //     {
+        //         Camera.main.transform.position = _panOrigin - _panDifference;
+        //     }
+        //     else
+        //     {
+        //         Quaternion q = Quaternion.identity;
+        //         float targetY = _originRY - _mouseDifference.x / 2;
+        //         Quaternion qy = Quaternion.Euler(0f, targetY, 0f);
+        //         q *= qy;
 
-                GameObject.Find("CameraOrigin").transform.rotation = q;
-            }
-        }
+        //         float targetZ = _originRZ + _mouseDifference.y / 2;
+        //         while (targetZ < -180)
+        //         {
+        //             targetZ += 360;
+        //         }
+        //         while (targetZ > 180)
+        //         {
+        //             targetZ -= 360;
+        //         }
+        //         targetZ = Mathf.Clamp(targetZ, -20, 20);
+        //         Quaternion qz = Quaternion.Euler(0f, 0f, targetZ);
+        //         q *= qz;
+
+        //         GameObject.Find("CameraOrigin").transform.rotation = q;
+        //     }
+        // }
     }
 
     private static void HandleScrolling()

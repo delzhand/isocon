@@ -52,31 +52,14 @@ public class Block : MonoBehaviour
     public Vector3Int Coordinate => transform.parent.GetComponent<Column>().Coordinate3 + new Vector3Int(0, 0, (int)(transform.position.y / .5f) + 2);
     public Vector2Int Coordinate2 => transform.parent.GetComponent<Column>().Coordinate;
 
-    private Vector3 _dragOrigin;
-    private bool _dragging;
+    // private Vector3 _dragOrigin;
+    // private bool _dragging;
 
     void Awake()
     {
-        if (!BlockMesh.IsSetup)
-        {
-            BlockMesh.Setup();
-        }
         _markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));
         ShapeChange(Shape);
     }
-
-    // void LateUpdate()
-    // {
-    //     if (!Input.GetMouseButtonUp(1))
-    //     {
-    //         return;
-    //     }
-    //     if (_dragging && Input.mousePosition == _dragOrigin)
-    //     {
-    //         // Mouse up where clicked
-    //         TileMenu.ShowMenu(this);
-    //     }
-    // }
 
     void Update()
     {
@@ -300,78 +283,134 @@ public class Block : MonoBehaviour
     static int editZ = 0;
     public void LeftClickDown()
     {
-        switch (Cursor.Mode)
+        IState state = StateManager.Find().SubState;
+        if (state is TileMarkingState)
         {
-            case CursorMode.Marking:
-                Select();
-                break;
-            case CursorMode.Editing:
-                Block.DeselectAll();
-                Select();
-                editZ = GetZ();
-                TerrainController.Edit(this);
-                Select();
-                Block.DeselectAll();
-                break;
-            case CursorMode.Default:
-                Token.DeselectAll();
-                break;
-            case CursorMode.Dragging:
-                Token.GetSelected().Move(this);
-                break;
+            Dragger.LeftClickRelease += Select;
         }
+        // else if (state is MapEditingState)
+        // {
+        //     DeselectAll();
+        //     Select();
+        //     editZ = GetZ();
+        //     TerrainController.Edit(this);
+        //     Select();
+        //     DeselectAll();
+        // }
+
+        // switch (Cursor.Mode)
+        // {
+        //     case CursorMode.Marking:
+        //         Select();
+        //         break;
+        //     case CursorMode.Editing:
+        //         Block.DeselectAll();
+        //         Select();
+        //         editZ = GetZ();
+        //         TerrainController.Edit(this);
+        //         Select();
+        //         Block.DeselectAll();
+        //         break;
+        //     case CursorMode.Default:
+        //         Token.DeselectAll();
+        //         break;
+        //     case CursorMode.Dragging:
+        //         Token.GetSelected().Move(this);
+        //         break;
+        // }
     }
 
     public void LeftClickHeld()
     {
-        switch (Cursor.Mode)
+        IState state = StateManager.Find().SubState;
+        if (state is MapEditingState)
         {
-            case CursorMode.Editing:
-                switch (MapEdit.EditOp)
-                {
-                    case "RotateBlock":
-                    case "ChangeShape":
-                    case "TerrainEffect":
+            switch (MapEdit.EditOp)
+            {
+                case "RotateBlock":
+                case "ChangeShape":
+                case "TerrainEffect":
+                    return;
+                case "AddBlock":
+                case "RemoveBlock":
+                    if (editZ != GetZ())
                         return;
-                    case "AddBlock":
-                    case "RemoveBlock":
-                        if (editZ != GetZ())
-                            return;
-                        if (GetTopBlock(Coordinate2) != this)
-                            return;
-                        goto case "StyleBlock";
-                    case "StyleBlock":
-                        Block.DeselectAll();
-                        Select();
-                        TerrainController.Edit(this);
-                        Select();
-                        Block.DeselectAll();
-                        break;
-                }
-                break;
+                    if (GetTopBlock(Coordinate2) != this)
+                        return;
+                    goto case "StyleBlock";
+                case "StyleBlock":
+                    Block.DeselectAll();
+                    Select();
+                    TerrainController.Edit(this);
+                    Select();
+                    Block.DeselectAll();
+                    break;
+            }
         }
+
+        // switch (Cursor.Mode)
+        // {
+        //     case CursorMode.Editing:
+        //         switch (MapEdit.EditOp)
+        //         {
+        //             case "RotateBlock":
+        //             case "ChangeShape":
+        //             case "TerrainEffect":
+        //                 return;
+        //             case "AddBlock":
+        //             case "RemoveBlock":
+        //                 if (editZ != GetZ())
+        //                     return;
+        //                 if (GetTopBlock(Coordinate2) != this)
+        //                     return;
+        //                 goto case "StyleBlock";
+        //             case "StyleBlock":
+        //                 Block.DeselectAll();
+        //                 Select();
+        //                 TerrainController.Edit(this);
+        //                 Select();
+        //                 Block.DeselectAll();
+        //                 break;
+        //         }
+        //         break;
+        // }
     }
 
     public void RightClickDown()
     {
-        _dragging = true;
-        _dragOrigin = Input.mousePosition;
+        Dragger.RightClickRelease += ToggleMenu;
+        // _dragging = true;
+        // _dragOrigin = Input.mousePosition;
+    }
+
+    private void ToggleMenu()
+    {
+        if (SelectionMenu.Visible)
+        {
+            SelectionMenu.Hide();
+        }
+        else
+        {
+            TileMenu.ShowMenu(this);
+        }
     }
 
     public void RightClickUp()
     {
-        // Mouse up where clicked
-        if (_dragging && Input.mousePosition == _dragOrigin)
-        {
-            if (SelectionMenu.Visible)
-            {
-                SelectionMenu.Hide();
-            }
-            else
-            {
-                TileMenu.ShowMenu(this);
-            }
-        }
+
+
+        // // Mouse up where clicked
+        // if (_dragging && Input.mousePosition == _dragOrigin)
+        // {
+        //     if (SelectionMenu.Visible)
+        //     {
+        //         SelectionMenu.Hide();
+        //     }
+        //     else
+        //     {
+        //         TileMenu.ShowMenu(this);
+        //     }
+        // }
     }
 
     public static void SetColor(string id, Color color)
@@ -670,7 +709,12 @@ public class Block : MonoBehaviour
         }
     }
 
-    public void Select(bool append = false)
+    public void Select()
+    {
+        SelectAppend(false);
+    }
+
+    public void SelectAppend(bool append = false)
     {
         SelectionMenu.Hide();
         if (Selected && !append)

@@ -12,6 +12,7 @@ public class StoredPreferences
     public float TokenScale;
     public string TokenOutline;
     public string Grid;
+    public float BlockBorderOpacity;
     public int PlayerCount;
     public string HostIP;
     public string TutorialsSeen;
@@ -127,6 +128,12 @@ public class Preferences
     public static void SetSystem(string value)
     {
         _current.System = value;
+        Save();
+    }
+
+    public static void SetBlockBorderOpacity(float value)
+    {
+        _current.BlockBorderOpacity = value;
         Save();
     }
 

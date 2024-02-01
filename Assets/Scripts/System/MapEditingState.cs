@@ -18,7 +18,7 @@ public class MapEditingState : TabletopSubstate
         Token.UnfocusAll();
         Block.ToggleSpacers(true);
         BlockMesh.ToggleAllBorders(true);
-        Cursor.Mode = CursorMode.Editing;
+        // Cursor.Mode = CursorMode.Editing;
         Player.Self().SetOp("Editing Map");
         Tutorial.Init("Edit Mode");
     }
@@ -87,6 +87,11 @@ public class MapEditingState : TabletopSubstate
     protected override void HandleKeypresses()
     {
         base.HandleKeypresses();
+        if (DisallowShortcutKeys())
+        {
+            return;
+        }
+
         if (Input.GetKeyUp(KeyCode.M))
         {
             GoToNeutral(new ClickEvent());

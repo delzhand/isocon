@@ -34,6 +34,12 @@ public class Config
             Preferences.SetTokenScale(evt.newValue);
         });
 
+        float borderOpacity = Preferences.Current.BlockBorderOpacity;
+        Modal.AddFloatSlider("BlockBorderOpacity", "Block Border Minimum", borderOpacity, 1, 0, (evt) =>
+        {
+            Preferences.SetBlockBorderOpacity(evt.newValue);
+        });
+
         string tokenOutline = Preferences.Current.TokenOutline;
         Modal.AddDropdownField("TokenOutlineField", "Token Outline", tokenOutline, StringUtility.CreateArray("White", "Black", "None"), (evt) =>
         {

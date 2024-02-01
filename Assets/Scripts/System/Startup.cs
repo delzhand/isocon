@@ -19,6 +19,7 @@ public class Startup
         UI.SetScale();
         Modal.Setup();
         BlockMesh.Setup();
+        DiceRoller.Setup();
 
         Debug.Log(GetArguments());
 

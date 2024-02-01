@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Mirror;
+using UnityEditor.Rendering.Universal;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -99,6 +100,8 @@ public class TabletopState : BaseState
     private void BindCallbacks()
     {
         UI.TopBar.Q("Isocon").RegisterCallback<ClickEvent>(ConfirmReturnToLauncher);
+        Dragger.RightClickStart += Viewport.InitializeDrag;
+        Dragger.RightDragUpdate += Viewport.UpdateDrag;
     }
 
     private void UnbindCallbacks()

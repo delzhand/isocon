@@ -555,7 +555,7 @@ public class TerrainController : MonoBehaviour
         }
 
         Color color = Color.white;
-        if (selected.Length > 0 && Cursor.Mode != CursorMode.Editing)
+        if (selected.Length > 0)
         {
             color = ColorUtility.UISelectYellow;
             UI.ToggleDisplay(root.Q("Elev").Q("SelectedMarker"), true);
@@ -726,35 +726,35 @@ public class TerrainController : MonoBehaviour
 
     public static void ToggleTerrainEffectMode(ClickEvent evt)
     {
-        // Disable map edit mode if necessary
-        if (Cursor.Mode == CursorMode.Editing)
-        {
-            MapEdit.ToggleEditMode(evt);
-        }
+        // // Disable map edit mode if necessary
+        // if (Cursor.Mode == CursorMode.Editing)
+        // {
+        //     MapEdit.ToggleEditMode(evt);
+        // }
 
-        if (Cursor.Mode != CursorMode.Marking)
-        {
-            Tutorial.Init("terrain effect mode");
-            Cursor.Mode = CursorMode.Marking;
-            Token.DeselectAll();
-            Token.UnfocusAll();
-            BlockMesh.ToggleAllBorders(true);
-            UI.ToggleActiveClass("MarkerMode", true);
-            UI.ToggleDisplay("BottomBar", false);
-            UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
-            Player.Self().SetOp("Editing Terrain Effects");
-        }
-        else
-        {
-            Cursor.Mode = CursorMode.Default;
-            BlockMesh.ToggleAllBorders(false);
-            UI.ToggleActiveClass("MarkerMode", false);
-            Block.DeselectAll();
-            UI.ToggleDisplay("BottomBar", true);
-            UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
-            SelectionMenu.Hide();
-            Player.Self().ClearOp();
-        }
+        // if (Cursor.Mode != CursorMode.Marking)
+        // {
+        //     Tutorial.Init("terrain effect mode");
+        //     Cursor.Mode = CursorMode.Marking;
+        //     Token.DeselectAll();
+        //     Token.UnfocusAll();
+        //     BlockMesh.ToggleAllBorders(true);
+        //     UI.ToggleActiveClass("MarkerMode", true);
+        //     UI.ToggleDisplay("BottomBar", false);
+        //     UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
+        //     Player.Self().SetOp("Editing Terrain Effects");
+        // }
+        // else
+        // {
+        //     Cursor.Mode = CursorMode.Default;
+        //     BlockMesh.ToggleAllBorders(false);
+        //     UI.ToggleActiveClass("MarkerMode", false);
+        //     Block.DeselectAll();
+        //     UI.ToggleDisplay("BottomBar", true);
+        //     UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
+        //     SelectionMenu.Hide();
+        //     Player.Self().ClearOp();
+        // }
     }
 
     private static int MaxElevation()

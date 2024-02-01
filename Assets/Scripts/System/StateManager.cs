@@ -6,8 +6,8 @@ public class StateManager : MonoBehaviour
     private IState _substate;
     public IState SubState { get => _substate; }
 
-    public string Debug;
-    public string Debug2;
+    public static bool IsDraggingToken;
+    public static bool ShowBorders;
 
     void Start()
     {
@@ -17,13 +17,6 @@ public class StateManager : MonoBehaviour
 
     void Update()
     {
-        Debug2 = MapEdit.EditOp;
-        Debug = $"{_current.GetType()}";
-        if (_substate != null)
-        {
-            Debug = $"{_current.GetType()} ({_substate.GetType()})";
-        }
-
         _current.UpdateState();
         _substate?.UpdateState();
     }
@@ -40,6 +33,11 @@ public class StateManager : MonoBehaviour
         _substate?.OnExit();
         _substate = newState;
         _substate?.OnEnter(this);
+    }
+
+    public static StateManager Find()
+    {
+        return GameObject.Find("AppState").GetComponent<StateManager>();
     }
 }
 

@@ -79,7 +79,7 @@ public class BlockMesh : MonoBehaviour
             Color tint = ColorUtility.GetColor(tintHex);
             var material = new Material(Resources.Load<Material>($"Materials/Block/Artistic/{texture}"));
             material.SetColor("_Tint", tint);
-            material.SetInt("_ShowOutline", Cursor.Mode == CursorMode.Editing ? 1 : 0);
+            material.SetInt("_ShowOutline", StateManager.ShowBorders ? 1 : 0);
             _customMaterials.Add(key, material);
             return material;
         }
@@ -87,15 +87,16 @@ public class BlockMesh : MonoBehaviour
 
     public static void ToggleAllBorders(bool show)
     {
+        StateManager.ShowBorders = show;
         foreach (string s in _customMaterials.Keys)
         {
             _customMaterials[s].SetInt("_ShowOutline", show ? 1 : 1);
-            _customMaterials[s].SetFloat("_OutlineOpacity", show ? 1 : .2f);
+            _customMaterials[s].SetFloat("_OutlineOpacity", show ? 1 : Preferences.Current.BlockBorderOpacity);
         }
         foreach (string s in StringUtility.CreateArray("side1", "side2", "top1", "top2"))
         {
             _sharedMaterials[s].SetInt("_ShowOutline", show ? 1 : 1);
-            _sharedMaterials[s].SetFloat("_OutlineOpacity", show ? 1 : .05f);
+            _sharedMaterials[s].SetFloat("_OutlineOpacity", show ? 1 : Preferences.Current.BlockBorderOpacity);
         }
     }
 

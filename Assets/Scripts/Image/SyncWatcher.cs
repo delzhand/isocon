@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class SyncStatus : MonoBehaviour
+public class SyncWatcher : MonoBehaviour
 {
     private static Dictionary<string, float> HashPercentages = new();
     private static Dictionary<string, string> HashTokens = new();

@@ -33,6 +33,7 @@ public class DirectionalLine : NetworkBehaviour
         _line.endWidth = .2f;
         _line.textureMode = LineTextureMode.Tile;
         _line.textureScale = new Vector2(5f, 1f);
+        _line.positionCount = 0;
     }
 
     // Update is called once per frame
