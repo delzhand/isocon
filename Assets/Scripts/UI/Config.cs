@@ -44,6 +44,7 @@ public class Config
         Modal.AddDropdownField("TokenOutlineField", "Token Outline", tokenOutline, StringUtility.CreateArray("White", "Black", "None"), (evt) =>
         {
             Preferences.SetTokenOutline(evt.newValue);
+            Token.SetAllTokenOutlines();
         });
 
         Modal.AddPreferredButton("Confirm", CloseModal);

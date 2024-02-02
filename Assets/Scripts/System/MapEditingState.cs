@@ -17,7 +17,7 @@ public class MapEditingState : TabletopSubstate
         Token.DeselectAll();
         Token.UnfocusAll();
         Block.ToggleSpacers(true);
-        BlockMesh.ToggleAllBorders(true);
+        BlockRendering.ToggleAllBorders(true);
         // Cursor.Mode = CursorMode.Editing;
         Player.Self().SetOp("Editing Map");
         Tutorial.Init("Edit Mode");
@@ -67,6 +67,7 @@ public class MapEditingState : TabletopSubstate
     {
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
+        Token.MoveAllTokensToOptimalBlock();
         Player.Self().CmdMapSync(json);
     }
 
@@ -116,7 +117,7 @@ public class MapEditingState : TabletopSubstate
     {
         base.GoToNeutral(evt);
         Player.Self().ClearOp();
-        BlockMesh.ToggleAllBorders(false);
+        BlockRendering.ToggleAllBorders(false);
     }
 
     #region Tools

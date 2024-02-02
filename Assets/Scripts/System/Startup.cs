@@ -18,7 +18,7 @@ public class Startup
         Preferences.Init();
         UI.SetScale();
         Modal.Setup();
-        BlockMesh.Setup();
+        BlockRendering.Setup();
         DiceRoller.Setup();
 
         Debug.Log(GetArguments());

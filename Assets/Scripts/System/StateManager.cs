@@ -6,7 +6,6 @@ public class StateManager : MonoBehaviour
     private IState _substate;
     public IState SubState { get => _substate; }
 
-    public static bool IsDraggingToken;
     public static bool ShowBorders;
 
     void Start()

@@ -8,7 +8,7 @@ public class TileMarkingState : TabletopSubstate
         base.OnEnter(sm);
         Token.DeselectAll();
         Token.UnfocusAll();
-        BlockMesh.ToggleAllBorders(true);
+        BlockRendering.ToggleAllBorders(true);
         // Cursor.Mode = CursorMode.Marking;
         Player.Self().SetOp("Marking Tiles");
         Tutorial.Init("Marking Mode");
@@ -63,11 +63,13 @@ public class TileMarkingState : TabletopSubstate
         Dragger.RightClickRelease -= ToggleBlockMenu;
     }
 
-    private void ToggleBlock() {
+    private void ToggleBlock()
+    {
         Pointer.PickBlock()?.Select();
     }
 
-    private void ToggleBlockMenu() {
+    private void ToggleBlockMenu()
+    {
         Pointer.PickBlock()?.ToggleMenu();
     }
 
@@ -103,7 +105,7 @@ public class TileMarkingState : TabletopSubstate
     {
         base.GoToNeutral(evt);
         Block.DeselectAll();
-        BlockMesh.ToggleAllBorders(false);
+        BlockRendering.ToggleAllBorders(false);
         Player.Self().ClearOp();
     }
 

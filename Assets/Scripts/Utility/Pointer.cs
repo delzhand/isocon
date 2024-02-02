@@ -5,9 +5,17 @@ using UnityEngine;
 public class Pointer
 {
     private static Ray _ray;
+    private static Token _unitBarMouseoverToken;
+    public static Token UnitBarMouseoverToken
+    {
+        get => _unitBarMouseoverToken;
+        set => _unitBarMouseoverToken = value;
+    }
 
-    public static Block PickBlock() {
-        if (UI.ClicksSuspended || Modal.IsOpen()) {
+    public static Block PickBlock()
+    {
+        if (UI.ClicksSuspended || Modal.IsOpen())
+        {
             return null;
         }
         _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -15,7 +23,28 @@ public class Pointer
         if (isHit && hit.collider.CompareTag("Block"))
         {
             return hit.collider.GetComponent<Block>();
-        }        
+        }
+        return null;
+    }
+
+    public static Token PickToken()
+    {
+        if (_unitBarMouseoverToken)
+        {
+            return _unitBarMouseoverToken;
+        }
+
+        if (UI.ClicksSuspended || Modal.IsOpen())
+        {
+            return null;
+        }
+        _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        bool isHit = Physics.Raycast(_ray, out RaycastHit hit, 9999f, LayerMask.GetMask("Token"));
+        if (isHit && hit.collider.CompareTag("TokenCollider"))
+        {
+            return hit.collider.GetComponent<Cutout>().GetToken();
+        }
+
         return null;
     }
 
@@ -33,9 +62,9 @@ public class Pointer
         PointWithMask(LayerMask.GetMask("Block"), focusMode);
     }
 
-    public static void PointAtTokens()
+    public static void Point()
     {
-        PointWithMask(LayerMask.GetMask("Token"), BlockFocusMode.Single);
+        PointWithMask(LayerMask.GetMask("Token", "Block"), BlockFocusMode.Single);
     }
 
     private static bool MaskContainsLayer(LayerMask layermask, string layer)
@@ -45,6 +74,8 @@ public class Pointer
 
     private static void PointWithMask(LayerMask mask, BlockFocusMode focusMode)
     {
+        Block.DehighlightAll();
+
         if (Viewport.IsDragging || UI.ClicksSuspended || Modal.IsOpen())
         {
             return;
@@ -77,7 +108,6 @@ public class Pointer
         {
             Token.UnfocusAll();
             Block.UnfocusAll();
-            Block.DehighlightAll();
         }
     }
 
@@ -86,29 +116,6 @@ public class Pointer
         if (t.State != TokenState.Focused)
         {
             t.Focus();
-        }
-        TokenClicks(t);
-        Block.DehighlightAll();
-    }
-
-    private static void TokenClicks(Token token)
-    {
-        if (UI.ClicksSuspended)
-        {
-            return;
-        }
-
-        if (token == null)
-        {
-            return;
-        }
-        if (IsLeftClick())
-        {
-            token.LeftClickDown();
-        }
-        if (IsRightHeld())
-        {
-            token.RightClickDown();
         }
     }
 
@@ -141,9 +148,8 @@ public class Pointer
 
     private static void BlockHit(Block b, BlockFocusMode mode)
     {
-        if (StateManager.IsDraggingToken)
+        if (Token.GetDragging() != null)
         {
-            Block.DehighlightAll();
             HighlightSizeArea(b);
         }
 
@@ -151,8 +157,6 @@ public class Pointer
         {
             FocusBlocks(b, mode);
         }
-
-        BlockClicks(b);
     }
 
     private static void HighlightSizeArea(Block block)
@@ -162,46 +166,7 @@ public class Pointer
         Block[] neighbors = TerrainController.FindNeighbors(block, size);
         for (int i = 0; i < neighbors.Length; i++)
         {
-            neighbors[i].Highlight();
+            neighbors[i]?.Highlight();
         }
     }
-
-    private static void BlockClicks(Block block)
-    {
-        if (UI.ClicksSuspended)
-        {
-            return;
-        }
-
-        if (block == null)
-        {
-            return;
-        }
-
-        if (IsLeftClick())
-        {
-            block.LeftClickDown();
-        }
-        // else if (IsLeftHeld())
-        // {
-        //     block.LeftClickHeld();
-        // }
-        if (IsRightClick())
-        {
-            block.RightClickDown();
-        }
-        // if (IsRightUp())
-        // {
-        //     block.RightClickUp();
-        // }
-    }
-
-    #region Helpers
-    private static bool IsLeftClick() => Input.GetMouseButtonDown(0);
-    private static bool IsRightClick() => Input.GetMouseButtonDown(1);
-    private static bool IsLeftUp() => Input.GetMouseButtonUp(0);
-    private static bool IsRightUp() => Input.GetMouseButtonUp(1);
-    private static bool IsLeftHeld() => Input.GetMouseButton(0);
-    private static bool IsRightHeld() => Input.GetMouseButton(1);
-    #endregion 
 }

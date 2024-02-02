@@ -258,65 +258,6 @@ public class MapEdit
         });
     }
 
-    public static void ToggleEditMode(ClickEvent evt)
-    {
-        // // Disable terrain effect mode if necessary
-        // if (Cursor.Mode == CursorMode.Marking)
-        // {
-        //     TerrainController.ToggleTerrainEffectMode(evt);
-        // }
-
-        // if (Cursor.Mode != CursorMode.Editing)
-        // {
-        //     StartEditing();
-        // }
-        // else
-        // {
-        //     EndEditing();
-        // }
-    }
-
-    // private static void StartEditing()
-    // {
-    //     UI.ToggleDisplay("ToolsPanel", true);
-    //     UI.ToggleDisplay("DiceRoller", false);
-    //     Block.DeselectAll();
-    //     Token.DeselectAll();
-    //     Token.UnfocusAll();
-    //     Block.ToggleSpacers(true);
-    //     Cursor.Mode = CursorMode.Editing;
-    //     BlockMesh.ToggleAllBorders(true);
-    //     UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), true);
-    //     UI.ToggleDisplay("BottomBar", false);
-    //     UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
-    //     Player.Self().SetOp("Editing Map");
-    //     UI.ToggleDisplay(UI.ToolsPanel.Q("ChangeShape"), TerrainController.GridType == "Square");
-    // }
-
-    // private static void EndEditing()
-    // {
-    //     Tutorial.Init("end edit");
-    //     Cursor.Mode = CursorMode.Default;
-    //     Cursor.FocusMode = FocusMode.Single;
-    //     BlockMesh.ToggleAllBorders(false);
-    //     UI.ToggleDisplay("ToolsPanel", false);
-    //     UI.ToggleDisplay("ToolOptions", false);
-    //     Block.ToggleSpacers(false);
-    //     MapSync();
-    //     UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), false);
-    //     UI.ToggleDisplay("BottomBar", true);
-    //     UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
-    //     Player.Self().ClearOp();
-    //     MoveTokensToOptimalLocations();
-    // }
-
-    private static void MapSync()
-    {
-        State state = State.GetStateFromScene();
-        string json = JsonUtility.ToJson(state);
-        Player.Self().CmdMapSync(json);
-    }
-
     private static void ResetConfirm(ClickEvent evt)
     {
         if (!TerrainController.MapDirty)
@@ -526,11 +467,6 @@ public class MapEdit
         return mapFiles.ToArray();
     }
 
-    public static string GetMarkerEffect()
-    {
-        return UI.System.Q("ToolsPanel").Q("EffectSearch").Q<TextField>("SearchInput").value;
-    }
-
     public static void ColorChanged()
     {
         VisualElement root = UI.System.Q("ToolOptions");
@@ -564,28 +500,6 @@ public class MapEdit
             case "SideBlockPaint":
                 Environment.CurrentPaintSide = c;
                 break;
-        }
-    }
-
-    private static void MoveTokensToOptimalLocations()
-    {
-        foreach (var gameObject in GameObject.FindGameObjectsWithTag("Token"))
-        {
-            var token = gameObject.GetComponent<Token>();
-            Transform columnTransform = token.GetBlock().transform.parent;
-            float height = float.MinValue;
-            foreach (Transform blockTransform in columnTransform)
-            {
-                BlockShape shape = blockTransform.GetComponent<Block>().Shape;
-                float z = blockTransform.GetComponent<Block>().GetMidpoint().y;
-                if (shape != BlockShape.Hidden && shape != BlockShape.Spacer)
-                {
-                    height = Mathf.Max(height, z);
-                }
-            }
-            Vector3 position = columnTransform.position;
-            position.y = height;
-            Player.Self().CmdMoveToken(token.Data.Id, position, false);
         }
     }
 }

@@ -100,15 +100,17 @@ public class TabletopState : BaseState
     private void BindCallbacks()
     {
         UI.TopBar.Q("Isocon").RegisterCallback<ClickEvent>(ConfirmReturnToLauncher);
-        Dragger.RightClickStart += Viewport.InitializeDrag;
+        Dragger.RightDragStart += Viewport.InitializeDrag;
         Dragger.RightDragUpdate += Viewport.UpdateDrag;
+        Dragger.RightDragRelease += Viewport.EndDrag;
     }
 
     private void UnbindCallbacks()
     {
         UI.TopBar.Q("Isocon").UnregisterCallback<ClickEvent>(ConfirmReturnToLauncher);
-        Dragger.RightClickStart -= Viewport.InitializeDrag;
+        Dragger.RightDragStart -= Viewport.InitializeDrag;
         Dragger.RightDragUpdate -= Viewport.UpdateDrag;
+        Dragger.RightDragRelease -= Viewport.EndDrag;
     }
 
     private void ConfirmReturnToLauncher(ClickEvent evt)

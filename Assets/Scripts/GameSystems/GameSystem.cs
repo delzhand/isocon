@@ -71,7 +71,6 @@ public class GameSystem : MonoBehaviour
         {
             items.Add(new MenuItem("Remove", "Remove", ClickRemove));
             items.Add(new MenuItem("Flip", "Flip", ClickFlip));
-            // items.Add(new MenuItem("LineCheck", "LOS/Distance Check", LineCheckClicked));
         }
         items.Add(new MenuItem("EndTurn", "End Turn", ClickEndTurn));
         items.Add(new MenuItem("Clone", "Clone", ClickClone));
@@ -79,14 +78,6 @@ public class GameSystem : MonoBehaviour
         items.Add(new MenuItem("Delete", "Delete", ClickDelete));
         return items.ToArray();
     }
-
-    // private static void LineCheckClicked(ClickEvent evt)
-    // {
-    //     Cursor.Mode = CursorMode.Targeting;
-    //     TokenData data = Token.GetSelected().Data;
-    //     Player.Self().GetComponent<DirectionalLine>().Init(data.Id, "Attacking");
-    //     SelectionMenu.Hide();
-    // }
 
     private static void ClickFlip(ClickEvent evt)
     {
@@ -132,6 +123,7 @@ public class GameSystem : MonoBehaviour
             string newName = UI.Modal.Q<TextField>("Name").value.Trim();
             Player.Self().CmdRequestTokenDataSetValue(data.Id, $"Name|{newName}");
             Modal.Close();
+            Token.DeselectAll();
         });
         Modal.AddButton("Cancel", Modal.CloseEvent);
     }
@@ -141,16 +133,6 @@ public class GameSystem : MonoBehaviour
         TokenData data = Token.GetSelected().Data;
         Player.Self().CmdRequestTokenDataSetValue(data.Id, "EndTurn");
         Token.DeselectAll();
-    }
-
-    private static void ClickMoveUp(ClickEvent evt)
-    {
-        TokenData data = Token.GetSelected().Data;
-    }
-
-    private static void ClickMoveDown(ClickEvent evt)
-    {
-        TokenData data = Token.GetSelected().Data;
     }
 
     public virtual MenuItem[] GetTileMenuItems()

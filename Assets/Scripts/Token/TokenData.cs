@@ -172,28 +172,15 @@ public class TokenData : NetworkBehaviour
         UnitBarElement.style.display = DisplayStyle.Flex;
 
         Token t = WorldObject.GetComponent<Token>();
-        UnitBarElement.RegisterCallback<MouseDownEvent>((evt) =>
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                t.LeftClickDown();
-                t.Focus();
-            }
-            else if (Input.GetMouseButtonDown(1))
-            {
-                t.RightClickDown();
-                t.Focus();
-            }
-        });
         UnitBarElement.RegisterCallback<MouseEnterEvent>((evt) =>
         {
-            // Pointer.OverUnitBarElement = true;
             t.Focus();
+            Pointer.UnitBarMouseoverToken = t;
         });
         UnitBarElement.RegisterCallback<MouseLeaveEvent>((evt) =>
         {
-            // Pointer.OverUnitBarElement = false;
             t.Unfocus();
+            Pointer.UnitBarMouseoverToken = null;
         });
 
         // Add it to the UI

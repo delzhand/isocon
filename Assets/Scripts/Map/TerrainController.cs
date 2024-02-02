@@ -234,8 +234,8 @@ public class TerrainController : MonoBehaviour
     public static void StyleBlocks(string styleTop, string styleSide, Color colorTop, Color colorSide)
     {
         List<Block> selected = Block.GetSelected().ToList();
-        string top = $"{BlockMesh.MaterialName(styleTop, true)}::{ColorUtility.GetHex(colorTop)}";
-        string side = $"{BlockMesh.MaterialName(styleSide, false)}::{ColorUtility.GetHex(colorSide)}";
+        string top = $"{BlockRendering.MaterialName(styleTop, true)}::{ColorUtility.GetHex(colorTop)}";
+        string side = $"{BlockRendering.MaterialName(styleSide, false)}::{ColorUtility.GetHex(colorSide)}";
 
         selected.ForEach(block =>
         {
@@ -260,11 +260,11 @@ public class TerrainController : MonoBehaviour
             (string, string) styles = block.SampleStyles();
             if (styles.Item1.Length > 0)
             {
-                UI.System.Q("ToolOptions").Q<DropdownField>("TopTexture").value = BlockMesh.ReverseTextureMap(styles.Item1.Split("::")[0]);
+                UI.System.Q("ToolOptions").Q<DropdownField>("TopTexture").value = BlockRendering.ReverseTextureMap(styles.Item1.Split("::")[0]);
                 Environment.CurrentPaintTop = ColorUtility.GetColor(styles.Item1.Split("::")[1]);
                 UI.System.Q("ToolOptions").Q("TopBlockPaint").style.backgroundColor = Environment.CurrentPaintTop;
 
-                UI.System.Q("ToolOptions").Q<DropdownField>("SideTexture").value = BlockMesh.ReverseTextureMap(styles.Item2.Split("::")[0]);
+                UI.System.Q("ToolOptions").Q<DropdownField>("SideTexture").value = BlockRendering.ReverseTextureMap(styles.Item2.Split("::")[0]);
                 Environment.CurrentPaintSide = ColorUtility.GetColor(styles.Item2.Split("::")[1]);
                 UI.System.Q("ToolOptions").Q("SideBlockPaint").style.backgroundColor = Environment.CurrentPaintSide;
 
@@ -502,6 +502,10 @@ public class TerrainController : MonoBehaviour
 
     private static GameObject TopBlock(GameObject column)
     {
+        if (column == null)
+        {
+            return null;
+        }
         GameObject top = null;
         Block[] blocks = column.GetComponentsInChildren<Block>();
         float highest = float.MinValue;

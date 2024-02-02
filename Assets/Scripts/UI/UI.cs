@@ -108,22 +108,10 @@ public class UI : MonoBehaviour
         }
     }
 
-    // public static void SetHardSuspend(bool val) {
-    //     hardSuspend = val;
-    // }
-
     public static void SetScale()
     {
         GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = Preferences.GetUIScale();
     }
-
-    // public static void FollowToken(Token token, VisualElement element, Camera camera, Vector2 offset, bool useAnchor = true) {
-    //     Transform t = token.transform.Find("Offset/Avatar/Cutout/Cutout Quad");
-    //     if (useAnchor) {
-    //         t = token.transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor");
-    //     }
-    //     FollowTransform(t, element, camera, offset);
-    // }
 
     public static void FollowTransform(Transform transform, VisualElement element, Camera camera, Vector2 offset)
     {

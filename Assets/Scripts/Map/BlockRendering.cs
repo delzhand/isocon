@@ -1,7 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlockMesh : MonoBehaviour
+public enum BlockShape
+{
+    Solid,
+    Slope,
+    SlopeInt,
+    SlopeExt,
+    Steps,
+    Corner,
+    FlatCorner,
+    Upslope,
+    Spacer,
+    Hidden
+}
+
+public class BlockRendering
 {
     public static Mesh Hex;
     public static Dictionary<BlockShape, Mesh> Shapes;

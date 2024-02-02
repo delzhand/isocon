@@ -8,6 +8,7 @@ public class NeutralState : TabletopSubstate
 {
     private bool _showSync = false;
     private bool _showInfo = false;
+    private Token _dragToken;
 
     public override void OnEnter(StateManager sm)
     {
@@ -17,17 +18,10 @@ public class NeutralState : TabletopSubstate
     public override void UpdateState()
     {
         base.UpdateState();
+        ShowTokenPanels();
         SelectionMenu.Update();
         TileShare.Offsets();
-        ShowTokenPanels();
-        if (StateManager.IsDraggingToken)
-        {
-            Pointer.PointAtBlocks();
-        }
-        else
-        {
-            Pointer.PointAtTokens();
-        }
+        Pointer.Point();
     }
 
 
@@ -87,6 +81,11 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("Info").RegisterCallback<ClickEvent>(ToggleInfo);
         UI.TopBar.Q("Sync").RegisterCallback<ClickEvent>(ToggleSync);
         UI.System.Q("BottomBar").Q("AddToken").RegisterCallback<ClickEvent>(ShowAddTokenModal);
+        Dragger.LeftClickRelease += LeftClickRelease;
+        Dragger.RightClickRelease += RightClickRelease;
+        Dragger.LeftDragStart += LeftDragStart;
+        Dragger.LeftDragRelease += LeftDragRelease;
+
     }
 
     protected override void UnbindCallbacks()
@@ -100,6 +99,32 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("Info").UnregisterCallback<ClickEvent>(ToggleInfo);
         UI.TopBar.Q("Sync").UnregisterCallback<ClickEvent>(ToggleSync);
         UI.System.Q("BottomBar").Q("AddToken").UnregisterCallback<ClickEvent>(ShowAddTokenModal);
+        Dragger.LeftClickRelease -= LeftClickRelease;
+        Dragger.RightClickRelease -= RightClickRelease;
+        Dragger.LeftDragStart -= LeftDragStart;
+        Dragger.LeftDragRelease -= LeftDragRelease;
+
+    }
+
+    private void LeftClickRelease()
+    {
+        Pointer.PickToken()?.ToggleInspect();
+    }
+
+    private void RightClickRelease()
+    {
+        Pointer.PickToken()?.ToggleMenu();
+    }
+
+    private void LeftDragStart()
+    {
+        _dragToken = Pointer.PickToken();
+        _dragToken?.StartDragging();
+    }
+
+    private void LeftDragRelease()
+    {
+        _dragToken?.StopDragging(Pointer.PickBlock());
     }
 
     private void ShowAddTokenModal(ClickEvent evt)

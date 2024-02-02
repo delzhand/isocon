@@ -16,6 +16,7 @@ public class Dragger : MonoBehaviour
     private static ClickState _left = ClickState.Up;
     private static Vector3 _leftMouseOrigin;
     public static DraggerCallback LeftClickStart;
+    public static DraggerCallback LeftDragStart;
     public static DraggerCallback LeftDragUpdate;
     public static DraggerCallback LeftClickRelease;
     public static DraggerCallback LeftDragRelease;
@@ -25,13 +26,14 @@ public class Dragger : MonoBehaviour
     public static bool IsRightDragging { get => _right == ClickState.Dragging; }
     private static Vector3 _rightMouseOrigin;
     public static DraggerCallback RightClickStart;
+    public static DraggerCallback RightDragStart;
     public static DraggerCallback RightDragUpdate;
     public static DraggerCallback RightClickRelease;
     public static DraggerCallback RightDragRelease;
 
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && !Modal.IsOpen())
         {
             if (_left == ClickState.Up)
             {
@@ -43,6 +45,7 @@ public class Dragger : MonoBehaviour
             {
                 if (Input.mousePosition != _leftMouseOrigin)
                 {
+                    LeftDragStart?.Invoke();
                     _left = ClickState.Dragging;
                 }
             }
@@ -64,7 +67,7 @@ public class Dragger : MonoBehaviour
             _left = ClickState.Up;
         }
 
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButton(1) && !Modal.IsOpen())
         {
             if (_right == ClickState.Up)
             {
@@ -76,6 +79,7 @@ public class Dragger : MonoBehaviour
             {
                 if (Input.mousePosition != _rightMouseOrigin)
                 {
+                    RightDragStart?.Invoke();
                     _right = ClickState.Dragging;
                 }
             }
