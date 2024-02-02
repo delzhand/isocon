@@ -3,23 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum BlockShape
-{
-    Solid,
-    Slope,
-    SlopeInt,
-    SlopeExt,
-    Steps,
-    Corner,
-    FlatCorner,
-    Upslope,
-    Spacer,
-    Hidden
-}
-
 public class Block : MonoBehaviour
 {
-    // Focus State
     public bool Selected { get; private set; } = false;
     private bool _focused = false;
     public bool Focused
@@ -36,8 +21,7 @@ public class Block : MonoBehaviour
     }
     static private HashSet<Block> _allFocused = new();
     static public IEnumerable<Block> AllFocusedBlocks => _allFocused;
-
-    public bool Highlighted = false;
+    private bool _highlighted = false;
     public BlockShape Shape = BlockShape.Solid;
     public bool Destroyable = true;
 
@@ -52,30 +36,10 @@ public class Block : MonoBehaviour
     public Vector3Int Coordinate => transform.parent.GetComponent<Column>().Coordinate3 + new Vector3Int(0, 0, (int)(transform.position.y / .5f) + 2);
     public Vector2Int Coordinate2 => transform.parent.GetComponent<Column>().Coordinate;
 
-    private Vector3 _dragOrigin;
-    private bool _dragging;
-
     void Awake()
     {
-        if (!BlockMesh.IsSetup)
-        {
-            BlockMesh.Setup();
-        }
         _markerMaterial = Instantiate(Resources.Load<Material>("Materials/Block/Marker"));
         ShapeChange(Shape);
-    }
-
-    void LateUpdate()
-    {
-        if (!Input.GetMouseButtonUp(1))
-        {
-            return;
-        }
-        if (_dragging && Input.mousePosition == _dragOrigin)
-        {
-            // Mouse up where clicked
-            TileMenu.ShowMenu(this);
-        }
     }
 
     void Update()
@@ -87,308 +51,37 @@ public class Block : MonoBehaviour
         }
     }
 
-    public string WriteOut()
+    public void ToggleMenu()
     {
-        Column c = transform.parent.GetComponent<Column>();
-        string[] bits = new string[]{
-            c.X.ToString(),
-            c.Y.ToString(),
-            transform.localPosition.y.ToString(),
-            transform.localEulerAngles.y.ToString(),
-            Shape.ToString(),
-            Destroyable.ToString(),
-            string.Join(",", _effects.ToArray()),
-            _customMaterialKeyTop,
-            _customMaterialKeySide
-        };
-        return string.Join("|", bits);
-    }
-
-    public static GameObject ReadIn(string version, string block)
-    {
-        string[] data = block.Split("|");
-        switch (version)
+        if (SelectionMenu.Visible)
         {
-            case "v1":
-                return ParseV1(data);
-            case "v2":
-                return ParseV2(data);
-            case "v3":
-                return ParseV3(data);
+            SelectionMenu.Hide();
         }
-        return null;
-    }
-
-    private static GameObject ParseV1(string[] data)
-    {
-        int x = int.Parse(data[0]);
-        int y = int.Parse(data[1]);
-        float z = float.Parse(data[2]);
-        float r = float.Parse(data[3]);
-        BlockShape type = (BlockShape)Enum.Parse(typeof(BlockShape), data[4], true);
-        bool destroyable = bool.Parse(data[5]);
-        string[] markersArray = data[6].Split(",");
-        List<string> markers = new List<string>();
-        for (int i = 0; i < markersArray.Length; i++)
+        else
         {
-            if (markersArray[i].Length > 0)
-            {
-                markers.Add(markersArray[i]);
-            }
-        }
-        // Default to false here to not break older saves
-        bool painted = false;
-        if (data.Length > 7)
-        {
-            painted = bool.Parse(data[7]);
-        }
-
-        GameObject map = GameObject.Find("Terrain");
-        GameObject column = GameObject.Find(x + "," + y);
-        if (column == null)
-        {
-            column = new GameObject();
-            column.name = x + "," + y;
-            column.tag = "Column";
-            column.transform.parent = map.transform;
-            column.transform.localPosition = new Vector3(x, 0, y);
-            column.transform.localScale = Vector3.one;
-            column.AddComponent<Column>().Set(x, y);
-        }
-
-        GameObject block = Instantiate(Resources.Load("Prefabs/Block") as GameObject);
-        block.name = "block-" + x + "," + z + "," + y;
-        block.transform.parent = column.transform;
-        block.transform.localScale = Vector3.one;
-        block.transform.localPosition = new Vector3(0, z, 0);
-        block.transform.localRotation = Quaternion.Euler(0, r, 0);
-        block.GetComponent<Block>().Destroyable = destroyable;
-        block.GetComponent<Block>().ShapeChange(type);
-        for (int i = 0; i < markers.Count; i++)
-        {
-            block.GetComponent<Block>().EffectChange(markers[i]);
-        }
-        // if (painted)
-        // {
-        //     Color top = ColorUtility.GetColor(data[8]);
-        //     Color sides = ColorUtility.GetColor(data[9]);
-        //     block.GetComponent<Block>().ApplyPaint(top, sides);
-        // }
-        // if (data.Length > 10)
-        // {
-        //     (string, string) TextureStrings = BlockMesh.TextureMap(data[10]);
-        //     block.GetComponent<Block>()._textureTop = TextureStrings.Item2;
-        //     block.GetComponent<Block>()._textureSide = TextureStrings.Item1;
-        // }
-
-        return block;
-    }
-
-    private static GameObject ParseV2(string[] data)
-    {
-        int x = int.Parse(data[0]);
-        int y = int.Parse(data[1]);
-        float z = float.Parse(data[2]);
-        float r = float.Parse(data[3]);
-        BlockShape type = (BlockShape)Enum.Parse(typeof(BlockShape), data[4], true);
-        bool destroyable = bool.Parse(data[5]);
-        string[] markersArray = data[6].Split(",");
-        List<string> markers = new List<string>();
-        for (int i = 0; i < markersArray.Length; i++)
-        {
-            if (markersArray[i].Length > 0)
-            {
-                markers.Add(markersArray[i]);
-            }
-        }
-        // Default to false here to not break older saves
-        bool painted = false;
-        if (data.Length > 7)
-        {
-            painted = bool.Parse(data[7]);
-        }
-
-        GameObject map = GameObject.Find("Terrain");
-        GameObject column = GameObject.Find(x + "," + y);
-        if (column == null)
-        {
-            column = new GameObject();
-            column.name = x + "," + y;
-            column.tag = "Column";
-            column.transform.parent = map.transform;
-            column.transform.localPosition = new Vector3(x, 0, y);
-            column.transform.localScale = Vector3.one;
-            column.AddComponent<Column>().Set(x, y);
-        }
-
-        GameObject block = Instantiate(Resources.Load("Prefabs/Block") as GameObject);
-        block.name = "block-" + x + "," + z + "," + y;
-        block.transform.parent = column.transform;
-        block.transform.localScale = Vector3.one;
-        block.transform.localPosition = new Vector3(0, z, 0);
-        block.transform.localRotation = Quaternion.Euler(0, r, 0);
-        block.GetComponent<Block>().Destroyable = destroyable;
-        block.GetComponent<Block>().ShapeChange(type);
-        for (int i = 0; i < markers.Count; i++)
-        {
-            block.GetComponent<Block>().EffectChange(markers[i]);
-        }
-        // if (painted)
-        // {
-        //     Color top = ColorUtility.GetColor(data[8]);
-        //     Color sides = ColorUtility.GetColor(data[9]);
-        //     block.GetComponent<Block>().ApplyPaint(top, sides);
-        // }
-        // if (data.Length > 10)
-        // {
-        //     block.GetComponent<Block>()._textureTop = data[10];
-        //     block.GetComponent<Block>()._textureSide = data[11];
-        // }
-
-        return block;
-    }
-
-    private static GameObject ParseV3(string[] data)
-    {
-        int x = int.Parse(data[0]);
-        int y = int.Parse(data[1]);
-        float z = float.Parse(data[2]);
-        float r = float.Parse(data[3]);
-        BlockShape type = (BlockShape)Enum.Parse(typeof(BlockShape), data[4], true);
-        bool destroyable = bool.Parse(data[5]);
-        string[] markersArray = data[6].Split(",");
-        List<string> markers = new List<string>();
-        for (int i = 0; i < markersArray.Length; i++)
-        {
-            if (markersArray[i].Length > 0)
-            {
-                markers.Add(markersArray[i]);
-            }
-        }
-        string topStyle = data[7];
-        string sideStyle = data[8];
-
-        GameObject map = GameObject.Find("Terrain");
-        GameObject column = GameObject.Find(x + "," + y);
-        if (column == null)
-        {
-            column = new GameObject();
-            column.name = x + "," + y;
-            column.tag = "Column";
-            column.transform.parent = map.transform;
-            column.transform.localPosition = new Vector3(x, 0, y);
-            column.transform.localScale = Vector3.one;
-            column.AddComponent<Column>().Set(x, y);
-        }
-
-        GameObject block = Instantiate(Resources.Load("Prefabs/Block") as GameObject);
-        block.name = "block-" + x + "," + z + "," + y;
-        block.transform.parent = column.transform;
-        block.transform.localScale = Vector3.one;
-        block.transform.localPosition = new Vector3(0, z, 0);
-        block.transform.localRotation = Quaternion.Euler(0, r, 0);
-        block.GetComponent<Block>().Destroyable = destroyable;
-        block.GetComponent<Block>().ShapeChange(type);
-        for (int i = 0; i < markers.Count; i++)
-        {
-            block.GetComponent<Block>().EffectChange(markers[i]);
-        }
-        block.GetComponent<Block>().ApplyStyle(topStyle, sideStyle);
-        return block;
-    }
-
-    static int editZ = 0;
-    public void LeftClickDown()
-    {
-        switch (Cursor.Mode)
-        {
-            case CursorMode.TerrainEffecting:
-                Select();
-                break;
-            case CursorMode.Editing:
-                Block.DeselectAll();
-                Select();
-                editZ = GetZ();
-                TerrainController.Edit(this);
-                Select();
-                Block.DeselectAll();
-                break;
-            case CursorMode.Default:
-                Token.DeselectAll();
-                break;
-            case CursorMode.Dragging:
-                Token.GetSelected().Move(this);
-                break;
-        }
-    }
-
-    public void LeftClickHeld()
-    {
-        switch (Cursor.Mode)
-        {
-            case CursorMode.Editing:
-                switch (MapEdit.EditOp)
-                {
-                    case "RotateBlock":
-                    case "ChangeShape":
-                    case "TerrainEffect":
-                        return;
-                    case "AddBlock":
-                    case "RemoveBlock":
-                        if (editZ != GetZ())
-                            return;
-                        if (GetTopBlock(Coordinate2) != this)
-                            return;
-                        goto case "StyleBlock";
-                    case "StyleBlock":
-                        Block.DeselectAll();
-                        Select();
-                        TerrainController.Edit(this);
-                        Select();
-                        Block.DeselectAll();
-                        break;
-                }
-                break;
-        }
-    }
-
-    public void RightClickDown()
-    {
-        switch (Cursor.Mode)
-        {
-            case CursorMode.TerrainEffecting:
-                if (SelectionMenu.Visible)
-                {
-                    SelectionMenu.Hide();
-                }
-                else
-                {
-                    _dragging = true;
-                    _dragOrigin = Input.mousePosition;
-                }
-                break;
+            TileMenu.ShowMenu(this);
         }
     }
 
     public static void SetColor(string id, Color color)
     {
-        if (!BlockMesh.IsSetup)
+        if (!BlockRendering.IsSetup)
         {
-            BlockMesh.Setup();
+            BlockRendering.Setup();
         }
-        BlockMesh.GetSharedMaterial(id).SetColor("_Color", color);
+        BlockRendering.GetSharedMaterial(id).SetColor("_Color", color);
     }
 
     /// <summary>
-    /// (depriciated) Use Coordinate.x instead.
+    /// (deprecated) Use Coordinate.x instead.
     /// </summary>
     public int GetX() => Coordinate.x;
     /// <summary>
-    /// (depriciated) Use Coordinate.y instead.
+    /// (deprecated) Use Coordinate.y instead.
     /// </summary>
     public int GetY() => Coordinate.y;
     /// <summary>
-    /// (depriciated) Use Coordinate.z instead.
+    /// (deprecated) Use Coordinate.z instead.
     /// </summary>
     public int GetZ() => Coordinate.z;
 
@@ -426,17 +119,17 @@ public class Block : MonoBehaviour
             switch (Shape)
             {
                 case BlockShape.Spacer:
-                    m = BlockMesh.Shapes[BlockShape.Solid];
+                    m = BlockRendering.Shapes[BlockShape.Solid];
                     transform.localScale = new Vector3(.3f, .3f, .3f);
                     break;
                 case BlockShape.Hidden:
-                    m = BlockMesh.Shapes[BlockShape.Solid];
+                    m = BlockRendering.Shapes[BlockShape.Solid];
                     transform.localScale = Vector3.zero;
                     break;
                 default:
                     try
                     {
-                        m = BlockMesh.Shapes[Shape];
+                        m = BlockRendering.Shapes[Shape];
                         transform.localScale = Vector3.one;
                         break;
                     }
@@ -450,7 +143,7 @@ public class Block : MonoBehaviour
         }
         else if (TerrainController.GridType == "Hex")
         {
-            m = BlockMesh.Hex;
+            m = BlockRendering.Hex;
             transform.localScale = Vector3.one;
         }
         GetComponent<MeshFilter>().mesh = m;
@@ -530,8 +223,8 @@ public class Block : MonoBehaviour
 
         if (_customMaterialKeyTop.Length > 0)
         {
-            mats[BlockMesh.MaterialTopIndex(Shape)] = BlockMesh.GetCustomMaterial(_customMaterialKeyTop, true);
-            mats[BlockMesh.MaterialSideIndex(Shape)] = BlockMesh.GetCustomMaterial(_customMaterialKeySide, false);
+            mats[BlockRendering.MaterialTopIndex(Shape)] = BlockRendering.GetCustomMaterial(_customMaterialKeyTop, true);
+            mats[BlockRendering.MaterialSideIndex(Shape)] = BlockRendering.GetCustomMaterial(_customMaterialKeySide, false);
         }
         else
         {
@@ -547,14 +240,14 @@ public class Block : MonoBehaviour
                 altSides = ((x + y + z) % 2 == 0);
                 // altTop = ((x + y) % 2 == 0);
             }
-            mats[BlockMesh.MaterialSideIndex(Shape)] = BlockMesh.GetSharedMaterial("side" + (altSides ? "1" : "2"));
-            mats[BlockMesh.MaterialTopIndex(Shape)] = BlockMesh.GetSharedMaterial("top" + (altSides ? "1" : "2"));
+            mats[BlockRendering.MaterialSideIndex(Shape)] = BlockRendering.GetSharedMaterial("side" + (altSides ? "1" : "2"));
+            mats[BlockRendering.MaterialTopIndex(Shape)] = BlockRendering.GetSharedMaterial("top" + (altSides ? "1" : "2"));
         }
 
         // Overwrite checkerboard/paint if highlighted
-        if (Highlighted)
+        if (_highlighted)
         {
-            mats[BlockMesh.MaterialTopIndex(Shape)] = BlockMesh.GetSharedMaterial("highlighted");
+            mats[BlockRendering.MaterialTopIndex(Shape)] = BlockRendering.GetSharedMaterial("highlighted");
         }
 
         // Markers
@@ -626,7 +319,7 @@ public class Block : MonoBehaviour
             }
         }
 
-        mats[BlockMesh.MaterialMarkerIndex(Shape)] = _markerMaterial;
+        mats[BlockRendering.MaterialMarkerIndex(Shape)] = _markerMaterial;
 
         // Selected/Focused
         string focusState = "unfocused";
@@ -642,10 +335,12 @@ public class Block : MonoBehaviour
         {
             focusState = "selectfocused";
         }
-        mats[BlockMesh.MaterialFocusIndex(Shape)] = BlockMesh.GetSharedMaterial(focusState);
+        mats[BlockRendering.MaterialFocusIndex(Shape)] = BlockRendering.GetSharedMaterial(focusState);
 
         // Apply
         mr.SetMaterials(mats.ToList());
+
+        mr.enabled = true;
     }
 
     public static void ToggleSpacers(bool show)
@@ -664,7 +359,12 @@ public class Block : MonoBehaviour
         }
     }
 
-    public void Select(bool append = false)
+    public void Select()
+    {
+        SelectAppend(false);
+    }
+
+    public void SelectAppend(bool append = false)
     {
         SelectionMenu.Hide();
         if (Selected && !append)
@@ -707,6 +407,7 @@ public class Block : MonoBehaviour
         {
             b.Deselect();
         }
+        TerrainController.SetInfo();
     }
 
     public void Focus()
@@ -737,18 +438,19 @@ public class Block : MonoBehaviour
             b.Unfocus();
         }
         _allFocused.Clear();
+        TerrainController.SetInfo();
     }
 
     public void Highlight()
     {
-        Highlighted = true;
+        _highlighted = true;
         _materialReset = true;
         TerrainController.SetInfo();
     }
 
     public void Dehighlight()
     {
-        Highlighted = false;
+        _highlighted = false;
         _materialReset = true;
     }
 
@@ -759,7 +461,7 @@ public class Block : MonoBehaviour
         for (int i = 0; i < gos.Length; i++)
         {
             Block block = gos[i].GetComponent<Block>();
-            if (block.Highlighted)
+            if (block._highlighted)
             {
                 highlighted.Add(block);
             }
@@ -858,4 +560,193 @@ public class Block : MonoBehaviour
     {
         _materialReset = true;
     }
+
+    #region Parsing
+    public string WriteOut()
+    {
+        Column c = transform.parent.GetComponent<Column>();
+        string[] bits = new string[]{
+            c.X.ToString(),
+            c.Y.ToString(),
+            transform.localPosition.y.ToString(),
+            transform.localEulerAngles.y.ToString(),
+            Shape.ToString(),
+            Destroyable.ToString(),
+            string.Join(",", _effects.ToArray()),
+            _customMaterialKeyTop,
+            _customMaterialKeySide
+        };
+        return string.Join("|", bits);
+    }
+
+    public static GameObject ReadIn(string version, string block)
+    {
+        string[] data = block.Split("|");
+        switch (version)
+        {
+            case "v1":
+                return ParseV1(data);
+            case "v2":
+                return ParseV2(data);
+            case "v3":
+                return ParseV3(data);
+        }
+        return null;
+    }
+
+    private static GameObject ParseV1(string[] data)
+    {
+        int x = int.Parse(data[0]);
+        int y = int.Parse(data[1]);
+        float z = float.Parse(data[2]);
+        float r = float.Parse(data[3]);
+        BlockShape type = (BlockShape)Enum.Parse(typeof(BlockShape), data[4], true);
+        bool destroyable = bool.Parse(data[5]);
+        string[] markersArray = data[6].Split(",");
+        List<string> markers = new List<string>();
+        for (int i = 0; i < markersArray.Length; i++)
+        {
+            if (markersArray[i].Length > 0)
+            {
+                markers.Add(markersArray[i]);
+            }
+        }
+        // Default to false here to not break older saves
+        bool painted = false;
+        if (data.Length > 7)
+        {
+            painted = bool.Parse(data[7]);
+        }
+
+        GameObject map = GameObject.Find("Terrain");
+        GameObject column = GameObject.Find(x + "," + y);
+        if (column == null)
+        {
+            column = new GameObject();
+            column.name = x + "," + y;
+            column.tag = "Column";
+            column.transform.parent = map.transform;
+            column.transform.localPosition = new Vector3(x, 0, y);
+            column.transform.localScale = Vector3.one;
+            column.AddComponent<Column>().Set(x, y);
+        }
+
+        GameObject block = Instantiate(Resources.Load("Prefabs/Block") as GameObject);
+        block.name = "block-" + x + "," + z + "," + y;
+        block.transform.parent = column.transform;
+        block.transform.localScale = Vector3.one;
+        block.transform.localPosition = new Vector3(0, z, 0);
+        block.transform.localRotation = Quaternion.Euler(0, r, 0);
+        block.GetComponent<Block>().Destroyable = destroyable;
+        block.GetComponent<Block>().ShapeChange(type);
+        for (int i = 0; i < markers.Count; i++)
+        {
+            block.GetComponent<Block>().EffectChange(markers[i]);
+        }
+
+        return block;
+    }
+
+    private static GameObject ParseV2(string[] data)
+    {
+        int x = int.Parse(data[0]);
+        int y = int.Parse(data[1]);
+        float z = float.Parse(data[2]);
+        float r = float.Parse(data[3]);
+        BlockShape type = (BlockShape)Enum.Parse(typeof(BlockShape), data[4], true);
+        bool destroyable = bool.Parse(data[5]);
+        string[] markersArray = data[6].Split(",");
+        List<string> markers = new List<string>();
+        for (int i = 0; i < markersArray.Length; i++)
+        {
+            if (markersArray[i].Length > 0)
+            {
+                markers.Add(markersArray[i]);
+            }
+        }
+        // Default to false here to not break older saves
+        bool painted = false;
+        if (data.Length > 7)
+        {
+            painted = bool.Parse(data[7]);
+        }
+
+        GameObject map = GameObject.Find("Terrain");
+        GameObject column = GameObject.Find(x + "," + y);
+        if (column == null)
+        {
+            column = new GameObject();
+            column.name = x + "," + y;
+            column.tag = "Column";
+            column.transform.parent = map.transform;
+            column.transform.localPosition = new Vector3(x, 0, y);
+            column.transform.localScale = Vector3.one;
+            column.AddComponent<Column>().Set(x, y);
+        }
+
+        GameObject block = Instantiate(Resources.Load("Prefabs/Block") as GameObject);
+        block.name = "block-" + x + "," + z + "," + y;
+        block.transform.parent = column.transform;
+        block.transform.localScale = Vector3.one;
+        block.transform.localPosition = new Vector3(0, z, 0);
+        block.transform.localRotation = Quaternion.Euler(0, r, 0);
+        block.GetComponent<Block>().Destroyable = destroyable;
+        block.GetComponent<Block>().ShapeChange(type);
+        for (int i = 0; i < markers.Count; i++)
+        {
+            block.GetComponent<Block>().EffectChange(markers[i]);
+        }
+
+        return block;
+    }
+
+    private static GameObject ParseV3(string[] data)
+    {
+        int x = int.Parse(data[0]);
+        int y = int.Parse(data[1]);
+        float z = float.Parse(data[2]);
+        float r = float.Parse(data[3]);
+        BlockShape type = (BlockShape)Enum.Parse(typeof(BlockShape), data[4], true);
+        bool destroyable = bool.Parse(data[5]);
+        string[] markersArray = data[6].Split(",");
+        List<string> markers = new List<string>();
+        for (int i = 0; i < markersArray.Length; i++)
+        {
+            if (markersArray[i].Length > 0)
+            {
+                markers.Add(markersArray[i]);
+            }
+        }
+        string topStyle = data[7];
+        string sideStyle = data[8];
+
+        GameObject map = GameObject.Find("Terrain");
+        GameObject column = GameObject.Find(x + "," + y);
+        if (column == null)
+        {
+            column = new GameObject();
+            column.name = x + "," + y;
+            column.tag = "Column";
+            column.transform.parent = map.transform;
+            column.transform.localPosition = new Vector3(x, 0, y);
+            column.transform.localScale = Vector3.one;
+            column.AddComponent<Column>().Set(x, y);
+        }
+
+        GameObject block = Instantiate(Resources.Load("Prefabs/Block") as GameObject);
+        block.name = "block-" + x + "," + z + "," + y;
+        block.transform.parent = column.transform;
+        block.transform.localScale = Vector3.one;
+        block.transform.localPosition = new Vector3(0, z, 0);
+        block.transform.localRotation = Quaternion.Euler(0, r, 0);
+        block.GetComponent<Block>().Destroyable = destroyable;
+        block.GetComponent<Block>().ShapeChange(type);
+        for (int i = 0; i < markers.Count; i++)
+        {
+            block.GetComponent<Block>().EffectChange(markers[i]);
+        }
+        block.GetComponent<Block>().ApplyStyle(topStyle, sideStyle);
+        return block;
+    }
+    #endregion    
 }
