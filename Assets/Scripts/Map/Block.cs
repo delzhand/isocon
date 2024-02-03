@@ -564,6 +564,18 @@ public class Block : MonoBehaviour
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    public static Block FindOptimalFromPosition(Vector3 v)
+    {
+        Block closest = GetClosest(v);
+        Block top = GetTopBlock(new Vector2Int(closest.Coordinate.x, closest.Coordinate.y));
+        return top;
+    }
+
+    /// <summary>
     /// Sets block to rebuild materials on the next update call
     /// </summary>
     public void MarkForRedraw()

@@ -153,6 +153,8 @@ public class Token : MonoBehaviour
     {
         Deselect();
         Vector3 v = block.GetMidpoint();
+        Block optimal = Block.FindOptimalFromPosition(v);
+        v = optimal.GetMidpoint();
         if (Data.Placed)
         {
             Player.Self().CmdMoveToken(Data.Id, v, false);
@@ -348,19 +350,7 @@ public class Token : MonoBehaviour
 
     private void MoveToOptimalBlock()
     {
-        Transform columnTransform = GetBlock().transform.parent;
-        float height = float.MinValue;
-        foreach (Transform blockTransform in columnTransform)
-        {
-            BlockShape shape = blockTransform.GetComponent<Block>().Shape;
-            float z = blockTransform.GetComponent<Block>().GetMidpoint().y;
-            if (shape != BlockShape.Hidden && shape != BlockShape.Spacer)
-            {
-                height = Mathf.Max(height, z);
-            }
-        }
-        Vector3 position = columnTransform.position;
-        position.y = height;
-        Player.Self().CmdMoveToken(Data.Id, position, false);
+        Block optimal = Block.FindOptimalFromPosition(transform.position);
+        Player.Self().CmdMoveToken(Data.Id, optimal.GetMidpoint(), false);
     }
 }
