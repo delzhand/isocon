@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 public struct DiceTray
 {
@@ -37,26 +38,31 @@ public struct DiceTray
     private static (int[], int) ParseDiceSizes(string input)
     {
         List<int> diceSizes = new List<int>();
+        int extraValue = 0;
 
-        // Define a regex pattern to match dice rolls like "2d20+3" or "3d8-2" or "1d6"
-        string pattern = @"(\d+)d(\d+)([+\-]\d+)?";
-        Match match = Regex.Match(input, pattern);
+        // Use regular expression to match the dice pattern
+        var matches = Regex.Matches(input, @"(\d+)d(\d+)|(\d+)");
 
-        // Check for invalid input
-        if (!match.Success)
+        foreach (Match match in matches)
         {
-            throw new ArgumentException("Invalid input format");
+            if (match.Groups[1].Success && match.Groups[2].Success)
+            {
+                // Dice notation like "NdM"
+                int count = int.Parse(match.Groups[1].Value);
+                int size = int.Parse(match.Groups[2].Value);
+
+                for (int i = 0; i < count; i++)
+                {
+                    diceSizes.Add(size);
+                }
+            }
+            else if (match.Groups[3].Success)
+            {
+                // Single value not associated with a dice size
+                extraValue += int.Parse(match.Groups[3].Value);
+            }
         }
 
-        int dieSize = int.Parse(match.Groups[2].Value);
-        int modifier = match.Groups[3].Success ? int.Parse(match.Groups[3].Value) : 0;
-
-        // Convert MatchCollection to List<Match> using LINQ
-        for (int i = 0; i < int.Parse(match.Groups[1].Value); i++)
-        {
-            diceSizes.Add(dieSize);
-        }
-
-        return (diceSizes.ToArray(), modifier);
+        return (diceSizes.ToArray(), extraValue);
     }
 }
