@@ -20,6 +20,7 @@ public class Startup
         Modal.Setup();
         BlockRendering.Setup();
         DiceRoller.Setup();
+        MapEdit.Setup();
 
         Debug.Log(GetArguments());
 

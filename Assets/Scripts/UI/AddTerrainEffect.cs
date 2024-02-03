@@ -30,6 +30,6 @@ public class AddTerrainEffect
         {
             blockNames.Add(block.name);
         });
-        Player.Self().CmdRequestMapSetValue(blockNames.ToArray(), "Effect", $"{effect}::{marker}::{color}");
+        Player.Self().CmdRequestMapSetValue(blockNames.ToArray(), "AddEffect", $"{effect}::{marker}::{color}");
     }
 }

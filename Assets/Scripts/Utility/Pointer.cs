@@ -128,14 +128,14 @@ public class Pointer
                 break;
             case BlockFocusMode.Row:
                 Block.UnfocusAll();
-                foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetRow(new Vector2Int(b.GetX(), b.GetY()))))
+                foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetRow(new Vector2Int(b.Coordinate.x, b.Coordinate.y))))
                 {
                     block.Focused = true;
                 }
                 break;
             case BlockFocusMode.Column:
                 Block.UnfocusAll();
-                foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetColumn(new Vector2Int(b.GetX(), b.GetY()))))
+                foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetColumn(new Vector2Int(b.Coordinate.x, b.Coordinate.y))))
                 {
                     block.Focused = true;
                 }

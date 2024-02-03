@@ -33,7 +33,7 @@ public class TileMenu
             List<string> effects = new();
             foreach (var block in Block.GetSelected())
             {
-                block.GetEffects().ForEach(effect =>
+                block.Marks.ForEach(effect =>
                 {
                     string effectName = effect.Split("::")[0];
                     if (!effects.Contains(effectName))

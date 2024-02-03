@@ -16,7 +16,7 @@ public class Block : MonoBehaviour
                 return;
             _focused = value;
             _allFocused.Add(this);
-            _materialReset = true;
+            MarkForRedraw();
         }
     }
     static private HashSet<Block> _allFocused = new();
@@ -25,7 +25,9 @@ public class Block : MonoBehaviour
     public BlockShape Shape = BlockShape.Solid;
     public bool Destroyable = true;
 
-    private List<string> _effects = new();
+    private List<string> _marks = new();
+    public List<string> Marks { get => _marks; }
+
     private Material _markerMaterial;
 
     private string _customMaterialKeyTop = "";
@@ -51,6 +53,9 @@ public class Block : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Shows the block menu for this block, unless the menu is visible already, in which case it hides it.
+    /// </summary>
     public void ToggleMenu()
     {
         if (SelectionMenu.Visible)
@@ -63,28 +68,10 @@ public class Block : MonoBehaviour
         }
     }
 
-    public static void SetColor(string id, Color color)
-    {
-        if (!BlockRendering.IsSetup)
-        {
-            BlockRendering.Setup();
-        }
-        BlockRendering.GetSharedMaterial(id).SetColor("_Color", color);
-    }
-
     /// <summary>
-    /// (deprecated) Use Coordinate.x instead.
+    /// Get the "game system height" of this block.
     /// </summary>
-    public int GetX() => Coordinate.x;
-    /// <summary>
-    /// (deprecated) Use Coordinate.y instead.
-    /// </summary>
-    public int GetY() => Coordinate.y;
-    /// <summary>
-    /// (deprecated) Use Coordinate.z instead.
-    /// </summary>
-    public int GetZ() => Coordinate.z;
-
+    /// <returns>A float representing the number of blocks high this block is, with slopes/steps counting as half.</returns>
     public float GetHeight()
     {
         float height = transform.localPosition.y + 1;
@@ -95,6 +82,10 @@ public class Block : MonoBehaviour
         return height;
     }
 
+    /// <summary>
+    /// Get the midpoint of this block, which is the visual center of the top surface plus a small offset.
+    /// </summary>
+    /// <returns>A vector3 representing the point at which tokens should be placed.</returns>
     public Vector3 GetMidpoint()
     {
         Vector3 v = transform.position + new Vector3(0, .25f, 0);
@@ -105,11 +96,11 @@ public class Block : MonoBehaviour
         return v;
     }
 
-    public List<string> GetEffects()
-    {
-        return _effects;
-    }
-
+    /// <summary>
+    /// Changes the shape of this block
+    /// </summary>
+    /// <param name="blocktype">The block type to change to</param>
+    /// <exception cref="Exception">If there is no mesh corresponding to the block type</exception>
     public void ShapeChange(BlockShape blocktype)
     {
         Shape = blocktype;
@@ -119,17 +110,17 @@ public class Block : MonoBehaviour
             switch (Shape)
             {
                 case BlockShape.Spacer:
-                    m = BlockRendering.Shapes[BlockShape.Solid];
+                    m = BlockRendering.Meshes[BlockShape.Solid];
                     transform.localScale = new Vector3(.3f, .3f, .3f);
                     break;
                 case BlockShape.Hidden:
-                    m = BlockRendering.Shapes[BlockShape.Solid];
+                    m = BlockRendering.Meshes[BlockShape.Solid];
                     transform.localScale = Vector3.zero;
                     break;
                 default:
                     try
                     {
-                        m = BlockRendering.Shapes[Shape];
+                        m = BlockRendering.Meshes[Shape];
                         transform.localScale = Vector3.one;
                         break;
                     }
@@ -147,41 +138,37 @@ public class Block : MonoBehaviour
             transform.localScale = Vector3.one;
         }
         GetComponent<MeshFilter>().mesh = m;
-        _materialReset = true;
+        MarkForRedraw();
     }
 
-    public void EffectChange(string effect)
+    public void AddMark(string mark)
     {
-        switch (effect)
+        switch (mark)
         {
             case "None":
-                _effects.Clear();
+                _marks.Clear();
                 break;
             default:
-                if (_effects.Contains(effect))
+                if (!_marks.Contains(mark))
                 {
-                    _effects.Remove(effect);
-                }
-                else
-                {
-                    _effects.Add(effect);
+                    _marks.Add(mark);
                 }
                 break;
         }
-        _materialReset = true;
+        MarkForRedraw();
     }
 
-    public void EffectRemove(string effect)
+    public void RemoveMark(string mark)
     {
-        if (_effects.Contains(effect))
+        if (_marks.Contains(mark))
         {
-            _effects.Remove(effect);
+            _marks.Remove(mark);
         }
-        _materialReset = true;
+        MarkForRedraw();
     }
 
     /// <summary>
-    /// Copies texture and colour from another block.
+    /// Copies style from another block.
     /// </summary>
     /// <param name="other"></param>
     /// <param name="copyShape">Also copy the shape</param>
@@ -193,29 +180,44 @@ public class Block : MonoBehaviour
         {
             ShapeChange(other.Shape);
         }
-        _materialReset = true;
+        MarkForRedraw();
     }
 
+    /// <summary>
+    /// Applies the specified style to the block
+    /// </summary>
+    /// <param name="top"></param>
+    /// <param name="side"></param>
     public void ApplyStyle(string top, string side)
     {
         _customMaterialKeyTop = top;
         _customMaterialKeySide = side;
-        _materialReset = true;
+        MarkForRedraw();
     }
 
+    /// <summary>
+    /// Changes the block's appearance to the default
+    /// </summary>
     public void RemoveStyle()
     {
         _customMaterialKeyTop = "";
         _customMaterialKeySide = "";
-        _materialReset = true;
+        MarkForRedraw();
     }
 
+    /// <summary>
+    /// Get a string pair representing the current style top and side keys
+    /// </summary>
+    /// <returns></returns>
     public (string, string) SampleStyles()
     {
         return (_customMaterialKeyTop, _customMaterialKeySide);
     }
 
-    void SetMaterials()
+    /// <summary>
+    /// Rebuild the materials for this block. Should never be called directly - instead set _materialReset to true and let Update call this
+    /// </summary>
+    private void SetMaterials()
     {
         MeshRenderer mr = GetComponent<MeshRenderer>();
 
@@ -261,13 +263,13 @@ public class Block : MonoBehaviour
         _markerMaterial.SetInt("_Border", 0);
         _markerMaterial.SetColor("_Color", Color.black);
 
-        foreach (string fullEffect in _effects)
+        foreach (string mark in _marks)
         {
-            string[] split = fullEffect.Split("::");
+            string[] split = mark.Split("::");
             if (split.Length > 1)
             {
-                string marker = split[1];
-                switch (marker)
+                string markEffect = split[1];
+                switch (markEffect)
                 {
                     case "Blocked":
                         _markerMaterial.SetInt("_Impassable", 1);
@@ -297,8 +299,8 @@ public class Block : MonoBehaviour
             }
             if (split.Length > 2)
             {
-                string color = split[2];
-                switch (color)
+                string markColor = split[2];
+                switch (markColor)
                 {
                     case "Red":
                         _markerMaterial.SetColor("_Color", new Color(1.5f, 0, 0));
@@ -343,27 +345,18 @@ public class Block : MonoBehaviour
         mr.enabled = true;
     }
 
-    public static void ToggleSpacers(bool show)
-    {
-        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
-        for (int i = 0; i < blocks.Length; i++)
-        {
-            if (!show && blocks[i].GetComponent<Block>().Shape == BlockShape.Spacer)
-            {
-                blocks[i].GetComponent<Block>().ShapeChange(BlockShape.Hidden);
-            }
-            if (show && blocks[i].GetComponent<Block>().Shape == BlockShape.Hidden)
-            {
-                blocks[i].GetComponent<Block>().ShapeChange(BlockShape.Spacer);
-            }
-        }
-    }
-
+    /// <summary>
+    /// Select this block as a target for marking
+    /// </summary>
     public void Select()
     {
         SelectAppend(false);
     }
 
+    /// <summary>
+    /// Add this block to the list of selected blocks for marking
+    /// </summary>
+    /// <param name="append">If append is false and the block is already selected, instead deselect it</param>
     public void SelectAppend(bool append = false)
     {
         SelectionMenu.Hide();
@@ -375,17 +368,24 @@ public class Block : MonoBehaviour
         {
             Selected = true;
         }
-        _materialReset = true;
+        MarkForRedraw();
         TerrainController.SetInfo();
     }
 
-    public void Deselect()
+    /// <summary>
+    /// Remove this block from the list of blocks for marking
+    /// </summary>
+    private void Deselect()
     {
         Selected = false;
-        _materialReset = true;
+        MarkForRedraw();
         SelectionMenu.Hide();
     }
 
+    /// <summary>
+    /// Get all of the currently selected blocks
+    /// </summary>
+    /// <returns></returns>
     public static Block[] GetSelected()
     {
         List<Block> selected = new();
@@ -401,6 +401,9 @@ public class Block : MonoBehaviour
         return selected.ToArray();
     }
 
+    /// <summary>
+    /// Clear the list of currently selected blocks
+    /// </summary>
     public static void DeselectAll()
     {
         foreach (Block b in GetSelected())
@@ -410,6 +413,9 @@ public class Block : MonoBehaviour
         TerrainController.SetInfo();
     }
 
+    /// <summary>
+    /// Indicate that this block would be affected by the current tool or pointer
+    /// </summary>
     public void Focus()
     {
         UnfocusAll();
@@ -418,43 +424,36 @@ public class Block : MonoBehaviour
         Player.Self().GetComponent<DirectionalLine>().SetTarget(GetMidpoint());
     }
 
-    public void Unfocus()
-    {
-        Focused = false;
-        _allFocused.Remove(this);
-    }
-
-    public static Block[] GetFocused()
-    {
-        return _allFocused.ToArray();
-
-    }
-
+    /// <summary>
+    /// Clear the focus state of all focused blocks
+    /// </summary>
     public static void UnfocusAll()
     {
         Player.Self().GetComponent<DirectionalLine>().UnsetTarget();
-        foreach (Block b in GetFocused())
+        foreach (Block b in _allFocused.ToArray())
         {
-            b.Unfocus();
+            b.Focused = false;
+            Block._allFocused.Remove(b);
         }
         _allFocused.Clear();
         TerrainController.SetInfo();
     }
 
+    /// <summary>
+    /// Indicate that this block is part of a targeted area
+    /// </summary>
     public void Highlight()
     {
         _highlighted = true;
-        _materialReset = true;
+        MarkForRedraw();
         TerrainController.SetInfo();
     }
 
-    public void Dehighlight()
-    {
-        _highlighted = false;
-        _materialReset = true;
-    }
-
-    public static Block[] GetHighlighted()
+    /// <summary>
+    /// Get an array of all highlighted blocks
+    /// </summary>
+    /// <returns></returns>
+    private static Block[] GetHighlighted()
     {
         List<Block> highlighted = new();
         GameObject[] gos = GameObject.FindGameObjectsWithTag("Block");
@@ -469,14 +468,23 @@ public class Block : MonoBehaviour
         return highlighted.ToArray();
     }
 
+    /// <summary>
+    /// Clear the highlighted state of all highlighted blocks
+    /// </summary>
     public static void DehighlightAll()
     {
         foreach (Block b in GetHighlighted())
         {
-            b.Dehighlight();
+            b._highlighted = false;
+            b.MarkForRedraw();
         }
     }
 
+    /// <summary>
+    /// Get the block whose transform position is nearest the specified vector
+    /// </summary>
+    /// <param name="targetPosition">The point to check against for proximity</param>
+    /// <returns>The block component with the shortest distance</returns>
     public static Block GetClosest(Vector3 targetPosition)
     {
         GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Block");
@@ -492,11 +500,6 @@ public class Block : MonoBehaviour
             }
         }
         return closestObject.GetComponent<Block>();
-    }
-
-    public Token GetToken()
-    {
-        return Token.GetAtBlock(this);
     }
 
     /// <summary>
@@ -545,6 +548,10 @@ public class Block : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Get a float pair indicating the low and high points of selected blocks
+    /// </summary>
+    /// <returns></returns>
     public static (float, float) GetElevationRange()
     {
         (float, float) lowHigh = (float.MaxValue, float.MinValue);
@@ -556,6 +563,9 @@ public class Block : MonoBehaviour
         return lowHigh;
     }
 
+    /// <summary>
+    /// Sets block to rebuild materials on the next update call
+    /// </summary>
     public void MarkForRedraw()
     {
         _materialReset = true;
@@ -572,7 +582,7 @@ public class Block : MonoBehaviour
             transform.localEulerAngles.y.ToString(),
             Shape.ToString(),
             Destroyable.ToString(),
-            string.Join(",", _effects.ToArray()),
+            string.Join(",", _marks.ToArray()),
             _customMaterialKeyTop,
             _customMaterialKeySide
         };
@@ -641,7 +651,7 @@ public class Block : MonoBehaviour
         block.GetComponent<Block>().ShapeChange(type);
         for (int i = 0; i < markers.Count; i++)
         {
-            block.GetComponent<Block>().EffectChange(markers[i]);
+            block.GetComponent<Block>().AddMark(markers[i]);
         }
 
         return block;
@@ -694,7 +704,7 @@ public class Block : MonoBehaviour
         block.GetComponent<Block>().ShapeChange(type);
         for (int i = 0; i < markers.Count; i++)
         {
-            block.GetComponent<Block>().EffectChange(markers[i]);
+            block.GetComponent<Block>().AddMark(markers[i]);
         }
 
         return block;
@@ -743,7 +753,7 @@ public class Block : MonoBehaviour
         block.GetComponent<Block>().ShapeChange(type);
         for (int i = 0; i < markers.Count; i++)
         {
-            block.GetComponent<Block>().EffectChange(markers[i]);
+            block.GetComponent<Block>().AddMark(markers[i]);
         }
         block.GetComponent<Block>().ApplyStyle(topStyle, sideStyle);
         return block;

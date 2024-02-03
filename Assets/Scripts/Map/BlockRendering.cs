@@ -18,7 +18,7 @@ public enum BlockShape
 public class BlockRendering
 {
     public static Mesh Hex;
-    public static Dictionary<BlockShape, Mesh> Shapes;
+    public static Dictionary<BlockShape, Mesh> Meshes;
     private static Dictionary<string, Material> _sharedMaterials;
     private static Dictionary<string, Material> _customMaterials;
     public static bool IsSetup = false;
@@ -34,7 +34,7 @@ public class BlockRendering
 
         Hex = Resources.Load<Mesh>("Models/Hex");
 
-        Shapes = new()
+        Meshes = new()
         {
             { BlockShape.Solid, Resources.Load<Mesh>("Models/Block") },
             { BlockShape.Slope, Resources.Load<Mesh>("Models/Slope") },
@@ -96,6 +96,31 @@ public class BlockRendering
             material.SetInt("_ShowOutline", StateManager.ShowBorders ? 1 : 0);
             _customMaterials.Add(key, material);
             return material;
+        }
+    }
+
+    public static void SetSharedMaterialColor(string id, Color color)
+    {
+        if (!BlockRendering.IsSetup)
+        {
+            BlockRendering.Setup();
+        }
+        BlockRendering.GetSharedMaterial(id).SetColor("_Color", color);
+    }
+
+    public static void ToggleSpacers(bool show)
+    {
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < blocks.Length; i++)
+        {
+            if (!show && blocks[i].GetComponent<Block>().Shape == BlockShape.Spacer)
+            {
+                blocks[i].GetComponent<Block>().ShapeChange(BlockShape.Hidden);
+            }
+            if (show && blocks[i].GetComponent<Block>().Shape == BlockShape.Hidden)
+            {
+                blocks[i].GetComponent<Block>().ShapeChange(BlockShape.Spacer);
+            }
         }
     }
 

@@ -103,7 +103,7 @@ public class Token : MonoBehaviour
     public void StartDragging()
     {
         StateChange(TokenState.Dragging);
-
+        BlockRendering.ToggleAllBorders(true);
         string op = Data.Placed ? "Moving" : "Placing";
         Player.Self().SetOp($"{op} {Data.Name}");
         Player.Self().GetComponent<DirectionalLine>().Init(Data.Id, op);
@@ -120,6 +120,7 @@ public class Token : MonoBehaviour
         {
             StateChange(TokenState.Neutral);
         }
+        BlockRendering.ToggleAllBorders(false);
     }
 
     public void ToggleInspect()

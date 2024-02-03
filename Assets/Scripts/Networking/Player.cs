@@ -161,11 +161,14 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
-    public void CmdRequestPlaceToken(string tokenId, Vector3 v)
+    public void CmdRequestPlaceToken(string tokenId, Vector3 target)
     {
         RpcPlaceToken(tokenId, true);
-        RpcDoMoveToken(tokenId, v + new Vector3(0, 1f, 0), true);
-        RpcDoMoveToken(tokenId, v, false);
+        Vector2 v = TokenData.Find(tokenId).UnitBarElement.worldBound.center * Preferences.GetUIScale();
+        Vector3 origin = Camera.main.ScreenToWorldPoint(new Vector3(v.x, Screen.height - v.y, 0));
+
+        RpcDoMoveToken(tokenId, origin, true);
+        RpcDoMoveToken(tokenId, target, false);
     }
     [Command]
     public void CmdRequestRemoveToken(string tokenId)
@@ -230,12 +233,12 @@ public class Player : NetworkBehaviour
     public void RpcMapSetValue(string[] blocks, string label, string value)
     {
         FileLogger.Write($"{label}: {value}");
-        if (label == "Effect")
+        if (label == "AddEffect")
         {
             for (int i = 0; i < blocks.Length; i++)
             {
                 Block target = GameObject.Find(blocks[i]).GetComponent<Block>();
-                target.EffectChange(value);
+                target.AddMark(value);
             }
         }
         else if (label == "RemoveEffect")
@@ -243,7 +246,7 @@ public class Player : NetworkBehaviour
             for (int i = 0; i < blocks.Length; i++)
             {
                 Block target = GameObject.Find(blocks[i]).GetComponent<Block>();
-                target.EffectRemove(value);
+                target.RemoveMark(value);
             }
         }
 
@@ -304,7 +307,7 @@ public class Player : NetworkBehaviour
         string json = Compression.DecompressString(bytes);
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
-        Block.ToggleSpacers(false);
+        BlockRendering.ToggleSpacers(false);
         Toast.AddSimple("Map synced.");
     }
 
@@ -315,7 +318,7 @@ public class Player : NetworkBehaviour
         FileLogger.Write($"Map received from host by everyone");
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
-        Block.ToggleSpacers(false);
+        BlockRendering.ToggleSpacers(false);
         Toast.AddSimple("Map synced.");
     }
     #endregion

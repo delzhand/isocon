@@ -10,6 +10,7 @@ public class MapEdit
     public static string ShapeOp = "ShapeSolid";
     public static string ResizeOp = "ResizeCloneCol";
     public static string StyleOp = "StylePaint";
+
     public static BlockFocusMode FocusMode = BlockFocusMode.Single;
 
     public static void Setup()
@@ -476,13 +477,13 @@ public class MapEdit
         {
             case "TopBlockColor":
                 Environment.TileTopColor = c;
-                Block.SetColor("top1", c);
-                Block.SetColor("top2", ColorUtility.DarkenColor(c, .2f));
+                BlockRendering.SetSharedMaterialColor("top1", c);
+                BlockRendering.SetSharedMaterialColor("top2", ColorUtility.DarkenColor(c, .2f));
                 break;
             case "SideBlockColor":
                 Environment.TileSideColor = c;
-                Block.SetColor("side1", c);
-                Block.SetColor("side2", ColorUtility.DarkenColor(c, .2f));
+                BlockRendering.SetSharedMaterialColor("side1", c);
+                BlockRendering.SetSharedMaterialColor("side2", ColorUtility.DarkenColor(c, .2f));
                 break;
             case "TopBgColor":
                 Environment.BgTopColor = c;
@@ -501,5 +502,13 @@ public class MapEdit
                 Environment.CurrentPaintSide = c;
                 break;
         }
+    }
+
+    public static void ActivateStylePaint()
+    {
+        VisualElement toolsRoot = UI.System.Q("ToolsPanel");
+        string s = "StylePaint";
+        StyleOp = s;
+        toolsRoot.Q("StyleBlock").Q("Icon").style.backgroundImage = toolsRoot.Q(s).Q("Icon").resolvedStyle.backgroundImage;
     }
 }

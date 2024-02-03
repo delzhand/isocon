@@ -24,10 +24,10 @@ public class Environment : MonoBehaviour
     {
         TileTopColor = top;
         TileSideColor = sides;
-        Block.SetColor("top1", top);
-        Block.SetColor("top2", DarkenColor(top, .2f));
-        Block.SetColor("side1", sides);
-        Block.SetColor("side2", DarkenColor(sides, .2f));
+        BlockRendering.SetSharedMaterialColor("top1", top);
+        BlockRendering.SetSharedMaterialColor("top2", DarkenColor(top, .2f));
+        BlockRendering.SetSharedMaterialColor("side1", sides);
+        BlockRendering.SetSharedMaterialColor("side2", DarkenColor(sides, .2f));
         UI.System.Q("TopBlockColor").style.backgroundColor = TileTopColor;
         UI.System.Q("SideBlockColor").style.backgroundColor = TileSideColor;
     }

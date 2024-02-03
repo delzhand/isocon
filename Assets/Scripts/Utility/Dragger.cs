@@ -14,6 +14,8 @@ public class Dragger : MonoBehaviour
     public delegate void DraggerCallback();
 
     private static ClickState _left = ClickState.Up;
+    public static bool IsLeftDown { get => _left != ClickState.Up; }
+    public static bool IsLeftDragging { get => _left == ClickState.Dragging; }
     private static Vector3 _leftMouseOrigin;
     public static DraggerCallback LeftClickStart;
     public static DraggerCallback LeftDragStart;
@@ -30,6 +32,16 @@ public class Dragger : MonoBehaviour
     public static DraggerCallback RightDragUpdate;
     public static DraggerCallback RightClickRelease;
     public static DraggerCallback RightDragRelease;
+
+    // private static ClickState _middle = ClickState.Up;
+    // public static bool IsMiddleDown { get => _middle != ClickState.Up; }
+    // public static bool IsMiddleDragging { get => _middle == ClickState.Dragging; }
+    // private static Vector3 _middleMouseOrigin;
+    // public static DraggerCallback MiddleClickStart;
+    // public static DraggerCallback MiddleDragStart;
+    // public static DraggerCallback MiddleDragUpdate;
+    // public static DraggerCallback MiddleClickRelease;
+    // public static DraggerCallback MiddleDragRelease;
 
     void Update()
     {

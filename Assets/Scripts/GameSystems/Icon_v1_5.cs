@@ -398,7 +398,7 @@ public class Icon_v1_5 : GameSystem
         List<Block> blocksToAppend = new();
         foreach (var b in Block.GetSelected())
         {
-            foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetCardinallyAdjacent(new Vector2Int(b.GetX(), b.GetY()))))
+            foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetCardinallyAdjacent(new Vector2Int(b.Coordinate.x, b.Coordinate.y))))
             {
                 blocksToAppend.Add(block);
             }
@@ -415,11 +415,11 @@ public class Icon_v1_5 : GameSystem
         List<Block> blocksToAppend = new();
         foreach (var b in Block.GetSelected())
         {
-            foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetCardinallyAdjacent(new Vector2Int(b.GetX(), b.GetY()))))
+            foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetCardinallyAdjacent(new Vector2Int(b.Coordinate.x, b.Coordinate.y))))
             {
                 blocksToAppend.Add(block);
             }
-            foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetDiagonallyAdjacent(new Vector2Int(b.GetX(), b.GetY()))))
+            foreach (var block in Block.GetTopBlocks(CoordinateUtility.GetDiagonallyAdjacent(new Vector2Int(b.Coordinate.x, b.Coordinate.y))))
             {
                 blocksToAppend.Add(block);
             }

@@ -70,6 +70,10 @@ public class Viewport
 
     private static void HandleScrolling()
     {
+        if (UI.ClicksSuspended || Modal.IsOpen())
+        {
+            return;
+        }
         Vector3 view = Camera.main.ScreenToViewportPoint(Input.mousePosition);
         bool isOutside = view.x < 0 || view.x > 1 || view.y < 0 || view.y > 1;
         float scroll = Input.GetAxis("Mouse ScrollWheel");

@@ -5,20 +5,16 @@ using UnityEngine.UIElements;
 
 public class MapEditingState : TabletopSubstate
 {
-    private static bool NeedsInit = true;
-    private string _currentFile;
-    private string _editOp;
+    public static List<Column> MarkedColumns;
 
     public override void OnEnter(StateManager sm)
     {
-        BindTools();
         base.OnEnter(sm);
         Block.DeselectAll();
         Token.DeselectAll();
         Token.UnfocusAll();
-        Block.ToggleSpacers(true);
+        BlockRendering.ToggleSpacers(true);
         BlockRendering.ToggleAllBorders(true);
-        // Cursor.Mode = CursorMode.Editing;
         Player.Self().SetOp("Editing Map");
         Tutorial.Init("Edit Mode");
     }
@@ -26,13 +22,14 @@ public class MapEditingState : TabletopSubstate
     public override void OnExit()
     {
         base.OnExit();
-        Block.ToggleSpacers(false);
+        BlockRendering.ToggleSpacers(false);
         MapSync();
     }
 
     public override void UpdateState()
     {
         base.UpdateState();
+        TerrainController.Organize();
         Pointer.PointAtBlocks();
     }
 
@@ -76,6 +73,8 @@ public class MapEditingState : TabletopSubstate
         UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>(GoToNeutral);
         UI.TopBar.Q("MarkerMode").RegisterCallback<ClickEvent>(GoToMarking);
         UI.TopBar.Q("DragMode").RegisterCallback<ClickEvent>(ChangeDragMode);
+        Dragger.LeftClickStart += LeftClickStart;
+        Dragger.LeftDragUpdate += LeftDragUpdate;
     }
 
     protected override void UnbindCallbacks()
@@ -83,6 +82,23 @@ public class MapEditingState : TabletopSubstate
         UI.TopBar.Q("EditMap").UnregisterCallback<ClickEvent>(GoToNeutral);
         UI.TopBar.Q("MarkerMode").UnregisterCallback<ClickEvent>(GoToMarking);
         UI.TopBar.Q("DragMode").UnregisterCallback<ClickEvent>(ChangeDragMode);
+        Dragger.LeftClickStart -= LeftClickStart;
+        Dragger.LeftDragUpdate -= LeftDragUpdate;
+    }
+
+    private void LeftClickStart()
+    {
+        MarkedColumns = new();
+        LeftDragUpdate();
+    }
+
+    private void LeftDragUpdate()
+    {
+        var block = Pointer.PickBlock();
+        if (block)
+        {
+            TerrainController.Edit(block);
+        }
     }
 
     protected override void HandleKeypresses()
@@ -119,19 +135,6 @@ public class MapEditingState : TabletopSubstate
         Player.Self().ClearOp();
         BlockRendering.ToggleAllBorders(false);
     }
-
-    #region Tools
-    private void BindTools()
-    {
-        if (!NeedsInit)
-        {
-            return;
-        }
-        NeedsInit = false;
-        MapEdit.Setup();
-    }
-    #endregion
-
 }
 
 public enum BlockFocusMode
