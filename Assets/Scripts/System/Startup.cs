@@ -1,3 +1,4 @@
+using System.IO;
 using System.Threading.Tasks;
 using Mirror;
 using Unity.Services.Authentication;
@@ -13,9 +14,8 @@ public class Startup
 
     public static void RunTasks()
     {
-        SetVersionText();
-
         Preferences.Init();
+        SetVersionText();
         UI.SetScale();
         Modal.Setup();
         BlockRendering.Setup();
@@ -78,7 +78,15 @@ public class Startup
                 break;
         }
         _latestVersion = RemoteConfigService.Instance.appConfig.GetString("LatestVersion");
-        GameSystem.DataJson = RemoteConfigService.Instance.appConfig.GetJson("GameSystem");
+        string latestData = RemoteConfigService.Instance.appConfig.GetJson("GameSystem");
+
+        string path = Preferences.Current.DataPath;
+        if (!Directory.Exists($"{path}/ruledata"))
+        {
+            Directory.CreateDirectory($"{path}/ruledata");
+        }
+        string fileName = "latest.json";
+        System.IO.File.WriteAllText($"{path}/ruledata/{fileName}", latestData);
     }
 
     public struct AppAttributes

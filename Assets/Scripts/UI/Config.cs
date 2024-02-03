@@ -47,6 +47,13 @@ public class Config
             Token.SetAllTokenOutlines();
         });
 
+        string rulesFile = Preferences.Current.RulesFile;
+        Modal.AddDropdownField("RulesFileField", "Rules File", rulesFile, GetAllRuleFiles(), (evt) =>
+        {
+            Preferences.SetRulesFile(evt.newValue);
+        });
+        Modal.AddMarkup("RulesDesc", "Rules are applied only when entering solo or host mode. Client mode will use the host's rules.");
+
         Modal.AddPreferredButton("Confirm", CloseModal);
     }
 
@@ -54,5 +61,19 @@ public class Config
     {
         Modal.Close();
     }
+
+    public static string[] GetAllRuleFiles()
+    {
+        List<string> ruleFiles = new List<string>();
+        FileUtility.GetFilesRecursively(Preferences.Current.DataPath, "/ruledata", ruleFiles);
+
+        for (int i = 0; i < ruleFiles.Count; i++)
+        {
+            ruleFiles[i] = ruleFiles[i].Replace("/ruledata/", "");
+        }
+
+        return ruleFiles.ToArray();
+    }
+
 
 }

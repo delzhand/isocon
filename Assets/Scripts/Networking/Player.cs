@@ -18,31 +18,12 @@ public class Player : NetworkBehaviour
     [SyncVar]
     public PlayerRole Role;
 
-    [SyncVar]
-    public bool Host = false;
-
-
     void Start()
     {
         if (isLocalPlayer)
         {
             Name = Preferences.Current.PlayerName;
-
-            if (GameObject.FindGameObjectsWithTag("Player").Length == 1)
-            {
-                Role = PlayerRole.GM;
-            }
-
-            if (NetworkServer.active && NetworkClient.active)
-            {
-                FileLogger.Write("Player is host");
-                Host = true;
-            }
-            else
-            {
-                FileLogger.Write("Player is client");
-                CmdRequestClientInit();
-            }
+            CmdRequestClientInit();
         }
     }
 
@@ -93,27 +74,31 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdRequestClientInit()
     {
-        FileLogger.Write($"Client {connectionToClient.connectionId} requested game system");
+        FileLogger.Write($"Client {connectionToClient.connectionId} requested a system sync");
         string system = Preferences.Current.System;
         string systemVars = GameSystem.Current().GetSystemVars();
-        TargetGameSystem(connectionToClient, system, systemVars);
-        TargetGridType(connectionToClient, TerrainController.GridType);
-    }
-    [TargetRpc]
-    public void TargetGameSystem(NetworkConnectionToClient target, string system, string systemVars)
-    {
-        FileLogger.Write($"Local game system set to {system}");
-        GameSystem.Set(system);
-        GameSystem.Current().SetSystemVars(systemVars);
-    }
-    [TargetRpc]
-    public void TargetGridType(NetworkConnectionToClient target, string grid)
-    {
-        FileLogger.Write($"Local grid type set to {grid}");
-        TerrainController.GridType = grid;
-        CmdRequestMapSync();
+        string grid = TerrainController.GridType;
+        string data = GameSystem.DataJson;
+        byte[] dataBytes = Compression.CompressString(data);
+
+        TargetClientInit(connectionToClient, system, systemVars, grid, dataBytes);
     }
 
+    [TargetRpc]
+    public void TargetClientInit(NetworkConnectionToClient target, string system, string systemVars, string grid, byte[] dataBytes)
+    {
+        GameSystem.Set(system);
+        GameSystem.Current().SetSystemVars(systemVars);
+        FileLogger.Write($"Local game system set to {system}");
+
+        TerrainController.GridType = grid;
+        FileLogger.Write($"Local grid type set to {grid}");
+
+        GameSystem.DataJson = Compression.DecompressString(dataBytes);
+        FileLogger.Write($"Game data received has length of {GameSystem.DataJson.Length}");
+
+        CmdRequestMapSync();
+    }
     #endregion
 
     #region Create Token

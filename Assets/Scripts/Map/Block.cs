@@ -429,7 +429,10 @@ public class Block : MonoBehaviour
     /// </summary>
     public static void UnfocusAll()
     {
-        Player.Self().GetComponent<DirectionalLine>().UnsetTarget();
+        if (Player.Self() != null)
+        {
+            Player.Self().GetComponent<DirectionalLine>().UnsetTarget();
+        }
         foreach (Block b in _allFocused.ToArray())
         {
             b.Focused = false;

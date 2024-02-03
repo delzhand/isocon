@@ -432,21 +432,6 @@ public class MapEdit
         return File.Exists(fullPath);
     }
 
-    private static void GetFilesRecursively(string basePath, string relativePath, List<string> fileList)
-    {
-        string[] files = Directory.GetFiles(basePath + relativePath);
-        foreach (string file in files)
-        {
-            fileList.Add(relativePath + "/" + Path.GetFileName(file));
-        }
-
-        string[] directories = Directory.GetDirectories(basePath + relativePath);
-        foreach (string directory in directories)
-        {
-            GetFilesRecursively(basePath, relativePath + "/" + Path.GetFileName(directory), fileList);
-        }
-    }
-
     public static string[] GetAllMapFiles()
     {
         string path = Preferences.Current.DataPath;
@@ -457,7 +442,7 @@ public class MapEdit
             Directory.CreateDirectory(path + "/maps");
         }
 
-        GetFilesRecursively(path, "/maps", mapFiles);
+        FileUtility.GetFilesRecursively(path, "/maps", mapFiles);
 
         // Remove "/maps" from each string in the list
         for (int i = 0; i < mapFiles.Count; i++)

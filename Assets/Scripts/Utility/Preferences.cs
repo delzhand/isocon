@@ -17,6 +17,7 @@ public class StoredPreferences
     public string HostIP;
     public string TutorialsSeen;
     public int SkipTutorials;
+    public string RulesFile;
 }
 
 public class Preferences
@@ -51,7 +52,8 @@ public class Preferences
                 PlayerCount = PlayerPrefs.GetInt("PlayerCount", 4),
                 HostIP = PlayerPrefs.GetString("HostIP", ""),
                 TutorialsSeen = PlayerPrefs.GetString("TutorialsSeen", ""),
-                SkipTutorials = PlayerPrefs.GetInt("SkipTutorials", 0)
+                SkipTutorials = PlayerPrefs.GetInt("SkipTutorials", 0),
+                RulesFile = PlayerPrefs.GetString("RulesFile", "lastest.json"),
             };
             Save();
         }
@@ -134,6 +136,12 @@ public class Preferences
     public static void SetBlockBorderOpacity(float value)
     {
         _current.BlockBorderOpacity = value;
+        Save();
+    }
+
+    public static void SetRulesFile(string value)
+    {
+        _current.RulesFile = value;
         Save();
     }
 

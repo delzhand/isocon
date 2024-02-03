@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using Mirror;
 using UnityEditor.Rendering.Universal;
 using UnityEngine;
@@ -19,6 +20,7 @@ public class TabletopState : BaseState
         if (_mode == ConnectMode.Host || _mode == ConnectMode.Solo)
         {
             TerrainController.InitializeTerrain(8, 8, 1);
+            IngestRuleData();
         }
         SetConnectionMessage();
         EnableInterface();
@@ -94,6 +96,19 @@ public class TabletopState : BaseState
     private void GoToLauncherState()
     {
         SM.ChangeState(new LauncherState());
+    }
+
+    private void IngestRuleData()
+    {
+        string filename = $"{Preferences.Current.DataPath}/ruledata/{Preferences.Current.RulesFile}";
+        if (!File.Exists(filename))
+        {
+            Toast.AddError($"Could not locate {filename}. Reverting to latest rule data.");
+            filename = $"{Preferences.Current.DataPath}/ruledata/latest.json";
+        }
+        string json = File.ReadAllText(filename);
+        GameSystem.DataJson = json;
+        Toast.AddSimple("Rule data loaded.");
     }
 
     #region Callbacks

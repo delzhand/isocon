@@ -63,10 +63,10 @@ public class NeutralState : TabletopSubstate
     private void ShowTokenPanels()
     {
         Token selected = Token.GetSelected();
-        GameSystem.Current().UpdateTokenPanel(selected != null ? selected.Data.Id : null, "SelectedTokenPanel");
+        GameSystem.Current()?.UpdateTokenPanel(selected != null ? selected.Data.Id : null, "SelectedTokenPanel");
 
         Token focused = Token.GetFocused();
-        GameSystem.Current().UpdateTokenPanel(focused != null ? focused.Data.Id : null, "FocusedTokenPanel");
+        GameSystem.Current()?.UpdateTokenPanel(focused != null ? focused.Data.Id : null, "FocusedTokenPanel");
     }
 
     #region Callbacks
