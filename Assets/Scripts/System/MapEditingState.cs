@@ -55,6 +55,7 @@ public class MapEditingState : TabletopSubstate
         base.DisableInterface();
         UI.ToggleDisplay("ToolsPanel", false);
         UI.ToggleDisplay("ToolOptions", false);
+        UI.ToggleDisplay(UI.TopBar.Q("Isocon"), true);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
         UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), false);
         UI.TopBar.Q("EditMap").Q<Label>("Label").text = "Edit <u>M</u>ap";

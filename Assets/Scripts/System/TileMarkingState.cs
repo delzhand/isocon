@@ -39,6 +39,7 @@ public class TileMarkingState : TabletopSubstate
     protected override void DisableInterface()
     {
         base.DisableInterface();
+        UI.ToggleDisplay(UI.TopBar.Q("Isocon"), true);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
         UI.ToggleActiveClass(UI.TopBar.Q("MarkerMode"), false);
         UI.TopBar.Q("MarkerMode").Q<Label>("Label").text = "Mark <u>T</u>iles";
