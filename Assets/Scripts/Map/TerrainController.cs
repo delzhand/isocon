@@ -129,6 +129,7 @@ public class TerrainController
         newblock.transform.parent = block.transform.parent;
         newblock.transform.localPosition = new Vector3(0, currentTop.transform.localPosition.y + 1, 0);
         newblock.transform.localScale = block.transform.localScale;
+        newblock.GetComponent<Block>().CopyStyle(currentTop.GetComponent<Block>(), true);
         ReorgNeeded = true;
     }
 
