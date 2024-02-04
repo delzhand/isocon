@@ -5,20 +5,20 @@
     <Style src="project://database/Assets/UI/Styles/v3/OverrideStyles.uss?fileID=7433441132597879392&amp;guid=15bcfaebbc0c9fd4691b003a9d1cd382&amp;type=3#OverrideStyles" />
     <Style src="project://database/Assets/UI/Styles/v3/Overhead.uss?fileID=7433441132597879392&amp;guid=db9f5488cbd5b104699c060ac772337b&amp;type=3#Overhead" />
     <ui:VisualElement name="Worldspace" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; left: 0; top: 0; right: 0; bottom: 0;" />
-    <ui:VisualElement name="Launcher" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: none;">
+    <ui:VisualElement name="Launcher" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex;">
         <ui:VisualElement name="StartupPanel" class="centered" style="margin-bottom: 0; display: flex; min-height: 0; width: 460px; justify-content: center; top: 33%; translate: -50% 0;">
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 0; flex-direction: row; justify-content: center; background-image: resource(&apos;Textures/isocon_logo&apos;); -unity-background-scale-mode: scale-to-fit; margin-bottom: 56px; height: 110px;">
                 <ui:Label tabindex="-1" text="BETA" parse-escape-sequences="true" display-tooltip-when-elided="true" style="position: absolute; top: -17px; right: -69px; background-color: rgb(44, 93, 135); -unity-font-style: bold; font-size: 16px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; color: rgb(255, 255, 255);" />
             </ui:VisualElement>
-            <ui:VisualElement name="StartupOptions" class="panel" style="flex-grow: 1; align-self: center; width: 100%; -unity-background-image-tint-color: rgba(255, 255, 255, 0); display: none;">
+            <ui:VisualElement name="StartupOptions" class="panel" style="flex-grow: 1; align-self: center; width: 100%; -unity-background-image-tint-color: rgba(255, 255, 255, 0); display: flex;">
                 <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: column; justify-content: space-between; width: 100%;">
-                    <ui:VisualElement style="flex-direction: row; justify-content: space-between;">
-                        <ui:Button display-tooltip-when-elided="true" name="SoloModeButton" style="flex-direction: column; width: 32%; align-items: center;">
+                    <ui:VisualElement style="flex-direction: row; justify-content: center;">
+                        <ui:Button display-tooltip-when-elided="true" name="SoloModeButton" style="flex-direction: column; width: 32%; align-items: center; display: flex; margin-right: 8px;">
                             <ui:VisualElement style="background-image: resource(&apos;Textures/solo_mode&apos;); -unity-background-scale-mode: scale-to-fit; height: 50px; width: 50px; margin-right: 0; margin-top: 4px;" />
                             <ui:Label tabindex="-1" text="SOLO MODE" display-tooltip-when-elided="true" style="font-size: 16px;" />
                             <ui:Label tabindex="-1" text="Edit maps offline or screen share" display-tooltip-when-elided="true" style="white-space: normal; -unity-font-style: normal;" />
                         </ui:Button>
-                        <ui:Button display-tooltip-when-elided="true" name="HostModeButton" style="flex-direction: column; width: 32%; align-items: center;">
+                        <ui:Button display-tooltip-when-elided="true" name="HostModeButton" style="flex-direction: column; width: 32%; align-items: center; display: flex; margin-right: 8px;">
                             <ui:VisualElement style="background-image: resource(&apos;Textures/host_mode&apos;); -unity-background-scale-mode: scale-to-fit; width: 50px; height: 50px; margin-right: 0; margin-top: 4px;" />
                             <ui:Label tabindex="-1" text="HOST TABLE" display-tooltip-when-elided="true" style="font-size: 16px; white-space: normal;" />
                             <ui:Label tabindex="-1" text="Start a session for multiple players" display-tooltip-when-elided="true" style="white-space: normal;" />
@@ -44,7 +44,7 @@
         </ui:VisualElement>
         <ui:Label tabindex="-1" text="v0.6.0" display-tooltip-when-elided="true" name="Version" style="position: absolute; right: auto; bottom: 0; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); font-size: 12px; left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 4px; padding-right: 0; padding-bottom: 4px; padding-left: 0; -unity-text-align: middle-center; width: 100%;" />
     </ui:VisualElement>
-    <ui:VisualElement name="Tabletop" style="flex-grow: 1; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex;">
+    <ui:VisualElement name="Tabletop" style="flex-grow: 1; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: none;">
         <ui:VisualElement name="TopBar" style="flex-grow: 0; height: 50px; min-height: 40px; padding-top: 10px; padding-right: 10px; padding-left: 10px; background-color: rgba(0, 0, 0, 0.49); flex-direction: row; align-items: flex-start; opacity: 1; -unity-text-outline-color: rgba(0, 0, 0, 0.49); padding-bottom: 10px;">
             <ui:VisualElement style="flex-grow: 1; flex-direction: row; margin-left: -10px;">
                 <ui:VisualElement name="EditMap" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px;">

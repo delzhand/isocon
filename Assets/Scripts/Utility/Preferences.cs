@@ -30,6 +30,11 @@ public class Preferences
 
     public static void Init()
     {
+#if UNITY_WEBGL
+        WebGLPrefs();
+        return;
+#endif
+
         string fileName = GetConfigFileName();
         // Load preferences from application directory if found
         if (File.Exists(fileName))
@@ -57,6 +62,25 @@ public class Preferences
             };
             Save();
         }
+    }
+
+    private static void WebGLPrefs()
+    {
+        _current = new()
+        {
+            DataPath = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath),
+            PlayerName = PlayerPrefs.GetString("PlayerName", "New Player"),
+            System = "",
+            UIScale = PlayerPrefs.GetString("UIScale", "100%"),
+            TokenScale = PlayerPrefs.GetFloat("TokenScale", 1f),
+            Grid = "",
+            TokenOutline = PlayerPrefs.GetString("TokenOutline", "White"),
+            PlayerCount = 1,
+            HostIP = PlayerPrefs.GetString("HostIP", ""),
+            TutorialsSeen = PlayerPrefs.GetString("TutorialsSeen", ""),
+            SkipTutorials = PlayerPrefs.GetInt("SkipTutorials", 0),
+            RulesFile = "",
+        };
 
     }
 

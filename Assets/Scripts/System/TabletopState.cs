@@ -25,7 +25,13 @@ public class TabletopState : BaseState
         SetConnectionMessage();
         EnableInterface();
         BindCallbacks();
+#if UNITY_WEBGL
+        Tutorial.Init("web client");
+#endif
+
+#if !UNITY_WEBGL
         Tutorial.Init("tabletop");
+#endif
 
         SM.ChangeSubState(new NeutralState());
     }
@@ -49,6 +55,9 @@ public class TabletopState : BaseState
         UI.ToggleDisplay("Tabletop", true);
         UI.ToggleDisplay("BottomBar", true);
         UI.ToggleDisplay("TopBar", true);
+#if UNITY_WEBGL
+        UI.ToggleDisplay("AddToken", false);
+#endif
     }
 
     private void DisableInterface()

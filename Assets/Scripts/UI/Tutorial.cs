@@ -56,6 +56,8 @@ public class Tutorial
                 return ("Camera Modes", "By holding down the right mouse button, you can either drag or rotate the map. Clicking the button in the top bar will toggle between modes, or you can press C.");
             case "terrain effect mode":
                 return ("Terrain Effect Mode", "In Terrain Effect mode you can assign effects to tiles and mark them with visual effects. Left click tiles to select them, right click to open the tile menu.");
+            case "web client":
+                return ("Web Client", "The web version of Isocon can't use local storage, so you can't create tokens. However, you can still interact with tokens other players have created as well as edit the map and mark tiles.");
         }
         throw new System.Exception("No such tutorial");
     }

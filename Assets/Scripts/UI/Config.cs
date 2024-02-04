@@ -9,11 +9,13 @@ public class Config
     {
         Modal.Reset("Configuration");
 
+#if !UNITY_WEBGL
         string path = Preferences.Current.DataPath;
         Modal.AddTextField("DataPath", "Data Path", path, (evt) =>
         {
             Preferences.SetDataPath(evt.newValue);
         });
+#endif
 
         string uiScale = Preferences.Current.UIScale;
         List<string> scaleOptions = new();
@@ -47,12 +49,14 @@ public class Config
             Token.SetAllTokenOutlines();
         });
 
+#if !UNITY_WEBGL
         string rulesFile = Preferences.Current.RulesFile;
         Modal.AddDropdownField("RulesFileField", "Rules File", rulesFile, GetAllRuleFiles(), (evt) =>
         {
             Preferences.SetRulesFile(evt.newValue);
         });
         Modal.AddMarkup("RulesDesc", "Rules are applied only when entering solo or host mode. Client mode will use the host's rules.");
+#endif
 
         Modal.AddPreferredButton("Confirm", CloseModal);
     }

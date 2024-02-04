@@ -9,8 +9,8 @@ using UnityEngine.UIElements;
 
 public class Startup
 {
-    private static string _version = "0.6.6";
-    private static string _latestVersion = "0.6.6";
+    private static string _version = "0.6.9";
+    private static string _latestVersion = "0.6.9";
 
     public static void RunTasks()
     {
@@ -32,6 +32,11 @@ public class Startup
 
     private static async void SetVersionText()
     {
+#if UNITY_WEBGL
+        UI.System.Q<Label>("Version").text = $"v{_version}";
+        return;
+#endif
+
         await AsyncAwake();
         if (_version != _latestVersion)
         {

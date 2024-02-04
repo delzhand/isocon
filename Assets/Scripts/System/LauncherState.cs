@@ -43,9 +43,10 @@ public class LauncherState : BaseState
         UI.ToggleDisplay("StartupOptions", true);
         UI.ToggleDisplay("Launcher", true);
 
-#if (UNITY_WEBGL) && !UNITY_EDITOR
+#if UNITY_WEBGL
         UI.ToggleDisplay("SoloModeButton", false);
         UI.ToggleDisplay("HostModeButton", false);
+        UI.ToggleDisplay("ExitButton", false);
 #endif
     }
 
