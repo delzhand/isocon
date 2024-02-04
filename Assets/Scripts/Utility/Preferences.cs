@@ -16,6 +16,7 @@ public class StoredPreferences
     public int PlayerCount;
     public string HostIP;
     public string TutorialsSeen;
+    public string ReleaseNotesSeen;
     public int SkipTutorials;
     public string RulesFile;
 }
@@ -57,6 +58,7 @@ public class Preferences
                 PlayerCount = PlayerPrefs.GetInt("PlayerCount", 4),
                 HostIP = PlayerPrefs.GetString("HostIP", ""),
                 TutorialsSeen = PlayerPrefs.GetString("TutorialsSeen", ""),
+                ReleaseNotesSeen = PlayerPrefs.GetString("ReleaseNotesSeen", ""),
                 SkipTutorials = PlayerPrefs.GetInt("SkipTutorials", 0),
                 RulesFile = PlayerPrefs.GetString("RulesFile", "lastest.json"),
             };
@@ -119,6 +121,17 @@ public class Preferences
     {
         _current.TutorialsSeen = value;
         Save();
+    }
+
+    public static void SetReleaseNotesSeen(string value)
+    {
+        _current.ReleaseNotesSeen = value;
+        Save();
+    }
+
+    public static string GetReleaseNotesSeen()
+    {
+        return (_current.ReleaseNotesSeen != null) ? _current.ReleaseNotesSeen : "";
     }
 
     public static void SetSkipTutorials(int value)
