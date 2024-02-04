@@ -33,15 +33,15 @@ public class Dragger : MonoBehaviour
     public static DraggerCallback RightClickRelease;
     public static DraggerCallback RightDragRelease;
 
-    // private static ClickState _middle = ClickState.Up;
-    // public static bool IsMiddleDown { get => _middle != ClickState.Up; }
-    // public static bool IsMiddleDragging { get => _middle == ClickState.Dragging; }
-    // private static Vector3 _middleMouseOrigin;
-    // public static DraggerCallback MiddleClickStart;
-    // public static DraggerCallback MiddleDragStart;
-    // public static DraggerCallback MiddleDragUpdate;
-    // public static DraggerCallback MiddleClickRelease;
-    // public static DraggerCallback MiddleDragRelease;
+    private static ClickState _middle = ClickState.Up;
+    public static bool IsMiddleDown { get => _middle != ClickState.Up; }
+    public static bool IsMiddleDragging { get => _middle == ClickState.Dragging; }
+    private static Vector3 _middleMouseOrigin;
+    public static DraggerCallback MiddleClickStart;
+    public static DraggerCallback MiddleDragStart;
+    public static DraggerCallback MiddleDragUpdate;
+    public static DraggerCallback MiddleClickRelease;
+    public static DraggerCallback MiddleDragRelease;
 
     void Update()
     {
@@ -111,6 +111,40 @@ public class Dragger : MonoBehaviour
                 RightDragRelease?.Invoke();
             }
             _right = ClickState.Up;
+        }
+
+        if (Input.GetMouseButton(2) && !Modal.IsOpen())
+        {
+            if (_middle == ClickState.Up)
+            {
+                MiddleClickStart?.Invoke();
+                _middle = ClickState.Checking;
+                _middleMouseOrigin = Input.mousePosition;
+            }
+            if (_middle == ClickState.Checking)
+            {
+                if (Input.mousePosition != _middleMouseOrigin)
+                {
+                    MiddleDragStart?.Invoke();
+                    _middle = ClickState.Dragging;
+                }
+            }
+            if (_middle == ClickState.Dragging)
+            {
+                MiddleDragUpdate?.Invoke();
+            }
+        }
+        else
+        {
+            if (_middle == ClickState.Checking)
+            {
+                MiddleClickRelease?.Invoke();
+            }
+            else if (_middle == ClickState.Dragging)
+            {
+                MiddleDragRelease?.Invoke();
+            }
+            _middle = ClickState.Up;
         }
     }
 

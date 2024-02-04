@@ -17,11 +17,6 @@ public class TabletopState : BaseState
     public override void OnEnter(StateManager sm)
     {
         base.OnEnter(sm);
-        if (_mode == ConnectMode.Host || _mode == ConnectMode.Solo)
-        {
-            TerrainController.InitializeTerrain(8, 8, 1);
-            IngestRuleData();
-        }
         SetConnectionMessage();
         EnableInterface();
         BindCallbacks();
@@ -107,7 +102,7 @@ public class TabletopState : BaseState
         SM.ChangeState(new LauncherState());
     }
 
-    private void IngestRuleData()
+    public static void IngestRuleData()
     {
         string filename = $"{Preferences.Current.DataPath}/ruledata/{Preferences.Current.RulesFile}";
         if (!File.Exists(filename))
@@ -124,17 +119,25 @@ public class TabletopState : BaseState
     private void BindCallbacks()
     {
         UI.TopBar.Q("Isocon").RegisterCallback<ClickEvent>(ConfirmReturnToLauncher);
-        Dragger.RightDragStart += Viewport.InitializeDrag;
-        Dragger.RightDragUpdate += Viewport.UpdateDrag;
+        Dragger.RightDragStart += Viewport.InitializeRightDrag;
+        Dragger.RightDragUpdate += Viewport.UpdateRightDrag;
         Dragger.RightDragRelease += Viewport.EndDrag;
+
+        Dragger.MiddleDragStart += Viewport.InitializeMiddleDrag;
+        Dragger.MiddleDragUpdate += Viewport.UpdateMiddleDrag;
+        Dragger.MiddleDragRelease += Viewport.EndDrag;
     }
 
     private void UnbindCallbacks()
     {
         UI.TopBar.Q("Isocon").UnregisterCallback<ClickEvent>(ConfirmReturnToLauncher);
-        Dragger.RightDragStart -= Viewport.InitializeDrag;
-        Dragger.RightDragUpdate -= Viewport.UpdateDrag;
+        Dragger.RightDragStart -= Viewport.InitializeRightDrag;
+        Dragger.RightDragUpdate -= Viewport.UpdateRightDrag;
         Dragger.RightDragRelease -= Viewport.EndDrag;
+
+        Dragger.MiddleDragStart -= Viewport.InitializeMiddleDrag;
+        Dragger.MiddleDragUpdate -= Viewport.UpdateMiddleDrag;
+        Dragger.MiddleDragRelease -= Viewport.EndDrag;
     }
 
     private void ConfirmReturnToLauncher(ClickEvent evt)

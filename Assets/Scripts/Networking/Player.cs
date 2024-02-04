@@ -23,7 +23,17 @@ public class Player : NetworkBehaviour
         if (isLocalPlayer)
         {
             Name = Preferences.Current.PlayerName;
-            CmdRequestClientInit();
+            if (NetworkServer.active && NetworkClient.active)
+            {
+                Toast.AddSimple("Connected as host.");
+                TabletopState.IngestRuleData();
+                TerrainController.InitializeTerrain(8, 8, 1);
+            }
+            else
+            {
+                Toast.AddSimple("Connected as player.");
+                CmdRequestClientInit();
+            }
         }
     }
 

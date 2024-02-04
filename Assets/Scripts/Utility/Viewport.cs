@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+public enum DragMode
+{
+    Rotate,
+    Pan
+}
+
 public class Viewport
 {
-
-    private static bool _dragMode = true;
-
+    private static DragMode _mode;
     private static Vector3 _panOrigin;
     private static Vector3 _mouseOrigin;
     private static float _originRY = 315;
@@ -21,46 +25,109 @@ public class Viewport
         HandleScrolling();
     }
 
-    public static void InitializeDrag()
+    public static void InitializeRightDrag()
+    {
+        if (_isDragging)
+        {
+            return;
+        }
+        switch (_mode)
+        {
+            case DragMode.Pan:
+                InitializePanDrag();
+                break;
+            case DragMode.Rotate:
+                InitializeRotateDrag();
+                break;
+        }
+    }
+
+    public static void InitializeMiddleDrag()
+    {
+        if (_isDragging)
+        {
+            return;
+        }
+        switch (_mode)
+        {
+            case DragMode.Pan:
+                InitializeRotateDrag();
+                break;
+            case DragMode.Rotate:
+                InitializePanDrag();
+                break;
+        }
+    }
+
+    private static void InitializeRotateDrag()
     {
         _isDragging = true;
         _mouseOrigin = Input.mousePosition;
-        _panOrigin = Camera.main.ScreenToWorldPoint(_mouseOrigin);
         _originRY = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.y;
         _originRZ = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.z;
     }
 
-    public static void UpdateDrag()
+    private static void InitializePanDrag()
     {
+        _isDragging = true;
+        _mouseOrigin = Input.mousePosition;
+        _panOrigin = Camera.main.ScreenToWorldPoint(_mouseOrigin);
+    }
 
-        if (_dragMode)
+    public static void UpdateRightDrag()
+    {
+        switch (_mode)
         {
-            Vector3 panDifference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.transform.position;
-            Camera.main.transform.position = _panOrigin - panDifference;
+            case DragMode.Pan:
+                UpdatePanDrag();
+                break;
+            case DragMode.Rotate:
+                UpdateRotateDrag();
+                break;
         }
-        else
+    }
+
+    public static void UpdateMiddleDrag()
+    {
+        switch (_mode)
         {
-            Vector3 mouseDifference = _mouseOrigin - Input.mousePosition;
-            Quaternion q = Quaternion.identity;
-            float targetY = _originRY - mouseDifference.x / 2;
-            Quaternion qy = Quaternion.Euler(0f, targetY, 0f);
-            q *= qy;
-
-            float targetZ = _originRZ + mouseDifference.y / 2;
-            while (targetZ < -180)
-            {
-                targetZ += 360;
-            }
-            while (targetZ > 180)
-            {
-                targetZ -= 360;
-            }
-            targetZ = Mathf.Clamp(targetZ, -20, 20);
-            Quaternion qz = Quaternion.Euler(0f, 0f, targetZ);
-            q *= qz;
-
-            GameObject.Find("CameraOrigin").transform.rotation = q;
+            case DragMode.Pan:
+                UpdateRotateDrag();
+                break;
+            case DragMode.Rotate:
+                UpdatePanDrag();
+                break;
         }
+    }
+
+    private static void UpdatePanDrag()
+    {
+        Vector3 panDifference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.transform.position;
+        Camera.main.transform.position = _panOrigin - panDifference;
+    }
+
+    private static void UpdateRotateDrag()
+    {
+        Vector3 mouseDifference = _mouseOrigin - Input.mousePosition;
+        Quaternion q = Quaternion.identity;
+        float targetY = _originRY - mouseDifference.x / 2;
+        Quaternion qy = Quaternion.Euler(0f, targetY, 0f);
+        q *= qy;
+
+        float targetZ = _originRZ + mouseDifference.y / 2;
+        while (targetZ < -180)
+        {
+            targetZ += 360;
+        }
+        while (targetZ > 180)
+        {
+            targetZ -= 360;
+        }
+        targetZ = Mathf.Clamp(targetZ, -20, 20);
+        Quaternion qz = Quaternion.Euler(0f, 0f, targetZ);
+        q *= qz;
+
+        GameObject.Find("CameraOrigin").transform.rotation = q;
     }
 
     public static void EndDrag()
@@ -88,25 +155,26 @@ public class Viewport
 
     public static void TogglePanMode()
     {
-        if (_dragMode)
+        switch (_mode)
         {
-            DisablePanMode();
-        }
-        else
-        {
-            EnablePanMode();
+            case DragMode.Pan:
+                EnableRotateMode();
+                break;
+            case DragMode.Rotate:
+                EnablePanMode();
+                break;
         }
     }
 
-    private static void DisablePanMode()
+    private static void EnableRotateMode()
     {
-        _dragMode = false;
+        _mode = DragMode.Rotate;
         UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Rotate <u>C</u>amera";
     }
 
     private static void EnablePanMode()
     {
-        _dragMode = true;
+        _mode = DragMode.Pan;
         UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Pan <u>C</u>amera";
     }
 }
