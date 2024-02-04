@@ -17,8 +17,9 @@ public class Viewport
     private static float _originRY = 315;
     private static float _originRZ = 0;
 
-    private static bool _isDragging = false;
-    public static bool IsDragging { get => _isDragging; }
+    private static bool _isRightDragging = false;
+    private static bool _isMiddleDragging = false;
+    public static bool IsDragging { get => _isRightDragging || _isMiddleDragging; }
 
     public static void HandleInput()
     {
@@ -27,10 +28,11 @@ public class Viewport
 
     public static void InitializeRightDrag()
     {
-        if (_isDragging)
+        if (_isMiddleDragging)
         {
             return;
         }
+        _isRightDragging = true;
         switch (_mode)
         {
             case DragMode.Pan:
@@ -44,10 +46,11 @@ public class Viewport
 
     public static void InitializeMiddleDrag()
     {
-        if (_isDragging)
+        if (_isRightDragging)
         {
             return;
         }
+        _isMiddleDragging = true;
         switch (_mode)
         {
             case DragMode.Pan:
@@ -61,7 +64,6 @@ public class Viewport
 
     private static void InitializeRotateDrag()
     {
-        _isDragging = true;
         _mouseOrigin = Input.mousePosition;
         _originRY = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.y;
         _originRZ = GameObject.Find("CameraOrigin").transform.rotation.eulerAngles.z;
@@ -69,13 +71,16 @@ public class Viewport
 
     private static void InitializePanDrag()
     {
-        _isDragging = true;
         _mouseOrigin = Input.mousePosition;
         _panOrigin = Camera.main.ScreenToWorldPoint(_mouseOrigin);
     }
 
     public static void UpdateRightDrag()
     {
+        if (!_isRightDragging)
+        {
+            return;
+        }
         switch (_mode)
         {
             case DragMode.Pan:
@@ -89,6 +94,10 @@ public class Viewport
 
     public static void UpdateMiddleDrag()
     {
+        if (!_isMiddleDragging)
+        {
+            return;
+        }
         switch (_mode)
         {
             case DragMode.Pan:
@@ -130,9 +139,14 @@ public class Viewport
         GameObject.Find("CameraOrigin").transform.rotation = q;
     }
 
-    public static void EndDrag()
+    public static void EndRightDrag()
     {
-        _isDragging = false;
+        _isRightDragging = false;
+    }
+
+    public static void EndMiddleDrag()
+    {
+        _isMiddleDragging = false;
     }
 
     private static void HandleScrolling()

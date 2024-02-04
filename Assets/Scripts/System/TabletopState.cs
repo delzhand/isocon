@@ -121,11 +121,11 @@ public class TabletopState : BaseState
         UI.TopBar.Q("Isocon").RegisterCallback<ClickEvent>(ConfirmReturnToLauncher);
         Dragger.RightDragStart += Viewport.InitializeRightDrag;
         Dragger.RightDragUpdate += Viewport.UpdateRightDrag;
-        Dragger.RightDragRelease += Viewport.EndDrag;
+        Dragger.RightDragRelease += Viewport.EndRightDrag;
 
         Dragger.MiddleDragStart += Viewport.InitializeMiddleDrag;
         Dragger.MiddleDragUpdate += Viewport.UpdateMiddleDrag;
-        Dragger.MiddleDragRelease += Viewport.EndDrag;
+        Dragger.MiddleDragRelease += Viewport.EndMiddleDrag;
     }
 
     private void UnbindCallbacks()
@@ -133,11 +133,11 @@ public class TabletopState : BaseState
         UI.TopBar.Q("Isocon").UnregisterCallback<ClickEvent>(ConfirmReturnToLauncher);
         Dragger.RightDragStart -= Viewport.InitializeRightDrag;
         Dragger.RightDragUpdate -= Viewport.UpdateRightDrag;
-        Dragger.RightDragRelease -= Viewport.EndDrag;
+        Dragger.RightDragRelease -= Viewport.EndRightDrag;
 
         Dragger.MiddleDragStart -= Viewport.InitializeMiddleDrag;
         Dragger.MiddleDragUpdate -= Viewport.UpdateMiddleDrag;
-        Dragger.MiddleDragRelease -= Viewport.EndDrag;
+        Dragger.MiddleDragRelease -= Viewport.EndMiddleDrag;
     }
 
     private void ConfirmReturnToLauncher(ClickEvent evt)
