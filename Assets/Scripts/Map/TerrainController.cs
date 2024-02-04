@@ -387,7 +387,14 @@ public class TerrainController
 
     public static void ApplyStyle(Block block)
     {
-        switch (MapEdit.StyleOp)
+        string op = MapEdit.StyleOp;
+        if (MapEditingState.AltMode)
+        {
+            op = "StyleSample";
+        }
+        Debug.Log(MapEditingState.AltMode);
+        Debug.Log(op);
+        switch (op)
         {
             case "StylePaint":
                 string textureTop = UI.System.Q<DropdownField>("TopTexture").value;

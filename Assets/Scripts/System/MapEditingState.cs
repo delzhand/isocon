@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 public class MapEditingState : TabletopSubstate
 {
     public static List<Column> MarkedColumns;
+    public static bool AltMode;
 
     public override void OnEnter(StateManager sm)
     {
@@ -126,6 +127,22 @@ public class MapEditingState : TabletopSubstate
         {
             ChangeDragMode(new ClickEvent());
             return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftAlt) && MapEdit.EditOp == "StyleBlock")
+        {
+            AltMode = true;
+            CustomCursor.SetSample();
+        }
+        else if (Input.GetKeyDown(KeyCode.RightAlt) && MapEdit.EditOp == "StyleBlock")
+        {
+            AltMode = true;
+            CustomCursor.SetSample();
+        }
+        else if ((Input.GetKeyUp(KeyCode.LeftAlt) || Input.GetKeyUp(KeyCode.RightAlt)) && MapEdit.EditOp == "StyleBlock")
+        {
+            AltMode = false;
+            CustomCursor.SetDefault();
         }
 
     }
