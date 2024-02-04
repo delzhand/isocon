@@ -46,6 +46,10 @@ public class MapEdit
                 UI.ToggleDisplay("ClickCatcher", false);
                 // set op
                 EditOp = tool.name;
+                if (EditOp == "StyleBlock")
+                {
+                    Tutorial.Init("style shortcut");
+                }
                 // set active class on current
                 toolsRoot.Query(null, "tool").ForEach((item) =>
                 {
