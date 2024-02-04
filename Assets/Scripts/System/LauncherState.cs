@@ -68,6 +68,7 @@ public class LauncherState : BaseState
     private void BindCallbacks()
     {
         UI.System.Q<Button>("ExitButton").RegisterCallback<ClickEvent>(ExitClicked);
+        UI.System.Q<Button>("ConfigButton").RegisterCallback<ClickEvent>(ConfigClicked);
         UI.System.Q<Button>("SoloModeButton").RegisterCallback<ClickEvent>(SoloModeClicked);
         UI.System.Q<Button>("HostModeButton").RegisterCallback<ClickEvent>(HostModeClicked);
         UI.System.Q<Button>("ClientModeButton").RegisterCallback<ClickEvent>(ClientModeClicked);
@@ -78,6 +79,7 @@ public class LauncherState : BaseState
     private void UnbindCallbacks()
     {
         UI.System.Q<Button>("ExitButton").UnregisterCallback<ClickEvent>(ExitClicked);
+        UI.System.Q<Button>("ConfigButton").UnregisterCallback<ClickEvent>(ConfigClicked);
         UI.System.Q<Button>("SoloModeButton").UnregisterCallback<ClickEvent>(SoloModeClicked);
         UI.System.Q<Button>("HostModeButton").UnregisterCallback<ClickEvent>(HostModeClicked);
         UI.System.Q<Button>("ClientModeButton").UnregisterCallback<ClickEvent>(ClientModeClicked);
@@ -87,6 +89,11 @@ public class LauncherState : BaseState
     private void ExitClicked(ClickEvent evt)
     {
         Application.Quit();
+    }
+
+    private void ConfigClicked(ClickEvent evt)
+    {
+        Config.OpenModal(evt);
     }
 
     private void SoloModeClicked(ClickEvent evt)
@@ -188,6 +195,7 @@ public class LauncherState : BaseState
             case ConnectMode.Host:
                 GameSystem.Set(Preferences.Current.System);
                 netManager.maxConnections = Preferences.Current.PlayerCount;
+                Debug.Log(netManager.maxConnections);
                 netManager.StartHost();
                 break;
             case ConnectMode.Client:

@@ -29,8 +29,12 @@
                             <ui:Label tabindex="-1" text="Connect to a session" display-tooltip-when-elided="true" style="white-space: normal;" />
                         </ui:Button>
                     </ui:VisualElement>
-                    <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); margin-top: 16px;">
-                        <ui:Button display-tooltip-when-elided="true" name="ExitButton" style="flex-grow: 1; flex-direction: row; justify-content: center;">
+                    <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); margin-top: 16px; flex-direction: row; margin-right: -4px; margin-left: -4px;">
+                        <ui:Button display-tooltip-when-elided="true" name="ConfigButton" style="flex-grow: 1; flex-direction: row; justify-content: center; align-items: center; margin-right: 4px; margin-left: 4px;">
+                            <ui:VisualElement style="background-image: resource(&apos;Textures/config&apos;); -unity-background-scale-mode: scale-to-fit; height: 24px; width: 24px; margin-right: 4px; margin-top: 0;" />
+                            <ui:Label tabindex="-1" text="Configuration" display-tooltip-when-elided="true" style="white-space: normal;" />
+                        </ui:Button>
+                        <ui:Button display-tooltip-when-elided="true" name="ExitButton" style="flex-grow: 1; flex-direction: row; justify-content: center; margin-right: 4px; margin-left: 4px;">
                             <ui:Label tabindex="-1" text="EXIT" display-tooltip-when-elided="true" name="Label" style="font-size: 16px;" />
                             <ui:Label tabindex="-1" text="Close IsoCON" display-tooltip-when-elided="true" style="white-space: normal;" />
                         </ui:Button>
