@@ -950,6 +950,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fba1c3673d16ce448261df1629f0ed8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TempString: 
 --- !u!4 &1395978825
 Transform:
   m_ObjectHideFlags: 0
@@ -1013,7 +1014,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 062306b607b3fa64c89671367c0fc873, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crosshair: {fileID: 2800000, guid: c157d07912c76b046b2b64f1aa430bbd, type: 3}
 --- !u!1 &1480977434
 GameObject:
   m_ObjectHideFlags: 0
