@@ -234,6 +234,7 @@ public class LauncherState : BaseState
         UI.System.Q("Worldspace").Clear();
         UI.System.Q("UnitBar").Clear();
         UI.System.Q("CurrentOps").Clear();
+        TerrainController.DestroyAllBlocks();
     }
 
     private void DetectConnectionAttemptOutcome()
