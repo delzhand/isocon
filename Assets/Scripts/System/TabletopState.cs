@@ -72,7 +72,7 @@ public class TabletopState : BaseState
                 text = $"You are connected to {Preferences.Current.HostIP} as a client.";
                 break;
             case ConnectMode.Host:
-                text = "You are hosting on port <LocalIP> (local) and <GlobalIP> (global).<br><br>You must either have port forwarding for port 7777 TCP to your local IP with no active VPN, or use a 3rd party service like Ngrok or Hamachi.";
+                text = "You are hosting on port <LocalIP> (local) and <GlobalIP> (global).<br><br>For users to connect to your global IP you must have port forwarding for port 7777 TCP to your local IP and not have a VPN active.";
                 break;
             case ConnectMode.Solo:
                 text = "You are in solo mode. Other users cannot connect to this table.";
