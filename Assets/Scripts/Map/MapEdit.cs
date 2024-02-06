@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using SimpleFileBrowser;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -10,6 +12,8 @@ public class MapEdit
     public static string ShapeOp = "ShapeSolid";
     public static string ResizeOp = "ResizeCloneCol";
     public static string StyleOp = "StylePaint";
+
+    public static string FileBrowserFileName = "";
 
     public static BlockFocusMode FocusMode = BlockFocusMode.Single;
 
@@ -319,32 +323,37 @@ public class MapEdit
 
     private static void OpenSaveModal(ClickEvent evt)
     {
-        Modal.Reset("Save Map");
+        FileBrowserHelper.OpenSaveMapBrowser(CurrentFile);
+        // Modal.Reset("Save Map");
 
-        Modal.AddTextField("Filename", "Filename", CurrentFile.Length > 0 ? CurrentFile : "");
-        UI.Modal.Q("Filename").style.minWidth = 400;
+        // Modal.AddTextField("Filename", "Filename", CurrentFile.Length > 0 ? CurrentFile : "");
+        // UI.Modal.Q("Filename").style.minWidth = 400;
 
-        Modal.AddDropdownField("SaveType", "Save Type", "Plaintext JSON", StringUtility.CreateArray("Encoded Screenshot", "Plaintext JSON"));
+        // Modal.AddDropdownField("SaveType", "Save Type", "Plaintext JSON", StringUtility.CreateArray("Encoded Screenshot", "Plaintext JSON"));
 
-        Modal.AddPreferredButton("Confirm", ConfirmMapSave);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        // Modal.AddPreferredButton("Confirm", ConfirmMapSave);
+        // Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
     private static void OpenOpenModal(ClickEvent evt)
     {
-        Modal.Reset("Open Map");
-        Modal.AddSearchField("SearchField", "Filename", "", GetAllMapFiles());
-        Modal.AddPreferredButton("Confirm", ConfirmMapOpen);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        FileBrowserHelper.OpenLoadMapBrowser();
+
+        // Modal.Reset("Open Map");
+        // Modal.AddSearchField("SearchField", "Filename", "", GetAllMapFiles());
+        // Modal.AddPreferredButton("Confirm", ConfirmMapOpen);
+        // Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
-    private static void ConfirmMapOpen(ClickEvent evt)
+    // private static void ConfirmMapOpen(ClickEvent evt)
+    public static void ConfirmMapOpen(ClickEvent evt)
     {
-        string value = UI.Modal.Q("SearchField").Q<TextField>("SearchInput").value;
+        // string value = UI.Modal.Q("SearchField").Q<TextField>("SearchInput").value;
+        string value = FileBrowserFileName;
         if (!TerrainController.MapDirty)
         {
             OpenFile();
-            Modal.Close();
+            // Modal.Close();
         }
         else
         {
@@ -354,79 +363,94 @@ public class MapEdit
 
     private static void OpenFile()
     {
-        string filename = UI.Modal.Q("SearchField").Q<TextField>("SearchInput").value;
-        string path = Preferences.Current.DataPath;
-        string fullPath = path + "/maps/" + filename;
-        CurrentFile = filename.Replace(".png", "").Replace(".json", "");
-        if (fullPath.EndsWith(".png"))
-        {
-            MapSaver.StegLoad(fullPath);
-        }
-        else
-        {
-            MapSaver.LegacyLoad(fullPath);
-        }
+        string filename = FileBrowserFileName;
+        MapSaver.LegacyLoad(filename);
+
+        // string filename = UI.Modal.Q("SearchField").Q<TextField>("SearchInput").value;
+        // string path = Preferences.Current.DataPath;
+        // string fullPath = path + "/maps/" + filename;
+        // CurrentFile = filename.Replace(".png", "").Replace(".json", "");
+        // if (fullPath.EndsWith(".png"))
+        // {
+        //     MapSaver.StegLoad(fullPath);
+        // }
+        // else
+        // {
+        //     MapSaver.LegacyLoad(fullPath);
+        // }
     }
 
-    private static void ConfirmMapSave(ClickEvent evt)
+    // private static void ConfirmMapSave(ClickEvent evt)
+    public static void ConfirmMapSave(ClickEvent evt)
     {
-        string value = UI.Modal.Q<TextField>("Filename").value;
-        if (value.Length == 0)
+        string value = FileBrowserFileName;
+        if (FileExists(value))
         {
-            Toast.AddError("Not a valid filename.");
+            Modal.DoubleConfirm("Confirm Overwrite", "A file with this name already exists. Overwrite?", WriteFile);
         }
         else
         {
-            string saveType = UI.Modal.Q<DropdownField>("SaveType").value;
-            if (saveType == "Encoded Screenshot")
-            {
-                if (value.EndsWith(".json"))
-                {
-                    value = value.Replace(".json", "");
-                }
-                if (!value.EndsWith(".png"))
-                {
-                    value += ".png";
-                }
-            }
-            else
-            {
-                if (value.EndsWith(".png"))
-                {
-                    value = value.Replace(".png", "");
-                }
-                if (!value.EndsWith(".json"))
-                {
-                    value += ".json";
-                }
-            }
-            UI.Modal.Q<TextField>("Filename").value = value;
-            if (FileExists(value))
-            {
-                Modal.DoubleConfirm("Confirm Overwrite", "A file with this name already exists. Overwrite?", WriteFile);
-            }
-            else
-            {
-                WriteFile();
-                Modal.Close();
-            }
+            WriteFile();
         }
+
+        // string value = UI.Modal.Q<TextField>("Filename").value;
+        // if (value.Length == 0)
+        // {
+        //     Toast.AddError("Not a valid filename.");
+        // }
+        // else
+        // {
+        //     string saveType = UI.Modal.Q<DropdownField>("SaveType").value;
+        //     if (saveType == "Encoded Screenshot")
+        //     {
+        //         if (value.EndsWith(".json"))
+        //         {
+        //             value = value.Replace(".json", "");
+        //         }
+        //         if (!value.EndsWith(".png"))
+        //         {
+        //             value += ".png";
+        //         }
+        //     }
+        //     else
+        //     {
+        //         if (value.EndsWith(".png"))
+        //         {
+        //             value = value.Replace(".png", "");
+        //         }
+        //         if (!value.EndsWith(".json"))
+        //         {
+        //             value += ".json";
+        //         }
+        //     }
+        //     UI.Modal.Q<TextField>("Filename").value = value;
+        //     if (FileExists(value))
+        //     {
+        //         Modal.DoubleConfirm("Confirm Overwrite", "A file with this name already exists. Overwrite?", WriteFile);
+        //     }
+        //     else
+        //     {
+        //         WriteFile();
+        //         Modal.Close();
+        //     }
+        // }
     }
 
     private static void WriteFile()
     {
-        string saveType = UI.Modal.Q<DropdownField>("SaveType").value;
-        string filename = UI.Modal.Q<TextField>("Filename").value;
-        string path = Preferences.Current.DataPath;
-        string fullPath = path + "/maps/" + filename;
-        if (saveType == "Encoded Screenshot")
-        {
-            MapSaver.StegSave(fullPath);
-        }
-        else
-        {
-            MapSaver.RegSave(fullPath);
-        }
+        MapSaver.RegSave(FileBrowserFileName);
+        // string saveType = UI.Modal.Q<DropdownField>("SaveType").value;
+        // string filename = UI.Modal.Q<TextField>("Filename").value;
+        // string path = Preferences.Current.DataPath;
+        // string fullPath = path + "/maps/" + filename;
+        // if (saveType == "Encoded Screenshot")
+        // {
+        //     MapSaver.StegSave(fullPath);
+        // }
+        // else
+        // {
+        //     MapSaver.RegSave(fullPath);
+        // }
     }
 
     private static bool FileExists(string filename)

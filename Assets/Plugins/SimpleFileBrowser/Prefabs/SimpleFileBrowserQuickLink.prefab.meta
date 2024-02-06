@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 419c1f8581236d6469bd13ae862bfb50
+timeCreated: 1479415743
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 113006
+  packageName: Runtime File Browser
+  packageVersion: 1.6.4
+  assetPath: Assets/Plugins/SimpleFileBrowser/Prefabs/SimpleFileBrowserQuickLink.prefab
+  uploadId: 626286

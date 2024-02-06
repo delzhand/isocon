@@ -23,6 +23,7 @@ public class Startup
         BlockRendering.Setup();
         DiceRoller.Setup();
         MapEdit.Setup();
+        TokenLibrary.Setup();
 
         UI.SetBlocking(UI.System, StringUtility.CreateArray(@"SelectionMenu", "TopBar", "BottomBar", "ToolsPanel", "ToolOptions", "SelectedTokenPanel", "FocusedTokenPanel", "Backdrop"));
 
