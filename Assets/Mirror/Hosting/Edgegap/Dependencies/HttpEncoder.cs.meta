@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 3c9f699c227f48e381db521abe59c2e1
+timeCreated: 1701789490
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 86.13.4
+  assetPath: Assets/Mirror/Hosting/Edgegap/Dependencies/HttpEncoder.cs
+  uploadId: 634249

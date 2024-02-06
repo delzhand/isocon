@@ -5,3 +5,10 @@ DefaultImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 86.13.4
+  assetPath: Assets/Mirror/Transports/KCP/kcp2k/LICENSE.txt
+  uploadId: 634249

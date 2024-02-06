@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: bc9f0a0fe4124424b8f9d4927795ee01
+timeCreated: 1700945893
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 86.13.4
+  assetPath: Assets/Mirror/Components/NetworkDiagnosticsDebugger.cs
+  uploadId: 634249

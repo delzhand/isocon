@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 57002d60dd8ce46b081a0a0a25e5b52b
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 86.13.4
+  assetPath: Assets/Mirror/Hosting/Edgegap/Editor/Fonts/MIRROR CHANGE.txt
+  uploadId: 634249

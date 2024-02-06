@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 39e91c0894e0a3841951d031abe91cc0
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 86.13.4
+  assetPath: Assets/Mirror/Hosting/Edgegap/Models/SDK/SessionModel.cs
+  uploadId: 634249

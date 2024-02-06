@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 20d59dd0013e73f4eaa719e9f2dc4c33
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 86.13.4
+  assetPath: Assets/Mirror/Hosting/Edgegap/Models/SDK/Error.cs
+  uploadId: 634249

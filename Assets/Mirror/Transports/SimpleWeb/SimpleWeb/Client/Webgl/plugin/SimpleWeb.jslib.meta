@@ -35,3 +35,10 @@ PluginImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 86.13.4
+  assetPath: Assets/Mirror/Transports/SimpleWeb/SimpleWeb/Client/Webgl/plugin/SimpleWeb.jslib
+  uploadId: 634249

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 0bb645e2f9d04384a85739269cc8a4e1
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 86.13.4
+  assetPath: Assets/Mirror/Hosting/Edgegap/Editor/Api/Models/Requests/CreateAppVersionRequest.cs
+  uploadId: 634249

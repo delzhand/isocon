@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: e8f7e8275b04c0148a38b7f878db4cf3
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 86.13.4
+  assetPath: Assets/Mirror/Hosting/Edgegap/Models/SDK/MatchmakerComponentResponse.cs
+  uploadId: 634249

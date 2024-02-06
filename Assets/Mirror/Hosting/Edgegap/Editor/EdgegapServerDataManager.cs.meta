@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 39f5f27c13279a34eb116630a00e41c2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 86.13.4
+  assetPath: Assets/Mirror/Hosting/Edgegap/Editor/EdgegapServerDataManager.cs
+  uploadId: 634249

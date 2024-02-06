@@ -93,9 +93,8 @@ namespace Mirror
         // for example: main player & pets are owned. monsters & npcs aren't.
         public bool isOwned { get; internal set; }
 
-        // Deprecated 2022-10-13
-        [Obsolete(".hasAuthority was renamed to .isOwned. This is easier to understand and prepares for SyncDirection, where there is a difference betwen isOwned and authority.")]
-        public bool hasAuthority => isOwned;
+        // public so NetworkManager can reset it from StopClient.
+        public bool clientStarted;
 
         /// <summary>The set of network connections (players) that can see this object.</summary>
         public readonly Dictionary<int, NetworkConnectionToClient> observers =
@@ -115,7 +114,7 @@ namespace Mirror
         //
         // it's also easier to work with for serialization etc.
         // serialized and visible in inspector for easier debugging
-        [SerializeField] uint _assetId;
+        [SerializeField, HideInInspector] uint _assetId;
 
         // The AssetId trick:
         //   Ideally we would have a serialized 'Guid m_AssetId' but Unity can't
@@ -355,6 +354,11 @@ namespace Mirror
 #endif
         }
 
+        // expose our AssetId Guid to uint mapping code in case projects need to map Guids to uint as well.
+        // this way their projects won't break if we change our mapping algorithm.
+        // needs to be available at runtime / builds, don't wrap in #if UNITY_EDITOR
+        public static uint AssetGuidToUint(Guid guid) => (uint)guid.GetHashCode(); // deterministic
+
 #if UNITY_EDITOR
         // child NetworkIdentities are not supported.
         // Disallow them and show an error for the user to fix.
@@ -380,8 +384,21 @@ namespace Mirror
             // only set if not empty. fixes https://github.com/vis2k/Mirror/issues/2765
             if (!string.IsNullOrWhiteSpace(path))
             {
+                // if we generate the assetId then we MUST be sure to set dirty
+                // in order to save the prefab object properly. otherwise it
+                // would be regenerated every time we reopen the prefab.
+                // -> Undo.RecordObject is the new EditorUtility.SetDirty!
+                // -> we need to call it before changing.
+                //
+                // to verify this, duplicate a prefab and double click to open it.
+                // add a log message if "_assetId != before_".
+                // without RecordObject, it'll log every time because it's not saved.
+                Undo.RecordObject(this, "Assigned AssetId");
+
+                // uint before = _assetId;
                 Guid guid = new Guid(AssetDatabase.AssetPathToGUID(path));
-                assetId = (uint)guid.GetHashCode(); // deterministic
+                assetId = AssetGuidToUint(guid);
+                // if (_assetId != before) Debug.Log($"Assigned assetId={assetId} to {name}");
             }
         }
 
@@ -693,7 +710,6 @@ namespace Mirror
             }
         }
 
-        bool clientStarted;
         internal void OnStartClient()
         {
             if (clientStarted) return;
@@ -942,6 +958,19 @@ namespace Mirror
                             if (ownerDirty) ownerWriter.WriteBytes(segment.Array, segment.Offset, segment.Count);
                             if (observersDirty) observersWriter.WriteBytes(segment.Array, segment.Offset, segment.Count);
                         }
+
+                        // clear dirty bits for the components that we serialized.
+                        // do not clear for _all_ components, only the ones that
+                        // were dirty and had their syncInterval elapsed.
+                        //
+                        // we don't want to clear bits before the syncInterval
+                        // was elapsed, as then they wouldn't be synced.
+                        //
+                        // only clear for delta, not for full (spawn messages).
+                        // otherwise if a player joins, we serialize monster,
+                        // and shouldn't clear dirty bits not yet synced to
+                        // other players.
+                        if (!initialState) comp.ClearAllDirtyBits();
                     }
                 }
             }
@@ -991,6 +1020,14 @@ namespace Mirror
                         // serialize into writer.
                         // server always knows initialState, we never need to send it
                         comp.Serialize(writer, false);
+
+                        // clear dirty bits for the components that we serialized.
+                        // do not clear for _all_ components, only the ones that
+                        // were dirty and had their syncInterval elapsed.
+                        //
+                        // we don't want to clear bits before the syncInterval
+                        // was elapsed, as then they wouldn't be synced.
+                        comp.ClearAllDirtyBits();
                     }
                 }
             }
@@ -1089,27 +1126,6 @@ namespace Mirror
                                 lastSerialization.ownerWriter,
                                 lastSerialization.observersWriter);
 
-                // clear dirty bits for the components that we serialized.
-                // previously we did this in NetworkServer.BroadcastToConnection
-                // for every connection, for every entity.
-                // but we only serialize each entity once, right here in this
-                // 'lastSerialization.tick != tick' scope.
-                // so only do it once.
-                //
-                // NOTE: not in Serializell as that should only do one
-                //       thing: serialize data.
-                //
-                //
-                // NOTE: DO NOT clear ALL component's dirty bits, because
-                //       components can have different syncIntervals and we
-                //       don't want to reset dirty bits for the ones that were
-                //       not synced yet.
-                //
-                // NOTE: this used to be very important to avoid ever growing
-                //       SyncList changes if they had no observers, but we've
-                //       added SyncObject.isRecording since.
-                ClearDirtyComponentsDirtyBits();
-
                 // set tick
                 lastSerialization.tick = tick;
                 //Debug.Log($"{name} (netId={netId}) serialized for tick={tickTimeStamp}");
@@ -1117,23 +1133,6 @@ namespace Mirror
 
             // return it
             return lastSerialization;
-        }
-
-        // Clear only dirty component's dirty bits. ignores components which
-        // may be dirty but not ready to be synced yet (because of syncInterval)
-        //
-        // NOTE: this used to be very important to avoid ever
-        //       growing SyncList changes if they had no observers,
-        //       but we've added SyncObject.isRecording since.
-        internal void ClearDirtyComponentsDirtyBits()
-        {
-            foreach (NetworkBehaviour comp in NetworkBehaviours)
-            {
-                if (comp.IsDirty())
-                {
-                    comp.ClearAllDirtyBits();
-                }
-            }
         }
 
         internal void AddObserver(NetworkConnectionToClient conn)

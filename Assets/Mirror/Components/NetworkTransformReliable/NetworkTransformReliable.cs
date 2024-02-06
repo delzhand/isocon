@@ -318,9 +318,9 @@ namespace Mirror
                     connectionToClient.remoteTimeStamp,
                     NetworkTime.localTime,                                  // arrival remote timestamp. NOT remote timeline.
                     NetworkServer.sendInterval * sendIntervalMultiplier,    // Unity 2019 doesn't have timeAsDouble yet
-                    target.localPosition,
-                    target.localRotation,
-                    target.localScale);
+                    GetPosition(),
+                    GetRotation(),
+                    GetScale());
             }
 
             // add a small timeline offset to account for decoupled arrival of
@@ -346,9 +346,9 @@ namespace Mirror
                     NetworkClient.connection.remoteTimeStamp,               // arrival remote timestamp. NOT remote timeline.
                     NetworkTime.localTime,                                  // Unity 2019 doesn't have timeAsDouble yet
                     NetworkClient.sendInterval * sendIntervalMultiplier,
-                    target.localPosition,
-                    target.localRotation,
-                    target.localScale);
+                    GetPosition(),
+                    GetRotation(),
+                    GetScale());
             }
 
             // add a small timeline offset to account for decoupled arrival of
@@ -392,15 +392,22 @@ namespace Mirror
 
             // insert a fake one at where we used to be,
             // 'sendInterval' behind the new one.
-            SnapshotInterpolation.InsertIfNotExists(snapshots, new TransformSnapshot(
-                remoteTimeStamp - sendInterval, // arrival remote timestamp. NOT remote time.
-                localTime - sendInterval,       // Unity 2019 doesn't have timeAsDouble yet
-                position,
-                rotation,
-                scale
-            ));
+            SnapshotInterpolation.InsertIfNotExists(
+                snapshots,
+                NetworkClient.snapshotSettings.bufferLimit,
+                new TransformSnapshot(
+                    remoteTimeStamp - sendInterval, // arrival remote timestamp. NOT remote time.
+                    localTime - sendInterval,       // Unity 2019 doesn't have timeAsDouble yet
+                    position,
+                    rotation,
+                    scale
+                )
+            );
         }
 
+        // reset state for next session.
+        // do not ever call this during a session (i.e. after teleport).
+        // calling this will break delta compression.
         public override void Reset()
         {
             base.Reset();
