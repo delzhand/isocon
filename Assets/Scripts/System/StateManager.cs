@@ -6,6 +6,10 @@ public class StateManager : MonoBehaviour
     private IState _substate;
     public IState SubState { get => _substate; }
 
+    public int frames = 4;
+    public int fps = 1;
+    public int x = 0;
+
     public static bool ShowBorders;
 
     public string TempString;

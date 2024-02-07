@@ -21,7 +21,7 @@ public class FileBrowserHelper : MonoBehaviour
 
     private static FileBrowserHelper Find()
     {
-        return GameObject.Find("FileBrowser").GetComponent<FileBrowserHelper>();
+        return GameObject.Find("AppState").GetComponent<FileBrowserHelper>();
     }
 
     public static void OpenSaveMapBrowser(string fileName)
