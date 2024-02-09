@@ -13,8 +13,6 @@ public class MapEdit
     public static string ResizeOp = "ResizeCloneCol";
     public static string StyleOp = "StylePaint";
 
-    public static string FileBrowserFileName = "";
-
     public static BlockFocusMode FocusMode = BlockFocusMode.Single;
 
     public static void Setup()
@@ -349,7 +347,7 @@ public class MapEdit
     public static void ConfirmMapOpen(ClickEvent evt)
     {
         // string value = UI.Modal.Q("SearchField").Q<TextField>("SearchInput").value;
-        string value = FileBrowserFileName;
+        string value = FileBrowser.Result[0];
         if (!TerrainController.MapDirty)
         {
             OpenFile();
@@ -363,7 +361,7 @@ public class MapEdit
 
     private static void OpenFile()
     {
-        string filename = FileBrowserFileName;
+        string filename = FileBrowser.Result[0];
         MapSaver.LegacyLoad(filename);
 
         // string filename = UI.Modal.Q("SearchField").Q<TextField>("SearchInput").value;
@@ -383,7 +381,7 @@ public class MapEdit
     // private static void ConfirmMapSave(ClickEvent evt)
     public static void ConfirmMapSave(ClickEvent evt)
     {
-        string value = FileBrowserFileName;
+        string value = FileBrowser.Result[0];
         if (FileExists(value))
         {
             Modal.DoubleConfirm("Confirm Overwrite", "A file with this name already exists. Overwrite?", WriteFile);
@@ -438,7 +436,7 @@ public class MapEdit
 
     private static void WriteFile()
     {
-        MapSaver.RegSave(FileBrowserFileName);
+        MapSaver.RegSave(FileBrowser.Result[0]);
         // string saveType = UI.Modal.Q<DropdownField>("SaveType").value;
         // string filename = UI.Modal.Q<TextField>("Filename").value;
         // string path = Preferences.Current.DataPath;

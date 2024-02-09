@@ -34,6 +34,10 @@
                             <ui:VisualElement style="background-image: resource(&apos;Textures/config&apos;); -unity-background-scale-mode: scale-to-fit; height: 24px; width: 24px; margin-right: 4px; margin-top: 0;" />
                             <ui:Label tabindex="-1" text="Configuration" display-tooltip-when-elided="true" style="white-space: normal;" />
                         </ui:Button>
+                        <ui:Button display-tooltip-when-elided="true" name="LibraryButton" style="flex-grow: 1; flex-direction: row; justify-content: center; align-items: center; margin-right: 4px; margin-left: 4px;">
+                            <ui:VisualElement style="background-image: resource(&apos;Textures/players&apos;); -unity-background-scale-mode: scale-to-fit; height: 24px; width: 24px; margin-right: 4px; margin-top: 0;" />
+                            <ui:Label tabindex="-1" text="Token Library" display-tooltip-when-elided="true" style="white-space: normal;" />
+                        </ui:Button>
                         <ui:Button display-tooltip-when-elided="true" name="ExitButton" style="flex-grow: 1; flex-direction: row; justify-content: center; margin-right: 4px; margin-left: 4px;">
                             <ui:Label tabindex="-1" text="EXIT" display-tooltip-when-elided="true" name="Label" style="font-size: 16px;" />
                             <ui:Label tabindex="-1" text="Close IsoCON" display-tooltip-when-elided="true" style="white-space: normal;" />
@@ -47,9 +51,6 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:Label tabindex="-1" text="v0.6.0" display-tooltip-when-elided="true" name="Version" style="position: absolute; right: auto; bottom: 0; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); font-size: 12px; left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 4px; padding-right: 0; padding-bottom: 4px; padding-left: 0; -unity-text-align: middle-center; width: 100%;" />
-        <ui:ScrollView name="TokenLibrary" mode="Vertical" mouse-wheel-scroll-size="1000" style="position: absolute; top: 40px; left: 40px; width: 690px; height: 435px; flex-direction: row; background-color: rgba(67, 67, 67, 0.91);">
-            <ui:VisualElement name="LibraryGrid" style="flex-grow: 1; flex-direction: row; flex-wrap: wrap; margin-top: 0; margin-right: 10px; margin-bottom: 20px; margin-left: 10px; padding-right: 0; padding-left: 0;" />
-        </ui:ScrollView>
     </ui:VisualElement>
     <ui:VisualElement name="Tabletop" style="flex-grow: 1; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: none;">
         <ui:VisualElement name="TopBar" style="flex-grow: 0; height: 50px; min-height: 40px; padding-top: 10px; padding-right: 10px; padding-left: 10px; background-color: rgba(0, 0, 0, 0.49); flex-direction: row; align-items: flex-start; opacity: 1; -unity-text-outline-color: rgba(0, 0, 0, 0.49); padding-bottom: 10px;">
@@ -448,17 +449,32 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="Backdrop" style="flex-grow: 1; position: absolute; left: auto; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.86); display: none;" />
-    <ui:VisualElement name="AddTokenOverlay" class="panel-text" style="flex-grow: 1; margin-top: 10%; margin-right: 10%; margin-bottom: 10%; margin-left: 10%; background-color: rgb(0, 0, 0); flex-direction: row; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; display: none;">
-        <ui:VisualElement style="flex-grow: 1; margin-top: 20px; margin-right: 10px; margin-bottom: 20px; margin-left: 10px; flex-direction: row;">
-            <ui:VisualElement style="width: 50%; margin-right: 10px; margin-left: 10px; background-color: rgba(255, 255, 255, 0.14); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;">
-                <ui:TextField label="Token Name" placeholder-text="Hero Name" />
-                <ui:DropdownField label="Size" choices="1x1,2x2,2x2" index="0" />
-                <ui:TextField label="Extra Info" placeholder-text="Lv 1 Fighter" />
-                <ui:IntegerField label="HP" value="100" />
+    <ui:VisualElement name="TokenLibraryModal" class="modal panel-text" style="position: absolute; left: 50%; top: 50%; -unity-slice-left: 28; -unity-slice-top: 46; -unity-slice-right: 34; -unity-slice-bottom: 30; translate: -50% -50%; display: flex; max-width: 600px; -unity-slice-scale: 0.5px; background-color: rgb(71, 65, 63); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px;">
+        <ui:VisualElement name="Top" style="flex-grow: 1; background-color: rgb(74, 113, 178); border-top-left-radius: 4px; border-top-right-radius: 4px; padding-top: 4px; padding-right: 24px; padding-bottom: 4px; padding-left: 8px;">
+            <ui:Label tabindex="-1" text="Token Library" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="-unity-text-align: upper-center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+            <ui:Button text="×" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Exit" class="roundbutton" style="margin-left: 0; align-self: center; position: absolute; right: 4px; top: 4px; margin-top: 0; margin-right: 0; margin-bottom: 0; color: rgb(255, 255, 255); font-size: 20px; -unity-text-align: middle-center; background-color: rgba(255, 255, 255, 0);" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Wrapper" style="flex-grow: 1; min-width: 0; min-height: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; flex-direction: column-reverse;">
+            <ui:VisualElement name="Buttons" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; margin-top: 24px; background-color: rgba(0, 0, 0, 0.67); padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;">
+                <ui:Button text="Edit" name="EditButton" class="preferred" />
+                <ui:Button text="Select" name="SelectButton" class="preferred" style="margin-left: 4px;" />
+                <ui:Button text="Cancel" name="CancelButton" style="margin-left: 4px;" />
             </ui:VisualElement>
-            <ui:ScrollView style="width: 50%; margin-top: 0; margin-right: 10px; margin-bottom: 0; margin-left: 10px; background-color: rgba(255, 255, 255, 0.14); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;">
-                <ui:VisualElement style="flex-grow: 1;" />
-            </ui:ScrollView>
+            <ui:VisualElement name="Contents" style="flex-grow: 1; flex-direction: column-reverse;">
+                <ui:ScrollView name="TokenLibrary" mode="Vertical" mouse-wheel-scroll-size="1000" style="flex-direction: row; background-color: rgba(67, 67, 67, 0.91);">
+                    <ui:VisualElement name="LibraryGrid" style="flex-direction: row; flex-wrap: wrap; margin-top: 0; margin-right: 10px; margin-bottom: 20px; margin-left: 10px; padding-right: 0; padding-left: 0; width: 425px; max-height: 425px;" />
+                </ui:ScrollView>
+                <ui:VisualElement name="TokenMetaEdit" style="flex-grow: 1; flex-direction: row;">
+                    <ui:VisualElement style="flex-grow: 1;">
+                        <ui:VisualElement style="width: 200px; height: 200px; border-left-color: rgba(255, 255, 255, 0.24); border-right-color: rgba(255, 255, 255, 0.24); border-top-color: rgba(255, 255, 255, 0.24); border-bottom-color: rgba(255, 255, 255, 0.24); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-grow: 1;">
+                        <ui:TextField label="Name" class="no-margin" />
+                        <ui:IntegerField label="Number of Frames" value="1" class="no-margin" style="margin-top: 4px;" />
+                        <ui:IntegerField label="FPS" value="0" class="no-margin" style="margin-top: 4px;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="GeneralModal" class="modal panel-text" style="position: absolute; left: 50%; top: 50%; -unity-slice-left: 28; -unity-slice-top: 46; -unity-slice-right: 34; -unity-slice-bottom: 30; translate: -50% -50%; display: none; max-width: 600px; -unity-slice-scale: 0.5px; background-color: rgb(71, 65, 63); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px;">

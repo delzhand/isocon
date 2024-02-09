@@ -374,9 +374,23 @@
 
 #TokenLibrary .item {
     margin: 20px 10px 0px 10px;
-    background-color: black;
+    background-color: rgba(0, 0, 0, .5);
     position: relative;
     overflow: hidden;
+}
+
+#TokenLibrary .item.selected {
+    background-color: yellow;
+}
+
+#TokenLibrary .item .unity-label {
+    position: absolute;
+    margin: 0;
+    padding: 4px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    white-space: normal;
 }
 
 #TokenLibrary .frame {

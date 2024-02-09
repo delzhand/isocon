@@ -14,8 +14,10 @@ public class TokenData : NetworkBehaviour
     public string Id;
     [SyncVar]
     public string Name;
+    // [SyncVar]
+    // public string GraphicHash;
     [SyncVar]
-    public string GraphicHash;
+    public TokenMeta TokenMeta;
     [SyncVar]
     public int Size;
     [SyncVar]
@@ -47,6 +49,7 @@ public class TokenData : NetworkBehaviour
         CreateWorldToken();
         CreateUnitBarElement();
         CreateOverheadElement();
+        GraphicSync();
     }
 
     void Update()
@@ -56,10 +59,10 @@ public class TokenData : NetworkBehaviour
             return;
         }
 
-        if (Graphic == null)
-        {
-            GraphicSync();
-        }
+        // if (Graphic == null)
+        // {
+        //     GraphicSync();
+        // }
 
         if (OverheadElement != null)
         {
@@ -79,23 +82,24 @@ public class TokenData : NetworkBehaviour
 
     private void GraphicSync()
     {
-        if (GraphicSyncInterval > 0)
-        {
-            GraphicSyncInterval -= Time.deltaTime;
-        }
-        else
-        {
-            Graphic = TextureSender.LoadImageFromFile(GraphicHash, true);
-            if (Graphic)
-            {
-                Graphic.wrapMode = TextureWrapMode.Clamp;
-                UpdateGraphic();
-            }
-            else
-            {
-                GraphicSyncInterval = 2.5f;
-            }
-        }
+        TokenLibrary.Add(TokenMeta);
+        // if (GraphicSyncInterval > 0)
+        // {
+        //     GraphicSyncInterval -= Time.deltaTime;
+        // }
+        // else
+        // {
+        //     Graphic = TextureSender.LoadImageFromFile(GraphicHash, true);
+        //     if (Graphic)
+        //     {
+        //         Graphic.wrapMode = TextureWrapMode.Clamp;
+        //         UpdateGraphic();
+        //     }
+        //     else
+        //     {
+        //         GraphicSyncInterval = 2.5f;
+        //     }
+        // }
     }
 
     private void CreateWorldToken()

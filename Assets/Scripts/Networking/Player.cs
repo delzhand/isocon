@@ -113,14 +113,14 @@ public class Player : NetworkBehaviour
 
     #region Create Token
     [Command]
-    public void CmdCreateToken(string system, string graphicHash, string name, int size, Color color, string systemData)
+    public void CmdCreateToken(string system, TokenMeta tokenMeta, string name, int size, Color color, string systemData)
     {
         string id = Guid.NewGuid().ToString();
         GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData"));
         TokenData data = g.GetComponent<TokenData>();
         data.Id = id;
         data.System = system;
-        data.GraphicHash = graphicHash;
+        data.TokenMeta = tokenMeta;
         data.Name = name;
         data.Size = size;
         data.Color = color;
@@ -319,35 +319,35 @@ public class Player : NetworkBehaviour
     #endregion
 
     #region Images
-    [Command]
-    public void CmdRequestImage(string hash)
-    {
-        FileLogger.Write($"Client {connectionToClient.connectionId} requested image {TextureSender.TruncateHash(hash)}");
-        Texture2D graphic = TextureSender.LoadImageFromFile(hash, true);
-        TextureSender.SendToClient(graphic, connectionToClient.connectionId);
-    }
+    // [Command]
+    // public void CmdRequestImage(string hash)
+    // {
+    //     FileLogger.Write($"Client {connectionToClient.connectionId} requested image {TextureSender.TruncateHash(hash)}");
+    //     Texture2D graphic = TextureSender.LoadImageFromFile(hash, true);
+    //     TextureSender.SendToClient(graphic, connectionToClient.connectionId);
+    // }
 
-    [Command]
-    public void CmdSendTextureChunk(string hash, int connectionId, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height)
-    {
-        // Send to host
-        if (connectionId == -1)
-        {
-            TextureSender.Receive(hash, chunkIndex, chunkTotal, chunkColors, width, height);
-        }
+    // [Command]
+    // public void CmdSendTextureChunk(string hash, int connectionId, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height)
+    // {
+    //     // Send to host
+    //     if (connectionId == -1)
+    //     {
+    //         TextureSender.Receive(hash, chunkIndex, chunkTotal, chunkColors, width, height);
+    //     }
 
-        // Send to that connection
-        else
-        {
-            NetworkConnectionToClient targetClient = NetworkServer.connections[connectionId];
-            TargetReceiveTextureChunk(targetClient, hash, chunkIndex, chunkTotal, chunkColors, width, height);
-        }
-    }
+    //     // Send to that connection
+    //     else
+    //     {
+    //         NetworkConnectionToClient targetClient = NetworkServer.connections[connectionId];
+    //         TargetReceiveTextureChunk(targetClient, hash, chunkIndex, chunkTotal, chunkColors, width, height);
+    //     }
+    // }
 
-    [TargetRpc]
-    public void TargetReceiveTextureChunk(NetworkConnectionToClient target, string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height)
-    {
-        TextureSender.Receive(hash, chunkIndex, chunkTotal, chunkColors, width, height);
-    }
+    // [TargetRpc]
+    // public void TargetReceiveTextureChunk(NetworkConnectionToClient target, string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height)
+    // {
+    //     TextureSender.Receive(hash, chunkIndex, chunkTotal, chunkColors, width, height);
+    // }
     #endregion
 }

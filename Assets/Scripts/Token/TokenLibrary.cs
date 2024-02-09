@@ -1,13 +1,39 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using SimpleFileBrowser;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class TokenLibrary : MonoBehaviour
 {
-    public static TokenMeta[] Tokens;
+    private class TokenLibraryFile
+    {
+        public TokenMeta[] Tokens;
+    }
+
+    private class SyncImage
+    {
+        public TokenMeta Meta;
+        public ImageChunk[] Chunks;
+    }
+
+    private class ImageChunk
+    {
+        public int Index;
+        public Color[] ColorChunk;
+    }
+
+    public static List<TokenMeta> Tokens;
     public static List<(TokenMeta, VisualElement)> ElementMap;
+    private static Dictionary<string, SyncImage> SyncImages;
+
+    private static int LibraryItemSize = 120;
 
     private static TokenLibrary Find()
     {
@@ -16,77 +42,12 @@ public class TokenLibrary : MonoBehaviour
 
     public static void Setup()
     {
+        Tokens = new();
         ElementMap = new();
-        Find().DebugSetup();
-    }
-
-    private void DebugSetup()
-    {
-        List<TokenMeta> list = new();
-        list.Add(new TokenMeta
-        {
-            FPS = 0,
-            Frames = 1,
-            Hash = "f3602264f74d1439d3aafa14a91f74313c7a68b621d5b5feacb461393d4a9c69",
-            Name = "Ada",
-        });
-        list.Add(new TokenMeta
-        {
-            FPS = 2,
-            Frames = 4,
-            Hash = "d8df59ff15f1a68794ae2549d2305d1cbda518be8b0d1d9e0c7ff999303597ae",
-            Name = "Ada Animated",
-        });
-        list.Add(new TokenMeta
-        {
-            FPS = 12,
-            Frames = 13,
-            Hash = "6914b4c0d81213c8cae0ddbcf62a0e334e83c9de0e70ecf607a691e56415ce78",
-            Name = "Hamon Bladeseeker",
-        });
-        list.Add(new TokenMeta
-        {
-            FPS = 0,
-            Frames = 1,
-            Hash = "ef9b4c06643152b1feb267f8604666ebe180afb2cdb98a90833365476ad46849",
-            Name = "Graddes"
-        });
-        list.Add(new TokenMeta
-        {
-            FPS = 0,
-            Frames = 1,
-            Hash = "80fb9ad785eabb079829a75b6d0f7b648da3f9a5553028da56d282a6e6b5e155",
-            Name = "Sae"
-        });
-        list.Add(new TokenMeta
-        {
-            FPS = 0,
-            Frames = 1,
-            Hash = "037305e03e1b75ad7a644422649b5f5456fcaed1f6c7cc66a70febb6d1cd97f5",
-            Name = "Red Worm"
-        });
-        list.Add(new TokenMeta
-        {
-            FPS = 0,
-            Frames = 1,
-            Hash = "312a77bf1aae81e42b3a6a6f87b7e7d2cd712bcd0339014486d34c52a53b14d7",
-            Name = "Horned Rooter"
-        });
-        list.Add(new TokenMeta
-        {
-            FPS = 0,
-            Frames = 1,
-            Hash = "8b3627c36b26c32aaa2997d2ed422253e9f0e19f896978cd22514514545f3830",
-            Name = "Gunwight"
-        });
-
-        Tokens = list.ToArray();
-
-        foreach (var tokenMeta in Tokens)
-        {
-            AddToUI(tokenMeta);
-        }
-
+        SyncImages = new();
+        Find().AddAddButtonToUI();
+        ReadLibraryFile();
+        Bind();
     }
 
     void Update()
@@ -101,33 +62,127 @@ public class TokenLibrary : MonoBehaviour
         }
     }
 
-    private void AddToUI(TokenMeta meta)
+    private static void Bind()
     {
-        int rawSize = 200;
+        UI.System.Q("TokenLibraryModal").Q("Exit").RegisterCallback<ClickEvent>(Close);
+        UI.System.Q("TokenLibraryModal").Q("CancelButton").RegisterCallback<ClickEvent>(Close);
+        // UI.System.Q("")
+    }
 
-        Texture2D graphic = TextureSender.LoadImageFromFile(meta.Hash, true);
+    public static void Show(ClickEvent evt)
+    {
+        UI.ToggleDisplay("TokenLibraryModal", true);
+    }
+
+    public static void Close(ClickEvent evt)
+    {
+        UI.ToggleDisplay("TokenLibraryModal", false);
+    }
+
+    public static TokenMeta GetMetaByHash(string hash)
+    {
+        foreach (TokenMeta meta in Tokens)
+        {
+            if (meta.Hash == hash)
+            {
+                return meta;
+            }
+        }
+        return new TokenMeta
+        {
+            FPS = 0,
+            Frames = 1,
+            Hash = hash,
+            Name = ""
+        };
+    }
+
+    public static void Add(TokenMeta meta)
+    {
+        var syncImage = new SyncImage
+        {
+            Meta = meta
+        };
+        SyncImages.Add(meta.Hash, syncImage);
+    }
+
+    private void AddAddButtonToUI()
+    {
+        VisualElement tokenDisplay = new();
+        tokenDisplay.AddToClassList("item");
+        tokenDisplay.style.height = LibraryItemSize;
+        tokenDisplay.style.width = LibraryItemSize;
+        tokenDisplay.Add(new Label("Add"));
+
+        tokenDisplay.RegisterCallback<ClickEvent>((evt) =>
+        {
+            FileBrowserHelper.OpenLoadTokenBrowser();
+        });
+        UI.System.Q("TokenLibrary").Q("LibraryGrid").Add(tokenDisplay);
+    }
+
+    public static void ConfirmSelect(ClickEvent evt)
+    {
+        int count = 0;
+        string directory = $"{Preferences.Current.DataPath}/hashed-tokens";
+        foreach (string filename in FileBrowser.Result)
+        {
+            count++;
+            byte[] imageData = File.ReadAllBytes(filename);
+            Texture2D texture = new Texture2D(2, 2);
+            texture.LoadImage(imageData);
+            string hash = GetTextureHash(texture);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+            File.WriteAllBytes($"{directory}/{hash}.png", imageData);
+            var tokenMeta = new TokenMeta
+            {
+                Hash = hash
+            };
+            tokenMeta.Name = filename.Split("\\").Last<string>();
+            Tokens.Add(tokenMeta);
+            AddToUI(tokenMeta);
+        }
+        WriteLibraryFile();
+        Toast.AddSuccess($"{count} tokens added to the library.");
+    }
+
+    private static Texture2D LoadHashedImage(string hash)
+    {
+        string directory = $"{Preferences.Current.DataPath}/hashed-tokens";
+        string filename = $"{directory}/{hash}.png";
+        byte[] imageData = File.ReadAllBytes(filename);
+        Texture2D texture = new Texture2D(2, 2);
+        texture.LoadImage(imageData);
+        return texture;
+    }
+
+    private static void AddToUI(TokenMeta meta)
+    {
+        Texture2D graphic = LoadHashedImage(meta.Hash);
         float aspectRatio = graphic.width / meta.Frames / (float)graphic.height;
 
         VisualElement tokenDisplay = new();
         tokenDisplay.AddToClassList("item");
-        tokenDisplay.style.height = rawSize;
-        tokenDisplay.style.width = rawSize;
+        tokenDisplay.style.height = LibraryItemSize;
+        tokenDisplay.style.width = LibraryItemSize;
 
         VisualElement frame = new();
         frame.AddToClassList("frame");
-        int width = rawSize;
-        int height = rawSize;
+        int width = LibraryItemSize;
+        int height = LibraryItemSize;
         if (aspectRatio >= 1)
         {
-            height = Mathf.RoundToInt(rawSize / aspectRatio);
+            height = Mathf.RoundToInt(LibraryItemSize / aspectRatio);
         }
         else
         {
-            width = Mathf.RoundToInt(rawSize * aspectRatio);
+            width = Mathf.RoundToInt(LibraryItemSize * aspectRatio);
         }
         frame.style.width = width;
         frame.style.height = height;
-        Debug.Log($"{meta.Name} w:{graphic.width / meta.Frames} h:{graphic.height} r:{aspectRatio} w2:{width} h2:{height}");
 
         Label label = new();
         label.AddToClassList("panel-text");
@@ -146,5 +201,60 @@ public class TokenLibrary : MonoBehaviour
         UI.System.Q("TokenLibrary").Q("LibraryGrid").Add(tokenDisplay);
 
         ElementMap.Add((meta, tokenDisplay));
+    }
+
+    private static void WriteLibraryFile()
+    {
+        string directory = $"{Preferences.Current.DataPath}/hashed-tokens";
+        string fileName = $"{directory}/library.json";
+        var tokenLibraryFile = new TokenLibraryFile();
+        tokenLibraryFile.Tokens = Tokens.ToArray();
+        string json = JsonUtility.ToJson(tokenLibraryFile);
+        File.WriteAllText(fileName, json);
+    }
+
+    private static void ReadLibraryFile()
+    {
+        string directory = $"{Preferences.Current.DataPath}/hashed-tokens";
+        string fileName = $"{directory}/library.json";
+        if (!File.Exists(fileName))
+        {
+            return;
+        }
+        string json = File.ReadAllText(fileName);
+        if (json.Length == 0)
+        {
+            return;
+        }
+        var tokenLibraryFile = JsonUtility.FromJson<TokenLibraryFile>(json);
+        Tokens = tokenLibraryFile.Tokens.ToList();
+        foreach (var tokenMeta in Tokens)
+        {
+            AddToUI(tokenMeta);
+        }
+    }
+
+    public static string GetTextureHash(Texture2D texture)
+    {
+        if (texture == null)
+        {
+            Debug.LogError("Texture is null.");
+            return null;
+        }
+
+        // Convert the texture data to a byte array
+        byte[] textureData = texture.GetRawTextureData();
+
+        // Compute the hash using SHA-256
+        using SHA256 sha256 = SHA256.Create();
+        byte[] hashBytes = sha256.ComputeHash(textureData);
+
+        // Convert the hash bytes to a hexadecimal string
+        StringBuilder sb = new();
+        for (int i = 0; i < hashBytes.Length; i++)
+        {
+            sb.Append(hashBytes[i].ToString("x2"));
+        }
+        return sb.ToString();
     }
 }

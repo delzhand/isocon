@@ -6,8 +6,8 @@ using UnityEngine;
 [Serializable]
 public class TokenMeta
 {
-    public string Name;
-    public int FPS;
-    public int Frames;
+    public string Name = "";
+    public int FPS = 0;
+    public int Frames = 1;
     public string Hash;
 }

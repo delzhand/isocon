@@ -68,6 +68,7 @@ public class LauncherState : BaseState
     private void BindCallbacks()
     {
         UI.System.Q<Button>("ExitButton").RegisterCallback<ClickEvent>(ExitClicked);
+        UI.System.Q<Button>("LibraryButton").RegisterCallback<ClickEvent>(LibraryClicked);
         UI.System.Q<Button>("ConfigButton").RegisterCallback<ClickEvent>(ConfigClicked);
         UI.System.Q<Button>("SoloModeButton").RegisterCallback<ClickEvent>(SoloModeClicked);
         UI.System.Q<Button>("HostModeButton").RegisterCallback<ClickEvent>(HostModeClicked);
@@ -79,6 +80,7 @@ public class LauncherState : BaseState
     private void UnbindCallbacks()
     {
         UI.System.Q<Button>("ExitButton").UnregisterCallback<ClickEvent>(ExitClicked);
+        UI.System.Q<Button>("LibraryButton").UnregisterCallback<ClickEvent>(LibraryClicked);
         UI.System.Q<Button>("ConfigButton").UnregisterCallback<ClickEvent>(ConfigClicked);
         UI.System.Q<Button>("SoloModeButton").UnregisterCallback<ClickEvent>(SoloModeClicked);
         UI.System.Q<Button>("HostModeButton").UnregisterCallback<ClickEvent>(HostModeClicked);
@@ -94,6 +96,12 @@ public class LauncherState : BaseState
     private void ConfigClicked(ClickEvent evt)
     {
         Config.OpenModal(evt);
+    }
+
+    private void LibraryClicked(ClickEvent evt)
+    {
+        Debug.Log("foo");
+        TokenLibrary.Show(evt);
     }
 
     private void SoloModeClicked(ClickEvent evt)
