@@ -10,4 +10,5 @@ public class TokenMeta
     public int FPS = 0;
     public int Frames = 1;
     public string Hash;
+    public bool Favorite;
 }

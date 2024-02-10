@@ -380,7 +380,7 @@
 }
 
 #TokenLibrary .item.selected {
-    background-color: yellow;
+    background-color: rgb(185, 185, 143);
 }
 
 #TokenLibrary .item .unity-label {

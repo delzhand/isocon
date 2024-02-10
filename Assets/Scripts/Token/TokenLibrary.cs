@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using SimpleFileBrowser;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -29,11 +30,15 @@ public class TokenLibrary : MonoBehaviour
         public Color[] ColorChunk;
     }
 
-    public static List<TokenMeta> Tokens;
+    public static Dictionary<string, TokenMeta> Tokens;
     public static List<(TokenMeta, VisualElement)> ElementMap;
     private static Dictionary<string, SyncImage> SyncImages;
 
     private static int LibraryItemSize = 120;
+
+    private static bool AllowSelect = false;
+    private static bool Editing = false; // if another state is ever necessary use an enum instead of more bools
+    private static string SelectedHash;
 
     private static TokenLibrary Find()
     {
@@ -64,14 +69,26 @@ public class TokenLibrary : MonoBehaviour
 
     private static void Bind()
     {
-        UI.System.Q("TokenLibraryModal").Q("Exit").RegisterCallback<ClickEvent>(Close);
-        UI.System.Q("TokenLibraryModal").Q("CancelButton").RegisterCallback<ClickEvent>(Close);
-        // UI.System.Q("")
+        VisualElement root = UI.System.Q("TokenLibraryModal");
+        root.Q("Exit").RegisterCallback<ClickEvent>(Close);
+        root.Q("CancelButton").RegisterCallback<ClickEvent>(CancelButtonClicked);
+        root.Q("EditButton").RegisterCallback<ClickEvent>(EditButtonClicked);
+        root.Q("SelectButton").RegisterCallback<ClickEvent>(SelectButtonClicked);
+        root.Q("SaveButton").RegisterCallback<ClickEvent>(SaveButtonClicked);
     }
 
-    public static void Show(ClickEvent evt)
+    public static void ShowDefaultMode(ClickEvent evt)
     {
+        AllowSelect = false;
         UI.ToggleDisplay("TokenLibraryModal", true);
+        UpdateVisibility();
+    }
+
+    public static void ShowSelectMode(ClickEvent evt)
+    {
+        AllowSelect = true;
+        UI.ToggleDisplay("TokenLibraryModal", true);
+        UpdateVisibility();
     }
 
     public static void Close(ClickEvent evt)
@@ -79,22 +96,69 @@ public class TokenLibrary : MonoBehaviour
         UI.ToggleDisplay("TokenLibraryModal", false);
     }
 
-    public static TokenMeta GetMetaByHash(string hash)
+    public static void CancelButtonClicked(ClickEvent evt)
     {
-        foreach (TokenMeta meta in Tokens)
+        if (Editing)
         {
-            if (meta.Hash == hash)
+            Editing = false;
+            UpdateVisibility();
+        }
+        else
+        {
+            Close(evt);
+        }
+    }
+
+    private static void EditButtonClicked(ClickEvent evt)
+    {
+        Editing = true;
+        UpdateVisibility();
+
+        TokenMeta meta = Tokens[SelectedHash];
+        VisualElement root = UI.System.Q("TokenLibraryModal");
+        root.Q<TextField>("NameField").value = meta.Name;
+        root.Q<IntegerField>("FramesField").value = meta.Frames;
+        root.Q<IntegerField>("FpsField").value = meta.FPS;
+        root.Q<Toggle>("FavoriteField").value = meta.Favorite;
+
+    }
+
+    private static void SelectButtonClicked(ClickEvent evt)
+    {
+        // invoke???
+    }
+
+    private static void SaveButtonClicked(ClickEvent evt)
+    {
+        // write file
+        Editing = false;
+        UpdateVisibility();
+
+        VisualElement root = UI.System.Q("TokenLibraryModal");
+        Tokens[SelectedHash].Name = root.Q<TextField>("NameField").value;
+        Tokens[SelectedHash].Frames = root.Q<IntegerField>("FramesField").value;
+        Tokens[SelectedHash].FPS = root.Q<IntegerField>("FpsField").value;
+        Tokens[SelectedHash].Favorite = root.Q<Toggle>("FavoriteField").value;
+        WriteLibraryFile();
+        foreach ((TokenMeta, VisualElement) item in ElementMap)
+        {
+            if (item.Item1.Hash == SelectedHash)
             {
-                return meta;
+                item.Item2.Q<Label>("TokenLabel").text = Tokens[SelectedHash].Name;
             }
         }
-        return new TokenMeta
-        {
-            FPS = 0,
-            Frames = 1,
-            Hash = hash,
-            Name = ""
-        };
+    }
+
+    private static void UpdateVisibility()
+    {
+        VisualElement root = UI.System.Q("TokenLibraryModal");
+        UI.ToggleDisplay(root.Q("TokenLibrary"), !Editing);
+        UI.ToggleDisplay(root.Q("TokenMetaEdit"), Editing);
+
+        UI.ToggleDisplay(root.Q("SelectButton"), AllowSelect && !Editing);
+        UI.ToggleDisplay(root.Q("SaveButton"), Editing);
+        UI.ToggleDisplay(root.Q("EditButton"), !Editing);
+        UI.Redraw();
     }
 
     public static void Add(TokenMeta meta)
@@ -142,7 +206,7 @@ public class TokenLibrary : MonoBehaviour
                 Hash = hash
             };
             tokenMeta.Name = filename.Split("\\").Last<string>();
-            Tokens.Add(tokenMeta);
+            Tokens[tokenMeta.Hash] = tokenMeta;
             AddToUI(tokenMeta);
         }
         WriteLibraryFile();
@@ -185,6 +249,7 @@ public class TokenLibrary : MonoBehaviour
         frame.style.height = height;
 
         Label label = new();
+        label.name = "TokenLabel";
         label.AddToClassList("panel-text");
         label.text = meta.Name;
         label.style.backgroundColor = new Color(0, 0, 0, .5f);
@@ -198,6 +263,23 @@ public class TokenLibrary : MonoBehaviour
         frame.Add(sprite);
         tokenDisplay.Add(frame);
         tokenDisplay.Add(label);
+
+        tokenDisplay.RegisterCallback<ClickEvent>((evt) =>
+        {
+            foreach ((TokenMeta, VisualElement) item in ElementMap)
+            {
+                if (item.Item1.Hash == meta.Hash)
+                {
+                    SelectedHash = meta.Hash;
+                    item.Item2.ToggleInClassList("selected");
+                }
+                else
+                {
+                    item.Item2.RemoveFromClassList("selected");
+                }
+            }
+        });
+
         UI.System.Q("TokenLibrary").Q("LibraryGrid").Add(tokenDisplay);
 
         ElementMap.Add((meta, tokenDisplay));
@@ -208,7 +290,7 @@ public class TokenLibrary : MonoBehaviour
         string directory = $"{Preferences.Current.DataPath}/hashed-tokens";
         string fileName = $"{directory}/library.json";
         var tokenLibraryFile = new TokenLibraryFile();
-        tokenLibraryFile.Tokens = Tokens.ToArray();
+        tokenLibraryFile.Tokens = Tokens.Values.ToArray();
         string json = JsonUtility.ToJson(tokenLibraryFile);
         File.WriteAllText(fileName, json);
     }
@@ -227,9 +309,10 @@ public class TokenLibrary : MonoBehaviour
             return;
         }
         var tokenLibraryFile = JsonUtility.FromJson<TokenLibraryFile>(json);
-        Tokens = tokenLibraryFile.Tokens.ToList();
-        foreach (var tokenMeta in Tokens)
+        Tokens.Clear();
+        foreach (var tokenMeta in tokenLibraryFile.Tokens)
         {
+            Tokens[tokenMeta.Hash] = tokenMeta;
             AddToUI(tokenMeta);
         }
     }

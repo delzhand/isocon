@@ -457,6 +457,7 @@
         <ui:VisualElement name="Wrapper" style="flex-grow: 1; min-width: 0; min-height: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; flex-direction: column-reverse;">
             <ui:VisualElement name="Buttons" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; margin-top: 24px; background-color: rgba(0, 0, 0, 0.67); padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;">
                 <ui:Button text="Edit" name="EditButton" class="preferred" />
+                <ui:Button text="Save" name="SaveButton" class="preferred" style="margin-left: 4px;" />
                 <ui:Button text="Select" name="SelectButton" class="preferred" style="margin-left: 4px;" />
                 <ui:Button text="Cancel" name="CancelButton" style="margin-left: 4px;" />
             </ui:VisualElement>
@@ -465,13 +466,14 @@
                     <ui:VisualElement name="LibraryGrid" style="flex-direction: row; flex-wrap: wrap; margin-top: 0; margin-right: 10px; margin-bottom: 20px; margin-left: 10px; padding-right: 0; padding-left: 0; width: 425px; max-height: 425px;" />
                 </ui:ScrollView>
                 <ui:VisualElement name="TokenMetaEdit" style="flex-grow: 1; flex-direction: row;">
-                    <ui:VisualElement style="flex-grow: 1;">
-                        <ui:VisualElement style="width: 200px; height: 200px; border-left-color: rgba(255, 255, 255, 0.24); border-right-color: rgba(255, 255, 255, 0.24); border-top-color: rgba(255, 255, 255, 0.24); border-bottom-color: rgba(255, 255, 255, 0.24); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px;" />
+                    <ui:VisualElement style="flex-grow: 0; margin-right: 8px;">
+                        <ui:VisualElement name="TokenPreview" style="width: 150px; height: 150px; border-left-color: rgba(255, 255, 255, 0.24); border-right-color: rgba(255, 255, 255, 0.24); border-top-color: rgba(255, 255, 255, 0.24); border-bottom-color: rgba(255, 255, 255, 0.24); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px;" />
                     </ui:VisualElement>
                     <ui:VisualElement style="flex-grow: 1;">
-                        <ui:TextField label="Name" class="no-margin" />
-                        <ui:IntegerField label="Number of Frames" value="1" class="no-margin" style="margin-top: 4px;" />
-                        <ui:IntegerField label="FPS" value="0" class="no-margin" style="margin-top: 4px;" />
+                        <ui:TextField label="Name" name="NameField" class="no-margin" />
+                        <ui:IntegerField label="Number of Frames" value="1" name="FramesField" class="no-margin" style="margin-top: 4px;" />
+                        <ui:IntegerField label="FPS" value="0" name="FpsField" class="no-margin" style="margin-top: 4px;" />
+                        <ui:Toggle label="Favorite" name="FavoriteField" class="no-margin" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

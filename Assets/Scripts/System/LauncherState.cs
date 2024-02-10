@@ -100,8 +100,7 @@ public class LauncherState : BaseState
 
     private void LibraryClicked(ClickEvent evt)
     {
-        Debug.Log("foo");
-        TokenLibrary.Show(evt);
+        TokenLibrary.ShowDefaultMode(evt);
     }
 
     private void SoloModeClicked(ClickEvent evt)

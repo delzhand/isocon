@@ -237,6 +237,6 @@ public class UI : MonoBehaviour
     {
         float x = GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale;
         GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = x - .01f;
-        // GameObject.Find("Engine").GetComponent<UI>().uiFix = true;
+        GameObject.Find("AppState").GetComponent<UI>().uiFix = true;
     }
 }
