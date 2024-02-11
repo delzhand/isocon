@@ -13,55 +13,41 @@ using UnityEngine.UIElements;
 
 public class TokenLibrary : MonoBehaviour
 {
+
+    public delegate void LibraryCallback();
+
     private class TokenLibraryFile
     {
         public TokenMeta[] Tokens;
     }
 
-    private class SyncImage
-    {
-        public TokenMeta Meta;
-        public ImageChunk[] Chunks;
-    }
-
-    private class ImageChunk
-    {
-        public int Index;
-        public Color[] ColorChunk;
-    }
-
     public static Dictionary<string, TokenMeta> Tokens;
-    public static List<(TokenMeta, VisualElement)> ElementMap;
-    private static Dictionary<string, SyncImage> SyncImages;
+    public static Dictionary<string, (TokenMeta, VisualElement)> ElementMap;
 
     private static int LibraryItemSize = 120;
 
     private static bool AllowSelect = false;
-    private static bool Editing = false; // if another state is ever necessary use an enum instead of more bools
+    private static bool Editing = false;
+    private static TokenMeta BackupMeta;
     private static string SelectedHash;
-
-    private static TokenLibrary Find()
-    {
-        return GameObject.Find("AppState").GetComponent<TokenLibrary>();
-    }
+    private static LibraryCallback OnSelect;
 
     public static void Setup()
     {
         Tokens = new();
         ElementMap = new();
-        SyncImages = new();
-        Find().AddAddButtonToUI();
         ReadLibraryFile();
         Bind();
     }
 
     void Update()
     {
-        foreach ((TokenMeta, VisualElement) item in ElementMap)
+        foreach ((TokenMeta, VisualElement) item in ElementMap.Values)
         {
             var meta = item.Item1;
             var element = item.Item2;
             int currentFrameIndex = Mathf.FloorToInt(Time.time * meta.FPS) % meta.Frames;
+
             int offset = Mathf.RoundToInt(-100 * currentFrameIndex);
             element.Q("Sprite").style.left = Length.Percent(offset);
         }
@@ -70,11 +56,21 @@ public class TokenLibrary : MonoBehaviour
     private static void Bind()
     {
         VisualElement root = UI.System.Q("TokenLibraryModal");
+        root.Q("AddButton").RegisterCallback<ClickEvent>((evt) => FileBrowserHelper.OpenLoadTokenBrowser());
         root.Q("Exit").RegisterCallback<ClickEvent>(Close);
         root.Q("CancelButton").RegisterCallback<ClickEvent>(CancelButtonClicked);
         root.Q("EditButton").RegisterCallback<ClickEvent>(EditButtonClicked);
         root.Q("SelectButton").RegisterCallback<ClickEvent>(SelectButtonClicked);
         root.Q("SaveButton").RegisterCallback<ClickEvent>(SaveButtonClicked);
+        root.Q<TextField>("NameField").RegisterValueChangedCallback<string>((evt) => ChangeEditingValue());
+        root.Q<IntegerField>("FramesField").RegisterValueChangedCallback<int>((evt) => ChangeEditingValue());
+        root.Q<IntegerField>("FpsField").RegisterValueChangedCallback<int>((evt) => ChangeEditingValue());
+        root.Q<Toggle>("FavoriteField").RegisterValueChangedCallback<bool>((evt) => ChangeEditingValue());
+
+        UI.System.Q<Button>("TestButton").RegisterCallback<ClickEvent>((evt) =>
+        {
+            TokenSync.SyncStep();
+        });
     }
 
     public static void ShowDefaultMode(ClickEvent evt)
@@ -84,11 +80,17 @@ public class TokenLibrary : MonoBehaviour
         UpdateVisibility();
     }
 
-    public static void ShowSelectMode(ClickEvent evt)
+    public static void ShowSelectMode(ClickEvent evt, LibraryCallback onSelect)
     {
         AllowSelect = true;
+        OnSelect = onSelect;
         UI.ToggleDisplay("TokenLibraryModal", true);
         UpdateVisibility();
+    }
+
+    public static TokenMeta GetSelectedMeta()
+    {
+        return Tokens[SelectedHash];
     }
 
     public static void Close(ClickEvent evt)
@@ -101,7 +103,15 @@ public class TokenLibrary : MonoBehaviour
         if (Editing)
         {
             Editing = false;
+            Tokens[SelectedHash].Name = BackupMeta.Name;
+            Tokens[SelectedHash].Frames = BackupMeta.Frames;
+            Tokens[SelectedHash].FPS = BackupMeta.FPS;
+            Tokens[SelectedHash].Favorite = BackupMeta.Favorite;
+
+            ElementMap[SelectedHash].Item2.Q<Label>("TokenLabel").text = Tokens[SelectedHash].Name;
+            UI.System.Q("TokenLibraryModal").Q(SelectedHash).Add(ElementMap[SelectedHash].Item2);
             UpdateVisibility();
+            UI.Redraw();
         }
         else
         {
@@ -113,19 +123,35 @@ public class TokenLibrary : MonoBehaviour
     {
         Editing = true;
         UpdateVisibility();
+        UI.Redraw();
 
         TokenMeta meta = Tokens[SelectedHash];
+
+        BackupMeta = new TokenMeta()
+        {
+            Favorite = meta.Favorite,
+            Frames = meta.Frames,
+            Name = meta.Name,
+            FPS = meta.FPS,
+            Hash = meta.Hash
+        };
+
         VisualElement root = UI.System.Q("TokenLibraryModal");
         root.Q<TextField>("NameField").value = meta.Name;
         root.Q<IntegerField>("FramesField").value = meta.Frames;
         root.Q<IntegerField>("FpsField").value = meta.FPS;
         root.Q<Toggle>("FavoriteField").value = meta.Favorite;
 
+        root.Q("TokenPreview").style.width = LibraryItemSize;
+        root.Q("TokenPreview").style.height = LibraryItemSize;
+
+        root.Q("TokenPreview").Add(ElementMap[meta.Hash].Item2);
     }
 
     private static void SelectButtonClicked(ClickEvent evt)
     {
-        // invoke???
+        OnSelect?.Invoke();
+        Close(evt);
     }
 
     private static void SaveButtonClicked(ClickEvent evt)
@@ -133,20 +159,21 @@ public class TokenLibrary : MonoBehaviour
         // write file
         Editing = false;
         UpdateVisibility();
+        UI.Redraw();
+        WriteLibraryFile();
 
+        UI.System.Q("TokenLibraryModal").Q(SelectedHash).Add(ElementMap[SelectedHash].Item2);
+    }
+
+    private static void ChangeEditingValue()
+    {
         VisualElement root = UI.System.Q("TokenLibraryModal");
         Tokens[SelectedHash].Name = root.Q<TextField>("NameField").value;
         Tokens[SelectedHash].Frames = root.Q<IntegerField>("FramesField").value;
         Tokens[SelectedHash].FPS = root.Q<IntegerField>("FpsField").value;
         Tokens[SelectedHash].Favorite = root.Q<Toggle>("FavoriteField").value;
-        WriteLibraryFile();
-        foreach ((TokenMeta, VisualElement) item in ElementMap)
-        {
-            if (item.Item1.Hash == SelectedHash)
-            {
-                item.Item2.Q<Label>("TokenLabel").text = Tokens[SelectedHash].Name;
-            }
-        }
+        ElementMap[SelectedHash].Item2.Q<Label>("TokenLabel").text = Tokens[SelectedHash].Name;
+        UpdateAnimation(ElementMap[SelectedHash].Item2, Tokens[SelectedHash]);
     }
 
     private static void UpdateVisibility()
@@ -155,34 +182,18 @@ public class TokenLibrary : MonoBehaviour
         UI.ToggleDisplay(root.Q("TokenLibrary"), !Editing);
         UI.ToggleDisplay(root.Q("TokenMetaEdit"), Editing);
 
-        UI.ToggleDisplay(root.Q("SelectButton"), AllowSelect && !Editing);
+        UI.ToggleDisplay(root.Q("SelectButton"), AllowSelect && !Editing && SelectedHash != null);
         UI.ToggleDisplay(root.Q("SaveButton"), Editing);
-        UI.ToggleDisplay(root.Q("EditButton"), !Editing);
-        UI.Redraw();
-    }
+        UI.ToggleDisplay(root.Q("EditButton"), !Editing && SelectedHash != null);
 
-    public static void Add(TokenMeta meta)
-    {
-        var syncImage = new SyncImage
+        if (AllowSelect)
         {
-            Meta = meta
-        };
-        SyncImages.Add(meta.Hash, syncImage);
-    }
-
-    private void AddAddButtonToUI()
-    {
-        VisualElement tokenDisplay = new();
-        tokenDisplay.AddToClassList("item");
-        tokenDisplay.style.height = LibraryItemSize;
-        tokenDisplay.style.width = LibraryItemSize;
-        tokenDisplay.Add(new Label("Add"));
-
-        tokenDisplay.RegisterCallback<ClickEvent>((evt) =>
+            root.Q("EditButton").RemoveFromClassList("preferred");
+        }
+        else
         {
-            FileBrowserHelper.OpenLoadTokenBrowser();
-        });
-        UI.System.Q("TokenLibrary").Q("LibraryGrid").Add(tokenDisplay);
+            root.Q("EditButton").AddToClassList("preferred");
+        }
     }
 
     public static void ConfirmSelect(ClickEvent evt)
@@ -195,6 +206,7 @@ public class TokenLibrary : MonoBehaviour
             byte[] imageData = File.ReadAllBytes(filename);
             Texture2D texture = new Texture2D(2, 2);
             texture.LoadImage(imageData);
+            texture.filterMode = FilterMode.Point;
             string hash = GetTextureHash(texture);
             if (!Directory.Exists(directory))
             {
@@ -209,8 +221,12 @@ public class TokenLibrary : MonoBehaviour
             Tokens[tokenMeta.Hash] = tokenMeta;
             AddToUI(tokenMeta);
         }
-        WriteLibraryFile();
-        Toast.AddSuccess($"{count} tokens added to the library.");
+        if (count > 0)
+        {
+            UI.Redraw();
+            WriteLibraryFile();
+            Toast.AddSuccess($"{count} tokens added to the library.");
+        }
     }
 
     private static Texture2D LoadHashedImage(string hash)
@@ -220,33 +236,25 @@ public class TokenLibrary : MonoBehaviour
         byte[] imageData = File.ReadAllBytes(filename);
         Texture2D texture = new Texture2D(2, 2);
         texture.LoadImage(imageData);
+        texture.filterMode = FilterMode.Point;
         return texture;
     }
 
     private static void AddToUI(TokenMeta meta)
     {
-        Texture2D graphic = LoadHashedImage(meta.Hash);
-        float aspectRatio = graphic.width / meta.Frames / (float)graphic.height;
+        VisualElement wrapper = new();
+        wrapper.name = meta.Hash;
+        wrapper.AddToClassList("wrapper");
+        wrapper.style.height = LibraryItemSize;
+        wrapper.style.width = LibraryItemSize;
 
         VisualElement tokenDisplay = new();
+        tokenDisplay.name = "Item";
         tokenDisplay.AddToClassList("item");
-        tokenDisplay.style.height = LibraryItemSize;
-        tokenDisplay.style.width = LibraryItemSize;
 
         VisualElement frame = new();
+        frame.name = "Frame";
         frame.AddToClassList("frame");
-        int width = LibraryItemSize;
-        int height = LibraryItemSize;
-        if (aspectRatio >= 1)
-        {
-            height = Mathf.RoundToInt(LibraryItemSize / aspectRatio);
-        }
-        else
-        {
-            width = Mathf.RoundToInt(LibraryItemSize * aspectRatio);
-        }
-        frame.style.width = width;
-        frame.style.height = height;
 
         Label label = new();
         label.name = "TokenLabel";
@@ -257,32 +265,61 @@ public class TokenLibrary : MonoBehaviour
         VisualElement sprite = new();
         sprite.name = "Sprite";
         sprite.AddToClassList("sprite");
-        sprite.style.width = width * meta.Frames;
-        sprite.style.backgroundImage = graphic;
+        sprite.style.backgroundImage = LoadHashedImage(meta.Hash);
 
         frame.Add(sprite);
         tokenDisplay.Add(frame);
         tokenDisplay.Add(label);
+        wrapper.Add(tokenDisplay);
 
         tokenDisplay.RegisterCallback<ClickEvent>((evt) =>
         {
-            foreach ((TokenMeta, VisualElement) item in ElementMap)
+            if (SelectedHash != null && SelectedHash != meta.Hash)
             {
-                if (item.Item1.Hash == meta.Hash)
-                {
-                    SelectedHash = meta.Hash;
-                    item.Item2.ToggleInClassList("selected");
-                }
-                else
-                {
-                    item.Item2.RemoveFromClassList("selected");
-                }
+                // Deselect other and select this
+                ElementMap[SelectedHash].Item2.Q("Item").RemoveFromClassList("selected");
+                SelectedHash = meta.Hash;
+                ElementMap[SelectedHash].Item2.Q("Item").AddToClassList("selected");
             }
+            else if (SelectedHash != null && SelectedHash == meta.Hash)
+            {
+                // Deselect this
+                ElementMap[SelectedHash].Item2.Q("Item").RemoveFromClassList("selected");
+                SelectedHash = null;
+            }
+            else
+            {
+                // Select this
+                SelectedHash = meta.Hash;
+                ElementMap[SelectedHash].Item2.Q("Item").AddToClassList("selected");
+            }
+            UpdateVisibility();
         });
 
-        UI.System.Q("TokenLibrary").Q("LibraryGrid").Add(tokenDisplay);
+        UI.System.Q("TokenLibrary").Q("LibraryGrid").Add(wrapper);
 
-        ElementMap.Add((meta, tokenDisplay));
+        ElementMap.Add(meta.Hash, (meta, tokenDisplay));
+        UpdateAnimation(tokenDisplay, meta);
+    }
+
+    private static void UpdateAnimation(VisualElement element, TokenMeta meta)
+    {
+        Texture2D graphic = element.Q("Sprite").resolvedStyle.backgroundImage.texture;
+        float aspectRatio = graphic.width / meta.Frames / (float)graphic.height;
+        int width = LibraryItemSize;
+        int height = LibraryItemSize;
+        if (aspectRatio >= 1)
+        {
+            height = Mathf.RoundToInt(LibraryItemSize / aspectRatio);
+        }
+        else
+        {
+            width = Mathf.RoundToInt(LibraryItemSize * aspectRatio);
+        }
+        element.Q("Frame").style.width = width;
+        element.Q("Frame").style.height = height;
+        element.Q("Sprite").style.width = width * meta.Frames;
+        UI.Redraw();
     }
 
     private static void WriteLibraryFile()
@@ -339,5 +376,12 @@ public class TokenLibrary : MonoBehaviour
             sb.Append(hashBytes[i].ToString("x2"));
         }
         return sb.ToString();
+    }
+
+    public static string TruncateHash(string hash)
+    {
+        string firstThree = hash.Substring(0, 3);
+        string lastThree = hash.Substring(hash.Length - 3);
+        return $"{firstThree}...{lastThree}";
     }
 }

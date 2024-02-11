@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
@@ -49,7 +50,7 @@ public class TokenData : NetworkBehaviour
         CreateWorldToken();
         CreateUnitBarElement();
         CreateOverheadElement();
-        GraphicSync();
+        TokenSync.Add(TokenMeta);
     }
 
     void Update()
@@ -59,10 +60,10 @@ public class TokenData : NetworkBehaviour
             return;
         }
 
-        // if (Graphic == null)
-        // {
-        //     GraphicSync();
-        // }
+        if (Graphic == null)
+        {
+            GraphicSync();
+        }
 
         if (OverheadElement != null)
         {
@@ -82,7 +83,14 @@ public class TokenData : NetworkBehaviour
 
     private void GraphicSync()
     {
-        TokenLibrary.Add(TokenMeta);
+        Texture2D graphic = TokenSync.LoadHashedImage(TokenMeta.Hash);
+        if (graphic)
+        {
+            Graphic = graphic;
+            UpdateGraphic();
+        }
+
+
         // if (GraphicSyncInterval > 0)
         // {
         //     GraphicSyncInterval -= Time.deltaTime;
@@ -200,7 +208,7 @@ public class TokenData : NetworkBehaviour
         // Set the UI portrait
         float height = 60;
         float width = 60;
-        if (Graphic.width > Graphic.height)
+        if (Graphic.width / TokenMeta.Frames > Graphic.height)
         {
             height *= Graphic.height / (float)Graphic.width;
         }
@@ -211,6 +219,10 @@ public class TokenData : NetworkBehaviour
         UnitBarElement.Q("Portrait").style.width = width;
         UnitBarElement.Q("Portrait").style.height = height;
         UnitBarElement.Q("Portrait").style.backgroundImage = Graphic;
+        UnitBarElement.Q("Portrait").style.backgroundPositionX = new BackgroundPosition(BackgroundPositionKeyword.Left);
+        UnitBarElement.Q("Portrait").style.backgroundPositionY = new BackgroundPosition(BackgroundPositionKeyword.Top);
+        UnitBarElement.Q("Portrait").style.backgroundRepeat = new BackgroundRepeat(Repeat.NoRepeat, Repeat.NoRepeat);
+        UnitBarElement.Q("Portrait").style.backgroundSize = new BackgroundSize(BackgroundSizeType.Cover);
         UI.Redraw();
         UnitBarElement.Q("ClassBackground").style.borderTopColor = Color;
         UnitBarElement.Q("ClassBackground").style.borderRightColor = Color;

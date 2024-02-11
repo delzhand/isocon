@@ -33,11 +33,16 @@ public class UI : MonoBehaviour
 
     void LateUpdate()
     {
+        RedrawFix();
+    }
+
+    private void RedrawFix()
+    {
         if (uiFix)
         {
             uiFix = false;
             float x = GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale;
-            GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = x + .01f;
+            GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = x + .001f;
         }
     }
 
@@ -236,7 +241,7 @@ public class UI : MonoBehaviour
     public static void Redraw()
     {
         float x = GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale;
-        GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = x - .01f;
+        GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = x - .001f;
         GameObject.Find("AppState").GetComponent<UI>().uiFix = true;
     }
 }

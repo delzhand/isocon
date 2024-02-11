@@ -334,6 +334,32 @@ public class Modal
         Modal.AddContents(field);
     }
 
+    public static void AddTokenField(string name)
+    {
+        TextField field = new("Token");
+        field.name = "Token";
+        field.AddToClassList("no-margin");
+        field.isReadOnly = true;
+
+        Button search = new();
+        search.text = "Search";
+        search.RegisterCallback<ClickEvent>((evt) =>
+        {
+            TokenLibrary.ShowSelectMode(evt, () =>
+            {
+                UI.Modal.Q(name).Q<TextField>("Token").value = TokenLibrary.GetSelectedMeta().Name;
+            });
+        });
+
+        VisualElement wrapper = new();
+        wrapper.name = name;
+        wrapper.Add(field);
+        wrapper.Add(search);
+        wrapper.style.flexDirection = FlexDirection.Row;
+
+        Modal.AddContents(wrapper);
+    }
+
     public static void AddColorField(string name, Color initial)
     {
         VisualElement field = ColorField.Create(name, initial);

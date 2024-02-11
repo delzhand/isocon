@@ -318,7 +318,35 @@ public class Player : NetworkBehaviour
     }
     #endregion
 
-    #region Images
+    #region TokenSync
+    [Command]
+    public void CmdRequestChunkCount(string hash)
+    {
+        RpcRequireChunkCount(hash);
+    }
+
+    [ClientRpc]
+    public void RpcRequireChunkCount(string hash)
+    {
+        int chunkCount = TokenSync.GetChunkCount(hash);
+        if (chunkCount > 0)
+        {
+            CmdDeliverChunkCount(hash, chunkCount);
+        }
+    }
+
+    [Command]
+    public void CmdDeliverChunkCount(string hash, int chunkCount)
+    {
+        RpcDeliverChunkCount(hash, chunkCount);
+    }
+
+    [ClientRpc]
+    public void RpcDeliverChunkCount(string hash, int chunkCount)
+    {
+        TokenSync.SetChunkCount(hash, chunkCount);
+    }
+
     // [Command]
     // public void CmdRequestImage(string hash)
     // {

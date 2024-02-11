@@ -372,18 +372,23 @@
     background-color: rgb(10, 129, 26);
 }
 
-#TokenLibrary .item {
+#TokenLibraryModal .wrapper {
     margin: 20px 10px 0px 10px;
+}
+
+#TokenLibraryModal .item {
     background-color: rgba(0, 0, 0, .5);
     position: relative;
     overflow: hidden;
+    height: 100%;
+    width: 100%;
 }
 
-#TokenLibrary .item.selected {
+#TokenLibraryModal .item.selected {
     background-color: rgb(185, 185, 143);
 }
 
-#TokenLibrary .item .unity-label {
+#TokenLibraryModal .item .unity-label {
     position: absolute;
     margin: 0;
     padding: 4px;
@@ -393,7 +398,7 @@
     white-space: normal;
 }
 
-#TokenLibrary .frame {
+#TokenLibraryModal .frame {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -401,9 +406,13 @@
     overflow: hidden;
 }
 
-#TokenLibrary .sprite {
+#TokenLibraryModal .sprite {
     position: absolute;
     height: 100%;
     top: 0;
     left: 0;
+}
+
+#TokenMetaEdit .unity-base-text-field__input {
+    width: 200px;
 }

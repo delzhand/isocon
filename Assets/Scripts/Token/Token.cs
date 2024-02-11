@@ -70,8 +70,10 @@ public class Token : MonoBehaviour
     public void SetImage(Texture2D image)
     {
         Image = image;
-        float aspectRatio = Image.width / (float)Image.height;
+        float aspectRatio = Image.width / Data.TokenMeta.Frames / (float)Image.height;
         transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetTexture("_Image", Image);
+        transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetInt("_XFrames", Data.TokenMeta.Frames);
+        transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetInt("_FPS", Data.TokenMeta.FPS);
         transform.Find("Offset/Avatar/Cutout/Cutout Quad").transform.localScale = new Vector3(aspectRatio, 1f, 1f);
     }
 

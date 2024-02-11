@@ -5,7 +5,7 @@
     <Style src="project://database/Assets/UI/Styles/v3/OverrideStyles.uss?fileID=7433441132597879392&amp;guid=15bcfaebbc0c9fd4691b003a9d1cd382&amp;type=3#OverrideStyles" />
     <Style src="project://database/Assets/UI/Styles/v3/Overhead.uss?fileID=7433441132597879392&amp;guid=db9f5488cbd5b104699c060ac772337b&amp;type=3#Overhead" />
     <ui:VisualElement name="Worldspace" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; left: 0; top: 0; right: 0; bottom: 0;" />
-    <ui:VisualElement name="Launcher" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex;">
+    <ui:VisualElement name="Launcher" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex; background-image: none; -unity-slice-left: 11; -unity-slice-top: 11; -unity-slice-right: 11; -unity-slice-bottom: 11; -unity-slice-scale: 1px;">
         <ui:VisualElement name="StartupPanel" class="centered" style="margin-bottom: 0; display: flex; min-height: 0; width: 460px; justify-content: center; top: 33%; translate: -50% 0;">
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 0; flex-direction: row; justify-content: center; background-image: resource(&apos;Textures/isocon_logo&apos;); -unity-background-scale-mode: scale-to-fit; margin-bottom: 56px; height: 110px;">
                 <ui:Label tabindex="-1" text="BETA" parse-escape-sequences="true" display-tooltip-when-elided="true" style="position: absolute; top: -17px; right: -69px; background-color: rgb(44, 93, 135); -unity-font-style: bold; font-size: 16px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; color: rgb(255, 255, 255);" />
@@ -449,7 +449,17 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="Backdrop" style="flex-grow: 1; position: absolute; left: auto; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.86); display: none;" />
-    <ui:VisualElement name="TokenLibraryModal" class="modal panel-text" style="position: absolute; left: 50%; top: 50%; -unity-slice-left: 28; -unity-slice-top: 46; -unity-slice-right: 34; -unity-slice-bottom: 30; translate: -50% -50%; display: flex; max-width: 600px; -unity-slice-scale: 0.5px; background-color: rgb(71, 65, 63); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px;">
+    <ui:VisualElement name="GeneralModal" class="modal panel-text" style="position: absolute; left: 50%; top: 50%; -unity-slice-left: 28; -unity-slice-top: 46; -unity-slice-right: 34; -unity-slice-bottom: 30; translate: -50% -50%; display: none; max-width: 600px; -unity-slice-scale: 0.5px; background-color: rgb(71, 65, 63); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px;">
+        <ui:VisualElement name="Top" style="flex-grow: 1; background-color: rgb(74, 113, 178); border-top-left-radius: 4px; border-top-right-radius: 4px; padding-top: 4px; padding-right: 24px; padding-bottom: 4px; padding-left: 8px;">
+            <ui:Label tabindex="-1" text="Load Map" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="-unity-text-align: upper-center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+            <ui:Button text="×" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Exit" class="roundbutton" style="margin-left: 0; align-self: center; position: absolute; right: 4px; top: 4px; margin-top: 0; margin-right: 0; margin-bottom: 0; color: rgb(255, 255, 255); font-size: 20px; -unity-text-align: middle-center; background-color: rgba(255, 255, 255, 0);" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Wrapper" style="flex-grow: 1; min-width: 0; min-height: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; flex-direction: column-reverse;">
+            <ui:VisualElement name="Buttons" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; margin-top: 24px; background-color: rgba(0, 0, 0, 0.67); padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;" />
+            <ui:VisualElement name="Contents" style="flex-grow: 1; flex-direction: column-reverse;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="TokenLibraryModal" class="modal panel-text" style="position: absolute; left: 50%; top: 50%; -unity-slice-left: 28; -unity-slice-top: 46; -unity-slice-right: 34; -unity-slice-bottom: 30; translate: -50% -50%; display: none; max-width: 600px; -unity-slice-scale: 0.5px; background-color: rgb(71, 65, 63); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px;">
         <ui:VisualElement name="Top" style="flex-grow: 1; background-color: rgb(74, 113, 178); border-top-left-radius: 4px; border-top-right-radius: 4px; padding-top: 4px; padding-right: 24px; padding-bottom: 4px; padding-left: 8px;">
             <ui:Label tabindex="-1" text="Token Library" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="-unity-text-align: upper-center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
             <ui:Button text="×" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Exit" class="roundbutton" style="margin-left: 0; align-self: center; position: absolute; right: 4px; top: 4px; margin-top: 0; margin-right: 0; margin-bottom: 0; color: rgb(255, 255, 255); font-size: 20px; -unity-text-align: middle-center; background-color: rgba(255, 255, 255, 0);" />
@@ -463,30 +473,24 @@
             </ui:VisualElement>
             <ui:VisualElement name="Contents" style="flex-grow: 1; flex-direction: column-reverse;">
                 <ui:ScrollView name="TokenLibrary" mode="Vertical" mouse-wheel-scroll-size="1000" style="flex-direction: row; background-color: rgba(67, 67, 67, 0.91);">
-                    <ui:VisualElement name="LibraryGrid" style="flex-direction: row; flex-wrap: wrap; margin-top: 0; margin-right: 10px; margin-bottom: 20px; margin-left: 10px; padding-right: 0; padding-left: 0; width: 425px; max-height: 425px;" />
+                    <ui:VisualElement name="LibraryGrid" style="flex-direction: row; flex-wrap: wrap; margin-top: 0; margin-right: 10px; margin-bottom: 20px; margin-left: 10px; padding-right: 0; padding-left: 0; width: 425px; max-height: 425px;">
+                        <ui:Button name="AddButton" style="width: 120px; height: 120px; font-size: 126px; margin-top: 20px; margin-right: 10px; margin-left: 10px;">
+                            <ui:Label text="+" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; translate: 0 -4px;" />
+                        </ui:Button>
+                    </ui:VisualElement>
                 </ui:ScrollView>
                 <ui:VisualElement name="TokenMetaEdit" style="flex-grow: 1; flex-direction: row;">
                     <ui:VisualElement style="flex-grow: 0; margin-right: 8px;">
-                        <ui:VisualElement name="TokenPreview" style="width: 150px; height: 150px; border-left-color: rgba(255, 255, 255, 0.24); border-right-color: rgba(255, 255, 255, 0.24); border-top-color: rgba(255, 255, 255, 0.24); border-bottom-color: rgba(255, 255, 255, 0.24); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px;" />
+                        <ui:VisualElement name="TokenPreview" style="width: 120px; height: 120px; border-left-color: rgba(255, 255, 255, 0.24); border-right-color: rgba(255, 255, 255, 0.24); border-top-color: rgba(255, 255, 255, 0.24); border-bottom-color: rgba(255, 255, 255, 0.24);" />
                     </ui:VisualElement>
                     <ui:VisualElement style="flex-grow: 1;">
                         <ui:TextField label="Name" name="NameField" class="no-margin" />
                         <ui:IntegerField label="Number of Frames" value="1" name="FramesField" class="no-margin" style="margin-top: 4px;" />
-                        <ui:IntegerField label="FPS" value="0" name="FpsField" class="no-margin" style="margin-top: 4px;" />
-                        <ui:Toggle label="Favorite" name="FavoriteField" class="no-margin" />
+                        <ui:IntegerField label="FPS" value="0" name="FpsField" focusable="true" class="no-margin" style="margin-top: 4px;" />
+                        <ui:Toggle label="Favorite" name="FavoriteField" focusable="false" class="no-margin" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-        </ui:VisualElement>
-    </ui:VisualElement>
-    <ui:VisualElement name="GeneralModal" class="modal panel-text" style="position: absolute; left: 50%; top: 50%; -unity-slice-left: 28; -unity-slice-top: 46; -unity-slice-right: 34; -unity-slice-bottom: 30; translate: -50% -50%; display: none; max-width: 600px; -unity-slice-scale: 0.5px; background-color: rgb(71, 65, 63); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px;">
-        <ui:VisualElement name="Top" style="flex-grow: 1; background-color: rgb(74, 113, 178); border-top-left-radius: 4px; border-top-right-radius: 4px; padding-top: 4px; padding-right: 24px; padding-bottom: 4px; padding-left: 8px;">
-            <ui:Label tabindex="-1" text="Load Map" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="-unity-text-align: upper-center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
-            <ui:Button text="×" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Exit" class="roundbutton" style="margin-left: 0; align-self: center; position: absolute; right: 4px; top: 4px; margin-top: 0; margin-right: 0; margin-bottom: 0; color: rgb(255, 255, 255); font-size: 20px; -unity-text-align: middle-center; background-color: rgba(255, 255, 255, 0);" />
-        </ui:VisualElement>
-        <ui:VisualElement name="Wrapper" style="flex-grow: 1; min-width: 0; min-height: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; flex-direction: column-reverse;">
-            <ui:VisualElement name="Buttons" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; margin-top: 24px; background-color: rgba(0, 0, 0, 0.67); padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;" />
-            <ui:VisualElement name="Contents" style="flex-grow: 1; flex-direction: column-reverse;" />
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="DoubleConfirmModal" class="modal panel-text" style="position: absolute; left: 50%; top: 50%; -unity-slice-left: 28; -unity-slice-top: 46; -unity-slice-right: 34; -unity-slice-bottom: 30; translate: -50% -50%; display: none; max-width: 600px; -unity-slice-scale: 0.5px; background-color: rgb(71, 65, 63); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px;">
@@ -507,4 +511,8 @@
     <ui:VisualElement name="Toasts" style="flex-grow: 1; position: absolute; left: auto; top: auto; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); color: rgb(255, 255, 255); -unity-text-align: middle-right; padding-left: 0; padding-right: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; display: flex; right: 10px; bottom: 10px; align-items: flex-end; padding-top: 0; padding-bottom: 0;" />
     <ui:VisualElement name="Fader" picking-mode="Ignore" style="flex-grow: 1; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); background-color: rgb(0, 0, 0); opacity: 0; display: none;" />
     <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="DebugText" class="self-centered" style="left: 50%; top: 20%; color: rgb(255, 255, 255); font-size: 24px; -unity-font-style: bold; display: none;" />
+    <ui:Button text="Button" name="TestButton" class="panel-text" style="position: absolute; top: 104px; left: 122px;" />
+    <ui:VisualElement name="SyncIndicator" style="flex-grow: 1; display: none;">
+        <ui:Label text="Syncing..." class="panel-text" style="position: absolute;" />
+    </ui:VisualElement>
 </ui:UXML>

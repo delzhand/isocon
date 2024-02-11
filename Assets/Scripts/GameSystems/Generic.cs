@@ -89,9 +89,8 @@ public class Generic : GameSystem
     }
     public override void CreateToken()
     {
+        var tokenMeta = TokenLibrary.GetSelectedMeta();
         string name = UI.Modal.Q<TextField>("NameField").value;
-        // Texture2D graphic = TextureSender.CopyLocalImage(UI.Modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
-        // string graphicHash = TextureSender.GetTextureHash(graphic);
         int size = int.Parse(UI.Modal.Q<DropdownField>("SizeField").value.Substring(0, 1));
         int hp = UI.Modal.Q<IntegerField>("HPField").value;
         string extraInfo = UI.Modal.Q<TextField>("ExtraInfo").value;
@@ -103,7 +102,7 @@ public class Generic : GameSystem
             ExtraInfo = extraInfo
         };
 
-        // Player.Self().CmdCreateToken("Generic", graphicHash, name, size, Color.black, JsonUtility.ToJson(data));
+        Player.Self().CmdCreateToken("Generic", tokenMeta, name, size, Color.black, JsonUtility.ToJson(data));
     }
 
     public override void UpdateData(TokenData data)
