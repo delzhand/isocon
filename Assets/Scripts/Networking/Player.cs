@@ -320,62 +320,67 @@ public class Player : NetworkBehaviour
 
     #region TokenSync
     [Command]
-    public void CmdRequestChunkCount(string hash)
+    public void CmdRequestImageInfo(string hash)
     {
-        RpcRequireChunkCount(hash);
+        RpcRequireImageInfo(hash);
     }
 
     [ClientRpc]
-    public void RpcRequireChunkCount(string hash)
+    public void RpcRequireImageInfo(string hash)
     {
-        int chunkCount = TokenSync.GetChunkCount(hash);
-        if (chunkCount > 0)
+        (int, int, int)? imageInfo = TokenSync.GetImageInfo(hash);
+        if (imageInfo != null)
         {
-            CmdDeliverChunkCount(hash, chunkCount);
+            int chunkCount = (int)imageInfo?.Item1;
+            int width = (int)imageInfo?.Item2;
+            int height = (int)imageInfo?.Item3;
+            FileLogger.Write($"Forwarding image info ({chunkCount}/{width}/{height}) for {TokenLibrary.TruncateHash(hash)} to host");
+            Player.Self().CmdDeliverImageInfo(hash, chunkCount, width, height);
         }
     }
 
     [Command]
-    public void CmdDeliverChunkCount(string hash, int chunkCount)
+    public void CmdDeliverImageInfo(string hash, int chunkCount, int width, int height)
     {
-        RpcDeliverChunkCount(hash, chunkCount);
+        FileLogger.Write($"Forwarding chunk count ({chunkCount}/{width}/{height}) for {TokenLibrary.TruncateHash(hash)} to clients");
+        RpcDeliverImageInfo(hash, chunkCount, width, height);
     }
 
     [ClientRpc]
-    public void RpcDeliverChunkCount(string hash, int chunkCount)
+    public void RpcDeliverImageInfo(string hash, int chunkCount, int width, int height)
     {
-        TokenSync.SetChunkCount(hash, chunkCount);
+        FileLogger.Write($"Received chunk count ({chunkCount}) for {TokenLibrary.TruncateHash(hash)}");
+        TokenSync.SetImageInfo(hash, chunkCount, width, height);
     }
 
-    // [Command]
-    // public void CmdRequestImage(string hash)
-    // {
-    //     FileLogger.Write($"Client {connectionToClient.connectionId} requested image {TextureSender.TruncateHash(hash)}");
-    //     Texture2D graphic = TextureSender.LoadImageFromFile(hash, true);
-    //     TextureSender.SendToClient(graphic, connectionToClient.connectionId);
-    // }
+    [Command]
+    public void CmdRequestMissingChunks(string hash, int[] missingChunks)
+    {
+        RpcRequireMissingChunks(hash, missingChunks);
+    }
 
-    // [Command]
-    // public void CmdSendTextureChunk(string hash, int connectionId, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height)
-    // {
-    //     // Send to host
-    //     if (connectionId == -1)
-    //     {
-    //         TextureSender.Receive(hash, chunkIndex, chunkTotal, chunkColors, width, height);
-    //     }
+    [ClientRpc]
+    public void RpcRequireMissingChunks(string hash, int[] missingChunks)
+    {
+        (int, Color[])? chunkInfo = TokenSync.GetMissingChunk(hash, missingChunks);
+        if (chunkInfo != null)
+        {
+            int index = (int)chunkInfo?.Item1;
+            Color[] chunk = (Color[])chunkInfo?.Item2;
+            Player.Self().CmdDeliverMissingChunk(hash, index, chunk);
+        }
+    }
 
-    //     // Send to that connection
-    //     else
-    //     {
-    //         NetworkConnectionToClient targetClient = NetworkServer.connections[connectionId];
-    //         TargetReceiveTextureChunk(targetClient, hash, chunkIndex, chunkTotal, chunkColors, width, height);
-    //     }
-    // }
+    [Command]
+    public void CmdDeliverMissingChunk(string hash, int index, Color[] chunk)
+    {
+        RpcDeliverMissingChunk(hash, index, chunk);
+    }
 
-    // [TargetRpc]
-    // public void TargetReceiveTextureChunk(NetworkConnectionToClient target, string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height)
-    // {
-    //     TextureSender.Receive(hash, chunkIndex, chunkTotal, chunkColors, width, height);
-    // }
+    [ClientRpc]
+    public void RpcDeliverMissingChunk(string hash, int index, Color[] chunk)
+    {
+        TokenSync.SetMissingChunk(hash, index, chunk);
+    }
     #endregion
 }

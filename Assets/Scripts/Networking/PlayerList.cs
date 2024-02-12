@@ -49,6 +49,7 @@ public class PlayerList : MonoBehaviour
             l.AddToClassList("no-margin");
             playerList.Add(l);
         }
+        HudText.SetItem("playerCount", $"Players: {_players.Count}/?", HudTextColor.Blue);
         UI.System.Q("InfoWindow").Q<Label>("PlayerCount").text = $"{_players.Count}";
     }
 }

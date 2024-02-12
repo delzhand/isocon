@@ -50,7 +50,7 @@ public class TokenData : NetworkBehaviour
         CreateWorldToken();
         CreateUnitBarElement();
         CreateOverheadElement();
-        TokenSync.Add(TokenMeta);
+        LoadGraphic();
     }
 
     void Update()
@@ -58,11 +58,6 @@ public class TokenData : NetworkBehaviour
         if (Destroyed)
         {
             return;
-        }
-
-        if (Graphic == null)
-        {
-            GraphicSync();
         }
 
         if (OverheadElement != null)
@@ -81,33 +76,21 @@ public class TokenData : NetworkBehaviour
         }
     }
 
-    private void GraphicSync()
+    private void LoadGraphic()
     {
+        FileLogger.Write($"Load graphic for {TokenLibrary.TruncateHash(TokenMeta.Hash)}");
         Texture2D graphic = TokenSync.LoadHashedImage(TokenMeta.Hash);
         if (graphic)
         {
+            FileLogger.Write($"Hashed image {TokenLibrary.TruncateHash(TokenMeta.Hash)} found locally");
             Graphic = graphic;
             UpdateGraphic();
         }
-
-
-        // if (GraphicSyncInterval > 0)
-        // {
-        //     GraphicSyncInterval -= Time.deltaTime;
-        // }
-        // else
-        // {
-        //     Graphic = TextureSender.LoadImageFromFile(GraphicHash, true);
-        //     if (Graphic)
-        //     {
-        //         Graphic.wrapMode = TextureWrapMode.Clamp;
-        //         UpdateGraphic();
-        //     }
-        //     else
-        //     {
-        //         GraphicSyncInterval = 2.5f;
-        //     }
-        // }
+        else
+        {
+            FileLogger.Write($"Hashed image {TokenLibrary.TruncateHash(TokenMeta.Hash)} not found locally, starting sync");
+            TokenSync.Add(TokenMeta);
+        }
     }
 
     private void CreateWorldToken()

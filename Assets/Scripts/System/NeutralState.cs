@@ -58,6 +58,12 @@ public class NeutralState : TabletopSubstate
         {
             ShowAddTokenModal(new ClickEvent());
         }
+
+        if (Input.GetKeyUp(KeyCode.X))
+
+        {
+            ShowConsole(new ClickEvent());
+        }
     }
 
     private void ShowTokenPanels()
@@ -130,6 +136,11 @@ public class NeutralState : TabletopSubstate
     private void ShowAddTokenModal(ClickEvent evt)
     {
         AddToken.OpenModal(new ClickEvent());
+    }
+
+    private void ShowConsole(ClickEvent evt)
+    {
+        IsoConsole.OpenModal(evt);
     }
 
     public void ToggleInfo(ClickEvent evt)

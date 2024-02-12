@@ -23,10 +23,26 @@ public class IsoConsole
     {
         string command = UI.Modal.Q<TextField>("Console").value;
         UI.Modal.Q<TextField>("Console").Focus();
-        if (command.Contains("maleghast/map"))
-        {
-            MMMImporter.CreateFromURL(command);
-        }
+        // if (command == "hud1")
+        // {
+        //     HudText.SetItem("syncing", "Syncing...", HudTextColor.Blue);
+        // }
+        // if (command == "hud2")
+        // {
+        //     HudText.SetItem("playerCount", "Players: 1/4", HudTextColor.Red);
+        // }
+        // if (command == "hud3")
+        // {
+        //     HudText.SetItem("connection", "Connection: Okay", HudTextColor.Yellow);
+        // }
+        // if (command == "hud4")
+        // {
+        //     HudText.SetItem("connection", "Connection: Excellent", HudTextColor.Green);
+        // }
+        // if (command == "hud5")
+        // {
+        //     HudText.RemoveItem("syncing");
+        // }
         // if (command == "gun")
         // {
         //     Player.Self().CmdCreateToken("Maleghast", "8b3627c36b26c32aaa2997d2ed422253e9f0e19f896978cd22514514545f3830", "", 1, Color.red, "");
