@@ -202,7 +202,6 @@ public class LauncherState : BaseState
             case ConnectMode.Host:
                 GameSystem.Set(Preferences.Current.System);
                 netManager.maxConnections = Preferences.Current.PlayerCount;
-                Debug.Log(netManager.maxConnections);
                 netManager.StartHost();
                 break;
             case ConnectMode.Client:

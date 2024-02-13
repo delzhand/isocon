@@ -39,7 +39,7 @@ public class TokenData : NetworkBehaviour
     public VisualElement UnitBarElement;
     public VisualElement OverheadElement;
 
-    private float GraphicSyncInterval = 0;
+    private static float GraphicSyncInterval = 0;
 
     void Start()
     {
@@ -60,6 +60,20 @@ public class TokenData : NetworkBehaviour
             return;
         }
 
+        // if (Graphic == null)
+        // {
+        //     TokenSync.SyncStep();
+        //     if (GraphicSyncInterval > 0)
+        //     {
+        //         GraphicSyncInterval -= Time.deltaTime;
+        //     }
+        //     else
+        //     {
+        //         LoadGraphic();
+        //         GraphicSyncInterval = 2.5f;
+        //     }
+        // }
+
         if (OverheadElement != null)
         {
             OverheadElement.style.display = Placed ? DisplayStyle.Flex : DisplayStyle.None;
@@ -78,18 +92,17 @@ public class TokenData : NetworkBehaviour
 
     private void LoadGraphic()
     {
-        FileLogger.Write($"Load graphic for {TokenLibrary.TruncateHash(TokenMeta.Hash)}");
+        FileLogger.Write($"Load graphic for {TokenMeta.TruncateHash(TokenMeta.Hash)}");
         Texture2D graphic = TokenSync.LoadHashedImage(TokenMeta.Hash);
         if (graphic)
         {
-            FileLogger.Write($"Hashed image {TokenLibrary.TruncateHash(TokenMeta.Hash)} found locally");
-            Graphic = graphic;
-            UpdateGraphic();
+            FileLogger.Write($"Hashed image {TokenMeta.TruncateHash(TokenMeta.Hash)} found locally");
+            SetGraphic(graphic);
         }
         else
         {
-            FileLogger.Write($"Hashed image {TokenLibrary.TruncateHash(TokenMeta.Hash)} not found locally, starting sync");
-            TokenSync.Add(TokenMeta);
+            FileLogger.Write($"Hashed image {TokenMeta.TruncateHash(TokenMeta.Hash)} not found locally, starting sync");
+            TokenSync.Add(TokenMeta, this);
         }
     }
 
@@ -182,8 +195,10 @@ public class TokenData : NetworkBehaviour
         UI.System.Q("UnitBar").Add(UnitBarElement);
     }
 
-    private void UpdateGraphic()
+    public void SetGraphic(Texture2D graphic)
     {
+        Graphic = graphic;
+
         // Set the world object graphic
         Token token = WorldObject.GetComponent<Token>();
         token.SetImage(Graphic);

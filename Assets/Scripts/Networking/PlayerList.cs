@@ -49,7 +49,10 @@ public class PlayerList : MonoBehaviour
             l.AddToClassList("no-margin");
             playerList.Add(l);
         }
-        HudText.SetItem("playerCount", $"Players: {_players.Count}/?", HudTextColor.Blue);
+
+        NetworkManager netManager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
+        string maxPlayers = netManager.maxConnections > 0 ? $"/{netManager.maxConnections}" : "";
+        HudText.SetItem("playerCount", $"Players: {_players.Count}{maxPlayers}", HudTextColor.Blue);
         UI.System.Q("InfoWindow").Q<Label>("PlayerCount").text = $"{_players.Count}";
     }
 }

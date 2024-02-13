@@ -127,25 +127,14 @@ public class TokenLibrary : MonoBehaviour
         UI.Redraw();
 
         TokenMeta meta = Tokens[SelectedHash];
-
-        BackupMeta = new TokenMeta()
-        {
-            Favorite = meta.Favorite,
-            Frames = meta.Frames,
-            Name = meta.Name,
-            FPS = meta.FPS,
-            Hash = meta.Hash
-        };
-
+        BackupMeta = TokenMeta.Copy(meta);
         VisualElement root = UI.System.Q("TokenLibraryModal");
         root.Q<TextField>("NameField").value = meta.Name;
         root.Q<IntegerField>("FramesField").value = meta.Frames;
         root.Q<IntegerField>("FpsField").value = meta.FPS;
         root.Q<Toggle>("FavoriteField").value = meta.Favorite;
-
         root.Q("TokenPreview").style.width = LibraryItemSize;
         root.Q("TokenPreview").style.height = LibraryItemSize;
-
         root.Q("TokenPreview").Add(ElementMap[meta.Hash].Item2);
     }
 
@@ -200,7 +189,7 @@ public class TokenLibrary : MonoBehaviour
     public static void ConfirmSelect(ClickEvent evt)
     {
         int count = 0;
-        string directory = $"{Preferences.Current.DataPath}/hashed-tokens";
+        string directory = GetHashedImageDirectory();
         foreach (string filename in FileBrowser.Result)
         {
             count++;
@@ -208,17 +197,8 @@ public class TokenLibrary : MonoBehaviour
             Texture2D texture = new Texture2D(2, 2);
             texture.LoadImage(imageData);
             texture.filterMode = FilterMode.Point;
-            string hash = GetTextureHash(texture);
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-            File.WriteAllBytes($"{directory}/{hash}.png", imageData);
-            var tokenMeta = new TokenMeta
-            {
-                Hash = hash
-            };
-            tokenMeta.Name = filename.Split("\\").Last<string>();
+            var tokenMeta = new TokenMeta(texture, filename);
+            File.WriteAllBytes($"{directory}/{tokenMeta.Hash}.png", imageData);
             Tokens[tokenMeta.Hash] = tokenMeta;
             AddToUI(tokenMeta);
         }
@@ -232,13 +212,23 @@ public class TokenLibrary : MonoBehaviour
 
     private static Texture2D LoadHashedImage(string hash)
     {
-        string directory = $"{Preferences.Current.DataPath}/hashed-tokens";
+        string directory = GetHashedImageDirectory();
         string filename = $"{directory}/{hash}.png";
         byte[] imageData = File.ReadAllBytes(filename);
         Texture2D texture = new Texture2D(2, 2);
         texture.LoadImage(imageData);
         texture.filterMode = FilterMode.Point;
         return texture;
+    }
+
+    public static string GetHashedImageDirectory()
+    {
+        string directory = $"{Preferences.Current.DataPath}/hashed-tokens";
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+        return directory;
     }
 
     private static void AddToUI(TokenMeta meta)
@@ -325,7 +315,7 @@ public class TokenLibrary : MonoBehaviour
 
     private static void WriteLibraryFile()
     {
-        string directory = $"{Preferences.Current.DataPath}/hashed-tokens";
+        string directory = GetHashedImageDirectory();
         string fileName = $"{directory}/library.json";
         var tokenLibraryFile = new TokenLibraryFile();
         tokenLibraryFile.Tokens = Tokens.Values.ToArray();
@@ -335,7 +325,7 @@ public class TokenLibrary : MonoBehaviour
 
     private static void ReadLibraryFile()
     {
-        string directory = $"{Preferences.Current.DataPath}/hashed-tokens";
+        string directory = GetHashedImageDirectory();
         string fileName = $"{directory}/library.json";
         if (!File.Exists(fileName))
         {
@@ -353,36 +343,5 @@ public class TokenLibrary : MonoBehaviour
             Tokens[tokenMeta.Hash] = tokenMeta;
             AddToUI(tokenMeta);
         }
-    }
-
-    public static string GetTextureHash(Texture2D texture)
-    {
-        if (texture == null)
-        {
-            Debug.LogError("Texture is null.");
-            return null;
-        }
-
-        // Convert the texture data to a byte array
-        byte[] textureData = texture.GetRawTextureData();
-
-        // Compute the hash using SHA-256
-        using SHA256 sha256 = SHA256.Create();
-        byte[] hashBytes = sha256.ComputeHash(textureData);
-
-        // Convert the hash bytes to a hexadecimal string
-        StringBuilder sb = new();
-        for (int i = 0; i < hashBytes.Length; i++)
-        {
-            sb.Append(hashBytes[i].ToString("x2"));
-        }
-        return sb.ToString();
-    }
-
-    public static string TruncateHash(string hash)
-    {
-        string firstThree = hash.Substring(0, 3);
-        string lastThree = hash.Substring(hash.Length - 3);
-        return $"{firstThree}...{lastThree}";
     }
 }

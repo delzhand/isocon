@@ -320,40 +320,6 @@ public class Player : NetworkBehaviour
 
     #region TokenSync
     [Command]
-    public void CmdRequestImageInfo(string hash)
-    {
-        RpcRequireImageInfo(hash);
-    }
-
-    [ClientRpc]
-    public void RpcRequireImageInfo(string hash)
-    {
-        (int, int, int)? imageInfo = TokenSync.GetImageInfo(hash);
-        if (imageInfo != null)
-        {
-            int chunkCount = (int)imageInfo?.Item1;
-            int width = (int)imageInfo?.Item2;
-            int height = (int)imageInfo?.Item3;
-            FileLogger.Write($"Forwarding image info ({chunkCount}/{width}/{height}) for {TokenLibrary.TruncateHash(hash)} to host");
-            Player.Self().CmdDeliverImageInfo(hash, chunkCount, width, height);
-        }
-    }
-
-    [Command]
-    public void CmdDeliverImageInfo(string hash, int chunkCount, int width, int height)
-    {
-        FileLogger.Write($"Forwarding chunk count ({chunkCount}/{width}/{height}) for {TokenLibrary.TruncateHash(hash)} to clients");
-        RpcDeliverImageInfo(hash, chunkCount, width, height);
-    }
-
-    [ClientRpc]
-    public void RpcDeliverImageInfo(string hash, int chunkCount, int width, int height)
-    {
-        FileLogger.Write($"Received chunk count ({chunkCount}) for {TokenLibrary.TruncateHash(hash)}");
-        TokenSync.SetImageInfo(hash, chunkCount, width, height);
-    }
-
-    [Command]
     public void CmdRequestMissingChunks(string hash, int[] missingChunks)
     {
         RpcRequireMissingChunks(hash, missingChunks);
@@ -362,12 +328,15 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void RpcRequireMissingChunks(string hash, int[] missingChunks)
     {
-        (int, Color[])? chunkInfo = TokenSync.GetMissingChunk(hash, missingChunks);
-        if (chunkInfo != null)
+        for (int i = 0; i < 10; i++)
         {
-            int index = (int)chunkInfo?.Item1;
-            Color[] chunk = (Color[])chunkInfo?.Item2;
-            Player.Self().CmdDeliverMissingChunk(hash, index, chunk);
+            (int, Color[]) chunkInfo = TokenSync.GetMissingChunk(hash, missingChunks);
+            if (chunkInfo.Item1 > -1)
+            {
+                int index = chunkInfo.Item1;
+                Color[] chunk = chunkInfo.Item2;
+                Player.Self().CmdDeliverMissingChunk(hash, index, chunk);
+            }
         }
     }
 

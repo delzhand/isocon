@@ -12,20 +12,16 @@ public class TokenSync
     {
         public TokenMeta Meta;
         public ImageChunk[] Chunks;
-        public int ChunkCount = 0;
-        public int Width = 0;
-        public int Height = 0;
-
-        public bool Initialized { get => ChunkCount > 0; }
+        public TokenData Data;
 
         public bool Complete { get => GetMissingChunks().Length == 0; }
 
-        public float Percent { get => Mathf.RoundToInt((ChunkCount - GetMissingChunks().Length) / (float)ChunkCount * 100); }
+        public float Percent { get => Mathf.RoundToInt((Meta.ChunkCount - GetMissingChunks().Length) / (float)Meta.ChunkCount * 100); }
 
         public int[] GetMissingChunks()
         {
             List<int> missingChunks = new();
-            for (int i = 0; i < ChunkCount; i++)
+            for (int i = 0; i < Meta.ChunkCount; i++)
             {
                 if (Chunks[i] == null)
                 {
@@ -44,7 +40,7 @@ public class TokenSync
 
     private static Dictionary<string, SyncImage> SyncImages;
 
-    public static void Add(TokenMeta meta)
+    public static void Add(TokenMeta meta, TokenData data)
     {
         if (SyncImages == null)
         {
@@ -53,7 +49,9 @@ public class TokenSync
 
         var syncImage = new SyncImage
         {
-            Meta = meta
+            Meta = meta,
+            Data = data,
+            Chunks = new ImageChunk[meta.ChunkCount]
         };
         SyncImages.Add(meta.Hash, syncImage);
     }
@@ -69,21 +67,14 @@ public class TokenSync
                 return;
             }
             (int, int, int) syncInfo = GetOverallPercentage();
+            int percent = syncInfo.Item1;
             int received = syncInfo.Item2;
             int total = syncInfo.Item3;
-            int percent = syncInfo.Item1;
             HudText.SetItem("syncStatus", $"Syncing... {syncInfo.Item2}/{syncInfo.Item3} ({syncInfo.Item1}%)", HudTextColor.Blue);
 
             foreach (var syncImage in SyncImages.Values)
             {
-                if (syncImage.Initialized)
-                {
-                    Player.Self().CmdRequestMissingChunks(syncImage.Meta.Hash, syncImage.GetMissingChunks());
-                }
-                else
-                {
-                    Player.Self().CmdRequestImageInfo(syncImage.Meta.Hash);
-                }
+                Player.Self().CmdRequestMissingChunks(syncImage.Meta.Hash, syncImage.GetMissingChunks());
             }
         }
         catch (Exception e)
@@ -95,11 +86,8 @@ public class TokenSync
 
     public static Texture2D LoadHashedImage(string hash)
     {
-        if (SyncImages == null)
-        {
-            SyncImages = new();
-        }
-        string directory = $"{Preferences.Current.DataPath}/hashed-tokens";
+        SyncImages ??= new();
+        string directory = TokenLibrary.GetHashedImageDirectory();
         string filename = $"{directory}/{hash}.png";
         if (File.Exists(filename))
         {
@@ -134,39 +122,19 @@ public class TokenSync
         int total = 0;
         foreach (var syncImage in SyncImages.Values)
         {
-            if (syncImage.Initialized)
-            {
-                total += syncImage.ChunkCount;
-                received += (syncImage.ChunkCount - syncImage.GetMissingChunks().Length);
-            }
+            total += syncImage.Meta.ChunkCount;
+            received += (syncImage.Meta.ChunkCount - syncImage.GetMissingChunks().Length);
         }
-        int percent = total > 0 ? Mathf.RoundToInt(received / (float)total) : 0;
+        int percent = total > 0 ? Mathf.RoundToInt(received / (float)total * 100) : 0;
         return (percent, received, total);
     }
 
-    public static (int, int, int)? GetImageInfo(string hash)
+    public static (int, Color[]) GetMissingChunk(string hash, int[] missingChunks)
     {
-        FileLogger.Write($"Requesting chunk count for {TokenLibrary.TruncateHash(hash)}");
         Texture2D image = LoadHashedImage(hash);
         if (image == null)
         {
-            FileLogger.Write($"This client does not have a graphic for {TokenLibrary.TruncateHash(hash)}");
-            return null;
-        }
-        Color[] allColors = image.GetPixels();
-        int chunkCount = Mathf.CeilToInt((float)allColors.Length / _chunkSize);
-        FileLogger.Write($"Graphic {TokenLibrary.TruncateHash(hash)} located, returning chunk count {chunkCount}");
-        return (chunkCount, image.width, image.height);
-    }
-
-    public static (int, Color[])? GetMissingChunk(string hash, int[] missingChunks)
-    {
-        FileLogger.Write($"Requesting one of {missingChunks.Length} chunk(s) for {TokenLibrary.TruncateHash(hash)}");
-        Texture2D image = LoadHashedImage(hash);
-        if (image == null)
-        {
-            FileLogger.Write($"This client does not have a graphic for {TokenLibrary.TruncateHash(hash)}");
-            return null;
+            return (-1, null);
         }
 
         int i = missingChunks[UnityEngine.Random.Range(0, missingChunks.Length - 1)];
@@ -178,53 +146,31 @@ public class TokenSync
         return (i, chunkColors);
     }
 
-    public static void SetImageInfo(string hash, int count, int width, int height)
-    {
-        var syncImage = SyncImages[hash];
-        if (syncImage == null)
-        {
-            return;
-        }
-
-        if (syncImage.ChunkCount != count)
-        {
-            FileLogger.Write($"Received chunk count {count} for {TokenLibrary.TruncateHash(hash)}");
-            syncImage.ChunkCount = count;
-            syncImage.Width = width;
-            syncImage.Height = height;
-            syncImage.Chunks = new ImageChunk[count];
-        }
-
-    }
-
     public static void SetMissingChunk(string hash, int index, Color[] chunk)
     {
-        var syncImage = SyncImages[hash];
-        if (syncImage == null || syncImage.Complete)
+        if (!SyncImages.ContainsKey(hash) || index < 0)
         {
             return;
         }
+
+        var syncImage = SyncImages[hash];
         syncImage.Chunks[index] = new ImageChunk()
         {
             Index = index,
             ColorChunk = chunk
         };
-        int missingChunks = syncImage.GetMissingChunks().Length;
-        int receivedChunks = syncImage.ChunkCount - missingChunks;
         if (SyncImages[hash].Complete)
         {
-            AssembleImageFromChunks(hash);
+            AssembleImageFromChunks(hash, SyncImages[hash]);
             SyncImages.Remove(hash);
         }
     }
 
-
-
-    private static void AssembleImageFromChunks(string hash)
+    private static void AssembleImageFromChunks(string hash, SyncImage syncImage)
     {
-        var syncImage = SyncImages[hash];
-        Texture2D receivedTexture = new(syncImage.Width, syncImage.Height);
-        Color[] allColors = new Color[syncImage.Width * syncImage.Height];
+        FileLogger.Write($"File {TokenMeta.TruncateHash(hash)}");
+        Texture2D receivedTexture = new(syncImage.Meta.Width, syncImage.Meta.Height);
+        Color[] allColors = new Color[syncImage.Meta.Width * syncImage.Meta.Height];
         foreach (var imageChunk in syncImage.Chunks)
         {
             int startIndex = imageChunk.Index * _chunkSize;
@@ -236,9 +182,11 @@ public class TokenSync
         receivedTexture.SetPixels(allColors);
         receivedTexture.Apply();
 
-        string directory = $"{Preferences.Current.DataPath}/hashed-tokens";
+        string directory = TokenLibrary.GetHashedImageDirectory();
         string filename = $"{directory}/{hash}.png";
         byte[] bytes = receivedTexture.EncodeToPNG();
         File.WriteAllBytes(filename, bytes);
+
+        syncImage.Data.SetGraphic(receivedTexture);
     }
 }
