@@ -328,7 +328,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void RpcRequireMissingChunks(string hash, int[] missingChunks)
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 25; i++)
         {
             (int, Color[]) chunkInfo = TokenSync.GetMissingChunk(hash, missingChunks);
             if (chunkInfo.Item1 > -1)

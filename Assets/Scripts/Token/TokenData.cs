@@ -60,19 +60,18 @@ public class TokenData : NetworkBehaviour
             return;
         }
 
-        // if (Graphic == null)
-        // {
-        //     TokenSync.SyncStep();
-        //     if (GraphicSyncInterval > 0)
-        //     {
-        //         GraphicSyncInterval -= Time.deltaTime;
-        //     }
-        //     else
-        //     {
-        //         LoadGraphic();
-        //         GraphicSyncInterval = 2.5f;
-        //     }
-        // }
+        if (Graphic == null)
+        {
+            if (GraphicSyncInterval > 0)
+            {
+                GraphicSyncInterval -= Time.deltaTime;
+            }
+            else
+            {
+                TokenSync.SyncStep();
+                GraphicSyncInterval = .2f;
+            }
+        }
 
         if (OverheadElement != null)
         {

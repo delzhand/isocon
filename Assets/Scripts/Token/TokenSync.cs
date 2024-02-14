@@ -39,6 +39,7 @@ public class TokenSync
     }
 
     private static Dictionary<string, SyncImage> SyncImages;
+    private static Dictionary<string, Color[]> ChunkCache;
 
     public static void Add(TokenMeta meta, TokenData data)
     {
@@ -67,9 +68,6 @@ public class TokenSync
                 return;
             }
             (int, int, int) syncInfo = GetOverallPercentage();
-            int percent = syncInfo.Item1;
-            int received = syncInfo.Item2;
-            int total = syncInfo.Item3;
             HudText.SetItem("syncStatus", $"Syncing... {syncInfo.Item2}/{syncInfo.Item3} ({syncInfo.Item1}%)", HudTextColor.Blue);
 
             foreach (var syncImage in SyncImages.Values)
@@ -131,14 +129,25 @@ public class TokenSync
 
     public static (int, Color[]) GetMissingChunk(string hash, int[] missingChunks)
     {
-        Texture2D image = LoadHashedImage(hash);
-        if (image == null)
+        int i = missingChunks[UnityEngine.Random.Range(0, missingChunks.Length - 1)];
+
+        ChunkCache ??= new Dictionary<string, Color[]>();
+        Color[] allColors = null;
+        if (ChunkCache.ContainsKey(hash))
         {
-            return (-1, null);
+            allColors = ChunkCache[hash];
+        }
+        else
+        {
+            Texture2D image = LoadHashedImage(hash);
+            if (image == null)
+            {
+                return (-1, null);
+            }
+            allColors = image.GetPixels();
+            ChunkCache[hash] = allColors;
         }
 
-        int i = missingChunks[UnityEngine.Random.Range(0, missingChunks.Length - 1)];
-        Color[] allColors = image.GetPixels();
         int startIndex = i * _chunkSize;
         int remainingColors = Mathf.Min(_chunkSize, allColors.Length - startIndex);
         Color[] chunkColors = new Color[remainingColors];
@@ -154,6 +163,10 @@ public class TokenSync
         }
 
         var syncImage = SyncImages[hash];
+        if (syncImage.Chunks[index] != null)
+        {
+            FileLogger.Write("wasted call");
+        }
         syncImage.Chunks[index] = new ImageChunk()
         {
             Index = index,
@@ -164,6 +177,8 @@ public class TokenSync
             AssembleImageFromChunks(hash, SyncImages[hash]);
             SyncImages.Remove(hash);
         }
+        (int, int, int) syncInfo = GetOverallPercentage();
+        HudText.SetItem("syncStatus", $"Syncing... {syncInfo.Item2}/{syncInfo.Item3} ({syncInfo.Item1}%)", HudTextColor.Blue);
     }
 
     private static void AssembleImageFromChunks(string hash, SyncImage syncImage)
