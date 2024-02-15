@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class TokenSync
+public class TokenSync : MonoBehaviour
 {
     private static readonly int _chunkSize = 512;
 
@@ -38,8 +39,40 @@ public class TokenSync
         public Color[] ColorChunk;
     }
 
+    private class SyncRequest
+    {
+        public int ConnectionId;
+        public float TimeReceived;
+        public string Hash;
+        public int[] MissingChunks;
+    }
+
     private static Dictionary<string, SyncImage> SyncImages;
     private static Dictionary<string, Color[]> ChunkCache;
+    private static Stack<SyncRequest> Outbound;
+
+    private float _interval = 0;
+    private static float MaxInterval = .5f;
+    private static int ChunksPerRequest = 30;
+
+    void Start()
+    {
+        Outbound ??= new();
+    }
+
+    void Update()
+    {
+        HudText.SetItem("outboundCount", $"Outbound Count: {Outbound.Count}", HudTextColor.Red);
+        if (Outbound.Count > 0 && _interval <= 0)
+        {
+            _interval = MaxInterval;
+            SyncStepSend();
+        }
+        else
+        {
+            _interval -= Time.deltaTime;
+        }
+    }
 
     public static void Add(TokenMeta meta, TokenData data)
     {
@@ -79,7 +112,28 @@ public class TokenSync
         {
             Toast.AddError(e.Message);
         }
+    }
 
+    public static void SyncStepSend()
+    {
+        var syncRequest = Outbound.Pop();
+
+        // purge if older than some duration
+
+        int count = Math.Min(syncRequest.MissingChunks.Length, ChunksPerRequest);
+        int[] missingChunks = syncRequest.MissingChunks;
+        ShuffleArray(missingChunks);
+        FileLogger.Write($"Filling {count} random chunks of {syncRequest.MissingChunks.Length}");
+        for (int i = 0; i < count; i++)
+        {
+            (int, Color[]) chunkInfo = TokenSync.GetMissingChunk(syncRequest.Hash, missingChunks[i]);
+            if (chunkInfo.Item1 > -1)
+            {
+                int index = chunkInfo.Item1;
+                Color[] chunk = chunkInfo.Item2;
+                Player.Self().CmdDeliverMissingChunk(syncRequest.ConnectionId, syncRequest.Hash, index, chunk);
+            }
+        }
     }
 
     public static Texture2D LoadHashedImage(string hash)
@@ -114,6 +168,27 @@ public class TokenSync
         return SyncImages.Count > 0;
     }
 
+    public static void StackRequest(int connectionId, string hash, int[] missingChunks)
+    {
+        string directory = TokenLibrary.GetHashedImageDirectory();
+        string filename = $"{directory}/{hash}.png";
+        if (File.Exists(filename))
+        {
+            var syncRequest = new SyncRequest()
+            {
+                ConnectionId = connectionId,
+                Hash = hash,
+                MissingChunks = missingChunks,
+                TimeReceived = Time.time
+            };
+            if (Outbound.Count == 0 || !Outbound.Peek().Equals(syncRequest))
+            {
+                Outbound.Push(syncRequest);
+            }
+        }
+
+    }
+
     private static (int, int, int) GetOverallPercentage()
     {
         int received = 0;
@@ -127,10 +202,8 @@ public class TokenSync
         return (percent, received, total);
     }
 
-    public static (int, Color[]) GetMissingChunk(string hash, int[] missingChunks)
+    public static (int, Color[]) GetMissingChunk(string hash, int chunkId)
     {
-        int i = missingChunks[UnityEngine.Random.Range(0, missingChunks.Length - 1)];
-
         ChunkCache ??= new Dictionary<string, Color[]>();
         Color[] allColors = null;
         if (ChunkCache.ContainsKey(hash))
@@ -148,11 +221,11 @@ public class TokenSync
             ChunkCache[hash] = allColors;
         }
 
-        int startIndex = i * _chunkSize;
+        int startIndex = chunkId * _chunkSize;
         int remainingColors = Mathf.Min(_chunkSize, allColors.Length - startIndex);
         Color[] chunkColors = new Color[remainingColors];
         System.Array.Copy(allColors, startIndex, chunkColors, 0, remainingColors);
-        return (i, chunkColors);
+        return (chunkId, chunkColors);
     }
 
     public static void SetMissingChunk(string hash, int index, Color[] chunk)
@@ -203,5 +276,17 @@ public class TokenSync
         File.WriteAllBytes(filename, bytes);
 
         syncImage.Data.SetGraphic(receivedTexture);
+    }
+
+    private static void ShuffleArray(int[] array)
+    {
+        System.Random rng = new System.Random();
+        for (int i = array.Length - 1; i > 0; i--)
+        {
+            int randomIndex = rng.Next(i + 1);
+            int temp = array[i];
+            array[i] = array[randomIndex];
+            array[randomIndex] = temp;
+        }
     }
 }

@@ -69,7 +69,7 @@ public class TokenData : NetworkBehaviour
             else
             {
                 TokenSync.SyncStep();
-                GraphicSyncInterval = .2f;
+                GraphicSyncInterval = .4f;
             }
         }
 

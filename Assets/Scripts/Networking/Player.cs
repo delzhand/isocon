@@ -322,34 +322,30 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdRequestMissingChunks(string hash, int[] missingChunks)
     {
-        RpcRequireMissingChunks(hash, missingChunks);
+        RpcRequireMissingChunks(connectionToClient.connectionId, hash, missingChunks);
     }
 
     [ClientRpc]
-    public void RpcRequireMissingChunks(string hash, int[] missingChunks)
+    public void RpcRequireMissingChunks(int connectionId, string hash, int[] missingChunks)
     {
-        for (int i = 0; i < 25; i++)
-        {
-            (int, Color[]) chunkInfo = TokenSync.GetMissingChunk(hash, missingChunks);
-            if (chunkInfo.Item1 > -1)
-            {
-                int index = chunkInfo.Item1;
-                Color[] chunk = chunkInfo.Item2;
-                Player.Self().CmdDeliverMissingChunk(hash, index, chunk);
-            }
-        }
+        TokenSync.StackRequest(connectionId, hash, missingChunks);
     }
 
     [Command]
-    public void CmdDeliverMissingChunk(string hash, int index, Color[] chunk)
+    public void CmdDeliverMissingChunk(int targetConnection, string hash, int index, Color[] chunk)
     {
-        RpcDeliverMissingChunk(hash, index, chunk);
+        var connection = NetworkServer.connections[targetConnection];
+        if (connection != null)
+        {
+            TargetDeliverMissingChunk(connection, hash, index, chunk);
+        }
     }
 
-    [ClientRpc]
-    public void RpcDeliverMissingChunk(string hash, int index, Color[] chunk)
+    [TargetRpc]
+    public void TargetDeliverMissingChunk(NetworkConnectionToClient target, string hash, int index, Color[] chunk)
     {
         TokenSync.SetMissingChunk(hash, index, chunk);
     }
+
     #endregion
 }
