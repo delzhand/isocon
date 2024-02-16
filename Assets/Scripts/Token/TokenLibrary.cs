@@ -67,11 +67,6 @@ public class TokenLibrary : MonoBehaviour
         root.Q<IntegerField>("FramesField").RegisterValueChangedCallback<int>((evt) => ChangeEditingValue());
         root.Q<IntegerField>("FpsField").RegisterValueChangedCallback<int>((evt) => ChangeEditingValue());
         root.Q<Toggle>("FavoriteField").RegisterValueChangedCallback<bool>((evt) => ChangeEditingValue());
-
-        UI.System.Q<Button>("TestButton").RegisterCallback<ClickEvent>((evt) =>
-        {
-            TokenSync.SyncStep();
-        });
     }
 
     public static void ShowDefaultMode(ClickEvent evt)
@@ -118,6 +113,9 @@ public class TokenLibrary : MonoBehaviour
         {
             Close(evt);
         }
+
+        ElementMap[SelectedHash].Item2.Q("Item").RemoveFromClassList("selected");
+        SelectedHash = null;
     }
 
     private static void EditButtonClicked(ClickEvent evt)
@@ -153,6 +151,9 @@ public class TokenLibrary : MonoBehaviour
         WriteLibraryFile();
 
         UI.System.Q("TokenLibraryModal").Q(SelectedHash).Add(ElementMap[SelectedHash].Item2);
+        ElementMap[SelectedHash].Item2.Q("Item").RemoveFromClassList("selected");
+        SelectedHash = null;
+
     }
 
     private static void ChangeEditingValue()

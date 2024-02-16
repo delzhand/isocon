@@ -25,8 +25,6 @@ public class TileMarkingState : TabletopSubstate
     {
         base.EnableInterface();
         UI.ToggleDisplay(UI.TopBar.Q("Dice"), false);
-        UI.ToggleDisplay(UI.TopBar.Q("Info"), false);
-        UI.ToggleDisplay(UI.TopBar.Q("Sync"), false);
         UI.ToggleDisplay(UI.TopBar.Q("Config"), false);
         UI.ToggleDisplay(UI.TopBar.Q("Isocon"), false);
         UI.ToggleDisplay("DiceRoller", false);

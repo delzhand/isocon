@@ -18,6 +18,15 @@ public class Player : NetworkBehaviour
     [SyncVar]
     public PlayerRole Role;
 
+    [SyncVar]
+    public int PercentSynced = 100;
+
+    [SyncVar]
+    public bool Host = false;
+
+    [SyncVar]
+    public int MaxConnections = 1;
+
     void Start()
     {
         if (isLocalPlayer)
@@ -25,9 +34,11 @@ public class Player : NetworkBehaviour
             Name = Preferences.Current.PlayerName;
             if (NetworkServer.active && NetworkClient.active)
             {
+                Host = true;
                 Toast.AddSimple("Connected as host.");
                 TabletopState.IngestRuleData();
                 TerrainController.InitializeTerrain(8, 8, 1);
+                MaxConnections = GameObject.Find("NetworkController").GetComponent<NetworkManager>().maxConnections;
             }
             else
             {
@@ -35,26 +46,6 @@ public class Player : NetworkBehaviour
                 CmdRequestClientInit();
             }
         }
-    }
-
-    public static bool IsHost()
-    {
-        return NetworkServer.active && NetworkClient.active;
-    }
-
-    public static bool IsGM()
-    {
-        Player p = Self();
-        if (p)
-        {
-            return p.Role == PlayerRole.GM;
-        }
-        return false;
-    }
-
-    public static bool IsOnline()
-    {
-        return Self() != null;
     }
 
     public static Player Self()

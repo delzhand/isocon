@@ -36,7 +36,7 @@ public class GameSystem : MonoBehaviour
 
     public virtual void Setup()
     {
-        UI.System.Q<Label>("SystemInfo").text = SystemName();
+        HudText.SetItem("gameSystem", SystemName(), 1, HudTextColor.Blue);
     }
 
     public virtual void Teardown()

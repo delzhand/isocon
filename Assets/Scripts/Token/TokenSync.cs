@@ -62,7 +62,6 @@ public class TokenSync : MonoBehaviour
 
     void Update()
     {
-        HudText.SetItem("outboundCount", $"Outbound Count: {Outbound.Count}", HudTextColor.Red);
         if (Outbound.Count > 0 && _interval <= 0)
         {
             _interval = MaxInterval;
@@ -71,6 +70,11 @@ public class TokenSync : MonoBehaviour
         else
         {
             _interval -= Time.deltaTime;
+        }
+
+        if (Player.Self() != null)
+        {
+            Player.Self().PercentSynced = GetOverallPercentage().Item1;
         }
     }
 
@@ -97,12 +101,8 @@ public class TokenSync : MonoBehaviour
             bool syncing = IsSyncing();
             if (!syncing)
             {
-                HudText.SetItem("syncStatus", "Synced", HudTextColor.Grey);
                 return;
             }
-            (int, int, int) syncInfo = GetOverallPercentage();
-            HudText.SetItem("syncStatus", $"Syncing... {syncInfo.Item2}/{syncInfo.Item3} ({syncInfo.Item1}%)", HudTextColor.Blue);
-
             foreach (var syncImage in SyncImages.Values)
             {
                 Player.Self().CmdRequestMissingChunks(syncImage.Meta.Hash, syncImage.GetMissingChunks());
@@ -189,8 +189,13 @@ public class TokenSync : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Provides information about all tokens in transit
+    /// </summary>
+    /// <returns>Item1 is percent, Item2 is received chunks, Item3 is total chunks</returns>
     private static (int, int, int) GetOverallPercentage()
     {
+        SyncImages ??= new();
         int received = 0;
         int total = 0;
         foreach (var syncImage in SyncImages.Values)
@@ -198,7 +203,7 @@ public class TokenSync : MonoBehaviour
             total += syncImage.Meta.ChunkCount;
             received += (syncImage.Meta.ChunkCount - syncImage.GetMissingChunks().Length);
         }
-        int percent = total > 0 ? Mathf.RoundToInt(received / (float)total * 100) : 0;
+        int percent = total > 0 ? Mathf.RoundToInt(received / (float)total * 100) : 100;
         return (percent, received, total);
     }
 
@@ -251,7 +256,14 @@ public class TokenSync : MonoBehaviour
             SyncImages.Remove(hash);
         }
         (int, int, int) syncInfo = GetOverallPercentage();
-        HudText.SetItem("syncStatus", $"Syncing... {syncInfo.Item2}/{syncInfo.Item3} ({syncInfo.Item1}%)", HudTextColor.Blue);
+        if (syncInfo.Item1 < 100)
+        {
+            HudText.SetItem("syncStatus", $"{syncInfo.Item2 * _chunkSize / 1000}/{syncInfo.Item3 * _chunkSize / 1000} kb received", 11, HudTextColor.Blue);
+        }
+        else
+        {
+            HudText.RemoveItem("syncStatus");
+        }
     }
 
     private static void AssembleImageFromChunks(string hash, SyncImage syncImage)

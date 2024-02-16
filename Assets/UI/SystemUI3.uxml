@@ -52,7 +52,7 @@
         </ui:VisualElement>
         <ui:Label tabindex="-1" text="v0.6.0" display-tooltip-when-elided="true" name="Version" style="position: absolute; right: auto; bottom: 0; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); font-size: 12px; left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 4px; padding-right: 0; padding-bottom: 4px; padding-left: 0; -unity-text-align: middle-center; width: 100%;" />
     </ui:VisualElement>
-    <ui:VisualElement name="Tabletop" style="flex-grow: 1; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex;">
+    <ui:VisualElement name="Tabletop" style="flex-grow: 1; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: none;">
         <ui:VisualElement name="TopBar" style="flex-grow: 0; height: 50px; min-height: 40px; padding-top: 10px; padding-right: 10px; padding-left: 10px; background-color: rgba(0, 0, 0, 0.49); flex-direction: row; align-items: flex-start; opacity: 1; -unity-text-outline-color: rgba(0, 0, 0, 0.49); padding-bottom: 10px;">
             <ui:VisualElement style="flex-grow: 1; flex-direction: row; margin-left: -10px;">
                 <ui:VisualElement name="EditMap" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px;">
@@ -70,55 +70,6 @@
                 <ui:VisualElement name="Dice" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; overflow: visible; height: 30px;">
                     <ui:VisualElement style="flex-grow: 1; width: 20px; height: 20px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/die_icon&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;" />
                     <ui:Label text="&lt;u&gt;D&lt;/u&gt;ice Roller" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;" />
-                </ui:VisualElement>
-                <ui:VisualElement name="Info" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; display: flex; height: 30px;">
-                    <ui:VisualElement style="flex-grow: 1; width: 24px; height: 24px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/info&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;" />
-                    <ui:Label text="&lt;u&gt;I&lt;/u&gt;nfo" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;" />
-                    <ui:VisualElement name="InfoWindow" class="panel" style="flex-grow: 1; display: none; position: absolute; top: 100%; left: 0;">
-                        <ui:VisualElement style="flex-grow: 1;">
-                            <ui:Label tabindex="-1" text="SYSTEM" display-tooltip-when-elided="true" class="panel-header" />
-                            <ui:Label text="Game system name" name="SystemInfo" class="no-margin" />
-                        </ui:VisualElement>
-                        <ui:VisualElement style="flex-grow: 1; margin-top: 8px;">
-                            <ui:Label tabindex="-1" text="CONNECTION" display-tooltip-when-elided="true" class="panel-header" />
-                            <ui:Label text="Connection details" name="ConnectionMessage" class="no-margin" style="white-space: normal; max-width: 240px;" />
-                        </ui:VisualElement>
-                        <ui:VisualElement style="flex-grow: 1; margin-top: 8px;">
-                            <ui:Label tabindex="-1" text="PLAYERS" display-tooltip-when-elided="true" class="panel-header" />
-                            <ui:VisualElement style="align-items: center; flex-direction: row;">
-                                <ui:VisualElement name="VisualElement" style="background-image: resource(&apos;Textures/players&apos;); -unity-background-scale-mode: scale-to-fit; width: 20px; height: 20px; margin-right: 8px;" />
-                                <ui:Label text="Connected:" class="no-margin" />
-                                <ui:Label text="1/4" name="PlayerCount" class="no-margin" />
-                            </ui:VisualElement>
-                            <ui:VisualElement name="PlayerList" />
-                        </ui:VisualElement>
-                        <ui:VisualElement style="flex-grow: 1; margin-top: 8px;">
-                            <ui:Label tabindex="-1" text="MAP TITLE" display-tooltip-when-elided="true" class="panel-header" />
-                            <ui:Label name="MapTitle" class="no-margin" style="white-space: normal; max-width: 240px;" />
-                        </ui:VisualElement>
-                        <ui:VisualElement style="flex-grow: 1; margin-top: 8px;">
-                            <ui:Label tabindex="-1" text="MAP DESCRIPTION" display-tooltip-when-elided="true" class="panel-header" />
-                            <ui:Label text="Connection details" name="Description" class="no-margin" style="white-space: normal; max-width: 240px;" />
-                        </ui:VisualElement>
-                        <ui:VisualElement style="flex-grow: 1; margin-top: 8px;">
-                            <ui:Label tabindex="-1" text="MAP OBJECTIVE" display-tooltip-when-elided="true" class="panel-header" />
-                            <ui:Label name="Objective" class="no-margin" style="white-space: normal; max-width: 240px;" />
-                        </ui:VisualElement>
-                        <ui:VisualElement style="flex-grow: 1; margin-top: 8px;">
-                            <ui:Label tabindex="-1" text="MAP AUTHOR" display-tooltip-when-elided="true" class="panel-header" />
-                            <ui:Label name="Author" class="no-margin" style="white-space: normal; max-width: 240px;" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                </ui:VisualElement>
-                <ui:VisualElement name="Sync" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; display: flex; height: 30px;">
-                    <ui:VisualElement style="flex-grow: 1; width: 24px; height: 24px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/sync&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;" />
-                    <ui:Label text="&lt;u&gt;S&lt;/u&gt;ync" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;" />
-                    <ui:VisualElement name="SyncPanel" class="panel" style="flex-grow: 1; display: none; position: absolute; top: 100%; left: 0;">
-                        <ui:VisualElement style="flex-grow: 1;">
-                            <ui:Label tabindex="-1" text="TOKENS" display-tooltip-when-elided="true" class="panel-header" />
-                            <ui:VisualElement name="SyncStatus" style="flex-grow: 1;" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="Config" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px;">
                     <ui:VisualElement style="flex-grow: 1; width: 20px; height: 20px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&apos;Textures/config&apos;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;" />
@@ -189,7 +140,6 @@
             </ui:VisualElement>
             <ui:VisualElement name="ClickCatcher" style="flex-grow: 1; position: absolute; left: -20%; top: -20%; right: -20%; bottom: -20%; display: none;" />
             <ui:VisualElement name="TopLeft" style="flex-grow: 1; position: absolute; left: 0; top: 0; flex-direction: column; align-items: flex-start; margin-top: 10px; margin-left: 10px;">
-                <ui:Button text="Button" name="TestButton" class="panel-text" style="position: relative;" />
                 <ui:VisualElement name="DetailsHud" picking-mode="Ignore" style="flex-grow: 1; position: relative; width: 431px; height: 410px; background-image: resource(&apos;Textures/TestRenderTexture&apos;);" />
                 <ui:VisualElement name="Tools" style="flex-grow: 1; flex-direction: row; align-items: flex-start; margin-top: 0; display: flex;">
                     <ui:VisualElement name="ToolsPanel" class="panel" style="flex-direction: column; flex-wrap: nowrap; min-height: auto; display: none; width: 66px; margin-right: 8px; padding-right: 10px; padding-top: 8px;">

@@ -64,23 +64,22 @@ public class TabletopState : BaseState
     #region Setup
     private void SetConnectionMessage()
     {
-        Label message = UI.System.Q<Label>("ConnectionMessage");
         string text = "";
         switch (_mode)
         {
             case ConnectMode.Client:
-                text = $"You are connected to {Preferences.Current.HostIP} as a client.";
+                text = $"Connected: {Preferences.Current.HostIP}";
                 break;
             case ConnectMode.Host:
-                text = "You are hosting on port <LocalIP> (local) and <GlobalIP> (global).<br><br>For users to connect to your global IP you must have port forwarding for port 7777 TCP to your local IP and not have a VPN active.";
+                text = "Hosting: <LocalIP>|<GlobalIP>";
                 break;
             case ConnectMode.Solo:
-                text = "You are in solo mode. Other users cannot connect to this table.";
+                text = "Solo";
                 break;
 
         }
-        message.text = text;
-        IPFinder.ReplaceTokens(message);
+        HudText.SetItem("connectionInfo", text, 1, HudTextColor.Blue);
+        IPFinder.ReplaceTokens(text);
     }
     #endregion
 

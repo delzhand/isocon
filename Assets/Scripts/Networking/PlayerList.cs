@@ -33,26 +33,33 @@ public class PlayerList : MonoBehaviour
             if (!_players.Contains(player) && player.Length > 0)
             {
                 Toast.AddSimple($"{player} disconnected.");
+                string syncTextId = $"{player}_sync";
+                HudText.RemoveItem(syncTextId);
             }
         }
 
         _lastPlayers.Clear();
         _players.CopyTo(_lastPlayers);
 
-        VisualElement playerList = UI.System.Q("PlayerList");
-        playerList.Clear();
+        int maxConnections = 1;
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("Player"))
         {
-            string name = g.GetComponent<Player>().Name;
-            Label l = new(name);
-            l.AddToClassList("playerlist-item");
-            l.AddToClassList("no-margin");
-            playerList.Add(l);
-        }
+            var player = g.GetComponent<Player>();
+            if (player.Host)
+            {
+                maxConnections = player.MaxConnections;
+            }
 
-        NetworkManager netManager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
-        string maxPlayers = netManager.maxConnections > 0 ? $"/{netManager.maxConnections}" : "";
-        HudText.SetItem("playerCount", $"Players: {_players.Count}{maxPlayers}", HudTextColor.Blue);
-        UI.System.Q("InfoWindow").Q<Label>("PlayerCount").text = $"{_players.Count}";
+            string syncTextId = $"{player.Name}_sync";
+            if (player.PercentSynced < 100)
+            {
+                HudText.SetItem(syncTextId, $"{player.Name} syncing... ({player.PercentSynced}%)", 10, HudTextColor.Red);
+            }
+            else
+            {
+                HudText.RemoveItem(syncTextId);
+            }
+        }
+        HudText.SetItem("playerCount", $"Players: {_players.Count}/{maxConnections}", 3, HudTextColor.Blue);
     }
 }

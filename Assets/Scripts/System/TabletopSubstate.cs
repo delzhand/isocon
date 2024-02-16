@@ -37,8 +37,6 @@ public abstract class TabletopSubstate : BaseState
         UI.ToggleDisplay(UI.TopBar.Q("DragMode"), true);
         UI.ToggleDisplay(UI.TopBar.Q("MarkerMode"), true);
         UI.ToggleDisplay(UI.TopBar.Q("Dice"), true);
-        UI.ToggleDisplay(UI.TopBar.Q("Info"), true);
-        UI.ToggleDisplay(UI.TopBar.Q("Sync"), true);
         UI.ToggleDisplay(UI.TopBar.Q("Config"), true);
     }
 

@@ -261,8 +261,7 @@ public class Icon_v1_5 : GameSystem
     public override void CreateToken()
     {
         string name = UI.Modal.Q<TextField>("NameField").value;
-        // Texture2D graphic = TextureSender.CopyLocalImage(UI.Modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
-        // string graphicHash = TextureSender.GetTextureHash(graphic);
+        var tokenMeta = TokenLibrary.GetSelectedMeta();
 
         string type = UI.Modal.Q<DropdownField>("Type").value;
         string playerJob = SearchField.GetValue(UI.Modal.Q("PlayerJob"));
@@ -314,12 +313,12 @@ public class Icon_v1_5 : GameSystem
             for (int i = 0; i < count; i++)
             {
                 string cloneName = $"{name} {StringUtility.ConvertIntToAlpha(i + 1)}";
-                // Player.Self().CmdCreateToken("Icon v1.5", graphicHash, cloneName, size, color, JsonUtility.ToJson(data));
+                Player.Self().CmdCreateToken("Icon v1.5", tokenMeta, cloneName, size, color, JsonUtility.ToJson(data));
             }
         }
         else
         {
-            // Player.Self().CmdCreateToken("Icon v1.5", graphicHash, name, size, color, JsonUtility.ToJson(data));
+            Player.Self().CmdCreateToken("Icon v1.5", tokenMeta, name, size, color, JsonUtility.ToJson(data));
         }
     }
 

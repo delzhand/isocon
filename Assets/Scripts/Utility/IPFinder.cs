@@ -20,7 +20,8 @@ public class IPFinder
 
     private static readonly string IpifyApiUrl = "https://api.ipify.org/?format=json";
 
-    private static async Task AsyncGetIP() {
+    private static async Task AsyncGetIP()
+    {
         try
         {
             using (HttpClient client = new HttpClient())
@@ -52,22 +53,25 @@ public class IPFinder
             _publicIP = "[unknown]";
         }
     }
-    
-    private static string LocalIP() {
-        #if UNITY_WEBGL
+
+    private static string LocalIP()
+    {
+#if UNITY_WEBGL
             return "";
-        #endif
+#endif
 
         return Dns.GetHostEntry(Dns.GetHostName()).AddressList.First(
             f => f.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
         .ToString();
     }
 
-    public static async void ReplaceTokens(Label label) {
-        label.text = label.text.Replace("<LocalIP>", LocalIP());
-        string original = label.text;
-        label.text = original.Replace("<GlobalIP>", "(checking...)");
+    public static async void ReplaceTokens(string text)
+    {
+        text = text.Replace("<LocalIP>", LocalIP());
+        string original = text;
+        text = original.Replace("<GlobalIP>", "(checking...)");
         await AsyncGetIP();
-        label.text = original.Replace("<GlobalIP>", _publicIP);
+        text = original.Replace("<GlobalIP>", _publicIP);
+        HudText.SetItem("connectionInfo", text, 1, HudTextColor.Blue);
     }
 }
