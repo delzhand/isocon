@@ -22,7 +22,6 @@ public class StateManager : MonoBehaviour
 
     public void ChangeState(IState newState)
     {
-        Debug.Log($"State changed to {newState.GetType()}");
         _current?.OnExit();
         _current = newState;
         _current.OnEnter(this);
@@ -30,7 +29,6 @@ public class StateManager : MonoBehaviour
 
     public void ChangeSubState(IState newState)
     {
-        Debug.Log($"SubState changed to {newState?.GetType()}");
         _substate?.OnExit();
         _substate = newState;
         _substate?.OnEnter(this);

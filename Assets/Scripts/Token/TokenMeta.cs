@@ -9,8 +9,6 @@ using UnityEngine;
 [Serializable]
 public class TokenMeta
 {
-    private static int _chunkSize = 512;
-
     public string Name = "";
     public int FPS = 0;
     public int Frames = 1;
@@ -24,7 +22,7 @@ public class TokenMeta
     {
     }
 
-    public TokenMeta(Texture2D image, string filename)
+    public TokenMeta(Texture2D image, string filename, int chunkCount)
     {
         if (image == null)
         {
@@ -35,7 +33,7 @@ public class TokenMeta
             throw new Exception("Filename must not be empty");
         }
         Hash = GetHash(image);
-        ChunkCount = Mathf.CeilToInt(image.GetPixels().Length / (float)_chunkSize);
+        ChunkCount = chunkCount;
         Name = filename.Split("\\").Last<string>();
         Width = image.width;
         Height = image.height;

@@ -70,6 +70,13 @@ public class TokenData : NetworkBehaviour
             {
                 TokenSync.SyncStep();
                 GraphicSyncInterval = .4f;
+
+                var texture = TokenSync.LoadHashedFileAsTexture(TokenMeta.Hash);
+                if (texture != null)
+                {
+                    SetGraphic(texture);
+                }
+
             }
         }
 
@@ -92,7 +99,7 @@ public class TokenData : NetworkBehaviour
     private void LoadGraphic()
     {
         FileLogger.Write($"Load graphic for {TokenMeta.TruncateHash(TokenMeta.Hash)}");
-        Texture2D graphic = TokenSync.LoadHashedImage(TokenMeta.Hash);
+        Texture2D graphic = TokenSync.LoadHashedFileAsTexture(TokenMeta.Hash);
         if (graphic)
         {
             FileLogger.Write($"Hashed image {TokenMeta.TruncateHash(TokenMeta.Hash)} found locally");

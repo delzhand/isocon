@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 public class TokenSync : MonoBehaviour
 {
-    private static readonly int _chunkSize = 512;
+    private static readonly int _chunkSize = 8 * 1024;
 
     private class SyncImage
     {
@@ -36,7 +36,7 @@ public class TokenSync : MonoBehaviour
     private class ImageChunk
     {
         public int Index;
-        public Color[] ColorChunk;
+        public Byte[] ByteChunk;
     }
 
     private class SyncRequest
@@ -48,7 +48,7 @@ public class TokenSync : MonoBehaviour
     }
 
     private static Dictionary<string, SyncImage> SyncImages;
-    private static Dictionary<string, Color[]> ChunkCache;
+    private static Dictionary<string, Byte[]> ChunkCache;
     private static Stack<SyncRequest> Outbound;
 
     private float _interval = 0;
@@ -126,17 +126,17 @@ public class TokenSync : MonoBehaviour
         FileLogger.Write($"Filling {count} random chunks of {syncRequest.MissingChunks.Length}");
         for (int i = 0; i < count; i++)
         {
-            (int, Color[]) chunkInfo = TokenSync.GetMissingChunk(syncRequest.Hash, missingChunks[i]);
+            (int, Byte[]) chunkInfo = TokenSync.GetMissingChunk(syncRequest.Hash, missingChunks[i]);
             if (chunkInfo.Item1 > -1)
             {
                 int index = chunkInfo.Item1;
-                Color[] chunk = chunkInfo.Item2;
+                Byte[] chunk = chunkInfo.Item2;
                 Player.Self().CmdDeliverMissingChunk(syncRequest.ConnectionId, syncRequest.Hash, index, chunk);
             }
         }
     }
 
-    public static Texture2D LoadHashedImage(string hash)
+    public static Texture2D LoadHashedFileAsTexture(string hash)
     {
         SyncImages ??= new();
         string directory = TokenLibrary.GetHashedImageDirectory();
@@ -207,33 +207,40 @@ public class TokenSync : MonoBehaviour
         return (percent, received, total);
     }
 
-    public static (int, Color[]) GetMissingChunk(string hash, int chunkId)
+    public static int GetChunkCount(int byteLength)
     {
-        ChunkCache ??= new Dictionary<string, Color[]>();
-        Color[] allColors = null;
+        return Mathf.CeilToInt(byteLength / (float)_chunkSize);
+    }
+
+    public static (int, Byte[]) GetMissingChunk(string hash, int chunkId)
+    {
+        ChunkCache ??= new Dictionary<string, Byte[]>();
+        Byte[] allBytes = null;
         if (ChunkCache.ContainsKey(hash))
         {
-            allColors = ChunkCache[hash];
+            allBytes = ChunkCache[hash];
         }
         else
         {
-            Texture2D image = LoadHashedImage(hash);
-            if (image == null)
+            string directory = TokenLibrary.GetHashedImageDirectory();
+            string filename = $"{directory}/{hash}.png";
+            if (!File.Exists(filename))
             {
                 return (-1, null);
             }
-            allColors = image.GetPixels();
-            ChunkCache[hash] = allColors;
+            allBytes = File.ReadAllBytes(filename);
+            ChunkCache[hash] = allBytes;
         }
 
         int startIndex = chunkId * _chunkSize;
-        int remainingColors = Mathf.Min(_chunkSize, allColors.Length - startIndex);
-        Color[] chunkColors = new Color[remainingColors];
-        System.Array.Copy(allColors, startIndex, chunkColors, 0, remainingColors);
-        return (chunkId, chunkColors);
+        int remainingBytes = Mathf.Min(_chunkSize, allBytes.Length - startIndex);
+        Debug.Log(allBytes.Length / _chunkSize);
+        Byte[] chunkBytes = new Byte[remainingBytes];
+        System.Array.Copy(allBytes, startIndex, chunkBytes, 0, remainingBytes);
+        return (chunkId, chunkBytes);
     }
 
-    public static void SetMissingChunk(string hash, int index, Color[] chunk)
+    public static void SetMissingChunk(string hash, int index, Byte[] chunk)
     {
         if (!SyncImages.ContainsKey(hash) || index < 0)
         {
@@ -248,7 +255,7 @@ public class TokenSync : MonoBehaviour
         syncImage.Chunks[index] = new ImageChunk()
         {
             Index = index,
-            ColorChunk = chunk
+            ByteChunk = chunk
         };
         if (SyncImages[hash].Complete)
         {
@@ -258,7 +265,7 @@ public class TokenSync : MonoBehaviour
         (int, int, int) syncInfo = GetOverallPercentage();
         if (syncInfo.Item1 < 100)
         {
-            HudText.SetItem("syncStatus", $"{syncInfo.Item2 * _chunkSize / 1000}/{syncInfo.Item3 * _chunkSize / 1000} kb received", 11, HudTextColor.Blue);
+            HudText.SetItem("syncStatus", $"{syncInfo.Item2 * _chunkSize}/{syncInfo.Item3 * _chunkSize} kb received", 11, HudTextColor.Blue);
         }
         else
         {
@@ -268,26 +275,20 @@ public class TokenSync : MonoBehaviour
 
     private static void AssembleImageFromChunks(string hash, SyncImage syncImage)
     {
-        FileLogger.Write($"File {TokenMeta.TruncateHash(hash)}");
-        Texture2D receivedTexture = new(syncImage.Meta.Width, syncImage.Meta.Height);
-        Color[] allColors = new Color[syncImage.Meta.Width * syncImage.Meta.Height];
+        FileLogger.Write($"Assembly file {TokenMeta.TruncateHash(hash)}");
+        Byte[] allBytes = new Byte[syncImage.Meta.ChunkCount * _chunkSize];
         foreach (var imageChunk in syncImage.Chunks)
         {
             int startIndex = imageChunk.Index * _chunkSize;
-            for (int i = 0; i < imageChunk.ColorChunk.Length; i++)
+            for (int i = 0; i < imageChunk.ByteChunk.Length; i++)
             {
-                allColors[startIndex + i] = imageChunk.ColorChunk[i];
+                allBytes[startIndex + i] = imageChunk.ByteChunk[i];
             }
         }
-        receivedTexture.SetPixels(allColors);
-        receivedTexture.Apply();
 
         string directory = TokenLibrary.GetHashedImageDirectory();
         string filename = $"{directory}/{hash}.png";
-        byte[] bytes = receivedTexture.EncodeToPNG();
-        File.WriteAllBytes(filename, bytes);
-
-        syncImage.Data.SetGraphic(receivedTexture);
+        File.WriteAllBytes(filename, allBytes);
     }
 
     private static void ShuffleArray(int[] array)

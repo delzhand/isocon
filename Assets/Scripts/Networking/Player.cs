@@ -323,7 +323,7 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
-    public void CmdDeliverMissingChunk(int targetConnection, string hash, int index, Color[] chunk)
+    public void CmdDeliverMissingChunk(int targetConnection, string hash, int index, Byte[] chunk)
     {
         var connection = NetworkServer.connections[targetConnection];
         if (connection != null)
@@ -333,7 +333,7 @@ public class Player : NetworkBehaviour
     }
 
     [TargetRpc]
-    public void TargetDeliverMissingChunk(NetworkConnectionToClient target, string hash, int index, Color[] chunk)
+    public void TargetDeliverMissingChunk(NetworkConnectionToClient target, string hash, int index, Byte[] chunk)
     {
         TokenSync.SetMissingChunk(hash, index, chunk);
     }

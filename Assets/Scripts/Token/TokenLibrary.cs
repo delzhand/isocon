@@ -114,8 +114,11 @@ public class TokenLibrary : MonoBehaviour
             Close(evt);
         }
 
-        ElementMap[SelectedHash].Item2.Q("Item").RemoveFromClassList("selected");
-        SelectedHash = null;
+        if (SelectedHash != null)
+        {
+            ElementMap[SelectedHash].Item2.Q("Item").RemoveFromClassList("selected");
+            SelectedHash = null;
+        }
     }
 
     private static void EditButtonClicked(ClickEvent evt)
@@ -198,7 +201,7 @@ public class TokenLibrary : MonoBehaviour
             Texture2D texture = new Texture2D(2, 2);
             texture.LoadImage(imageData);
             texture.filterMode = FilterMode.Point;
-            var tokenMeta = new TokenMeta(texture, filename);
+            var tokenMeta = new TokenMeta(texture, filename, TokenSync.GetChunkCount(imageData.Length));
             File.WriteAllBytes($"{directory}/{tokenMeta.Hash}.png", imageData);
             Tokens[tokenMeta.Hash] = tokenMeta;
             AddToUI(tokenMeta);
@@ -209,17 +212,6 @@ public class TokenLibrary : MonoBehaviour
             WriteLibraryFile();
             Toast.AddSuccess($"{count} tokens added to the library.");
         }
-    }
-
-    private static Texture2D LoadHashedImage(string hash)
-    {
-        string directory = GetHashedImageDirectory();
-        string filename = $"{directory}/{hash}.png";
-        byte[] imageData = File.ReadAllBytes(filename);
-        Texture2D texture = new Texture2D(2, 2);
-        texture.LoadImage(imageData);
-        texture.filterMode = FilterMode.Point;
-        return texture;
     }
 
     public static string GetHashedImageDirectory()
@@ -257,7 +249,7 @@ public class TokenLibrary : MonoBehaviour
         VisualElement sprite = new();
         sprite.name = "Sprite";
         sprite.AddToClassList("sprite");
-        sprite.style.backgroundImage = LoadHashedImage(meta.Hash);
+        sprite.style.backgroundImage = TokenSync.LoadHashedFileAsTexture(meta.Hash);
 
         frame.Add(sprite);
         tokenDisplay.Add(frame);
