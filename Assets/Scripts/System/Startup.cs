@@ -11,8 +11,8 @@ using UnityEngine.UIElements;
 
 public class Startup
 {
-    private static string _version = "0.6.9";
-    private static string _latestVersion = "0.6.9";
+    private static string _version = "0.7.0";
+    private static string _latestVersion = "0.7.0";
 
     public static void RunTasks()
     {
@@ -35,20 +35,32 @@ public class Startup
 
     private static void ReleaseNotes()
     {
-        string version = "0.6.9";
-        string notes = @"<size=+3><b>IsoCON Version 0.6.9</b></size>
+        string version = "0.7.0";
+        string notes = @"<size=+3><b>IsoCON Version 0.7.0</b></size>
 
 <size=+2><b>Features</b></size>
+* Token Library - Maintain the tokens you plan to use in your games from inside Isocon and search it from the Add Token modal.
+* Animated Tokens - Frames of animation should be laid out horizontally, FPS and number of frames can be configured in the token library.
+* File Browser - tokens and maps can now be loaded from anywhere, not just the data directory.
 * A config option to keep block borders outside of editing/dragging has been added.
 * Homebrew support has been added - in the data directory you'll now find a folder called 'rules', and after launching this release it will contain a folder called latest.json. Copy this file and make your edits, and you can then select the new file in the config panel.
 
 <size=+2><b>Improvements</b></size>
+* Rebuilt token sync - speed and stability should be vastly improved
+* Data HUD added that shows information including the sync status of other players
 * The alt key can now be held when style painting blocks to quickly switch to the sample tool.
 * Dragging a token into the side of a block now automatically move it to the topmost block.
 * Eliminated hundreds of redundant function calls per frame.
+* Screen transitions implemented when moving between launcher and tabletop.
+* Camera can be rotated with right mouse button and dragged with middle mouse button. The top bar camera option now swaps this functionality.
+
+<size=+2><b>Changes</b></size>
+* Add Token button moved out of bottom bar, bottom bar hidden by default, shows now when the new Deploy button is clicked.
+* Info/Sync top bar options removed
 
 <size=+2><b>Fixes</b></size>
 * Bugs with the dice roller have been resolved.
+* 6x8 Maleghast Map Maker maps now import correctly.
 
 <size=+2><b>Known Issues</b></size>
 * The change to token placement means that multi-level maps can't have tokens on a lower level anymore.";
