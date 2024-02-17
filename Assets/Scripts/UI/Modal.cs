@@ -235,6 +235,19 @@ public class Modal
         Modal.AddContents(label);
     }
 
+    public static void AddDescription(string name, string contents)
+    {
+        Label label = new Label(contents);
+        label.enableRichText = true;
+        label.style.whiteSpace = WhiteSpace.Normal;
+        label.style.maxWidth = 280;
+        label.style.marginLeft = 154;
+
+        label.name = name;
+        label.AddToClassList("no-margin");
+        Modal.AddContents(label);
+    }
+
     public static void AddTextField(string name, string label, string defaultValue, EventCallback<ChangeEvent<string>> onChange = null)
     {
         TextField field = new(label);

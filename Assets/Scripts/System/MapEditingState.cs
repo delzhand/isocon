@@ -44,6 +44,7 @@ public class MapEditingState : TabletopSubstate
         UI.ToggleDisplay("ToolsPanel", true);
         UI.ToggleDisplay("DiceRoller", false);
         UI.ToggleDisplay("BottomBar", false);
+        UI.ToggleDisplay("BottomRight", false);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
         UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), true);
         UI.TopBar.Q("EditMap").Q<Label>("Label").text = "Save <u>M</u>ap";

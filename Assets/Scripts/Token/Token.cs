@@ -130,6 +130,7 @@ public class Token : MonoBehaviour
         if (State == TokenState.Inspecting)
         {
             StateChange(TokenState.Neutral);
+            Player.Self().ClearOp();
         }
         else
         {

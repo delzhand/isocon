@@ -151,7 +151,7 @@ public class LauncherState : BaseState
                 Preferences.SetGrid(evt.newValue);
                 ConfigModalEvaluateConditions();
             });
-            Modal.AddMarkup("HexMessage", "Warning! Hex support is experimental. Some visual effects may not display correctly.");
+            Modal.AddDescription("HexMessage", "Warning! Hex support is experimental. Some visual effects may not display correctly.");
         }
 
         if (_mode == ConnectMode.Host)
@@ -188,6 +188,7 @@ public class LauncherState : BaseState
             UI.ToggleDisplay(UI.Modal.Q("GridType"), grid);
             UI.ToggleDisplay("HexMessage", grid && hex);
         }
+        UI.Redraw();
     }
 
     private void ConfirmConfig(ClickEvent evt)

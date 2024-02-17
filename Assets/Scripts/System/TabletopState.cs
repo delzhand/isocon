@@ -52,7 +52,6 @@ public class TabletopState : BaseState
     private void EnableInterface()
     {
         UI.ToggleDisplay("Tabletop", true);
-        UI.ToggleDisplay("BottomBar", true);
         UI.ToggleDisplay("TopBar", true);
 #if UNITY_WEBGL
         UI.ToggleDisplay("AddToken", false);

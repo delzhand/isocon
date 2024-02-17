@@ -7,10 +7,18 @@ using UnityEngine.UIElements;
 public class NeutralState : TabletopSubstate
 {
     private Token _dragToken;
+    private bool _bottomBarVisible = false;
 
     public override void OnEnter(StateManager sm)
     {
         base.OnEnter(sm);
+    }
+
+    protected override void EnableInterface()
+    {
+        base.EnableInterface();
+        UI.ToggleDisplay(UI.System.Q("BottomBar"), _bottomBarVisible);
+        UI.ToggleDisplay(UI.System.Q("BottomRight"), true);
     }
 
     public override void UpdateState()
@@ -82,7 +90,8 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(GoToConfig);
         UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(Config.OpenModal);
-        UI.System.Q("BottomBar").Q("AddToken").RegisterCallback<ClickEvent>(ShowAddTokenModal);
+        UI.System.Q("BottomRight").Q("AddToken").RegisterCallback<ClickEvent>(ShowAddTokenModal);
+        UI.System.Q("BottomRight").Q("DeployToken").RegisterCallback<ClickEvent>(ToggleBottomBar);
         Dragger.LeftClickRelease += LeftClickRelease;
         Dragger.RightClickRelease += RightClickRelease;
         Dragger.LeftDragStart += LeftDragStart;
@@ -98,7 +107,8 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("Config").UnregisterCallback<ClickEvent>(GoToConfig);
         UI.TopBar.Q("Dice").UnregisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
         UI.TopBar.Q("Config").UnregisterCallback<ClickEvent>(Config.OpenModal);
-        UI.System.Q("BottomBar").Q("AddToken").UnregisterCallback<ClickEvent>(ShowAddTokenModal);
+        UI.System.Q("BottomRight").Q("AddToken").UnregisterCallback<ClickEvent>(ShowAddTokenModal);
+        UI.System.Q("BottomRight").Q("DeployToken").UnregisterCallback<ClickEvent>(ToggleBottomBar);
         Dragger.LeftClickRelease -= LeftClickRelease;
         Dragger.RightClickRelease -= RightClickRelease;
         Dragger.LeftDragStart -= LeftDragStart;
@@ -130,6 +140,12 @@ public class NeutralState : TabletopSubstate
     private void ShowAddTokenModal(ClickEvent evt)
     {
         AddToken.OpenModal(new ClickEvent());
+    }
+
+    private void ToggleBottomBar(ClickEvent evt)
+    {
+        _bottomBarVisible = !_bottomBarVisible;
+        UI.ToggleDisplay(UI.System.Q("BottomBar"), _bottomBarVisible);
     }
 
     private void ShowConsole(ClickEvent evt)

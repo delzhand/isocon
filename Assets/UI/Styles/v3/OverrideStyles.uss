@@ -46,10 +46,6 @@
     width: 220px;
 }
 
-#AddTokenButton:hover {
-    color: orange;
-}
-
 #Effects .effect {
     margin: 0;
     margin-bottom: 2px;
@@ -222,22 +218,22 @@
 }
 
 #SelectedTokenPanel {
-    left: -400px;
-    opacity: 0;
-}
-
-#FocusedTokenPanel {
-    right: -400px;
+    right: 65%;
     opacity: 0;
 }
 
 #SelectedTokenPanel.active {
-    left: 0;
+    right: 55%;
     opacity: 1;
 }
 
+#FocusedTokenPanel {
+    left: 65%;
+    opacity: 0;
+}
+
 #FocusedTokenPanel.active {
-    right: 0;
+    left: 55%;
     opacity: 1;
 }
 
@@ -415,4 +411,8 @@
 
 #TokenMetaEdit .unity-base-text-field__input {
     width: 200px;
+}
+
+#TokenSearchField #unity-text-input {
+    background-color: #AAA;
 }

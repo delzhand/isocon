@@ -15,6 +15,7 @@ public class Config
         {
             Preferences.SetDataPath(evt.newValue);
         });
+        Modal.AddDescription("DataPathDesc", "This is the directory where the token library, shared tokens, and log files will be saved.");
 #endif
 
         string uiScale = Preferences.Current.UIScale;
@@ -55,7 +56,7 @@ public class Config
         {
             Preferences.SetRulesFile(evt.newValue);
         });
-        Modal.AddMarkup("RulesDesc", "Rules are applied only when entering solo or host mode. Client mode will use the host's rules.");
+        Modal.AddDescription("RulesDesc", "Rules are applied only when entering solo or host mode. Client mode will use the host's rules.");
 #endif
 
         Modal.AddPreferredButton("Confirm", CloseModal);

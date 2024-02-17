@@ -393,8 +393,6 @@ public class TerrainController
         {
             op = "StyleSample";
         }
-        Debug.Log(MapEditingState.AltMode);
-        Debug.Log(op);
         switch (op)
         {
             case "StylePaint":

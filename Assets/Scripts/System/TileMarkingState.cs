@@ -29,6 +29,7 @@ public class TileMarkingState : TabletopSubstate
         UI.ToggleDisplay(UI.TopBar.Q("Isocon"), false);
         UI.ToggleDisplay("DiceRoller", false);
         UI.ToggleDisplay("BottomBar", false);
+        UI.ToggleDisplay("BottomRight", false);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
         UI.ToggleActiveClass(UI.TopBar.Q("MarkerMode"), true);
         UI.TopBar.Q("MarkerMode").Q<Label>("Label").text = "Stop Marking <u>T</u>iles";
