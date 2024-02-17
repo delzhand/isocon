@@ -149,6 +149,7 @@ public class LauncherState : BaseState
             Modal.AddDropdownField("GridType", "Grid Type", gridType, new string[] { "Square", "Hex" }, (evt) =>
             {
                 Preferences.SetGrid(evt.newValue);
+                ConfigModalEvaluateConditions();
             });
             Modal.AddMarkup("HexMessage", "Warning! Hex support is experimental. Some visual effects may not display correctly.");
         }
@@ -183,8 +184,9 @@ public class LauncherState : BaseState
         if (UI.Modal.Q("GameSystem") != null)
         {
             bool grid = StringUtility.CheckInList(UI.Modal.Q<DropdownField>("GameSystem").value, "Generic", "Lancer");
+            bool hex = Preferences.Current.Grid == "Hex";
             UI.ToggleDisplay(UI.Modal.Q("GridType"), grid);
-            UI.ToggleDisplay("HexMessage", grid);
+            UI.ToggleDisplay("HexMessage", grid && hex);
         }
     }
 
