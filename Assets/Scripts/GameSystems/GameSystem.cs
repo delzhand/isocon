@@ -36,7 +36,7 @@ public class GameSystem : MonoBehaviour
 
     public virtual void Setup()
     {
-        UI.System.Q<Label>("SystemInfo").text = SystemName();
+        HudText.SetItem("gameSystem", SystemName(), 1, HudTextColor.Blue);
     }
 
     public virtual void Teardown()
@@ -108,7 +108,7 @@ public class GameSystem : MonoBehaviour
         string name = data.Name.Length == 0 ? "this token" : data.Name;
         Modal.DoubleConfirm("Clone Token", $"Are you sure you want to clone {name}?", () =>
         {
-            Player.Self().CmdCreateToken(data.System, data.GraphicHash, data.Name, data.Size, data.Color, data.SystemData);
+            Player.Self().CmdCreateToken(data.System, data.TokenMeta, data.Name, data.Size, data.Color, data.SystemData);
             Token.DeselectAll();
         });
     }

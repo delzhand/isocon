@@ -18,6 +18,15 @@ public class Player : NetworkBehaviour
     [SyncVar]
     public PlayerRole Role;
 
+    [SyncVar]
+    public int PercentSynced = 100;
+
+    [SyncVar]
+    public bool Host = false;
+
+    [SyncVar]
+    public int MaxConnections = 1;
+
     void Start()
     {
         if (isLocalPlayer)
@@ -25,9 +34,10 @@ public class Player : NetworkBehaviour
             Name = Preferences.Current.PlayerName;
             if (NetworkServer.active && NetworkClient.active)
             {
+                Host = true;
                 Toast.AddSimple("Connected as host.");
                 TabletopState.IngestRuleData();
-                TerrainController.InitializeTerrain(8, 8, 1);
+                MaxConnections = GameObject.Find("NetworkController").GetComponent<NetworkManager>().maxConnections;
             }
             else
             {
@@ -35,26 +45,6 @@ public class Player : NetworkBehaviour
                 CmdRequestClientInit();
             }
         }
-    }
-
-    public static bool IsHost()
-    {
-        return NetworkServer.active && NetworkClient.active;
-    }
-
-    public static bool IsGM()
-    {
-        Player p = Self();
-        if (p)
-        {
-            return p.Role == PlayerRole.GM;
-        }
-        return false;
-    }
-
-    public static bool IsOnline()
-    {
-        return Self() != null;
     }
 
     public static Player Self()
@@ -113,14 +103,14 @@ public class Player : NetworkBehaviour
 
     #region Create Token
     [Command]
-    public void CmdCreateToken(string system, string graphicHash, string name, int size, Color color, string systemData)
+    public void CmdCreateToken(string system, TokenMeta tokenMeta, string name, int size, Color color, string systemData)
     {
         string id = Guid.NewGuid().ToString();
         GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData"));
         TokenData data = g.GetComponent<TokenData>();
         data.Id = id;
         data.System = system;
-        data.GraphicHash = graphicHash;
+        data.TokenMeta = tokenMeta;
         data.Name = name;
         data.Size = size;
         data.Color = color;
@@ -318,36 +308,34 @@ public class Player : NetworkBehaviour
     }
     #endregion
 
-    #region Images
+    #region TokenSync
     [Command]
-    public void CmdRequestImage(string hash)
+    public void CmdRequestMissingChunks(string hash, int[] missingChunks)
     {
-        FileLogger.Write($"Client {connectionToClient.connectionId} requested image {TextureSender.TruncateHash(hash)}");
-        Texture2D graphic = TextureSender.LoadImageFromFile(hash, true);
-        TextureSender.SendToClient(graphic, connectionToClient.connectionId);
+        RpcRequireMissingChunks(connectionToClient.connectionId, hash, missingChunks);
+    }
+
+    [ClientRpc]
+    public void RpcRequireMissingChunks(int connectionId, string hash, int[] missingChunks)
+    {
+        TokenSync.StackRequest(connectionId, hash, missingChunks);
     }
 
     [Command]
-    public void CmdSendTextureChunk(string hash, int connectionId, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height)
+    public void CmdDeliverMissingChunk(int targetConnection, string hash, int index, Byte[] chunk)
     {
-        // Send to host
-        if (connectionId == -1)
+        var connection = NetworkServer.connections[targetConnection];
+        if (connection != null)
         {
-            TextureSender.Receive(hash, chunkIndex, chunkTotal, chunkColors, width, height);
-        }
-
-        // Send to that connection
-        else
-        {
-            NetworkConnectionToClient targetClient = NetworkServer.connections[connectionId];
-            TargetReceiveTextureChunk(targetClient, hash, chunkIndex, chunkTotal, chunkColors, width, height);
+            TargetDeliverMissingChunk(connection, hash, index, chunk);
         }
     }
 
     [TargetRpc]
-    public void TargetReceiveTextureChunk(NetworkConnectionToClient target, string hash, int chunkIndex, int chunkTotal, Color[] chunkColors, int width, int height)
+    public void TargetDeliverMissingChunk(NetworkConnectionToClient target, string hash, int index, Byte[] chunk)
     {
-        TextureSender.Receive(hash, chunkIndex, chunkTotal, chunkColors, width, height);
+        TokenSync.SetMissingChunk(hash, index, chunk);
     }
+
     #endregion
 }

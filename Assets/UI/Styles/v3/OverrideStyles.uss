@@ -42,7 +42,7 @@
     padding: 2px 6px;
 }
 
-#Sidebar > * {
+#Sidebar>* {
     width: 220px;
 }
 
@@ -86,11 +86,12 @@
 #Effects .item {
     background-color: rgba(0, 0, 0, .5);
 }
+
 #Effects .item:hover {
     background-color: rgba(156, 122, 25, 1);
 }
 
-#ToolsSidebar > * {
+#ToolsSidebar>* {
     margin-bottom: 4px;
 }
 
@@ -164,8 +165,7 @@
     flex-direction: column-reverse;
 }
 
-#DiceResult {
-}
+#DiceResult {}
 
 #SearchResults {
     width: 244px;
@@ -198,7 +198,7 @@
     min-width: 244px;
 }
 
-#GeneralModal #Contents > * {
+#GeneralModal #Contents>* {
     margin-bottom: 4px;
 }
 
@@ -257,7 +257,7 @@
 #FocusedTokenPanel #Vitals,
 #FocusedTokenPanel #Conditions {
     margin-left: 0px;
-    margin-right: 8px; 
+    margin-right: 8px;
 }
 
 #FocusedTokenPanel #Conditions {
@@ -291,54 +291,66 @@
     width: 40px;
 }
 
-#MaleghastStatus .unity-toggle__input > .unity-toggle__checkmark {
-        -unity-background-image-tint-color: rgba(0, 0, 0, .5);
-}
-#MaleghastStatus .unity-toggle__input:checked > .unity-toggle__checkmark {
-        -unity-background-image-tint-color: rgba(255, 255, 255, 1);
+#MaleghastStatus .unity-toggle__input>.unity-toggle__checkmark {
+    -unity-background-image-tint-color: rgba(0, 0, 0, .5);
 }
 
-#MaleghastStatus #StatusPhysicalArmor .unity-toggle__input > .unity-toggle__checkmark {
+#MaleghastStatus .unity-toggle__input:checked>.unity-toggle__checkmark {
+    -unity-background-image-tint-color: rgba(255, 255, 255, 1);
+}
+
+#MaleghastStatus #StatusPhysicalArmor .unity-toggle__input>.unity-toggle__checkmark {
     background-image: resource("Textures/GameSystem/Maleghast/MarkerArmorPHYS");
 }
-#MaleghastStatus #StatusMagicArmor .unity-toggle__input > .unity-toggle__checkmark {
+
+#MaleghastStatus #StatusMagicArmor .unity-toggle__input>.unity-toggle__checkmark {
     background-image: resource("Textures/GameSystem/Maleghast/MarkerArmorMAG");
 }
-#MaleghastStatus #StatusSuperArmor .unity-toggle__input > .unity-toggle__checkmark {
+
+#MaleghastStatus #StatusSuperArmor .unity-toggle__input>.unity-toggle__checkmark {
     background-image: resource("Textures/GameSystem/Maleghast/MarkerArmorSUPER");
 }
-#MaleghastStatus #StatusDeathburst .unity-toggle__input > .unity-toggle__checkmark {
+
+#MaleghastStatus #StatusDeathburst .unity-toggle__input>.unity-toggle__checkmark {
     background-image: resource("Textures/GameSystem/Maleghast/MarkerDeathburst");
 }
-#MaleghastStatus #StatusFlight .unity-toggle__input > .unity-toggle__checkmark {
+
+#MaleghastStatus #StatusFlight .unity-toggle__input>.unity-toggle__checkmark {
     background-image: resource("Textures/GameSystem/Maleghast/MarkerFlight");
 }
-#MaleghastStatus #StatusMiracle .unity-toggle__input > .unity-toggle__checkmark {
+
+#MaleghastStatus #StatusMiracle .unity-toggle__input>.unity-toggle__checkmark {
     background-image: resource("Textures/GameSystem/Maleghast/MarkerMiracle");
 }
-#MaleghastStatus #StatusRetaliation .unity-toggle__input > .unity-toggle__checkmark {
+
+#MaleghastStatus #StatusRetaliation .unity-toggle__input>.unity-toggle__checkmark {
     background-image: resource("Textures/GameSystem/Maleghast/MarkerRetaliation");
 }
-#MaleghastStatus #StatusReload .unity-toggle__input > .unity-toggle__checkmark {
+
+#MaleghastStatus #StatusReload .unity-toggle__input>.unity-toggle__checkmark {
     background-image: resource("Textures/GameSystem/Maleghast/MarkerReload");
 }
 
-#MaleghastStatus #StatusBerserk .unity-toggle__input > .unity-toggle__checkmark {
+#MaleghastStatus #StatusBerserk .unity-toggle__input>.unity-toggle__checkmark {
     background-image: resource("Textures/GameSystem/Maleghast/MarkerBerserk");
 }
-#MaleghastStatus #StatusDoom .unity-toggle__input > .unity-toggle__checkmark {
+
+#MaleghastStatus #StatusDoom .unity-toggle__input>.unity-toggle__checkmark {
     background-image: resource("Textures/GameSystem/Maleghast/MarkerDoom");
 }
-#MaleghastStatus #StatusMutation .unity-toggle__input > .unity-toggle__checkmark {
+
+#MaleghastStatus #StatusMutation .unity-toggle__input>.unity-toggle__checkmark {
     background-image: resource("Textures/GameSystem/Maleghast/MarkerMutation");
 }
-#MaleghastStatus #StatusPlague .unity-toggle__input > .unity-toggle__checkmark {
+
+#MaleghastStatus #StatusPlague .unity-toggle__input>.unity-toggle__checkmark {
     background-image: resource("Textures/GameSystem/Maleghast/MarkerPlague");
 }
 
 #TopBar .item {
     background-color: rgba(0, 0, 0, .5);
 }
+
 #TopBar .item:hover {
     background-color: rgba(156, 122, 25, 1);
 }
@@ -358,4 +370,49 @@
 
 #SyncStatus .unity-progress-bar__progress {
     background-color: rgb(10, 129, 26);
+}
+
+#TokenLibraryModal .wrapper {
+    margin: 20px 10px 0px 10px;
+}
+
+#TokenLibraryModal .item {
+    background-color: rgba(0, 0, 0, .5);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+}
+
+#TokenLibraryModal .item.selected {
+    background-color: rgb(185, 185, 143);
+}
+
+#TokenLibraryModal .item .unity-label {
+    position: absolute;
+    margin: 0;
+    padding: 4px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    white-space: normal;
+}
+
+#TokenLibraryModal .frame {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    overflow: hidden;
+}
+
+#TokenLibraryModal .sprite {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+#TokenMetaEdit .unity-base-text-field__input {
+    width: 200px;
 }

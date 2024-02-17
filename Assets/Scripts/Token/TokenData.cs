@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
@@ -14,8 +15,10 @@ public class TokenData : NetworkBehaviour
     public string Id;
     [SyncVar]
     public string Name;
+    // [SyncVar]
+    // public string GraphicHash;
     [SyncVar]
-    public string GraphicHash;
+    public TokenMeta TokenMeta;
     [SyncVar]
     public int Size;
     [SyncVar]
@@ -32,11 +35,12 @@ public class TokenData : NetworkBehaviour
 
     public bool NeedsRedraw;
     public Texture2D Graphic;
+    public Texture2D GraphicSingle;
     public GameObject WorldObject;
     public VisualElement UnitBarElement;
     public VisualElement OverheadElement;
 
-    private float GraphicSyncInterval = 0;
+    private static float GraphicSyncInterval = 0;
 
     void Start()
     {
@@ -47,6 +51,7 @@ public class TokenData : NetworkBehaviour
         CreateWorldToken();
         CreateUnitBarElement();
         CreateOverheadElement();
+        LoadGraphic();
     }
 
     void Update()
@@ -58,7 +63,22 @@ public class TokenData : NetworkBehaviour
 
         if (Graphic == null)
         {
-            GraphicSync();
+            if (GraphicSyncInterval > 0)
+            {
+                GraphicSyncInterval -= Time.deltaTime;
+            }
+            else
+            {
+                TokenSync.SyncStep();
+                GraphicSyncInterval = .4f;
+
+                var texture = TokenSync.LoadHashedFileAsTexture(TokenMeta.Hash);
+                if (texture != null)
+                {
+                    SetGraphic(texture);
+                }
+
+            }
         }
 
         if (OverheadElement != null)
@@ -77,24 +97,19 @@ public class TokenData : NetworkBehaviour
         }
     }
 
-    private void GraphicSync()
+    private void LoadGraphic()
     {
-        if (GraphicSyncInterval > 0)
+        FileLogger.Write($"Load graphic for {TokenMeta.TruncateHash(TokenMeta.Hash)}");
+        Texture2D graphic = TokenSync.LoadHashedFileAsTexture(TokenMeta.Hash);
+        if (graphic)
         {
-            GraphicSyncInterval -= Time.deltaTime;
+            FileLogger.Write($"Hashed image {TokenMeta.TruncateHash(TokenMeta.Hash)} found locally");
+            SetGraphic(graphic);
         }
         else
         {
-            Graphic = TextureSender.LoadImageFromFile(GraphicHash, true);
-            if (Graphic)
-            {
-                Graphic.wrapMode = TextureWrapMode.Clamp;
-                UpdateGraphic();
-            }
-            else
-            {
-                GraphicSyncInterval = 2.5f;
-            }
+            FileLogger.Write($"Hashed image {TokenMeta.TruncateHash(TokenMeta.Hash)} not found locally, starting sync");
+            TokenSync.Add(TokenMeta, this);
         }
     }
 
@@ -187,8 +202,11 @@ public class TokenData : NetworkBehaviour
         UI.System.Q("UnitBar").Add(UnitBarElement);
     }
 
-    private void UpdateGraphic()
+    public void SetGraphic(Texture2D graphic)
     {
+        Graphic = graphic;
+        SetGraphicSingle();
+
         // Set the world object graphic
         Token token = WorldObject.GetComponent<Token>();
         token.SetImage(Graphic);
@@ -196,22 +214,36 @@ public class TokenData : NetworkBehaviour
         // Set the UI portrait
         float height = 60;
         float width = 60;
-        if (Graphic.width > Graphic.height)
+        if (GraphicSingle.width > Graphic.height)
         {
-            height *= Graphic.height / (float)Graphic.width;
+            height *= GraphicSingle.height / (float)GraphicSingle.width;
         }
         else
         {
-            width *= Graphic.width / (float)Graphic.height;
+            width *= GraphicSingle.width / (float)GraphicSingle.height;
         }
         UnitBarElement.Q("Portrait").style.width = width;
         UnitBarElement.Q("Portrait").style.height = height;
-        UnitBarElement.Q("Portrait").style.backgroundImage = Graphic;
+        UnitBarElement.Q("Portrait").style.backgroundImage = GraphicSingle;
+        UnitBarElement.Q("Portrait").style.backgroundPositionX = new BackgroundPosition(BackgroundPositionKeyword.Left);
+        UnitBarElement.Q("Portrait").style.backgroundPositionY = new BackgroundPosition(BackgroundPositionKeyword.Top);
+        UnitBarElement.Q("Portrait").style.backgroundRepeat = new BackgroundRepeat(Repeat.NoRepeat, Repeat.NoRepeat);
+        UnitBarElement.Q("Portrait").style.backgroundSize = new BackgroundSize(BackgroundSizeType.Cover);
         UI.Redraw();
         UnitBarElement.Q("ClassBackground").style.borderTopColor = Color;
         UnitBarElement.Q("ClassBackground").style.borderRightColor = Color;
         UnitBarElement.Q("ClassBackground").style.borderBottomColor = Color;
         UnitBarElement.Q("ClassBackground").style.borderLeftColor = Color;
+    }
+
+    private void SetGraphicSingle()
+    {
+        Color[] pixels = Graphic.GetPixels(0, 0, Graphic.width / TokenMeta.Frames, Graphic.height);
+        GraphicSingle = new Texture2D(Graphic.width / TokenMeta.Frames, Graphic.height);
+        GraphicSingle.SetPixels(pixels);
+        GraphicSingle.Apply();
+        GraphicSingle.wrapMode = TextureWrapMode.Clamp;
+        GraphicSingle.filterMode = FilterMode.Point;
     }
 
     public static TokenData Find(string id)
@@ -255,7 +287,7 @@ public class TokenData : NetworkBehaviour
         VisualElement panel = UI.System.Q(elementName);
         if (Graphic != null)
         {
-            panel.Q("Portrait").style.backgroundImage = Graphic;
+            panel.Q("Portrait").style.backgroundImage = GraphicSingle;
         }
         panel.Q<Label>("Name").text = Name.Trim();
         UI.ToggleDisplay(panel.Q<Label>("Name"), Name.Trim().Length > 0);

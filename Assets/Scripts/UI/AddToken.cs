@@ -12,17 +12,9 @@ public class AddToken
         Token.DeselectAll();
         Modal.Reset("Add Token");
         string[] imageOptions = GetImageOptions();
-        if (imageOptions.Length > 0)
-        {
-            Modal.AddSearchField("ImageSearchField", "Add Token", "", GetImageOptions());
-            GameSystem.Current().AddTokenModal();
-            Modal.AddPreferredButton("Confirm", ConfirmAddToken);
-        }
-        else
-        {
-            string path = Preferences.Current.DataPath;
-            Modal.AddLabel($"No images were found. Token images must be added to {path}/tokens (this can be changed in configuration).", "error-message");
-        }
+        Modal.AddTokenField("TokenSearchField");
+        GameSystem.Current().AddTokenModal();
+        Modal.AddPreferredButton("Confirm", ConfirmAddToken);
         Modal.AddButton("Cancel", (evt) =>
         {
             Modal.Close();

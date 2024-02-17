@@ -7,6 +7,8 @@ using UnityEngine.UIElements;
 
 public class FileBrowserHelper : MonoBehaviour
 {
+    public static string[] FileNames;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +23,19 @@ public class FileBrowserHelper : MonoBehaviour
 
     private static FileBrowserHelper Find()
     {
-        return GameObject.Find("FileBrowser").GetComponent<FileBrowserHelper>();
+        return GameObject.Find("AppState").GetComponent<FileBrowserHelper>();
+    }
+
+    public static void OpenLoadTokenBrowser()
+    {
+        Find().LoadTokenBrowser();
+    }
+
+    private void LoadTokenBrowser()
+    {
+        FileBrowser.SetFilters(true, new FileBrowser.Filter("Images", ".png"));
+        FileBrowser.SetDefaultFilter(".png");
+        StartCoroutine(ShowDialogCoroutine(false, FileBrowser.PickMode.Files, true, $"{Preferences.Current.DataPath}/tokens", null, "Add Tokens to Library", "Select", TokenLibrary.ConfirmSelect, null));
     }
 
     public static void OpenSaveMapBrowser(string fileName)
@@ -70,21 +84,22 @@ public class FileBrowserHelper : MonoBehaviour
             cancel?.Invoke(new ClickEvent());
         }
 
-        if (FileBrowser.Success)
-        {
-            // Print paths of the selected files (FileBrowser.Result) (null, if FileBrowser.Success is false)
-            for (int i = 0; i < FileBrowser.Result.Length; i++)
-            {
-                MapEdit.FileBrowserFileName = FileBrowser.Result[i];
-            }
+        // if (FileBrowser.Success)
+        // {
+        //     FileNames = FileBrowser.Result;
+        //     // // Print paths of the selected files (FileBrowser.Result) (null, if FileBrowser.Success is false)
+        //     // for (int i = 0; i < FileBrowser.Result.Length; i++)
+        //     // {
+        //     //     MapEdit.FileBrowserFileName = FileBrowser.Result[i];
+        //     // }
 
-            // Read the bytes of the first file via FileBrowserHelpers
-            // Contrary to File.ReadAllBytes, this function works on Android 10+, as well
-            byte[] bytes = FileBrowserHelpers.ReadBytesFromFile(FileBrowser.Result[0]);
+        //     // Read the bytes of the first file via FileBrowserHelpers
+        //     // Contrary to File.ReadAllBytes, this function works on Android 10+, as well
+        //     byte[] bytes = FileBrowserHelpers.ReadBytesFromFile(FileBrowser.Result[0]);
 
-            // Or, copy the first file to persistentDataPath
-            string destinationPath = Path.Combine(Application.persistentDataPath, FileBrowserHelpers.GetFilename(FileBrowser.Result[0]));
-            FileBrowserHelpers.CopyFile(FileBrowser.Result[0], destinationPath);
-        }
+        //     // Or, copy the first file to persistentDataPath
+        //     string destinationPath = Path.Combine(Application.persistentDataPath, FileBrowserHelpers.GetFilename(FileBrowser.Result[0]));
+        //     FileBrowserHelpers.CopyFile(FileBrowser.Result[0], destinationPath);
+        // }
     }
 }

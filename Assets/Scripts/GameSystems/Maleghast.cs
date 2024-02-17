@@ -301,9 +301,7 @@ public class Maleghast : GameSystem
     public override void CreateToken()
     {
         string name = UI.Modal.Q<TextField>("NameField").value;
-        Texture2D graphic = TextureSender.CopyLocalImage(UI.Modal.Q("ImageSearchField").Q<TextField>("SearchInput").value);
-        string graphicHash = TextureSender.GetTextureHash(graphic);
-
+        var tokenMeta = TokenLibrary.GetSelectedMeta();
         string houseJob = SearchField.GetValue(UI.Modal.Q("UnitType"));
         string house = houseJob.Split("/")[0];
         string job = houseJob.Split("/")[1];
@@ -328,7 +326,7 @@ public class Maleghast : GameSystem
             color = ColorUtility.GetColor(FindHouse(colorValue)["color"]);
         }
 
-        Player.Self().CmdCreateToken("Maleghast", graphicHash, name, size, color, JsonUtility.ToJson(data));
+        Player.Self().CmdCreateToken("Maleghast", tokenMeta, name, size, Color.black, JsonUtility.ToJson(data));
     }
 
     public override MenuItem[] GetTileMenuItems()

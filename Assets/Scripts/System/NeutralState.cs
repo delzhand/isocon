@@ -6,8 +6,6 @@ using UnityEngine.UIElements;
 
 public class NeutralState : TabletopSubstate
 {
-    private bool _showSync = false;
-    private bool _showInfo = false;
     private Token _dragToken;
 
     public override void OnEnter(StateManager sm)
@@ -58,6 +56,12 @@ public class NeutralState : TabletopSubstate
         {
             ShowAddTokenModal(new ClickEvent());
         }
+
+        if (Input.GetKeyUp(KeyCode.X))
+
+        {
+            ShowConsole(new ClickEvent());
+        }
     }
 
     private void ShowTokenPanels()
@@ -78,8 +82,6 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(GoToConfig);
         UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(Config.OpenModal);
-        UI.TopBar.Q("Info").RegisterCallback<ClickEvent>(ToggleInfo);
-        UI.TopBar.Q("Sync").RegisterCallback<ClickEvent>(ToggleSync);
         UI.System.Q("BottomBar").Q("AddToken").RegisterCallback<ClickEvent>(ShowAddTokenModal);
         Dragger.LeftClickRelease += LeftClickRelease;
         Dragger.RightClickRelease += RightClickRelease;
@@ -96,8 +98,6 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("Config").UnregisterCallback<ClickEvent>(GoToConfig);
         UI.TopBar.Q("Dice").UnregisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
         UI.TopBar.Q("Config").UnregisterCallback<ClickEvent>(Config.OpenModal);
-        UI.TopBar.Q("Info").UnregisterCallback<ClickEvent>(ToggleInfo);
-        UI.TopBar.Q("Sync").UnregisterCallback<ClickEvent>(ToggleSync);
         UI.System.Q("BottomBar").Q("AddToken").UnregisterCallback<ClickEvent>(ShowAddTokenModal);
         Dragger.LeftClickRelease -= LeftClickRelease;
         Dragger.RightClickRelease -= RightClickRelease;
@@ -132,19 +132,9 @@ public class NeutralState : TabletopSubstate
         AddToken.OpenModal(new ClickEvent());
     }
 
-    public void ToggleInfo(ClickEvent evt)
+    private void ShowConsole(ClickEvent evt)
     {
-        _showInfo = !_showInfo;
-        UI.ToggleDisplay("InfoWindow", _showInfo);
-        UI.ToggleActiveClass(UI.TopBar.Q("Info"), _showInfo);
-
-    }
-
-    public void ToggleSync(ClickEvent evt)
-    {
-        _showSync = !_showSync;
-        UI.ToggleDisplay("SyncPanel", _showSync);
-        UI.ToggleActiveClass(UI.TopBar.Q("Sync"), _showSync);
+        IsoConsole.OpenModal(evt);
     }
 
     #endregion

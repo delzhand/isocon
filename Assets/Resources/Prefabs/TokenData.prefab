@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clientStarted: 0
   sceneId: 0
   _assetId: 4218568658
   serverOnly: 0
@@ -70,8 +71,11 @@ MonoBehaviour:
   Name: 
   GraphicHash: 
   Size: 0
+  Color: {r: 0, g: 0, b: 0, a: 0}
   SystemData: 
+  Destroyed: 0
   Placed: 0
   LastKnownPosition: {x: 0, y: 0, z: 0}
+  NeedsRedraw: 0
   Graphic: {fileID: 0}
   WorldObject: {fileID: 0}

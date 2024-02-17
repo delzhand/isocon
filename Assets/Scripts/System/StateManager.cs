@@ -8,8 +8,6 @@ public class StateManager : MonoBehaviour
 
     public static bool ShowBorders;
 
-    public string TempString;
-
     void Start()
     {
         Startup.RunTasks();
@@ -18,7 +16,6 @@ public class StateManager : MonoBehaviour
 
     void Update()
     {
-        TempString = $"{MapEdit.EditOp} {MapEdit.StyleOp}";
         _current.UpdateState();
         _substate?.UpdateState();
     }
