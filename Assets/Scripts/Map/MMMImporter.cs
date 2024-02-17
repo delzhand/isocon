@@ -18,9 +18,9 @@ public class MMMImporter
         string decodedData = LZString.DecompressFromEncodedURIComponent(encodedData);
 
         TerrainController.ResetTerrain(width, height, 0);
-        for (int y = 0; y < height; y++)
+        for (int x = 0; x < height; x++)
         {
-            for (int x = 0; x < width; x++)
+            for (int y = 0; y < width; y++)
             {
                 int index = x * width + y;
                 int brush = int.Parse(decodedData[index].ToString());
