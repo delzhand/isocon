@@ -17,6 +17,10 @@ public class TabletopState : BaseState
     public override void OnEnter(StateManager sm)
     {
         base.OnEnter(sm);
+        if (Player.Self().Host)
+        {
+            TerrainController.InitializeTerrain(8, 8, 1);
+        }
         SetConnectionMessage();
         EnableInterface();
         BindCallbacks();
