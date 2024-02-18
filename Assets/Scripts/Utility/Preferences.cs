@@ -191,11 +191,8 @@ public class Preferences
 
     private static string GetConfigFileName()
     {
-        string path = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath);
-        if (Preferences.Current != null)
-        {
-            path = Preferences.Current.DataPath;
-        }
-        return $"{path}/config.dat";
+        string path = Application.persistentDataPath;
+        string fileName = $"{path}/config.dat";
+        return fileName;
     }
 }

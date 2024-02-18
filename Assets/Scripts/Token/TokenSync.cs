@@ -234,7 +234,6 @@ public class TokenSync : MonoBehaviour
 
         int startIndex = chunkId * _chunkSize;
         int remainingBytes = Mathf.Min(_chunkSize, allBytes.Length - startIndex);
-        Debug.Log(allBytes.Length / _chunkSize);
         Byte[] chunkBytes = new Byte[remainingBytes];
         System.Array.Copy(allBytes, startIndex, chunkBytes, 0, remainingBytes);
         return (chunkId, chunkBytes);

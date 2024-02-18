@@ -11,8 +11,8 @@ using UnityEngine.UIElements;
 
 public class Startup
 {
-    private static string _version = "0.7.0";
-    private static string _latestVersion = "0.7.0";
+    private static string _version = "0.7.1";
+    private static string _latestVersion = "0.7.1";
 
     public static void RunTasks()
     {
@@ -35,8 +35,8 @@ public class Startup
 
     private static void ReleaseNotes()
     {
-        string version = "0.7.0";
-        string notes = @"<size=+3><b>IsoCON Version 0.7.0</b></size>
+        string version = "0.7";
+        string notes = @"<size=+3><b>IsoCON Version 0.7</b></size>
 
 <size=+2><b>Features</b></size>
 * Token Library - Maintain the tokens you plan to use in your games from inside Isocon and search it from the Add Token modal.
@@ -126,13 +126,13 @@ public class Startup
         switch (configResponse.requestOrigin)
         {
             case ConfigOrigin.Default:
-                Debug.Log("No settings loaded this session and no local cache file exists; using default values.");
+                FileLogger.Write("No settings loaded this session and no local cache file exists; using default values.");
                 break;
             case ConfigOrigin.Cached:
-                Debug.Log("No settings loaded this session; using cached values from a previous session.");
+                FileLogger.Write("No settings loaded this session; using cached values from a previous session.");
                 break;
             case ConfigOrigin.Remote:
-                Debug.Log("New settings loaded this session; update values accordingly.");
+                FileLogger.Write("New settings loaded this session; update values accordingly.");
                 break;
         }
         _latestVersion = RemoteConfigService.Instance.appConfig.GetString("LatestVersion");
