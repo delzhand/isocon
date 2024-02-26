@@ -1,0 +1,43 @@
+#Button {
+    background-image: resource('Textures/UI8/gray_button_1_normal');
+}
+
+#Button:hover {
+    background-image: resource('Textures/UI8/gray_button_1_hover');
+}
+
+#Button.active {
+    background-image: resource('Textures/UI8/gray_button_1_active');
+}
+
+#Description {
+    display: none;
+}
+
+#Button:hover #Description {
+    display: flex;
+}
+
+#Description.right {
+    translate: 10px -50%;
+    top: 50%;
+    left: 100%;
+}
+
+#Description.left {
+    translate: -10px -50%;
+    top: 50%;
+    right: 100%;
+}
+
+#Description.top {
+    translate: -50% -10px;
+    left: 50%;
+    bottom: 100%;
+}
+
+#Description.bottom {
+    translate: -50% 10px;
+    left: 50%;
+    top: 100%;
+}

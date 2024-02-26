@@ -1,0 +1,14 @@
+.bg-repeat-x {
+    background-size: cover;
+    background-repeat: repeat-x;
+}
+
+.bg-repeat-y {
+    background-size: cover;
+    background-repeat: repeat-y;
+}
+
+.bg-repeat-xy {
+    background-size: auto;
+    background-repeat: repeat;
+}

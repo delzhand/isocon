@@ -593,7 +593,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PanelSettings: {fileID: 11400000, guid: 390ee78057a00e5468aee0f1b18adf25, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 98ecd702131dcf64fa9ba8761b97f5a3,
+  sourceAsset: {fileID: 9197481963319205126, guid: 6732995eb4bf85a4ea6d3d6236433e4d,
     type: 3}
   m_SortingOrder: 1
 --- !u!1 &747926459
@@ -949,7 +949,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1395978824
 MonoBehaviour:
   m_ObjectHideFlags: 0
