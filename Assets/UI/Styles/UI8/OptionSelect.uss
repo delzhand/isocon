@@ -1,0 +1,43 @@
+.inline {
+    flex-direction: row;
+}
+
+#Label {
+    margin: 0;
+    padding: 0;
+    margin-top: 3px;
+}
+
+.inline #Label {
+    width: 100px;
+}
+
+#Options>* {
+    width: 47%;
+    color: #AEAEAE;
+    background-image: resource('Textures/UI8/blue_tile_2_normal');
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    padding-top: 2px;
+    padding-bottom: 4px;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#Options>.active {
+    color: #E8E8E8;
+    background-image: resource('Textures/UI8/blue_tile_2_active');
+}
+
+#Options.three-up>* {
+    width: 27%;
+}
+
+.inline #Options>* {
+    width: 46%;
+}
+
+.inline #Options.three-up>* {
+    width: 29%;
+}
