@@ -5,11 +5,17 @@
 #Label {
     margin: 0;
     padding: 0;
-    margin-top: 3px;
+    margin-top: -7px;
 }
 
 .inline #Label {
     width: 100px;
+    margin-top: 5px;
+}
+
+.inline #Options {
+    flex-grow: 1;
+    justify-content: space-between;
 }
 
 #Options>* {
@@ -39,5 +45,5 @@
 }
 
 .inline #Options.three-up>* {
-    width: 29%;
+    width: 28%;
 }

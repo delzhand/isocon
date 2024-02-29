@@ -12,3 +12,17 @@
     background-size: auto;
     background-repeat: repeat;
 }
+
+.form-wrapper {
+    background-image: resource('Textures/UI8/darkgray_tile_1_normal');
+    -unity-slice-left: 20;
+    -unity-slice-top: 20;
+    -unity-slice-right: 20;
+    -unity-slice-bottom: 20;
+    -unity-slice-scale: 0.6px;
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    padding-top: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+}

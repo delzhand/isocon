@@ -18,8 +18,13 @@
                 <ui:Button text="Cancel" parse-escape-sequences="true" display-tooltip-when-elided="true" name="CancelConnecting" class="preferred" />
             </ui:VisualElement>
             <ui:VisualElement class="bg-repeat-xy" style="background-image: resource(&apos;Textures/UI8/blue_diamond_background&apos;); height: 100%; width: 446px; border-left-width: 6px; border-left-color: rgb(148, 139, 99); border-right-color: rgb(148, 139, 99); border-top-color: rgb(148, 139, 99); border-bottom-color: rgb(148, 139, 99); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;">
-                <IsoconUILibrary.OptionSelect label="Class" label-position="normal" options-list="Heavy,Skirmisher,Leader,Artillery,Legend,Mob" />
-                <IsoconUILibrary.OptionSelect label="Elite" options-list="No,Yes" label-position="inline" name="OptionSelect" />
+                <IsoconUILibrary.OptionSelect label="Class" label-position="inline" options-list="Heavy,Skirmisher,Leader,Artillery,Legend,Mob" />
+                <IsoconUILibrary.OptionSelect label="Elite" options-list="No,Yes" label-position="inline" option-columns="two" style="margin-top: 10px;" />
+                <IsoconUILibrary.TextInput label-position="inline" label="Name" style="margin-top: 10px;" />
+                <ui:VisualElement class="form-wrapper">
+                    <IsoconUILibrary.StatLine label="DMG/FRAY" value="6/4" />
+                    <IsoconUILibrary.StatLine label="RNG" value="3" style="margin-top: 5px;" />
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:Label tabindex="-1" text="v0.6.0" display-tooltip-when-elided="true" name="Version" style="position: absolute; right: auto; bottom: 0; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); font-size: 12px; left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 4px; padding-right: 0; padding-bottom: 4px; padding-left: 0; -unity-text-align: middle-center; width: 100%;" />
