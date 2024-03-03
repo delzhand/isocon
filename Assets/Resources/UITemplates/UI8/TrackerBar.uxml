@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Styles/UI8/TrackerBar.uss?fileID=7433441132597879392&amp;guid=184ec329bed661b4b8d6e9d5b119d662&amp;type=3#TrackerBar" />
+    <ui:VisualElement name="TrackerBar" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; -unity-font-definition: resource(&apos;Fonts/Renner_ 400 Book&apos;);">
+        <ui:VisualElement style="flex-grow: 1;">
+            <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-between; -unity-text-align: lower-left;">
+                <ui:Label text="Label" name="Label" style="font-size: 18px; color: rgb(178, 178, 178); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                <ui:Label text="73&lt;color=#b2eef3&gt;+13&lt;/color&gt;/100" name="Value" style="font-size: 20px; color: rgb(255, 255, 255); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1;">
+                <ui:ProgressBar value="73" name="MainBar" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+                <ui:ProgressBar value="13" name="OverBar" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

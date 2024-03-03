@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:VisualElement name="Wrapper">
-        <ui:VisualElement name="Background" style="background-image: resource(&apos;Textures/UI8/blue_tile_1_normal&apos;); -unity-slice-left: 22; -unity-background-scale-mode: stretch-to-fill; -unity-slice-right: 22; -unity-slice-top: 0; -unity-slice-bottom: 0; -unity-slice-scale: 0.3px; justify-content: center; padding-right: 14px; padding-left: 14px; -unity-font-style: normal; padding-top: 4px; padding-bottom: 4px; width: 100%; flex-shrink: 0; color: rgb(255, 255, 255); -unity-font-definition: resource(&apos;Fonts/MusticaPro-SemiBold&apos;); -unity-text-align: middle-center;">
+    <ui:VisualElement name="Wrapper" style="-unity-font-definition: resource(&apos;Fonts/Renner_ 400 Book&apos;);">
+        <ui:VisualElement name="Background" style="background-image: resource(&apos;Textures/UI8/blue_tile_1_normal&apos;); -unity-slice-left: 22; -unity-background-scale-mode: stretch-to-fill; -unity-slice-right: 22; -unity-slice-top: 0; -unity-slice-bottom: 0; -unity-slice-scale: 0.3px; justify-content: center; padding-right: 14px; padding-left: 14px; padding-top: 4px; padding-bottom: 4px; width: 100%; flex-shrink: 0; color: rgb(255, 255, 255); -unity-text-align: middle-center;">
             <ui:Label text="Label" style="margin-top: -2px; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
         </ui:VisualElement>
     </ui:VisualElement>

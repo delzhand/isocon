@@ -16,3 +16,7 @@
 #Input {
     flex-grow: 1;
 }
+
+#Input .unity-text-field__input {
+    padding: 1px 4px 1px 4px;
+}

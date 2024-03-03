@@ -26,3 +26,39 @@
     padding-bottom: 20px;
     padding-left: 20px;
 }
+
+.heading1 {
+    font-size: 30px;
+    border-bottom-width: 1px;
+    border-color: #FFF;
+    color: #FFF;
+    -unity-font-style: bold;
+    margin: 0;
+    padding: 0;
+}
+
+.heading2 {
+    font-size: 24px;
+    border-bottom-width: 1px;
+    border-color: #FFF;
+    color: #FFF;
+    -unity-font-style: bold;
+    margin: 0;
+    padding: 0;
+}
+
+.tag-list {
+    flex-direction: row;
+    align-items: flex-start;
+    flex-grow: 0;
+}
+
+.tag-list>* {
+    background-color: blue;
+    color: #FFF;
+    border-radius: 4px;
+    margin: 0;
+    margin-right: 5px;
+    padding: 2px 8px 2px 8px;
+    -unity-font-style: bold;
+}

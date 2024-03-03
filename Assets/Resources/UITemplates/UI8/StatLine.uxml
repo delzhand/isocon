@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:VisualElement name="StatLIne" style="-unity-font-definition: resource(&apos;Fonts/MusticaPro-SemiBold&apos;); color: rgb(178, 178, 178); flex-direction: row; font-size: 18px;">
-        <ui:Label text="Label" name="Label" style="-unity-text-align: middle-left; margin-top: 0; margin-right: 5px; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+    <ui:VisualElement name="StatLIne" style="color: rgb(178, 178, 178); flex-direction: row; font-size: 18px; -unity-font-definition: resource(&apos;Fonts/Renner_ 400 Book&apos;);">
+        <ui:Label text="Heavy" name="Label" style="-unity-text-align: middle-left; margin-top: 0; margin-right: 5px; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
         <ui:VisualElement style="flex-grow: 1; background-color: rgb(178, 178, 178); height: 1px; justify-content: center; align-items: center; align-self: center;" />
         <ui:Label text="1" name="Value" style="color: rgb(255, 255, 255); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
     </ui:VisualElement>
