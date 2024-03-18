@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Styles/UI8/TrackerStatus.uss?fileID=7433441132597879392&amp;guid=8d365db697cc15a499c33bbca2fbbb67&amp;type=3#TrackerStatus" />
+    <ui:VisualElement name="TrackerStatus" style="-unity-font-definition: resource(&apos;Fonts/MusticaPro-SemiBold&apos;);">
+        <ui:VisualElement name="Background" style="background-image: resource(&apos;Textures/UI8/blue_tile_1_normal&apos;); -unity-slice-left: 22; -unity-background-scale-mode: stretch-to-fill; -unity-slice-right: 22; -unity-slice-top: 0; -unity-slice-bottom: 0; -unity-slice-scale: 0.3px; justify-content: center; padding-right: 14px; padding-left: 14px; padding-top: 4px; padding-bottom: 4px; width: 100%; flex-shrink: 0; color: rgb(255, 255, 255); -unity-text-align: middle-center; margin-top: 0; margin-bottom: 0; flex-direction: row; align-items: center;">
+            <ui:VisualElement name="Icon" class="positive">
+                <ui:Label text="3" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 12px;" />
+            </ui:VisualElement>
+            <ui:Label text="Label" name="Label" style="margin-top: -2px; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: middle-left; font-size: 18px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Buttons" style="flex-grow: 1; flex-direction: row; justify-content: space-evenly;">
+            <ui:Button text="Decrease" />
+            <ui:Button text="Increase" />
+            <ui:Button text="Remove" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,20 @@
+#Icon {
+    width: 13px;
+    height: 18px;
+    margin-right: 5px;
+    align-items: stretch;
+    justify-content: space-around;
+    translate: 0 -1px;
+}
+
+.positive {
+    background-image: resource('Textures/UI8/status_tile_pos');
+}
+
+.neutral {
+    background-image: resource('Textures/UI8/status_tile_normal');
+}
+
+.negative {
+    background-image: resource('Textures/UI8/status_tile_neg');
+}

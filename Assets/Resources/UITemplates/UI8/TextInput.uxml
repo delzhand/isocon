@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Styles/UI8/TextInput.uss?fileID=7433441132597879392&amp;guid=c63abb3e6528d9f4cb717754f0843618&amp;type=3#TextInput" />
-    <ui:VisualElement name="TextInput" style="background-image: resource(&apos;Textures/UI8/darkgray_tile_1_normal&apos;); -unity-slice-left: 40; -unity-slice-top: 40; -unity-slice-right: 40; -unity-slice-bottom: 40; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; -unity-font-definition: resource(&apos;Fonts/Renner_ 400 Book&apos;); color: rgb(223, 201, 140); font-size: 24px; -unity-slice-scale: 0.6px;">
+    <ui:VisualElement name="TextInput" style="background-image: resource(&apos;Textures/UI8/darkgray_tile_1_normal&apos;); -unity-slice-left: 40; -unity-slice-top: 40; -unity-slice-right: 40; -unity-slice-bottom: 40; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; -unity-font-definition: resource(&apos;Fonts/MusticaPro-SemiBold&apos;); color: rgb(223, 201, 140); font-size: 24px; -unity-slice-scale: 0.6px;">
         <ui:Label text="Label" name="Label" style="margin-bottom: 5px;" />
         <ui:TextField name="Input" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
     </ui:VisualElement>

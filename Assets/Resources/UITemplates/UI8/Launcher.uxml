@@ -1,9 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Styles/UI8/Common.uss?fileID=7433441132597879392&amp;guid=0533afe211a9db843be2963ef4ea9b04&amp;type=3#Common" />
-    <ui:VisualElement name="Launcher" style="position: relative; left: 0; top: 0; right: 0; bottom: 0; display: flex; background-image: none; -unity-slice-left: 11; -unity-slice-top: 11; -unity-slice-right: 11; -unity-slice-bottom: 11; -unity-slice-scale: 1px; align-items: stretch; -unity-font-definition: resource(&apos;Fonts/Renner_ 400 Book&apos;); color: rgb(255, 255, 255); flex-grow: 1;">
+    <ui:VisualElement name="Launcher" style="position: relative; left: 0; top: 0; right: 0; bottom: 0; display: flex; background-image: none; -unity-slice-left: 11; -unity-slice-top: 11; -unity-slice-right: 11; -unity-slice-bottom: 11; -unity-slice-scale: 1px; align-items: stretch; -unity-font-definition: resource(&apos;Fonts/MusticaPro-SemiBold&apos;); color: rgb(255, 255, 255); flex-grow: 1;">
         <ui:VisualElement name="StartupPanel" style="margin-bottom: 0; display: flex; min-height: 0; justify-content: space-between; align-items: center; flex-direction: row; flex-grow: 1; margin-top: 0; margin-right: 0; margin-left: 0;">
             <ui:VisualElement name="Logo" style="background-color: rgba(0, 0, 0, 0); border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 0; flex-direction: row; justify-content: center; background-image: resource(&apos;Textures/isocon_logo&apos;); -unity-background-scale-mode: scale-to-fit; margin-bottom: 56px; height: 110px; width: 460px; align-items: center;">
-                <ui:Label tabindex="-1" text="BETA" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BetaLabel" style="position: absolute; top: -17px; right: -69px; background-color: rgb(44, 93, 135); -unity-font-style: bold; font-size: 16px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; color: rgb(255, 255, 255);" />
+                <ui:Label tabindex="-1" text="BETA" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BetaLabel" style="position: absolute; top: -17px; right: -69px; background-color: rgb(44, 93, 135); -unity-font-style: bold; font-size: 16px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; color: rgb(255, 255, 255); -unity-font-definition: resource(&apos;Fonts/Renner_ 400 Book&apos;);" />
             </ui:VisualElement>
             <ui:VisualElement name="Buttons" style="align-self: center; -unity-background-image-tint-color: rgba(255, 255, 255, 0); display: flex; flex-direction: row; align-items: center;">
                 <IsoconUILibrary.GrayButtonLarge label="Solo" icon="project://database/Assets/Resources/Textures/solo_mode.png?fileID=2800000&amp;guid=aff74041c7444d546b2ab999bdcbdb9b&amp;type=3#solo_mode" description="Edit maps offline or screen share" name="SoloModeButton" style="margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;" />
@@ -18,7 +18,7 @@
                 <ui:Button text="Cancel" parse-escape-sequences="true" display-tooltip-when-elided="true" name="CancelConnecting" class="preferred" />
             </ui:VisualElement>
             <ui:VisualElement class="bg-repeat-xy" style="background-image: resource(&apos;Textures/UI8/blue_diamond_background&apos;); height: 100%; width: 446px; border-left-width: 6px; border-left-color: rgb(148, 139, 99); border-right-color: rgb(148, 139, 99); border-top-color: rgb(148, 139, 99); border-bottom-color: rgb(148, 139, 99); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;">
-                <ui:Label text="Graddes" class="heading1" />
+                <ui:Label text="Graddes" class="heading1" style="margin-top: 15px;" />
                 <ui:VisualElement class="tag-list" style="margin-top: 5px;">
                     <ui:Label text="Wright" style="background-color: rgb(0, 162, 255);" />
                     <ui:Label text="Enochian" style="background-color: rgb(0, 162, 255);" />
@@ -26,19 +26,24 @@
                 <ui:VisualElement class="form-wrapper" style="margin-top: 15px;">
                     <IsoconUILibrary.TrackerBar label="HP" value="100&lt;color=#666666&gt;+25&lt;/color&gt;/100" main-background="#7B3B3BFF" main-color="#F77474FF" over-color="#B2EEF3FF" over-value="8" main-value="25" max-value="32" />
                 </ui:VisualElement>
-                <ui:VisualElement class="form-wrapper" style="margin-top: 5px;">
+                <ui:VisualElement class="form-wrapper" style="margin-top: 10px;">
                     <IsoconUILibrary.TrackerBar label="RESOLVE" value="100&lt;color=#666666&gt;+25&lt;/color&gt;/100" main-background="#393C14FF" main-color="#FFAAAAFF" over-color="#FCFF97FF" over-value="1" main-value="3" max-value="6" style="margin-top: 0;" />
                 </ui:VisualElement>
-                <ui:VisualElement class="form-wrapper" style="margin-top: 5px;">
+                <ui:VisualElement class="form-wrapper" style="margin-top: 10px;">
                     <IsoconUILibrary.StatLine label="DMG/FRAY" value="6/4" style="margin-top: 5px;" />
                     <IsoconUILibrary.StatLine label="RNG" value="3" style="margin-top: 5px;" />
                     <IsoconUILibrary.StatLine label="SPD/DASH" value="4/2" style="margin-top: 5px;" />
                     <IsoconUILibrary.StatLine label="DEF" value="6" style="margin-top: 5px;" />
                 </ui:VisualElement>
-                <IsoconUILibrary.OptionSelect label="Class" label-position="inline" options-list="Heavy,Skirmisher,Leader,Artillery,Legend,Mob" style="margin-top: 5px;" />
-                <IsoconUILibrary.OptionSelect label="Elite" options-list="No,Yes" label-position="inline" option-columns="two" style="margin-top: 10px;" />
-                <IsoconUILibrary.TextInput label-position="inline" label="Name" style="margin-top: 10px;" />
-                <ui:Label text="Status" class="heading2" />
+                <IsoconUILibrary.OptionSelect label="Class" label-position="inline" options-list="Heavy,Skirmisher,Leader,Artillery,Legend,Mob" style="margin-top: 5px; display: none;" />
+                <IsoconUILibrary.OptionSelect label="Elite" options-list="No,Yes" label-position="inline" option-columns="two" style="margin-top: 10px; display: none;" />
+                <IsoconUILibrary.TextInput label-position="inline" label="Name" style="margin-top: 10px; display: none;" />
+                <ui:Label text="Status" class="heading2" style="margin-top: 15px;" />
+                <ui:VisualElement style="flex-grow: 1;">
+                    <IsoconUILibrary.TrackerStatus icon="negative" label="Bloodied" style="margin-top: 5px;" />
+                    <IsoconUILibrary.TrackerStatus label="Aether" style="margin-top: 5px;" />
+                    <IsoconUILibrary.TrackerStatus label="Regeneration" icon="positive" style="margin-top: 5px;" />
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:Label tabindex="-1" text="v0.6.0" display-tooltip-when-elided="true" name="Version" style="position: absolute; right: auto; bottom: 0; -unity-font-definition: resource(&apos;Fonts/ModernSans-Light SDF&apos;); -unity-font-style: bold; color: rgb(255, 255, 255); font-size: 12px; left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 4px; padding-right: 0; padding-bottom: 4px; padding-left: 0; -unity-text-align: middle-center; width: 100%;" />
