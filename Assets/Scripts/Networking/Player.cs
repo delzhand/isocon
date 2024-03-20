@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using Mirror;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -269,10 +270,9 @@ public class Player : NetworkBehaviour
     #region Session Init
     // Used by anyone after completing a map edit
     [Command]
-    public void CmdMapSync(string json)
+    public void CmdMapSync(byte[] bytes)
     {
         FileLogger.Write("Map sent to all clients");
-        byte[] bytes = Compression.CompressString(json);
         RpcMapSync(bytes);
     }
     // Used by new players to request data from host

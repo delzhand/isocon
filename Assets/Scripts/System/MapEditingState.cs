@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -66,7 +67,7 @@ public class MapEditingState : TabletopSubstate
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
         Token.MoveAllTokensToOptimalBlock();
-        Player.Self().CmdMapSync(json);
+        Player.Self().CmdMapSync(Compression.CompressString(json));
     }
 
     protected override void BindCallbacks()
