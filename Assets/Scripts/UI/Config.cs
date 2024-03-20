@@ -18,6 +18,12 @@ public class Config
         Modal.AddDescription("DataPathDesc", "This is the directory where the token library, shared tokens, and log files will be saved.");
 #endif
 
+        Modal.AddToggleField("ShowHUD", "Display Info HUD", Preferences.Current.ShowHUD, (evt) =>
+        {
+            Preferences.SetShowHUD(evt.newValue);
+            UI.ToggleDisplay("DetailsHud", evt.newValue);
+        });
+
         string uiScale = Preferences.Current.UIScale;
         List<string> scaleOptions = new();
         for (int i = 75; i <= 250; i += 25)
@@ -49,15 +55,6 @@ public class Config
             Preferences.SetTokenOutline(evt.newValue);
             Token.SetAllTokenOutlines();
         });
-
-#if !UNITY_WEBGL
-        string rulesFile = Preferences.Current.RulesFile;
-        Modal.AddDropdownField("RulesFileField", "Rules File", rulesFile, GetAllRuleFiles(), (evt) =>
-        {
-            Preferences.SetRulesFile(evt.newValue);
-        });
-        Modal.AddDescription("RulesDesc", "Rules are applied only when entering solo or host mode. Client mode will use the host's rules.");
-#endif
 
         Modal.AddPreferredButton("Confirm", CloseModal);
     }

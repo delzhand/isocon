@@ -19,6 +19,7 @@ public class StoredPreferences
     public string ReleaseNotesSeen;
     public int SkipTutorials;
     public string RulesFile;
+    public bool ShowHUD;
 }
 
 public class Preferences
@@ -31,11 +32,6 @@ public class Preferences
 
     public static void Init()
     {
-#if UNITY_WEBGL
-        WebGLPrefs();
-        return;
-#endif
-
         string fileName = GetConfigFileName();
         // Load preferences from application directory if found
         if (File.Exists(fileName))
@@ -60,36 +56,22 @@ public class Preferences
                 TutorialsSeen = PlayerPrefs.GetString("TutorialsSeen", ""),
                 ReleaseNotesSeen = PlayerPrefs.GetString("ReleaseNotesSeen", ""),
                 SkipTutorials = PlayerPrefs.GetInt("SkipTutorials", 0),
-                RulesFile = PlayerPrefs.GetString("RulesFile", "lastest.json"),
+                ShowHUD = true
             };
             Save();
         }
-    }
-
-    private static void WebGLPrefs()
-    {
-        _current = new()
-        {
-            DataPath = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath),
-            PlayerName = PlayerPrefs.GetString("PlayerName", "New Player"),
-            System = "",
-            UIScale = PlayerPrefs.GetString("UIScale", "100%"),
-            TokenScale = PlayerPrefs.GetFloat("TokenScale", 1f),
-            Grid = "",
-            TokenOutline = PlayerPrefs.GetString("TokenOutline", "White"),
-            PlayerCount = 1,
-            HostIP = PlayerPrefs.GetString("HostIP", ""),
-            TutorialsSeen = PlayerPrefs.GetString("TutorialsSeen", ""),
-            SkipTutorials = PlayerPrefs.GetInt("SkipTutorials", 0),
-            RulesFile = "",
-        };
-
     }
 
     public static void SetDataPath(string value)
     {
         PlayerPrefs.SetString("DataFolder", value);
         _current.DataPath = value;
+        Save();
+    }
+
+    public static void SetShowHUD(bool value)
+    {
+        _current.ShowHUD = value;
         Save();
     }
 

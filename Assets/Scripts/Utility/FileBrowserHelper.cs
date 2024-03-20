@@ -1,13 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using SimpleFileBrowser;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class FileBrowserHelper : MonoBehaviour
 {
     public static string[] FileNames;
+    public static string FieldOrigin;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +27,20 @@ public class FileBrowserHelper : MonoBehaviour
     private static FileBrowserHelper Find()
     {
         return GameObject.Find("AppState").GetComponent<FileBrowserHelper>();
+    }
+
+    public static void OpenLoadRulesBrowser(EventCallback<ClickEvent> onSelect, string fieldName)
+
+    {
+        FieldOrigin = fieldName;
+        Find().LoadRulesBrowser(onSelect);
+    }
+
+    private void LoadRulesBrowser(EventCallback<ClickEvent> onSelect)
+    {
+        FileBrowser.SetFilters(true, new FileBrowser.Filter("Rules", ".json"));
+        FileBrowser.SetDefaultFilter(".json");
+        StartCoroutine(ShowDialogCoroutine(false, FileBrowser.PickMode.Files, false, $"{Preferences.Current.DataPath}/tokens", null, "Select a Rule File", "Select", onSelect, null));
     }
 
     public static void OpenLoadTokenBrowser()

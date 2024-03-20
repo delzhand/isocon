@@ -5,6 +5,7 @@ using Unity.Services.Core;
 using Unity.Services.RemoteConfig;
 using UnityEngine;
 using UnityEngine.UIElements;
+using SimpleFileBrowser;
 
 public class LauncherState : BaseState
 {
@@ -152,6 +153,8 @@ public class LauncherState : BaseState
                 ConfigModalEvaluateConditions();
             });
             Modal.AddDescription("HexMessage", "Warning! Hex support is experimental. Some visual effects may not display correctly.");
+
+            Modal.AddFileField("RulesFile", "Homebrew Override");
         }
 
         if (_mode == ConnectMode.Host)

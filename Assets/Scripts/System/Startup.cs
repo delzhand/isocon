@@ -35,8 +35,8 @@ public class Startup
 
     private static void ReleaseNotes()
     {
-        string version = "0.7";
-        string notes = @"<size=+3><b>IsoCON Version 0.7</b></size>
+        string version = "0.7.1";
+        string notes = @"<size=+3><b>IsoCON Version 0.7.1</b></size>
 
 <size=+2><b>Features</b></size>
 * Token Library - Maintain the tokens you plan to use in your games from inside Isocon and search it from the Add Token modal.
@@ -73,7 +73,7 @@ public class Startup
         }
 
         Modal.Reset("Release Notes");
-        Modal.AddMarkup("ReleaseNotes", notes);
+        Modal.AddLongMarkup("ReleaseNotes", notes);
         Modal.AddPreferredButton("Close", (evt) =>
         {
             seenParts.Add(version);

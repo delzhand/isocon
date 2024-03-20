@@ -53,6 +53,7 @@ public class TabletopState : BaseState
     {
         UI.ToggleDisplay("Tabletop", true);
         UI.ToggleDisplay("TopBar", true);
+        UI.ToggleDisplay("DetailsHud", Preferences.Current.ShowHUD);
 #if UNITY_WEBGL
         UI.ToggleDisplay("AddToken", false);
 #endif

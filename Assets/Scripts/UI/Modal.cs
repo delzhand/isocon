@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using IsoconUILibrary;
+using SimpleFileBrowser;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -235,6 +236,24 @@ public class Modal
         Modal.AddContents(label);
     }
 
+    public static void AddLongMarkup(string name, string contents)
+    {
+        ScrollView scrollView = new ScrollView();
+        scrollView.AddToClassList("no-margin");
+        scrollView.style.maxHeight = 300;
+        scrollView.mouseWheelScrollSize = 1000;
+
+        Label label = new Label(contents);
+        label.enableRichText = true;
+        label.style.whiteSpace = WhiteSpace.Normal;
+
+        label.name = name;
+        label.AddToClassList("no-margin");
+
+        scrollView.Add(label);
+        Modal.AddContents(scrollView);
+    }
+
     public static void AddDescription(string name, string contents)
     {
         Label label = new Label(contents);
@@ -371,6 +390,35 @@ public class Modal
         wrapper.style.flexDirection = FlexDirection.Row;
 
         Modal.AddContents(wrapper);
+    }
+
+    public static void AddFileField(string name, string label)
+    {
+        TextField field = new(label);
+        field.name = "File";
+        field.AddToClassList("no-margin");
+        field.isReadOnly = true;
+
+        Button search = new();
+        search.text = "Search";
+        search.RegisterCallback<ClickEvent>((evt) =>
+        {
+            FileBrowserHelper.OpenLoadRulesBrowser(ConfirmFileFieldSelect, "RulesFile");
+        });
+
+        VisualElement wrapper = new();
+        wrapper.name = name;
+        wrapper.Add(field);
+        wrapper.Add(search);
+        wrapper.style.flexDirection = FlexDirection.Row;
+
+        Modal.AddContents(wrapper);
+    }
+
+    private static void ConfirmFileFieldSelect(ClickEvent evt)
+    {
+        string result = FileBrowser.Result[0];
+        UI.Modal.Q(FileBrowserHelper.FieldOrigin).Q<TextField>("File").value = result;
     }
 
     public static void AddColorField(string name, Color initial)
