@@ -20,6 +20,7 @@ public class MapSaver
         string json = File.ReadAllText(fullPath);
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
+        BlockRendering.ToggleAllBorders(StateManager.ShowBorders);
         Toast.AddSuccess("Map loaded.");
     }
 
