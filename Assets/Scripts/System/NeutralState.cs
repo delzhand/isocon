@@ -30,7 +30,6 @@ public class NeutralState : TabletopSubstate
         Pointer.Point();
     }
 
-
     protected override void HandleKeypresses()
     {
         base.HandleKeypresses();
@@ -92,6 +91,7 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(Config.OpenModal);
         UI.System.Q("BottomRight").Q("AddToken").RegisterCallback<ClickEvent>(ShowAddTokenModal);
         UI.System.Q("BottomRight").Q("DeployToken").RegisterCallback<ClickEvent>(ToggleBottomBar);
+        UI.System.Q<Button>("TurnAdvance").RegisterCallback<ClickEvent>(AdvanceRound);
         Dragger.LeftClickRelease += LeftClickRelease;
         Dragger.RightClickRelease += RightClickRelease;
         Dragger.LeftDragStart += LeftDragStart;
@@ -109,6 +109,7 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("Config").UnregisterCallback<ClickEvent>(Config.OpenModal);
         UI.System.Q("BottomRight").Q("AddToken").UnregisterCallback<ClickEvent>(ShowAddTokenModal);
         UI.System.Q("BottomRight").Q("DeployToken").UnregisterCallback<ClickEvent>(ToggleBottomBar);
+        UI.System.Q<Button>("TurnAdvance").UnregisterCallback<ClickEvent>(AdvanceRound);
         Dragger.LeftClickRelease -= LeftClickRelease;
         Dragger.RightClickRelease -= RightClickRelease;
         Dragger.LeftDragStart -= LeftDragStart;
@@ -151,6 +152,14 @@ public class NeutralState : TabletopSubstate
     private void ShowConsole(ClickEvent evt)
     {
         IsoConsole.OpenModal(evt);
+    }
+
+    private void AdvanceRound(ClickEvent evt)
+    {
+        Modal.DoubleConfirm("Advance Turn", GameSystem.Current().TurnAdvanceMessage(), () =>
+        {
+            Player.Self().CmdRequestGameDataSetValue("IncrementTurn");
+        });
     }
 
     #endregion
