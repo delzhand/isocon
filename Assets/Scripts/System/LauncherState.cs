@@ -154,7 +154,15 @@ public class LauncherState : BaseState
             });
             Modal.AddDescription("HexMessage", "Warning! Hex support is experimental. Some visual effects may not display correctly.");
 
-            Modal.AddFileField("RulesFile", "Homebrew Override");
+            bool overrideRules = Preferences.Current.OverrideRules;
+            Modal.AddToggleField("HomebrewToggle", "Use Homebrew Data", overrideRules, (evt) =>
+            {
+                Preferences.SetOverrideRules(evt.newValue);
+                ConfigModalEvaluateConditions();
+            });
+
+            string rulesFile = Preferences.Current.RulesFile;
+            Modal.AddFileField("RulesFile", "Homebrew File", rulesFile);
         }
 
         if (_mode == ConnectMode.Host)
@@ -191,11 +199,15 @@ public class LauncherState : BaseState
             UI.ToggleDisplay(UI.Modal.Q("GridType"), grid);
             UI.ToggleDisplay("HexMessage", grid && hex);
         }
+        UI.ToggleDisplay(UI.Modal.Q("RulesFile"), UI.Modal.Q<Toggle>("HomebrewToggle").value);
         UI.Redraw();
+
     }
 
     private void ConfirmConfig(ClickEvent evt)
     {
+        Preferences.Current.RulesFile = UI.Modal.Q("RulesFile").Q<TextField>("File").value;
+
         TerrainController.GridType = DefaultGridType();
         NetworkManager netManager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
         switch (_mode)

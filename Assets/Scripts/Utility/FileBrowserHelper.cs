@@ -40,7 +40,7 @@ public class FileBrowserHelper : MonoBehaviour
     {
         FileBrowser.SetFilters(true, new FileBrowser.Filter("Rules", ".json"));
         FileBrowser.SetDefaultFilter(".json");
-        StartCoroutine(ShowDialogCoroutine(false, FileBrowser.PickMode.Files, false, $"{Preferences.Current.DataPath}/tokens", null, "Select a Rule File", "Select", onSelect, null));
+        StartCoroutine(ShowDialogCoroutine(false, FileBrowser.PickMode.Files, false, $"{Preferences.Current.DataPath}/ruledata", null, "Select a Rule File", "Select", onSelect, null));
     }
 
     public static void OpenLoadTokenBrowser()

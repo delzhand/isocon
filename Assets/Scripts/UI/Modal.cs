@@ -392,10 +392,11 @@ public class Modal
         Modal.AddContents(wrapper);
     }
 
-    public static void AddFileField(string name, string label)
+    public static void AddFileField(string name, string label, string defaultValue)
     {
         TextField field = new(label);
         field.name = "File";
+        field.value = defaultValue;
         field.AddToClassList("no-margin");
         field.isReadOnly = true;
 

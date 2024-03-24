@@ -107,15 +107,24 @@ public class TabletopState : BaseState
 
     public static void IngestRuleData()
     {
-        string filename = $"{Preferences.Current.DataPath}/ruledata/{Preferences.Current.RulesFile}";
-        if (!File.Exists(filename))
+        string filename = $"{Preferences.Current.DataPath}/ruledata/latest.json";
+        bool usingDefault = true;
+        if (Preferences.Current.OverrideRules)
         {
-            Toast.AddError($"Could not locate {filename}. Reverting to latest rule data.");
-            filename = $"{Preferences.Current.DataPath}/ruledata/latest.json";
+            if (File.Exists(Preferences.Current.RulesFile))
+            {
+                filename = Preferences.Current.RulesFile;
+                usingDefault = false;
+            }
+            else
+            {
+                Toast.AddError($"Could not locate {filename}. Reverting to default.");
+            }
         }
         string json = File.ReadAllText(filename);
         GameSystem.DataJson = json;
-        Toast.AddSimple("Rule data loaded.");
+        string message = usingDefault ? "Default rule data loaded." : "Homebrew rule data loaded.";
+        Toast.AddSimple(message);
     }
 
     #region Callbacks

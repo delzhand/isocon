@@ -18,6 +18,7 @@ public class StoredPreferences
     public string TutorialsSeen;
     public string ReleaseNotesSeen;
     public int SkipTutorials;
+    public bool OverrideRules;
     public string RulesFile;
     public bool ShowHUD;
 }
@@ -155,6 +156,12 @@ public class Preferences
     public static void SetBlockBorderOpacity(float value)
     {
         _current.BlockBorderOpacity = value;
+        Save();
+    }
+
+    public static void SetOverrideRules(bool value)
+    {
+        _current.OverrideRules = value;
         Save();
     }
 
