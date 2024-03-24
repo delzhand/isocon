@@ -601,9 +601,12 @@ public class Icon_v1_5 : GameSystem
         UI.ToggleDisplay(panel.Q("Wound3"), sysdata.Wounds >= 3);
 
         panel.Q("IconResolveBar").Q<Label>("ResolveNum").text = $"{sysdata.Resolve}";
-        panel.Q("IconResolveBar").Q<ProgressBar>("ResolveBar").value = sysdata.Resolve;
+        panel.Q("IconResolveBar").Q<ProgressBar>("ResolveBar").value = sysdata.Resolve + Icon_v1_5.PartyResolve;
+        panel.Q("IconResolveBar").Q<ProgressBar>("ResolveBar").highValue = 6;
+
         panel.Q("IconResolveBar").Q<Label>("PartyResolveNum").text = $"+{Icon_v1_5.PartyResolve}";
-        panel.Q("IconResolveBar").Q<ProgressBar>("PartyResolveBar").highValue = Icon_v1_5.PartyResolve;
+        panel.Q("IconResolveBar").Q<ProgressBar>("PartyResolveBar").value = Icon_v1_5.PartyResolve;
+        panel.Q("IconResolveBar").Q<ProgressBar>("PartyResolveBar").highValue = 6;
         UI.ToggleDisplay(panel.Q("IconResolveBar"), sysdata.Type == "Player");
         UI.ToggleDisplay(panel.Q("PartyResolveBar"), Icon_v1_5.PartyResolve > 0);
         UI.ToggleDisplay(panel.Q("PartyResolveNum"), Icon_v1_5.PartyResolve > 0);
