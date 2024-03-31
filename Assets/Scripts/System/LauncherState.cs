@@ -199,14 +199,20 @@ public class LauncherState : BaseState
             UI.ToggleDisplay(UI.Modal.Q("GridType"), grid);
             UI.ToggleDisplay("HexMessage", grid && hex);
         }
-        UI.ToggleDisplay(UI.Modal.Q("RulesFile"), UI.Modal.Q<Toggle>("HomebrewToggle").value);
+        if (UI.Modal.Q("RulesFile") != null)
+        {
+            UI.ToggleDisplay(UI.Modal.Q("RulesFile"), UI.Modal.Q<Toggle>("HomebrewToggle").value);
+        }
         UI.Redraw();
 
     }
 
     private void ConfirmConfig(ClickEvent evt)
     {
-        Preferences.Current.RulesFile = UI.Modal.Q("RulesFile").Q<TextField>("File").value;
+        if (UI.Modal.Q("RulesFile") != null)
+        {
+            Preferences.Current.RulesFile = UI.Modal.Q("RulesFile").Q<TextField>("File").value;
+        }
 
         TerrainController.GridType = DefaultGridType();
         NetworkManager netManager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();

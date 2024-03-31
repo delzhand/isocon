@@ -11,8 +11,8 @@ using UnityEngine.UIElements;
 
 public class Startup
 {
-    private static string _version = "0.7.1";
-    private static string _latestVersion = "0.7.1";
+    private static string _version = "0.7.3";
+    private static string _latestVersion = "0.7.3";
 
     public static void RunTasks()
     {
@@ -35,22 +35,15 @@ public class Startup
 
     private static void ReleaseNotes()
     {
-        string version = "0.7.2";
-        string notes = @"<size=+3><b>IsoCON Version 0.7.2</b></size>
-
-<size=+2><b>Improvements</b></size>
-* Homebrew rule selection has been moved to the launcher
+        string notes = @$"<size=+3><b>IsoCON Version {_version}</b></size>
 
 <size=+2><b>Fixes</b></size>
-* Turn Advance button now functions correctly
-* Configured outline color is applied to new tokens
-* A bug preventing maps over a certain filesize from being shared has been resolved.
-* The Resolve/Party Resolve bar in ICON 1.5 token display has been fixed.
-* Long patch notes are now scrollable and shouldn't overflow the screen at certain resolution/scales";
+* A critical bug with client connections has been resolved.
+";
 
         string seen = Preferences.GetReleaseNotesSeen();
         List<string> seenParts = seen.Split("|").ToList();
-        if (seenParts.Contains(version))
+        if (seenParts.Contains(_version))
         {
             return;
         }
@@ -59,7 +52,7 @@ public class Startup
         Modal.AddLongMarkup("ReleaseNotes", notes);
         Modal.AddPreferredButton("Close", (evt) =>
         {
-            seenParts.Add(version);
+            seenParts.Add(_version);
             Preferences.SetReleaseNotesSeen(string.Join("|", seenParts.ToArray()));
             Modal.Close();
         });
