@@ -10,39 +10,37 @@
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-bottom-width: 0; flex-direction: row; justify-content: center; background-image: resource(&apos;Textures/isocon_logo&apos;); -unity-background-scale-mode: scale-to-fit; margin-bottom: 56px; height: 110px;">
                 <ui:Label tabindex="-1" text="BETA" parse-escape-sequences="true" display-tooltip-when-elided="true" style="position: absolute; top: -17px; right: -69px; background-color: rgb(44, 93, 135); -unity-font-style: bold; font-size: 16px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; color: rgb(255, 255, 255);" />
             </ui:VisualElement>
-            <ui:VisualElement name="StartupOptions" class="panel" style="flex-grow: 1; align-self: center; width: 100%; -unity-background-image-tint-color: rgba(255, 255, 255, 0); display: flex;">
-                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: column; justify-content: space-between; width: 100%;">
-                    <ui:VisualElement style="flex-direction: row; justify-content: center;">
-                        <ui:Button display-tooltip-when-elided="true" name="SoloModeButton" style="flex-direction: column; width: 32%; align-items: center; display: flex; margin-right: 8px;">
-                            <ui:VisualElement style="background-image: resource(&apos;Textures/solo_mode&apos;); -unity-background-scale-mode: scale-to-fit; height: 50px; width: 50px; margin-right: 0; margin-top: 4px;" />
-                            <ui:Label tabindex="-1" text="SOLO MODE" display-tooltip-when-elided="true" style="font-size: 16px;" />
-                            <ui:Label tabindex="-1" text="Edit maps offline or screen share" display-tooltip-when-elided="true" style="white-space: normal; -unity-font-style: normal;" />
-                        </ui:Button>
-                        <ui:Button display-tooltip-when-elided="true" name="HostModeButton" style="flex-direction: column; width: 32%; align-items: center; display: flex; margin-right: 8px;">
-                            <ui:VisualElement style="background-image: resource(&apos;Textures/host_mode&apos;); -unity-background-scale-mode: scale-to-fit; width: 50px; height: 50px; margin-right: 0; margin-top: 4px;" />
-                            <ui:Label tabindex="-1" text="HOST TABLE" display-tooltip-when-elided="true" style="font-size: 16px; white-space: normal;" />
-                            <ui:Label tabindex="-1" text="Start a session for multiple players" display-tooltip-when-elided="true" style="white-space: normal;" />
-                        </ui:Button>
-                        <ui:Button display-tooltip-when-elided="true" name="ClientModeButton" style="flex-direction: column; width: 32%; align-items: center;">
-                            <ui:VisualElement style="background-image: resource(&apos;Textures/client_mode&apos;); -unity-background-scale-mode: scale-to-fit; width: 50px; height: 50px; margin-right: 0; margin-top: 4px;" />
-                            <ui:Label tabindex="-1" text="JOIN TABLE" display-tooltip-when-elided="true" style="font-size: 16px; white-space: normal;" />
-                            <ui:Label tabindex="-1" text="Connect to a session" display-tooltip-when-elided="true" style="white-space: normal;" />
-                        </ui:Button>
-                    </ui:VisualElement>
-                    <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); margin-top: 16px; flex-direction: row; margin-right: -4px; margin-left: -4px;">
-                        <ui:Button display-tooltip-when-elided="true" name="ConfigButton" style="flex-grow: 1; flex-direction: row; justify-content: center; align-items: center; margin-right: 4px; margin-left: 4px;">
-                            <ui:VisualElement style="background-image: resource(&apos;Textures/config&apos;); -unity-background-scale-mode: scale-to-fit; height: 24px; width: 24px; margin-right: 4px; margin-top: 0;" />
-                            <ui:Label tabindex="-1" text="Configuration" display-tooltip-when-elided="true" style="white-space: normal;" />
-                        </ui:Button>
-                        <ui:Button display-tooltip-when-elided="true" name="LibraryButton" style="flex-grow: 1; flex-direction: row; justify-content: center; align-items: center; margin-right: 4px; margin-left: 4px;">
-                            <ui:VisualElement style="background-image: resource(&apos;Textures/players&apos;); -unity-background-scale-mode: scale-to-fit; height: 24px; width: 24px; margin-right: 4px; margin-top: 0;" />
-                            <ui:Label tabindex="-1" text="Token Library" display-tooltip-when-elided="true" style="white-space: normal;" />
-                        </ui:Button>
-                        <ui:Button display-tooltip-when-elided="true" name="ExitButton" style="flex-grow: 1; flex-direction: row; justify-content: center; margin-right: 4px; margin-left: 4px;">
-                            <ui:Label tabindex="-1" text="EXIT" display-tooltip-when-elided="true" name="Label" style="font-size: 16px;" />
-                            <ui:Label tabindex="-1" text="Close IsoCON" display-tooltip-when-elided="true" style="white-space: normal;" />
-                        </ui:Button>
-                    </ui:VisualElement>
+            <ui:VisualElement name="StartupOptions" class="panel" style="flex-grow: 1; align-self: center; -unity-background-image-tint-color: rgba(255, 255, 255, 0); display: flex; padding-right: 0; padding-left: 0; width: 100%; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255);">
+                <ui:VisualElement style="flex-direction: row; justify-content: space-between; margin-left: -4px; margin-right: -4px; align-self: center; align-items: stretch; flex-wrap: wrap;">
+                    <ui:Button display-tooltip-when-elided="true" name="SoloModeButton" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; width: 135px;">
+                        <ui:VisualElement style="background-image: resource(&apos;Textures/solo_mode&apos;); -unity-background-scale-mode: scale-to-fit; height: 50px; width: 50px; margin-right: 0; margin-top: 4px;" />
+                        <ui:Label tabindex="-1" text="SOLO MODE" display-tooltip-when-elided="true" style="font-size: 16px;" />
+                        <ui:Label tabindex="-1" text="Edit maps offline or screen share" display-tooltip-when-elided="true" style="white-space: normal; -unity-font-style: normal;" />
+                    </ui:Button>
+                    <ui:Button display-tooltip-when-elided="true" name="HostModeButton" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; flex-grow: 1; width: 135px;">
+                        <ui:VisualElement style="background-image: resource(&apos;Textures/host_mode&apos;); -unity-background-scale-mode: scale-to-fit; width: 50px; height: 50px; margin-right: 0; margin-top: 4px;" />
+                        <ui:Label tabindex="-1" text="HOST TABLE" display-tooltip-when-elided="true" style="font-size: 16px; white-space: normal;" />
+                        <ui:Label tabindex="-1" text="Start a session for multiple players" display-tooltip-when-elided="true" style="white-space: normal;" />
+                    </ui:Button>
+                    <ui:Button display-tooltip-when-elided="true" name="ClientModeButton" style="flex-direction: column; align-items: center; margin-right: 8px; margin-left: 8px; flex-grow: 1; width: 135px;">
+                        <ui:VisualElement style="background-image: resource(&apos;Textures/client_mode&apos;); -unity-background-scale-mode: scale-to-fit; width: 50px; height: 50px; margin-right: 0; margin-top: 4px;" />
+                        <ui:Label tabindex="-1" text="JOIN TABLE" display-tooltip-when-elided="true" style="font-size: 16px; white-space: normal;" />
+                        <ui:Label tabindex="-1" text="Connect to a session" display-tooltip-when-elided="true" style="white-space: normal;" />
+                    </ui:Button>
+                </ui:VisualElement>
+                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); margin-top: 16px; flex-direction: row; margin-right: -4px; margin-left: -4px; flex-wrap: wrap; justify-content: space-between; align-self: center;">
+                    <ui:Button display-tooltip-when-elided="true" name="ConfigButton" style="flex-grow: 1; flex-direction: row; justify-content: center; align-items: center; margin-right: 8px; margin-left: 8px; width: 135px;">
+                        <ui:VisualElement style="background-image: resource(&apos;Textures/config&apos;); -unity-background-scale-mode: scale-to-fit; height: 24px; width: 24px; margin-right: 4px; margin-top: 0;" />
+                        <ui:Label tabindex="-1" text="Configuration" display-tooltip-when-elided="true" style="white-space: normal;" />
+                    </ui:Button>
+                    <ui:Button display-tooltip-when-elided="true" name="LibraryButton" style="flex-grow: 1; flex-direction: row; justify-content: center; align-items: center; margin-right: 8px; margin-left: 8px; width: 135px;">
+                        <ui:VisualElement style="background-image: resource(&apos;Textures/players&apos;); -unity-background-scale-mode: scale-to-fit; height: 24px; width: 24px; margin-right: 4px; margin-top: 0;" />
+                        <ui:Label tabindex="-1" text="Token Library" display-tooltip-when-elided="true" style="white-space: normal;" />
+                    </ui:Button>
+                    <ui:Button display-tooltip-when-elided="true" name="ExitButton" style="flex-grow: 1; flex-direction: row; justify-content: center; margin-right: 8px; margin-left: 8px; width: 135px;">
+                        <ui:Label tabindex="-1" text="EXIT" display-tooltip-when-elided="true" name="Label" style="font-size: 12px;" />
+                        <ui:Label tabindex="-1" text="Close IsoCON" display-tooltip-when-elided="true" style="white-space: normal;" />
+                    </ui:Button>
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="ConnectingMessage" class="panel" style="flex-grow: 1; align-self: center; width: 100%; -unity-background-image-tint-color: rgb(255, 255, 255); flex-direction: row; display: none;">
