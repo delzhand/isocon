@@ -43,6 +43,16 @@ public class Config
             Preferences.SetTokenScale(evt.newValue);
         });
 
+        int framerate = Preferences.Current.TargetFramerate;
+        Modal.AddIntField("TargetFramerate", "FPS Limit", framerate, (evt) =>
+        {
+            if (evt.newValue > 3)
+            {
+                Preferences.SetTargetFramerate(evt.newValue);
+                Application.targetFrameRate = evt.newValue;
+            }
+        });
+
         float borderOpacity = Preferences.Current.BlockBorderOpacity;
         Modal.AddFloatSlider("BlockBorderOpacity", "Block Border Minimum", borderOpacity, 1, 0, (evt) =>
         {

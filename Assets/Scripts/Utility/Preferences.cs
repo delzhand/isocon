@@ -21,6 +21,7 @@ public class StoredPreferences
     public bool OverrideRules;
     public string RulesFile;
     public bool ShowHUD;
+    public int TargetFramerate;
 }
 
 public class Preferences
@@ -57,6 +58,7 @@ public class Preferences
                 TutorialsSeen = PlayerPrefs.GetString("TutorialsSeen", ""),
                 ReleaseNotesSeen = PlayerPrefs.GetString("ReleaseNotesSeen", ""),
                 SkipTutorials = PlayerPrefs.GetInt("SkipTutorials", 0),
+                TargetFramerate = PlayerPrefs.GetInt("TargetFramerate", 30),
                 ShowHUD = true
             };
             Save();
@@ -168,6 +170,12 @@ public class Preferences
     public static void SetRulesFile(string value)
     {
         _current.RulesFile = value;
+        Save();
+    }
+
+    public static void SetTargetFramerate(int value)
+    {
+        _current.TargetFramerate = value;
         Save();
     }
 
