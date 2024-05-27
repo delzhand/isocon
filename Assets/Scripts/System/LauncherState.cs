@@ -43,6 +43,7 @@ public class LauncherState : BaseState
         UI.ToggleDisplay("StartupPanel", true);
         UI.ToggleDisplay("StartupOptions", true);
         UI.ToggleDisplay("Launcher", true);
+        UI.ToggleDisplay("TokenLibraryModal", false);
 
 #if UNITY_WEBGL
         UI.ToggleDisplay("SoloModeButton", false);

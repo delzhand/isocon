@@ -430,6 +430,7 @@
             <ui:VisualElement name="Buttons" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; margin-top: 24px; background-color: rgba(0, 0, 0, 0.67); padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;">
                 <ui:Button text="Edit" name="EditButton" class="preferred" />
                 <ui:Button text="Save" name="SaveButton" class="preferred" style="margin-left: 4px;" />
+                <ui:Button text="Delete" name="DeleteButton" style="margin-left: 4px;" />
                 <ui:Button text="Select" name="SelectButton" class="preferred" style="margin-left: 4px;" />
                 <ui:Button text="Cancel" name="CancelButton" style="margin-left: 4px;" />
             </ui:VisualElement>

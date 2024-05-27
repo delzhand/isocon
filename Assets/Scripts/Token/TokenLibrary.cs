@@ -61,6 +61,7 @@ public class TokenLibrary : MonoBehaviour
         root.Q("Exit").RegisterCallback<ClickEvent>(Close);
         root.Q("CancelButton").RegisterCallback<ClickEvent>(CancelButtonClicked);
         root.Q("EditButton").RegisterCallback<ClickEvent>(EditButtonClicked);
+        root.Q("DeleteButton").RegisterCallback<ClickEvent>(DeleteButtonClicked);
         root.Q("SelectButton").RegisterCallback<ClickEvent>(SelectButtonClicked);
         root.Q("SaveButton").RegisterCallback<ClickEvent>(SaveButtonClicked);
         root.Q<TextField>("NameField").RegisterValueChangedCallback<string>((evt) => ChangeEditingValue());
@@ -139,6 +140,20 @@ public class TokenLibrary : MonoBehaviour
         root.Q("TokenPreview").Add(ElementMap[meta.Hash].Item2);
     }
 
+    private static void DeleteButtonClicked(ClickEvent evt)
+    {
+        Editing = false;
+        UpdateVisibility();
+        UI.Redraw();
+
+        ElementMap.Remove(SelectedHash);
+        Tokens.Remove(SelectedHash);
+        UI.System.Q("TokenLibraryModal").Q(SelectedHash).RemoveFromHierarchy();
+        Toast.AddSuccess($"Token deleted.");
+        SelectedHash = null;
+        WriteLibraryFile();
+    }
+
     private static void SelectButtonClicked(ClickEvent evt)
     {
         OnSelect?.Invoke();
@@ -177,6 +192,7 @@ public class TokenLibrary : MonoBehaviour
         UI.ToggleDisplay(root.Q("TokenMetaEdit"), Editing);
 
         UI.ToggleDisplay(root.Q("SelectButton"), AllowSelect && !Editing && SelectedHash != null);
+        UI.ToggleDisplay(root.Q("DeleteButton"), Editing);
         UI.ToggleDisplay(root.Q("SaveButton"), Editing);
         UI.ToggleDisplay(root.Q("EditButton"), !Editing && SelectedHash != null);
 
@@ -249,7 +265,12 @@ public class TokenLibrary : MonoBehaviour
         VisualElement sprite = new();
         sprite.name = "Sprite";
         sprite.AddToClassList("sprite");
-        sprite.style.backgroundImage = TokenSync.LoadHashedFileAsTexture(meta.Hash);
+        Texture2D backgroundImage = TokenSync.LoadHashedFileAsTexture(meta.Hash);
+        if (backgroundImage == null)
+        {
+            Toast.AddError($"Could not find library image {meta.Hash}.png in the hashed-tokens directory.");
+        }
+        sprite.style.backgroundImage = backgroundImage;
 
         frame.Add(sprite);
         tokenDisplay.Add(frame);
@@ -289,6 +310,10 @@ public class TokenLibrary : MonoBehaviour
     private static void UpdateAnimation(VisualElement element, TokenMeta meta)
     {
         Texture2D graphic = element.Q("Sprite").resolvedStyle.backgroundImage.texture;
+        if (graphic == null)
+        {
+            return;
+        }
         float aspectRatio = graphic.width / meta.Frames / (float)graphic.height;
         int width = LibraryItemSize;
         int height = LibraryItemSize;
