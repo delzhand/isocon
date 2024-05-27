@@ -11,8 +11,8 @@ using UnityEngine.UIElements;
 
 public class Startup
 {
-    private static string _version = "0.7.3";
-    private static string _latestVersion = "0.7.3";
+    private static string _version = "0.7.4";
+    private static string _latestVersion = "0.7.4";
 
     public static void RunTasks()
     {
@@ -38,7 +38,11 @@ public class Startup
         string notes = @$"<size=+3><b>IsoCON Version {_version}</b></size>
 
 <size=+2><b>Fixes</b></size>
-* A critical bug with client connections has been resolved.
+* Missing image files in the hashed-tokens directory now throw an error instead of breaking.
+* Tokens can now be deleted from the library.
+* Unity version updated to 6.
+* Unity splash screen removed.
+* Minor UI tweaks.
 ";
 
         string seen = Preferences.GetReleaseNotesSeen();
