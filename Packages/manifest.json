@@ -1,11 +1,11 @@
 {
   "dependencies": {
-    "com.singularitygroup.hotreload": "git+https://gitlab.hotreload.net/root/hot-reload-releases.git#1.12.9",
     "com.unity.collab-proxy": "2.3.1",
     "com.unity.ide.rider": "3.0.28",
     "com.unity.ide.visualstudio": "2.0.22",
     "com.unity.ide.vscode": "1.2.5",
     "com.unity.memoryprofiler": "1.1.0",
+    "com.unity.multiplayer.playmode": "1.0.0",
     "com.unity.nuget.newtonsoft-json": "3.2.1",
     "com.unity.remote-config": "4.0.0",
     "com.unity.render-pipelines.universal": "17.0.3",

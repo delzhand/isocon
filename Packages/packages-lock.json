@@ -1,14 +1,13 @@
 {
   "dependencies": {
     "com.singularitygroup.hotreload": {
-      "version": "git+https://gitlab.hotreload.net/root/hot-reload-releases.git#1.12.9",
+      "version": "file:com.singularitygroup.hotreload",
       "depth": 0,
-      "source": "git",
+      "source": "embedded",
       "dependencies": {
         "com.unity.ugui": "1.0.0",
         "com.unity.modules.unitywebrequest": "1.0.0"
-      },
-      "hash": "15115347b80179b483f7f4022c18fe48604dee8d"
+      }
     },
     "com.unity.burst": {
       "version": "1.8.13",
@@ -91,6 +90,15 @@
       "source": "registry",
       "dependencies": {
         "com.unity.editorcoroutines": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.multiplayer.playmode": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "2.0.2"
       },
       "url": "https://packages.unity.com"
     },
