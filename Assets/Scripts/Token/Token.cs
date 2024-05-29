@@ -89,6 +89,7 @@ public class Token : MonoBehaviour
                 SetVisualSquareYellow();
                 UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true);
                 Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
+                Data.NeedsRedraw = true;
                 break;
             case TokenState.Focused:
                 SetVisualSquareBlue();

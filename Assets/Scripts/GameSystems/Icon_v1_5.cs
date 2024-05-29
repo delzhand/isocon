@@ -4,10 +4,8 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using System.Linq;
 using System;
-using System.Data.Common;
 using IsoconUILibrary;
 using SimpleJSON;
-using System.Reflection;
 using Random = UnityEngine.Random;
 using Unity.Mathematics;
 
