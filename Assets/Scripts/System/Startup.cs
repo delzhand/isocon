@@ -26,6 +26,7 @@ public class Startup
         TokenLibrary.Setup();
 
         UI.SetBlocking(UI.System, StringUtility.CreateArray(@"SelectionMenu", "TopBar", "BottomBar", "ToolsPanel", "ToolOptions", "SelectedTokenPanel", "FocusedTokenPanel", "Backdrop"));
+        Application.targetFrameRate = Preferences.Current.TargetFramerate;
 
         // Useful during development when editing UI
         UI.ToggleDisplay("Tabletop", false);
