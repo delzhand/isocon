@@ -39,7 +39,8 @@ public class Startup
         string notes = @$"<size=+3><b>IsoCON Version {_version}</b></size>
 
 <size=+2><b>Fixes</b></size>
-* Fixes a bug that caused status effects to appear on incorrect tokens (ICON 1.5)
+* Fixes a bug that caused status effects to appear on incorrect tokens. (ICON 1.5)
+* Adds a framerate limiter to config. (thanks to McPalm)
 ";
 
         string seen = Preferences.GetReleaseNotesSeen();
