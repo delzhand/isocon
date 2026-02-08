@@ -80,8 +80,14 @@ public class DiceRoller
             DieRoll("max");
         });
 
+        root.Q<Button>("Lowest").RegisterCallback<ClickEvent>((evt) =>
+        {
+            DieRoll("min");
+        });
+
         UI.ToggleDisplay(root.Q("Total"), false);
         UI.ToggleDisplay(root.Q("Highest"), false);
+        UI.ToggleDisplay(root.Q("Lowest"), false);
     }
 
     private static void DieAdd(string die)
@@ -90,6 +96,13 @@ public class DiceRoller
         UI.ToggleDisplay(root.Q(die).Q<Label>("count"), true);
         UI.ToggleDisplay(root.Q("Total"), true);
         UI.ToggleDisplay(root.Q("Highest"), true);
+        UI.ToggleDisplay(root.Q("Lowest"), true);
+    }
+
+    public static void DirectDieRoll(string op, string rollString, string description)
+    {
+        Player.Self().CmdRequestDiceRoll(new DiceTray(Player.Self().Name, rollString, op, description));
+        reset();
     }
 
     private static void DieRoll(string op)
@@ -167,6 +180,30 @@ public class DiceRoller
         UI.ToggleDisplay(root.Q("d4").Q<Label>("count"), false);
         UI.ToggleDisplay(root.Q("Total"), false);
         UI.ToggleDisplay(root.Q("Highest"), false);
+        UI.ToggleDisplay(root.Q("Lowest"), false);
+    }
+
+    private class TrayResult
+    {
+        public int min = int.MaxValue;
+        public int max = int.MinValue;
+        public int sum = 0;
+        public int largestDie = 2;
+        public List<int> rolls = new();
+    }
+
+    private static TrayResult GetResult(DiceTray tray)
+    {
+        TrayResult r = new TrayResult();
+        for (int i = 0; i < tray.Rolls.Length; i++)
+        {
+            r.largestDie = Math.Max(r.largestDie, tray.Rolls[i].Die);
+            r.max = Math.Max(r.max, tray.Rolls[i].Rolled);
+            r.min = Math.Min(r.min, tray.Rolls[i].Rolled);
+            r.sum += tray.Rolls[i].Rolled;
+            r.rolls.Add(tray.Rolls[i].Rolled);
+        }
+        return r;
     }
 
     public static void AddOutcome(DiceTray tray)
@@ -174,19 +211,7 @@ public class DiceRoller
         VisualTreeAsset resultTemplate = Resources.Load<VisualTreeAsset>("UITemplates/DiceResult");
         VisualElement resultElement = resultTemplate.Instantiate();
 
-        List<int> rolls = new();
-        int sum = 0;
-        int max = int.MinValue;
-        int min = int.MaxValue;
-        int largestDie = 2;
-        for (int i = 0; i < tray.Rolls.Length; i++)
-        {
-            largestDie = math.max(largestDie, tray.Rolls[i].Die);
-            max = Math.Max(max, tray.Rolls[i].Rolled);
-            min = Math.Min(min, tray.Rolls[i].Rolled);
-            sum += tray.Rolls[i].Rolled;
-            rolls.Add(tray.Rolls[i].Rolled);
-        }
+        TrayResult r = GetResult(tray);
 
         if (tray.Description != null)
         {
@@ -197,7 +222,7 @@ public class DiceRoller
             resultElement.Q<Label>("Label").text = tray.PlayerName;
         }
 
-        switch (largestDie)
+        switch (r.largestDie)
         {
             case 4:
             case 6:
@@ -205,7 +230,7 @@ public class DiceRoller
             case 10:
             case 12:
             case 20:
-                resultElement.Q("Icon").style.backgroundImage = Resources.Load<Texture2D>($"Textures/die_{largestDie}");
+                resultElement.Q("Icon").style.backgroundImage = Resources.Load<Texture2D>($"Textures/die_{r.largestDie}");
                 break;
             default:
                 UI.ToggleDisplay(resultElement.Q("Icon"), false);
@@ -225,15 +250,19 @@ public class DiceRoller
         switch (tray.Op)
         {
             case "sum":
-                resultElement.Q<Label>("Result").text = $"{sum + tray.Modifier}";
-                resultElement.Q<Label>("Rolls").text = $"{string.Join("+", rolls.ToArray())}{modString}";
+                resultElement.Q<Label>("Result").text = $"{r.sum + tray.Modifier}";
+                resultElement.Q<Label>("Rolls").text = $"{string.Join("+", r.rolls.ToArray())}{modString}";
                 break;
             case "max":
-                resultElement.Q<Label>("Result").text = $"{max + tray.Modifier}";
-                resultElement.Q<Label>("Rolls").text = $"({string.Join(", ", rolls.ToArray())}){modString}";
+                resultElement.Q<Label>("Result").text = $"{r.max + tray.Modifier}";
+                resultElement.Q<Label>("Rolls").text = $"({string.Join(", ", r.rolls.ToArray())}){modString}";
+                break;
+            case "min":
+                resultElement.Q<Label>("Result").text = $"{r.min + tray.Modifier}";
+                resultElement.Q<Label>("Rolls").text = $"({string.Join(", ", r.rolls.ToArray())}){modString}";
                 break;
             default:
-                resultElement.Q<Label>("Result").text = $"({string.Join(", ", rolls.ToArray())}){modString}";
+                resultElement.Q<Label>("Result").text = $"({string.Join(", ", r.rolls.ToArray())}){modString}";
                 UI.ToggleDisplay(resultElement.Q<Label>("Rolls"), false);
                 break;
         }

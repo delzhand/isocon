@@ -141,7 +141,11 @@ public class LauncherState : BaseState
         if (_mode == ConnectMode.Solo || _mode == ConnectMode.Host)
         {
             string system = Preferences.Current.System;
-            Modal.AddDropdownField("GameSystem", "Game System", system, new string[] { "Generic", "ICON 1.5", "Maleghast"/*, "Lancer"*/}, (evt) =>
+
+            /**
+             * Game Systems Entry Point
+             */
+            Modal.AddDropdownField("GameSystem", "Game System", system, new string[] { "Generic", "ICON 1.5", "ICON 2.0 Playtest", "Maleghast"/*, "Lancer"*/}, (evt) =>
             {
                 Preferences.SetSystem(evt.newValue);
                 ConfigModalEvaluateConditions();
@@ -195,6 +199,9 @@ public class LauncherState : BaseState
     {
         if (UI.Modal.Q("GameSystem") != null)
         {
+            /**
+             * Game System Grid Type
+             */
             bool grid = StringUtility.CheckInList(UI.Modal.Q<DropdownField>("GameSystem").value, "Generic", "Lancer");
             bool hex = Preferences.Current.Grid == "Hex";
             UI.ToggleDisplay(UI.Modal.Q("GridType"), grid);

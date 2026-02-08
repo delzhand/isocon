@@ -12,10 +12,16 @@ public class GameSystem : MonoBehaviour
     public static GameSystem Current()
     {
         GameSystem system = GameObject.Find("GameSystem").GetComponent<GameSystem>();
+
+        /**
+         * Game Systems Registration Point 1
+         */
         switch (system.SystemName())
         {
             case "ICON 1.5":
                 return system as Icon_v1_5;
+            case "ICON 2.0 Playtest":
+                return system as Icon_v2_0;
             case "Maleghast":
                 return system as Maleghast;
             case "Generic System":
@@ -196,6 +202,10 @@ public class GameSystem : MonoBehaviour
         GameObject g = GameObject.Find("GameSystem");
         GameSystem system = g.GetComponent<GameSystem>();
         DestroyImmediate(system);
+
+        /**
+         * Game Systems Registration Point 2
+         */
         switch (value)
         {
             case "Generic":
@@ -203,6 +213,9 @@ public class GameSystem : MonoBehaviour
                 break;
             case "ICON 1.5":
                 system = g.AddComponent<Icon_v1_5>();
+                break;
+            case "ICON 2.0 Playtest":
+                system = g.AddComponent<Icon_v2_0>();
                 break;
             case "Maleghast":
                 system = g.AddComponent<Maleghast>();

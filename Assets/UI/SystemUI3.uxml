@@ -382,6 +382,7 @@
                         </ui:VisualElement>
                         <ui:Button text="Total" name="Total" style="margin-bottom: 4px; flex-grow: 1; width: 100%;" />
                         <ui:Button text="Highest" name="Highest" style="margin-bottom: 4px; flex-grow: 1; width: 100%;" />
+                        <ui:Button text="Lowest" name="Lowest" style="margin-bottom: 4px; flex-grow: 1; width: 100%;" />
                         <ui:Button text="Reset" name="Reset" style="margin-bottom: 4px; flex-grow: 1; width: 100%;" />
                     </ui:VisualElement>
                 </ui:VisualElement>

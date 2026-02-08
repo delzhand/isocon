@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Template name="IconResolveBar" src="project://database/Assets/Resources/UITemplates/GameSystem/IconResolveBar.uxml?fileID=9197481963319205126&amp;guid=20599701efad12a49a5bdbe29d27108d&amp;type=3#IconResolveBar" />
+    <ui:Template name="StatTemplate" src="project://database/Assets/Resources/UITemplates/GameSystem/StatTemplate.uxml?fileID=9197481963319205126&amp;guid=80bbd3f70be4eca4faa677a44a6f09b2&amp;type=3#StatTemplate" />
+    <ui:Template name="Icon2HPBar" src="project://database/Assets/Resources/UITemplates/GameSystem/Icon2HPBar.uxml?fileID=9197481963319205126&amp;guid=29524ff866e5c954fadf7e600b6c68fb&amp;type=3#Icon2HPBar" />
+    <Style src="project://database/Assets/UI/Styles/v3/ResetStyles.uss?fileID=7433441132597879392&amp;guid=de2bf69906fa39c4888692f959f4a9ef&amp;type=3#ResetStyles" />
+    <Style src="project://database/Assets/UI/Styles/v3/GlobalStyles.uss?fileID=7433441132597879392&amp;guid=7121076cb2a24ed45a625b144b837ee6&amp;type=3#GlobalStyles" />
+    <Style src="project://database/Assets/UI/Styles/v3/OverrideStyles.uss?fileID=7433441132597879392&amp;guid=15bcfaebbc0c9fd4691b003a9d1cd382&amp;type=3#OverrideStyles" />
+    <ui:VisualElement name="DataColumn" class="panel" style="display: flex; margin-right: -4px; margin-left: -4px;">
+        <ui:VisualElement name="Vitals" style="background-color: rgba(0, 0, 0, 0); padding-top: 4px; width: 100px; margin-right: 4px; margin-left: 4px;">
+            <ui:Button text="Alter Vitals" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AlterVitals" style="margin-top: 0; margin-bottom: 4px;" />
+            <ui:Instance template="Icon2HPBar" name="Icon2HPBar" />
+            <ui:Instance template="IconResolveBar" name="IconResolveBar" />
+            <ui:VisualElement name="Stats" style="flex-grow: 1;">
+                <ui:Instance template="StatTemplate" name="Move" />
+                <ui:Instance template="StatTemplate" name="Defense" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="Conditions" style="background-color: rgba(0, 0, 0, 0); padding-top: 4px; margin-right: 4px; margin-left: 4px;">
+            <ui:Button text="Add Status" parse-escape-sequences="true" display-tooltip-when-elided="true" name="AlterStatus" style="margin-top: 0; margin-bottom: 4px;" />
+            <ui:VisualElement name="List" style="flex-grow: 1;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

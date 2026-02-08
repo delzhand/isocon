@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="IconHPBar" style="margin-bottom: 2px;">
+        <ui:VisualElement name="StatTemplate" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: space-between; margin-bottom: 2px;">
+            <ui:Label tabindex="-1" text="HP" display-tooltip-when-elided="true" style="font-size: 10px; -unity-text-align: middle-left; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; color: rgb(176, 176, 176);" />
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row-reverse;">
+                <ui:Label tabindex="-1" text="/40" display-tooltip-when-elided="true" name="MHP" style="position: relative; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-text-align: upper-right;" />
+                <ui:Label tabindex="-1" text="+3" display-tooltip-when-elided="true" name="VIG" style="position: relative; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-text-align: upper-right; color: rgb(37, 225, 242);" />
+                <ui:Label tabindex="-1" text="22" display-tooltip-when-elided="true" name="CHP" style="position: relative; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-text-align: upper-right;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:ProgressBar value="22" high-value="40" name="HpBar" style="margin-top: 0; max-height: 8px;" />
+        <ui:ProgressBar value="3" high-value="40" name="VigorBar" style="margin-top: 0; max-height: 4px; position: absolute; bottom: 0; translate: 0 -2px;" />
+    </ui:VisualElement>
+</ui:UXML>

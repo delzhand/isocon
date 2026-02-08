@@ -7,15 +7,17 @@ using System;
 using IsoconUILibrary;
 using SimpleJSON;
 using Random = UnityEngine.Random;
+using Unity.VisualScripting;
+using UnityEditor.ShaderGraph.Serialization;
 
-public class Icon_v1_5 : GameSystem
+public class Icon_v2_0 : GameSystem
 {
 
     public static int PartyResolve = 0;
 
     public override string SystemName()
     {
-        return "ICON 1.5";
+        return "ICON 2.0 Playtest";
     }
 
     public override string GetSystemVars()
@@ -50,11 +52,9 @@ public class Icon_v1_5 : GameSystem
     private void SetupPanel(string elementName, bool editable)
     {
         VisualElement panel = UI.System.Q(elementName);
-        VisualElement unitPanel = UI.CreateFromTemplate("UITemplates/GameSystem/IconUnitPanel");
+        VisualElement unitPanel = UI.CreateFromTemplate("UITemplates/GameSystem/Icon2UnitPanel");
 
-        unitPanel.Q("Damage").Q<Label>("Label").text = "DMG/FRAY";
-        unitPanel.Q("Range").Q<Label>("Label").text = "RNG";
-        unitPanel.Q("Speed").Q<Label>("Label").text = "SPD/DASH";
+        unitPanel.Q("Move").Q<Label>("Label").text = "MOV";
         unitPanel.Q("Defense").Q<Label>("Label").text = "DEF";
         unitPanel.Q<Button>("AlterVitals").RegisterCallback<ClickEvent>(AlterVitalsModal);
         unitPanel.Q<Button>("AlterStatus").RegisterCallback<ClickEvent>(AlterStatusModal);
@@ -105,11 +105,6 @@ public class Icon_v1_5 : GameSystem
 
         Modal.AddSeparator();
 
-        Modal.AddColumns("WoundColumns", 2);
-        Modal.AddContentButton("AddWound", "Add Wound", (evt) => AlterVitals("GainWound"));
-        Modal.AddContentButton("RemoveWound", "Remove Wound", (evt) => AlterVitals("LoseWound"));
-        Modal.MoveToColumn("WoundColumns_0", "AddWound");
-        Modal.MoveToColumn("WoundColumns_1", "RemoveWound");
         Modal.AddPreferredButton("Complete", Modal.CloseEvent);
     }
 
@@ -127,7 +122,7 @@ public class Icon_v1_5 : GameSystem
 
         JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
         List<string> statuses = new();
-        foreach (JSONNode s in gamedata["Icon1_5"]["StatusEffects"].AsArray)
+        foreach (JSONNode s in gamedata["Icon2_0"]["StatusEffects"].AsArray)
         {
             statuses.Add(s["Name"]);
         }
@@ -156,13 +151,13 @@ public class Icon_v1_5 : GameSystem
 
     private static void AddStatus(ClickEvent evt)
     {
-        Icon1_5Condition condition = new();
+        Icon2_0Condition condition = new();
         string type = UI.Modal.Q<DropdownField>("Type").value;
         if (type == "ICON Preset")
         {
             condition.Name = SearchField.GetValue(UI.Modal.Q("PregenStatuses"));
             JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
-            foreach (JSONNode j in gamedata["Icon1_5"]["StatusEffects"])
+            foreach (JSONNode j in gamedata["Icon2_0"]["StatusEffects"])
             {
                 if (j["Name"] == condition.Name)
                 {
@@ -210,19 +205,19 @@ public class Icon_v1_5 : GameSystem
     {
         JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
         List<string> playerJobs = new();
-        foreach (JSONNode pjob in gamedata["Icon1_5"]["PlayerJobs"].AsArray)
+        foreach (string pjob in gamedata["Icon2_0"]["PlayerJobs"].AsObject.Keys)
         {
             playerJobs.Add(pjob);
         }
         List<string> foeClasses = new();
-        foreach (JSONNode fclass in gamedata["Icon1_5"]["FoeClasses"].AsArray)
+        foreach (string fclass in gamedata["Icon2_0"]["FoeClasses"].AsObject.Keys)
         {
             foeClasses.Add(fclass);
         }
 
         base.AddTokenModal();
         Modal.AddDropdownField("Type", "Type", "Player", new string[] { "Player", "Foe", "Object" }, (evt) => AddTokenModalEvaluateConditions());
-        Modal.AddSearchField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs.ToArray());
+        Modal.AddSearchField("PlayerJob", "Job", playerJobs[0], playerJobs.ToArray());
         Modal.AddDropdownField("FoeClass", "Class", foeClasses[0], foeClasses.ToArray(), (evt) => AddTokenModalEvaluateConditions());
         Modal.AddTextField("FoeJob", "Job", "");
         Modal.AddToggleField("Elite", "Elite", false);
@@ -271,22 +266,34 @@ public class Icon_v1_5 : GameSystem
         int count = UI.Modal.Q<IntegerField>("CloneCount").value;
 
         int hpMultiplier = 1;
-        Icon1_5Data data = new()
+        Icon2_0Data data = new()
         {
             Type = type
         };
 
+        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
         if (type == "Player")
         {
             data.Class = playerJob.Split("/")[0];
             data.Job = playerJob.Split("/")[1];
             data.Elite = false;
+            JSONNode stats = gamedata["Icon2_0"]["PlayerJobs"][playerJob];
+            data.MaxHP = stats[0];
+            data.Move = stats[1];
+            data.Defense = stats[2];
+            data.TColor = stats[3];
         }
         else if (type == "Foe")
         {
             data.Class = foeClass;
             data.Job = foeJob;
             data.Elite = elite;
+            JSONNode stats = gamedata["Icon2_0"]["FoeClasses"][playerJob];
+            data.MaxHP = stats[0];
+            data.Move = stats[1];
+            data.Defense = stats[2];
+            data.TColor = stats[3];
+
             if (elite)
             {
                 hpMultiplier = 2;
@@ -298,30 +305,39 @@ public class Icon_v1_5 : GameSystem
         }
         else
         {
-
             hpMultiplier = objectHP;
         }
-        InitSystemData(data, hpMultiplier);
 
-        Color color = GetColor(data.Class);
+        data.MaxHP = data.MaxHP * hpMultiplier;
+        if (data.Type == "Object")
+        {
+            data.MaxHP = hpMultiplier;
+        }
+
+        data.CurrentHP = data.MaxHP;
+        data.Vigor = 0;
+
+
+        Color color = GetColor(data.TColor);
 
         if ((type == "Object" || foeClass == "Mob") && count > 1)
         {
             for (int i = 0; i < count; i++)
             {
                 string cloneName = $"{name} {StringUtility.ConvertIntToAlpha(i + 1)}";
-                Player.Self().CmdCreateToken("Icon v1.5", tokenMeta, cloneName, size, color, JsonUtility.ToJson(data));
+                Player.Self().CmdCreateToken("Icon v2.0", tokenMeta, cloneName, size, color, JsonUtility.ToJson(data));
             }
         }
         else
         {
-            Player.Self().CmdCreateToken("Icon v1.5", tokenMeta, name, size, color, JsonUtility.ToJson(data));
+            Player.Self().CmdCreateToken("Icon v2.0", tokenMeta, name, size, color, JsonUtility.ToJson(data));
         }
     }
 
-    private static Color GetColor(string job)
+    private static Color GetColor(string dataColor)
     {
-        switch (GetStatColor(job))
+
+        switch (dataColor)
         {
             case "Red":
                 return ColorUtility.NormalizeRGB(238, 34, 12);
@@ -337,34 +353,6 @@ public class Icon_v1_5 : GameSystem
                 return ColorUtility.NormalizeRGB(146, 146, 146);
         }
         return Color.black;
-    }
-
-    private static string GetStatColor(string job)
-    {
-        string statColor = "Gray";
-        switch (job)
-        {
-            case "Wright":
-            case "Artillery":
-                statColor = "Blue";
-                break;
-            case "Vagabond":
-            case "Skirmisher":
-                statColor = "Yellow";
-                break;
-            case "Stalwart":
-            case "Heavy":
-                statColor = "Red";
-                break;
-            case "Leader":
-            case "Mendicant":
-                statColor = "Green";
-                break;
-            case "Legend":
-                statColor = "Purple";
-                break;
-        }
-        return statColor;
     }
 
     public override MenuItem[] GetTokenMenuItems(TokenData data)
@@ -437,67 +425,33 @@ public class Icon_v1_5 : GameSystem
     private void AttackRollClicked(ClickEvent evt)
     {
         Modal.Reset("Attack Roll");
-        Modal.AddNumberNudgerField("BoonField", "Boons", 0, 0);
-        Modal.AddNumberNudgerField("CurseField", "Curses", 0, 0);
+        Modal.AddNumberNudgerField("PowerField", "Weakness/Power", 0, -20);
         Modal.AddPreferredButton("Roll", AttackRoll);
         Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
     private void SaveRollClicked(ClickEvent evt)
     {
-        Modal.Reset("Save Roll");
-        Modal.AddNumberNudgerField("BoonField", "Boons", 0, 0);
-        Modal.AddNumberNudgerField("CurseField", "Curses", 0, 0);
-        Modal.AddPreferredButton("Roll", SaveRoll);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        string name = Token.GetSelected().Data.Name;
+        DiceRoller.DirectDieRoll("sum", "1d6", $"{name}'s save roll");
+        Token.DeselectAll();
+        Modal.Close();
     }
 
     private void AttackRoll(ClickEvent evt)
     {
-        BoonCurseRoll("Attack");
-        Token.DeselectAll();
-    }
-
-    private void SaveRoll(ClickEvent evt)
-    {
-        BoonCurseRoll("Save");
-        Token.DeselectAll();
-    }
-
-    private void BoonCurseRoll(string label)
-    {
         string name = Token.GetSelected().Data.Name;
-        int boon = UI.Modal.Q<NumberNudger>("BoonField").value;
-        int curse = UI.Modal.Q<NumberNudger>("CurseField").value;
-        int balance = boon - curse;
-        int x = 1 + Random.Range(0, 20);
-        string rollString = $"{x}";
-        int mod = 0;
-        List<int> mods = new();
-        for (int i = 0; i < Math.Abs(balance); i++)
-        {
-            int y = 1 + Random.Range(0, 6);
-            mods.Add(y);
-            mod = Math.Max(mod, y);
-        }
-        if (mod > 0 && balance > 0)
-        {
-            x += mod;
-            rollString += $"+boon({String.Join(",", mods.ToArray())})";
-        }
-        if (mod > 0 && balance < 0)
-        {
-            x -= mod;
-            rollString += $"-curse({String.Join(",", mods.ToArray())})";
-        }
-        Player.Self().CmdShareDiceRoll($"{name}'s {label} ({Player.Self().Name})", $"{x}", rollString, 20);
+        int power = UI.Modal.Q<NumberNudger>("PowerField").value;
+        string op = power > 0 ? "max" : "min";
+        DiceRoller.DirectDieRoll(op, $"{Math.Abs(power) + 1}d10", $"{name}'s attack roll");
+        Token.DeselectAll();
         Modal.Close();
     }
 
     public override void UpdateData(TokenData data)
     {
         base.UpdateData(data);
-        Icon1_5Data mdata = JsonUtility.FromJson<Icon1_5Data>(data.SystemData);
+        Icon2_0Data mdata = JsonUtility.FromJson<Icon2_0Data>(data.SystemData);
 
         data.OverheadElement.Q<ProgressBar>("VigorBar").value = mdata.Vigor;
         data.OverheadElement.Q<ProgressBar>("VigorBar").highValue = mdata.MaxHP;
@@ -506,35 +460,13 @@ public class Icon_v1_5 : GameSystem
         data.OverheadElement.Q<ProgressBar>("HpBar").value = mdata.CurrentHP;
         data.OverheadElement.Q<ProgressBar>("HpBar").highValue = mdata.MaxHP;
 
-        UI.ToggleDisplay(data.OverheadElement.Q("Wound1"), mdata.Wounds >= 1);
-        UI.ToggleDisplay(data.OverheadElement.Q("Wound2"), mdata.Wounds >= 2);
-        UI.ToggleDisplay(data.OverheadElement.Q("Wound3"), mdata.Wounds >= 3);
+        UI.ToggleDisplay(data.OverheadElement.Q("Wound1"), false);
+        UI.ToggleDisplay(data.OverheadElement.Q("Wound2"), false);
+        UI.ToggleDisplay(data.OverheadElement.Q("Wound3"), false);
 
         UI.ToggleDisplay(data.OverheadElement.Q("HpBar"), mdata.CurrentHP > 0);
     }
 
-    private static void InitSystemData(Icon1_5Data data, int hpMultiplier)
-    {
-
-        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
-        JSONNode stats = gamedata["Icon1_5"]["Stats"][GetStatColor(data.Class)];
-
-        data.MaxHP = stats["MaxHP"] * hpMultiplier;
-        if (data.Type == "Object")
-        {
-            data.MaxHP = hpMultiplier;
-        }
-        data.CurrentHP = data.MaxHP;
-        data.Vigor = 0;
-        data.Wounds = 0;
-
-        data.Damage = stats["Damage"];
-        data.Fray = stats["Fray"];
-        data.Range = stats["Range"];
-        data.Speed = stats["Speed"];
-        data.Dash = stats["Dash"];
-        data.Defense = stats["Defense"];
-    }
 
     public override void TokenDataSetValue(string tokenId, string value)
     {
@@ -544,7 +476,7 @@ public class Icon_v1_5 : GameSystem
         {
             return;
         }
-        Icon1_5Data sysdata = JsonUtility.FromJson<Icon1_5Data>(data.SystemData);
+        Icon2_0Data sysdata = JsonUtility.FromJson<Icon2_0Data>(data.SystemData);
         sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
         data.SystemData = JsonUtility.ToJson(sysdata);
         data.NeedsRedraw = true;
@@ -560,7 +492,7 @@ public class Icon_v1_5 : GameSystem
         }
 
         data.UpdateTokenPanel(elementName);
-        Icon1_5Data sysdata = JsonUtility.FromJson<Icon1_5Data>(data.SystemData);
+        Icon2_0Data sysdata = JsonUtility.FromJson<Icon2_0Data>(data.SystemData);
 
         VisualElement panel = UI.System.Q(elementName);
 
@@ -582,35 +514,29 @@ public class Icon_v1_5 : GameSystem
         panel.Q("Elite").style.backgroundColor = ColorUtility.NormalizeRGB(202, 85, 239);
         UI.ToggleDisplay(panel.Q("Elite"), sysdata.Elite);
 
-        panel.Q("IconHPBar").Q<Label>("CHP").text = $"{sysdata.CurrentHP}";
-        panel.Q("IconHPBar").Q<Label>("MHP").text = $"/{sysdata.MaxHP}";
-        panel.Q("IconHPBar").Q<ProgressBar>("HpBar").value = sysdata.CurrentHP;
-        panel.Q("IconHPBar").Q<ProgressBar>("HpBar").highValue = sysdata.MaxHP;
+        panel.Q("Icon2HPBar").Q<Label>("CHP").text = $"{sysdata.CurrentHP}";
+        panel.Q("Icon2HPBar").Q<Label>("MHP").text = $"/{sysdata.MaxHP}";
+        panel.Q("Icon2HPBar").Q<ProgressBar>("HpBar").value = sysdata.CurrentHP;
+        panel.Q("Icon2HPBar").Q<ProgressBar>("HpBar").highValue = sysdata.MaxHP;
 
-        panel.Q("IconHPBar").Q<Label>("VIG").text = $"+{sysdata.Vigor}";
-        panel.Q("IconHPBar").Q<ProgressBar>("VigorBar").value = sysdata.Vigor;
-        panel.Q("IconHPBar").Q<ProgressBar>("VigorBar").highValue = sysdata.MaxHP;
+        panel.Q("Icon2HPBar").Q<Label>("VIG").text = $"+{sysdata.Vigor}";
+        panel.Q("Icon2HPBar").Q<ProgressBar>("VigorBar").value = sysdata.Vigor;
+        panel.Q("Icon2HPBar").Q<ProgressBar>("VigorBar").highValue = sysdata.MaxHP;
         UI.ToggleDisplay(panel.Q("VigorBar"), sysdata.Vigor > 0);
         UI.ToggleDisplay(panel.Q("VIG"), sysdata.Vigor > 0);
 
-        UI.ToggleDisplay(panel.Q("Wound1"), sysdata.Wounds >= 1);
-        UI.ToggleDisplay(panel.Q("Wound2"), sysdata.Wounds >= 2);
-        UI.ToggleDisplay(panel.Q("Wound3"), sysdata.Wounds >= 3);
-
         panel.Q("IconResolveBar").Q<Label>("ResolveNum").text = $"{sysdata.Resolve}";
-        panel.Q("IconResolveBar").Q<ProgressBar>("ResolveBar").value = sysdata.Resolve + Icon_v1_5.PartyResolve;
+        panel.Q("IconResolveBar").Q<ProgressBar>("ResolveBar").value = sysdata.Resolve + Icon_v2_0.PartyResolve;
         panel.Q("IconResolveBar").Q<ProgressBar>("ResolveBar").highValue = 6;
 
-        panel.Q("IconResolveBar").Q<Label>("PartyResolveNum").text = $"+{Icon_v1_5.PartyResolve}";
-        panel.Q("IconResolveBar").Q<ProgressBar>("PartyResolveBar").value = Icon_v1_5.PartyResolve;
+        panel.Q("IconResolveBar").Q<Label>("PartyResolveNum").text = $"+{Icon_v2_0.PartyResolve}";
+        panel.Q("IconResolveBar").Q<ProgressBar>("PartyResolveBar").value = Icon_v2_0.PartyResolve;
         panel.Q("IconResolveBar").Q<ProgressBar>("PartyResolveBar").highValue = 6;
         UI.ToggleDisplay(panel.Q("IconResolveBar"), sysdata.Type == "Player");
-        UI.ToggleDisplay(panel.Q("PartyResolveBar"), Icon_v1_5.PartyResolve > 0);
-        UI.ToggleDisplay(panel.Q("PartyResolveNum"), Icon_v1_5.PartyResolve > 0);
+        UI.ToggleDisplay(panel.Q("PartyResolveBar"), Icon_v2_0.PartyResolve > 0);
+        UI.ToggleDisplay(panel.Q("PartyResolveNum"), Icon_v2_0.PartyResolve > 0);
 
-        panel.Q("Damage").Q<Label>("Value").text = $"{sysdata.Defense}/{sysdata.Fray}";
-        panel.Q("Range").Q<Label>("Value").text = $"{sysdata.Range}";
-        panel.Q("Speed").Q<Label>("Value").text = $"{sysdata.Speed}/{sysdata.Dash}";
+        panel.Q("Move").Q<Label>("Value").text = $"{sysdata.Move}";
         panel.Q("Defense").Q<Label>("Value").text = $"{sysdata.Defense}";
         UI.ToggleDisplay(panel.Q("Stats"), sysdata.Type != "Object");
 
@@ -618,7 +544,7 @@ public class Icon_v1_5 : GameSystem
         {
             data.NeedsRedraw = false;
             panel.Q("Conditions").Q("List").Clear();
-            foreach (Icon1_5Condition condition in sysdata.Status)
+            foreach (Icon2_0Condition condition in sysdata.Status)
             {
                 VisualElement template = UI.CreateFromTemplate("UITemplates/GameSystem/ConditionTemplate");
                 string label = $"{condition.Name}";
@@ -659,7 +585,7 @@ public class Icon_v1_5 : GameSystem
 }
 
 [Serializable]
-public class Icon1_5Condition
+public class Icon2_0Condition
 {
     public string Name;
     public string ModifierType;
@@ -690,7 +616,7 @@ public class Icon1_5Condition
 }
 
 [Serializable]
-public class Icon1_5Data
+public class Icon2_0Data
 {
     public int CurrentHP;
     public int MaxHP;
@@ -700,34 +626,17 @@ public class Icon1_5Data
     public string Job;
     public string Class;
     public bool Elite;
-    public int HPMultiplier;
-    public int Wounds;
-    public int Damage;
-    public int Fray;
-    public int Range;
-    public int Speed;
-    public int Dash;
+    public int Move;
     public int Defense;
-    public Icon1_5Condition[] Status;
+    public string TColor;
+    public Icon2_0Condition[] Status;
 
     public void Change(string value, Token token, bool placed)
     {
-        if (value.StartsWith("GainWound"))
-        {
-            Wounds++;
-            Wounds = Math.Min(Wounds, 3);
-            int woundMaxHP = MaxHP / 4 * (4 - Wounds);
-            CurrentHP = Math.Min(CurrentHP, woundMaxHP);
-        }
-        if (value.StartsWith("LoseWound"))
-        {
-            Wounds--;
-            Wounds = Math.Max(Wounds, 0);
-        }
         if (value.StartsWith("GainHP"))
         {
             int diff = int.Parse(value.Split("|")[1]);
-            int woundMaxHP = MaxHP / 4 * (4 - Wounds);
+            int woundMaxHP = MaxHP;
             if (CurrentHP + diff > woundMaxHP)
             {
                 diff = woundMaxHP - CurrentHP;
@@ -809,7 +718,7 @@ public class Icon1_5Data
         if (value.StartsWith("GainPRES"))
         {
             int diff = int.Parse(value.Split("|")[1]);
-            Icon_v1_5.PartyResolve += diff;
+            Icon_v2_0.PartyResolve += diff;
         }
         if (value.StartsWith("LoseRES"))
         {
@@ -819,11 +728,11 @@ public class Icon1_5Data
         if (value.StartsWith("LosePRES"))
         {
             int diff = int.Parse(value.Split("|")[1]);
-            if (diff > Icon_v1_5.PartyResolve)
+            if (diff > Icon_v2_0.PartyResolve)
             {
-                diff = Icon_v1_5.PartyResolve;
+                diff = Icon_v2_0.PartyResolve;
             }
-            Icon_v1_5.PartyResolve -= diff;
+            Icon_v2_0.PartyResolve -= diff;
         }
         if (value.StartsWith("Damage"))
         {
@@ -877,7 +786,7 @@ public class Icon1_5Data
         if (value.StartsWith("GainStatus"))
         {
             string[] parts = value.Split("|");
-            Icon1_5Condition condition = JsonUtility.FromJson<Icon1_5Condition>(parts[1]);
+            Icon2_0Condition condition = JsonUtility.FromJson<Icon2_0Condition>(parts[1]);
             AddCondition(condition);
             if (placed)
             {
@@ -911,7 +820,8 @@ public class Icon1_5Data
         if (CurrentHP <= 0)
         {
             RemoveCondition("Bloodied");
-            AddCondition(new Icon1_5Condition()
+            RemoveCondition("Crisis");
+            AddCondition(new Icon2_0Condition()
             {
                 Name = "Defeated",
                 ModifierType = "None",
@@ -922,9 +832,22 @@ public class Icon1_5Data
         else if (CurrentHP <= MaxHP / 2)
         {
             RemoveCondition("Defeated");
-            AddCondition(new Icon1_5Condition()
+            RemoveCondition("Crisis");
+            AddCondition(new Icon2_0Condition()
             {
                 Name = "Bloodied",
+                ModifierType = "None",
+                Color = "Red",
+                Locked = true
+            });
+        }
+        else if (CurrentHP <= MaxHP / 4)
+        {
+            RemoveCondition("Defeated");
+            RemoveCondition("Bloodied");
+            AddCondition(new Icon2_0Condition()
+            {
+                Name = "Crisis",
                 ModifierType = "None",
                 Color = "Red",
                 Locked = true
@@ -933,23 +856,24 @@ public class Icon1_5Data
         else
         {
             RemoveCondition("Bloodied");
+            RemoveCondition("Crisis");
             RemoveCondition("Defeated");
         }
     }
 
-    private void AddCondition(Icon1_5Condition c)
+    private void AddCondition(Icon2_0Condition c)
     {
         RemoveCondition(c.Name);
-        List<Icon1_5Condition> statusList = Status.ToList();
+        List<Icon2_0Condition> statusList = Status.ToList();
         statusList.Add(c);
         Status = statusList.ToArray();
     }
 
     private void RemoveCondition(string name)
     {
-        List<Icon1_5Condition> statusList = Status.ToList();
-        List<Icon1_5Condition> newStatusList = new();
-        foreach (Icon1_5Condition condition in statusList)
+        List<Icon2_0Condition> statusList = Status.ToList();
+        List<Icon2_0Condition> newStatusList = new();
+        foreach (Icon2_0Condition condition in statusList)
         {
             if (name != condition.Name)
             {
@@ -961,8 +885,8 @@ public class Icon1_5Data
 
     private void CounterCondition(string name, int num)
     {
-        List<Icon1_5Condition> statusList = Status.ToList();
-        foreach (Icon1_5Condition condition in statusList)
+        List<Icon2_0Condition> statusList = Status.ToList();
+        foreach (Icon2_0Condition condition in statusList)
         {
             if (name == condition.Name)
             {

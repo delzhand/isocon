@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Styles/v3/Overhead.uss?fileID=7433441132597879392&amp;guid=db9f5488cbd5b104699c060ac772337b&amp;type=3#Overhead" />
+    <ui:VisualElement name="Overhead" class="token" style="translate: -50% -50%;">
+        <ui:VisualElement name="Color" class="blue" style="right: auto; left: -12px; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; bottom: 0; display: none;" />
+        <ui:VisualElement name="Elite" style="visibility: hidden; display: none;" />
+        <ui:VisualElement name="HpAndVig" style="height: 13px;">
+            <ui:ProgressBar value="3" name="VigorBar" high-value="12" />
+            <ui:ProgressBar value="3.09" high-value="24" name="HpBar" style="height: 7px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
