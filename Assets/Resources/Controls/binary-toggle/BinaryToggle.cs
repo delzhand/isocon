@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace IsoconUILibrary {
+namespace IsoconUILibrary
+{
 
-    public class BinaryToggle : BaseField<bool>
+    [UxmlElement]
+    public partial class BinaryToggle : BaseField<bool>
     {
-        public new class UxmlFactory : UxmlFactory<BinaryToggle, UxmlTraits> {}
-        public new class UxmlTraits : BaseFieldTraits<bool, UxmlBoolAttributeDescription> {}
-
         public static readonly new string ussClassName = "binary-toggle";
         public static readonly new string inputUssClassName = "binary-toggle__input";
         public static readonly string inputKnobUssClassName = "binary-toggle__input-knob";
         public static readonly string inputCheckedUssClassName = "binary-toggle__input--checked";
 
+
         VisualElement m_Input;
         VisualElement m_Knob;
 
-        public BinaryToggle(): this(null, null, null) {}
+        public BinaryToggle() : this(null, null, null) { }
 
-        public BinaryToggle(string label, string off_state, string on_state): base(label, null) {
+        public BinaryToggle(string label, string off_state, string on_state) : base(label, null)
+        {
             AddToClassList(ussClassName);
 
             m_Input = this.Q(className: BaseField<bool>.inputUssClassName);
