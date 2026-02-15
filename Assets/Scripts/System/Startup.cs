@@ -11,8 +11,8 @@ using UnityEngine.UIElements;
 
 public class Startup
 {
-    private static string _version = "0.7.6";
-    private static string _latestVersion = "0.7.6";
+    private static string _version = "0.8.0";
+    private static string _latestVersion = "0.8.0";
 
     public static void RunTasks()
     {
@@ -39,10 +39,17 @@ public class Startup
         string notes = @$"<size=+3><b>IsoCON Version {_version}</b></size>
 
 <size=+2><b>Features</b></size>
-* Added support for Icon 2.0 Playtest game system
-* Added a Lowest (disadvantage) option to the dice roller
+* Sessions can now be saved and loaded
+* Added support for <b>Icon 2.0 Playtest</b> game system
+* Added a <b>Lowest</b> option to the dice roller
 * Updated documentation
 * Custom GameSystems can now more easily make direct dice rolls
+* Added a button to immediately switch to a fixed overhead camera view
+<size=+2><b>Changes</b></size>
+* Tokens in <b>Generic</b> system can now set a color
+* Rotate/Pan camera toggle moved to Configuration
+<size=+2><b>Fixes</b></size>
+* Elevation display on slopes and steps is now correct
 ";
 
         string seen = Preferences.GetReleaseNotesSeen();
