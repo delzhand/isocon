@@ -50,7 +50,6 @@ public class TileMarkingState : TabletopSubstate
     {
         UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>(GoToEditing);
         UI.TopBar.Q("MarkerMode").RegisterCallback<ClickEvent>(GoToNeutral);
-        UI.TopBar.Q("DragMode").RegisterCallback<ClickEvent>(ChangeDragMode);
         Dragger.LeftClickRelease += ToggleBlock;
         Dragger.RightClickRelease += ToggleBlockMenu;
     }
@@ -59,7 +58,6 @@ public class TileMarkingState : TabletopSubstate
     {
         UI.TopBar.Q("EditMap").UnregisterCallback<ClickEvent>(GoToEditing);
         UI.TopBar.Q("MarkerMode").UnregisterCallback<ClickEvent>(GoToNeutral);
-        UI.TopBar.Q("DragMode").UnregisterCallback<ClickEvent>(ChangeDragMode);
         Dragger.LeftClickRelease -= ToggleBlock;
         Dragger.RightClickRelease -= ToggleBlockMenu;
     }
@@ -93,13 +91,6 @@ public class TileMarkingState : TabletopSubstate
             GoToNeutral(new ClickEvent());
             return;
         }
-
-        if (Input.GetKeyUp(KeyCode.C))
-        {
-            ChangeDragMode(new ClickEvent());
-            return;
-        }
-
     }
 
     protected override void GoToNeutral(ClickEvent evt)

@@ -75,7 +75,6 @@ public class MapEditingState : TabletopSubstate
     {
         UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>(GoToNeutral);
         UI.TopBar.Q("MarkerMode").RegisterCallback<ClickEvent>(GoToMarking);
-        UI.TopBar.Q("DragMode").RegisterCallback<ClickEvent>(ChangeDragMode);
         Dragger.LeftClickStart += LeftClickStart;
         Dragger.LeftDragUpdate += LeftDragUpdate;
     }
@@ -84,7 +83,6 @@ public class MapEditingState : TabletopSubstate
     {
         UI.TopBar.Q("EditMap").UnregisterCallback<ClickEvent>(GoToNeutral);
         UI.TopBar.Q("MarkerMode").UnregisterCallback<ClickEvent>(GoToMarking);
-        UI.TopBar.Q("DragMode").UnregisterCallback<ClickEvent>(ChangeDragMode);
         Dragger.LeftClickStart -= LeftClickStart;
         Dragger.LeftDragUpdate -= LeftDragUpdate;
     }
@@ -121,12 +119,6 @@ public class MapEditingState : TabletopSubstate
         if (Input.GetKeyUp(KeyCode.T))
         {
             GoToMarking(new ClickEvent());
-            return;
-        }
-
-        if (Input.GetKeyUp(KeyCode.C))
-        {
-            ChangeDragMode(new ClickEvent());
             return;
         }
 

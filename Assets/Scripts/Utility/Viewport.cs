@@ -180,15 +180,27 @@ public class Viewport
         }
     }
 
+    public static void SetPanMode(bool pan)
+    {
+        if (pan)
+        {
+            EnablePanMode();
+        }
+        else
+        {
+            EnableRotateMode();
+        }
+    }
+
     private static void EnableRotateMode()
     {
         _mode = DragMode.Rotate;
-        UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Rotate <u>C</u>amera";
+        // UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Rotate <u>C</u>amera";
     }
 
     private static void EnablePanMode()
     {
         _mode = DragMode.Pan;
-        UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Pan <u>C</u>amera";
+        // UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Pan <u>C</u>amera";
     }
 }

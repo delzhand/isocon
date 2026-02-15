@@ -34,7 +34,6 @@ public abstract class TabletopSubstate : BaseState
         UI.ToggleDisplay(UI.System.Q("TopRight"), true);
 
         UI.ToggleDisplay(UI.TopBar.Q("EditMap"), true);
-        UI.ToggleDisplay(UI.TopBar.Q("DragMode"), true);
         UI.ToggleDisplay(UI.TopBar.Q("MarkerMode"), true);
         UI.ToggleDisplay(UI.TopBar.Q("Dice"), true);
         UI.ToggleDisplay(UI.TopBar.Q("Config"), true);
@@ -88,11 +87,6 @@ public abstract class TabletopSubstate : BaseState
     protected virtual void GoToSession(ClickEvent evt)
     {
         Session.OpenModal(evt);
-    }
-
-    protected void ChangeDragMode(ClickEvent evt)
-    {
-        Viewport.TogglePanMode();
     }
 
     protected void FixView(ClickEvent evt)

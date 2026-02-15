@@ -66,6 +66,14 @@ public class Config
             Token.SetAllTokenOutlines();
         });
 
+        string dragMode = Preferences.Current.DragPan ? "Pan" : "Rotate";
+        Modal.AddDropdownField("CameraDragModeField", "Right Click Drag Behavior", dragMode, StringUtility.CreateArray("Pan", "Rotate"), (evt) =>
+        {
+            bool dragValue = (evt.newValue == "Pan");
+            Preferences.SetDragPan(dragValue);
+            Viewport.SetPanMode(dragValue);
+        });
+
         Modal.AddPreferredButton("Confirm", CloseModal);
     }
 

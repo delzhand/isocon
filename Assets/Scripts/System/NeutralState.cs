@@ -49,11 +49,6 @@ public class NeutralState : TabletopSubstate
             GoToMarking(new ClickEvent());
         }
 
-        if (Input.GetKeyUp(KeyCode.C))
-        {
-            ChangeDragMode(new ClickEvent());
-        }
-
         if (Input.GetKeyUp(KeyCode.F))
         {
             GoToConfig(new ClickEvent());
@@ -94,7 +89,6 @@ public class NeutralState : TabletopSubstate
     {
         UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>(GoToEditing);
         UI.TopBar.Q("MarkerMode").RegisterCallback<ClickEvent>(GoToMarking);
-        UI.TopBar.Q("DragMode").RegisterCallback<ClickEvent>(ChangeDragMode);
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(GoToConfig);
         UI.TopBar.Q("Session").RegisterCallback<ClickEvent>(GoToSession);
         UI.TopBar.Q("FixedView").RegisterCallback<ClickEvent>(FixView);
@@ -113,7 +107,6 @@ public class NeutralState : TabletopSubstate
     {
         UI.TopBar.Q("EditMap").UnregisterCallback<ClickEvent>(GoToEditing);
         UI.TopBar.Q("MarkerMode").UnregisterCallback<ClickEvent>(GoToMarking);
-        UI.TopBar.Q("DragMode").UnregisterCallback<ClickEvent>(ChangeDragMode);
         UI.TopBar.Q("Config").UnregisterCallback<ClickEvent>(GoToConfig);
         UI.TopBar.Q("Session").UnregisterCallback<ClickEvent>(GoToSession);
         UI.TopBar.Q("Dice").UnregisterCallback<ClickEvent>(DiceRoller.ToggleVisible);

@@ -22,6 +22,7 @@ public class StoredPreferences
     public string RulesFile;
     public bool ShowHUD;
     public int TargetFramerate;
+    public bool DragPan;
 }
 
 public class Preferences
@@ -59,7 +60,8 @@ public class Preferences
                 ReleaseNotesSeen = PlayerPrefs.GetString("ReleaseNotesSeen", ""),
                 SkipTutorials = PlayerPrefs.GetInt("SkipTutorials", 0),
                 TargetFramerate = PlayerPrefs.GetInt("TargetFramerate", 30),
-                ShowHUD = true
+                ShowHUD = true,
+                DragPan = true,
             };
             Save();
         }
@@ -77,6 +79,13 @@ public class Preferences
         _current.ShowHUD = value;
         Save();
     }
+
+    public static void SetDragPan(bool value)
+    {
+        _current.DragPan = value;
+        Save();
+    }
+
 
     public static void SetUIScale(string value)
     {
