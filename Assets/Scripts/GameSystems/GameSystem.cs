@@ -173,6 +173,16 @@ public class GameSystem : MonoBehaviour
         throw new NotImplementedException();
     }
 
+    public virtual bool ValidateAddToken()
+    {
+        if (!TokenLibrary.TokenSelected())
+        {
+            Toast.AddError("A token has not been selected.");
+            return false;
+        }
+        return true;
+    }
+
     // public virtual void DeserializeToken(string json)
     // {
     //     throw new NotImplementedException();

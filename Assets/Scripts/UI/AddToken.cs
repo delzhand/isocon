@@ -24,9 +24,12 @@ public class AddToken
 
     private static void ConfirmAddToken(ClickEvent evt)
     {
-        GameSystem.Current().CreateToken();
-        Modal.Close();
-        Player.Self().ClearOp();
+        if (GameSystem.Current().ValidateAddToken())
+        {
+            GameSystem.Current().CreateToken();
+            Modal.Close();
+            Player.Self().ClearOp();
+        }
     }
 
     private static void CancelAddToken(ClickEvent evt)

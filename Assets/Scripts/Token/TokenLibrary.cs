@@ -90,6 +90,11 @@ public class TokenLibrary : MonoBehaviour
         return Tokens[SelectedHash];
     }
 
+    public static bool TokenSelected()
+    {
+        return SelectedHash != null;
+    }
+
     public static void Close(ClickEvent evt)
     {
         UI.ToggleDisplay("TokenLibraryModal", false);
