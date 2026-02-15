@@ -8,15 +8,10 @@ public class Session
     public static void OpenModal(ClickEvent evt)
     {
         Modal.Reset("Session");
-        Modal.AddMarkup("SnapshotDesc", "Saving a session snapshot will preserve all tokens including current status and position. It does not save the current map or state.");
-        Modal.AddTextField("SnapshotFile", "Filename", "snapshot.json");
-        Modal.AddContentButton("Snapshot", "Save Session Snapshot", SaveSnapshot);
-        Modal.AddSeparator();
-
-        Modal.AddMarkup("LoadSessionDesc", "Loading a session snapshot will delete all existing tokens and load the tokens from the file.");
+        Modal.AddMarkup("SnapshotDesc", "Session snapshots capture the current status and position of all tokens, but not the map state.");
         Modal.AddFileField("SessionFile", "Session File", "", "sessions");
-        Modal.AddContentButton("SessionLoad", "Load Session", LoadSession);
-
+        Modal.AddButton("Save Session", SaveSession);
+        Modal.AddButton("Load Session", LoadSession);
         Modal.AddButton("Cancel", CloseModal);
     }
 
@@ -27,9 +22,9 @@ public class Session
         Modal.Close();
     }
 
-    private static void SaveSnapshot(ClickEvent evt)
+    private static void SaveSession(ClickEvent evt)
     {
-        string filename = UI.Modal.Q<TextField>("SnapshotFile").value;
+        string filename = UI.Modal.Q("SessionFile").Q<TextField>("File").value;
         GameSystem.Current().SerializeSession(filename);
         Modal.Close();
     }

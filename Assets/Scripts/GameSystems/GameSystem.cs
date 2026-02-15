@@ -190,13 +190,8 @@ public class GameSystem : MonoBehaviour
 
     public void WriteSessionToFile(string session, string filename)
     {
-        string path = Preferences.Current.DataPath;
-        if (!Directory.Exists($"{path}/sessions"))
-        {
-            Directory.CreateDirectory($"{path}/sessions");
-        }
-        System.IO.File.WriteAllText($"{path}/sessions/{filename}", session);
-        Toast.AddSuccess($"Session saved to {path}/sessions/{filename}.");
+        System.IO.File.WriteAllText(filename, session);
+        Toast.AddSuccess($"Session saved to {filename}.");
     }
 
     public virtual void DeserializeSession(string filename)
