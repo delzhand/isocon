@@ -69,6 +69,10 @@ public class NeutralState : TabletopSubstate
         {
             ShowConsole(new ClickEvent());
         }
+        if (Input.GetKeyUp(KeyCode.V))
+        {
+            FixView(new ClickEvent());
+        }
     }
 
     private void ShowTokenPanels()
@@ -87,6 +91,7 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("MarkerMode").RegisterCallback<ClickEvent>(GoToMarking);
         UI.TopBar.Q("DragMode").RegisterCallback<ClickEvent>(ChangeDragMode);
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(GoToConfig);
+        UI.TopBar.Q("FixedView").RegisterCallback<ClickEvent>(FixView);
         UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(Config.OpenModal);
         UI.System.Q("BottomRight").Q("AddToken").RegisterCallback<ClickEvent>(ShowAddTokenModal);

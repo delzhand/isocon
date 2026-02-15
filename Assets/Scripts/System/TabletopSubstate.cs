@@ -89,5 +89,11 @@ public abstract class TabletopSubstate : BaseState
         Viewport.TogglePanMode();
     }
 
+    protected void FixView(ClickEvent evt)
+    {
+        Quaternion q = Quaternion.Euler(new Vector3(0, 0, 20));
+        GameObject.Find("CameraOrigin").transform.rotation = q;
+    }
+
     #endregion
 }
