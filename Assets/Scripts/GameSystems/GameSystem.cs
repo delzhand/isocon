@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.IO;
 
 public class GameSystem : MonoBehaviour
 {
@@ -28,6 +29,16 @@ public class GameSystem : MonoBehaviour
                 return system as Generic;
         }
         return null;
+    }
+
+    public static string[] SystemOptions()
+    {
+        return new string[] { "Generic System", "ICON 1.5", "ICON 2.0 Playtest", "Maleghast" };
+    }
+
+    public static string[] HexOptionalSystems()
+    {
+        return new string[] { "Generic System" };
     }
 
     public virtual string GetOverheadAsset()
@@ -162,6 +173,37 @@ public class GameSystem : MonoBehaviour
         throw new NotImplementedException();
     }
 
+    // public virtual void DeserializeToken(string json)
+    // {
+    //     throw new NotImplementedException();
+    // }
+
+    // public virtual void SerializeToken(string tokenId)
+    // {
+    //     throw new NotImplementedException();
+    // }
+
+    public virtual void SerializeSession(string filename)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void WriteSessionToFile(string session, string filename)
+    {
+        string path = Preferences.Current.DataPath;
+        if (!Directory.Exists($"{path}/sessions"))
+        {
+            Directory.CreateDirectory($"{path}/sessions");
+        }
+        System.IO.File.WriteAllText($"{path}/sessions/{filename}", session);
+        Toast.AddSuccess($"Session saved to {path}/sessions/{filename}.");
+    }
+
+    public virtual void DeserializeSession(string filename)
+    {
+        throw new NotImplementedException();
+    }
+
     public virtual void UpdateData(TokenData data)
     {
         if (data.OverheadElement == null)
@@ -203,12 +245,9 @@ public class GameSystem : MonoBehaviour
         GameSystem system = g.GetComponent<GameSystem>();
         DestroyImmediate(system);
 
-        /**
-         * Game Systems Registration Point 2
-         */
         switch (value)
         {
-            case "Generic":
+            case "Generic System":
                 system = g.AddComponent<Generic>();
                 break;
             case "ICON 1.5":
@@ -225,4 +264,25 @@ public class GameSystem : MonoBehaviour
         system.Teardown();
         system.Setup();
     }
+}
+
+[Serializable]
+public class GamesystemSessionChecker
+{
+    public string System;
+
+    public static bool ValidateFile(string filename)
+    {
+        string session = File.ReadAllText(filename);
+        GamesystemSessionChecker check = JsonUtility.FromJson<GamesystemSessionChecker>(session);
+        string currentSystem = GameSystem.Current().SystemName();
+        if (check.System != currentSystem)
+        {
+            Toast.AddError($"Session system '{check.System}' does not match current system '{currentSystem}'.");
+            return false;
+        }
+        return true;
+    }
+
+
 }

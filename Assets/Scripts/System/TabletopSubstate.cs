@@ -38,6 +38,7 @@ public abstract class TabletopSubstate : BaseState
         UI.ToggleDisplay(UI.TopBar.Q("MarkerMode"), true);
         UI.ToggleDisplay(UI.TopBar.Q("Dice"), true);
         UI.ToggleDisplay(UI.TopBar.Q("Config"), true);
+        UI.ToggleDisplay(UI.TopBar.Q("Session"), true);
     }
 
     protected virtual void DisableInterface()
@@ -82,6 +83,11 @@ public abstract class TabletopSubstate : BaseState
     protected virtual void GoToConfig(ClickEvent evt)
     {
         Config.OpenModal(evt);
+    }
+
+    protected virtual void GoToSession(ClickEvent evt)
+    {
+        Session.OpenModal(evt);
     }
 
     protected void ChangeDragMode(ClickEvent evt)

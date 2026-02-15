@@ -43,6 +43,21 @@ public class FileBrowserHelper : MonoBehaviour
         StartCoroutine(ShowDialogCoroutine(false, FileBrowser.PickMode.Files, false, $"{Preferences.Current.DataPath}/ruledata", null, "Select a Rule File", "Select", onSelect, null));
     }
 
+    public static void OpenLoadSessionsBrowser(EventCallback<ClickEvent> onSelect, string fieldName)
+
+    {
+        FieldOrigin = fieldName;
+        Find().LoadSessionsBrowser(onSelect);
+    }
+
+    private void LoadSessionsBrowser(EventCallback<ClickEvent> onSelect)
+    {
+        FileBrowser.SetFilters(true, new FileBrowser.Filter("Sessions", ".json"));
+        FileBrowser.SetDefaultFilter(".json");
+        StartCoroutine(ShowDialogCoroutine(false, FileBrowser.PickMode.Files, false, $"{Preferences.Current.DataPath}/sessions", null, "Select a Session File", "Select", onSelect, null));
+    }
+
+
     public static void OpenLoadTokenBrowser()
     {
         Find().LoadTokenBrowser();

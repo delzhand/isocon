@@ -118,6 +118,26 @@ public class Player : NetworkBehaviour
         data.SystemData = systemData;
         NetworkServer.Spawn(g);
     }
+
+    public void CmdCreateTokenPlaced(string system, TokenMeta tokenMeta, string name, int size, Color color, string systemData, Vector3 position)
+    {
+        string id = Guid.NewGuid().ToString();
+        GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData"));
+        TokenData data = g.GetComponent<TokenData>();
+        data.Id = id;
+        data.System = system;
+        data.TokenMeta = tokenMeta;
+        data.Name = name;
+        data.Size = size;
+        data.Color = color;
+        data.SystemData = systemData;
+
+        data.Placed = true;
+        data.LastKnownPosition = position;
+        g.transform.localScale = Vector3.one;
+
+        NetworkServer.Spawn(g);
+    }
     #endregion
 
     #region Delete Token
@@ -128,6 +148,21 @@ public class Player : NetworkBehaviour
         FileLogger.Write($"Client {connectionToClient.connectionId} requested to delete token {data.Name}");
         RpcDeleteToken(tokenId);
         data.Destroyed = true;
+    }
+    [Command]
+    public void CmdRequestDeleteAllTokens()
+    {
+        FileLogger.Write($"Client {connectionToClient.connectionId} requested to delete all tokens");
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("TokenData"))
+        {
+            TokenData data = g.GetComponent<TokenData>();
+            if (data.Deletable && !data.Destroyed)
+            {
+                FileLogger.Write($"Client {connectionToClient.connectionId} requested to delete token {data.Name} ({data.Id})");
+                RpcDeleteToken(data.Id);
+                data.Destroyed = true;
+            }
+        }
     }
     [ClientRpc]
     public void RpcDeleteToken(string tokenId)

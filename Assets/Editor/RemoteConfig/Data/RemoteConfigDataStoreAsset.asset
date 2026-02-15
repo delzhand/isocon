@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"d5a5afd3-6631-487a-a9c1-37299d5200de\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"83e79ec2-9aa3-43ab-9cd7-d233ced2051f\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"0.7.4\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"a175efe4-664f-4d76-bfd0-2debe50256e7\"\r\n    },\r\n    \"rs\":
+    \"entityId\": \"ff801106-5e23-4ca8-8f0f-31d1156bdcb2\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f0e474ef-f8f4-4b0d-ac79-db98d275c4f4\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"350adb74-4110-42e2-86e8-baac239f0305\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
     \"Stats\": {\r\n            \"Yellow\": {\r\n              \"Speed\": 4,\r\n             
@@ -134,14 +134,138 @@ MonoBehaviour:
     \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
     \"Name\": \"Weakened+\",\r\n              \"Color\": \"Red\",\r\n             
     \"ModifierType\": \"None\"\r\n            }\r\n          ]\r\n        },\r\n       
-    \"Maleghast\": {\r\n          \"Houses\": [\r\n            {\r\n             
-    \"name\": \"CARCASS\",\r\n              \"color\": \"AC0079\",\r\n             
-    \"units\": [\r\n                {\r\n                  \"conditions\": \"\",\r\n                 
-    \"name\": \"Gunwight\",\r\n                  \"move\": 2,\r\n                 
-    \"actAbilities\": \"=OL45|=Baton\",\r\n                  \"upgrades\": \"-Brace|-Tactical
-    Reload|-Scavenge Ammo\",\r\n                  \"def\": 4,\r\n                 
-    \"hp\": 2,\r\n                  \"type\": \"Thrall\",\r\n                  \"traits\":
-    \"=Formation|=Thrall\"\r\n                },\r\n                {\r\n                 
+    \"Icon2_0\": {\r\n          \"PlayerJobs\": {\r\n            \"Stalwart/Tactician\":
+    [\r\n              40,\r\n              3,\r\n              4,\r\n             
+    \"Red\"\r\n            ],\r\n            \"Stalwart/Bastion\": [\r\n             
+    40,\r\n              3,\r\n              4,\r\n              \"Red\"\r\n           
+    ],\r\n            \"Stalwart/Breaker\": [\r\n              40,\r\n             
+    3,\r\n              4,\r\n              \"Red\"\r\n            ],\r\n           
+    \"Stalwart/Slayer\": [\r\n              40,\r\n              3,\r\n             
+    4,\r\n              \"Red\"\r\n            ],\r\n            \"Stalwart/Workshop
+    Knight\": [\r\n              40,\r\n              3,\r\n              4,\r\n             
+    \"Red\"\r\n            ],\r\n            \"Stalwart/Hawk Knight\": [\r\n             
+    40,\r\n              3,\r\n              4,\r\n              \"Red\"\r\n           
+    ],\r\n            \"Stalwart/Cleaver\": [\r\n              40,\r\n             
+    3,\r\n              4,\r\n              \"Red\"\r\n            ],\r\n           
+    \"Stalwart/Partizan\": [\r\n              40,\r\n              3,\r\n             
+    4,\r\n              \"Red\"\r\n            ],\r\n            \"Stalwart/Colossus\":
+    [\r\n              40,\r\n              3,\r\n              4,\r\n             
+    \"Red\"\r\n            ],\r\n            \"Stalwart/Knave\": [\r\n             
+    40,\r\n              3,\r\n              4,\r\n              \"Red\"\r\n           
+    ],\r\n            \"Stalwart/Bleak Knight\": [\r\n              40,\r\n             
+    3,\r\n              4,\r\n              \"Red\"\r\n            ],\r\n           
+    \"Stalwart/Corvidian\": [\r\n              40,\r\n              3,\r\n             
+    4,\r\n              \"Red\"\r\n            ],\r\n            \"Vagabond/Puppeteer\":
+    [\r\n              32,\r\n              6,\r\n              4,\r\n             
+    \"Yellow\"\r\n            ],\r\n            \"Vagabond/Weeping Assassin\": [\r\n             
+    32,\r\n              6,\r\n              4,\r\n              \"Yellow\"\r\n           
+    ],\r\n            \"Vagabond/Venomist\": [\r\n              32,\r\n             
+    6,\r\n              4,\r\n              \"Yellow\"\r\n            ],\r\n           
+    \"Vagabond/Dragoon\": [\r\n              32,\r\n              6,\r\n             
+    4,\r\n              \"Yellow\"\r\n            ],\r\n            \"Vagabond/Pathfinder\":
+    [\r\n              32,\r\n              6,\r\n              4,\r\n             
+    \"Yellow\"\r\n            ],\r\n            \"Vagabond/Freelancer\": [\r\n             
+    32,\r\n              6,\r\n              4,\r\n              \"Yellow\"\r\n           
+    ],\r\n            \"Vagabond/Rake\": [\r\n              32,\r\n             
+    6,\r\n              4,\r\n              \"Yellow\"\r\n            ],\r\n           
+    \"Vagabond/Fool\": [\r\n              32,\r\n              6,\r\n             
+    4,\r\n              \"Yellow\"\r\n            ],\r\n            \"Vagabond/Dancer\":
+    [\r\n              32,\r\n              6,\r\n              4,\r\n             
+    \"Yellow\"\r\n            ],\r\n            \"Vagabond/Stormscale\": [\r\n             
+    32,\r\n              6,\r\n              4,\r\n              \"Yellow\"\r\n           
+    ],\r\n            \"Vagabond/Warden\": [\r\n              32,\r\n             
+    6,\r\n              4,\r\n              \"Yellow\"\r\n            ],\r\n           
+    \"Vagabond/Blightrunner\": [\r\n              32,\r\n              6,\r\n             
+    4,\r\n              \"Yellow\"\r\n            ],\r\n            \"Mendicant/Chanter\":
+    [\r\n              48,\r\n              4,\r\n              4,\r\n             
+    \"Green\"\r\n            ],\r\n            \"Mendicant/Zephyr\": [\r\n             
+    48,\r\n              4,\r\n              4,\r\n              \"Green\"\r\n           
+    ],\r\n            \"Mendicant/Raconteur\": [\r\n              48,\r\n             
+    4,\r\n              4,\r\n              \"Green\"\r\n            ],\r\n           
+    \"Mendicant/Harvester\": [\r\n              48,\r\n              4,\r\n             
+    4,\r\n              \"Green\"\r\n            ],\r\n            \"Mendicant/Fair
+    Wright\": [\r\n              48,\r\n              4,\r\n              4,\r\n             
+    \"Green\"\r\n            ],\r\n            \"Mendicant/Herbalist\": [\r\n             
+    48,\r\n              4,\r\n              4,\r\n              \"Green\"\r\n           
+    ],\r\n            \"Mendicant/Sealer\": [\r\n              48,\r\n             
+    4,\r\n              4,\r\n              \"Green\"\r\n            ],\r\n           
+    \"Mendicant/Shrine Gaurdian\": [\r\n              48,\r\n              4,\r\n             
+    4,\r\n              \"Green\"\r\n            ],\r\n            \"Mendicant/Yaman\":
+    [\r\n              48,\r\n              4,\r\n              4,\r\n             
+    \"Green\"\r\n            ],\r\n            \"Mendicant/Seer\": [\r\n             
+    48,\r\n              4,\r\n              4,\r\n              \"Green\"\r\n           
+    ],\r\n            \"Mendicant/Chronomancer\": [\r\n              48,\r\n             
+    4,\r\n              4,\r\n              \"Green\"\r\n            ],\r\n           
+    \"Mendicant/Celestian\": [\r\n              48,\r\n              4,\r\n             
+    4,\r\n              \"Green\"\r\n            ],\r\n            \"Wright/Enochian\":
+    [\r\n              32,\r\n              4,\r\n              4,\r\n             
+    \"Blue\"\r\n            ],\r\n            \"Wright/Theurgist\": [\r\n             
+    32,\r\n              4,\r\n              4,\r\n              \"Blue\"\r\n           
+    ],\r\n            \"Wright/Runesmith\": [\r\n              32,\r\n             
+    4,\r\n              4,\r\n              \"Blue\"\r\n            ],\r\n           
+    \"Wright/Geomancer\": [\r\n              32,\r\n              4,\r\n             
+    4,\r\n              \"Blue\"\r\n            ],\r\n            \"Wright/Auran\":
+    [\r\n              32,\r\n              4,\r\n              4,\r\n             
+    \"Blue\"\r\n            ],\r\n            \"Wright/Alchemist\": [\r\n             
+    32,\r\n              4,\r\n              4,\r\n              \"Blue\"\r\n           
+    ],\r\n            \"Wright/Spellblade\": [\r\n              32,\r\n             
+    4,\r\n              4,\r\n              \"Blue\"\r\n            ],\r\n           
+    \"Wright/Wayfarer\": [\r\n              32,\r\n              4,\r\n             
+    4,\r\n              \"Blue\"\r\n            ],\r\n            \"Wright/Entropist\":
+    [\r\n              32,\r\n              4,\r\n              4,\r\n             
+    \"Blue\"\r\n            ],\r\n            \"Wright/Stormbender\": [\r\n             
+    32,\r\n              4,\r\n              4,\r\n              \"Blue\"\r\n           
+    ],\r\n            \"Wright/Mistwalker\": [\r\n              32,\r\n             
+    4,\r\n              4,\r\n              \"Blue\"\r\n            ],\r\n           
+    \"Wright/Snowbinder\": [\r\n              32,\r\n              4,\r\n             
+    4,\r\n              \"Blue\"\r\n            ]\r\n          },\r\n          \"FoeClasses\":
+    {\r\n            \"Heavy\": [\r\n              40,\r\n              3,\r\n             
+    4,\r\n              \"Red\"\r\n            ],\r\n            \"Artillery\": [\r\n             
+    32,\r\n              4,\r\n              4,\r\n              \"Blue\"\r\n           
+    ],\r\n            \"Skirmisher\": [\r\n              32,\r\n              6,\r\n             
+    4,\r\n              \"Yellow\"\r\n            ],\r\n            \"Leader\": [\r\n             
+    48,\r\n              4,\r\n              4,\r\n              \"Green\"\r\n           
+    ],\r\n            \"Mob\": [\r\n              2,\r\n              4,\r\n             
+    4,\r\n              \"Purple\"\r\n            ],\r\n            \"Legend\": [\r\n             
+    40,\r\n              4,\r\n              4,\r\n              \"Purple\"\r\n           
+    ]\r\n          },\r\n          \"StatusEffects\": [\r\n            {\r\n             
+    \"Name\": \"Strength\",\r\n              \"Color\": \"Blue\",\r\n             
+    \"ModifierType\": \"Number\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Keen\",\r\n              \"Color\": \"Blue\",\r\n              \"ModifierType\":
+    \"Number\"\r\n            },\r\n            {\r\n              \"Name\": \"Shield\",\r\n             
+    \"Color\": \"Blue\",\r\n              \"ModifierType\": \"Number\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Haste\",\r\n              \"Color\":
+    \"Blue\",\r\n              \"ModifierType\": \"Number\"\r\n            },\r\n           
+    {\r\n              \"Name\": \"Evasion\",\r\n              \"Color\": \"Blue\",\r\n             
+    \"ModifierType\": \"Number\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Reckless\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"Number\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Sturdy\",\r\n              \"Color\": \"Blue\",\r\n             
+    \"ModifierType\": \"Number\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Stealth\",\r\n              \"Color\": \"Blue\",\r\n             
+    \"ModifierType\": \"Number\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Daze\",\r\n              \"Color\": \"Red\",\r\n              \"ModifierType\":
+    \"Number\"\r\n            },\r\n            {\r\n              \"Name\": \"Blind\",\r\n             
+    \"Color\": \"Red\",\r\n              \"ModifierType\": \"Number\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Branded\",\r\n             
+    \"Color\": \"Red\",\r\n              \"ModifierType\": \"Number\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Slow\",\r\n              \"Color\":
+    \"Red\",\r\n              \"ModifierType\": \"Number\"\r\n            },\r\n           
+    {\r\n              \"Name\": \"Stun\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"Number\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Hatred\",\r\n              \"Color\": \"Red\",\r\n              \"ModifierType\":
+    \"Number\"\r\n            },\r\n            {\r\n              \"Name\": \"Shadow
+    Venom\",\r\n              \"Color\": \"Red\",\r\n              \"ModifierType\":
+    \"Number\"\r\n            },\r\n            {\r\n              \"Name\": \"Petrification\",\r\n             
+    \"Color\": \"Red\",\r\n              \"ModifierType\": \"Number\"\r\n           
+    }\r\n          ]\r\n        },\r\n        \"Maleghast\": {\r\n          \"Houses\":
+    [\r\n            {\r\n              \"name\": \"CARCASS\",\r\n              \"color\":
+    \"AC0079\",\r\n              \"units\": [\r\n                {\r\n                 
+    \"conditions\": \"\",\r\n                  \"name\": \"Gunwight\",\r\n                 
+    \"move\": 2,\r\n                  \"actAbilities\": \"=OL45|=Baton\",\r\n                 
+    \"upgrades\": \"-Brace|-Tactical Reload|-Scavenge Ammo\",\r\n                 
+    \"def\": 4,\r\n                  \"hp\": 2,\r\n                  \"type\": \"Thrall\",\r\n                 
+    \"traits\": \"=Formation|=Thrall\"\r\n                },\r\n                {\r\n                 
     \"conditions\": \"\",\r\n                  \"name\": \"Ammo Goblin\",\r\n                 
     \"move\": 3,\r\n                  \"actAbilities\": \"=Regurgitate Ammo|=Bone
     Shards|=Destructive Glee\",\r\n                  \"upgrades\": \"-Vomit Bullets|-Napalm
@@ -408,15 +532,15 @@ MonoBehaviour:
     \"Retaliation\",\r\n            \"Reload\",\r\n            \"Physical Armor\",\r\n           
     \"Magic Armor\",\r\n            \"Super Armor\"\r\n          ]\r\n        }\r\n     
     }\r\n    }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"d5a5afd3-6631-487a-a9c1-37299d5200de\"\r\n   
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"83e79ec2-9aa3-43ab-9cd7-d233ced2051f\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"LatestVersion\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"0.7.4\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"a175efe4-664f-4d76-bfd0-2debe50256e7\"\r\n    },\r\n    \"rs\":
+    \"entityId\": \"ff801106-5e23-4ca8-8f0f-31d1156bdcb2\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"LatestMessage\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"IsoCON is still in beta! Multiplayer features are P2P and may require
     the host player to have port forwarding enabled for port 7777. Client and hosts
     may need to disable VPN. Please send any feedback or bug reports to isocondev@gmail.com.\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f0e474ef-f8f4-4b0d-ac79-db98d275c4f4\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"350adb74-4110-42e2-86e8-baac239f0305\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"GameSystem\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"Icon1_5\": {\r\n         
     \"Stats\": {\r\n            \"Yellow\": {\r\n              \"Speed\": 4,\r\n             
@@ -530,14 +654,138 @@ MonoBehaviour:
     \"ModifierType\": \"None\"\r\n            },\r\n            {\r\n             
     \"Name\": \"Weakened+\",\r\n              \"Color\": \"Red\",\r\n             
     \"ModifierType\": \"None\"\r\n            }\r\n          ]\r\n        },\r\n       
-    \"Maleghast\": {\r\n          \"Houses\": [\r\n            {\r\n             
-    \"name\": \"CARCASS\",\r\n              \"color\": \"AC0079\",\r\n             
-    \"units\": [\r\n                {\r\n                  \"conditions\": \"\",\r\n                 
-    \"name\": \"Gunwight\",\r\n                  \"move\": 2,\r\n                 
-    \"actAbilities\": \"=OL45|=Baton\",\r\n                  \"upgrades\": \"-Brace|-Tactical
-    Reload|-Scavenge Ammo\",\r\n                  \"def\": 4,\r\n                 
-    \"hp\": 2,\r\n                  \"type\": \"Thrall\",\r\n                  \"traits\":
-    \"=Formation|=Thrall\"\r\n                },\r\n                {\r\n                 
+    \"Icon2_0\": {\r\n          \"PlayerJobs\": {\r\n            \"Stalwart/Tactician\":
+    [\r\n              40,\r\n              3,\r\n              4,\r\n             
+    \"Red\"\r\n            ],\r\n            \"Stalwart/Bastion\": [\r\n             
+    40,\r\n              3,\r\n              4,\r\n              \"Red\"\r\n           
+    ],\r\n            \"Stalwart/Breaker\": [\r\n              40,\r\n             
+    3,\r\n              4,\r\n              \"Red\"\r\n            ],\r\n           
+    \"Stalwart/Slayer\": [\r\n              40,\r\n              3,\r\n             
+    4,\r\n              \"Red\"\r\n            ],\r\n            \"Stalwart/Workshop
+    Knight\": [\r\n              40,\r\n              3,\r\n              4,\r\n             
+    \"Red\"\r\n            ],\r\n            \"Stalwart/Hawk Knight\": [\r\n             
+    40,\r\n              3,\r\n              4,\r\n              \"Red\"\r\n           
+    ],\r\n            \"Stalwart/Cleaver\": [\r\n              40,\r\n             
+    3,\r\n              4,\r\n              \"Red\"\r\n            ],\r\n           
+    \"Stalwart/Partizan\": [\r\n              40,\r\n              3,\r\n             
+    4,\r\n              \"Red\"\r\n            ],\r\n            \"Stalwart/Colossus\":
+    [\r\n              40,\r\n              3,\r\n              4,\r\n             
+    \"Red\"\r\n            ],\r\n            \"Stalwart/Knave\": [\r\n             
+    40,\r\n              3,\r\n              4,\r\n              \"Red\"\r\n           
+    ],\r\n            \"Stalwart/Bleak Knight\": [\r\n              40,\r\n             
+    3,\r\n              4,\r\n              \"Red\"\r\n            ],\r\n           
+    \"Stalwart/Corvidian\": [\r\n              40,\r\n              3,\r\n             
+    4,\r\n              \"Red\"\r\n            ],\r\n            \"Vagabond/Puppeteer\":
+    [\r\n              32,\r\n              6,\r\n              4,\r\n             
+    \"Yellow\"\r\n            ],\r\n            \"Vagabond/Weeping Assassin\": [\r\n             
+    32,\r\n              6,\r\n              4,\r\n              \"Yellow\"\r\n           
+    ],\r\n            \"Vagabond/Venomist\": [\r\n              32,\r\n             
+    6,\r\n              4,\r\n              \"Yellow\"\r\n            ],\r\n           
+    \"Vagabond/Dragoon\": [\r\n              32,\r\n              6,\r\n             
+    4,\r\n              \"Yellow\"\r\n            ],\r\n            \"Vagabond/Pathfinder\":
+    [\r\n              32,\r\n              6,\r\n              4,\r\n             
+    \"Yellow\"\r\n            ],\r\n            \"Vagabond/Freelancer\": [\r\n             
+    32,\r\n              6,\r\n              4,\r\n              \"Yellow\"\r\n           
+    ],\r\n            \"Vagabond/Rake\": [\r\n              32,\r\n             
+    6,\r\n              4,\r\n              \"Yellow\"\r\n            ],\r\n           
+    \"Vagabond/Fool\": [\r\n              32,\r\n              6,\r\n             
+    4,\r\n              \"Yellow\"\r\n            ],\r\n            \"Vagabond/Dancer\":
+    [\r\n              32,\r\n              6,\r\n              4,\r\n             
+    \"Yellow\"\r\n            ],\r\n            \"Vagabond/Stormscale\": [\r\n             
+    32,\r\n              6,\r\n              4,\r\n              \"Yellow\"\r\n           
+    ],\r\n            \"Vagabond/Warden\": [\r\n              32,\r\n             
+    6,\r\n              4,\r\n              \"Yellow\"\r\n            ],\r\n           
+    \"Vagabond/Blightrunner\": [\r\n              32,\r\n              6,\r\n             
+    4,\r\n              \"Yellow\"\r\n            ],\r\n            \"Mendicant/Chanter\":
+    [\r\n              48,\r\n              4,\r\n              4,\r\n             
+    \"Green\"\r\n            ],\r\n            \"Mendicant/Zephyr\": [\r\n             
+    48,\r\n              4,\r\n              4,\r\n              \"Green\"\r\n           
+    ],\r\n            \"Mendicant/Raconteur\": [\r\n              48,\r\n             
+    4,\r\n              4,\r\n              \"Green\"\r\n            ],\r\n           
+    \"Mendicant/Harvester\": [\r\n              48,\r\n              4,\r\n             
+    4,\r\n              \"Green\"\r\n            ],\r\n            \"Mendicant/Fair
+    Wright\": [\r\n              48,\r\n              4,\r\n              4,\r\n             
+    \"Green\"\r\n            ],\r\n            \"Mendicant/Herbalist\": [\r\n             
+    48,\r\n              4,\r\n              4,\r\n              \"Green\"\r\n           
+    ],\r\n            \"Mendicant/Sealer\": [\r\n              48,\r\n             
+    4,\r\n              4,\r\n              \"Green\"\r\n            ],\r\n           
+    \"Mendicant/Shrine Gaurdian\": [\r\n              48,\r\n              4,\r\n             
+    4,\r\n              \"Green\"\r\n            ],\r\n            \"Mendicant/Yaman\":
+    [\r\n              48,\r\n              4,\r\n              4,\r\n             
+    \"Green\"\r\n            ],\r\n            \"Mendicant/Seer\": [\r\n             
+    48,\r\n              4,\r\n              4,\r\n              \"Green\"\r\n           
+    ],\r\n            \"Mendicant/Chronomancer\": [\r\n              48,\r\n             
+    4,\r\n              4,\r\n              \"Green\"\r\n            ],\r\n           
+    \"Mendicant/Celestian\": [\r\n              48,\r\n              4,\r\n             
+    4,\r\n              \"Green\"\r\n            ],\r\n            \"Wright/Enochian\":
+    [\r\n              32,\r\n              4,\r\n              4,\r\n             
+    \"Blue\"\r\n            ],\r\n            \"Wright/Theurgist\": [\r\n             
+    32,\r\n              4,\r\n              4,\r\n              \"Blue\"\r\n           
+    ],\r\n            \"Wright/Runesmith\": [\r\n              32,\r\n             
+    4,\r\n              4,\r\n              \"Blue\"\r\n            ],\r\n           
+    \"Wright/Geomancer\": [\r\n              32,\r\n              4,\r\n             
+    4,\r\n              \"Blue\"\r\n            ],\r\n            \"Wright/Auran\":
+    [\r\n              32,\r\n              4,\r\n              4,\r\n             
+    \"Blue\"\r\n            ],\r\n            \"Wright/Alchemist\": [\r\n             
+    32,\r\n              4,\r\n              4,\r\n              \"Blue\"\r\n           
+    ],\r\n            \"Wright/Spellblade\": [\r\n              32,\r\n             
+    4,\r\n              4,\r\n              \"Blue\"\r\n            ],\r\n           
+    \"Wright/Wayfarer\": [\r\n              32,\r\n              4,\r\n             
+    4,\r\n              \"Blue\"\r\n            ],\r\n            \"Wright/Entropist\":
+    [\r\n              32,\r\n              4,\r\n              4,\r\n             
+    \"Blue\"\r\n            ],\r\n            \"Wright/Stormbender\": [\r\n             
+    32,\r\n              4,\r\n              4,\r\n              \"Blue\"\r\n           
+    ],\r\n            \"Wright/Mistwalker\": [\r\n              32,\r\n             
+    4,\r\n              4,\r\n              \"Blue\"\r\n            ],\r\n           
+    \"Wright/Snowbinder\": [\r\n              32,\r\n              4,\r\n             
+    4,\r\n              \"Blue\"\r\n            ]\r\n          },\r\n          \"FoeClasses\":
+    {\r\n            \"Heavy\": [\r\n              40,\r\n              3,\r\n             
+    4,\r\n              \"Red\"\r\n            ],\r\n            \"Artillery\": [\r\n             
+    32,\r\n              4,\r\n              4,\r\n              \"Blue\"\r\n           
+    ],\r\n            \"Skirmisher\": [\r\n              32,\r\n              6,\r\n             
+    4,\r\n              \"Yellow\"\r\n            ],\r\n            \"Leader\": [\r\n             
+    48,\r\n              4,\r\n              4,\r\n              \"Green\"\r\n           
+    ],\r\n            \"Mob\": [\r\n              2,\r\n              4,\r\n             
+    4,\r\n              \"Purple\"\r\n            ],\r\n            \"Legend\": [\r\n             
+    40,\r\n              4,\r\n              4,\r\n              \"Purple\"\r\n           
+    ]\r\n          },\r\n          \"StatusEffects\": [\r\n            {\r\n             
+    \"Name\": \"Strength\",\r\n              \"Color\": \"Blue\",\r\n             
+    \"ModifierType\": \"Number\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Keen\",\r\n              \"Color\": \"Blue\",\r\n              \"ModifierType\":
+    \"Number\"\r\n            },\r\n            {\r\n              \"Name\": \"Shield\",\r\n             
+    \"Color\": \"Blue\",\r\n              \"ModifierType\": \"Number\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Haste\",\r\n              \"Color\":
+    \"Blue\",\r\n              \"ModifierType\": \"Number\"\r\n            },\r\n           
+    {\r\n              \"Name\": \"Evasion\",\r\n              \"Color\": \"Blue\",\r\n             
+    \"ModifierType\": \"Number\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Reckless\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"Number\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Sturdy\",\r\n              \"Color\": \"Blue\",\r\n             
+    \"ModifierType\": \"Number\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Stealth\",\r\n              \"Color\": \"Blue\",\r\n             
+    \"ModifierType\": \"Number\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Daze\",\r\n              \"Color\": \"Red\",\r\n              \"ModifierType\":
+    \"Number\"\r\n            },\r\n            {\r\n              \"Name\": \"Blind\",\r\n             
+    \"Color\": \"Red\",\r\n              \"ModifierType\": \"Number\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Branded\",\r\n             
+    \"Color\": \"Red\",\r\n              \"ModifierType\": \"Number\"\r\n           
+    },\r\n            {\r\n              \"Name\": \"Slow\",\r\n              \"Color\":
+    \"Red\",\r\n              \"ModifierType\": \"Number\"\r\n            },\r\n           
+    {\r\n              \"Name\": \"Stun\",\r\n              \"Color\": \"Red\",\r\n             
+    \"ModifierType\": \"Number\"\r\n            },\r\n            {\r\n             
+    \"Name\": \"Hatred\",\r\n              \"Color\": \"Red\",\r\n              \"ModifierType\":
+    \"Number\"\r\n            },\r\n            {\r\n              \"Name\": \"Shadow
+    Venom\",\r\n              \"Color\": \"Red\",\r\n              \"ModifierType\":
+    \"Number\"\r\n            },\r\n            {\r\n              \"Name\": \"Petrification\",\r\n             
+    \"Color\": \"Red\",\r\n              \"ModifierType\": \"Number\"\r\n           
+    }\r\n          ]\r\n        },\r\n        \"Maleghast\": {\r\n          \"Houses\":
+    [\r\n            {\r\n              \"name\": \"CARCASS\",\r\n              \"color\":
+    \"AC0079\",\r\n              \"units\": [\r\n                {\r\n                 
+    \"conditions\": \"\",\r\n                  \"name\": \"Gunwight\",\r\n                 
+    \"move\": 2,\r\n                  \"actAbilities\": \"=OL45|=Baton\",\r\n                 
+    \"upgrades\": \"-Brace|-Tactical Reload|-Scavenge Ammo\",\r\n                 
+    \"def\": 4,\r\n                  \"hp\": 2,\r\n                  \"type\": \"Thrall\",\r\n                 
+    \"traits\": \"=Formation|=Thrall\"\r\n                },\r\n                {\r\n                 
     \"conditions\": \"\",\r\n                  \"name\": \"Ammo Goblin\",\r\n                 
     \"move\": 3,\r\n                  \"actAbilities\": \"=Regurgitate Ammo|=Bone
     Shards|=Destructive Glee\",\r\n                  \"upgrades\": \"-Vomit Bullets|-Napalm

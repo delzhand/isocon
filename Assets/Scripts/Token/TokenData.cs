@@ -29,6 +29,8 @@ public class TokenData : NetworkBehaviour
     [SyncVar]
     public bool Destroyed;
     [SyncVar]
+    public bool Deletable;
+    [SyncVar]
     public bool Placed;
     [SyncVar]
     public Vector3 LastKnownPosition;
@@ -58,6 +60,7 @@ public class TokenData : NetworkBehaviour
     {
         if (Destroyed)
         {
+            Destroy(gameObject);
             return;
         }
 

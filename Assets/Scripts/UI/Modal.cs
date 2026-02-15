@@ -392,7 +392,7 @@ public class Modal
         Modal.AddContents(wrapper);
     }
 
-    public static void AddFileField(string name, string label, string defaultValue)
+    public static void AddFileField(string name, string label, string defaultValue, string type)
     {
         TextField field = new(label);
         field.name = "File";
@@ -402,10 +402,22 @@ public class Modal
 
         Button search = new();
         search.text = "Search";
-        search.RegisterCallback<ClickEvent>((evt) =>
+        ClickEvent ce = null;
+        switch (type)
         {
-            FileBrowserHelper.OpenLoadRulesBrowser(ConfirmFileFieldSelect, "RulesFile");
-        });
+            case "rules":
+                search.RegisterCallback<ClickEvent>((evt) =>
+                {
+                    FileBrowserHelper.OpenLoadRulesBrowser(ConfirmFileFieldSelect, "RulesFile");
+                });
+                break;
+            case "sessions":
+                search.RegisterCallback<ClickEvent>((evt) =>
+                {
+                    FileBrowserHelper.OpenLoadSessionsBrowser(ConfirmFileFieldSelect, "SessionFile");
+                });
+                break;
+        }
 
         VisualElement wrapper = new();
         wrapper.name = name;

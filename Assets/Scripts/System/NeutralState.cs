@@ -65,10 +65,15 @@ public class NeutralState : TabletopSubstate
         }
 
         if (Input.GetKeyUp(KeyCode.X))
-
         {
             ShowConsole(new ClickEvent());
         }
+
+        if (Input.GetKeyUp(KeyCode.S))
+        {
+            GoToSession(new ClickEvent());
+        }
+
         if (Input.GetKeyUp(KeyCode.V))
         {
             FixView(new ClickEvent());
@@ -91,9 +96,9 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("MarkerMode").RegisterCallback<ClickEvent>(GoToMarking);
         UI.TopBar.Q("DragMode").RegisterCallback<ClickEvent>(ChangeDragMode);
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(GoToConfig);
+        UI.TopBar.Q("Session").RegisterCallback<ClickEvent>(GoToSession);
         UI.TopBar.Q("FixedView").RegisterCallback<ClickEvent>(FixView);
         UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
-        UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(Config.OpenModal);
         UI.System.Q("BottomRight").Q("AddToken").RegisterCallback<ClickEvent>(ShowAddTokenModal);
         UI.System.Q("BottomRight").Q("DeployToken").RegisterCallback<ClickEvent>(ToggleBottomBar);
         UI.System.Q<Button>("TurnAdvance").RegisterCallback<ClickEvent>(AdvanceRound);
@@ -110,8 +115,8 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("MarkerMode").UnregisterCallback<ClickEvent>(GoToMarking);
         UI.TopBar.Q("DragMode").UnregisterCallback<ClickEvent>(ChangeDragMode);
         UI.TopBar.Q("Config").UnregisterCallback<ClickEvent>(GoToConfig);
+        UI.TopBar.Q("Session").UnregisterCallback<ClickEvent>(GoToSession);
         UI.TopBar.Q("Dice").UnregisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
-        UI.TopBar.Q("Config").UnregisterCallback<ClickEvent>(Config.OpenModal);
         UI.System.Q("BottomRight").Q("AddToken").UnregisterCallback<ClickEvent>(ShowAddTokenModal);
         UI.System.Q("BottomRight").Q("DeployToken").UnregisterCallback<ClickEvent>(ToggleBottomBar);
         UI.System.Q<Button>("TurnAdvance").UnregisterCallback<ClickEvent>(AdvanceRound);

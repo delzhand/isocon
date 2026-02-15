@@ -6,6 +6,7 @@ using Unity.Services.RemoteConfig;
 using UnityEngine;
 using UnityEngine.UIElements;
 using SimpleFileBrowser;
+using System.Linq;
 
 public class LauncherState : BaseState
 {
@@ -142,10 +143,8 @@ public class LauncherState : BaseState
         {
             string system = Preferences.Current.System;
 
-            /**
-             * Game Systems Entry Point
-             */
-            Modal.AddDropdownField("GameSystem", "Game System", system, new string[] { "Generic", "ICON 1.5", "ICON 2.0 Playtest", "Maleghast"/*, "Lancer"*/}, (evt) =>
+            string[] systemOptions = GameSystem.SystemOptions();
+            Modal.AddDropdownField("GameSystem", "Game System", system, systemOptions, (evt) =>
             {
                 Preferences.SetSystem(evt.newValue);
                 ConfigModalEvaluateConditions();
@@ -167,16 +166,16 @@ public class LauncherState : BaseState
             });
 
             string rulesFile = Preferences.Current.RulesFile;
-            Modal.AddFileField("RulesFile", "Homebrew File", rulesFile);
+            Modal.AddFileField("RulesFile", "Homebrew File", rulesFile, "rules");
         }
 
         if (_mode == ConnectMode.Host)
         {
             int maxPlayers = Preferences.Current.PlayerCount;
             Modal.AddIntField("PlayerCount", "Max Player Count", maxPlayers, (evt) =>
-            {
-                Preferences.SetPlayerCount(evt.newValue);
-            });
+                    {
+                        Preferences.SetPlayerCount(evt.newValue);
+                    });
         }
 
         if (_mode == ConnectMode.Client)
@@ -202,7 +201,8 @@ public class LauncherState : BaseState
             /**
              * Game System Grid Type
              */
-            bool grid = StringUtility.CheckInList(UI.Modal.Q<DropdownField>("GameSystem").value, "Generic", "Lancer");
+            string[] hexSystems = GameSystem.HexOptionalSystems();
+            bool grid = StringUtility.CheckInList(UI.Modal.Q<DropdownField>("GameSystem").value, hexSystems);
             bool hex = Preferences.Current.Grid == "Hex";
             UI.ToggleDisplay(UI.Modal.Q("GridType"), grid);
             UI.ToggleDisplay("HexMessage", grid && hex);

@@ -326,7 +326,9 @@ public class Maleghast : GameSystem
             color = ColorUtility.GetColor(FindHouse(colorValue)["color"]);
         }
 
-        Player.Self().CmdCreateToken("Maleghast", tokenMeta, name, size, Color.black, JsonUtility.ToJson(data));
+        data.ColorHex = ColorUtility.GetHex(color);
+
+        Player.Self().CmdCreateToken(SystemName(), tokenMeta, name, size, color, JsonUtility.ToJson(data));
     }
 
     public override MenuItem[] GetTileMenuItems()
@@ -577,6 +579,62 @@ public class Maleghast : GameSystem
         UI.ToggleDisplay(panel.Q("Configuration"), sysdata.Type != "Object");
         UI.ToggleDisplay(panel.Q("Status"), sysdata.Type != "Object");
     }
+
+    private void DeserializeToken(MaleghastTokenPersistence tp)
+    {
+        Color color = ColorUtility.GetColor(tp.Color);
+        string data = JsonUtility.ToJson(tp.SystemData);
+        Player.Self().CmdCreateTokenPlaced(SystemName(), tp.TokenMeta, tp.Name, tp.Size, color, data, tp.Position);
+    }
+
+    private MaleghastTokenPersistence PersistToken(string tokenId)
+    {
+        TokenData data = TokenData.Find(tokenId);
+        MaleghastTokenPersistence p = new();
+        p.Name = data.Name;
+        p.SystemData = JsonUtility.FromJson<MaleghastData>(data.SystemData);
+        p.TokenMeta = data.TokenMeta;
+        p.Color = p.SystemData.ColorHex;
+        p.Position = data.LastKnownPosition;
+        p.Size = data.Size;
+        return p;
+    }
+
+    public override void SerializeSession(string filename)
+    {
+        List<MaleghastTokenPersistence> tps = new();
+        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
+        for (int i = 0; i < tokens.Length; i++)
+        {
+            MaleghastTokenPersistence tp = PersistToken(tokens[i].GetComponent<Token>().Data.Id);
+            tps.Add(tp);
+        }
+
+        MaleghastSessionPersistence sp = new();
+        sp.System = SystemName();
+        sp.RoundNumber = RoundNumber;
+        sp.Tokens = tps.ToArray();
+        string session = JsonUtility.ToJson(sp);
+        WriteSessionToFile(session, filename);
+    }
+
+    public override void DeserializeSession(string filename)
+    {
+        if (!GamesystemSessionChecker.ValidateFile(filename))
+        {
+            return;
+        }
+
+        string session = System.IO.File.ReadAllText(filename);
+        MaleghastSessionPersistence sp = JsonUtility.FromJson<MaleghastSessionPersistence>(session);
+        Player.Self().CmdRequestDeleteAllTokens();
+        RoundNumber = sp.RoundNumber;
+        foreach (MaleghastTokenPersistence tp in sp.Tokens)
+        {
+            DeserializeToken(tp);
+        }
+        Player.Self().CmdRequestClientInit();
+    }
 }
 
 [Serializable]
@@ -590,6 +648,7 @@ public class MaleghastData
     public string Job;
     public int Move;
     public int Defense;
+    public string ColorHex;
     public string[] Traits;
     public string[] ActAbilities;
     public string[] SoulAbilities;
@@ -757,4 +816,23 @@ public class MaleghastData
             }
         }
     }
+}
+
+[Serializable]
+public class MaleghastTokenPersistence
+{
+    public string Name;
+    public TokenMeta TokenMeta;
+    public MaleghastData SystemData;
+    public string Color;
+    public int Size;
+    public Vector3 Position;
+}
+
+[Serializable]
+public class MaleghastSessionPersistence
+{
+    public string System;
+    public int RoundNumber;
+    public MaleghastTokenPersistence[] Tokens;
 }

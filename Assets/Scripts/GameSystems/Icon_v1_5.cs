@@ -310,12 +310,12 @@ public class Icon_v1_5 : GameSystem
             for (int i = 0; i < count; i++)
             {
                 string cloneName = $"{name} {StringUtility.ConvertIntToAlpha(i + 1)}";
-                Player.Self().CmdCreateToken("Icon v1.5", tokenMeta, cloneName, size, color, JsonUtility.ToJson(data));
+                Player.Self().CmdCreateToken(SystemName(), tokenMeta, cloneName, size, color, JsonUtility.ToJson(data));
             }
         }
         else
         {
-            Player.Self().CmdCreateToken("Icon v1.5", tokenMeta, name, size, color, JsonUtility.ToJson(data));
+            Player.Self().CmdCreateToken(SystemName(), tokenMeta, name, size, color, JsonUtility.ToJson(data));
         }
     }
 
@@ -656,6 +656,64 @@ public class Icon_v1_5 : GameSystem
             }
         }
     }
+
+    private void DeserializeToken(Icon1_5TokenPersistence tp)
+    {
+        Color color = GetColor(tp.Color);
+        string data = JsonUtility.ToJson(tp.SystemData);
+        Player.Self().CmdCreateTokenPlaced("Icon v1.5", tp.TokenMeta, tp.Name, tp.Size, color, data, tp.Position);
+    }
+
+    private Icon1_5TokenPersistence PersistToken(string tokenId)
+    {
+        TokenData data = TokenData.Find(tokenId);
+        Icon1_5TokenPersistence p = new();
+        p.Name = data.Name;
+        p.SystemData = JsonUtility.FromJson<Icon1_5Data>(data.SystemData);
+        p.TokenMeta = data.TokenMeta;
+        p.Color = p.SystemData.ColorName;
+        p.Position = data.LastKnownPosition;
+        p.Size = data.Size;
+        return p;
+    }
+
+    public override void SerializeSession(string filename)
+    {
+        List<Icon1_5TokenPersistence> tps = new();
+        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
+        for (int i = 0; i < tokens.Length; i++)
+        {
+            Icon1_5TokenPersistence tp = PersistToken(tokens[i].GetComponent<Token>().Data.Id);
+            tps.Add(tp);
+        }
+
+        Icon1_5SessionPersistence sp = new();
+        sp.System = SystemName();
+        sp.PartyResolve = PartyResolve;
+        sp.RoundNumber = RoundNumber;
+        sp.Tokens = tps.ToArray();
+        string session = JsonUtility.ToJson(sp);
+        WriteSessionToFile(session, filename);
+    }
+
+    public override void DeserializeSession(string filename)
+    {
+        if (!GamesystemSessionChecker.ValidateFile(filename))
+        {
+            return;
+        }
+
+        string session = System.IO.File.ReadAllText(filename);
+        Icon1_5SessionPersistence sp = JsonUtility.FromJson<Icon1_5SessionPersistence>(session);
+        Player.Self().CmdRequestDeleteAllTokens();
+        PartyResolve = sp.PartyResolve;
+        RoundNumber = sp.RoundNumber;
+        foreach (Icon1_5TokenPersistence tp in sp.Tokens)
+        {
+            DeserializeToken(tp);
+        }
+        Player.Self().CmdRequestClientInit();
+    }
 }
 
 [Serializable]
@@ -708,6 +766,7 @@ public class Icon1_5Data
     public int Speed;
     public int Dash;
     public int Defense;
+    public string ColorName;
     public Icon1_5Condition[] Status;
 
     public void Change(string value, Token token, bool placed)
@@ -973,3 +1032,22 @@ public class Icon1_5Data
     }
 }
 
+[Serializable]
+public class Icon1_5TokenPersistence
+{
+    public string Name;
+    public TokenMeta TokenMeta;
+    public Icon1_5Data SystemData;
+    public string Color;
+    public int Size;
+    public Vector3 Position;
+}
+
+[Serializable]
+public class Icon1_5SessionPersistence
+{
+    public string System;
+    public int PartyResolve;
+    public int RoundNumber;
+    public Icon1_5TokenPersistence[] Tokens;
+}

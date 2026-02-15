@@ -7,8 +7,7 @@ using System;
 using IsoconUILibrary;
 using SimpleJSON;
 using Random = UnityEngine.Random;
-using Unity.VisualScripting;
-using UnityEditor.ShaderGraph.Serialization;
+using System.IO;
 
 public class Icon_v2_0 : GameSystem
 {
@@ -250,6 +249,64 @@ public class Icon_v2_0 : GameSystem
         UI.ToggleDisplay(UI.Modal.Q("CloneCount"), cloneCount);
     }
 
+    private void DeserializeToken(Icon2_0TokenPersistence tp)
+    {
+        Color color = GetColor(tp.Color);
+        string data = JsonUtility.ToJson(tp.SystemData);
+        Player.Self().CmdCreateTokenPlaced(SystemName(), tp.TokenMeta, tp.Name, tp.Size, color, data, tp.Position);
+    }
+
+    private Icon2_0TokenPersistence PersistToken(string tokenId)
+    {
+        TokenData data = TokenData.Find(tokenId);
+        Icon2_0TokenPersistence p = new();
+        p.Name = data.Name;
+        p.SystemData = JsonUtility.FromJson<Icon2_0Data>(data.SystemData);
+        p.TokenMeta = data.TokenMeta;
+        p.Color = p.SystemData.ColorName;
+        p.Position = data.LastKnownPosition;
+        p.Size = data.Size;
+        return p;
+    }
+
+    public override void SerializeSession(string filename)
+    {
+        List<Icon2_0TokenPersistence> tps = new();
+        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
+        for (int i = 0; i < tokens.Length; i++)
+        {
+            Icon2_0TokenPersistence tp = PersistToken(tokens[i].GetComponent<Token>().Data.Id);
+            tps.Add(tp);
+        }
+
+        Icon2_0SessionPersistence sp = new();
+        sp.System = SystemName();
+        sp.PartyResolve = PartyResolve;
+        sp.RoundNumber = RoundNumber;
+        sp.Tokens = tps.ToArray();
+        string session = JsonUtility.ToJson(sp);
+        WriteSessionToFile(session, filename);
+    }
+
+    public override void DeserializeSession(string filename)
+    {
+        if (!GamesystemSessionChecker.ValidateFile(filename))
+        {
+            return;
+        }
+
+        string session = System.IO.File.ReadAllText(filename);
+        Icon2_0SessionPersistence sp = JsonUtility.FromJson<Icon2_0SessionPersistence>(session);
+        Player.Self().CmdRequestDeleteAllTokens();
+        PartyResolve = sp.PartyResolve;
+        RoundNumber = sp.RoundNumber;
+        foreach (Icon2_0TokenPersistence tp in sp.Tokens)
+        {
+            DeserializeToken(tp);
+        }
+        Player.Self().CmdRequestClientInit();
+    }
+
     public override void CreateToken()
     {
         string name = UI.Modal.Q<TextField>("NameField").value;
@@ -281,7 +338,7 @@ public class Icon_v2_0 : GameSystem
             data.MaxHP = stats[0];
             data.Move = stats[1];
             data.Defense = stats[2];
-            data.TColor = stats[3];
+            data.ColorName = stats[3];
         }
         else if (type == "Foe")
         {
@@ -292,7 +349,7 @@ public class Icon_v2_0 : GameSystem
             data.MaxHP = stats[0];
             data.Move = stats[1];
             data.Defense = stats[2];
-            data.TColor = stats[3];
+            data.ColorName = stats[3];
 
             if (elite)
             {
@@ -318,19 +375,19 @@ public class Icon_v2_0 : GameSystem
         data.Vigor = 0;
 
 
-        Color color = GetColor(data.TColor);
+        Color color = GetColor(data.ColorName);
 
         if ((type == "Object" || foeClass == "Mob") && count > 1)
         {
             for (int i = 0; i < count; i++)
             {
                 string cloneName = $"{name} {StringUtility.ConvertIntToAlpha(i + 1)}";
-                Player.Self().CmdCreateToken("Icon v2.0", tokenMeta, cloneName, size, color, JsonUtility.ToJson(data));
+                Player.Self().CmdCreateToken(SystemName(), tokenMeta, cloneName, size, color, JsonUtility.ToJson(data));
             }
         }
         else
         {
-            Player.Self().CmdCreateToken("Icon v2.0", tokenMeta, name, size, color, JsonUtility.ToJson(data));
+            Player.Self().CmdCreateToken(SystemName(), tokenMeta, name, size, color, JsonUtility.ToJson(data));
         }
     }
 
@@ -421,7 +478,6 @@ public class Icon_v2_0 : GameSystem
         SelectSmallBlastClicked(evt);
     }
 
-
     private void AttackRollClicked(ClickEvent evt)
     {
         Modal.Reset("Attack Roll");
@@ -466,7 +522,6 @@ public class Icon_v2_0 : GameSystem
 
         UI.ToggleDisplay(data.OverheadElement.Q("HpBar"), mdata.CurrentHP > 0);
     }
-
 
     public override void TokenDataSetValue(string tokenId, string value)
     {
@@ -628,7 +683,7 @@ public class Icon2_0Data
     public bool Elite;
     public int Move;
     public int Defense;
-    public string TColor;
+    public string ColorName;
     public Icon2_0Condition[] Status;
 
     public void Change(string value, Token token, bool placed)
@@ -829,18 +884,6 @@ public class Icon2_0Data
                 Locked = true
             });
         }
-        else if (CurrentHP <= MaxHP / 2)
-        {
-            RemoveCondition("Defeated");
-            RemoveCondition("Crisis");
-            AddCondition(new Icon2_0Condition()
-            {
-                Name = "Bloodied",
-                ModifierType = "None",
-                Color = "Red",
-                Locked = true
-            });
-        }
         else if (CurrentHP <= MaxHP / 4)
         {
             RemoveCondition("Defeated");
@@ -853,12 +896,25 @@ public class Icon2_0Data
                 Locked = true
             });
         }
+        else if (CurrentHP <= MaxHP / 2)
+        {
+            RemoveCondition("Defeated");
+            RemoveCondition("Crisis");
+            AddCondition(new Icon2_0Condition()
+            {
+                Name = "Bloodied",
+                ModifierType = "None",
+                Color = "Red",
+                Locked = true
+            });
+        }
         else
         {
             RemoveCondition("Bloodied");
             RemoveCondition("Crisis");
             RemoveCondition("Defeated");
         }
+        string json = JsonUtility.ToJson(this);
     }
 
     private void AddCondition(Icon2_0Condition c)
@@ -897,3 +953,22 @@ public class Icon2_0Data
     }
 }
 
+[Serializable]
+public class Icon2_0TokenPersistence
+{
+    public string Name;
+    public TokenMeta TokenMeta;
+    public Icon2_0Data SystemData;
+    public string Color;
+    public int Size;
+    public Vector3 Position;
+}
+
+[Serializable]
+public class Icon2_0SessionPersistence
+{
+    public string System;
+    public int PartyResolve;
+    public int RoundNumber;
+    public Icon2_0TokenPersistence[] Tokens;
+}

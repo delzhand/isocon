@@ -74,18 +74,16 @@ public class Config
         Modal.Close();
     }
 
-    public static string[] GetAllRuleFiles()
-    {
-        List<string> ruleFiles = new List<string>();
-        FileUtility.GetFilesRecursively(Preferences.Current.DataPath, "/ruledata", ruleFiles);
+    // public static string[] GetAllRuleFiles()
+    // {
+    //     List<string> ruleFiles = new List<string>();
+    //     FileUtility.GetFilesRecursively(Preferences.Current.DataPath, "/ruledata", ruleFiles);
 
-        for (int i = 0; i < ruleFiles.Count; i++)
-        {
-            ruleFiles[i] = ruleFiles[i].Replace("/ruledata/", "");
-        }
+    //     for (int i = 0; i < ruleFiles.Count; i++)
+    //     {
+    //         ruleFiles[i] = ruleFiles[i].Replace("/ruledata/", "");
+    //     }
 
-        return ruleFiles.ToArray();
-    }
-
-
+    //     return ruleFiles.ToArray();
+    // }
 }

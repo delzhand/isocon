@@ -3,6 +3,8 @@ using System.Reflection;
 using SimpleJSON;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Collections.Generic;
+using System.IO;
 
 public class Generic : GameSystem
 {
@@ -102,7 +104,7 @@ public class Generic : GameSystem
             ExtraInfo = extraInfo
         };
 
-        Player.Self().CmdCreateToken("Generic", tokenMeta, name, size, Color.black, JsonUtility.ToJson(data));
+        Player.Self().CmdCreateToken(SystemName(), tokenMeta, name, size, Color.black, JsonUtility.ToJson(data));
     }
 
     public override void UpdateData(TokenData data)
@@ -156,6 +158,66 @@ public class Generic : GameSystem
         panel.Q<ProgressBar>("HpBar").highValue = sysdata.MaxHP;
     }
 
+    private void DeserializeToken(GenericTokenPersistence tp)
+    {
+        Color color = Color.black;
+        string data = JsonUtility.ToJson(tp.SystemData);
+        Player.Self().CmdCreateTokenPlaced(SystemName(), tp.TokenMeta, tp.Name, tp.Size, color, data, tp.Position);
+    }
+
+    private GenericTokenPersistence PersistToken(string tokenId)
+    {
+        TokenData data = TokenData.Find(tokenId);
+        GenericTokenPersistence p = new();
+        p.Name = data.Name;
+        p.SystemData = JsonUtility.FromJson<GenericData>(data.SystemData);
+        p.TokenMeta = data.TokenMeta;
+        p.Position = data.LastKnownPosition;
+        p.Size = data.Size;
+        return p;
+    }
+
+    public override void SerializeSession(string filename)
+    {
+        List<GenericTokenPersistence> tps = new();
+        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
+        for (int i = 0; i < tokens.Length; i++)
+        {
+            GenericTokenPersistence tp = PersistToken(tokens[i].GetComponent<Token>().Data.Id);
+            tps.Add(tp);
+        }
+        GenericSessionPersistence sp = new();
+        sp.System = SystemName();
+        sp.RoundNumber = RoundNumber;
+        sp.Tokens = tps.ToArray();
+        string session = JsonUtility.ToJson(sp);
+        WriteSessionToFile(session, filename);
+    }
+
+    public override void DeserializeSession(string filename)
+    {
+        if (!GamesystemSessionChecker.ValidateFile(filename))
+        {
+            return;
+        }
+
+        // This runs immediately, locally, whereas the Cmd to delete all runs later async
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("TokenData"))
+        {
+            TokenData data = g.GetComponent<TokenData>();
+            data.Deletable = true;
+        }
+
+        string session = System.IO.File.ReadAllText(filename);
+        GenericSessionPersistence sp = JsonUtility.FromJson<GenericSessionPersistence>(session);
+        Player.Self().CmdRequestDeleteAllTokens();
+        RoundNumber = sp.RoundNumber;
+        foreach (GenericTokenPersistence tp in sp.Tokens)
+        {
+            DeserializeToken(tp);
+        }
+        Player.Self().CmdRequestClientInit();
+    }
 }
 
 [Serializable]
@@ -207,4 +269,23 @@ public class GenericData
     {
         token.SetDefeated(CurrentHP <= 0);
     }
+}
+
+[Serializable]
+public class GenericTokenPersistence
+{
+    public string Name;
+    public TokenMeta TokenMeta;
+    public GenericData SystemData;
+    public string Color;
+    public int Size;
+    public Vector3 Position;
+}
+
+[Serializable]
+public class GenericSessionPersistence
+{
+    public string System;
+    public int RoundNumber;
+    public GenericTokenPersistence[] Tokens;
 }
