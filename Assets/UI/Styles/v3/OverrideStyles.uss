@@ -416,3 +416,8 @@
 #TokenSearchField #unity-text-input {
     background-color: #AAA;
 }
+
+#File #unity-text-input {
+    max-width: 360px;
+    min-width: 360px;
+}
