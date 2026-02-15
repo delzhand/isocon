@@ -398,6 +398,7 @@ public class Modal
         field.name = "File";
         field.value = defaultValue;
         field.AddToClassList("no-margin");
+        field.AddToClassList("filefield");
         field.isReadOnly = true;
 
         Button search = new();
