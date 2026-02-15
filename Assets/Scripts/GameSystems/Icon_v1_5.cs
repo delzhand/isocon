@@ -133,7 +133,7 @@ public class Icon_v1_5 : GameSystem
         }
         Modal.AddSearchField("PregenStatuses", "Status", "", statuses.ToArray());
         Modal.AddTextField("Name", "Name", "");
-        Modal.AddDropdownField("Color", "Color", "Gray", StringUtility.CreateArray("Gray", "Green", "Red", "Blue", "Purple", "Yellow", "Orange"));
+        Modal.AddDropdownField("Color", "Color", "Gray", ColorUtility.CommonColors());
         Modal.AddDropdownField("Modifier", "Modifier Type", "None", StringUtility.CreateArray("None", "Number"));
         Modal.AddPreferredButton("Add", AddStatus);
         Modal.AddButton("Cancel", Modal.CloseEvent);

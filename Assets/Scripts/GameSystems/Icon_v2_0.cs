@@ -127,7 +127,7 @@ public class Icon_v2_0 : GameSystem
         }
         Modal.AddSearchField("PregenStatuses", "Status", "", statuses.ToArray());
         Modal.AddTextField("Name", "Name", "");
-        Modal.AddDropdownField("Color", "Color", "Gray", StringUtility.CreateArray("Gray", "Green", "Red", "Blue", "Purple", "Yellow", "Orange"));
+        Modal.AddDropdownField("Color", "Color", "Gray", ColorUtility.CommonColors());
         Modal.AddDropdownField("Modifier", "Modifier Type", "None", StringUtility.CreateArray("None", "Number"));
         Modal.AddPreferredButton("Add", AddStatus);
         Modal.AddButton("Cancel", Modal.CloseEvent);
@@ -251,7 +251,7 @@ public class Icon_v2_0 : GameSystem
 
     private void DeserializeToken(Icon2_0TokenPersistence tp)
     {
-        Color color = GetColor(tp.Color);
+        Color color = ColorUtility.GetCommonColor(tp.Color);
         string data = JsonUtility.ToJson(tp.SystemData);
         Player.Self().CmdCreateTokenPlaced(SystemName(), tp.TokenMeta, tp.Name, tp.Size, color, data, tp.Position);
     }
@@ -375,7 +375,7 @@ public class Icon_v2_0 : GameSystem
         data.Vigor = 0;
 
 
-        Color color = GetColor(data.ColorName);
+        Color color = ColorUtility.GetCommonColor(data.ColorName);
 
         if ((type == "Object" || foeClass == "Mob") && count > 1)
         {
@@ -389,27 +389,6 @@ public class Icon_v2_0 : GameSystem
         {
             Player.Self().CmdCreateToken(SystemName(), tokenMeta, name, size, color, JsonUtility.ToJson(data));
         }
-    }
-
-    private static Color GetColor(string dataColor)
-    {
-
-        switch (dataColor)
-        {
-            case "Red":
-                return ColorUtility.NormalizeRGB(238, 34, 12);
-            case "Blue":
-                return ColorUtility.NormalizeRGB(0, 162, 255);
-            case "Yellow":
-                return ColorUtility.NormalizeRGB(254, 174, 0);
-            case "Green":
-                return ColorUtility.NormalizeRGB(97, 216, 54);
-            case "Purple":
-                return ColorUtility.NormalizeRGB(202, 85, 239);
-            case "Gray":
-                return ColorUtility.NormalizeRGB(146, 146, 146);
-        }
-        return Color.black;
     }
 
     public override MenuItem[] GetTokenMenuItems(TokenData data)

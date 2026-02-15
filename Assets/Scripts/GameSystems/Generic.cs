@@ -88,7 +88,9 @@ public class Generic : GameSystem
         Modal.AddDropdownField("SizeField", "Size", "1x1", new string[] { "1x1", "2x2", "3x3" });
         Modal.AddTextField("ExtraInfo", "Extra Info", "");
         Modal.AddIntField("HPField", "HP", 1);
+        Modal.AddDropdownField("ColorField", "Color", "Gray", ColorUtility.CommonColors());
     }
+
     public override void CreateToken()
     {
         var tokenMeta = TokenLibrary.GetSelectedMeta();
@@ -96,15 +98,19 @@ public class Generic : GameSystem
         int size = int.Parse(UI.Modal.Q<DropdownField>("SizeField").value.Substring(0, 1));
         int hp = UI.Modal.Q<IntegerField>("HPField").value;
         string extraInfo = UI.Modal.Q<TextField>("ExtraInfo").value;
+        string colorName = UI.Modal.Q<DropdownField>("ColorField").value;
 
         GenericData data = new()
         {
             CurrentHP = hp,
             MaxHP = hp,
-            ExtraInfo = extraInfo
+            ExtraInfo = extraInfo,
+            ColorName = colorName
         };
 
-        Player.Self().CmdCreateToken(SystemName(), tokenMeta, name, size, Color.black, JsonUtility.ToJson(data));
+        Color color = ColorUtility.GetCommonColor(colorName);
+
+        Player.Self().CmdCreateToken(SystemName(), tokenMeta, name, size, color, JsonUtility.ToJson(data));
     }
 
     public override void UpdateData(TokenData data)
@@ -226,6 +232,7 @@ public class GenericData
     public int CurrentHP;
     public int MaxHP;
     public string ExtraInfo;
+    public string ColorName;
 
     public void Change(string value, Token token, bool placed)
     {
@@ -277,7 +284,7 @@ public class GenericTokenPersistence
     public string Name;
     public TokenMeta TokenMeta;
     public GenericData SystemData;
-    public string Color;
+    public string ColorName;
     public int Size;
     public Vector3 Position;
 }

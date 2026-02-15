@@ -88,6 +88,32 @@ public class ColorUtility
         return new Color32(r, g, b, 255);
     }
 
+    public static string[] CommonColors()
+    {
+        return StringUtility.CreateArray("Gray", "Green", "Red", "Blue", "Purple", "Yellow", "Orange");
+    }
+
+    public static Color GetCommonColor(string dataColor)
+    {
+
+        switch (dataColor)
+        {
+            case "Red":
+                return ColorUtility.NormalizeRGB(238, 34, 12);
+            case "Blue":
+                return ColorUtility.NormalizeRGB(0, 162, 255);
+            case "Yellow":
+                return ColorUtility.NormalizeRGB(254, 174, 0);
+            case "Green":
+                return ColorUtility.NormalizeRGB(97, 216, 54);
+            case "Purple":
+                return ColorUtility.NormalizeRGB(202, 85, 239);
+            case "Gray":
+                return ColorUtility.NormalizeRGB(146, 146, 146);
+        }
+        return Color.black;
+    }
+
     public static Color DarkenColor(Color originalColor, float percentage)
     {
         float darkenAmount = Mathf.Clamp01(percentage);
