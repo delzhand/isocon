@@ -77,7 +77,7 @@ public class Block : MonoBehaviour
         float height = transform.localPosition.y + 1;
         if (Shape == BlockShape.Slope || Shape == BlockShape.Steps || Shape == BlockShape.SlopeInt || Shape == BlockShape.SlopeExt)
         {
-            height += .5f;
+            height -= .5f;
         }
         return height;
     }
