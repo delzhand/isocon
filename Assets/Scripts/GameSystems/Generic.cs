@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 public class Generic : GameSystem
 {
@@ -25,6 +26,11 @@ public class Generic : GameSystem
         VisualElement panel = UI.System.Q(elementName);
         VisualElement hpBar = UI.CreateFromTemplate("UITemplates/GameSystem/SimpleHPBar");
         panel.Q("Data").Add(hpBar);
+        panel.Q("Data").style.flexDirection = FlexDirection.Column;
+        VisualElement resourceContainer = new VisualElement();
+        resourceContainer.name = "Resources";
+        panel.Q("Data").Add(resourceContainer);
+
         if (editable)
         {
             Button hpButton = new()
@@ -113,6 +119,36 @@ public class Generic : GameSystem
         Player.Self().CmdCreateToken(SystemName(), tokenMeta, name, size, color, JsonUtility.ToJson(data));
     }
 
+    public override MenuItem[] GetTokenMenuItems(TokenData data)
+    {
+        MenuItem[] baseItems = base.GetTokenMenuItems(data);
+
+        List<MenuItem> items = new();
+        items.Add(new MenuItem("AddResource", "Add Resource", AddResourceClicked));
+        return baseItems.Concat(items.ToArray()).ToArray();
+    }
+
+    private void AddResourceClicked(ClickEvent evt)
+    {
+        Modal.Reset("Add Resource");
+        Modal.AddTextField("ResourceName", "Resource Name", "");
+        Modal.AddIntField("ResourceValue", "Resource Initial Value", 0);
+        Modal.AddPreferredButton("Add", AddResource);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+        SelectionMenu.Hide();
+    }
+
+    private void AddResource(ClickEvent evt)
+    {
+        string resourceName = UI.Modal.Q<TextField>("ResourceName").value;
+        int resourceValue = UI.Modal.Q<IntegerField>("ResourceValue").value;
+        GenericTokenResource resource = new();
+        resource.Name = resourceName;
+        resource.Value = resourceValue;
+        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, $"SetResource|{JsonUtility.ToJson(resource)}");
+        Modal.Close();
+    }
+
     public override void UpdateData(TokenData data)
     {
         base.UpdateData(data);
@@ -129,6 +165,7 @@ public class Generic : GameSystem
         GenericData sysdata = JsonUtility.FromJson<GenericData>(data.SystemData);
         sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
         data.SystemData = JsonUtility.ToJson(sysdata);
+        data.NeedsRedraw = true;
     }
 
     public override void UpdateTokenPanel(string tokenId, string elementName)
@@ -162,6 +199,44 @@ public class Generic : GameSystem
         panel.Q<Label>("MHP").text = $"/{sysdata.MaxHP}";
         panel.Q<ProgressBar>("HpBar").value = sysdata.CurrentHP;
         panel.Q<ProgressBar>("HpBar").highValue = sysdata.MaxHP;
+
+        if (data.NeedsRedraw)
+        {
+            data.NeedsRedraw = false;
+            panel.Q("Resources").Clear();
+            foreach (GenericTokenResource resource in sysdata.Resources)
+            {
+                VisualElement template = UI.CreateFromTemplate("UITemplates/GameSystem/ConditionTemplate");
+                string label = $"{resource.Name} ({resource.Value})";
+                template.Q<Label>("Name").text = label;
+                if (elementName == "SelectedTokenPanel")
+                {
+                    template.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) =>
+                    {
+                        Player.Self().CmdRequestTokenDataSetValue(tokenId, $"IncrementResource|{resource.Name}");
+                    });
+                    template.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) =>
+                    {
+                        Player.Self().CmdRequestTokenDataSetValue(tokenId, $"DecrementResource|{resource.Name}");
+                    });
+                    template.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) =>
+                    {
+                        Player.Self().CmdRequestTokenDataSetValue(tokenId, $"LoseResource|{resource.Name}");
+                    });
+                    UI.ToggleDisplay(template.Q("Increment"), true);
+                    UI.ToggleDisplay(template.Q("Decrement"), true);
+                    UI.ToggleDisplay(template.Q("Remove"), true);
+                }
+                else
+                {
+                    UI.ToggleDisplay(template.Q("Increment"), false);
+                    UI.ToggleDisplay(template.Q("Decrement"), false);
+                    UI.ToggleDisplay(template.Q("Remove"), false);
+                }
+                template.Q("Wrapper").style.backgroundColor = Color.gray;
+                panel.Q("Resources").Add(template);
+            }
+        }
     }
 
     private void DeserializeToken(GenericTokenPersistence tp)
@@ -227,12 +302,20 @@ public class Generic : GameSystem
 }
 
 [Serializable]
+public class GenericTokenResource
+{
+    public string Name;
+    public int Value;
+}
+
+[Serializable]
 public class GenericData
 {
     public int CurrentHP;
     public int MaxHP;
     public string ExtraInfo;
     public string ColorName;
+    public GenericTokenResource[] Resources;
 
     public void Change(string value, Token token, bool placed)
     {
@@ -270,11 +353,56 @@ public class GenericData
             }
             OnVitalChange(token);
         }
+        if (value.StartsWith("SetResource"))
+        {
+            string[] parts = value.Split("|");
+            GenericTokenResource resource = JsonUtility.FromJson<GenericTokenResource>(parts[1]);
+            SetResource(resource);
+            PopoverText.Create(token, "Resource Set", Color.white);
+        }
+        if (value.StartsWith("IncrementResource"))
+        {
+            string[] parts = value.Split("|");
+            CounterResource(parts[1], 1);
+            if (placed)
+            {
+                PopoverText.Create(token, $"/+1|_{parts[1].ToUpper()}", Color.white);
+            }
+        }
+        if (value.StartsWith("DecrementResource"))
+        {
+            string[] parts = value.Split("|");
+            CounterResource(parts[1], -1);
+            if (placed)
+            {
+                PopoverText.Create(token, $"/-1|_{parts[1].ToUpper()}", Color.white);
+            }
+        }
+    }
+
+    private void CounterResource(string name, int num)
+    {
+        List<GenericTokenResource> resourceList = Resources.ToList();
+        foreach (GenericTokenResource resource in resourceList)
+        {
+            if (name == resource.Name)
+            {
+                resource.Value += num;
+            }
+        }
+        Resources = resourceList.ToArray();
     }
 
     private void OnVitalChange(Token token)
     {
         token.SetDefeated(CurrentHP <= 0);
+    }
+
+    private void SetResource(GenericTokenResource resource)
+    {
+        List<GenericTokenResource> resourceList = Resources.ToList();
+        resourceList.Add(resource);
+        Resources = resourceList.ToArray();
     }
 }
 
