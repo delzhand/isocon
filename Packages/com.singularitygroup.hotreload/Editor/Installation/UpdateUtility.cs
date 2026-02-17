@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using SingularityGroup.HotReload.Editor.Cli;
+using SingularityGroup.HotReload.Editor.Localization;
 using SingularityGroup.HotReload.RuntimeDependencies;
 using UnityEditor;
 #if UNITY_EDITOR_WIN
@@ -18,17 +19,17 @@ namespace SingularityGroup.HotReload.Editor {
             string serverDir;
             if(!CliUtils.TryFindServerDir(out serverDir)) {
                 progress?.Report(1);
-                return "unable to locate hot reload package";
+                return Translations.Utility.UnableToLocateHotReloadPackage;
             }
             var packageDir = Path.GetDirectoryName(Path.GetFullPath(serverDir));
             var cacheDir = Path.GetFullPath(PackageConst.LibraryCachePath);
             if(Path.GetPathRoot(packageDir) != Path.GetPathRoot(cacheDir)) {
                 progress?.Report(1);
-                return "unable to update package because it is located on a different drive than the unity project";
+                return Translations.Utility.UnableToUpdatePackageDifferentDrive;
             }
             var updatedPackageCopy = BackupPackage(packageDir, version);
             
-            var key = $"{DownloadUtility.GetPackagePrefix(version)}/HotReload.zip";
+            var key = $"{DownloadUtility.GetPackagePrefix(version, PackageConst.DefaultLocale)}/HotReload.zip";
             var url = DownloadUtility.GetDownloadUrl(key);
             var targetFileName = $"HotReload{version.Replace('.', '-')}.zip";
             var targetFilePath = CliUtils.GetTempDownloadFilePath(targetFileName);

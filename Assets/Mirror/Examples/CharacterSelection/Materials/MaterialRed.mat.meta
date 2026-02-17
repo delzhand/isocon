@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0cb2aedfe1c0146808538c1b8ae2b1ab
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/CharacterSelection/Materials/MaterialRed.mat
+  uploadId: 736421

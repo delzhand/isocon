@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 8b76e63e8ad5c42d59aa6ccdda8cddbf
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/CouchCoop/Scripts/CanvasScript.cs
+  uploadId: 736421

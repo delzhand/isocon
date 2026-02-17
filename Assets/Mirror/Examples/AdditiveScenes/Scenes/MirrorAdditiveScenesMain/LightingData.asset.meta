@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: df141818507db234cb3ca8bf3ab28a3f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 6475696996188705980
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/AdditiveScenes/Scenes/MirrorAdditiveScenesMain/LightingData.asset
+  uploadId: 736421

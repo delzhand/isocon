@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 9619a16fe963d4deb9b5821f4475c606
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/CharacterSelection/MirrorCharacterSelection.unity
+  uploadId: 736421

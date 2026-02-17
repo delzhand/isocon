@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 881505c283e224c4fbe4e03127f08b4a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/BenchmarkPrediction/PredictedBall.prefab
+  uploadId: 736421

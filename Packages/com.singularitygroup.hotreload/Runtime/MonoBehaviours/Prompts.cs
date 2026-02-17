@@ -4,6 +4,9 @@ using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 namespace SingularityGroup.HotReload {
     internal class Prompts : MonoBehaviour {
@@ -11,8 +14,8 @@ namespace SingularityGroup.HotReload {
         public GameObject connectedPrompt;
         public GameObject questionPrompt;
         
-        [Header("Other")]
-        [Tooltip("Used when project does not create an EventSystem early enough")]
+        [Header(Localization.Translations.MenuItems.Other)]
+        [Tooltip(Localization.Translations.MenuItems.FalllbackEventSystem)]
         public GameObject fallbackEventSystem;
         
         #region Singleton
@@ -30,7 +33,7 @@ namespace SingularityGroup.HotReload {
                 if (_I == null) {
                     // allow showing prompts in editor (for testing)
                     if (!Application.isEditor && !PlayerEntrypoint.IsPlayerWithHotReload()) {
-                        throw new NotSupportedException("IsPlayerWithHotReload() is false");
+                        throw new NotSupportedException(Localization.Translations.Errors.IsPlayerWithHotReloadFalse);
                     }
                     var go = Instantiate(HotReloadSettingsObject.I.PromptsPrefab,
                         new Vector3(0, 0, 0), Quaternion.identity);
@@ -105,10 +108,18 @@ namespace SingularityGroup.HotReload {
         private void Update() {
             if (!userTriedToInteract) {
                 // when user interacts with the screen, make sure overlay can handle taps
+#if ENABLE_INPUT_SYSTEM
+                if ((Touchscreen.current != null && Touchscreen.current.touches.Count > 0) || 
+                    (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)) {
+                    userTriedToInteract = true;
+                    DoEnsureEventSystem();
+                }
+#else
                 if (Input.touchCount > 0 || Input.GetMouseButtonDown(0)) {
                     userTriedToInteract = true;
                     DoEnsureEventSystem();
                 }
+#endif
             }
         }
 
@@ -123,8 +134,7 @@ namespace SingularityGroup.HotReload {
         /// Scene must contain an EventSystem and StandaloneInputModule, otherwise clicking/tapping on the overlay does nothing.
         private void DoEnsureEventSystem() {
             if (EventSystem.current == null) {
-                Log.Info($"No EventSystem is active, enabling an EventSystem inside Hot Reload {name} prefab." +
-                    " A Unity EventSystem and an Input module is required for tapping buttons on the Unity UI.");
+                Log.Info(string.Format(Localization.Translations.Settings.NoEventSystemWarning, name));
                 fallbackEventSystem.SetActive(true);
             }
         }

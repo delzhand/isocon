@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a22cebde73b10534b99d20367fda7b1f
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Hosting/Edgegap/README.md
+  uploadId: 736421

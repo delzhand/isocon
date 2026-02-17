@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7b18949555c60224384ab80e57e1fd68
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Hosting/Edgegap/Editor/Fonts/Spartan-SemiBold SDF.asset
+  uploadId: 736421

@@ -1,7 +1,7 @@
 {
   "displayName": "Hot Reload",
   "name": "com.singularitygroup.hotreload",
-  "unity": "2018.4",
+  "unity": "2019.4",
   "description": "Change code and get immediate updates in the Unity Editor or on-device.",
   "category": "Engineering",
   "keywords": [
@@ -12,7 +12,7 @@
     "sg",
     "singularity"
   ],
-  "version": "1.12.9",
+  "version": "1.13.15",
   "dependencies": {
     "com.unity.ugui": "1.0.0",
     "com.unity.modules.unitywebrequest": "1.0.0"

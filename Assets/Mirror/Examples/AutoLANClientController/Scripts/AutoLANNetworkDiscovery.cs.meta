@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: ae7e7ce4a60904a8d927cce7422254c9
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/AutoLANClientController/Scripts/AutoLANNetworkDiscovery.cs
+  uploadId: 736421

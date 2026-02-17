@@ -8,50 +8,53 @@ using UnityEngine.UI;
 
 namespace SingularityGroup.HotReload.Demo {
     class HotReloadBasicDemo : MonoBehaviour {
-        
+
         public GameObject cube;
         public Text informationText;
         public Button openWindowButton;
         public Button openScriptButton;
         public TextAsset thisScript;
-        
+
+        // // 1. Adding fields (Added fields can show in the inspector)
+        // public int myNewField = 1;
+
         void Start() {
-            if(Application.isEditor) {
+            if (Application.isEditor) {
                 openWindowButton.onClick.AddListener(Demo.I.OpenHotReloadWindow);
-                openScriptButton.onClick.AddListener(() => Demo.I.OpenScriptFile(thisScript, 31, 13));
+                openScriptButton.onClick.AddListener(() => Demo.I.OpenScriptFile(thisScript, myStaticField, 13));
             } else {
                 openWindowButton.gameObject.SetActive(false);
                 openScriptButton.gameObject.SetActive(false);
                 informationText.gameObject.SetActive(false);
             }
         }
-        
+
         // Update is called once per frame
         void Update() {
             if (Demo.I.IsServerRunning()) {
-                informationText.text = "Hot Reload is running";
+                informationText.text = Localization.Translations.Common.HotReloadIsRunning;
             } else {
-                informationText.text = "Hot Reload is not running";
+                informationText.text = Localization.Translations.Common.HotReloadIsNotRunning;
             }
-            
-            // // 1. Editing functions in monobehaviours, normal classes or static classes
+
+            // // 2. Editing functions in monobehaviours, normal classes or static classes
             // // Edit the vector to rotate the cube in the scene differently or change the speed
             // var speed = 100;
             // cube.transform.Rotate(new Vector3(0, 1, 0) * Time.deltaTime * speed); 
-            
-            // // 1. Editing functions in monobehaviours, normal classes or static classes
+
+            // // 2. Editing functions in monobehaviours, normal classes or static classes
             // // Uncomment this code to scale the cube
             // cube.transform.localScale = Mathf.Sin(Time.time) * Vector3.one;
-            
-            // // 1. Editing functions in monobehaviours, normal classes or static classes
+
+            // // 2. Editing functions in monobehaviours, normal classes or static classes
             // // Uncomment this code to make the cube move from left to right and back
             // var newPos = cube.transform.position += (cube.transform.localScale.x < 0.5 ? Vector3.left : Vector3.right) * Time.deltaTime;
             // if(Mathf.Abs(newPos.x) > 10) {
             //     cube.transform.position = Vector3.zero;
             // }
         }
-        
-        // 2. Editing lambda methods
+
+        // 3. Editing lambda methods
         static Func<int, int> addFunction = x => {
             var result = x + 10;
             Debug.Log("Add: " + result);
@@ -60,17 +63,17 @@ namespace SingularityGroup.HotReload.Demo {
             // Debug.Log("Multiply: " + result);
             return result;
         };
-        
-        // 3. Editing async/await methods
+
+        // 4. Editing async/await methods
         async Task AsyncMethod() {
             // await Task.Delay(500);
             // Debug.Log("AsyncMethod");
-            
+
             // // silicense warning
             await Task.CompletedTask;
         }
-        
-        // 4. Editing properties (get/set)
+
+        // 5. Editing properties (get/set)
         public static string SomeString {
             // edit the get method
             get {
@@ -78,8 +81,8 @@ namespace SingularityGroup.HotReload.Demo {
                 return someStringHere;
             }
         }
-        
-        // 5. Editing indexers (square bracket access such as dictionaries)
+
+        // 6. Editing indexers (square bracket access such as dictionaries)
         class CustomDictionary : Dictionary<string, int> {
             public new int this[string key] {
                 get {
@@ -102,8 +105,8 @@ namespace SingularityGroup.HotReload.Demo {
             { "d", 19 },
             { "D", 20 }
         };
-        
-        // 6. Editing operators methods (explicit and implicit operators)
+
+        // 7. Editing operators methods (explicit and implicit operators)
         public class Email {
             public string Value { get; }
 
@@ -116,7 +119,7 @@ namespace SingularityGroup.HotReload.Demo {
                 // Uncomment to change the implicit operator
                 // => value.Value + " FOO";
                 => value.Value;
-            
+
             // // Uncomment to change add an implicit operator
             // public static implicit operator byte[](Email value)
             //     => Encoding.UTF8.GetBytes(value.Value);
@@ -126,51 +129,86 @@ namespace SingularityGroup.HotReload.Demo {
                 => new Email(value);
         }
         
+        // 8. Editing fields: modifiers/type/name/initializer 
+        public int myEditedField = 4;
+
+        // 9. Editing static field initializers (variable value is updated)
+        static readonly int myStaticField = 31;
+
+        // // 10. Adding auto properties/events
+        // int MyProperty { get; set; } = 6;
+        // event Action MyEvent = () => Debug.Log("MyEvent");
+
+        class GenericClass<T> {
+            // // 11. Adding methods in generic classes
+            // public void GenericMethod() {
+            //     Debug.Log("GenericMethod");
+            // }
+            // // 12. Adding fields (any type) in generic classes
+            // public T myGenericField;
+        }
+
         void LateUpdate() {
-            // // 2. Editing lambda methods
+            // // 3. Editing lambda methods
             // addFunction(10);
-            
-            
-            // // 3. Editing async/await methods
+
+
+            // // 4. Editing async/await methods
             // AsyncMethod().Forget();
-            
-            
-            // // 4. Editing properties (get/set)
+
+
+            // // 5. Editing properties (get/set)
             // Debug.Log(SomeString);
-            
-            
-            // // 5. Editing indexers (square bracket access such as dictionaries)
+
+
+            // // 6. Editing indexers (square bracket access such as dictionaries)
             // Debug.Log(randomDict["A"]);
-            
-            
-            // // 6. Editing operators methods (explicit and implicit operators)
+
+
+            // // 7. Editing operators methods (explicit and implicit operators)
             Email email = new Email("example@example.com");
             // string stringEmail = email;
             // Debug.Log(stringEmail);
-            
+
             // // Uncomment new operator in Email class + Uncomment this to add byte implicit operator
             // byte[] byteEmail = email;
             // var hexRepresentation = BitConverter.ToString(byteEmail);
             // Debug.Log(hexRepresentation);
             // Debug.Log(Encoding.UTF8.GetString(byteEmail));
+
+            // // 8. Editing fields: modifiers/type/name/initializer 
+            // Debug.Log("myEditedField: " + myEditedField);
+
+            // // 9. Editing static field initializers (variable value is updated)
+            // Debug.Log("myStaticField: " + myStaticField);
+
+            // // 10. Adding auto properties/events
+            // Debug.Log("MyProperty: " + MyProperty);
+            // MyEvent.Invoke();
             
-            // // 7. Editing lambda methods with closures
+            // var newClass = new GenericClass<int>();
+            // // 11. Adding methods in generic classes
+            // newClass.GenericMethod();
+            // // 12. Adding fields in generic classes
+            // newClass.myGenericField = 3;
+            // Debug.Log("myGenericField: " + newClass.myGenericField);
+
+            // // 13. Editing lambda methods with closures
             // // Uncomment to log sorted array
             // // Switch a and b to reverse the sorting
             // int[] numbers = { 5, 3, 8, 1, 9 };
             // Array.Sort(numbers, (b, a) => a.CompareTo(b));
             // Debug.Log(string.Join(", ", numbers));
-            
         }
-        
+
         // This function gets invoked every time it's patched
         [InvokeOnHotReloadLocal]
         static void OnHotReloadMe() {
-            // change the string to see the method getting invoked
-            Debug.Log("Hello there");
+            // // change the string to see the method getting invoked
+            // Debug.Log("Hello there");
         }
 
-        // // 8. Adding event functions
+        // // 14. Adding event functions
         // void OnDisable() {
         //     Debug.Log("OnDisable");
         // }

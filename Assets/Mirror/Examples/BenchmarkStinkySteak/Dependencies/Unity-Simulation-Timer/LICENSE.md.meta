@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b0c6073310113462d96a86bea89ec4ea
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/BenchmarkStinkySteak/Dependencies/Unity-Simulation-Timer/LICENSE.md
+  uploadId: 736421

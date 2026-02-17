@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d4dfee5fdad6e4e5992b5bb20418ecaa
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/StackedPrediction/MirrorStackedPrediction.unity
+  uploadId: 736421

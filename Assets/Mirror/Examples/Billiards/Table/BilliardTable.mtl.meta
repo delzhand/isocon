@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 5d94495d573e34a16bff9b52dd3ad7e5
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/Billiards/Table/BilliardTable.mtl
+  uploadId: 736421

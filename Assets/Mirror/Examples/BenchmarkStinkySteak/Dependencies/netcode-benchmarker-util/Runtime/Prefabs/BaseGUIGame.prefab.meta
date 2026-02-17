@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 6e6b75e5db829b54ba9287ce8d21b551
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/BenchmarkStinkySteak/Dependencies/netcode-benchmarker-util/Runtime/Prefabs/BaseGUIGame.prefab
+  uploadId: 736421

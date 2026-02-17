@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: aa7b0f2a00af4ef4bac3c70fb2c798eb
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/BenchmarkStinkySteak/Dependencies/netcode-benchmarker-util/Runtime/Shaders/Unlit.mat
+  uploadId: 736421

@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 51b244c3535d474aaf0a7a679f86185f
+timeCreated: 1654065994
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/Snapshot Interpolation/ClientCube.cs
+  uploadId: 736421

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c6cf80717befa4eee90b94e6b416b0ca
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/RigidbodyPhysics/Prefabs/Player Ball.prefab
+  uploadId: 736421

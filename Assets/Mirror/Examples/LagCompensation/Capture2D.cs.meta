@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: a2ccdcd0db384bf08f4150ffb08fd09b
+timeCreated: 1687921611
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/LagCompensation/Capture2D.cs
+  uploadId: 736421

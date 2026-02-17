@@ -25,7 +25,7 @@ namespace Mirror
         }
 
         [ServerCallback]
-        public override void Reset()
+        public override void ResetState()
         {
             lastRebuildTime = 0D;
             CustomRanges.Clear();
@@ -75,9 +75,8 @@ namespace Mirror
             }
         }
 
-        // internal so we can update from tests
         [ServerCallback]
-        internal void Update()
+        void LateUpdate()
         {
             // rebuild all spawned NetworkIdentity's observers every interval
             if (NetworkTime.localTime >= lastRebuildTime + rebuildInterval)

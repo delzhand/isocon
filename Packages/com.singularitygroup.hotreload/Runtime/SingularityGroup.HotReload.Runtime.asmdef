@@ -6,7 +6,8 @@
         "GUID:2bafac87e7f4b9b418d9448d219b01ab",
         "GUID:46c537318f0d530469a1df1fafe86c9c",
         "GUID:af67dfb2ec5c9c740be50ae4470ed85f",
-        "SingularityGroup.HotReload.Runtime.Public"
+        "SingularityGroup.HotReload.Runtime.Public",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -20,7 +21,8 @@
     ],
     "autoReferenced": false,
     "defineConstraints": [
-        "ENABLE_MONO"
+        "ENABLE_MONO",
+        "DEVELOPMENT_BUILD || UNITY_EDITOR"
     ],
     "versionDefines": [],
     "noEngineReferences": false

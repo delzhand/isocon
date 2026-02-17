@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2c26d69f5818f514b9504823866eb714
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/PickupsDropsChilds/PickupsDropsChilds.unity
+  uploadId: 736421

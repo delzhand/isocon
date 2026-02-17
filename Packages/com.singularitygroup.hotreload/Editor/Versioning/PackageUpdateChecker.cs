@@ -4,12 +4,15 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using SingularityGroup.HotReload.Editor.Localization;
+using SingularityGroup.HotReload.Localization;
 using SingularityGroup.HotReload.Editor.Semver;
 using SingularityGroup.HotReload.Newtonsoft.Json;
 using SingularityGroup.HotReload.Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
+using Translations = SingularityGroup.HotReload.Editor.Localization.Translations;
 
 namespace SingularityGroup.HotReload.Editor {
     internal class PackageUpdateChecker {
@@ -17,11 +20,12 @@ namespace SingularityGroup.HotReload.Editor {
         readonly JsonSerializer jsonSerializer = JsonSerializer.CreateDefault();
         SemVersion newVersionDetected;
         bool started;
+        bool warnedVersionCheckFailed;
 
         private static TimeSpan RetryInterval => TimeSpan.FromSeconds(30);
         private static TimeSpan CheckInterval => TimeSpan.FromHours(1);
         
-        private static readonly HttpClient client = RequestHelper.CreateHttpClient();
+        private static readonly HttpClient client = HttpClientUtils.CreateHttpClient();
 
         private static string _lastRemotePackageVersion;
 
@@ -40,12 +44,12 @@ namespace SingularityGroup.HotReload.Editor {
                         break;
                     }
                 } catch(Exception ex) {
-                    Log.Warning("encountered exception when checking for new Hot Reload package version:\n{0}", ex);
+                    Log.Warning(Translations.Errors.WarningVersionCheckException, ex);
                 }
                 await Task.Delay(RetryInterval);
             }
         }
-        
+
         public bool TryGetNewVersion(out SemVersion version) {
             var currentVersion = SemVersion.Parse(PackageConst.Version, strict: true);
             return !ReferenceEquals(version = newVersionDetected, null) && newVersionDetected > currentVersion;
@@ -70,8 +74,9 @@ namespace SingularityGroup.HotReload.Editor {
             if(response.err != null) {
                 if(response.statusCode == 0 || response.statusCode == 404) {
                     // probably no internet, fail silently and retry
-                } else {
-                    Log.Warning("version check failed: {0}", response.err);
+                } else if (!warnedVersionCheckFailed) {
+                    Log.Warning(Translations.Errors.WarningVersionCheckFailed, response.err);
+                    warnedVersionCheckFailed = true;
                 }
             } else {
                 var newVersion = response.data;
@@ -113,8 +118,10 @@ namespace SingularityGroup.HotReload.Editor {
 
         static async Task<Response<SemVersion>> GetLatestPackageVersion() {
             string versionUrl;
-            
-            if (PackageConst.IsAssetStoreBuild) {
+
+            if (PackageConst.DefaultLocaleField == Locale.SimplifiedChinese) {
+                versionUrl = "https://d2tc55zjhw51ly.cloudfront.net/releases/latest/asset-store-version-zh.json";
+            } else if (PackageConst.IsAssetStoreBuild) {
                 // version updates are synced with asset store
                 versionUrl = "https://d2tc55zjhw51ly.cloudfront.net/releases/latest/asset-store-version.json";
             } else {
@@ -123,7 +130,7 @@ namespace SingularityGroup.HotReload.Editor {
             try {
                 using(var resp = await client.GetAsync(versionUrl).ConfigureAwait(false)) {
                     if(resp.StatusCode != HttpStatusCode.OK) {
-                        return Response.FromError<SemVersion>($"Request failed with statusCode: {resp.StatusCode} {resp.ReasonPhrase}");
+                        return Response.FromError<SemVersion>(string.Format(Translations.Errors.ErrorRequestFailedStatusCode, resp.StatusCode, resp.ReasonPhrase));
                     }
                     
                     var json = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -131,9 +138,9 @@ namespace SingularityGroup.HotReload.Editor {
                     SemVersion newVersion;
                     JToken value;
                     if (!o.TryGetValue("version", out value)) {
-                        return Response.FromError<SemVersion>("Invalid package.json");
+                        return Response.FromError<SemVersion>(Translations.Errors.ErrorInvalidPackageJson);
                     } else if(!SemVersion.TryParse(value.Value<string>(), out newVersion, strict: true)) {
-                        return Response.FromError<SemVersion>($"Invalid version in package.json: '{value.Value<string>()}'");
+                        return Response.FromError<SemVersion>(string.Format(Translations.Errors.ErrorInvalidVersionInPackageJson, value.Value<string>()));
                     } else {
                         return Response.FromResult(newVersion);
                     }
@@ -145,7 +152,7 @@ namespace SingularityGroup.HotReload.Editor {
         
         public async Task UpdatePackageAsync(SemVersion newVersion) {
             //Package can be updated by updating the git url via the package manager
-            if(EditorUtility.DisplayDialog($"Update To v{newVersion}", $"By pressing 'Update' the Hot Reload package will be updated to v{newVersion}", "Update", "Cancel")) {
+            if(EditorUtility.DisplayDialog(string.Format(Translations.Dialogs.DialogTitleUpdateFormat, newVersion), string.Format(Translations.Dialogs.DialogMessageUpdateFormat, newVersion), Translations.Dialogs.DialogButtonUpdate, Translations.Common.ButtonCancel)) {
                 var resp = await GetLatestPackageVersion();
                 if(resp.err == null && resp.data > newVersion) {
                     newVersion = resp.data;
@@ -154,7 +161,7 @@ namespace SingularityGroup.HotReload.Editor {
                 if(await IsUsingGitRepo()) {
                     var err = UpdateGitUrlInManifest(newVersion);
                     if(err != null) {
-                        Log.Warning("Encountered issue when updating Hot Reload: {0}", err);
+                        Log.Warning(Translations.Errors.WarningUpdateIssueFailed, err);
                     } else {
                         //Delete state to force another version check after the package is installed
                         File.Delete(persistedFile);
@@ -168,7 +175,7 @@ namespace SingularityGroup.HotReload.Editor {
                 } else {
                     var err = await UpdateUtility.Update(newVersion.ToString(), null, CancellationToken.None);
                     if(err != null) {
-                        Log.Warning("Failed to update package: {0}", err);
+                        Log.Warning(Translations.Errors.WarningUpdatePackageFailed, err);
                     } else {
                         CompileMethodDetourer.Reset();
                         AssetDatabase.Refresh();
@@ -186,7 +193,7 @@ namespace SingularityGroup.HotReload.Editor {
             const string manifestJsonPath = "Packages/manifest.json";
             var repoUrlToNewVersion = $"{repoUrl}#{newVersion}";
             if(!File.Exists(manifestJsonPath)) {
-                return "Unable to find manifest.json";
+                return Translations.Errors.ErrorUnableToFindManifestJson;
             }
             
             var root = JObject.Load(new JsonTextReader(new StringReader(File.ReadAllText(manifestJsonPath))));
@@ -205,11 +212,11 @@ namespace SingularityGroup.HotReload.Editor {
             JToken value;
             if(!root.TryGetValue("dependencies", out value)) {
                 deps = null;
-                return "no dependencies object found in manifest.json";
+                return Translations.Errors.ErrorNoDependenciesInManifest;
             }
             deps = value.Value<JObject>();
             if(deps == null) {
-                return "dependencies object null in manifest.json";
+                return Translations.Errors.ErrorDependenciesNullInManifest;
             }
             return null;
         }
@@ -217,7 +224,7 @@ namespace SingularityGroup.HotReload.Editor {
         static async Task<bool> IsUsingGitRepo() {
             var respose = await Task.Run(() => IsUsingGitRepoThreaded(PackageConst.PackageName));
             if(respose.err != null) {
-                Log.Warning("Unable to find package. message: {0}", respose.err);
+                Log.Warning(Translations.Errors.WarningUnableToFindPackage, respose.err);
                 return false;
             } else {
                 return respose.data;
@@ -227,7 +234,7 @@ namespace SingularityGroup.HotReload.Editor {
         static Response<bool> IsUsingGitRepoThreaded(string packageId) {
             var fi = new FileInfo("Packages/manifest.json");
             if(!fi.Exists) {
-                return "Unable to find manifest.json";
+                return Translations.Errors.ErrorUnableToFindManifestJson;
             }
             
             using(var reader = fi.OpenText()) {
@@ -235,7 +242,7 @@ namespace SingularityGroup.HotReload.Editor {
                 JObject deps;
                 var err = TryGetManfestDeps(root, out deps);
                 if(err != null) {
-                    return "no dependencies specified in manifest.json";
+                    return Translations.Errors.ErrorNoDependenciesSpecified;
                 }
                 JToken value;
                 if(!deps.TryGetValue(packageId, out value)) {

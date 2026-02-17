@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 4ff300cf6bb3c6342a9552c4f18788c8
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/AdditiveScenes/Prefabs/Cube.prefab
+  uploadId: 736421

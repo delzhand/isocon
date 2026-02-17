@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7d859fe3222918f4e9b2fe25afa82ced
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/BenchmarkStinkySteak/BehaviourConfig.asset
+  uploadId: 736421

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 849c125c9d8094249b3c664da1cd143a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/AdditiveLevels/Prefabs/StartPoint.prefab
+  uploadId: 736421

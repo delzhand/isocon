@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2082151ae101a9445990e8a0fe9142da
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/RigidbodyPhysics/Materials/Floor.mat
+  uploadId: 736421

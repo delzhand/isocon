@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 3590209a79a25424184c0d150f85656c
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/_Common/KenneyAssets/kenney_kenney-fonts/License.txt
+  uploadId: 736421

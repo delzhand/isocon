@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 66ac5ce307b2d4bdc92012b90285ac0b
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/_Common/OpenGameArt/License.txt
+  uploadId: 736421

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 449c20116b4724976879aadb9b214c25
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/BenchmarkStinkySteak/Dependencies/netcode-benchmarker-util/LICENSE.md
+  uploadId: 736421

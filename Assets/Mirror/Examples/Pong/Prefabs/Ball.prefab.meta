@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5f7a7f34494ed40268eff49dbf9168bf
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/Pong/Prefabs/Ball.prefab
+  uploadId: 736421

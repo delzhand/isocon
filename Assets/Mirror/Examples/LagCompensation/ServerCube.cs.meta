@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: eb17f7222317f4b889bb4e80f69df3f9
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/LagCompensation/ServerCube.cs
+  uploadId: 736421

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a4076fff9676bc243ae6d7d6c08341f3
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/PickupsDropsChilds/Prefabs/Box.prefab
+  uploadId: 736421

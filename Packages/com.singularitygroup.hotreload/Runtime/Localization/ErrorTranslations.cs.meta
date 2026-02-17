@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: c96d2f0898524320839b84cf22fcd820
+timeCreated: 1762538447
+AssetOrigin:
+  serializedVersion: 1
+  productId: 254358
+  packageName: Hot Reload | Edit Code Without Compiling
+  packageVersion: 1.13.15
+  assetPath: Packages/com.singularitygroup.hotreload/Runtime/Localization/ErrorTranslations.cs
+  uploadId: 846426

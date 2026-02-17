@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 614e28b6213c14195b8661c153bf4ee4
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/CCU/Player.prefab
+  uploadId: 736421

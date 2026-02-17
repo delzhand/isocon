@@ -4,11 +4,11 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using SingularityGroup.HotReload.Editor.Localization;
 using UnityEditor;
 using UnityEngine;
 using System.Threading.Tasks;
 using System.IO;
-using SingularityGroup.HotReload.Editor.Cli;
 using SingularityGroup.HotReload.Newtonsoft.Json;
 using SingularityGroup.HotReload.EditorDependencies;
 
@@ -36,19 +36,19 @@ namespace SingularityGroup.HotReload.Editor {
     }
     
     internal class HotReloadAboutTab : HotReloadTabBase {
-        internal static readonly OpenURLButton seeMore = new OpenURLButton("See More", Constants.ChangelogURL);
-        internal static readonly OpenDialogueButton manageLicenseButton = new OpenDialogueButton("Manage License", Constants.ManageLicenseURL, "Manage License", "Upgrade/downgrade/edit your subscription and edit payment info.", "Open in browser", "Cancel");
-        internal static readonly OpenDialogueButton manageAccountButton = new OpenDialogueButton("Manage Account", Constants.ManageAccountURL, "Manage Account", "Login with company code 'naughtycult'. Use the email you signed up with. Your initial password was sent to you by email.", "Open in browser", "Cancel");
-        internal static readonly OpenURLButton contactButton = new OpenURLButton("Contact", Constants.ContactURL);
-        internal static readonly OpenURLButton discordButton = new OpenURLButton("Join Discord", Constants.DiscordInviteUrl);
-        internal static readonly OpenDialogueButton reportIssueButton = new OpenDialogueButton("Report issue", Constants.ReportIssueURL, "Report issue", "Report issue in our public issue tracker. Requires gitlab.com account (if you don't have one and are not willing to make it, please contact us by other means such as our website).", "Open in browser", "Cancel");
+        internal static readonly OpenURLButton seeMore = new OpenURLButton(Translations.About.ButtonSeeMore, Constants.ChangelogURL);
+        internal static readonly OpenDialogueButton manageLicenseButton = new OpenDialogueButton(Translations.About.ButtonManageLicense, Constants.ManageLicenseURL, Translations.About.ButtonManageLicense, Translations.Dialogs.DialogManageLicenseMessage, Translations.Common.ButtonOpenInBrowser, Translations.Common.ButtonCancel);
+        internal static readonly OpenDialogueButton manageAccountButton = new OpenDialogueButton(Translations.About.ButtonManageAccount, Constants.ManageAccountURL, Translations.About.ButtonManageAccount, Translations.Dialogs.DialogManageAccountMessage, Translations.Common.ButtonOpenInBrowser, Translations.Common.ButtonCancel);
+        internal static readonly OpenURLButton contactButton = new OpenURLButton(Translations.About.ButtonContact, Constants.ContactURL);
+        internal static readonly OpenURLButton discordButton = new OpenURLButton(Translations.About.ButtonJoinDiscord, Constants.DiscordInviteUrl);
+        internal static readonly OpenDialogueButton reportIssueButton = new OpenDialogueButton(Translations.About.ButtonReportIssue, Constants.ReportIssueURL, Translations.About.ButtonReportIssue, Translations.Dialogs.DialogReportIssueMessage, Translations.Common.ButtonOpenInBrowser, Translations.Common.ButtonCancel);
 
         private Vector2 _changelogScroll;
         private IReadOnlyList<ChangelogVersion> _changelog = new List<ChangelogVersion>();
         private bool _requestedChangelog;
         private int _changelogRequestAttempt;
         private string _changelogDir = Path.Combine(PackageConst.LibraryCachePath, "changelog.json");
-        public static string logsPath = Path.Combine(CliUtils.GetAppDataPath(), "logs");
+        public static string logsPath = Path.Combine(PackageConst.LibraryCachePath, "logs");
 
         private static bool LatestChangelogLoaded(IReadOnlyList<ChangelogVersion> changelog) {
             return changelog.Any() && changelog[0].versionNum == PackageUpdateChecker.lastRemotePackageVersion;
@@ -89,7 +89,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
         
-        public HotReloadAboutTab(HotReloadWindow window) : base(window, "Help", "_Help", "Info and support for Hot Reload for Unity.") { }
+        public HotReloadAboutTab(HotReloadWindow window) : base(window, Translations.About.AboutTitle, "_Help", Translations.About.AboutDescription) { }
 
         string GetRelativeDate(DateTime givenDate) {
             const int second = 1;
@@ -102,20 +102,20 @@ namespace SingularityGroup.HotReload.Editor {
             var delta = Math.Abs(ts.TotalSeconds);
 
             if (delta < 24 * hour)
-                return "Today";
+                return Translations.About.AboutToday;
 
             if (delta < 48 * hour)
-                return "Yesterday";
+                return Translations.About.AboutYesterday;
 
             if (delta < 30 * day)
-                return ts.Days + " days ago";
+                return string.Format(Translations.About.AboutDaysAgo, ts.Days);
 
             if (delta < 12 * month) {
                 var months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
-                return months <= 1 ? "one month ago" : months + " months ago";
+                return months <= 1 ? Translations.About.AboutOneMonthAgo : string.Format(Translations.About.AboutMonthsAgo, months);
             }
             var years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
-            return years <= 1 ? "one year ago" : years + " years ago";
+            return years <= 1 ? Translations.About.AboutOneYearAgo : string.Format(Translations.About.AboutYearsAgo, years);
         }
 
         void RenderVersion(ChangelogVersion version) {
@@ -131,7 +131,7 @@ namespace SingularityGroup.HotReload.Editor {
             
             //features
             if (version.features != null) {
-                EditorGUILayout.TextArea("Features:", HotReloadWindowStyles.H2TitleStyle);
+                EditorGUILayout.TextArea(Translations.About.AboutFeatures, HotReloadWindowStyles.H2TitleStyle);
                 tempTextString = "";
                 foreach (var feature in version.features) {
                     tempTextString += "• " + feature + "\n";
@@ -141,7 +141,7 @@ namespace SingularityGroup.HotReload.Editor {
             
             //improvements
             if (version.improvements != null) {
-                EditorGUILayout.TextArea("Improvements:", HotReloadWindowStyles.H2TitleStyle);
+                EditorGUILayout.TextArea(Translations.About.AboutImprovements, HotReloadWindowStyles.H2TitleStyle);
                 tempTextString = "";
                 foreach (var improvement in version.improvements) {
                     tempTextString += "• " + improvement + "\n";
@@ -151,7 +151,7 @@ namespace SingularityGroup.HotReload.Editor {
             
             //fixes
             if (version.fixes != null) {
-                EditorGUILayout.TextArea("Fixes:", HotReloadWindowStyles.H2TitleStyle);
+                EditorGUILayout.TextArea(Translations.About.AboutFixes, HotReloadWindowStyles.H2TitleStyle);
                 tempTextString = "";
                 foreach (var fix in version.fixes) {
                     tempTextString += "• " + fix + "\n";
@@ -171,7 +171,7 @@ namespace SingularityGroup.HotReload.Editor {
             FetchChangelog().Forget();
             using (new EditorGUILayout.HorizontalScope(HotReloadWindowStyles.SectionInnerBoxWide)) {
                 using (new EditorGUILayout.VerticalScope()) {
-                    HotReloadPrefs.ShowChangeLog = EditorGUILayout.Foldout(HotReloadPrefs.ShowChangeLog, "Changelog", true, HotReloadWindowStyles.FoldoutStyle);
+                    HotReloadPrefs.ShowChangeLog = EditorGUILayout.Foldout(HotReloadPrefs.ShowChangeLog, Translations.Miscellaneous.ChangelogTitle, true, HotReloadWindowStyles.FoldoutStyle);
                     if (!HotReloadPrefs.ShowChangeLog) {
                         return;
                     }
@@ -225,7 +225,7 @@ namespace SingularityGroup.HotReload.Editor {
                         RenderLogButtons();
 
                         EditorGUILayout.Space();
-                        EditorGUILayout.HelpBox($" Hot Reload version {PackageConst.Version}. ", MessageType.Info);
+                        EditorGUILayout.HelpBox(string.Format(Translations.About.AboutVersionInfo, PackageConst.Version), MessageType.Info);
                         EditorGUILayout.Space();
 
                         RenderHelpButtons();
@@ -249,7 +249,7 @@ namespace SingularityGroup.HotReload.Editor {
                     var buttonHeight = 19;
                     
                     var bigButtonRect = new Rect(labelRect.x + 3, labelRect.y + 5, labelRect.width - 6, buttonHeight);
-                    OpenURLButton.RenderRaw(bigButtonRect, "Documentation", Constants.DocumentationURL, HotReloadWindowStyles.HelpTabButton);
+                    OpenURLButton.RenderRaw(bigButtonRect, Translations.About.ButtonDocumentation, Constants.DocumentationURL, HotReloadWindowStyles.HelpTabButton);
                     
                     var firstLayerX = bigButtonRect.x;
                     var firstLayerY = bigButtonRect.y + buttonHeight + 3;
@@ -261,7 +261,7 @@ namespace SingularityGroup.HotReload.Editor {
                     
                     using (new EditorGUILayout.HorizontalScope()) {
                         OpenURLButton.RenderRaw(new Rect { x = firstLayerX, y = firstLayerY, width = firstLayerWidth, height = buttonHeight }, contactButton.text, contactButton.url, HotReloadWindowStyles.HelpTabButton);
-                        OpenURLButton.RenderRaw(new Rect { x = secondLayerX, y = firstLayerY, width = secondLayerWidth, height = buttonHeight }, "Unity Forum", Constants.ForumURL, HotReloadWindowStyles.HelpTabButton);
+                        OpenURLButton.RenderRaw(new Rect { x = secondLayerX, y = firstLayerY, width = secondLayerWidth, height = buttonHeight }, Translations.About.ButtonUnityForum, Constants.ForumURL, HotReloadWindowStyles.HelpTabButton);
                     }
                     using (new EditorGUILayout.HorizontalScope()) {
                         OpenDialogueButton.RenderRaw(rect: new Rect { x = firstLayerX, y = secondLayerY, width = firstLayerWidth, height = buttonHeight }, text: reportIssueButton.text, url: reportIssueButton.url, title: reportIssueButton.title, message: reportIssueButton.message, ok: reportIssueButton.ok, cancel: reportIssueButton.cancel, style: HotReloadWindowStyles.HelpTabButton);
@@ -277,31 +277,32 @@ namespace SingularityGroup.HotReload.Editor {
                 EditorGUILayout.Space();
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.FlexibleSpace();
-                if (GUILayout.Button("Open Log File")) {
+                if (GUILayout.Button(Translations.Common.ButtonOpenLogFile)) {
                     var mostRecentFile = LogsHelper.FindRecentLog(logsPath);
                     if (mostRecentFile == null) {
-                        Log.Info("No logs found");
+                        Log.Info(Translations.About.LogNoLogsFound);
                     } else {
                         try {
                             Process.Start($"\"{Path.Combine(logsPath, mostRecentFile)}\"");
                         } catch (Win32Exception e) {
+                            // TODO: is this the same for chinese?
                             if (e.Message.Contains("Application not found")) {
                                 try {
                                     Process.Start("notepad.exe", $"\"{Path.Combine(logsPath, mostRecentFile)}\"");
                                 } catch {
                                     // Fallback to opening folder with all logs
                                     Process.Start($"\"{logsPath}\"");
-                                    Log.Info("Failed opening log file.");
+                                    Log.Info(Translations.About.LogFailedOpeningLogFile);
                                 }
                             }
                         } catch {
                             // Fallback to opening folder with all logs
                             Process.Start($"\"{logsPath}\"");
-                            Log.Info("Failed opening log file.");
+                            Log.Info(Translations.About.LogFailedOpeningLogFile);
                         }
                     }
                 }
-                if (GUILayout.Button("Browse all logs")) {
+                if (GUILayout.Button(Translations.Common.ButtonBrowseAllLogs)) {
                     Process.Start($"\"{logsPath}\"");
                 }
                 EditorGUILayout.EndHorizontal();

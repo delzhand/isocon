@@ -9,6 +9,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 254358
   packageName: Hot Reload | Edit Code Without Compiling
-  packageVersion: 1.12.8
+  packageVersion: 1.13.15
   assetPath: Packages/com.singularitygroup.hotreload/Server/linux-x64/terminal-run.sh
-  uploadId: 632084
+  uploadId: 846426

@@ -1,4 +1,3 @@
-#if ENABLE_MONO && (DEVELOPMENT_BUILD || UNITY_EDITOR)
 using System;
 using System.Runtime.InteropServices;
 
@@ -193,4 +192,3 @@ namespace SingularityGroup.HotReload.Interop {
         RequireSecObject = 32768, // 0x00008000
     }
 }
-#endif

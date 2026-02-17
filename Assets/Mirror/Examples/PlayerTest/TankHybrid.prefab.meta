@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: fc412adcffebbeb4190ef3d4ea64c047
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/PlayerTest/TankHybrid.prefab
+  uploadId: 736421

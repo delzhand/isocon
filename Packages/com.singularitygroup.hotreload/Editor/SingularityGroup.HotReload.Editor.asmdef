@@ -7,7 +7,8 @@
         "UnityEditor.UI",
         "UnityEngine.UI",
         "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
+        "UnityEditor.TestRunner",
+        "VInspector"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [
@@ -21,7 +22,10 @@
         "SingularityGroup.HotReload.RuntimeDependencies2019.dll",
         "SingularityGroup.HotReload.RuntimeDependencies2020.dll",
         "SingularityGroup.HotReload.RuntimeDependencies2022.dll",
-        "SingularityGroup.HotReload.EditorDependencies.dll"
+        "SingularityGroup.HotReload.EditorDependencies.dll",
+        "Sirenix.OdinInspector.Editor.dll",
+        "Sirenix.Utilities.dll",
+        "Sirenix.OdinInspector.Attributes.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": []

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 626c6e9ff4b955443ae42a354ab1f38a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8574412962073106934
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/PlayerTest/PlayerTestScene/TerrainLayer2019.terrainlayer
+  uploadId: 736421

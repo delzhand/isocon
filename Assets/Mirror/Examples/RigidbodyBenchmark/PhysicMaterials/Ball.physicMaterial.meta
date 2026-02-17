@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0597114e4b10a4ab3b8d8d07fbaca542
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 13400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/RigidbodyBenchmark/PhysicMaterials/Ball.physicMaterial
+  uploadId: 736421

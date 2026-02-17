@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using SingularityGroup.HotReload.Editor.Localization;
 
 namespace SingularityGroup.HotReload.Editor {
     internal class HotReloadOptionsSection {
@@ -23,7 +24,7 @@ namespace SingularityGroup.HotReload.Editor {
                 // This does not save the asset, user has to do that by saving assets in Unity (e.g. press hotkey Ctrl + S)
                 var target = so.targetObject as HotReloadSettingsObject;
                 if (target == null) {
-                    Log.Warning("Unexpected problem unable to save HotReloadSettingsObject");
+                    Log.Warning(Translations.Errors.WarningUnexpectedSaveProblem);
                 } else {
                     // when one of the project options changed then we ensure the asset file exists.
                     HotReloadSettingsEditor.EnsureSettingsCreated(target);

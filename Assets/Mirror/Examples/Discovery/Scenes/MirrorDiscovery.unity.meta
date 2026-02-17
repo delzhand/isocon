@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 90fddc74fa21c423599167eb28b09dd1
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/Discovery/Scenes/MirrorDiscovery.unity
+  uploadId: 736421

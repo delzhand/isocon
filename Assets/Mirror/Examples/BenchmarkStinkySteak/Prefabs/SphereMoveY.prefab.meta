@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 296e7798207e69a40a871087348da0c3
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/BenchmarkStinkySteak/Prefabs/SphereMoveY.prefab
+  uploadId: 736421

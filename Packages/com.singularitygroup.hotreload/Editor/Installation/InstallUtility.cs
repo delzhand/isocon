@@ -22,9 +22,13 @@ namespace SingularityGroup.HotReload.Editor {
         public static void HandleEditorStart(string updatedFromVersion) {
             var showOnStartup = HotReloadPrefs.ShowOnStartup;
             if (showOnStartup == ShowOnStartupEnum.Always || (showOnStartup == ShowOnStartupEnum.OnNewVersion && !String.IsNullOrEmpty(updatedFromVersion))) {
-                HotReloadWindow.Open();
+                // Don't open Hot Reload window inside Virtual Player folder
+                // This is a heuristic since user might have the main player inside VP user-created folder, but that will be rare
+                if (new DirectoryInfo(Path.GetFullPath("..")).Name != "VP" && !HotReloadPrefs.DeactivateHotReload) {
+                    HotReloadWindow.Open();
+                }
             }
-            if (HotReloadPrefs.LaunchOnEditorStart) {
+            if (HotReloadPrefs.LaunchOnEditorStart && !HotReloadPrefs.DeactivateHotReload) {
                 EditorCodePatcher.DownloadAndRun().Forget();
             }
             
@@ -45,11 +49,18 @@ namespace SingularityGroup.HotReload.Editor {
             if (EditorCodePatcher.licenseType == UnityLicenseType.UnityPro) {
                 RedeemLicenseHelper.I.StartRegistration();
             }
-            HotReloadWindow.Open();
+            // Don't open Hot Reload window inside Virtual Player folder
+            // This is a heuristic since user might have the main player inside VP user-created folder, but that will be rare
+            if (new DirectoryInfo(Path.GetFullPath("..")).Name != "VP") {
+                HotReloadWindow.Open();
+            }
             HotReloadPrefs.AllowDisableUnityAutoRefresh = true;
             HotReloadPrefs.AllAssetChanges = true;
             HotReloadPrefs.AutoRecompileUnsupportedChanges = true;
             HotReloadPrefs.AutoRecompileUnsupportedChangesOnExitPlayMode = true;
+#if UNITY_EDITOR_WIN
+            HotReloadPrefs.UseWatchman = false;
+#endif
             if (HotReloadCli.CanOpenInBackground) {
                 HotReloadPrefs.DisableConsoleWindow = true;
             }

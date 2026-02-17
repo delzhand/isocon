@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f3f3b7b9663c37141921929c9cfb2d5e
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/HexSpatialHash/Prefabs/Hex2DPlayer.prefab
+  uploadId: 736421

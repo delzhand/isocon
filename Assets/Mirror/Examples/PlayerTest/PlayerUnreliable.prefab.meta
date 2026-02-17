@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 400bac1c9e1e96648a83f333d4837484
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/PlayerTest/PlayerUnreliable.prefab
+  uploadId: 736421

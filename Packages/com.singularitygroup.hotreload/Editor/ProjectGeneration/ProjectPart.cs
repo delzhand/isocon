@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using SingularityGroup.HotReload.Editor.Localization;
 using UnityEditor.Compilation;
 using UnityEngine;
 
@@ -60,7 +61,7 @@ namespace SingularityGroup.HotReload.Editor.ProjectGeneration
         foreach (var error in responseFilesWithErrors)
         foreach (var valueError in error.Value.Errors)
         {
-          Log.Error("{0} Parse Error : {1}", error.Key, valueError);
+          Log.Error(Translations.Errors.ErrorParseError, error.Key, valueError);
         }
       }
 

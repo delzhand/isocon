@@ -1,7 +1,6 @@
-#if ENABLE_MONO && (DEVELOPMENT_BUILD || UNITY_EDITOR)
-
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -9,12 +8,18 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using SingularityGroup.HotReload.DTO;
+using SingularityGroup.HotReload.Localization;
 using JetBrains.Annotations;
 using SingularityGroup.HotReload.Burst;
 using SingularityGroup.HotReload.HarmonyLib;
 using SingularityGroup.HotReload.JsonConverters;
+using SingularityGroup.HotReload.MonoMod.Utils;
 using SingularityGroup.HotReload.Newtonsoft.Json;
 using SingularityGroup.HotReload.RuntimeDependencies;
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditorInternal;
+#endif
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -22,9 +27,26 @@ using UnityEngine.SceneManagement;
 
 namespace SingularityGroup.HotReload {
     class RegisterPatchesResult {
-        public readonly List<SMethod> patchedMethods = new List<SMethod>();
-        public readonly List<SMethod> addedMethods = new List<SMethod>();
+        // note: doesn't include removals and method definition changes (e.g. renames)
+        public readonly List<MethodPatch> patchedMethods = new List<MethodPatch>();
+        public List<SField> addedFields = new List<SField>();
+        public readonly List<SMethod> patchedSMethods = new List<SMethod>();
+        public bool inspectorModified;
+        public bool inspectorFieldAdded;
         public readonly List<Tuple<SMethod, string>> patchFailures = new List<Tuple<SMethod, string>>();
+        public readonly List<string> patchExceptions = new List<string>();
+    }
+
+    class FieldHandler {
+        public readonly Func<Type, FieldInfo, bool> storeField;
+        public readonly Action<Type, FieldInfo, FieldInfo> registerInspectorFieldAttributes;
+        public readonly Func<Type, string, bool> hideField;
+
+        public FieldHandler(Func<Type, FieldInfo, bool> storeField, Func<Type, string, bool> hideField, Action<Type, FieldInfo, FieldInfo> registerInspectorFieldAttributes) {
+            this.storeField = storeField;
+            this.hideField = hideField;
+            this.registerInspectorFieldAttributes = registerInspectorFieldAttributes;
+        }
     }
     
     class CodePatcher {
@@ -41,6 +63,8 @@ namespace SingularityGroup.HotReload {
         string[] assemblySearchPaths;
         SymbolResolver symbolResolver;
         readonly string tmpDir;
+        public FieldHandler fieldHandler;
+        public bool debuggerCompatibilityEnabled;
         
         CodePatcher() {
             pendingPatches = new List<MethodPatchResponse>();
@@ -55,9 +79,21 @@ namespace SingularityGroup.HotReload {
                 try {
                     LoadPatches(PersistencePath);
                 } catch(Exception ex) {
-                    Log.Error("Encountered exception when loading patches from disk:\n{0}", ex);
+                    Log.Error($"{Localization.Translations.Logging.LoadingPatchesFromDiskError}\n{ex}");
                 }
             }
+#if UNITY_EDITOR
+            // Unity event methods are not assigned outside the scene. 
+            // So we need to ensure they are added when entering play mode from edit mode
+            EditorApplication.playModeStateChanged += state => {
+                if (state != PlayModeStateChange.EnteredPlayMode) {
+                    return;
+                }
+                foreach (var unityEventMethod in unityEventMethods) {
+                    EnsureUnityEventMethod(unityEventMethod);
+                }
+            };
+#endif
         }
         
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -67,12 +103,12 @@ namespace SingularityGroup.HotReload {
 
         
         void LoadPatches(string filePath) {
-            PlayerLog("Loading patches from file {0}", filePath);
+            PlayerLog(Localization.Translations.Logging.LoadingPatchesFromFile, filePath);
             var file = new FileInfo(filePath);
             if(file.Exists) {
                 var bytes = File.ReadAllText(filePath);
                 var patches = JsonConvert.DeserializeObject<List<MethodPatchResponse>>(bytes);
-                PlayerLog("Loaded {0} patches from disk", patches.Count.ToString());
+                PlayerLog(Localization.Translations.Logging.LoadedPatchesFromDisk, patches.Count.ToString());
                 foreach (var patch in patches) {
                     RegisterPatches(patch, persist: false);
                 }
@@ -90,13 +126,13 @@ namespace SingularityGroup.HotReload {
         }
        
         internal RegisterPatchesResult RegisterPatches(MethodPatchResponse patches, bool persist) {
-            PlayerLog("Register patches.\nWarnings: {0} \nMethods:\n{1}", string.Join("\n", patches.failures), string.Join("\n", patches.patches.SelectMany(p => p.modifiedMethods).Select(m => m.displayName)));
+            PlayerLog(Localization.Translations.Logging.RegisterPatches, string.Join("\n", patches.failures), string.Join("\n", patches.patches.SelectMany(p => p.modifiedMethods).Select(m => m.displayName)));
             pendingPatches.Add(patches);
             return ApplyPatches(persist);
         }
         
         RegisterPatchesResult ApplyPatches(bool persist) {
-            PlayerLog("ApplyPatches. {0} patches pending.", pendingPatches.Count);
+            PlayerLog(Localization.Translations.Logging.ApplyPatchesPending, pendingPatches.Count);
             EnsureSymbolResolver();
 
             var result = new RegisterPatchesResult();
@@ -107,6 +143,26 @@ namespace SingularityGroup.HotReload {
                     if (seenResponses.Contains(response.id)) {
                         continue;
                     }
+                    foreach (var patch in response.patches) {
+                        var asm = Assembly.Load(patch.patchAssembly, patch.patchPdb);
+                        SymbolResolver.AddAssembly(asm);
+                    }
+                    HandleRemovedUnityMethods(response.removedMethod);
+#if UNITY_EDITOR
+                    HandleAlteredFields(response.id, result, response.alteredFields);
+#endif
+                    // needs to come before RegisterNewFieldInitializers
+                    RegisterNewFieldDefinitions(response);
+                    // Note: order is important here. Reshaped fields require new field initializers to be added
+                    // because the old initializers must override new initilaizers for existing holders.
+                    // so that the initializer is not invoked twice
+                    RegisterNewFieldInitializers(response);
+                    HandleReshapedFields(response);
+                    RemoveOldFieldInitializers(response);
+#if UNITY_EDITOR
+                    RegisterInspectorFieldAttributes(result, response);
+#endif
+
                     HandleMethodPatchResponse(response, result);
                     patchHistory.Add(response);
 
@@ -114,10 +170,10 @@ namespace SingularityGroup.HotReload {
                     count += response.patches.Length;
                 }
                 if (count > 0) {
-                    Dispatch.OnHotReload().Forget();
+                    Dispatch.OnHotReload(result.patchedMethods).Forget();
                 }
             } catch(Exception ex) {
-                Log.Warning("Exception occured when handling method patch. Exception:\n{0}", ex);
+                Log.Warning($"{Localization.Translations.Logging.ExceptionHandlingMethodPatch}\n{ex}");
             } finally {
                 pendingPatches.Clear();
             }
@@ -141,9 +197,28 @@ namespace SingularityGroup.HotReload {
                 if (didLog || !UnityEventHelper.UnityMethodsAdded()) {
                     return;
                 }
-                Log.Warning("A new Scene was loaded while new unity event methods were added at runtime. MonoBehaviours in the Scene will not trigger these new events.");
+                Log.Warning(Localization.Translations.Logging.SceneLoadedWithNewUnityEventMethods);
                 didLog = true;
             };
+        }
+
+        static HashSet<MethodBase> unityEventMethods = new HashSet<MethodBase>();
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        static void OnSceneLoad() {
+            SceneManager.sceneLoaded += (_, __) => {
+                foreach (var unityEventMethod in unityEventMethods) {
+                    EnsureUnityEventMethod(unityEventMethod);
+                }
+            };
+        }
+
+        static bool EnsureUnityEventMethod(MethodBase newMethod) {
+            try {
+                return UnityEventHelper.EnsureUnityEventMethod(newMethod);
+            } catch(Exception ex) {
+                Log.Warning(Localization.Translations.Logging.ExceptionEnsureUnityEventMethod, ex.GetType().Name, ex.Message);
+                return false;
+            }
         }
 
         void HandleMethodPatchResponse(MethodPatchResponse response, RegisterPatchesResult result) {
@@ -151,64 +226,310 @@ namespace SingularityGroup.HotReload {
 
             foreach(var patch in response.patches) {
                 try {
-                    var asm = Assembly.Load(patch.patchAssembly, patch.patchPdb);
-
-                    var module = asm.GetLoadedModules()[0];
                     foreach(var sMethod in patch.newMethods) {
-                        var newMethod = module.ResolveMethod(sMethod.metadataToken);
-                        try {
-                            UnityEventHelper.EnsureUnityEventMethod(newMethod);
-                        } catch(Exception ex) {
-                            Log.Warning("Encountered exception in EnsureUnityEventMethod: {0} {1}", ex.GetType().Name, ex.Message);
-                        }
+                        var newMethod = SymbolResolver.Resolve(sMethod);
+
+                        var isUnityEvent = EnsureUnityEventMethod(newMethod);
+                        if (isUnityEvent) {
+                            unityEventMethods.Add(newMethod);
+                        } 
+                        
                         MethodUtils.DisableVisibilityChecks(newMethod);
                         if (!patch.patchMethods.Any(m => m.metadataToken == sMethod.metadataToken)) {
-                            result.addedMethods.Add(sMethod);
+                            result.patchedMethods.Add(new MethodPatch(null, null, newMethod));
+                            result.patchedSMethods.Add(sMethod);
+                            previousPatchMethods[newMethod] = newMethod;
+                            newMethods.Add(newMethod);
                         }
                     }
                     
-                    symbolResolver.AddAssembly(asm);
                     for (int i = 0; i < patch.modifiedMethods.Length; i++) {
                         var sOriginalMethod = patch.modifiedMethods[i];
                         var sPatchMethod = patch.patchMethods[i];
-                        var err = PatchMethod(module: module, sOriginalMethod: sOriginalMethod, sPatchMethod: sPatchMethod, containsBurstJobs: patch.unityJobs.Length > 0, patchesResult: result);
+                        var err = PatchMethod(response.id, sOriginalMethod: sOriginalMethod, sPatchMethod: sPatchMethod, containsBurstJobs: patch.unityJobs.Length > 0, patchesResult: result);
                         if (!string.IsNullOrEmpty(err)) {
                             result.patchFailures.Add(Tuple.Create(sOriginalMethod, err));
                         }
                     }
-                    JobHotReloadUtility.HotReloadBurstCompiledJobs(patch, module);
+                    foreach (var job in patch.unityJobs) {
+                        var type = SymbolResolver.Resolve(new SType(patch.assemblyName, job.jobKind.ToString(), job.metadataToken));
+                        JobHotReloadUtility.HotReloadBurstCompiledJobs(job, type);
+                    }
+#if UNITY_EDITOR
+                    HandleNewFields(patch.patchId, result, patch.newFields);
+#endif
+                } catch (Exception ex) {
+                    RequestHelper.RequestEditorEventWithRetry(new Stat(StatSource.Client, StatLevel.Error, StatFeature.Patching, StatEventType.Exception), new EditorExtraData {
+                        { StatKey.PatchId, patch.patchId },
+                        { StatKey.Detailed_Exception, ex.ToString() },
+                    }).Forget();
+                    result.patchExceptions.Add($"{Localization.Translations.Logging.ExceptionApplyingPatch}\nException: {ex}");
+                }
+            }
+        }
+        
+        void HandleRemovedUnityMethods(SMethod[] removedMethods) {
+            if (removedMethods == null) {
+                return;
+            }
+            foreach(var sMethod in removedMethods) {
+                try {
+                    var oldMethod = SymbolResolver.Resolve(sMethod);
+                    UnityEventHelper.RemoveUnityEventMethod(oldMethod);
+                    unityEventMethods.Remove(oldMethod);
+                } catch (SymbolResolvingFailedException) {
+                    // ignore, not a unity event method if can't resolve
                 } catch(Exception ex) {
-                    Log.Warning("Failed to apply patch with id: {0}\n{1}", patch.patchId, ex);
+                    Log.Warning(Localization.Translations.Logging.ExceptionRemoveUnityEventMethod, ex.GetType().Name, ex.Message);
+                }
+            }
+        }
+        
+        // Important: must come before applying any patches
+        void RegisterNewFieldInitializers(MethodPatchResponse resp) {
+            for (var i = 0; i < resp.addedFieldInitializerFields.Length; i++) {
+                var sField = resp.addedFieldInitializerFields[i];
+                var sMethod = resp.addedFieldInitializerInitializers[i];
+                try {
+                    var declaringType = SymbolResolver.Resolve(sField.declaringType);
+                    var method = SymbolResolver.Resolve(sMethod);
+                    if (!(method is MethodInfo initializer)) {
+                        Log.Warning(string.Format(Localization.Translations.Logging.FailedRegisteringInitializerInvalidMethod, sField.fieldName, sField.declaringType.typeName));
+                        continue;
+                    }
+                    // We infer if the field is static by the number of parameters the method has
+                    // because sField is old field
+                    var isStatic = initializer.GetParameters().Length == 0;
+                    MethodUtils.DisableVisibilityChecks(initializer);
+                    // Initializer return type is used in place of fieldType because latter might be point to old field if the type changed
+                    FieldInitializerRegister.RegisterInitializer(declaringType, sField.fieldName, initializer.ReturnType, initializer, isStatic);
+                    
+                } catch (Exception e) {
+                    RequestHelper.RequestEditorEventWithRetry(new Stat(StatSource.Client, StatLevel.Error, StatFeature.Patching, StatEventType.RegisterFieldInitializer), new EditorExtraData {
+                        { StatKey.PatchId, resp.id },
+                        { StatKey.Detailed_Exception, e.ToString() },
+                    }).Forget();
+                    Log.Warning(string.Format(Localization.Translations.Logging.FailedRegisteringInitializerException, sField.fieldName, sField.declaringType.typeName, e.Message));
+                }
+            }
+        }
+        
+        void RegisterNewFieldDefinitions(MethodPatchResponse resp) {
+            foreach (var sField in resp.newFieldDefinitions) {
+                try {
+                    var declaringType = SymbolResolver.Resolve(sField.declaringType);
+                    var fieldType = SymbolResolver.Resolve(sField).FieldType;
+                    FieldResolver.RegisterFieldType(declaringType, sField.fieldName, fieldType);
+                } catch (Exception e) {
+                    RequestHelper.RequestEditorEventWithRetry(new Stat(StatSource.Client, StatLevel.Error, StatFeature.Patching, StatEventType.RegisterFieldDefinition), new EditorExtraData {
+                        { StatKey.PatchId, resp.id },
+                        { StatKey.Detailed_Exception, e.ToString() },
+                    }).Forget();
+                    Log.Warning(string.Format(Localization.Translations.Logging.FailedRegisteringNewFieldDefinitions, sField.fieldName, sField.declaringType.typeName, e.Message));
+                }
+            }
+        }
+            
+        // Important: must come before applying any patches
+        // Note: server might decide not to report removed field initializer at all if it can handle it
+        void RemoveOldFieldInitializers(MethodPatchResponse resp) {
+            foreach (var sField in resp.removedFieldInitializers) {
+                try {
+                    var declaringType = SymbolResolver.Resolve(sField.declaringType);
+                    var fieldType = SymbolResolver.Resolve(sField.declaringType);
+                    FieldInitializerRegister.UnregisterInitializer(declaringType, sField.fieldName, fieldType, sField.isStatic);
+                } catch (Exception e) {
+                    RequestHelper.RequestEditorEventWithRetry(new Stat(StatSource.Client, StatLevel.Error, StatFeature.Patching, StatEventType.UnregisterFieldInitializer), new EditorExtraData {
+                        { StatKey.PatchId, resp.id },
+                        { StatKey.Detailed_Exception, e.ToString() },
+                    }).Forget();
+                    Log.Warning(string.Format(Localization.Translations.Logging.FailedRemovingInitializer, sField.fieldName, sField.declaringType.typeName, e.Message));
+                }
+            }
+        }
+        
+        // Important: must come before applying any patches
+        // Should also come after RegisterNewFieldInitializers so that new initializers are not invoked for existing objects
+        internal void HandleReshapedFields(MethodPatchResponse resp) {
+            foreach(var patch in resp.patches) {
+                var removedReshapedFields = patch.deletedFields;
+                var renamedReshapedFieldsFrom = patch.renamedFieldsFrom;
+                var renamedReshapedFieldsTo = patch.renamedFieldsTo;
+                
+                foreach (var f in removedReshapedFields) {
+                    try {
+                        var declaringType = SymbolResolver.Resolve(f.declaringType);
+                        var fieldType = SymbolResolver.Resolve(f).FieldType;
+                        FieldResolver.ClearHolders(declaringType, f.isStatic, f.fieldName, fieldType);
+                    } catch (Exception e) {
+                        RequestHelper.RequestEditorEventWithRetry(new Stat(StatSource.Client, StatLevel.Error, StatFeature.Patching, StatEventType.ClearHolders), new EditorExtraData {
+                            { StatKey.PatchId, resp.id },
+                            { StatKey.Detailed_Exception, e.ToString() },
+                        }).Forget();
+                        Log.Warning(string.Format(Localization.Translations.Logging.FailedRemovingFieldValue, f.fieldName, f.declaringType.typeName, e.Message));
+                    }
+                }
+                for (var i = 0; i < renamedReshapedFieldsFrom.Length; i++) {
+                    var fromField = renamedReshapedFieldsFrom[i];
+                    var toField = renamedReshapedFieldsTo[i];
+                    try {
+                        var declaringType = SymbolResolver.Resolve(fromField.declaringType);
+                        var fieldType = SymbolResolver.Resolve(fromField).FieldType;
+                        var toFieldType = SymbolResolver.Resolve(toField).FieldType;
+                        if (!AreSTypesCompatible(fromField.declaringType, toField.declaringType)
+                            || fieldType != toFieldType
+                            || fromField.isStatic != toField.isStatic
+                        ) {
+                            FieldResolver.ClearHolders(declaringType, fromField.isStatic, fromField.fieldName, fieldType);
+                            continue;
+                        }
+                        FieldResolver.MoveHolders(declaringType, fromField.fieldName, toField.fieldName, fieldType, fromField.isStatic);
+                    } catch (Exception e) {
+                        RequestHelper.RequestEditorEventWithRetry(new Stat(StatSource.Client, StatLevel.Error, StatFeature.Patching, StatEventType.MoveHolders), new EditorExtraData {
+                            { StatKey.PatchId, resp.id },
+                            { StatKey.Detailed_Exception, e.ToString() },
+                        }).Forget();
+                        Log.Warning(Localization.Translations.Logging.FailedMovingFieldValue, fromField, toField, toField.declaringType.typeName, e.Message);
+                    }
                 }
             }
         }
 
-        string PatchMethod(Module module, SMethod sOriginalMethod, SMethod sPatchMethod, bool containsBurstJobs, RegisterPatchesResult patchesResult) {
+        internal bool AreSTypesCompatible(SType one, SType two) {
+            if (one.isGenericParameter != two.isGenericParameter) {
+                return false;
+            }
+            if (one.metadataToken != two.metadataToken) {
+                return false;
+            }
+            if (one.assemblyName != two.assemblyName) {
+                return false;
+            }
+            if (one.genericParameterPosition != two.genericParameterPosition) {
+                return false;
+            }
+            if (one.typeName != two.typeName) {
+                return false;
+            }
+            return true;
+        }
+
+#if UNITY_EDITOR
+        internal void RegisterInspectorFieldAttributes(RegisterPatchesResult result, MethodPatchResponse resp) {
+            foreach (var patch in resp.patches) {
+                var propertyAttributesFieldOriginal = patch.propertyAttributesFieldOriginal ?? Array.Empty<SField>();
+                var propertyAttributesFieldUpdated = patch.propertyAttributesFieldUpdated ?? Array.Empty<SField>();
+                for (var i = 0; i < propertyAttributesFieldOriginal.Length; i++) {
+                    var original = propertyAttributesFieldOriginal[i];
+                    var updated = propertyAttributesFieldUpdated[i];
+                    try {
+                        var declaringType = SymbolResolver.Resolve(original.declaringType);
+                        var originalField = SymbolResolver.Resolve(original);
+                        var updatedField = SymbolResolver.Resolve(updated);
+                        fieldHandler?.registerInspectorFieldAttributes?.Invoke(declaringType, originalField, updatedField);
+                        result.inspectorModified = true;
+                    } catch (Exception e) {
+                        RequestHelper.RequestEditorEventWithRetry(new Stat(StatSource.Client, StatLevel.Error, StatFeature.Patching, StatEventType.MoveHolders), new EditorExtraData {
+                            { StatKey.PatchId, resp.id },
+                            { StatKey.Detailed_Exception, e.ToString() },
+                        }).Forget();
+                        Log.Warning(string.Format(Localization.Translations.Logging.FailedUpdatingFieldAttributes, original.fieldName, original.declaringType.typeName, e.Message));
+                    }
+                }
+            }
+        }
+        
+        internal void HandleNewFields(string patchId, RegisterPatchesResult result, SField[] sFields) {
+            foreach (var sField in sFields) {
+                if (!sField.serializable) {
+                    continue;
+                }
+                try {
+                    var declaringType = SymbolResolver.Resolve(sField.declaringType);
+                    var field = SymbolResolver.Resolve(sField);
+                    result.inspectorFieldAdded = fieldHandler?.storeField?.Invoke(declaringType, field) ?? false;
+                    result.inspectorModified = true;
+                } catch (Exception e) {
+                    RequestHelper.RequestEditorEventWithRetry(new Stat(StatSource.Client, StatLevel.Error, StatFeature.Patching, StatEventType.AddInspectorField), new EditorExtraData {
+                        { StatKey.PatchId, patchId },
+                        { StatKey.Detailed_Exception, e.ToString() },
+                    }).Forget();
+                    Log.Warning(string.Format(Localization.Translations.Logging.FailedAddingFieldToInspector, sField.fieldName, sField.declaringType.typeName, e.Message));
+                }
+            }
+            result.addedFields.AddRange(sFields);
+        }
+        
+        // IMPORTANT: must come before HandleNewFields. Might contain new fields which we don't want to hide
+        internal void HandleAlteredFields(string patchId, RegisterPatchesResult result, SField[] alteredFields) {
+            if (alteredFields == null) {
+                return;
+            }
+            bool alteredFieldHidden = false;
+            foreach(var sField in alteredFields) {
+                try {
+                    var declaringType = SymbolResolver.Resolve(sField.declaringType);
+                    if (fieldHandler?.hideField?.Invoke(declaringType, sField.fieldName) == true) {
+                        alteredFieldHidden = true;
+                    }
+                } catch(Exception e) {
+                    RequestHelper.RequestEditorEventWithRetry(new Stat(StatSource.Client, StatLevel.Error, StatFeature.Patching, StatEventType.HideInspectorField), new EditorExtraData {
+                        { StatKey.PatchId, patchId },
+                        { StatKey.Detailed_Exception, e.ToString() },
+                    }).Forget();
+                    Log.Warning(string.Format(Localization.Translations.Logging.FailedHidingFieldFromInspector, sField.fieldName, sField.declaringType.typeName, e.Message));
+                }
+            }
+            if (alteredFieldHidden) {
+                result.inspectorModified = true;
+            }
+        }
+#endif
+
+        Dictionary<MethodBase, MethodBase> previousPatchMethods = new Dictionary<MethodBase, MethodBase>();
+        public IEnumerable<MethodBase> OriginalPatchMethods => previousPatchMethods.Keys;
+        List<MethodBase> newMethods = new List<MethodBase>();
+
+        string PatchMethod(string patchId, SMethod sOriginalMethod, SMethod sPatchMethod, bool containsBurstJobs, RegisterPatchesResult patchesResult) {
             try {
-                var patchMethod = module.ResolveMethod(sPatchMethod.metadataToken);
+                var patchMethod = SymbolResolver.Resolve(sPatchMethod);
                 var start = DateTime.UtcNow;
                 var state = TryResolveMethod(sOriginalMethod, patchMethod);
+                if (Debugger.IsAttached && !debuggerCompatibilityEnabled) {
+                    RequestHelper.RequestEditorEventWithRetry(new Stat(StatSource.Client, StatLevel.Error, StatFeature.Patching, StatEventType.DebuggerAttached), new EditorExtraData {
+                        { StatKey.PatchId, patchId },
+                    }).Forget();
+                    return Localization.Translations.Logging.DebuggerAttachedNotAllowed;
+                }
 
                 if (DateTime.UtcNow - start > TimeSpan.FromMilliseconds(500)) {
-                    Log.Info("Hot Reload apply took {0}", (DateTime.UtcNow - start).TotalMilliseconds);
+                    Log.Info(Localization.Translations.Logging.HotReloadApplyTook, (DateTime.UtcNow - start).TotalMilliseconds);
                 }
 
                 if(state.match == null) {
-                    var error = 
-                        "Method mismatch: {0}, patch: {1}. This can have multiple reasons:\n"
-                        + "1. You are running the Editor multiple times for the same project using symlinks, and are making changes from the symlink project\n"
-                        + "2. A bug in Hot Reload. Please send us a reproduce (code before/after), and we'll get it fixed for you\n"
-                        ;
-                    Log.Warning(error, sOriginalMethod.simpleName, patchMethod.Name);
-
-                    return string.Format(error, sOriginalMethod.simpleName, patchMethod.Name);
+                    RequestHelper.RequestEditorEventWithRetry(new Stat(StatSource.Client, StatLevel.Error, StatFeature.Patching, StatEventType.MethodMismatch), new EditorExtraData {
+                        { StatKey.PatchId, patchId },
+                    }).Forget();
+                    return string.Format(Localization.Translations.Logging.MethodMismatch, sOriginalMethod.simpleName, patchMethod.Name);
                 }
 
-                PlayerLog("Detour method {0:X8} {1}, offset: {2}", sOriginalMethod.metadataToken, patchMethod.Name, state.offset);
+                PlayerLog(Localization.Translations.Logging.DetourMethod, sOriginalMethod.metadataToken, patchMethod.Name, state.offset);
                 DetourResult result;
                 DetourApi.DetourMethod(state.match, patchMethod, out result);
                 if (result.success) {
-                    patchesResult.patchedMethods.Add(sOriginalMethod);
+                    // previous method is either original method or the last patch method
+                    MethodBase previousMethod;
+                    if (!previousPatchMethods.TryGetValue(state.match, out previousMethod)) {
+                        previousMethod = state.match;
+                    }
+                    MethodBase originalMethod = state.match;
+                    if (newMethods.Contains(state.match)) {
+                        // for function added at runtime the original method should be null
+                        originalMethod = null;
+                    }
+                    patchesResult.patchedMethods.Add(new MethodPatch(originalMethod, previousMethod, patchMethod));
+                    patchesResult.patchedSMethods.Add(sOriginalMethod);
+                    previousPatchMethods[state.match] = patchMethod;
                     try {
                         Dispatch.OnHotReloadLocal(state.match, patchMethod);
                     } catch {
@@ -220,10 +541,18 @@ namespace SingularityGroup.HotReload {
                         //ignore. The method is likely burst compiled and can't be patched
                         return null;
                     } else {
+                        RequestHelper.RequestEditorEventWithRetry(new Stat(StatSource.Client, StatLevel.Error, StatFeature.Patching, StatEventType.Failure), new EditorExtraData {
+                            { StatKey.PatchId, patchId },
+                            { StatKey.Detailed_Exception, result.exception.ToString() },
+                        }).Forget();
                         return HandleMethodPatchFailure(sOriginalMethod, result.exception);
                     }
                 }
             } catch(Exception ex) {
+                RequestHelper.RequestEditorEventWithRetry(new Stat(StatSource.Client, StatLevel.Error, StatFeature.Patching, StatEventType.Exception), new EditorExtraData {
+                    { StatKey.PatchId, patchId },
+                    { StatKey.Detailed_Exception, ex.ToString() },
+                }).Forget();
                 return HandleMethodPatchFailure(sOriginalMethod, ex);
             }
         }
@@ -297,7 +626,11 @@ namespace SingularityGroup.HotReload {
             MethodBase resolvedMethod = null;
             try {
                 resolvedMethod = TryGetMethodBaseWithRelativeToken(methodToResolve, offset);
-                if(!MethodCompatiblity.AreMethodsCompatible(resolvedMethod, patchMethod)) {
+                var err = MethodCompatiblity.CheckCompatibility(resolvedMethod, patchMethod);
+                if(err != null) {
+                    // if (resolvedMethod.Name == patchMethod.Name) {
+                    //     Log.Info(err);
+                    // }
                     resolvedMethod = null;
                 }
             } catch (SymbolResolvingFailedException ex) when(ex.InnerException is ArgumentOutOfRangeException) {
@@ -312,15 +645,11 @@ namespace SingularityGroup.HotReload {
             return symbolResolver.Resolve(new SMethod(sOriginalMethod.assemblyName, 
                 sOriginalMethod.displayName, 
                 sOriginalMethod.metadataToken + offset,
-                sOriginalMethod.genericTypeArguments, 
-                sOriginalMethod.genericTypeArguments,
                 sOriginalMethod.simpleName));
         }
     
         string HandleMethodPatchFailure(SMethod method, Exception exception) {
-            var err = $"Failed to apply patch for method {method.displayName} in assembly {method.assemblyName}\n{exception}";
-            Log.Warning(err);
-            return err;
+            return string.Format(Localization.Translations.Logging.FailedToApplyPatchForMethod, method.displayName, method.assemblyName, exception);
         }
 
         void EnsureSymbolResolver() {
@@ -367,12 +696,12 @@ namespace SingularityGroup.HotReload {
             filePath = Path.GetFullPath(filePath);
             var dir = Path.GetDirectoryName(filePath);
             if(string.IsNullOrEmpty(dir)) {
-                throw new ArgumentException("Invalid path: " + filePath, nameof(filePath));
+                throw new ArgumentException(string.Format(Localization.Translations.Logging.InvalidPath, filePath), nameof(filePath));
             }
             Directory.CreateDirectory(dir);
             var history = patchHistory.ToList();
             
-            PlayerLog("Saving {0} applied patches to {1}", history.Count, filePath);
+            PlayerLog(Localization.Translations.Logging.SavingAppliedPatches, history.Count, filePath);
 
             await Task.Run(() => {
                 using (FileStream fs = File.Create(filePath))
@@ -420,4 +749,3 @@ namespace SingularityGroup.HotReload {
         }
     }
 }
-#endif

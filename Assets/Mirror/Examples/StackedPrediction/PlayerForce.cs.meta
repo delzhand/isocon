@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 1a1438116a7f4afb89cf449850639d09
+timeCreated: 1711085217
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/StackedPrediction/PlayerForce.cs
+  uploadId: 736421

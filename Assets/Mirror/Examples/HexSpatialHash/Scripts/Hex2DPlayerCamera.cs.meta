@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 8bd7ffa7c966c0c47be237edb68c98c8
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/HexSpatialHash/Scripts/Hex2DPlayerCamera.cs
+  uploadId: 736421

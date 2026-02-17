@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using SingularityGroup.HotReload;
+using SingularityGroup.HotReload.Editor.Localization;
 using SingularityGroup.HotReload.Editor.Util;
 using SingularityGroup.HotReload.Newtonsoft.Json;
 using UnityEditor;
@@ -275,7 +276,7 @@ namespace SingularityGroup.HotReload.Editor.ProjectGeneration {
                 try {
                     pp.OnGeneratedCSProjectFilesThreaded();
                 } catch (Exception ex) {
-                    Log.Warning("Post processor '{0}' threw exception when calling OnGeneratedCSProjectFilesThreaded:\n{1}", pp, ex);
+                    Log.Warning(Translations.Errors.WarningPostProcessorException, pp, ex);
                 }
             }
         }
@@ -297,7 +298,7 @@ namespace SingularityGroup.HotReload.Editor.ProjectGeneration {
                 try {
                     newContents = pp.OnGeneratedCSProjectThreaded(path, newContents);
                 } catch (Exception ex) {
-                    Log.Warning("Post processor '{0}' failed when processing project '{1}':\n{2}", pp, path, ex);
+                    Log.Warning(Translations.Errors.WarningPostProcessorFailedProject, pp, path, ex);
                 }
             }
 
@@ -309,7 +310,7 @@ namespace SingularityGroup.HotReload.Editor.ProjectGeneration {
                 try {
                     newContents = pp.OnGeneratedSlnSolutionThreaded(path, newContents);
                 } catch (Exception ex) {
-                    Log.Warning("Post processor '{0}' failed when processing solution '{1}':\n{2}", pp, path, ex);
+                    Log.Warning(Translations.Errors.WarningPostProcessorFailedSolution, pp, path, ex);
                 }
             }
 
@@ -425,8 +426,7 @@ namespace SingularityGroup.HotReload.Editor.ProjectGeneration {
                 return string.Format(GetProjectHeaderTemplate(), arguments);
             } catch (Exception) {
                 throw new NotSupportedException(
-                    "Failed creating c# project because the c# project header did not have the correct amount of arguments, which is " +
-                    arguments.Length);
+                    string.Format(Translations.Utility.FailedCreateCSharpProject, arguments.Length));
             }
         }
 
@@ -438,7 +438,7 @@ namespace SingularityGroup.HotReload.Editor.ProjectGeneration {
         // #if !ROSLYN_ANALYZER_FIX
         //         .Concat(GetRoslynAnalyzerPaths())
         // #else
-                .Concat(assembly.CompilerOptions.RoslynAnalyzerDllPaths)
+                .Concat(assembly.CompilerOptions.RoslynAnalyzerDllPaths ?? Array.Empty<string>())
         // #endif
                 .Select(MakeAbsolutePath)
                 .Distinct()
@@ -655,7 +655,7 @@ namespace SingularityGroup.HotReload.Editor.ProjectGeneration {
                             var index = b.IndexOf(":", StringComparison.Ordinal);
                             if (index > 0 && b.Length > index) {
                                 var key = b.Substring(1, index - 1);
-                                return new KeyValuePair<string, string>(key, b.Substring(index + 1));
+                                return new KeyValuePair<string, string>(key.ToLowerInvariant(), b.Substring(index + 1));
                             }
 
                             const string warnaserror = "warnaserror";
@@ -849,11 +849,11 @@ namespace SingularityGroup.HotReload.Editor.ProjectGeneration {
                         var instance = (IHotReloadProjectGenerationPostProcessor)Activator.CreateInstance(type);
                         postProcessors.Add(instance);
                     } catch (MissingMethodException) {
-                        Log.Warning("The type '{0}' was expected to have a public default constructor but it didn't", type.FullName);
+                        Log.Warning(Translations.Errors.WarningPostProcessorNoDefaultConstructor, type.FullName);
                     } catch (TargetInvocationException ex) {
-                        Log.Warning("Exception occurred when invoking default constructor of '{0}':\n{1}", type.FullName, ex.InnerException);
+                        Log.Warning(Translations.Errors.WarningPostProcessorConstructorException, type.FullName, ex.InnerException);
                     } catch (Exception ex) {
-                        Log.Warning("Unknown exception encountered when trying to create post processor '{0}':\n{1}", type.FullName, ex);
+                        Log.Warning(Translations.Errors.WarningPostProcessorUnknownException, type.FullName, ex);
                     }
                 }
 

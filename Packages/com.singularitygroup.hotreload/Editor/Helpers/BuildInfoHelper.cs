@@ -12,12 +12,14 @@ namespace SingularityGroup.HotReload.Editor {
         public readonly BuildTarget activeBuildTarget;
         public readonly string[] omittedProjects;
         public readonly bool batchMode;
+        public readonly string locale;
 
-        public BuildInfoInput(string allDefineSymbols, BuildTarget activeBuildTarget, string[] omittedProjects, bool batchMode) {
+        public BuildInfoInput(string allDefineSymbols, BuildTarget activeBuildTarget, string[] omittedProjects, bool batchMode, string locale) {
             this.allDefineSymbols = allDefineSymbols;
             this.activeBuildTarget = activeBuildTarget;
             this.omittedProjects = omittedProjects;
             this.batchMode = batchMode;
+            this.locale = locale;
         }
     }
     
@@ -31,12 +33,14 @@ namespace SingularityGroup.HotReload.Editor {
             });
             // cached so unexpensive most of the time
             var omittedProjects = AssemblyOmission.GetOmittedProjects(allDefineSymbols);
+            var locale = PackageConst.DefaultLocale;
 
             return new BuildInfoInput(
                 allDefineSymbols: allDefineSymbols,
                 activeBuildTarget: buildTarget,
                 omittedProjects: omittedProjects,
-                batchMode: batchMode
+                batchMode: batchMode,
+                locale: locale
             );
         }
 
@@ -50,7 +54,8 @@ namespace SingularityGroup.HotReload.Editor {
                 allDefineSymbols: allDefineSymbols, 
                 activeBuildTarget: buildTarget, 
                 omittedProjects: AssemblyOmission.GetOmittedProjects(allDefineSymbols),
-                batchMode: Application.isBatchMode
+                batchMode: Application.isBatchMode,
+                locale: PackageConst.DefaultLocale
             ));
         }
 
@@ -71,6 +76,8 @@ namespace SingularityGroup.HotReload.Editor {
                 buildMachineHostName = hostname,
                 buildMachinePort = RequestHelper.port,
                 activeBuildTarget = input.activeBuildTarget.ToString(),
+                buildMachineRequestOrigin = RequestHelper.origin,
+                locale = input.locale
             };
         }
 

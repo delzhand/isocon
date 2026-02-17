@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e43f8c9a8ffac304d8ed2e98d0614ff8
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/HexSpatialHash/Hex3DSpatialHash.unity
+  uploadId: 736421

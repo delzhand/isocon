@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: fe94388660a5e45688a685723da14b57
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/StackedPrediction/NetworkManagerStackedPrediction.cs
+  uploadId: 736421

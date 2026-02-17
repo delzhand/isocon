@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using SingularityGroup.HotReload.Editor.Localization;
 using SingularityGroup.HotReload.HarmonyLib;
 using UnityEditor;
 using UnityEditor.Compilation;
@@ -231,7 +232,7 @@ namespace SingularityGroup.HotReload.Editor {
             DetourApi.DetourMethod(original, replacement, out result);
 
             if (!result.success) {
-                Debug.LogWarning($"Detouring {original.Name} method failed. {result.exception?.GetType()} {result.exception}");
+                Debug.LogWarning(string.Format(Translations.Errors.DebugDetouringMethodFailed, original.Name, result.exception?.GetType(), result.exception));
             } else {
                 reverters.Add(result.patchRecord);
             }

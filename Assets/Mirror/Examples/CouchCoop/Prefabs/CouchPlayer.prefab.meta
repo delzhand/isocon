@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c5eb745ce31f9439f9bb3fe7c091ad27
+PrefabImporter:
+  externalObjects: {}
+  userData: ''
+  assetBundleName: ''
+  assetBundleVariant: ''
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/CouchCoop/Prefabs/CouchPlayer.prefab
+  uploadId: 736421

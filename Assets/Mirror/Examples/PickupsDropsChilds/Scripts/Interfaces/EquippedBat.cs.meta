@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 35ca3b53a1e608f46ae9195e9d8cae83
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/PickupsDropsChilds/Scripts/Interfaces/EquippedBat.cs
+  uploadId: 736421

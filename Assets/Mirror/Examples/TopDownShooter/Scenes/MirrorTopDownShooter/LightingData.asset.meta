@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 104e4838c7ef6a441a546bb94af41b1e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 112000000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/TopDownShooter/Scenes/MirrorTopDownShooter/LightingData.asset
+  uploadId: 736421

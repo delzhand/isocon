@@ -1,10 +1,9 @@
-#if ENABLE_MONO && (DEVELOPMENT_BUILD || UNITY_EDITOR)
-
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using SingularityGroup.HotReload.DTO;
 using SingularityGroup.HotReload.RuntimeDependencies;
+using SingularityGroup.HotReload.Localization;
 
 namespace SingularityGroup.HotReload {
     internal class SymbolResolver {
@@ -23,25 +22,50 @@ namespace SingularityGroup.HotReload {
             assemblies.Add(asm);
         }
 
-        public Type Resolve(SType t) {
-            List<Assembly> assemblies;
-            if (assembliesByName.TryGetValue(t.assemblyName, out assemblies)) {
-              
-                Type type;
-                foreach (var assembly in assemblies) {
-                    if ((type = assembly.GetType(t.typeName)) != null) {
-                        if(t.typeName == "System.Array" && t.genericArguments.Length > 0) {
-                            var elementType = Resolve(t.genericArguments[0]);
-                            return elementType.Assembly.GetType(t.genericArguments[0].typeName + "[]");
+         public Type Resolve(SType t) {
+            var assmeblies = Resolve(t.assemblyName);
+            Type result = null;
+            Exception lastException = null;
+            for (var i = 0; i < assmeblies.Count; i++) {
+                try {
+                    result = assmeblies[i].GetLoadedModules()[0].ResolveType(t.metadataToken);
+                    if (t.isGenericParameter) {
+                        if (!result.IsGenericTypeDefinition) {
+                            throw new SymbolResolvingFailedException(t, new ApplicationException(Localization.Translations.Errors.GenericParameterNotGenericType));
                         }
-                        if(t.genericArguments.Length > 0) {
-                            type = type.MakeGenericType(ResolveTypes(t.genericArguments));
+                        var genericParameters = result.GetGenericArguments();
+                        if (t.genericParameterPosition >= genericParameters.Length) {
+                            throw new SymbolResolvingFailedException(t, new ApplicationException(Localization.Translations.Errors.GenericParameterDidNotExist));
                         }
-                        return type;
+                        result = genericParameters[t.genericParameterPosition];
                     }
+                    break;
+                } catch(Exception ex) {
+                    lastException = ex;
                 }
             }
-            throw new SymbolResolvingFailedException(t);
+            if(result == null) {
+                throw new SymbolResolvingFailedException(t, lastException);
+            }
+            return result;
+        }
+        
+         public FieldInfo Resolve(SField t) {
+            var assmeblies = Resolve(t.assemblyName);
+            FieldInfo result = null;
+            Exception lastException = null;
+            for (var i = 0; i < assmeblies.Count; i++) {
+                try {
+                    result = assmeblies[i].GetLoadedModules()[0].ResolveField(t.metadataToken);
+                    break;
+                } catch(Exception ex) {
+                    lastException = ex;
+                }
+            }
+            if(result == null) {
+                throw new SymbolResolvingFailedException(t, lastException);
+            }
+            return result;
         }
         
         public IReadOnlyList<Assembly> Resolve(string assembly) {
@@ -54,13 +78,11 @@ namespace SingularityGroup.HotReload {
         
         public MethodBase Resolve(SMethod m) {
             var assmeblies = Resolve(m.assemblyName);
-            var genericTypeArgs = ResolveTypes(m.genericTypeArguments);
-            var genericMethodArgs = ResolveTypes(m.genericArguments);
             MethodBase result = null;
             Exception lastException = null;
             for (var i = 0; i < assmeblies.Count; i++) {
                 try {
-                    result = assmeblies[i].GetLoadedModules()[0].ResolveMethod(m.metadataToken, genericTypeArgs, genericMethodArgs);
+                    result = assmeblies[i].GetLoadedModules()[0].ResolveMethod(m.metadataToken);
                     break;
                 } catch(Exception ex) {
                     lastException = ex;
@@ -71,20 +93,5 @@ namespace SingularityGroup.HotReload {
             }
             return result;
         }
-
-        Type[] ResolveTypes(SType[] sTypes) {
-            if(sTypes == null) {
-                return null;
-            }
-            if(sTypes.Length == 0) {
-                return Array.Empty<Type>();
-            }
-            var result = new Type[sTypes.Length];
-            for (int i = 0; i < sTypes.Length; i++) {
-                result[i] = Resolve(sTypes[i]);
-            }
-            return result;
-        }
     }
 }
-#endif

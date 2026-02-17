@@ -1,13 +1,7 @@
-#if ENABLE_MONO && (DEVELOPMENT_BUILD || UNITY_EDITOR)
 using System;
-using System.Linq;
 using JetBrains.Annotations;
 using System.IO;
 using UnityEngine;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace SingularityGroup.HotReload {
     /// <summary>
@@ -62,11 +56,7 @@ namespace SingularityGroup.HotReload {
         private static HotReloadSettingsObject LoadSettings() {
             HotReloadSettingsObject settings;
             if (Application.isEditor) {
-                #if UNITY_EDITOR
-                settings = AssetDatabase.LoadAssetAtPath<HotReloadSettingsObject>(editorAssetPath);
-                #else
-                settings = null;
-                #endif
+                settings = HotReloadSettingsHelper.GetSettingsObject(editorAssetPath);
             } else {
                 // load from Resources (assumes that build includes the resource)
                 settings = Resources.Load<HotReloadSettingsObject>(resourceName);
@@ -93,38 +83,21 @@ namespace SingularityGroup.HotReload {
         
         // Call this during build, just to be sure the field is correct. (I had some issues with it while editing the prefab)
         public void EnsurePrefabSetCorrectly() {
-#if UNITY_EDITOR
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabAssetPath);
-            if (prefab == null) {
-                // when you use HotReload as a unitypackage, prefab is somewhere inside your assets folder
-                var guids = AssetDatabase.FindAssets("HotReloadPrompts t:prefab", new string[]{"Assets"});
-                var paths = guids.Select(guid => AssetDatabase.GUIDToAssetPath(guid));
-                var promptsPrefabPath = paths.FirstOrDefault(assetpath => Path.GetFileName(assetpath) == "HotReloadPrompts.prefab");
-                if (promptsPrefabPath != null) {
-                    prefab = AssetDatabase.LoadAssetAtPath<GameObject>(promptsPrefabPath);
-                }
-            }
-            if (prefab == null) {
-                throw new Exception("Failed to find PromptsPrefab (are you using Hot Reload as a package?");
-            }
-            PromptsPrefab = prefab;
-#endif
+            PromptsPrefab = HotReloadSettingsHelper.GetOrCreateSettingsPrefab(prefabAssetPath);
         }
 
         public void EnsurePrefabNotInBuild() {
-#if UNITY_EDITOR
             PromptsPrefab = null;
-#endif
         }
 
         
         // put the stored settings here
 
-        [Header("Build Settings")]
-        [Tooltip("Should the Hot Reload runtime be included in development builds? HotReload is never included in release builds.")]
+        [Header(Localization.Translations.MenuItems.BuildSettings)]
+        [Tooltip(Localization.Translations.MenuItems.IncludeInBuildTooltip)]
         public bool IncludeInBuild = true;
 
-        [Header("Player Settings")]
+        [Header(Localization.Translations.MenuItems.PlayerSettings)]
         public bool AllowAndroidAppToMakeHttpRequests = false;
 
         #region hidden
@@ -137,4 +110,3 @@ namespace SingularityGroup.HotReload {
         #endregion settings
     }
 }
-#endif

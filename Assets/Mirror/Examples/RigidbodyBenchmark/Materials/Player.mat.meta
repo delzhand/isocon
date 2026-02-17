@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 39b4637f172cd49e3859073b6bbdb7e5
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/RigidbodyBenchmark/Materials/Player.mat
+  uploadId: 736421

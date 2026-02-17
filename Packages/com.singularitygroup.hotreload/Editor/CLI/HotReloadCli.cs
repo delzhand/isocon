@@ -1,10 +1,18 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using System.Net;
+#if UNITY_EDITOR_WIN
+using System.Net.NetworkInformation;
+#else
+using System.Net.Sockets;
+#endif
 using System.Threading.Tasks;
+using SingularityGroup.HotReload.Editor.Localization;
+using SingularityGroup.HotReload.Localization;
 using SingularityGroup.HotReload.Newtonsoft.Json;
 using UnityEditor;
+using Translations = SingularityGroup.HotReload.Editor.Localization.Translations;
 
 namespace SingularityGroup.HotReload.Editor.Cli {
     [InitializeOnLoad]
@@ -32,17 +40,44 @@ namespace SingularityGroup.HotReload.Editor.Cli {
         /// </summary>
         public static Task StartAsync() {
             return StartAsync(
+                isReleaseMode: RequestHelper.IsReleaseMode(),
                 exposeServerToNetwork: HotReloadPrefs.ExposeServerToLocalNetwork, 
                 allAssetChanges: HotReloadPrefs.AllAssetChanges, 
-                createNoWindow: HotReloadPrefs.DisableConsoleWindow
+                createNoWindow: HotReloadPrefs.DisableConsoleWindow,
+#if UNITY_EDITOR_WIN
+                useWatchman: HotReloadPrefs.UseWatchman,
+#endif
+                detailedErrorReporting: !HotReloadPrefs.DisableDetailedErrorReporting
             );
         }
         
-        internal static async Task StartAsync(bool exposeServerToNetwork, bool allAssetChanges, bool createNoWindow, LoginData loginData = null) {
-            await Prepare().ConfigureAwait(false);
+        internal static async Task StartAsync(
+            bool exposeServerToNetwork, 
+            bool allAssetChanges, 
+            bool createNoWindow, 
+            bool isReleaseMode, 
+            bool detailedErrorReporting, 
+#if UNITY_EDITOR_WIN 
+            bool useWatchman = true,
+#endif
+            LoginData loginData = null
+) {
+            var port = await Prepare().ConfigureAwait(false);
             await ThreadUtility.SwitchToThreadPool();
             StartArgs args;
-            if (TryGetStartArgs(UnityHelper.DataPath, exposeServerToNetwork, allAssetChanges, createNoWindow, loginData, out args)) {
+            if (TryGetStartArgs(
+                    UnityHelper.DataPath, 
+                    exposeServerToNetwork, 
+                    allAssetChanges, 
+                    createNoWindow, 
+                    isReleaseMode, 
+                    detailedErrorReporting, 
+                    loginData, 
+                    port, 
+#if UNITY_EDITOR_WIN 
+                    useWatchman,
+#endif
+                    out args)) {
                 await controller.Start(args);
             }
         }
@@ -63,13 +98,25 @@ namespace SingularityGroup.HotReload.Editor.Cli {
 #pragma warning restore CS0649
         }
         
-        static bool TryGetStartArgs(string dataPath, bool exposeServerToNetwork, bool allAssetChanges, bool createNoWindow, LoginData loginData, out StartArgs args) {
+        static bool TryGetStartArgs(
+            string dataPath, 
+            bool exposeServerToNetwork, 
+            bool allAssetChanges, 
+            bool createNoWindow, 
+            bool isReleaseMode, 
+            bool detailedErrorReporting, 
+            LoginData loginData, 
+            int port, 
+#if UNITY_EDITOR_WIN 
+            bool useWatchman,
+#endif
+            out StartArgs args
+        ) {
             string serverDir;
             if(!CliUtils.TryFindServerDir(out serverDir)) {
-                Log.Warning($"Failed to start the Hot Reload Server. " +
-                                 $"Unable to locate the 'Server' directory. " +
-                                 $"Make sure the 'Server' directory is " +
-                                 $"somewhere in the Assets folder inside a 'HotReload' folder or in the HotReload package");
+                Log.Warning(string.Format(Translations.Errors.WarningFailedToStartServer, 
+                                 Translations.Utility.UnableToLocateServer +
+                                 Translations.Utility.UnableToLocateServerDetail));
                 args = null;
                 return false;
             }
@@ -93,11 +140,11 @@ namespace SingularityGroup.HotReload.Editor.Cli {
                 var info = new DirectoryInfo(Path.GetFullPath("."));
                 slnPath = Path.Combine(Path.GetFullPath("."), info.Name + ".sln");
                 if (!File.Exists(slnPath)) {
-                    Log.Warning($"Failed to start the Hot Reload Server. Cannot find solution file. Please disable \"useBuiltInProjectGeneration\" in settings to enable custom project generation.");
+                    Log.Warning(string.Format(Translations.Errors.WarningFailedToStartServer, Translations.Utility.CannotFindSolutionFile));
                     args = null;
                     return false;
                 }
-                Log.Info("Using default project generation. If you encounter any problem with Unity's default project generation consider disabling it to use custom project generation.");
+                Log.Info(Translations.Errors.InfoDefaultProjectGeneration);
                 try {
                     Directory.Delete(ProjectGeneration.ProjectGeneration.tempDir, true);
                 } catch(Exception ex) {
@@ -108,14 +155,17 @@ namespace SingularityGroup.HotReload.Editor.Cli {
             }
 
             if (!File.Exists(slnPath)) {
-                Log.Warning($"No .sln file found. Open any c# file to generate it so Hot Reload can work properly");
+                Log.Warning(Translations.Errors.WarningNoSlnFileFound);
             }
             
             var searchAssemblies = string.Join(";", CodePatcher.I.GetAssemblySearchPaths());
-            var cliArguments = $@"-u ""{unityProjDir}"" -s ""{slnPath}"" -t ""{cliTempDir}"" -a ""{searchAssemblies}"" -ver ""{PackageConst.Version}"" -proc ""{Process.GetCurrentProcess().Id}"" -assets ""{allAssetChanges}""";
+            var cliArguments = $@"-u ""{unityProjDir}"" -s ""{slnPath}"" -t ""{cliTempDir}"" -a ""{searchAssemblies}"" -ver ""{PackageConst.Version}"" -proc ""{Process.GetCurrentProcess().Id}"" -assets ""{allAssetChanges}"" -p ""{port}"" -r {isReleaseMode} -detailed-error-reporting {detailedErrorReporting}";
             if (loginData != null) {
                 cliArguments += $@" -email ""{loginData.email}"" -pass ""{loginData.password}""";
             }
+            #if UNITY_EDITOR_WIN
+            cliArguments += $@" -w ""{useWatchman}""";
+            #endif
             if (exposeServerToNetwork) {
                 // server will listen on local network interface (default is localhost only)
                 cliArguments += " -e true";
@@ -132,15 +182,65 @@ namespace SingularityGroup.HotReload.Editor.Cli {
             return true;
         }
         
-        static async Task Prepare() {
+        private static int DiscoverFreePort() {
+            var maxAttempts = 10;
+            for (int attempt = 0; attempt < maxAttempts; attempt++) {
+                var port = RequestHelper.defaultPort + attempt;
+                if (IsPortInUse(port)) {
+                    continue;
+                }
+                return port;
+            }
+            // we give up at this point
+            return RequestHelper.defaultPort + maxAttempts;
+        }
+        
+        public static bool IsPortInUse(int port) {
+        // Note that there is a racecondition that a port gets occupied after checking.
+        // However, it will very rare someone will run into this.
+#if UNITY_EDITOR_WIN
+            IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            IPEndPoint[] activeTcpListeners = ipGlobalProperties.GetActiveTcpListeners();
+
+            foreach (IPEndPoint endPoint in activeTcpListeners) {
+                if (endPoint.Port == port) {
+                    return true;
+                }
+            }
+
+            return false;
+#else
+            try {
+                using (TcpClient tcpClient = new TcpClient()) {
+                    tcpClient.Connect(IPAddress.Loopback, port); // Try to connect to the specified port
+                    return true;
+                }
+            } catch (SocketException) {
+                return false;
+            } catch (Exception e) {
+                Log.Exception(e);
+                // act as if the port is allocated
+                return true;
+            }
+#endif
+        }
+        
+        
+        static async Task<int> Prepare() {
             await ThreadUtility.SwitchToMainThread();
             
             var dataPath = UnityHelper.DataPath;
             await ProjectGeneration.ProjectGeneration.EnsureSlnAndCsprojFiles(dataPath);
             await PrepareBuildInfoAsync();
             PrepareSystemPathsFile();
+            
+            var port = DiscoverFreePort();
+            HotReloadState.ServerPort = port;
+            RequestHelper.SetServerPort(port);
+            return port;
         }
-        
+
+        static bool didLogWarning;
         internal static async Task PrepareBuildInfoAsync() {
             await ThreadUtility.SwitchToMainThread();
             var buildInfoInput = await BuildInfoHelper.GetGenerateBuildInfoInput();
@@ -148,8 +248,13 @@ namespace SingularityGroup.HotReload.Editor.Cli {
                 try {
                     var buildInfo = BuildInfoHelper.GenerateBuildInfoThreaded(buildInfoInput);
                     PrepareBuildInfo(buildInfo);
-                } catch {
-                    // ignore, we will warn when making a build
+                } catch (Exception e) {
+                    if (!didLogWarning) {
+                        Log.Warning(string.Format(Translations.Errors.WarningPreparingBuildInfoFailed, e));
+                        didLogWarning = true;
+                    } else { 
+                        Log.Debug(string.Format(Translations.Utility.PreparingBuildInfoFailed, e));
+                    }
                 }
             });
         }

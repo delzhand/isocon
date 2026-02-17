@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 44d2f1170bbe4432bf6f388bcfabefee
+timeCreated: 1710138272
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/EdgegapLobby/Scripts/UILobbyStatus.cs
+  uploadId: 736421

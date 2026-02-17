@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using UnityEditor;
+using UnityEditor.Build;
+using UnityEngine;
 
 namespace SingularityGroup.HotReload.Editor {
     internal static class HotReloadBuildHelper {
@@ -90,17 +92,20 @@ namespace SingularityGroup.HotReload.Editor {
             BuildTargetGroup.WebGL, // has never had mono
         };
         
+#pragma warning disable CS0618
         public static bool IsMonoSupported(BuildTargetGroup buildTarget) {
-            // "When a platform can support both backends, Mono is the default. For more information, see Scripting restrictions."
-            // Unity docs https://docs.unity3d.com/Manual/Mono.html (2019.4/2020.3/2021.3)
-#pragma warning disable CS0618 // obsolete since 2023
-            var defaultScripting = PlayerSettings.GetDefaultScriptingBackend(buildTarget);
-#pragma warning restore CS0618
-            if (defaultScripting == ScriptingImplementation.Mono2x) {
-                return Array.IndexOf(unsupportedBuildTargets, buildTarget) == -1;
+            var backend = PlayerSettings.GetScriptingBackend(buildTarget);
+            try {
+                // GetDefaultScriptingBackend returns IL2CPP for Unity 6 which goes against Unity documentation.
+                // Have to use a workaround approach instead
+                PlayerSettings.SetScriptingBackend(buildTarget, ScriptingImplementation.Mono2x);
+                return PlayerSettings.GetScriptingBackend(buildTarget) == ScriptingImplementation.Mono2x;
+            } catch {
+                return false;
+            } finally {
+                PlayerSettings.SetScriptingBackend(buildTarget, backend);
             }
-            // default scripting was not Mono, so the platform doesn't support Mono at all.
-            return false;
         }
+#pragma warning restore CS0618
     }
 }

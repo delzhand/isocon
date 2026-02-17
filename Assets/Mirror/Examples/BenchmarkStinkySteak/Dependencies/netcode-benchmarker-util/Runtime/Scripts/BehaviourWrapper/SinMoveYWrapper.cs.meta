@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 2a8c50aebdfe1ad42bfa887f78c8892f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/BenchmarkStinkySteak/Dependencies/netcode-benchmarker-util/Runtime/Scripts/BehaviourWrapper/SinMoveYWrapper.cs
+  uploadId: 736421

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ffab5af8b8b354f8ca8eb7aeaf89dfac
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/BilliardsPredicted/Player/PlayerPredicted.prefab
+  uploadId: 736421

@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 12be1a0b0b06402da21c46ae29d60746
+timeCreated: 1762675925
+AssetOrigin:
+  serializedVersion: 1
+  productId: 254358
+  packageName: Hot Reload | Edit Code Without Compiling
+  packageVersion: 1.13.15
+  assetPath: Packages/com.singularitygroup.hotreload/Runtime/Localization/MenuItemTranslations.cs
+  uploadId: 846426

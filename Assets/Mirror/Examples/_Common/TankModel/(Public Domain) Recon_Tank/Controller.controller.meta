@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a7211483bbd794b6d85ed88576e7d85c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/_Common/TankModel/(Public Domain) Recon_Tank/Controller.controller
+  uploadId: 736421

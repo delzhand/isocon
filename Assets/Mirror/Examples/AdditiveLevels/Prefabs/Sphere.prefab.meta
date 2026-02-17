@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e588080aa542be54d9ca9d5c734dc9ee
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/AdditiveLevels/Prefabs/Sphere.prefab
+  uploadId: 736421

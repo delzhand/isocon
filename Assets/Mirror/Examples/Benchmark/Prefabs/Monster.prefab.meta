@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 30b8f251d03d84284b70601e691d474f
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/Benchmark/Prefabs/Monster.prefab
+  uploadId: 736421

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1585faff4c0ab4a6182a0a6846f1c7a5
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/RigidbodyBenchmark/Scenes/MirrorRigidbodyBenchmark.unity
+  uploadId: 736421

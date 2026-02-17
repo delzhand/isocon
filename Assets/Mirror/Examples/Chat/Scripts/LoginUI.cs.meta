@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 7a77ca56c9d91af4b81b73a9907d6112
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/Chat/Scripts/LoginUI.cs
+  uploadId: 736421

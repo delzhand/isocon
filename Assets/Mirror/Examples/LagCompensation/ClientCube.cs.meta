@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 8caf33fba9e694fef966e0b2f88f0afc
+timeCreated: 1654065994
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/LagCompensation/ClientCube.cs
+  uploadId: 736421

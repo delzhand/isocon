@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 87a6103a0a29544ba9f303c8a3b7407c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/BenchmarkPrediction/RandomForce.cs
+  uploadId: 736421

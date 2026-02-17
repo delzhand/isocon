@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: dbced55099d7c40d5bd1ef53259f5771
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/TopDownShooter/Materials/MaterialBlack.mat
+  uploadId: 736421

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 81f714daf7144784b8a2f42f1cd30927
+timeCreated: 1497127647
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/AdditiveLevels/Materials/Skybox.mat
+  uploadId: 736421

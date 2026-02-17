@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 06efd9578579c449ebfffcf962b1ee65
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/TopDownShooter/Materials/MaterialWalls.mat
+  uploadId: 736421

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: feea51e51b4564f06a38482bbebac8fa
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/BenchmarkPrediction/PlayerSpectator.prefab
+  uploadId: 736421

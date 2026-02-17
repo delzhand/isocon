@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: e7cfbc91b3df3449dba2d6585082228e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/RigidbodyBenchmark/Scripts/AutoForce.cs
+  uploadId: 736421

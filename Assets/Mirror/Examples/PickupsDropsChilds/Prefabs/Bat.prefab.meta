@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b69a433c73f41474da198fa7ef37e343
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/PickupsDropsChilds/Prefabs/Bat.prefab
+  uploadId: 736421

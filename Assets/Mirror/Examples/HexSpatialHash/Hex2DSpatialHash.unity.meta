@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d3ffd60e82eb25d4fb848e2becd149bf
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/HexSpatialHash/Hex2DSpatialHash.unity
+  uploadId: 736421

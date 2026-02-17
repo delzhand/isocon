@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 037d7d103792c4a6aa3ed9e8f1fd9706
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/CouchCoop/Materials/MaterialGround.mat
+  uploadId: 736421

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 3dffd49e089f6414cb7c65f03ea07de0
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/TopDownShooter/Scenes/MirrorTopDownShooter.unity
+  uploadId: 736421

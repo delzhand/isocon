@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7341570099774486d9de82fa640e73ab
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 13400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/StackedPrediction/CubeMaterial.physicMaterial
+  uploadId: 736421

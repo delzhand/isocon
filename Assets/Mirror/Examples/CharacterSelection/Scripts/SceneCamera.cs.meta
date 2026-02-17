@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: db9418a9e709a7844acac42de096cba6
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/CharacterSelection/Scripts/SceneCamera.cs
+  uploadId: 736421

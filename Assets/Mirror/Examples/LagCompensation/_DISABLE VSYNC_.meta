@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 8a02664e59ea04082ba401785fdf2a3f
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/LagCompensation/_DISABLE VSYNC_
+  uploadId: 736421

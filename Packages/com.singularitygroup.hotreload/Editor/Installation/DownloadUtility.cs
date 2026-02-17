@@ -5,6 +5,9 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using SingularityGroup.HotReload.Editor.Cli;
+using SingularityGroup.HotReload.Editor.Localization;
+using SingularityGroup.HotReload.Localization;
+using Translations = SingularityGroup.HotReload.Editor.Localization.Translations;
 
 namespace SingularityGroup.HotReload.Editor {
     static class DownloadUtility {
@@ -13,17 +16,17 @@ namespace SingularityGroup.HotReload.Editor {
         public static async Task<DownloadResult> DownloadFile(string url, string targetFilePath, IProgress<float> progress, CancellationToken cancellationToken) {
             var tmpDir = Path.GetDirectoryName(targetFilePath);
             Directory.CreateDirectory(tmpDir);
-            using(var client = RequestHelper.CreateHttpClient()) {
+            using(var client = HttpClientUtils.CreateHttpClient()) {
                 client.Timeout = TimeSpan.FromMinutes(10);
                 return await client.DownloadAsync(url, targetFilePath, progress, cancellationToken).ConfigureAwait(false);
             }
         }
         
-        public static string GetPackagePrefix(string version) {
+        public static string GetPackagePrefix(string version, string locale) {
             if (PackageConst.IsAssetStoreBuild) {
-                return $"releases/asset-store/{version.Replace('.', '-')}";
+                return $"releases/asset-store/{(locale == Locale.SimplifiedChinese ? "zh/" : "")}{version.Replace('.', '-')}";
             }
-            return $"releases/{version.Replace('.', '-')}";
+            return $"releases/{(locale == Locale.SimplifiedChinese ? "zh/" : "")}{version.Replace('.', '-')}";
         }
         
         public static string GetDownloadUrl(string key) {
@@ -34,11 +37,11 @@ namespace SingularityGroup.HotReload.Editor {
             // Get the http headers first to examine the content length
             using (var response = await client.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false)) {
                 if (response.StatusCode != HttpStatusCode.OK) {
-                    throw new DownloadException($"Download failed with status code {response.StatusCode} and reason {response.ReasonPhrase}");
+                    throw new DownloadException(string.Format(Translations.Errors.ExceptionDownloadFailed, response.StatusCode, response.ReasonPhrase));
                 }
                 var contentLength = response.Content.Headers.ContentLength;
                 if (!contentLength.HasValue) {
-                    throw new DownloadException("Download failed: Content length unknown");
+                    throw new DownloadException(Translations.Errors.ExceptionDownloadContentLengthUnknown);
                 }
     
                 using (var fs = new FileStream(destinationFilePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
@@ -55,7 +58,7 @@ namespace SingularityGroup.HotReload.Editor {
                     }
                     await fs.FlushAsync().ConfigureAwait(false);
                     if (fs.Length != contentLength.Value) {
-                        throw new DownloadException("Download failed: download file is corrupted");
+                        throw new DownloadException(Translations.Errors.ExceptionDownloadFileCorrupted);
                     }
                     return new DownloadResult(HttpStatusCode.OK, null);
                 }
@@ -66,14 +69,14 @@ namespace SingularityGroup.HotReload.Editor {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
             if (!source.CanRead)
-                throw new ArgumentException("Has to be readable", nameof(source));
+                throw new ArgumentException(Translations.Utility.StreamHasToBeReadable, nameof(source));
             if (destination == null)
                 throw new ArgumentNullException(nameof(destination));
             if (!destination.CanWrite)
-                throw new ArgumentException("Has to be writable", nameof(destination));
+                throw new ArgumentException(Translations.Utility.StreamHasToBeWritable, nameof(destination));
             if (bufferSize < 0)
                 throw new ArgumentOutOfRangeException(nameof(bufferSize));
-    
+
             var buffer = new byte[bufferSize];
             long totalBytesRead = 0;
             int bytesRead;

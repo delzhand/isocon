@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a8a73128beb4248aca152ab0364c5abc
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/CharacterSelection/MirrorCharacterSelectionNoCharacter.unity
+  uploadId: 736421

@@ -14,7 +14,12 @@ namespace Mirror
         readonly NetworkWriter reliableRpcs = new NetworkWriter();
         readonly NetworkWriter unreliableRpcs = new NetworkWriter();
 
-        public virtual string address => Transport.active.ServerGetClientAddress(connectionId);
+        public virtual string address { get; private set; }
+
+        /// <summary>Unique identifier for this connection that is assigned by the transport layer.</summary>
+        // assigned by transport, this id is unique for every connection on server.
+        // clients don't know their own id and they don't know other client's ids.
+        public readonly int connectionId;
 
         /// <summary>NetworkIdentities that this connection can see</summary>
         // TODO move to server's NetworkConnectionToClient?
@@ -50,9 +55,13 @@ namespace Mirror
         /// <summary>Round trip time (in seconds) that it takes a message to go server->client->server.</summary>
         public double rtt => _rtt.Value;
 
-        public NetworkConnectionToClient(int networkConnectionId)
-            : base(networkConnectionId)
+        internal NetworkConnectionToClient() : base() { }
+
+        public NetworkConnectionToClient(int networkConnectionId, string clientAddress = "localhost") : base()
         {
+            connectionId = networkConnectionId;
+            address = clientAddress;
+
             // initialize EMA with 'emaDuration' seconds worth of history.
             // 1 second holds 'sendRate' worth of values.
             // multiplied by emaDuration gives n-seconds.
@@ -62,6 +71,8 @@ namespace Mirror
             // buffer limit should be at least multiplier to have enough in there
             snapshotBufferSizeLimit = Mathf.Max((int)NetworkClient.snapshotSettings.bufferTimeMultiplier, snapshotBufferSizeLimit);
         }
+
+        public override string ToString() => $"connection({connectionId})";
 
         public void OnTimeSnapshot(TimeSnapshot snapshot)
         {
@@ -204,10 +215,9 @@ namespace Mirror
             {
                 if (netIdentity != null)
                 {
-                    // unspawn scene objects, destroy instantiated objects.
-                    // fixes: https://github.com/MirrorNetworking/Mirror/issues/3538
+                    // disown scene objects, destroy instantiated objects.
                     if (netIdentity.sceneId != 0)
-                        NetworkServer.UnSpawn(netIdentity.gameObject);
+                        NetworkServer.RemovePlayerForConnection(this, RemovePlayerOptions.KeepActive);
                     else
                         NetworkServer.Destroy(netIdentity.gameObject);
                 }

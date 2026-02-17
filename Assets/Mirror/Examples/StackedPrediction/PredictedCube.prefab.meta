@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 8e024f835ef4842998861f956ca7cb5c
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/StackedPrediction/PredictedCube.prefab
+  uploadId: 736421

@@ -11,7 +11,6 @@ namespace SimpleFileBrowser
 		, IPointerClickHandler
 #endif
 	{
-#pragma warning disable 0649
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WSA || UNITY_WSA_10_0
 		[SerializeField]
 		private FileBrowser fileBrowser;
@@ -22,7 +21,6 @@ namespace SimpleFileBrowser
 		private RectTransform viewportTransform;
 		[SerializeField]
 		private RectTransform contentTransform;
-#pragma warning restore 0649
 
 		private float itemHeight, _1OverItemHeight;
 		private float viewportHeight;
@@ -203,7 +201,6 @@ namespace SimpleFileBrowser
 			else
 			{
 				item = adapter.CreateItem();
-				item.transform.SetParent( contentTransform, false );
 				item.SetAdapter( adapter );
 			}
 
@@ -222,6 +219,14 @@ namespace SimpleFileBrowser
 
 				item.gameObject.SetActive( false );
 				pooledItems.Push( item );
+			}
+
+			if( topIndex == currentTopIndex && bottomIndex == currentBottomIndex )
+				items.Clear();
+			else
+			{
+				for( int i = topIndex; i <= bottomIndex; i++ )
+					items.Remove( i );
 			}
 		}
 

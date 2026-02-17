@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2c7daf3b157284a79ba7835914c660f8
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/TopDownShooter/Materials/PlayerRF.mat
+  uploadId: 736421

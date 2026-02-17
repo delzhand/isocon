@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 1e39c1f768bb465fa48c1fe2c3dd4d75
+timeCreated: 1759652321
+AssetOrigin:
+  serializedVersion: 1
+  productId: 254358
+  packageName: Hot Reload | Edit Code Without Compiling
+  packageVersion: 1.13.15
+  assetPath: Packages/com.singularitygroup.hotreload/Editor/Localization/Localization.cs
+  uploadId: 846426

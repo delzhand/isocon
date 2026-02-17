@@ -1,4 +1,3 @@
-#if ENABLE_MONO && (DEVELOPMENT_BUILD || UNITY_EDITOR)
 using UnityEngine;
 
 namespace SingularityGroup.HotReload {
@@ -39,4 +38,3 @@ namespace SingularityGroup.HotReload {
         }
     }
 }
-#endif

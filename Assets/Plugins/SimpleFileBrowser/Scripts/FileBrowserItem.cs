@@ -1,6 +1,7 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
+using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace SimpleFileBrowser
 {
@@ -17,7 +18,6 @@ namespace SimpleFileBrowser
 		#region Variables
 		protected FileBrowser fileBrowser;
 
-#pragma warning disable 0649
 		[SerializeField]
 		private Image background;
 
@@ -29,8 +29,7 @@ namespace SimpleFileBrowser
 		private Image multiSelectionToggle;
 
 		[SerializeField]
-		private Text nameText;
-#pragma warning restore 0649
+		private TextMeshProUGUI nameText;
 
 #pragma warning disable 0414
 		private bool isSelected, isHidden;

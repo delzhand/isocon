@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 22f1fa3a0aff72b46a371f667bb4fb30
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/Basic/Prefabs/PlayerUI.prefab
+  uploadId: 736421

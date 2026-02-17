@@ -1,11 +1,12 @@
 #if ENABLE_MONO && (DEVELOPMENT_BUILD || UNITY_EDITOR)
 using JetBrains.Annotations;
+using SingularityGroup.HotReload.Localization;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace SingularityGroup.HotReload {
     internal class RetryDialog : MonoBehaviour {
-        [Header("UI controls")]
+        [Header(Localization.Translations.MenuItems.UIControls)]
         public Button buttonHide;
         public Button buttonRetryAutoPair;
         public Button buttonTroubleshoot;
@@ -42,11 +43,20 @@ namespace SingularityGroup.HotReload {
             
             buttonRetryAutoPair.onClick.AddListener(() => {
                 Hide();
-                PlayerEntrypoint.TryConnectToIp(ipInput.textComponent.text);
+                int port;
+                var ipAndPort = ipInput.textComponent.text.Split(':');
+                if (ipAndPort.Length != 2 || !int.TryParse(ipAndPort[1], out port)) {
+                    port = PlayerEntrypoint.PlayerBuildInfo?.buildMachinePort ?? RequestHelper.defaultPort;
+                }
+                var ip = ipAndPort.Length > 0 ? ipAndPort[0] : string.Empty;
+                PlayerEntrypoint.TryConnectToIpAndPort(ip, port);
             });
             
             buttonTroubleshoot.onClick.AddListener(() => {
-                Application.OpenURL("https://hotreload.net/documentation#connection-issues");
+                var docsUrl = PackageConst.DefaultLocale == Locale.SimplifiedChinese ?
+                    "https://hotreload.net/zh/documentation/on-device#连接问题" :
+                    "https://hotreload.net/documentation/on-device#connection-issues" ;
+                Application.OpenURL(docsUrl);
             });
         }
 
@@ -55,7 +65,7 @@ namespace SingularityGroup.HotReload {
         public static ServerHandshake.Result HandshakeResults { private get; set; } = ServerHandshake.Result.None;
 
         private void OnEnable() {
-            ipInput.text = PlayerEntrypoint.PlayerBuildInfo?.buildMachineHostName;
+            ipInput.text = $"{PlayerEntrypoint.PlayerBuildInfo?.buildMachineHostName}:{PlayerEntrypoint.PlayerBuildInfo?.buildMachinePort}";
             UpdateUI();
         }
 
@@ -67,9 +77,9 @@ namespace SingularityGroup.HotReload {
             // assumes that auto-pair already tried for several seconds
             // suggestions to help the user when auto-pair is failing
             var networkText = Application.isMobilePlatform ? "WiFi" : "LAN/WiFi";
-            var noWifiNetwork = $"Is this device connected to {networkText}?";
-            var waitForCompiling = "Wait for compiling to finish before trying again";
-            var targetNetworkIsReachable = $"Make sure you're on the same {networkText} network. Also ensure Hot Reload is running";
+            var noWifiNetwork = string.Format(Localization.Translations.Dialogs.IsConnected, networkText);
+            var waitForCompiling = Localization.Translations.Dialogs.WaitForCompiling;
+            var targetNetworkIsReachable = string.Format(Localization.Translations.Dialogs.TargetNetworkIsReachable, networkText);
 
             if (Application.internetReachability != NetworkReachability.ReachableViaLocalAreaNetwork) {
                 textSuggestion.text = noWifiNetwork;
@@ -81,7 +91,7 @@ namespace SingularityGroup.HotReload {
                 textSuggestion.text = targetNetworkIsReachable;
             }
 
-            textSummary.text = autoConnect ? "Auto-pair encountered an issue" : "Connection failed";
+            textSummary.text = autoConnect ? Localization.Translations.Dialogs.AutoPairEncounteredIssue : Localization.Translations.Dialogs.ConnectionFailed;
 
             if (enableDebugging && textForDebugging) {
                 textForDebugging.enabled = true;

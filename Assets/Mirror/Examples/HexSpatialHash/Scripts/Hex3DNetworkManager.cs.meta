@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 3291bd2e9ac86c046bb768d598cd0a3f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/HexSpatialHash/Scripts/Hex3DNetworkManager.cs
+  uploadId: 736421

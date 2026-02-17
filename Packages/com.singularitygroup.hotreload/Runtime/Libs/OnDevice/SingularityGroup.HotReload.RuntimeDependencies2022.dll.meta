@@ -8,7 +8,7 @@ PluginImporter:
   defineConstraints:
   - ENABLE_MONO
   - UNITY_2022_2_OR_NEWER
-  - DEVELOPMENT_BUILD
+  - DEVELOPMENT_BUILD || UNITY_EDITOR
   isPreloaded: 0
   isOverridable: 1
   isExplicitlyReferenced: 1
@@ -91,6 +91,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 254358
   packageName: Hot Reload | Edit Code Without Compiling
-  packageVersion: 1.12.8
+  packageVersion: 1.13.15
   assetPath: Packages/com.singularitygroup.hotreload/Runtime/Libs/OnDevice/SingularityGroup.HotReload.RuntimeDependencies2022.dll
-  uploadId: 632084
+  uploadId: 846426

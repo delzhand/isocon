@@ -1,4 +1,3 @@
-#if ENABLE_MONO && (DEVELOPMENT_BUILD || UNITY_EDITOR)
 using UnityEngine;
 
 namespace SingularityGroup.HotReload {
@@ -8,13 +7,15 @@ namespace SingularityGroup.HotReload {
         public static bool IsAssetStoreBuild => true;
 
         
-        public const string Version = "1.12.9";
+        public const string Version = "1.13.15";
         // Never higher than Version
         // Used for the download
-        public const string ServerVersion = "1.12.9";
+        public const string ServerVersion = "1.13.15";
         public const string PackageName = "com.singularitygroup.hotreload";
+        public const string DefaultLocale = Localization.Locale.English;
+        // avoids unreachable code warnings from using const
+        public static string DefaultLocaleField = DefaultLocale;
         public const string LibraryCachePath = "Library/" + PackageName;
         public const string ConfigFileName = "hot-reload-config.json";
     }
 }
-#endif

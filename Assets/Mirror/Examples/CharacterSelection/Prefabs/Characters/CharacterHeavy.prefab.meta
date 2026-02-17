@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 59ffef73ea4ec43c09cd00a5135ca8f1
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/CharacterSelection/Prefabs/Characters/CharacterHeavy.prefab
+  uploadId: 736421

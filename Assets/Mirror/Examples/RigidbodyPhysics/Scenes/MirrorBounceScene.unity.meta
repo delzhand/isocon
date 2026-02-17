@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b42449e4a64f03a42b999b0c118df11b
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/RigidbodyPhysics/Scenes/MirrorBounceScene.unity
+  uploadId: 736421

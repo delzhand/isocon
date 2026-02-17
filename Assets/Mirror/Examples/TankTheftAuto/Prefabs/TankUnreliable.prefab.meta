@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 77f79485ebed3b14fb954879767fe9c0
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/TankTheftAuto/Prefabs/TankUnreliable.prefab
+  uploadId: 736421

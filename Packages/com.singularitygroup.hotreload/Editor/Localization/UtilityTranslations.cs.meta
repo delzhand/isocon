@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: c089e14ef1f6aa5438ecc4ea082be7d9
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 254358
+  packageName: Hot Reload | Edit Code Without Compiling
+  packageVersion: 1.13.15
+  assetPath: Packages/com.singularitygroup.hotreload/Editor/Localization/UtilityTranslations.cs
+  uploadId: 846426

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: fc40b1557a4729e4e9cfaad99e1097ff
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/BenchmarkStinkySteak/Prefabs/PlayerDummy.prefab
+  uploadId: 736421

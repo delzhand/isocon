@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 #endif
 using System.Text.RegularExpressions;
+using SingularityGroup.HotReload.Editor.Localization;
 
 namespace SingularityGroup.HotReload.Editor.Semver
 {
@@ -132,7 +133,7 @@ namespace SingularityGroup.HotReload.Editor.Semver
             }
             else if (strict)
             {
-                throw new InvalidOperationException("Invalid version (no minor version given in strict mode)");
+                throw new InvalidOperationException(Translations.Utility.InvalidVersionNoMinor);
             }
 
             var patchMatch = match.Groups["patch"];
@@ -147,7 +148,7 @@ namespace SingularityGroup.HotReload.Editor.Semver
             }
             else if (strict) 
             {
-                throw new InvalidOperationException("Invalid version (no patch version given in strict mode)");
+                throw new InvalidOperationException(Translations.Utility.InvalidVersionNoPatch);
             }
 
             var prerelease = match.Groups["pre"].Value;
@@ -267,10 +268,10 @@ namespace SingularityGroup.HotReload.Editor.Semver
         public string Build { get; private set; }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="string" /> that represents this instance.
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="string" /> that represents this instance.
         /// </returns>
         public override string ToString()
         {

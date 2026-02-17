@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: aa1f875396fa7d348a782cebc2f75d7c
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/MultipleMatches/Scenes/MirrorMultipleMatches.unity
+  uploadId: 736421

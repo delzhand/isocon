@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 65881ca9607b5ea42b654a7ed2566027
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/PickupsDropsChilds/Scripts/Interfaces/EquippedBall.cs
+  uploadId: 736421

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 1931e6adfa27e41bbbea220a6436c0e9
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: ''
+  assetBundleName: ''
+  assetBundleVariant: ''
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/CouchCoop/Scripts/CouchPlayer.cs
+  uploadId: 736421

@@ -1,4 +1,3 @@
-#if ENABLE_MONO && (DEVELOPMENT_BUILD || UNITY_EDITOR)
 #if UNITY_ANDROID && !UNITY_EDITOR
 #define MOBILE_ANDROID
 #endif
@@ -61,4 +60,3 @@ namespace SingularityGroup.HotReload {
         }
     }
 }
-#endif

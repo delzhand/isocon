@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e5905ffa27de84009b346b49d518ba03
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/Chat/Prefabs/Player.prefab
+  uploadId: 736421

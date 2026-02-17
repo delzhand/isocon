@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 79c6ff7781e8c4174b07ea7e905f62b2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/BilliardsPredicted/Player/PlayerPredicted.cs
+  uploadId: 736421

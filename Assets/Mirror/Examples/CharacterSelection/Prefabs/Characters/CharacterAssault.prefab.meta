@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f574d1625ad4549bba64a6edf31b4d10
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/CharacterSelection/Prefabs/Characters/CharacterAssault.prefab
+  uploadId: 736421

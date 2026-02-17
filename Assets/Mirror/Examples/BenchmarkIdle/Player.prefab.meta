@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c07d22724e9914db19b931058fd2111e
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/BenchmarkIdle/Player.prefab
+  uploadId: 736421

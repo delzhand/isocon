@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e1971f4a8c7661546bc509b44bd91b80
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/AdditiveScenes/Prefabs/Capsule.prefab
+  uploadId: 736421

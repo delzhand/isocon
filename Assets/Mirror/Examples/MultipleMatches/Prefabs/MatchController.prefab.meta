@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e101d385946c91b4c81f318efc723a88
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/MultipleMatches/Prefabs/MatchController.prefab
+  uploadId: 736421

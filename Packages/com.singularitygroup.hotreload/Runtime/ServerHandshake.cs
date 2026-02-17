@@ -1,8 +1,8 @@
-#if ENABLE_MONO && (DEVELOPMENT_BUILD || UNITY_EDITOR)
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using SingularityGroup.HotReload.Localization;
 
 namespace SingularityGroup.HotReload {
     internal class ServerHandshake {
@@ -97,8 +97,8 @@ namespace SingularityGroup.HotReload {
             // handle objections in order of obviousness, most obvious goes first
             if (results.HasFlag(Result.DifferentProject)) {
                 await Prompts.ShowQuestionDialog(new QuestionDialog.Config {
-                    summary = "Hot Reload was started from a different project",
-                    suggestion = "Please run Hot Reload from the matching Unity project",
+                    summary = Localization.Translations.Dialogs.DifferentProjectSummary,
+                    suggestion = Localization.Translations.Dialogs.DifferentProjectSuggestion,
                     continueButtonText = "OK",
                     cancelButtonText = null,
                 });
@@ -109,8 +109,8 @@ namespace SingularityGroup.HotReload {
             if (results.HasFlag(Result.DifferentCommit)) {
                 Prompts.SetConnectionState(ConnectionSummary.DifferencesFound);
                 bool yes = await Prompts.ShowQuestionDialog(new QuestionDialog.Config {
-                    summary = "Editor and current build are on different commits",
-                    suggestion = "This can cause errors when the build was made on an old commit.",
+                    summary = Localization.Translations.Dialogs.DifferentCommitSummary,
+                    suggestion = Localization.Translations.Dialogs.DifferentCommitSuggestion,
                     continueButtonText = "Connect",
                 });
                 if (yes) {
@@ -188,7 +188,7 @@ namespace SingularityGroup.HotReload {
                 Log.Debug("Won't send handshake request because server is not healhy");
                 return results;
             }
-            Log.Info("Request handshake to Hot Reload server with hostname: {0}", info.hostName);
+            Log.Info(string.Format(Localization.Translations.Logging.RequestHandshakeToServer, info.hostName));
             //Log.Debug("Handshake with projectOmissionRegex: \"{0}\"", buildInfo.projectOmissionRegex);
             var response = await RequestHelper.RequestHandshake(info, buildInfo.DefineSymbolsAsHashSet,
                 buildInfo.projectOmissionRegex);
@@ -228,10 +228,10 @@ namespace SingularityGroup.HotReload {
 
             if (remoteBuildTarget == null) {
                 // Should never happen. Server responsed with an error when no BuildInfo at all.
-                Log.Warning("Server did not declare its current Unity activeBuildTarget in the handshake response. Will assume it is {0}.", buildInfo.activeBuildTarget);
+                Log.Warning(string.Format(Localization.Translations.Errors.HandshakeFailedInvalidBuildTarget, buildInfo.activeBuildTarget));
                 results |= Result.QuietWarning;
             } else if (remoteBuildTarget != buildInfo.activeBuildTarget) {
-                Log.Warning("Your Unity project is running on {0}. You may need to switch it to {1} for Hot Reload to work.", remoteBuildTarget, buildInfo.activeBuildTarget);
+                Log.Warning(string.Format(Localization.Translations.Errors.BuildTargetMismatch, remoteBuildTarget, buildInfo.activeBuildTarget));
                 results |= Result.QuietWarning;
             }
 
@@ -242,4 +242,3 @@ namespace SingularityGroup.HotReload {
         }
     }
 }
-#endif

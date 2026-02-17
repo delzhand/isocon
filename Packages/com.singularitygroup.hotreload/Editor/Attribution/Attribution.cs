@@ -34,7 +34,7 @@ namespace SingularityGroup.HotReload.Editor {
          public static void RegisterLogin(LoginStatusResponse response) {
              //Licensing might not be initialized yet.
              //The hwId should be set eventually.
-             if(response.hardwareId == null) {
+             if(response?.hardwareId == null) {
                  return;
              }
              //Only forward attribution if this is an asset store build.

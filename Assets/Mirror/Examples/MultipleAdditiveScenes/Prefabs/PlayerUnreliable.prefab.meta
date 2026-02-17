@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8f9e691c1c5e6c8459a8e05388f9329e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/MultipleAdditiveScenes/Prefabs/PlayerUnreliable.prefab
+  uploadId: 736421

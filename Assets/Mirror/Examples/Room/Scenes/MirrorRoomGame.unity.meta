@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 48478f4d522f96945b8396f376299d3a
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/Room/Scenes/MirrorRoomGame.unity
+  uploadId: 736421

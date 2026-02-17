@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: e875a237ce12c3145b20f17222f10b68
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/MultipleMatches/Scripts/MatchGUI.cs
+  uploadId: 736421

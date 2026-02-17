@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: af70148bee18c584898036462be91b19
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Hosting/Edgegap/Editor/Fonts/BaronNeue SDF.asset
+  uploadId: 736421

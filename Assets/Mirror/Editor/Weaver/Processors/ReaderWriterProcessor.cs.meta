@@ -13,6 +13,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 129321
   packageName: Mirror
-  packageVersion: 86.13.4
+  packageVersion: 96.0.1
   assetPath: Assets/Mirror/Editor/Weaver/Processors/ReaderWriterProcessor.cs
-  uploadId: 634249
+  uploadId: 736421

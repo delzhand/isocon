@@ -7,9 +7,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using SingularityGroup.HotReload.DTO;
 using SingularityGroup.HotReload.Editor.Cli;
+using SingularityGroup.HotReload.Localization;
 using SingularityGroup.HotReload.Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
+using Translations = SingularityGroup.HotReload.Editor.Localization.Translations;
 
 namespace SingularityGroup.HotReload.Editor {
     internal class ServerDownloader : IProgress<float> {
@@ -80,7 +82,7 @@ namespace SingularityGroup.HotReload.Editor {
                     var error = $"{e.GetType().Name}: {e.Message}";
                     errors = (errors ?? new HashSet<string>());
                     if (errors.Add(error)) {
-                        Log.Warning($"Download attempt failed. If the issue persists please reach out to customer support for assistance. Exception: {error}");
+                        Log.Warning(Translations.Errors.ErrorDownloadFailed, error);
                     }
                 }
                 if (!sucess) {
@@ -96,7 +98,7 @@ namespace SingularityGroup.HotReload.Editor {
                 };
                 // sending telemetry requires server to be running so we only attempt after server is downloaded
                 RequestHelper.RequestEditorEventWithRetry(new Stat(StatSource.Client, StatLevel.Error, StatFeature.Editor, StatEventType.Download), data).Forget();
-                Log.Info("Download succeeded!");
+                Log.Info(Translations.Errors.ErrorDownloadSucceeded);
             }
             
             const int ERROR_ALREADY_EXISTS = 0xB7;
@@ -131,8 +133,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
             
             if (!File.Exists(customBinaryPath)) {
-                Log.Warning($"unable to find server binary for platform '{cliController.PlatformName}' at '{customBinaryPath}'. " +
-                            $"Will proceed with downloading the binary (default behavior)");
+                Log.Warning(Translations.Errors.ErrorServerBinaryNotFound, cliController.PlatformName, customBinaryPath);
                 return false;
             } 
             
@@ -148,14 +149,15 @@ namespace SingularityGroup.HotReload.Editor {
                 }
                 return true;
             } catch(IOException ex) {
-                Log.Warning("encountered exception when copying server binary in the specified custom executable path '{0}':\n{1}", customBinaryPath, ex);
+                Log.Warning(Translations.Errors.ErrorCopyingServerBinary, customBinaryPath, ex);
                 return false;
             }
         }
 
         static string GetDownloadUrl(ICliController cliController) {
             const string version = PackageConst.ServerVersion;
-            var key = $"{DownloadUtility.GetPackagePrefix(version)}/server/{cliController.PlatformName}/{cliController.BinaryFileName}";
+            // NOTE: server is not translated at the moment so we always use english
+            var key = $"{DownloadUtility.GetPackagePrefix(version, Locale.English)}/server/{cliController.PlatformName}/{cliController.BinaryFileName}";
             return DownloadUtility.GetDownloadUrl(key);
         }
 
@@ -165,18 +167,16 @@ namespace SingularityGroup.HotReload.Editor {
         
         public Task<bool> PromptForDownload() {
             if (EditorUtility.DisplayDialog(
-                title: "Install platform specific components",
-                message: InstallDescription,
-                ok: "Install",
-                cancel: "More Info")
+                title: Translations.Dialogs.DialogTitleInstallComponents,
+                message: Translations.Dialogs.DialogMessageInstallComponents,
+                ok: Translations.Dialogs.DialogButtonInstall,
+                cancel: Translations.Dialogs.DialogButtonMoreInfo)
             ) {
                 return EnsureDownloaded(HotReloadCli.controller, CancellationToken.None);
             }
             Application.OpenURL(Constants.AdditionalContentURL);
             return Task.FromResult(false);
         }
-        
-        public const string InstallDescription = "For Hot Reload to work, additional components specific to your operating system have to be installed";
     }
     
     class DownloadResult {

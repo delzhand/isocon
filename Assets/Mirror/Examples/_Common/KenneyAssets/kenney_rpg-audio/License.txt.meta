@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a01d310525d49474dabf1fc5e304ba48
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/_Common/KenneyAssets/kenney_rpg-audio/License.txt
+  uploadId: 736421

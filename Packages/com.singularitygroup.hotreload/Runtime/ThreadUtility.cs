@@ -1,5 +1,4 @@
-﻿#if ENABLE_MONO && (DEVELOPMENT_BUILD || UNITY_EDITOR)
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using UnityEngine;
@@ -223,4 +222,3 @@ namespace SingularityGroup.HotReload {
         }
     }
 }
-#endif

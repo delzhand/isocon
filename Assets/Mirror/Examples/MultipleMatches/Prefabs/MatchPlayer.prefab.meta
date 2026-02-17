@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 11d2414f1e120a14c98cba6866e5348f
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/MultipleMatches/Prefabs/MatchPlayer.prefab
+  uploadId: 736421

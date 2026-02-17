@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: eb3de65e983cc7f4caaed498f0a300ff
+PackageManifestImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/BenchmarkStinkySteak/Dependencies/Unity-Simulation-Timer/package.json
+  uploadId: 736421

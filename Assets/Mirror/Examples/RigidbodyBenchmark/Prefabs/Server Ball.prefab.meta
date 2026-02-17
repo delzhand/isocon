@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d61a7422206054cc8974b0d32ffebef5
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/RigidbodyBenchmark/Prefabs/Server Ball.prefab
+  uploadId: 736421

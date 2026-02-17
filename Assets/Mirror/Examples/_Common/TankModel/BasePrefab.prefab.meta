@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dad07e68d3659e6439279d0d4110cf4c
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/_Common/TankModel/BasePrefab.prefab
+  uploadId: 736421

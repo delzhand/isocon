@@ -5,6 +5,7 @@ using System.IO;
 using UnityEditor;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using SingularityGroup.HotReload.Editor.Localization;
 using SingularityGroup.HotReload.Newtonsoft.Json;
 using UnityEditor.Compilation;
 
@@ -14,12 +15,12 @@ namespace SingularityGroup.HotReload.Editor {
     internal static class AssemblyOmission {
         // [MenuItem("Window/Hot Reload Dev/List omitted projects")]
         private static void Check() {
-            Log.Info("To compile C# files same as a Player build, we must omit projects which aren't part of the selected Player build.");
+            Log.Info(Translations.Errors.InfoOmitProjectsForPlayerBuild);
             var omitted = GetOmittedProjects(EditorUserBuildSettings.activeScriptCompilationDefines);
-            Log.Info("---------");
+            Log.Info(Translations.Errors.InfoSeparator);
 
             foreach (var name in omitted) {
-                Log.Info("omitted editor/other project named: {0}", name);
+                Log.Info(Translations.Errors.InfoOmittedEditorProject, name);
             }
         }
         
@@ -69,10 +70,10 @@ namespace SingularityGroup.HotReload.Editor {
 
             if (verboseLogs) {
                 foreach (var name in editorAssemblies) {
-                    Log.Info("found project named {0}", name);
+                    Log.Info(Translations.Errors.InfoFoundProjectNamed, name);
                 }
                 foreach (var playerAssemblyName in playerAssemblies) {
-                    Log.Debug("player assembly named {0}", playerAssemblyName);
+                    Log.Debug(string.Format(Translations.Utility.PlayerAssemblyDebug, playerAssemblyName));
                 }
             }
             // leaves the editor assemblies that are not built into player assemblies (e.g. editor and test assemblies)
@@ -143,13 +144,14 @@ namespace SingularityGroup.HotReload.Editor {
                     return null;
                 }
             }
-            
+
             // Unity Define Constraints syntax is described in the docs https://docs.unity3d.com/Manual/class-AssemblyDefinitionImporter.html
             static readonly Dictionary<string, string> syntaxMap = new Dictionary<string, string> {
                     { "OR", "||" },
                     { "AND", "&&" },
                     { "NOT", "!" }
                 };
+            
             
             /// <summary>
             /// Evaluate a define constraint like 'UNITY_ANDROID || UNITY_IOS'

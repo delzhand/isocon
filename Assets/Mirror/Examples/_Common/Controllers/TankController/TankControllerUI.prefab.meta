@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e64b14552402f6745a7f0aca6237fae2
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/_Common/Controllers/TankController/TankControllerUI.prefab
+  uploadId: 736421

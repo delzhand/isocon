@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
+using SingularityGroup.HotReload.Editor.Localization;
 
 namespace SingularityGroup.HotReload.Editor {
     internal static class EditorWindowHelper {
@@ -37,9 +38,9 @@ namespace SingularityGroup.HotReload.Editor {
             NeedsRecompile
         }
 
-        private static readonly Dictionary<NotificationStatus, GUIContent> notificationContent = new Dictionary<NotificationStatus, GUIContent> {
-            { NotificationStatus.Patching, new GUIContent("[Hot Reload] Applying patches...")},
-            { NotificationStatus.NeedsRecompile, new GUIContent("[Hot Reload] Unsupported Changes detected! Recompiling...")},
+        private static Dictionary<NotificationStatus, GUIContent> notificationContent => new Dictionary<NotificationStatus, GUIContent> {
+            { NotificationStatus.Patching, new GUIContent(Translations.Miscellaneous.NotificationPatching)},
+            { NotificationStatus.NeedsRecompile, new GUIContent(Translations.Miscellaneous.NotificationNeedsRecompile)},
         };
         
         static Type gameViewT;

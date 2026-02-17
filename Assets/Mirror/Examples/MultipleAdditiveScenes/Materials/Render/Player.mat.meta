@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2089070a3452e6f4d866c53e51aae8f2
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/MultipleAdditiveScenes/Materials/Render/Player.mat
+  uploadId: 736421

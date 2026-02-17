@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 67177defd4d334a549e535f10506cc66
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/Basic/README.md
+  uploadId: 736421

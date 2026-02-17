@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 011728c6713537e48899c937300ca5d7
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/PlayerTest/PlayerHybrid.prefab
+  uploadId: 736421

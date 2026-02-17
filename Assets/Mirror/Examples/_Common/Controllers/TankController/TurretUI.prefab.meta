@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 4d16730f7a8ba0a419530d1156d25080
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/_Common/Controllers/TankController/TurretUI.prefab
+  uploadId: 736421

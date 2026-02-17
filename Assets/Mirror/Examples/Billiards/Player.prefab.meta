@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2a61e2175dfa740fdbd5b75afe107cd7
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/Billiards/Player.prefab
+  uploadId: 736421

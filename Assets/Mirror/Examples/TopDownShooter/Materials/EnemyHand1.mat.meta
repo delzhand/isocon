@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a67c3c575ae0d407f9019b2609129145
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/TopDownShooter/Materials/EnemyHand1.mat
+  uploadId: 736421

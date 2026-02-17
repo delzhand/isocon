@@ -1,8 +1,8 @@
-#if ENABLE_MONO && (DEVELOPMENT_BUILD || UNITY_EDITOR)
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using SingularityGroup.HotReload.DTO;
+using SingularityGroup.HotReload.Localization;
 
 namespace SingularityGroup.HotReload {
     
@@ -80,14 +80,14 @@ namespace SingularityGroup.HotReload {
                 var secondsSinceHealthy = TimeSinceServerHealthy().TotalSeconds;
                 var reconnectTimeout = 30; // seconds
                 if (secondsSinceHealthy > 2) {
-                    Log.Info("Hot Reload was unreachable for 5 seconds, trying to reconnect...");
+                    Log.Info(Localization.Translations.Common.HotReloadUnreachable);
                     // feedback for the user so they know why patches are not applying
                     Prompts.SetConnectionState($"{ConnectionSummary.TryingToReconnect} {reconnectTimeout - secondsSinceHealthy:F0}s", false);
                     Prompts.ShowConnectionDialog();
                 }
                 if (secondsSinceHealthy > reconnectTimeout) {
                     // give up on the server, give user a way to connect to another
-                    Log.Info($"Hot Reload was unreachable for {reconnectTimeout} seconds, disconnecting");
+                    Log.Info(string.Format(Localization.Translations.Logging.HotReloadUnreachableDisconnecting, reconnectTimeout));
                     var disconnectedServer = RequestHelper.ServerInfo;
                     Disconnect().Forget();
                     // Let user tap button to retry connecting to the same server (maybe just need to run Hot Reload again)
@@ -100,7 +100,6 @@ namespace SingularityGroup.HotReload {
         static void HandleResponseReceived(MethodPatchResponse response) {
             Log.Debug("PollMethodPatches handling MethodPatchResponse id:{0} response.patches.Length:{1} response.failures.Length:{2}",
                 response.id, response.patches.Length, response.failures.Length);
-            // TODO handle new response data (removed methods etc.)
             if(response.patches.Length > 0) {
                 CodePatcher.I.RegisterPatches(response, persist: true);
             }
@@ -115,4 +114,3 @@ namespace SingularityGroup.HotReload {
     }
 
 }
-#endif

@@ -1,5 +1,4 @@
-﻿#if ENABLE_MONO && (DEVELOPMENT_BUILD || UNITY_EDITOR)
-#pragma warning disable CS0618 // obsolete warnings (stay warning-free also in newer unity versions) 
+﻿#pragma warning disable CS0618 // obsolete warnings (stay warning-free also in newer unity versions) 
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using SingularityGroup.HotReload.Localization;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -16,16 +16,15 @@ namespace SingularityGroup.HotReload {
 
     static class Dispatch {
         // DispatchOnHotReload is called every time a patch is applied (1x per batch of filechanges)
-        // Currently, we don't support [InvokeOnHotReload] on patched methods
-        public static async Task OnHotReload() {
+        public static async Task OnHotReload(List<MethodPatch> patchedMethods) {
             var methods = await Task.Run(() => GetOrFillMethodsCacheThreaded());
 
             foreach (var m in methods) {
                 if (m.IsStatic) {
-                    InvokeStaticMethod(m, nameof(InvokeOnHotReload));
+                    InvokeStaticMethod(m, nameof(InvokeOnHotReload), patchedMethods);
                 } else {
                     foreach (var go in GameObject.FindObjectsOfType(m.DeclaringType)) {
-                        InvokeInstanceMethod(m, go);
+                        InvokeInstanceMethod(m, go, patchedMethods);
                     }
                 }
             }
@@ -43,13 +42,13 @@ namespace SingularityGroup.HotReload {
             }
             var patchMethodParams = patchMethod.GetParameters();
             if (patchMethodParams.Length == 0) {
-                InvokeStaticMethod(patchMethod, nameof(InvokeOnHotReloadLocal));
+                InvokeStaticMethod(patchMethod, nameof(InvokeOnHotReloadLocal), null);
             } else if (typeof(MonoBehaviour).IsAssignableFrom(patchMethodParams[0].ParameterType)) {
                 foreach (var go in GameObject.FindObjectsOfType(patchMethodParams[0].ParameterType)) {
                     InvokeInstanceMethodStatic(patchMethod, go);
                 }
             } else {
-                Log.Warning($"[{nameof(InvokeOnHotReloadLocal)}] {patchMethod.DeclaringType?.Name} {patchMethod.Name} failed. Make sure it's a method with 0 parameters either static or defined on MonoBehaviour.");
+                Log.Warning($"[{nameof(InvokeOnHotReloadLocal)}] {patchMethod.DeclaringType?.Name} {patchMethod.Name} {Localization.Translations.Utility.MethodCallWarning}");
             }
         }
 
@@ -58,17 +57,17 @@ namespace SingularityGroup.HotReload {
             var reloadMethod = reloadForType?.GetMethod(attrib.methodToInvoke, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
 
             if (reloadMethod == null) {
-                Log.Warning($"[{nameof(InvokeOnHotReloadLocal)}] failed to find method {attrib.methodToInvoke}. Make sure it exists within the same class.");
+                Log.Warning($"[{nameof(InvokeOnHotReloadLocal)}] {string.Format(Localization.Translations.Utility.OnHotReloadLocalWarning, attrib.methodToInvoke)}");
                 return;
             }
             if (reloadMethod.IsStatic) {
-                InvokeStaticMethod(reloadMethod, nameof(InvokeOnHotReloadLocal));
+                InvokeStaticMethod(reloadMethod, nameof(InvokeOnHotReloadLocal), null);
             } else if (typeof(MonoBehaviour).IsAssignableFrom(reloadForType)) {
                 foreach (var go in GameObject.FindObjectsOfType(reloadForType)) {
-                    InvokeInstanceMethod(reloadMethod, go);
+                    InvokeInstanceMethod(reloadMethod, go, null);
                 }
             } else {
-                Log.Warning($"[{nameof(InvokeOnHotReloadLocal)}] {reloadMethod.DeclaringType?.Name} {reloadMethod.Name} failed. Make sure it's a method with 0 parameters either static or defined on MonoBehaviour.");
+                Log.Warning($"[{nameof(InvokeOnHotReloadLocal)}] {reloadMethod.DeclaringType?.Name} {reloadMethod.Name} {Localization.Translations.Utility.MethodCallWarning}");
             }
         }
 
@@ -146,26 +145,34 @@ namespace SingularityGroup.HotReload {
             return methods;
         }
 
-        private static void InvokeStaticMethod(MethodBase m, string attrName) {
+        private static void InvokeStaticMethod(MethodBase m, string attrName, List<MethodPatch> patchedMethods) {
             try {
-                m.Invoke(null, new object[] { });
+                if (patchedMethods != null && m.GetParameters().Length == 1) {
+                    m.Invoke(null, new object[] { patchedMethods });
+                } else {
+                    m.Invoke(null, new object[] { });
+                }
             } catch (Exception e) {
                 if (m.GetParameters().Length != 0) {
-                    Log.Warning($"[{attrName}] {m.DeclaringType?.Name} {m.Name} failed. Make sure it has 0 parameters. Exception:\n{e}");
+                    Log.Warning($"[{attrName}] {m.DeclaringType?.Name} {m.Name} {Localization.Translations.Utility.OnHotReloadWarning}\n{e}");
                 } else {
                     Log.Warning($"[{attrName}] {m.DeclaringType?.Name} {m.Name} failed. Exception\n{e}");
                 }
             }
         }
 
-        private static void InvokeInstanceMethod(MethodBase m, Object go) {
+        private static void InvokeInstanceMethod(MethodBase m, Object go, List<MethodPatch> patchedMethods) {
             try {
-                m.Invoke(go, new object[] { });
+                if (patchedMethods != null && m.GetParameters().Length == 1) {
+                    m.Invoke(go, new object[] { patchedMethods });
+                } else {
+                    m.Invoke(go, new object[] { });
+                }
             } catch (Exception e) {
                 if (m.GetParameters().Length != 0) {
-                    Log.Warning($"[InvokeOnHotReload] {m.DeclaringType?.Name} {m.Name} failed. Make sure it has 0 parameters. Exception:\n{e}");
+                    Log.Warning($"[InvokeOnHotReload] {m.DeclaringType?.Name} {m.Name} {Localization.Translations.Utility.OnHotReloadWarning}\n{e}");
                 } else {
-                    Log.Warning($"[InvokeOnHotReload] {m.DeclaringType?.Name} {m.Name} failed. Exception:\n{e}");
+                    Log.Warning(string.Format(Localization.Translations.Logging.InvokeOnHotReloadFailed, m.DeclaringType?.Name, m.Name, e));
                 }
             }
         }
@@ -175,13 +182,12 @@ namespace SingularityGroup.HotReload {
                 m.Invoke(null, new object[] { go });
             } catch (Exception e) {
                 if (m.GetParameters().Length != 0) {
-                    Log.Warning($"[InvokeOnHotReloadLocal] {m.DeclaringType?.Name} {m.Name} failed. Make sure it has 0 parameters. Exception:\n{e}");
+                    Log.Warning($"[InvokeOnHotReloadLocal] {m.DeclaringType?.Name} {m.Name} {Localization.Translations.Utility.OnHotReloadLocalCallWarning}\n{e}");
                 } else {
-                    Log.Warning($"[InvokeOnHotReloadLocal] {m.DeclaringType?.Name} {m.Name} failed. Exception:\n{e}");
+                    Log.Warning(Localization.Translations.Logging.InvokeOnHotReloadLocalFailed, m.DeclaringType?.Name, m.Name, e);
                 }
             }
         }
 
     }
 }
-#endif

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f389723f4f9365143bac0d85db592dbd
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/HexSpatialHash/Prefabs/SpawnPrefab.prefab
+  uploadId: 736421

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 6acf49d76d0eb47c08e908da71d52859
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/CharacterSelection/Prefabs/CharacterData.prefab
+  uploadId: 736421

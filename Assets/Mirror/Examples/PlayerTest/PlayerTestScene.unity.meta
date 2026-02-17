@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2eee477bd391ecc4ba9ca46b6f8b86e3
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/PlayerTest/PlayerTestScene.unity
+  uploadId: 736421

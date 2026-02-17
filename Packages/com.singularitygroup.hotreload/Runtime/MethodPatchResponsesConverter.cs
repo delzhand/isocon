@@ -1,5 +1,3 @@
-#if ENABLE_MONO && (DEVELOPMENT_BUILD || UNITY_EDITOR)
-
 using System;
 using System.Collections.Generic;
 using SingularityGroup.HotReload.DTO;
@@ -30,6 +28,11 @@ namespace SingularityGroup.HotReload.JsonConverters {
             CodePatch[] patches = null;
             string[] failures = null;
             SMethod[] removedMethod = null;
+            SField[] alteredFields = null;
+            SField[] addedFieldInitializerFields = null;
+            SMethod[] addedFieldInitializerInitializers = null;
+            SField[] removedFieldInitializers = null;
+            SField[] newFieldDefinitions = null;
 
             while (reader.Read()) {
                 if (reader.TokenType == JsonToken.EndObject) {
@@ -56,6 +59,26 @@ namespace SingularityGroup.HotReload.JsonConverters {
                     case nameof(MethodPatchResponse.removedMethod):
                         removedMethod = ReadSMethodArray(reader);
                         break;
+                    
+                    case nameof(MethodPatchResponse.alteredFields):
+                        alteredFields = ReadSFields(reader);
+                        break;
+
+                    case nameof(MethodPatchResponse.addedFieldInitializerFields):
+                        addedFieldInitializerFields = ReadSFields(reader);
+                        break;
+
+                    case nameof(MethodPatchResponse.addedFieldInitializerInitializers):
+                        addedFieldInitializerInitializers = ReadSMethodArray(reader);
+                        break;
+
+                    case nameof(MethodPatchResponse.removedFieldInitializers):
+                        removedFieldInitializers = ReadSFields(reader);
+                        break;
+                        
+                    case nameof(MethodPatchResponse.newFieldDefinitions):
+                        newFieldDefinitions = ReadSFields(reader);
+                        break;
 
                     default:
                         reader.Skip(); // Skip unknown properties
@@ -68,8 +91,14 @@ namespace SingularityGroup.HotReload.JsonConverters {
                 patches ?? Array.Empty<CodePatch>(), 
                 failures ?? Array.Empty<string>(), 
                 removedMethod ?? Array.Empty<SMethod>(),
-                // Note: doesn't have to be persisted here 
-                Array.Empty<PartiallySupportedChange>()
+                alteredFields ?? Array.Empty<SField>(),
+                // Note: suggestions don't have to be persisted here 
+                Array.Empty<PartiallySupportedChange>(),
+                Array.Empty<HotReloadSuggestionKind>(),
+                addedFieldInitializerFields ?? Array.Empty<SField>(),
+                addedFieldInitializerInitializers ?? Array.Empty<SMethod>(),
+                removedFieldInitializers ?? Array.Empty<SField>(),
+                newFieldDefinitions ?? Array.Empty<SField>()
             );
         }
 
@@ -91,6 +120,12 @@ namespace SingularityGroup.HotReload.JsonConverters {
                 SMethod[] patchMethods = null;
                 SMethod[] newMethods = null;
                 SUnityJob[] unityJobs = null;
+                SField[] newFields = null;
+                SField[] deletedFields = null;
+                SField[] renamedFieldsFrom = null;
+                SField[] renamedFieldsTo = null;
+                SField[] propertyAttributesFieldOriginal = null;
+                SField[] propertyAttributesFieldUpdated = null;
 
                 while (reader.Read()) {
                     if (reader.TokenType == JsonToken.EndObject) {
@@ -133,6 +168,29 @@ namespace SingularityGroup.HotReload.JsonConverters {
                         case nameof(CodePatch.unityJobs):
                             unityJobs = ReadSUnityJobArray(reader);
                             break;
+                        
+                        case nameof(CodePatch.newFields):
+                            newFields = ReadSFields(reader);
+                            break;
+                        case nameof(CodePatch.deletedFields):
+                            deletedFields = ReadSFields(reader);
+                            break;
+                        
+                        case nameof(CodePatch.renamedFieldsFrom):
+                            renamedFieldsFrom = ReadSFields(reader);
+                            break;
+                        
+                        case nameof(CodePatch.renamedFieldsTo):
+                            renamedFieldsTo = ReadSFields(reader);
+                            break;
+                        
+                        case nameof(CodePatch.propertyAttributesFieldOriginal):
+                            propertyAttributesFieldOriginal = ReadSFields(reader);
+                            break;
+                        
+                        case nameof(CodePatch.propertyAttributesFieldUpdated):
+                            propertyAttributesFieldUpdated = ReadSFields(reader);
+                            break;
 
                         default:
                             reader.Skip(); // Skip unknown properties
@@ -148,7 +206,13 @@ namespace SingularityGroup.HotReload.JsonConverters {
                     modifiedMethods: modifiedMethods ?? Array.Empty<SMethod>(),
                     patchMethods: patchMethods ?? Array.Empty<SMethod>(),
                     newMethods: newMethods ?? Array.Empty<SMethod>(),
-                    unityJobs: unityJobs ?? Array.Empty<SUnityJob>()
+                    unityJobs: unityJobs ?? Array.Empty<SUnityJob>(),
+                    newFields: newFields ?? Array.Empty<SField>(),
+                    deletedFields: deletedFields ?? Array.Empty<SField>(),
+                    renamedFieldsFrom: renamedFieldsFrom ?? Array.Empty<SField>(),
+                    renamedFieldsTo: renamedFieldsTo ?? Array.Empty<SField>(),
+                    propertyAttributesFieldOriginal: propertyAttributesFieldOriginal ?? Array.Empty<SField>(),
+                    propertyAttributesFieldUpdated: propertyAttributesFieldUpdated ?? Array.Empty<SField>()
                 ));
             }
 
@@ -210,13 +274,23 @@ namespace SingularityGroup.HotReload.JsonConverters {
 
             return array.ToArray();
         }
+        
+        private SField[] ReadSFields(JsonReader reader) {
+            var array = new List<SField>();
+            while (reader.Read()) {
+                if (reader.TokenType == JsonToken.StartObject) {
+                    array.Add(ReadSField(reader));
+                } else if (reader.TokenType == JsonToken.EndArray) {
+                    break; // End of the SUnityJob array
+                }
+            }
+            return array.ToArray();
+        }
 
         private SMethod ReadSMethod(JsonReader reader) {
             string assemblyName = null;
             string displayName = null;
             int metadataToken = default(int);
-            SType[] genericTypeArguments = null;
-            SType[] genericArguments = null;
             string simpleName = null;
 
             while (reader.Read()) {
@@ -241,14 +315,6 @@ namespace SingularityGroup.HotReload.JsonConverters {
                         metadataToken = reader.ReadAsInt32() ?? default(int);
                         break;
                     
-                    case nameof(SMethod.genericTypeArguments):
-                        genericTypeArguments = ReadSTypeArray(reader);
-                        break;
-                    
-                    case nameof(SMethod.genericArguments):
-                        genericArguments = ReadSTypeArray(reader);
-                        break;
-                    
                     case nameof(SMethod.simpleName):
                         simpleName = reader.ReadAsString();
                         break;
@@ -263,8 +329,6 @@ namespace SingularityGroup.HotReload.JsonConverters {
                 assemblyName ?? string.Empty,
                 displayName ?? string.Empty,
                 metadataToken, 
-                genericTypeArguments ?? Array.Empty<SType>(),
-                genericArguments ?? Array.Empty<SType>(),
                 simpleName ?? string.Empty
             );
         }
@@ -272,9 +336,12 @@ namespace SingularityGroup.HotReload.JsonConverters {
         private SType ReadSType(JsonReader reader) {
             string assemblyName = null;
             string typeName = null;
-            SType[] genericArguments = null;
+            int? metadataToken = null;
 
             while (reader.Read()) {
+                if (reader.TokenType == JsonToken.Null) {
+                    return null;
+                }
                 if (reader.TokenType == JsonToken.EndObject) {
                     break;
                 }
@@ -292,8 +359,8 @@ namespace SingularityGroup.HotReload.JsonConverters {
                         typeName = reader.ReadAsString();
                         break;
 
-                    case nameof(SType.genericArguments):
-                        genericArguments = ReadSTypeArray(reader);
+                    case nameof(SType.metadataToken):
+                        metadataToken = reader.ReadAsInt32();
                         break;
 
                     default:
@@ -305,7 +372,7 @@ namespace SingularityGroup.HotReload.JsonConverters {
             return new SType(
                 assemblyName ?? string.Empty,
                 typeName ?? string.Empty,
-                genericArguments ?? Array.Empty<SType>()
+                metadataToken ?? 0
             );
         }
 
@@ -339,6 +406,57 @@ namespace SingularityGroup.HotReload.JsonConverters {
             }
 
             return new SUnityJob(metadataToken, jobKind);
+        }
+        
+        private SField ReadSField(JsonReader reader) {
+            SType declaringType = null;
+            string fieldName = null;
+            string assemblyName = null;
+            int? metadataToken = null;
+            bool? serializable = null;
+            bool? isStatic = null;
+
+            while (reader.Read()) {
+                if (reader.TokenType == JsonToken.EndObject) {
+                    break;
+                }
+                if (reader.TokenType != JsonToken.PropertyName) {
+                    continue;
+                }
+                var propertyName = (string)reader.Value;
+
+                switch (propertyName) {
+                    case nameof(SField.declaringType):
+                        declaringType = ReadSType(reader);
+                        break;
+                    
+                    case nameof(SField.fieldName):
+                        fieldName = reader.ReadAsString();
+                        break;
+
+                    case nameof(SField.assemblyName):
+                        assemblyName = reader.ReadAsString();
+                        break;
+                    
+                    case nameof(SField.metadataToken):
+                        metadataToken = reader.ReadAsInt32();
+                        break;
+
+                    case nameof(SField.serializable):
+                        serializable = reader.ReadAsBoolean();
+                        break;
+                    
+                    case nameof(SField.isStatic):
+                        isStatic = reader.ReadAsBoolean();
+                        break;
+                    
+                    default:
+                        reader.Skip(); // Skip unknown properties
+                        break;
+                }
+            }
+
+            return new SField(declaringType: declaringType, fieldName: fieldName, assemblyName: assemblyName, metadataToken ?? 0, isStatic ?? false, serializable ?? false);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
@@ -412,6 +530,60 @@ namespace SingularityGroup.HotReload.JsonConverters {
                             }
                             writer.WriteEndArray();
                         }
+                        
+                        if (responsePatch.newFields != null) {
+                            writer.WritePropertyName(nameof(responsePatch.newFields));
+                            writer.WriteStartArray();
+                            foreach (var newField in responsePatch.newFields) {
+                                WriteSField(writer, newField);
+                            }
+                            writer.WriteEndArray();
+                        }
+                        
+                        if (responsePatch.deletedFields != null) {
+                            writer.WritePropertyName(nameof(responsePatch.deletedFields));
+                            writer.WriteStartArray();
+                            foreach (var deletedField in responsePatch.deletedFields) {
+                                WriteSField(writer, deletedField);
+                            }
+                            writer.WriteEndArray();
+                        }
+                        
+                        if (responsePatch.renamedFieldsFrom != null) {
+                            writer.WritePropertyName(nameof(responsePatch.renamedFieldsFrom));
+                            writer.WriteStartArray();
+                            foreach (var removedFieldFrom in responsePatch.renamedFieldsFrom) {
+                                WriteSField(writer, removedFieldFrom);
+                            }
+                            writer.WriteEndArray();
+                        }
+                        
+                        if (responsePatch.renamedFieldsTo != null) {
+                            writer.WritePropertyName(nameof(responsePatch.renamedFieldsTo));
+                            writer.WriteStartArray();
+                            foreach (var removedFieldTo in responsePatch.renamedFieldsTo) {
+                                WriteSField(writer, removedFieldTo);
+                            }
+                            writer.WriteEndArray();
+                        }
+                        
+                        if (responsePatch.propertyAttributesFieldOriginal != null) {
+                            writer.WritePropertyName(nameof(responsePatch.propertyAttributesFieldOriginal));
+                            writer.WriteStartArray();
+                            foreach (var removedFieldFrom in responsePatch.propertyAttributesFieldOriginal) {
+                                WriteSField(writer, removedFieldFrom);
+                            }
+                            writer.WriteEndArray();
+                        }
+                        
+                        if (responsePatch.propertyAttributesFieldUpdated != null) {
+                            writer.WritePropertyName(nameof(responsePatch.propertyAttributesFieldUpdated));
+                            writer.WriteStartArray();
+                            foreach (var removedFieldTo in responsePatch.propertyAttributesFieldUpdated) {
+                                WriteSField(writer, removedFieldTo);
+                            }
+                            writer.WriteEndArray();
+                        }
 
                         writer.WriteEndObject();
                     }
@@ -436,6 +608,51 @@ namespace SingularityGroup.HotReload.JsonConverters {
                     writer.WriteEndArray();
                 }
                 
+                if (response.alteredFields != null) {
+                    writer.WritePropertyName(nameof(response.alteredFields));
+                    writer.WriteStartArray();
+                    foreach (var alteredField in response.alteredFields) {
+                        WriteSField(writer, alteredField);
+                    }
+                    writer.WriteEndArray();
+                }
+                
+                if (response.addedFieldInitializerFields != null) {
+                    writer.WritePropertyName(nameof(response.addedFieldInitializerFields));
+                    writer.WriteStartArray();
+                    foreach (var addedFieldInitializerField in response.addedFieldInitializerFields) {
+                        WriteSField(writer, addedFieldInitializerField);
+                    }
+                    writer.WriteEndArray();
+                }
+
+                if (response.addedFieldInitializerInitializers != null) {
+                    writer.WritePropertyName(nameof(response.addedFieldInitializerInitializers));
+                    writer.WriteStartArray();
+                    foreach (var addedFieldInitializerInitializer in response.addedFieldInitializerInitializers) {
+                        WriteSMethod(writer, addedFieldInitializerInitializer);
+                    }
+                    writer.WriteEndArray();
+                }
+                
+                if (response.removedFieldInitializers != null) {
+                    writer.WritePropertyName(nameof(response.removedFieldInitializers));
+                    writer.WriteStartArray();
+                    foreach (var removedFieldInitializer in response.removedFieldInitializers) {
+                        WriteSField(writer, removedFieldInitializer);
+                    }
+                    writer.WriteEndArray();
+                }
+                
+                if (response.newFieldDefinitions != null) {
+                    writer.WritePropertyName(nameof(response.newFieldDefinitions));
+                    writer.WriteStartArray();
+                    foreach (var newFieldDefinition in response.newFieldDefinitions) {
+                        WriteSField(writer, newFieldDefinition);
+                    }
+                    writer.WriteEndArray();
+                }
+                
                 writer.WriteEndObject();
             }
             writer.WriteEndArray();
@@ -450,51 +667,47 @@ namespace SingularityGroup.HotReload.JsonConverters {
             writer.WriteValue(method.displayName);
             writer.WritePropertyName(nameof(method.metadataToken));
             writer.WriteValue(method.metadataToken);
-
-            if (method.genericTypeArguments != null) {
-                writer.WritePropertyName(nameof(method.genericTypeArguments));
-                writer.WriteStartArray();
-                foreach (var genericTypeArgument in method.genericTypeArguments) {
-                    WriteSType(writer, genericTypeArgument);
-                }
-                writer.WriteEndArray();
-            }
-
-            if (method.genericArguments != null) {
-                writer.WritePropertyName(nameof(method.genericArguments));
-                writer.WriteStartArray();
-                foreach (var genericArgument in method.genericArguments) {
-                    WriteSType(writer, genericArgument);
-                }
-                writer.WriteEndArray();
-            }
-            
             writer.WritePropertyName(nameof(method.simpleName));
             writer.WriteValue(method.simpleName);
             
             writer.WriteEndObject();
         }
+        
+        void WriteSField(JsonWriter writer, SField field) {
+            writer.WriteStartObject();
+            
+            writer.WritePropertyName(nameof(field.declaringType));
+            writer.WriteSType(field.declaringType);
+            writer.WritePropertyName(nameof(field.fieldName));
+            writer.WriteValue(field.fieldName);
+            writer.WritePropertyName(nameof(field.assemblyName));
+            writer.WriteValue(field.assemblyName);
+            writer.WritePropertyName(nameof(field.metadataToken));
+            writer.WriteValue(field.metadataToken);
+            writer.WritePropertyName(nameof(field.serializable));
+            writer.WriteValue(field.serializable);
+            
+            writer.WriteEndObject();
+        }
 
-        void WriteSType(JsonWriter writer, SType type) {
+    }
+    internal static class MethodPatchResponsesConverterExtensions {
+        public static void WriteSType(this JsonWriter writer, SType type) {
+            if (type == null) {
+                writer.WriteNull();
+                return;
+            }
             writer.WriteStartObject();
             
             writer.WritePropertyName(nameof(type.assemblyName));
             writer.WriteValue(type.assemblyName);
             writer.WritePropertyName(nameof(type.typeName));
             writer.WriteValue(type.typeName);
-
-            // always writing generic arguments will cause recursion issues
-            if (type.genericArguments?.Length > 0) {
-                writer.WritePropertyName(nameof(type.genericArguments));
-                writer.WriteStartArray();
-                foreach (var genericArgument in type.genericArguments) {
-                    WriteSType(writer, genericArgument);
-                }
-                writer.WriteEndArray();
-            }
+            writer.WritePropertyName(nameof(type.metadataToken));
+            writer.WriteValue(type.metadataToken);
             
             writer.WriteEndObject();
         }
     }
+
 }
-#endif

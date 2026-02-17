@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a2c9bdffb0b934b52b2c337a5c8a5698
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 129321
+  packageName: Mirror
+  packageVersion: 96.0.1
+  assetPath: Assets/Mirror/Examples/Snapshot Interpolation/Snapshot3D.cs
+  uploadId: 736421
