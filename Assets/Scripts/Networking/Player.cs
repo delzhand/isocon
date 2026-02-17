@@ -79,6 +79,7 @@ public class Player : NetworkBehaviour
         string system = Preferences.Current.System;
         string systemVars = GameSystem.Current().GetSystemVars();
         string grid = TerrainController.GridType;
+        BlockRendering.ToggleHex(grid == "Hex");
         string data = GameSystem.DataJson;
         byte[] dataBytes = Compression.CompressString(data);
 
@@ -93,6 +94,8 @@ public class Player : NetworkBehaviour
         FileLogger.Write($"Local game system set to {system}");
 
         TerrainController.GridType = grid;
+        BlockRendering.ToggleHex(grid == "Hex");
+
         FileLogger.Write($"Local grid type set to {grid}");
 
         GameSystem.DataJson = Compression.DecompressString(dataBytes);

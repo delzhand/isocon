@@ -94,6 +94,7 @@ public class BlockRendering
             var material = new Material(Resources.Load<Material>($"Materials/Block/Artistic/{texture}"));
             material.SetColor("_Tint", tint);
             material.SetInt("_ShowOutline", StateManager.ShowBorders ? 1 : 0);
+            material.SetInt("_Hex", TerrainController.GridType == "Hex" ? 1 : 0);
             _customMaterials.Add(key, material);
             return material;
         }
@@ -126,6 +127,7 @@ public class BlockRendering
 
     public static void ToggleAllBorders(bool show)
     {
+        bool hex = TerrainController.GridType == "Hex";
         StateManager.ShowBorders = show;
         foreach (string s in _customMaterials.Keys)
         {
@@ -136,6 +138,18 @@ public class BlockRendering
         {
             _sharedMaterials[s].SetInt("_ShowOutline", show ? 1 : 1);
             _sharedMaterials[s].SetFloat("_OutlineOpacity", show ? 1 : Preferences.Current.BlockBorderOpacity);
+        }
+    }
+
+    public static void ToggleHex(bool hex)
+    {
+        foreach (string s in _customMaterials.Keys)
+        {
+            _customMaterials[s].SetInt("_Hex", hex ? 1 : 0);
+        }
+        foreach (string s in StringUtility.CreateArray("top1", "top2"))
+        {
+            _sharedMaterials[s].SetInt("_Hex", hex ? 1 : 0);
         }
     }
 

@@ -95,6 +95,7 @@ public class TerrainController
         }
         ReorgNeeded = true;
         Environment.SetBackgroundColors(Environment.BgBottomColor, Environment.BgTopColor);
+        BlockRendering.ToggleHex(GridType == "Hex");
     }
 
     public static void ResetTerrain(int width, int length, int height)
