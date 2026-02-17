@@ -241,8 +241,8 @@ public class Generic : GameSystem
 
     private void DeserializeToken(GenericTokenPersistence tp)
     {
-        Color color = Color.black;
         string data = JsonUtility.ToJson(tp.SystemData);
+        Color color = ColorUtility.GetCommonColor(tp.SystemData.ColorName);
         Player.Self().CmdCreateTokenPlaced(SystemName(), tp.TokenMeta, tp.Name, tp.Size, color, data, tp.Position);
     }
 
@@ -412,7 +412,6 @@ public class GenericTokenPersistence
     public string Name;
     public TokenMeta TokenMeta;
     public GenericData SystemData;
-    public string ColorName;
     public int Size;
     public Vector3 Position;
 }
