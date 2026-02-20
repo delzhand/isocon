@@ -45,6 +45,8 @@ public class Startup
 * Updated documentation
 * Custom GameSystems can now more easily make direct dice rolls
 * Added a button to immediately switch to a fixed overhead camera view
+* Per-token <b>Resources</b> can be added to <b>Generic</b> tokens via the right-click menu
+* Tokens can be resized at any time via the right-click menu
 <size=+2><b>Changes</b></size>
 * Tokens in <b>Generic</b> system can now set a color
 * Rotate/Pan camera toggle moved to Configuration

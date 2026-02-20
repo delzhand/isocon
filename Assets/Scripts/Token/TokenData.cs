@@ -182,6 +182,12 @@ public class TokenData : NetworkBehaviour
         }
     }
 
+    public void UpdateSize(int size)
+    {
+        Size = size;
+        SetSize();
+    }
+
     private void CreateUnitBarElement()
     {
         // Create the element in the UI

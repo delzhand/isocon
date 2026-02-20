@@ -161,7 +161,6 @@ public class Generic : GameSystem
     {
         base.TokenDataSetValue(tokenId, value);
         TokenData data = TokenData.Find(tokenId);
-        Debug.Log($"GenericInterpreter change registered for {data.Name}: {value}");
         GenericData sysdata = JsonUtility.FromJson<GenericData>(data.SystemData);
         sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
         data.SystemData = JsonUtility.ToJson(sysdata);

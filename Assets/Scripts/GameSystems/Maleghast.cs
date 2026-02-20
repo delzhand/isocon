@@ -314,11 +314,8 @@ public class Maleghast : GameSystem
         };
         InitSystemData(data);
 
-        int size = 1;
-        if (data.Type == "Tyrant")
-        {
-            size = 2;
-        }
+        JSONNode jobData = FindJob(data.House, data.Job);
+        int size = jobData["size"];
 
         Color color = ColorUtility.GetColor(FindHouse(house)["color"]);
         if (colorValue != "House Default")

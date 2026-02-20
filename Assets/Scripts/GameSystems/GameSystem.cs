@@ -89,6 +89,7 @@ public class GameSystem : MonoBehaviour
             items.Add(new MenuItem("Remove", "Remove", ClickRemove));
             items.Add(new MenuItem("Flip", "Flip", ClickFlip));
         }
+        items.Add(new MenuItem("Resize", "Resize", ClickResize));
         items.Add(new MenuItem("EndTurn", "End Turn", ClickEndTurn));
         items.Add(new MenuItem("Clone", "Clone", ClickClone));
         items.Add(new MenuItem("EditName", "Edit Name", ClickEditName));
@@ -139,6 +140,21 @@ public class GameSystem : MonoBehaviour
         {
             string newName = UI.Modal.Q<TextField>("Name").value.Trim();
             Player.Self().CmdRequestTokenDataSetValue(data.Id, $"Name|{newName}");
+            Modal.Close();
+            Token.DeselectAll();
+        });
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+    }
+
+    private static void ClickResize(ClickEvent evt)
+    {
+        Modal.Reset("Resize");
+        Modal.AddDropdownField("SizeField", "Size", "1x1", new string[] { "1x1", "2x2", "3x3" });
+        Modal.AddPreferredButton("Update Size", (evt) =>
+        {
+            string newSize = UI.Modal.Q<DropdownField>("SizeField").value;
+            TokenData data = Token.GetSelected().Data;
+            Player.Self().CmdRequestTokenDataSetValue(data.Id, $"Size|{newSize}");
             Modal.Close();
             Token.DeselectAll();
         });
@@ -220,6 +236,7 @@ public class GameSystem : MonoBehaviour
     public virtual void TokenDataSetValue(string tokenId, string value)
     {
         TokenData data = TokenData.Find(tokenId);
+        Debug.Log(value);
         if (value == "EndTurn")
         {
             data.UnitBarElement.Q("Portrait").style.unityBackgroundImageTintColor = ColorUtility.GetColor("#505050");
@@ -231,6 +248,13 @@ public class GameSystem : MonoBehaviour
         if (value.StartsWith("Name"))
         {
             data.Name = value.Split("|")[1];
+        }
+        if (value.StartsWith("Size"))
+        {
+            string sizeValue = value.Split("|")[1];
+            string number = sizeValue.Substring(0, 1);
+            data.Size = int.Parse(number);
+            data.UpdateSize(data.Size);
         }
     }
 
