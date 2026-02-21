@@ -25,6 +25,8 @@ public class GameSystem : MonoBehaviour
                 return system as Icon_v2_0;
             case "Maleghast":
                 return system as Maleghast;
+            case "Lancer":
+                return system as Lancer;
             case "Generic System":
                 return system as Generic;
         }
@@ -33,7 +35,7 @@ public class GameSystem : MonoBehaviour
 
     public static string[] SystemOptions()
     {
-        return new string[] { "Generic System", "ICON 1.5", "ICON 2.0 Playtest", "Maleghast" };
+        return new string[] { "Generic System", "ICON 1.5", "ICON 2.0 Playtest", "Maleghast", /*"Lancer"*/ };
     }
 
     public static string[] HexOptionalSystems()
@@ -287,6 +289,9 @@ public class GameSystem : MonoBehaviour
                 break;
             case "Maleghast":
                 system = g.AddComponent<Maleghast>();
+                break;
+            case "Lancer":
+                system = g.AddComponent<Lancer>();
                 break;
         }
         Toast.AddSimple(system.SystemName() + " initialized.");
