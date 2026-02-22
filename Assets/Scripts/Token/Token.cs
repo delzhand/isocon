@@ -131,7 +131,7 @@ public class Token : MonoBehaviour
     {
         if (State == TokenState.Inspecting)
         {
-            StateChange(TokenState.Neutral);
+            StateChange(TokenState.Focused);
             Player.Self().ClearOp();
         }
         else
