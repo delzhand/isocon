@@ -78,10 +78,32 @@ public class NeutralState : TabletopSubstate
     private void ShowTokenPanels()
     {
         Token selected = Token.GetSelected();
-        GameSystem.Current()?.UpdateTokenPanel(selected != null ? selected.Data.Id : null, "SelectedTokenPanel");
-
         Token focused = Token.GetFocused();
-        GameSystem.Current()?.UpdateTokenPanel(focused != null ? focused.Data.Id : null, "FocusedTokenPanel");
+
+        if (focused && selected)
+        {
+            UI.ToggleActiveClass("LeftTokenPanel", true);
+            UI.ToggleActiveClass("RightTokenPanel", true);
+            selected.Data.UpdateTokenPanel("LeftTokenPanel");
+            focused.Data.UpdateTokenPanel("RightTokenPanel");
+        }
+        else if (focused && !selected)
+        {
+            UI.ToggleActiveClass("LeftTokenPanel", true);
+            UI.ToggleActiveClass("RightTokenPanel", false);
+            focused.Data.UpdateTokenPanel("LeftTokenPanel");
+        }
+        else if (selected && !focused)
+        {
+            UI.ToggleActiveClass("LeftTokenPanel", true);
+            UI.ToggleActiveClass("RightTokenPanel", false);
+            selected.Data.UpdateTokenPanel("LeftTokenPanel");
+        }
+        else
+        {
+            UI.ToggleActiveClass("LeftTokenPanel", false);
+            UI.ToggleActiveClass("RightTokenPanel", false);
+        }
     }
 
     #region Callbacks

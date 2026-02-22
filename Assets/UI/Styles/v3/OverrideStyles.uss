@@ -52,6 +52,7 @@
     padding: 2px 2px 2px 6px;
     background-color: rgb(255, 255, 255);
     -unity-font-style: bold;
+    font-style: bold;
     border-radius: 10px;
     -unity-font-definition: resource('Fonts/ModernSans-Light SDF');
     align-self: flex-end;
@@ -122,6 +123,7 @@
     color: rgb(140, 0, 0);
     font-size: 10px;
     -unity-text-align: middle-center;
+    text-align: middle-center;
 }
 
 #Wounds .one {
@@ -161,7 +163,7 @@
     flex-direction: column-reverse;
 }
 
-#DiceResult {}
+/* #DiceResult {} */
 
 #SearchResults {
     width: 244px;
@@ -210,7 +212,9 @@
 #GeneralModal #Contents .big-number .unity-integer-field__input {
     font-size: 32px;
     -unity-font-style: bold;
+    font-style: bold;
     -unity-text-align: middle-center;
+    text-align: middle-center;
 }
 
 #FloatingControls .hover {
@@ -221,59 +225,61 @@
     -unity-background-image-tint-color: rgb(25, 130, 156);
 }
 
-#SelectedTokenPanel {
+#LeftTokenPanel {
     right: 65%;
     opacity: 0;
 }
 
-#SelectedTokenPanel.active {
+#LeftTokenPanel.active {
     right: 55%;
     opacity: 1;
 }
 
-#FocusedTokenPanel {
+#RightTokenPanel {
     left: 65%;
     opacity: 0;
 }
 
-#FocusedTokenPanel.active {
+#RightTokenPanel.active {
     left: 55%;
     opacity: 1;
 }
 
-#SelectedTokenPanel #DataColumn {
+#LeftTokenPanel #DataColumn {
     flex-direction: row;
 }
 
-#SelectedTokenPanel #Status,
-#SelectedTokenPanel #Configuration {
+#LeftTokenPanel #Status,
+#LeftTokenPanel #Configuration {
     min-width: 120px;
 }
 
-#FocusedTokenPanel #DataColumn {
+#RightTokenPanel #DataColumn {
     flex-direction: row-reverse;
 }
 
-#FocusedTokenPanel #Vitals,
-#FocusedTokenPanel #Conditions {
+#RightTokenPanel #Vitals,
+#RightTokenPanel #Conditions {
     margin-left: 0px;
     margin-right: 8px;
 }
 
-#FocusedTokenPanel #Conditions {
+#RightTokenPanel #Conditions {
     min-width: 0;
 }
 
-#FocusedTokenPanel #DataColumn Button,
-#FocusedTokenPanel #Controls {
+#RightTokenPanel #DataColumn Button,
+#RightTokenPanel #Controls {
     display: none;
 }
 
-#SelectedTokenPanel #ExtraInfo .unity-label,
-#FocusedTokenPanel #ExtraInfo .unity-label {
+#LeftTokenPanel #ExtraInfo .unity-label,
+#RightTokenPanel #ExtraInfo .unity-label {
     -unity-text-align: middle-center;
+    text-align: middle-center;
     color: #FFF;
     -unity-font-style: bold;
+    font-style: bold;
     white-space: normal;
     padding: 2px 6px;
     margin: 0px 2px;
