@@ -198,6 +198,10 @@
     margin-bottom: 4px;
 }
 
+#GeneralModal #Contents .column>* {
+    margin-bottom: 4px;
+}
+
 #GeneralModal #Contents .big-number.unity-base-field {
     flex-direction: column;
     margin-bottom: 8px;

@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using Mirror;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -106,6 +105,22 @@ public class Player : NetworkBehaviour
     #endregion
 
     #region Create Token
+    [Command]
+    public void CmdCreateSystemToken(string json)
+    {
+        SystemTokenMeta stm = JsonUtility.FromJson<SystemTokenMeta>(json);
+        GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData"));
+        TokenData data = g.GetComponent<TokenData>();
+        data.Id = Guid.NewGuid().ToString(); ;
+        data.System = stm.System;
+        data.TokenMeta = stm.TokenMeta;
+        data.Name = stm.Name;
+        data.Shape = stm.Shape;
+        data.Color = stm.Color;
+        data.SystemData = json;
+        NetworkServer.Spawn(g);
+    }
+
     [Command]
     public void CmdCreateToken(string system, TokenMeta tokenMeta, string name, int size, Color color, string systemData)
     {
@@ -236,14 +251,14 @@ public class Player : NetworkBehaviour
         GameSystem.Current().GameDataSetValue(value);
     }
     [Command]
-    public void CmdRequestTokenDataSetValue(string tokenId, string value)
+    public void CmdRequestTokenDataCommand(string tokenId, string value)
     {
-        RpcTokenDataSetValue(tokenId, value);
+        RpcTokenDataCommand(tokenId, value);
     }
     [ClientRpc]
-    public void RpcTokenDataSetValue(string tokenId, string value)
+    public void RpcTokenDataCommand(string tokenId, string value)
     {
-        GameSystem.Current().TokenDataSetValue(tokenId, value);
+        TokenData.Command(tokenId, value);
     }
     #endregion
 

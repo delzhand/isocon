@@ -123,7 +123,7 @@ public class Maleghast : GameSystem
     private static void AlterVitals(string cmd)
     {
         int val = UI.Modal.Q<IntegerField>("Number").value;
-        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, $"{cmd}|{val}");
+        Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"{cmd}|{val}");
     }
 
     private void ConfigModal(ClickEvent evt)
@@ -267,13 +267,13 @@ public class Maleghast : GameSystem
         {
             value = $"LoseStatus|{status}";
         }
-        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, value);
+        Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, value);
     }
 
     private void TokenChange(int evt, string token)
     {
         string value = $"SetToken|{token}|{evt}";
-        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, value);
+        Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, value);
     }
 
     private static string[] GetStatuses()

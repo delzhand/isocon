@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
@@ -15,12 +16,12 @@ public class TokenData : NetworkBehaviour
     public string Id;
     [SyncVar]
     public string Name;
-    // [SyncVar]
-    // public string GraphicHash;
     [SyncVar]
     public TokenMeta TokenMeta;
     [SyncVar]
     public int Size;
+    [SyncVar]
+    public string Shape;
     [SyncVar]
     public Color Color;
     [SyncVar]
@@ -135,9 +136,10 @@ public class TokenData : NetworkBehaviour
 
     public void CreateOverheadElement()
     {
-        if (GameSystem.Current() != null)
+        ISystemToken st = SystemTokenRegistry.DoInterfaceCallback(System, SystemData);
+        string asset = st.GetOverheadAsset();
+        if (asset != null)
         {
-            string asset = GameSystem.Current().GetOverheadAsset();
             VisualTreeAsset template = Resources.Load<VisualTreeAsset>(asset);
             VisualElement instance = template.Instantiate();
             OverheadElement = instance.Q("Overhead");
@@ -180,6 +182,11 @@ public class TokenData : NetworkBehaviour
             WorldObject.transform.Find("Offset").transform.localScale = new Vector3(3, 3, 3);
             WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2.7f, 2.7f, 4);
         }
+    }
+
+    public Token GetToken()
+    {
+        return WorldObject.GetComponent<Token>();
     }
 
     public void UpdateSize(int size)
@@ -266,6 +273,25 @@ public class TokenData : NetworkBehaviour
             }
         }
         return null;
+    }
+
+    public static void Command(string tokenId, string command)
+    {
+        TokenData data = TokenData.Find(tokenId);
+        data.HandleCommand(command);
+    }
+
+    private void HandleCommand(string command)
+    {
+        if (command.StartsWith("Rename|"))
+        {
+            Name = command.Split("|")[1];
+        }
+
+        ISystemToken st = SystemTokenRegistry.DoInterfaceCallback(System, SystemData);
+        st.HandleCommand(command, this);
+        SystemData = st.Serialize();
+        NeedsRedraw = true;
     }
 
     public void Select()

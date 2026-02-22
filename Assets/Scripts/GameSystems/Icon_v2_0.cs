@@ -110,7 +110,7 @@ public class Icon_v2_0 : GameSystem
     private static void AlterVitals(string cmd)
     {
         int val = UI.Modal.Q<IntegerField>("Number").value;
-        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, $"{cmd}|{val}");
+        Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"{cmd}|{val}");
     }
 
     private static void AlterStatusModal(ClickEvent evt)
@@ -175,7 +175,7 @@ public class Icon_v2_0 : GameSystem
             condition.NumValue = 0;
         }
 
-        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, $"GainStatus|{JsonUtility.ToJson(condition)}");
+        Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"GainStatus|{JsonUtility.ToJson(condition)}");
         Modal.Close();
     }
 
@@ -591,15 +591,15 @@ public class Icon_v2_0 : GameSystem
                 {
                     template.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) =>
                     {
-                        Player.Self().CmdRequestTokenDataSetValue(tokenId, $"IncrementStatus|{condition.Name}");
+                        Player.Self().CmdRequestTokenDataCommand(tokenId, $"IncrementStatus|{condition.Name}");
                     });
                     template.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) =>
                     {
-                        Player.Self().CmdRequestTokenDataSetValue(tokenId, $"DecrementStatus|{condition.Name}");
+                        Player.Self().CmdRequestTokenDataCommand(tokenId, $"DecrementStatus|{condition.Name}");
                     });
                     template.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) =>
                     {
-                        Player.Self().CmdRequestTokenDataSetValue(tokenId, $"LoseStatus|{condition.Name}");
+                        Player.Self().CmdRequestTokenDataCommand(tokenId, $"LoseStatus|{condition.Name}");
                     });
                     UI.ToggleDisplay(template.Q("Increment"), condition.ModifierType == "Number");
                     UI.ToggleDisplay(template.Q("Decrement"), condition.ModifierType == "Number");

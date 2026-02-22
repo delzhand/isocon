@@ -63,6 +63,12 @@ public class Modal
         isModalOpen = true;
     }
 
+    public static void ResetPreferredButtons()
+    {
+        UI.Modal.Q("Buttons").Clear();
+        preferredAction = null;
+    }
+
     private static void AddContents(VisualElement e)
     {
         UI.Modal.Q("Contents").Add(e);
@@ -215,6 +221,7 @@ public class Modal
             v2.name = $"{name}_{i}";
             v2.style.marginLeft = 8;
             v2.style.marginRight = 8;
+            v2.AddToClassList("column");
             v.Add(v2);
         }
         Modal.AddContents(v);
@@ -293,6 +300,7 @@ public class Modal
             field.RegisterValueChangedCallback<string>(onChange);
         }
         field.AddToClassList("no-margin");
+        field.style.minWidth = 400;
         field.focusable = false;
         Modal.AddContents(field);
     }
@@ -368,7 +376,7 @@ public class Modal
 
     public static void AddTokenField(string name)
     {
-        TextField field = new("Token");
+        TextField field = new("Token Graphic");
         field.name = "Token";
         field.AddToClassList("no-margin");
         field.isReadOnly = true;

@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 public class AddToken
@@ -11,28 +9,39 @@ public class AddToken
         Player.Self().SetOp("Adding a Token");
         Token.DeselectAll();
         Modal.Reset("Add Token");
-        string[] imageOptions = GetImageOptions();
-        Modal.AddTokenField("TokenSearchField");
-        GameSystem.Current().AddTokenModal();
-        Modal.AddPreferredButton("Confirm", ConfirmAddToken);
-        Modal.AddButton("Cancel", (evt) =>
+        Modal.AddDropdownField("TokenType", "Token Type", "Basic", SystemTokenRegistry.GetAllSystems().ToArray(), (evt) =>
         {
-            Modal.Close();
+            VisualElement v = UI.Modal.Q("Contents").Q("TypeData_0");
+            if (v != null)
+            {
+                v.Clear();
+                Modal.ResetPreferredButtons();
+            }
+
+            string type = UI.Modal.Q<DropdownField>("TokenType").value;
+            SystemTokenRegistry.DoCallback($"{type}|AddTokenModal");
         });
+        Modal.AddColumns("TypeData", 1);
+        SystemTokenRegistry.DoCallback($"Basic|AddTokenModal");
         Modal.AddCloseCallback(CancelAddToken);
     }
 
-    private static void ConfirmAddToken(ClickEvent evt)
+    public static void OrderFields(string[] fieldNames)
     {
-        if (GameSystem.Current().ValidateAddToken())
+        foreach (string f in fieldNames)
         {
-            GameSystem.Current().CreateToken();
-            Modal.Close();
-            Player.Self().ClearOp();
+            Modal.MoveToColumn("TypeData_0", f);
         }
     }
 
-    private static void CancelAddToken(ClickEvent evt)
+    public static void FinalizeToken(string json)
+    {
+        Player.Self().CmdCreateSystemToken(json);
+        Player.Self().ClearOp();
+        Modal.Close();
+    }
+
+    public static void CancelAddToken(ClickEvent evt)
     {
         Player.Self().ClearOp();
     }

@@ -70,7 +70,7 @@ public class Generic : GameSystem
     private static void AlterVitals(string cmd)
     {
         int val = UI.Modal.Q<IntegerField>("Number").value;
-        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, $"{cmd}|{val}");
+        Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"{cmd}|{val}");
     }
 
     public override void GameDataSetValue(string value)
@@ -145,7 +145,7 @@ public class Generic : GameSystem
         GenericTokenResource resource = new();
         resource.Name = resourceName;
         resource.Value = resourceValue;
-        Player.Self().CmdRequestTokenDataSetValue(Token.GetSelected().Data.Id, $"SetResource|{JsonUtility.ToJson(resource)}");
+        Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"SetResource|{JsonUtility.ToJson(resource)}");
         Modal.Close();
     }
 
@@ -212,15 +212,15 @@ public class Generic : GameSystem
                 {
                     template.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) =>
                     {
-                        Player.Self().CmdRequestTokenDataSetValue(tokenId, $"IncrementResource|{resource.Name}");
+                        Player.Self().CmdRequestTokenDataCommand(tokenId, $"IncrementResource|{resource.Name}");
                     });
                     template.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) =>
                     {
-                        Player.Self().CmdRequestTokenDataSetValue(tokenId, $"DecrementResource|{resource.Name}");
+                        Player.Self().CmdRequestTokenDataCommand(tokenId, $"DecrementResource|{resource.Name}");
                     });
                     template.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) =>
                     {
-                        Player.Self().CmdRequestTokenDataSetValue(tokenId, $"LoseResource|{resource.Name}");
+                        Player.Self().CmdRequestTokenDataCommand(tokenId, $"LoseResource|{resource.Name}");
                     });
                     UI.ToggleDisplay(template.Q("Increment"), true);
                     UI.ToggleDisplay(template.Q("Decrement"), true);

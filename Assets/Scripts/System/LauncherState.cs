@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using SimpleFileBrowser;
 using System.Linq;
+using System.Collections.Generic;
 
 public class LauncherState : BaseState
 {
@@ -227,12 +228,12 @@ public class LauncherState : BaseState
         switch (_mode)
         {
             case ConnectMode.Solo:
-                GameSystem.Set(Preferences.Current.System);
+                // GameSystem.Set(Preferences.Current.System);
                 netManager.maxConnections = 1;
                 netManager.StartHost();
                 break;
             case ConnectMode.Host:
-                GameSystem.Set(Preferences.Current.System);
+                // GameSystem.Set(Preferences.Current.System);
                 netManager.maxConnections = Preferences.Current.PlayerCount;
                 netManager.StartHost();
                 break;

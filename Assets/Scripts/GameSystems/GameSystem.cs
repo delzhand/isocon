@@ -141,7 +141,7 @@ public class GameSystem : MonoBehaviour
         Modal.AddPreferredButton("Confirm", (evt) =>
         {
             string newName = UI.Modal.Q<TextField>("Name").value.Trim();
-            Player.Self().CmdRequestTokenDataSetValue(data.Id, $"Name|{newName}");
+            Player.Self().CmdRequestTokenDataCommand(data.Id, $"Name|{newName}");
             Modal.Close();
             Token.DeselectAll();
         });
@@ -156,7 +156,7 @@ public class GameSystem : MonoBehaviour
         {
             string newSize = UI.Modal.Q<DropdownField>("SizeField").value;
             TokenData data = Token.GetSelected().Data;
-            Player.Self().CmdRequestTokenDataSetValue(data.Id, $"Size|{newSize}");
+            Player.Self().CmdRequestTokenDataCommand(data.Id, $"Size|{newSize}");
             Modal.Close();
             Token.DeselectAll();
         });
@@ -166,7 +166,7 @@ public class GameSystem : MonoBehaviour
     private static void ClickEndTurn(ClickEvent evt)
     {
         TokenData data = Token.GetSelected().Data;
-        Player.Self().CmdRequestTokenDataSetValue(data.Id, "EndTurn");
+        Player.Self().CmdRequestTokenDataCommand(data.Id, "EndTurn");
         Token.DeselectAll();
     }
 
