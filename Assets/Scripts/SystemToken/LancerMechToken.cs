@@ -1,0 +1,207 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+[Serializable]
+public class LancerMechToken : SystemToken
+{
+    public int MaxHP;
+    public int CurrentHP;
+    public int Stress;
+    public int Structure;
+    public int Heat;
+    public int MaxHeat;
+    public int Armor;
+
+    public override string Serialize()
+    {
+        return JsonUtility.ToJson(this);
+    }
+
+    public override string GetOverheadAsset()
+    {
+        return "UITemplates/GameSystem/LancerMechOverhead";
+    }
+
+    public override MenuItem[] GetTokenMenuItems(bool placed)
+    {
+        MenuItem[] baseItems = base.GetTokenMenuItems(placed);
+
+        List<MenuItem> items = new();
+        items.Add(new MenuItem("HeatDmg", "Heat Damage", (evt) =>
+        {
+            Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, "GainHeat|1");
+            SelectionMenu.Hide();
+        }));
+        items.Add(new MenuItem("StructureDmg", "Structure Damage", (evt) =>
+        {
+            Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, "LoseStructure|1");
+            SelectionMenu.Hide();
+        }));
+        items.Add(new MenuItem("StressDmg", "Stress Damage", (evt) =>
+        {
+            Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, "LoseStress|1");
+            SelectionMenu.Hide();
+        }));
+        return baseItems.Concat(items.ToArray()).ToArray();
+    }
+
+    public override void HandleCommand(string command, TokenData tokenData)
+    {
+        base.HandleCommand(command, tokenData);
+        base.HandleCommand(command, tokenData);
+        if (command.StartsWith("GainHeat|"))
+        {
+            GainHeat(command, tokenData);
+        }
+        if (command.StartsWith("LoseStructure|"))
+        {
+            LoseStructure(command, tokenData);
+        }
+        if (command.StartsWith("LoseStress|"))
+        {
+            LoseStress(command, tokenData);
+        }
+    }
+
+    private void GainHeat(string command, TokenData tokenData)
+    {
+        Token token = tokenData.GetToken();
+        int diff = int.Parse(command.Split("|")[1]);
+        if (Heat + diff > MaxHeat)
+        {
+            diff = MaxHeat - Heat;
+        }
+        if (diff > 0)
+        {
+            Heat += diff;
+            if (tokenData.Placed)
+            {
+                PopoverText.Create(token, $"/+{diff}|_HEAT", Color.white);
+            }
+        }
+    }
+
+    private void LoseStress(string command, TokenData tokenData)
+    {
+        Token token = tokenData.GetToken();
+        int diff = int.Parse(command.Split("|")[1]);
+        if (Stress - diff < 0)
+        {
+            diff = Stress;
+        }
+        if (diff > 0)
+        {
+            Stress -= diff;
+            if (tokenData.Placed)
+            {
+                PopoverText.Create(token, $"/-{diff}|_STRESS", Color.white);
+            }
+        }
+    }
+
+    private void LoseStructure(string command, TokenData tokenData)
+    {
+        Token token = tokenData.GetToken();
+        int diff = int.Parse(command.Split("|")[1]);
+        if (Structure - diff < 0)
+        {
+            diff = Structure;
+        }
+        if (diff > 0)
+        {
+            Structure -= diff;
+            if (tokenData.Placed)
+            {
+                PopoverText.Create(token, $"/-{diff}|_STRUCT", Color.white);
+            }
+        }
+    }
+
+    public override void UpdateOverhead(TokenData tokenData)
+    {
+        VisualElement o = tokenData.OverheadElement;
+        o.Q<ProgressBar>("HpBar").value = CurrentHP;
+        o.Q<ProgressBar>("HpBar").highValue = MaxHP;
+        o.Q<Label>("Structure").text = CharacterString("◆", Structure, 4);
+        o.Q<Label>("Stress").text = CharacterString("▼", Stress, 4);
+        o.Q<Label>("Heat").text = CharacterString("▰", Heat, MaxHeat);
+    }
+
+    private string CharacterString(string character, int value, int max)
+    {
+        StringBuilder sb = new();
+        for (int i = 0; i < max; i++)
+        {
+            if (i == value)
+            {
+                sb.Append("<color=white>");
+            }
+            sb.Append(character);
+        }
+        sb.Append("</color>");
+        return sb.ToString();
+    }
+
+    public static void AddTokenModal()
+    {
+        Modal.AddMarkup("Description", "Lancer Mech tokens have primary HP, Structure, Stress, and Heat stats by default.");
+        Modal.AddTokenField("TokenSearchField");
+        Modal.AddTextField("NameField", "Token Name", "Token");
+        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", StringUtility.CreateArray("Square 1x1", "Square 2x2", "Square 3x3", "Hex 1", "Hex 2", "Hex 3"));
+        Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
+        Modal.AddIntField("MaxHPField", "Max HP", 10);
+        Modal.AddIntField("MaxHeatField", "Heat Cap", 4);
+        Modal.AddPreferredButton("Create Token", CreateClicked);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+
+        // Necessary to ensure fields are in order and can be cleared when changing type dropdown
+        AddToken.OrderFields(StringUtility.CreateArray("Description", "TokenSearchField", "NameField", "ShapeField", "ColorField", "MaxHPField", "MaxHeatField"));
+    }
+
+    private static void CreateClicked(ClickEvent evt)
+    {
+        if (!TokenLibrary.TokenSelected())
+        {
+            Toast.AddError("A token has not been selected");
+            return;
+        }
+
+        string name = UI.Modal.Q<TextField>("NameField").value;
+        string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
+        int maxHP = UI.Modal.Q<IntegerField>("MaxHPField").value;
+        int maxHeat = UI.Modal.Q<IntegerField>("MaxHeatField").value;
+        string color = UI.Modal.Q<DropdownField>("ColorField").value;
+        LancerMechToken t = new()
+        {
+            System = "Lancer Mech",
+            Name = name,
+            MaxHP = maxHP,
+            CurrentHP = maxHP,
+            Structure = 4,
+            Stress = 4,
+            MaxHeat = maxHeat,
+            Heat = 0,
+            Shape = shape,
+            Color = ColorUtility.GetCommonColor(color),
+            TokenMeta = TokenLibrary.GetSelectedMeta()
+        };
+        AddToken.FinalizeToken(t.Serialize());
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void Register()
+    {
+        SystemTokenRegistry.RegisterSystem("Lancer Mech");
+        SystemTokenRegistry.RegisterInterfaceCallback("Lancer Mech", DeserializeAsInterface);
+        SystemTokenRegistry.RegisterSimpleCallback("Lancer Mech|AddTokenModal", AddTokenModal);
+    }
+
+    public static ISystemToken DeserializeAsInterface(string json)
+    {
+        return JsonUtility.FromJson<LancerMechToken>(json);
+    }
+}

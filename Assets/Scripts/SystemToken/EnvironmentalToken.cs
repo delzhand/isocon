@@ -10,14 +10,16 @@ public class EnvironmentalToken : SystemToken
         return JsonUtility.ToJson(this);
     }
 
-    public override string GetOverheadAsset()
+    public override void InitTokenPanel(string elementName)
     {
-        return "UITemplates/GameSystem/SimpleOverhead";
+        VisualElement panel = UI.System.Q(elementName);
+        panel.Q("Data").Clear();
+        panel.Q("ExtraInfo").Clear();
     }
 
     public static void AddTokenModal()
     {
-        Modal.AddMarkup("Description", "Environmental Tokens have no stats but are useful for interactive or indestructible objects.");
+        Modal.AddMarkup("Description", "Environmental tokens have no stats but are useful for interactive or indestructible objects.");
         Modal.AddTokenField("TokenSearchField");
         Modal.AddTextField("NameField", "Token Name", "Token");
         Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", StringUtility.CreateArray("Square 1x1", "Square 2x2", "Square 3x3", "Hex 1", "Hex 2", "Hex 3"));

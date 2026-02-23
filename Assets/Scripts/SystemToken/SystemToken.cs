@@ -10,6 +10,10 @@ public interface ISystemToken
     string GetOverheadAsset();
     MenuItem[] GetTokenMenuItems(bool placed);
     void HandleCommand(string command, TokenData tokenData);
+    void UpdateOverhead(TokenData tokenData);
+    void UpdateTokenPanel(TokenData tokenData, string elementName);
+    void InitTokenPanel(string elementName);
+
 }
 
 [Serializable]
@@ -101,6 +105,18 @@ public abstract class SystemToken : ISystemToken
         {
             Name = command.Split("|")[1];
         }
+    }
+
+    public virtual void UpdateOverhead(TokenData tokenData)
+    {
+    }
+
+    public virtual void UpdateTokenPanel(TokenData tokenData, string elementName)
+    {
+    }
+
+    public virtual void InitTokenPanel(string elementName)
+    {
     }
 }
 

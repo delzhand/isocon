@@ -226,22 +226,22 @@
 }
 
 #LeftTokenPanel {
-    right: 65%;
+    right: 90%;
     opacity: 0;
 }
 
 #LeftTokenPanel.active {
-    right: 55%;
+    right: 80%;
     opacity: 1;
 }
 
 #RightTokenPanel {
-    left: 65%;
+    left: 90%;
     opacity: 0;
 }
 
 #RightTokenPanel.active {
-    left: 55%;
+    left: 80%;
     opacity: 1;
 }
 

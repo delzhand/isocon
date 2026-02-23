@@ -22,6 +22,8 @@ public class Token : MonoBehaviour
     public Token LastFocused;
     public TokenState State = TokenState.Neutral;
 
+    public static bool RebuildPanels = false;
+
     void Update()
     {
         AlignToCamera();
@@ -84,6 +86,12 @@ public class Token : MonoBehaviour
         switch (state)
         {
             case TokenState.Inspecting:
+                RebuildPanels = true;
+                SetVisualSquareYellow();
+                UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true);
+                Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
+                Data.NeedsRedraw = true;
+                break;
             case TokenState.Dragging:
             case TokenState.MenuOpen:
                 SetVisualSquareYellow();
@@ -92,6 +100,7 @@ public class Token : MonoBehaviour
                 Data.NeedsRedraw = true;
                 break;
             case TokenState.Focused:
+                RebuildPanels = true;
                 SetVisualSquareBlue();
                 UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true);
                 Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UIFocusBlue;
@@ -132,12 +141,12 @@ public class Token : MonoBehaviour
         if (State == TokenState.Inspecting)
         {
             StateChange(TokenState.Focused);
-            Player.Self().ClearOp();
+            // Player.Self().ClearOp();
         }
         else
         {
             StateChange(TokenState.Inspecting);
-            Player.Self().SetOp($"Inspecting {Data.Name}");
+            // Player.Self().SetOp($"Inspecting {Data.Name}");
         }
     }
 

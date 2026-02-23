@@ -92,13 +92,15 @@ public class TokenData : NetworkBehaviour
             {
                 UI.FollowTransform(WorldObject.GetComponent<Token>().transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").transform, OverheadElement, Camera.main, Vector2.zero);
             }
+            ISystemToken st = SystemTokenRegistry.DoInterfaceCallback(System, SystemData);
+            st.UpdateOverhead(this);
         }
 
-        if (GameSystem.Current() != null)
-        {
-            GameSystem.Current().UpdateData(this);
-            gameObject.name = $"TokenData:{Name}";
-        }
+        // if (GameSystem.Current() != null)
+        // {
+        //     GameSystem.Current().UpdateData(this);
+        // }
+        gameObject.name = $"TokenData:{Name}";
     }
 
     private void LoadGraphic()
@@ -325,7 +327,45 @@ public class TokenData : NetworkBehaviour
             panel.Q("Portrait").style.backgroundImage = GraphicSingle;
         }
         panel.Q<Label>("Name").text = Name.Trim();
+        panel.Q("ClassBackground").style.borderTopColor = Color;
+        panel.Q("ClassBackground").style.borderRightColor = Color;
+        panel.Q("ClassBackground").style.borderBottomColor = Color;
+        panel.Q("ClassBackground").style.borderLeftColor = Color;
         UI.ToggleDisplay(panel.Q<Label>("Name"), Name.Trim().Length > 0);
+
+        ISystemToken st = SystemTokenRegistry.DoInterfaceCallback(System, SystemData);
+        st.UpdateTokenPanel(this, elementName);
+    }
+
+    // public void InitTokenPanels()
+    // {
+    //     Token selected = Token.GetSelected();
+    //     Token focused = Token.GetFocused();
+
+    //     // Debug.Log($"{selected?.Data.Name} | {focused?.Data.Name} set as panel tokens");
+
+    //     if (focused && selected)
+    //     {
+    //         selected.Data.InitTokenPanel("LeftTokenPanel");
+    //         focused.Data.InitTokenPanel("RightTokenPanel");
+    //     }
+    //     else if (focused && !selected)
+    //     {
+    //         UI.ToggleActiveClass("LeftTokenPanel", true);
+    //         UI.ToggleActiveClass("RightTokenPanel", false);
+    //         focused.Data.UpdateTokenPanel("LeftTokenPanel");
+    //     }
+    //     else if (selected && !focused)
+    //     {
+    //         UI.ToggleActiveClass("LeftTokenPanel", true);
+    //         UI.ToggleActiveClass("RightTokenPanel", false);
+    //         selected.Data.UpdateTokenPanel("LeftTokenPanel");
+    //     }
+    // }
+
+    public ISystemToken GetSystemToken()
+    {
+        return SystemTokenRegistry.DoInterfaceCallback(System, SystemData);
     }
 
     public void Delete()

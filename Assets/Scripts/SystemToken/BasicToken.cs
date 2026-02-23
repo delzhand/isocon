@@ -39,47 +39,56 @@ public class BasicToken : SystemToken
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
-    public override void HandleCommand(string value, TokenData tokenData)
+    public override void HandleCommand(string command, TokenData tokenData)
+    {
+
+        base.HandleCommand(command, tokenData);
+        if (command.StartsWith("GainHP|"))
+        {
+            GainHP(command, tokenData);
+        }
+        if (command.StartsWith("LoseHP|"))
+        {
+            LoseHP(command, tokenData);
+        }
+    }
+
+    private void GainHP(string command, TokenData tokenData)
     {
         Token token = tokenData.GetToken();
+        int diff = int.Parse(command.Split("|")[1]);
+        if (CurrentHP + diff > MaxHP)
+        {
+            diff = MaxHP - CurrentHP;
+        }
+        if (diff > 0)
+        {
+            CurrentHP += diff;
+            if (tokenData.Placed)
+            {
+                PopoverText.Create(token, $"/+{diff}|_HP", Color.white);
+            }
+        }
+        UpdateGraphic(tokenData);
+    }
 
-        base.HandleCommand(value, tokenData);
-        if (value.StartsWith("GainHP"))
+    private void LoseHP(string command, TokenData tokenData)
+    {
+        Token token = tokenData.GetToken();
+        int diff = int.Parse(command.Split("|")[1]);
+        if (CurrentHP - diff < 0)
         {
-            int diff = int.Parse(value.Split("|")[1]);
-            if (CurrentHP + diff > MaxHP)
-            {
-                diff = MaxHP - CurrentHP;
-            }
-            if (diff > 0)
-            {
-                CurrentHP += diff;
-                if (tokenData.Placed)
-                {
-                    PopoverText.Create(token, $"/+{diff}|_HP", Color.white);
-                }
-            }
-            UpdateGraphic(tokenData);
-            UpdateOverhead(tokenData);
+            diff = CurrentHP;
         }
-        if (value.StartsWith("LoseHP"))
+        if (diff > 0)
         {
-            int diff = int.Parse(value.Split("|")[1]);
-            if (CurrentHP - diff < 0)
+            CurrentHP -= diff;
+            if (tokenData.Placed)
             {
-                diff = CurrentHP;
+                PopoverText.Create(token, $"/-{diff}|_HP", Color.white);
             }
-            if (diff > 0)
-            {
-                CurrentHP -= diff;
-                if (tokenData.Placed)
-                {
-                    PopoverText.Create(token, $"/-{diff}|_HP", Color.white);
-                }
-            }
-            UpdateGraphic(tokenData);
-            UpdateOverhead(tokenData);
         }
+        UpdateGraphic(tokenData);
     }
 
     private void UpdateGraphic(TokenData tokenData)
@@ -88,15 +97,35 @@ public class BasicToken : SystemToken
         token.SetDefeated(CurrentHP <= 0);
     }
 
-    private void UpdateOverhead(TokenData tokenData)
+    public override void UpdateOverhead(TokenData tokenData)
     {
         tokenData.OverheadElement.Q<ProgressBar>("HpBar").value = CurrentHP;
         tokenData.OverheadElement.Q<ProgressBar>("HpBar").highValue = MaxHP;
     }
 
+    public override void UpdateTokenPanel(TokenData tokenData, string elementName)
+    {
+        VisualElement panel = UI.System.Q(elementName);
+        panel.Q<ProgressBar>("HpBar").style.minWidth = 150;
+        panel.Q<Label>("CHP").text = $"{CurrentHP}";
+        panel.Q<Label>("MHP").text = $"/{MaxHP}";
+        panel.Q<ProgressBar>("HpBar").value = CurrentHP;
+        panel.Q<ProgressBar>("HpBar").highValue = MaxHP;
+    }
+
+    public override void InitTokenPanel(string elementName)
+    {
+        VisualElement panel = UI.System.Q(elementName);
+        panel.Q("Data").Clear();
+        panel.Q("ExtraInfo").Clear();
+        VisualElement hpBar = UI.CreateFromTemplate("UITemplates/GameSystem/SimpleHPBar");
+        panel.Q("Data").Add(hpBar);
+        panel.Q("Data").style.flexDirection = FlexDirection.Column;
+    }
+
     public static void AddTokenModal()
     {
-        Modal.AddMarkup("Description", "Basic Tokens have a primary HP stat by default, but custom resources can be assigned and tracked once created.");
+        Modal.AddMarkup("Description", "Basic tokens have a primary HP stat by default, but custom resources can be assigned and tracked once created.");
         Modal.AddTokenField("TokenSearchField");
         Modal.AddTextField("NameField", "Token Name", "Token");
         Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", StringUtility.CreateArray("Square 1x1", "Square 2x2", "Square 3x3", "Hex 1", "Hex 2", "Hex 3"));
@@ -140,8 +169,6 @@ public class BasicToken : SystemToken
         SystemTokenRegistry.RegisterSystem("Basic");
         SystemTokenRegistry.RegisterInterfaceCallback("Basic", DeserializeAsInterface);
         SystemTokenRegistry.RegisterSimpleCallback("Basic|AddTokenModal", AddTokenModal);
-        // Replace the above with this unless there's a broader use case for simple callbacks
-        // SystemTokenRegistry.RegisterAddTokenModal("Basic", AddTokenModal);
     }
 
     public static ISystemToken DeserializeAsInterface(string json)
