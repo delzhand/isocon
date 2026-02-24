@@ -288,7 +288,7 @@ public class Icon_v2_0 : GameSystem
             data.Class = foeClass;
             data.Job = foeJob;
             data.Elite = elite;
-            JSONNode stats = gamedata["Icon2_0"]["FoeClasses"][playerJob];
+            JSONNode stats = gamedata["Icon2_0"]["FoeClasses"][foeClass];
             data.MaxHP = stats[0];
             data.Move = stats[1];
             data.Defense = stats[2];
