@@ -1,12 +1,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public interface ISystemToken
 {
     string Serialize();
+    string Label();
     string GetOverheadAsset();
     MenuItem[] GetTokenMenuItems(bool placed);
     void HandleCommand(string command, TokenData tokenData);
@@ -20,10 +22,14 @@ public interface ISystemToken
 public abstract class SystemToken : ISystemToken
 {
     public string System;
-    public string Name;
     public TokenMeta TokenMeta;
     public string Shape;
     public Color Color;
+
+    public virtual string Label()
+    {
+        throw new NotImplementedException();
+    }
 
     public virtual string Serialize()
     {
@@ -101,10 +107,6 @@ public abstract class SystemToken : ISystemToken
 
     public virtual void HandleCommand(string command, TokenData tokenData)
     {
-        if (command.StartsWith("Rename|"))
-        {
-            Name = command.Split("|")[1];
-        }
     }
 
     public virtual void UpdateOverhead(TokenData tokenData)
@@ -117,6 +119,21 @@ public abstract class SystemToken : ISystemToken
 
     public virtual void InitTokenPanel(string elementName)
     {
+    }
+
+    public string SymbolString(string character, int value, int max)
+    {
+        StringBuilder sb = new();
+        for (int i = 0; i < max; i++)
+        {
+            if (i == value)
+            {
+                sb.Append("<color=white>");
+            }
+            sb.Append(character);
+        }
+        sb.Append("</color>");
+        return sb.ToString();
     }
 }
 

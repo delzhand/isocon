@@ -270,7 +270,7 @@ public class LauncherState : BaseState
         {
             Object.DestroyImmediate(child.gameObject);
         }
-        UI.System.Q("Worldspace").Clear();
+        UI.World.Q("Worldspace").Clear();
         UI.System.Q("UnitBar").Clear();
         UI.System.Q("CurrentOps").Clear();
         TerrainController.DestroyAllBlocks();

@@ -15,24 +15,27 @@ public class PopoverText : MonoBehaviour
     void Update()
     {
         timer -= Time.deltaTime;
-        if (timer < -1.5f) {
-            UI.System.Q("Worldspace").Remove(Element);
+        if (timer < -1.5f)
+        {
+            UI.World.Q("Worldspace").Remove(Element);
             GameObject.Destroy(gameObject);
         }
 
-        for (int i = 0; i < Element.childCount; i++) {
+        for (int i = 0; i < Element.childCount; i++)
+        {
             VisualElement child = Element.Children().ToArray()[i];
-            float percentage = 1 - Mathf.Clamp((timer + (i/8f))/duration, 0, 1);
+            float percentage = 1 - Mathf.Clamp((timer + (i / 8f)) / duration, 0, 1);
             float distance = Mathf.Sin(Mathf.PI * percentage) * 20;
             child.style.left = distance * .5f;
             child.style.bottom = distance;
             child.style.scale = new Scale(Vector2.Lerp(Vector2.zero, Vector2.one, percentage));
         }
 
-        UI.FollowTransform(Token.transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor"), Element, Camera.main, new Vector2(0, -22));
+        UI.FollowTransform(Token.transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor"), Element, UI.World, Camera.main, new Vector2(0, -22));
     }
 
-    public static void Create(Token token, string text, Color color) {
+    public static void Create(Token token, string text, Color color)
+    {
         // String is split on |
         // A leading / means large, sub-split characters
         // A leading = means medium text
@@ -46,11 +49,13 @@ public class PopoverText : MonoBehaviour
         p.Element.AddToClassList("centered");
         p.Element.AddToClassList("popover");
         p.Element.style.color = color;
-        UI.System.Q("Worldspace").Add(p.Element);
+        UI.World.Q("Worldspace").Add(p.Element);
 
         string[] parts = text.Split("|");
-        foreach (string part in parts) {
-            switch (part[0]) {
+        foreach (string part in parts)
+        {
+            switch (part[0])
+            {
                 case '_':
                 case '=':
                     Label partLabel = new();
@@ -59,9 +64,10 @@ public class PopoverText : MonoBehaviour
                     p.Element.Add(partLabel);
                     if (part[0] == '_') partLabel.AddToClassList("small");
                     if (part[0] == '=') partLabel.AddToClassList("medium");
-                    break; 
+                    break;
                 case '/':
-                    foreach (char c in part[1..]) {
+                    foreach (char c in part[1..])
+                    {
                         Label cLabel = new();
                         cLabel.text = $"{c}";
                         cLabel.style.color = color;

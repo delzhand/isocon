@@ -24,17 +24,26 @@ public class Config
             UI.ToggleDisplay("DetailsHud", evt.newValue);
         });
 
-        string uiScale = Preferences.Current.UIScale;
         List<string> scaleOptions = new();
         for (int i = 75; i <= 250; i += 25)
         {
             scaleOptions.Add(i + "%");
         }
+
+        string uiScale = Preferences.Current.UIScale;
         Modal.AddDropdownField("UIScaleField", "UI Scale", uiScale, scaleOptions.ToArray(), (evt) =>
         {
             Preferences.SetUIScale(evt.newValue);
             float value = float.Parse(evt.newValue.Replace("%", "")) / 100f;
             GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = value;
+        });
+
+        string worldUiScale = Preferences.Current.WorldUIScale;
+        Modal.AddDropdownField("WorldUIScaleField", "World UI Scale", worldUiScale, scaleOptions.ToArray(), (evt) =>
+        {
+            Preferences.SetWorldUIScale(evt.newValue);
+            float value = float.Parse(evt.newValue.Replace("%", "")) / 100f;
+            GameObject.Find("UICanvas/WorldUI").GetComponent<UIDocument>().panelSettings.scale = value;
         });
 
         float tokenScale = Preferences.Current.TokenScale;

@@ -9,6 +9,7 @@ public class StoredPreferences
     public string PlayerName;
     public string System;
     public string UIScale;
+    public string WorldUIScale = "100%";
     public float TokenScale;
     public string TokenOutline;
     public string Grid;
@@ -51,6 +52,7 @@ public class Preferences
                 PlayerName = PlayerPrefs.GetString("PlayerName", "New Player"),
                 System = PlayerPrefs.GetString("System", "Generic"),
                 UIScale = PlayerPrefs.GetString("UIScale", "100%"),
+                WorldUIScale = PlayerPrefs.GetString("WorldUIScale", "100%"),
                 TokenScale = PlayerPrefs.GetFloat("TokenScale", 1f),
                 Grid = PlayerPrefs.GetString("Grid", "Square"),
                 TokenOutline = PlayerPrefs.GetString("TokenOutline", "White"),
@@ -93,9 +95,21 @@ public class Preferences
         Save();
     }
 
+    public static void SetWorldUIScale(string value)
+    {
+        _current.WorldUIScale = value;
+        Save();
+    }
+
     public static float GetUIScale()
     {
         string uiScale = Preferences.Current.UIScale;
+        return float.Parse(uiScale.Replace("%", "")) / 100f;
+    }
+
+    public static float GetWorldUIScale()
+    {
+        string uiScale = Preferences.Current.WorldUIScale;
         return float.Parse(uiScale.Replace("%", "")) / 100f;
     }
 

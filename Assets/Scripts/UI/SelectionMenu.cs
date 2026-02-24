@@ -44,7 +44,7 @@ public class SelectionMenu
         {
             if (FollowTransform != null)
             {
-                UI.FollowTransform(FollowTransform, UI.System.Q("SelectionMenu"), Camera.main, Offset);
+                UI.FollowTransform(FollowTransform, UI.System.Q("SelectionMenu"), UI.System, Camera.main, Offset);
                 UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, Length.Percent(-100)));
             }
             else

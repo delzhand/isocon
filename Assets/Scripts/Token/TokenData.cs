@@ -15,7 +15,7 @@ public class TokenData : NetworkBehaviour
     [SyncVar]
     public string Id;
     [SyncVar]
-    public string Name;
+    public string Name = "";
     [SyncVar]
     public TokenMeta TokenMeta;
     [SyncVar]
@@ -90,7 +90,7 @@ public class TokenData : NetworkBehaviour
             OverheadElement.style.display = Placed ? DisplayStyle.Flex : DisplayStyle.None;
             if (WorldObject != null)
             {
-                UI.FollowTransform(WorldObject.GetComponent<Token>().transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").transform, OverheadElement, Camera.main, Vector2.zero);
+                UI.FollowTransform(WorldObject.GetComponent<Token>().transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").transform, OverheadElement, UI.World, Camera.main, Vector2.zero);
             }
             ISystemToken st = SystemTokenRegistry.DoInterfaceCallback(System, SystemData);
             st.UpdateOverhead(this);
@@ -145,7 +145,7 @@ public class TokenData : NetworkBehaviour
             VisualTreeAsset template = Resources.Load<VisualTreeAsset>(asset);
             VisualElement instance = template.Instantiate();
             OverheadElement = instance.Q("Overhead");
-            UI.System.Q("Worldspace").Add(OverheadElement);
+            UI.World.Q("Worldspace").Add(OverheadElement);
         }
     }
 
@@ -326,15 +326,16 @@ public class TokenData : NetworkBehaviour
         {
             panel.Q("Portrait").style.backgroundImage = GraphicSingle;
         }
-        panel.Q<Label>("Name").text = Name.Trim();
+        ISystemToken st = SystemTokenRegistry.DoInterfaceCallback(System, SystemData);
+        st.UpdateTokenPanel(this, elementName);
+        Name = st.Label();
+        panel.Q<Label>("Name").text = Name;
         panel.Q("ClassBackground").style.borderTopColor = Color;
         panel.Q("ClassBackground").style.borderRightColor = Color;
         panel.Q("ClassBackground").style.borderBottomColor = Color;
         panel.Q("ClassBackground").style.borderLeftColor = Color;
-        UI.ToggleDisplay(panel.Q<Label>("Name"), Name.Trim().Length > 0);
+        UI.ToggleDisplay(panel.Q<Label>("Name"), Name.Length > 0);
 
-        ISystemToken st = SystemTokenRegistry.DoInterfaceCallback(System, SystemData);
-        st.UpdateTokenPanel(this, elementName);
     }
 
     // public void InitTokenPanels()
@@ -371,7 +372,7 @@ public class TokenData : NetworkBehaviour
     public void Delete()
     {
         UI.System.Q("UnitBar").Remove(UnitBarElement);
-        UI.System.Q("Worldspace").Remove(OverheadElement);
+        UI.World.Q("Worldspace").Remove(OverheadElement);
         Destroy(WorldObject);
         Token.DeselectAll();
     }

@@ -5,18 +5,29 @@ using UnityEngine.UIElements;
 [Serializable]
 public class EnvironmentalToken : SystemToken
 {
+    #region Registration
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void Register()
+    {
+        SystemTokenRegistry.RegisterSystem("Environmental");
+        SystemTokenRegistry.RegisterInterfaceCallback("Environmental", DeserializeAsInterface);
+        SystemTokenRegistry.RegisterSimpleCallback("Environmental|AddTokenModal", AddTokenModal);
+    }
     public override string Serialize()
     {
         return JsonUtility.ToJson(this);
     }
-
-    public override void InitTokenPanel(string elementName)
+    public static ISystemToken DeserializeAsInterface(string json)
     {
-        VisualElement panel = UI.System.Q(elementName);
-        panel.Q("Data").Clear();
-        panel.Q("ExtraInfo").Clear();
+        return JsonUtility.FromJson<EnvironmentalToken>(json);
     }
+    #endregion
 
+    #region Stats
+    public string Name;
+    #endregion
+
+    #region Creation
     public static void AddTokenModal()
     {
         Modal.AddMarkup("Description", "Environmental tokens have no stats but are useful for interactive or indestructible objects.");
@@ -52,17 +63,25 @@ public class EnvironmentalToken : SystemToken
         };
         AddToken.FinalizeToken(t.Serialize());
     }
+    #endregion
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    private static void Register()
+    public override string Label()
     {
-        SystemTokenRegistry.RegisterSystem("Environmental");
-        SystemTokenRegistry.RegisterInterfaceCallback("Environmental", DeserializeAsInterface);
-        SystemTokenRegistry.RegisterSimpleCallback("Environmental|AddTokenModal", AddTokenModal);
+        return Name;
     }
 
-    public static ISystemToken DeserializeAsInterface(string json)
+    public override void InitTokenPanel(string elementName)
     {
-        return JsonUtility.FromJson<EnvironmentalToken>(json);
+        VisualElement panel = UI.System.Q(elementName);
+        panel.Q("Data").Clear();
+        panel.Q("ExtraInfo").Clear();
+    }
+
+    public override void HandleCommand(string command, TokenData tokenData)
+    {
+        if (command.StartsWith("Rename|"))
+        {
+            Name = command.Split("|")[1];
+        }
     }
 }
