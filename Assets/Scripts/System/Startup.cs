@@ -11,8 +11,8 @@ using UnityEngine.UIElements;
 
 public class Startup
 {
-    private static string _version = "0.7.6";
-    private static string _latestVersion = "0.7.6";
+    private static string _version = "0.7.7";
+    private static string _latestVersion = "0.7.7";
 
     public static void RunTasks()
     {
@@ -38,11 +38,8 @@ public class Startup
     {
         string notes = @$"<size=+3><b>IsoCON Version {_version}</b></size>
 
-<size=+2><b>Features</b></size>
-* Added support for Icon 2.0 Playtest game system
-* Added a Lowest (disadvantage) option to the dice roller
-* Updated documentation
-* Custom GameSystems can now more easily make direct dice rolls
+<size=+2><b>Fixes</b></size>
+* Fixed a bug with Foe HP in Icon 2.0 (thanks to penguin-event-horizon)
 ";
 
         string seen = Preferences.GetReleaseNotesSeen();
