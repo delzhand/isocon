@@ -100,6 +100,8 @@ public class Token : MonoBehaviour
                 Data.NeedsRedraw = true;
                 break;
             case TokenState.Focused:
+                Debug.Log($"focused {this.Data.Name}");
+                UnfocusAll();
                 RebuildPanels = true;
                 SetVisualSquareBlue();
                 UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true);
@@ -261,7 +263,6 @@ public class Token : MonoBehaviour
         {
             if (tokens[i].GetComponent<Token>().State == TokenState.Focused)
             {
-
                 return tokens[i].GetComponent<Token>();
             }
         }
@@ -270,12 +271,40 @@ public class Token : MonoBehaviour
 
     public static void UnfocusAll()
     {
-        Token t = GetFocused();
-        if (t)
+        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
+        for (int i = 0; i < tokens.Length; i++)
         {
-            t.Unfocus();
+            if (tokens[i].GetComponent<Token>().State == TokenState.Focused)
+            {
+                tokens[i].GetComponent<Token>().Unfocus();
+            }
         }
     }
+
+    public static void UnfocusOthers(Token exclude)
+    {
+        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
+        for (int i = 0; i < tokens.Length; i++)
+        {
+            if (tokens[i].GetComponent<Token>().State == TokenState.Focused)
+            {
+                if (!tokens[i].Equals(exclude))
+                {
+                    tokens[i].GetComponent<Token>().Unfocus();
+                }
+            }
+        }
+    }
+
+    // public static void UnfocusOthers(Token exclude)
+    // {
+    //     Debug.Log($"unfocus all but {exclude.Data.Name}");
+    //     Token t = GetFocused();
+    //     if (t && t != exclude)
+    //     {
+    //         t.Unfocus();
+    //     }
+    // }
 
     public Block GetBlock()
     {

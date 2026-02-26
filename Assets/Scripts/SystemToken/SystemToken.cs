@@ -135,6 +135,12 @@ public abstract class SystemToken : ISystemToken
         sb.Append("</color>");
         return sb.ToString();
     }
+
+    public void DirectCommand(string command)
+    {
+        Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, command);
+        SelectionMenu.Hide();
+    }
 }
 
 [Serializable]

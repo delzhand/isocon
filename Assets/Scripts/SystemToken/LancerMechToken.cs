@@ -100,36 +100,39 @@ public class LancerMechToken : SystemToken
         MenuItem[] baseItems = base.GetTokenMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("HeatDmg", "Heat Damage", (evt) =>
-        {
-            Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, "GainHeat|1");
-            SelectionMenu.Hide();
-        }));
-        items.Add(new MenuItem("StructureDmg", "Structure Damage", (evt) =>
-        {
-            Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, "LoseStructure|1");
-            SelectionMenu.Hide();
-        }));
-        items.Add(new MenuItem("StressDmg", "Stress Damage", (evt) =>
-        {
-            Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, "LoseStress|1");
-            SelectionMenu.Hide();
-        }));
+        items.Add(new MenuItem("GainHP", "HP Up", (evt) => { NumberPicker.NumberCommand("HpUp"); }));
+        items.Add(new MenuItem("LoseHP", "HP Down", (evt) => { NumberPicker.NumberCommand("HpDown"); }));
+        items.Add(new MenuItem("HeatUp", "Heat Up", (evt) => { DirectCommand("HeatUp|1"); }));
+        items.Add(new MenuItem("HeatDown", "Heat Down", (evt) => { DirectCommand("HeatDown|1"); }));
+        items.Add(new MenuItem("StressUp", "Stress Up", (evt) => { DirectCommand("StressUp|1"); }));
+        items.Add(new MenuItem("StressDown", "Stress Down", (evt) => { DirectCommand("StressDown|1"); }));
+        items.Add(new MenuItem("StructureUp", "Structure Up", (evt) => { DirectCommand("StructureUp|1"); }));
+        items.Add(new MenuItem("StructureDown", "Structure Down", (evt) => { DirectCommand("StructureDown|1"); }));
+
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
     public override void HandleCommand(string command, TokenData tokenData)
     {
         base.HandleCommand(command, tokenData);
-        if (command.StartsWith("GainHeat|"))
+        if (command.StartsWith("HpUp|"))
+        {
+            GainHP(command, tokenData);
+        }
+        if (command.StartsWith("HpDown|"))
+        {
+            LoseHP(command, tokenData);
+        }
+
+        if (command.StartsWith("HeatUp|"))
         {
             GainHeat(command, tokenData);
         }
-        if (command.StartsWith("LoseStructure|"))
+        if (command.StartsWith("StructureDown|"))
         {
             LoseStructure(command, tokenData);
         }
-        if (command.StartsWith("LoseStress|"))
+        if (command.StartsWith("StressDown|"))
         {
             LoseStress(command, tokenData);
         }
@@ -200,6 +203,42 @@ public class LancerMechToken : SystemToken
             if (tokenData.Placed)
             {
                 PopoverText.Create(token, $"/-{diff}|_STRUCT", Color.white);
+            }
+        }
+    }
+
+    private void GainHP(string command, TokenData tokenData)
+    {
+        Token token = tokenData.GetToken();
+        int diff = int.Parse(command.Split("|")[1]);
+        if (CurrentHP + diff > MaxHP)
+        {
+            diff = MaxHP - CurrentHP;
+        }
+        if (diff > 0)
+        {
+            CurrentHP += diff;
+            if (tokenData.Placed)
+            {
+                PopoverText.Create(token, $"/+{diff}|_HP", Color.white);
+            }
+        }
+    }
+
+    private void LoseHP(string command, TokenData tokenData)
+    {
+        Token token = tokenData.GetToken();
+        int diff = int.Parse(command.Split("|")[1]);
+        if (CurrentHP - diff < 0)
+        {
+            diff = CurrentHP;
+        }
+        if (diff > 0)
+        {
+            CurrentHP -= diff;
+            if (tokenData.Placed)
+            {
+                PopoverText.Create(token, $"/-{diff}|_HP", Color.white);
             }
         }
     }

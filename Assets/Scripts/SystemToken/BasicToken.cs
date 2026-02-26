@@ -89,22 +89,13 @@ public class BasicToken : SystemToken
 
         List<MenuItem> items = new();
         // items.Add(new MenuItem("AddResource", "Add Resource", AddResourceClicked));
-        items.Add(new MenuItem("GainHP", "Gain 3 HP", (evt) =>
-        {
-            Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, "GainHP|3");
-            SelectionMenu.Hide();
-        }));
-        items.Add(new MenuItem("LoseHP", "Lose 3 HP", (evt) =>
-        {
-            Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, "LoseHP|3");
-            SelectionMenu.Hide();
-        }));
+        items.Add(new MenuItem("GainHP", "Gain HP", (evt) => { NumberPicker.NumberCommand("GainHP"); }));
+        items.Add(new MenuItem("LoseHP", "Lose HP", (evt) => { NumberPicker.NumberCommand("LoseHP"); }));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
     public override void HandleCommand(string command, TokenData tokenData)
     {
-
         base.HandleCommand(command, tokenData);
         if (command.StartsWith("GainHP|"))
         {
@@ -190,10 +181,5 @@ public class BasicToken : SystemToken
         Token token = tokenData.GetToken();
         token.SetDefeated(CurrentHP <= 0);
     }
-
-
-
-
-
 
 }

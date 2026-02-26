@@ -95,6 +95,14 @@ public class UI : MonoBehaviour
         }
     }
 
+    public static VisualElement NumberPicker
+    {
+        get
+        {
+            return UI.System.Q("NumberPickerModal");
+        }
+    }
+
     public static VisualElement ToolsPanel
     {
         get

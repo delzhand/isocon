@@ -22,10 +22,10 @@
     padding-right: 8px;
     padding-top: 6px;
     padding-bottom: 10px;
-    -unity-font-definition: resource('Fonts/MusticaPro-SemiBold SDF');
+    -unity-font-definition: resource("Fonts/MusticaPro-SemiBold SDF");
     text-shadow: 0 0 1px rgb(0, 0, 0);
     border-radius: 3px;
-    background-image: resource('Textures/9slice');
+    background-image: resource("Textures/9slice");
     -unity-slice-left: 10;
     -unity-slice-right: 10;
     -unity-slice-top: 10;
@@ -33,14 +33,12 @@
 }
 
 .panel .hover {
-    background-image: resource('Textures/gradient 3');
+    background-image: resource("Textures/gradient 3");
     -unity-background-image-tint-color: rgba(255, 228, 0, 0.39);
 }
 
 .panel .active {
-    /* background-image: resource('Textures/gradient 3'); */
-    /* -unity-background-image-tint-color: rgba(0, 251, 255, 0.39); */
-    background-color: #4971b2;
+    background-color: rgb(73, 113, 178);
 }
 
 .panel2 {
@@ -49,7 +47,7 @@
     padding-right: 8px;
     padding-top: 4px;
     padding-bottom: 4px;
-    -unity-font-definition: resource('Fonts/MusticaPro-SemiBold SDF');
+    -unity-font-definition: resource("Fonts/MusticaPro-SemiBold SDF");
     text-shadow: 0 0 1px rgb(0, 0, 0);
     border-radius: 6px;
     background-color: rgba(0, 0, 0, 0.5);
@@ -57,7 +55,7 @@
 
 .panel-text {
     color: rgb(255, 255, 255);
-    -unity-font-definition: resource('Fonts/MusticaPro-SemiBold SDF');
+    -unity-font-definition: resource("Fonts/MusticaPro-SemiBold SDF");
     text-shadow: 0 0 1px rgb(0, 0, 0);
 }
 
@@ -147,11 +145,11 @@
 }
 
 .unity-button.active {
-    background-color: #2c5d87;
+    background-color: rgb(44, 93, 135);
 }
 
 .unity-button.preferred {
-    background-color: #2c5d87;
+    background-color: rgb(44, 93, 135);
 }
 
 .red {
@@ -182,7 +180,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    -unity-font-definition: resource('Fonts/DAYROM__ SDF');
+    -unity-font-definition: resource("Fonts/MusticaPro-SemiBold SDF");
     text-shadow: 0 0 1px rgb(0, 0, 0);
     text-shadow: 2px 2px 1px rgb(0, 0, 0);
     flex-direction: row;
@@ -208,7 +206,7 @@
 }
 
 .popover .large {
-    font-size: 32px;
+    font-size: 26px;
 }
 
 .dice-plus {
@@ -230,8 +228,8 @@
     height: 16px;
     width: 16px;
     border-radius: 50%;
-    background-color: #FFF;
-    color: #000;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     border-color: rgba(255, 255, 255, 0);
     padding: 0;
     -unity-font-style: bold;
@@ -239,13 +237,13 @@
 }
 
 .roundbutton:hover {
-    border-color: #FFF;
-    background-color: rgba(255, 255, 255, .5);
+    border-color: rgb(255, 255, 255);
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 .error-message {
-    background-color: #962D2D;
-    color: #FFF;
+    background-color: rgb(150, 45, 45);
+    color: rgb(255, 255, 255);
     padding: 10px;
     white-space: normal;
 }
@@ -256,24 +254,22 @@
 
 .better-dropdown {
     width: 340px;
-    --unity-metrics-single_line-height: 500px;    
+    --unity-metrics-single_line-height: 500px;
 }
 
-.reverse-toggle {
-    /* flex-direction: row-reverse; */
-}
+.reverse-toggle {}
 
 .reverse-toggle .unity-toggle__input {
-    /* width: 24px; */
     flex-direction: row-reverse;
 }
 
 .reverse-toggle .unity-toggle__label {
-    /* flex-grow: 1;
-    margin-left: 6px;
-    -unity-text-align: upper-left;
-    min-width: 180px;
-    white-space: normal; */
     white-space: normal;
     width: 150px;
+}
+
+.digit-button {
+    flex-basis: 50px;
+    padding: 10px;
+    margin-bottom: 8px;
 }
