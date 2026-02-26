@@ -164,7 +164,7 @@ public class Generic : GameSystem
         GenericData sysdata = JsonUtility.FromJson<GenericData>(data.SystemData);
         sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
         data.SystemData = JsonUtility.ToJson(sysdata);
-        data.NeedsRedraw = true;
+        // data.NeedsRedraw = true;
     }
 
     public override void UpdateTokenPanel(string tokenId, string elementName)
@@ -199,43 +199,43 @@ public class Generic : GameSystem
         panel.Q<ProgressBar>("HpBar").value = sysdata.CurrentHP;
         panel.Q<ProgressBar>("HpBar").highValue = sysdata.MaxHP;
 
-        if (data.NeedsRedraw)
-        {
-            data.NeedsRedraw = false;
-            panel.Q("Resources").Clear();
-            foreach (GenericTokenResource resource in sysdata.Resources)
-            {
-                VisualElement template = UI.CreateFromTemplate("UITemplates/GameSystem/ConditionTemplate");
-                string label = $"{resource.Name} ({resource.Value})";
-                template.Q<Label>("Name").text = label;
-                if (elementName == "SelectedTokenPanel")
-                {
-                    template.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) =>
-                    {
-                        Player.Self().CmdRequestTokenDataCommand(tokenId, $"IncrementResource|{resource.Name}");
-                    });
-                    template.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) =>
-                    {
-                        Player.Self().CmdRequestTokenDataCommand(tokenId, $"DecrementResource|{resource.Name}");
-                    });
-                    template.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) =>
-                    {
-                        Player.Self().CmdRequestTokenDataCommand(tokenId, $"LoseResource|{resource.Name}");
-                    });
-                    UI.ToggleDisplay(template.Q("Increment"), true);
-                    UI.ToggleDisplay(template.Q("Decrement"), true);
-                    UI.ToggleDisplay(template.Q("Remove"), true);
-                }
-                else
-                {
-                    UI.ToggleDisplay(template.Q("Increment"), false);
-                    UI.ToggleDisplay(template.Q("Decrement"), false);
-                    UI.ToggleDisplay(template.Q("Remove"), false);
-                }
-                template.Q("Wrapper").style.backgroundColor = Color.gray;
-                panel.Q("Resources").Add(template);
-            }
-        }
+        // if (data.NeedsRedraw)
+        // {
+        //     data.NeedsRedraw = false;
+        //     panel.Q("Resources").Clear();
+        //     foreach (GenericTokenResource resource in sysdata.Resources)
+        //     {
+        //         VisualElement template = UI.CreateFromTemplate("UITemplates/GameSystem/ConditionTemplate");
+        //         string label = $"{resource.Name} ({resource.Value})";
+        //         template.Q<Label>("Name").text = label;
+        //         if (elementName == "SelectedTokenPanel")
+        //         {
+        //             template.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) =>
+        //             {
+        //                 Player.Self().CmdRequestTokenDataCommand(tokenId, $"IncrementResource|{resource.Name}");
+        //             });
+        //             template.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) =>
+        //             {
+        //                 Player.Self().CmdRequestTokenDataCommand(tokenId, $"DecrementResource|{resource.Name}");
+        //             });
+        //             template.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) =>
+        //             {
+        //                 Player.Self().CmdRequestTokenDataCommand(tokenId, $"LoseResource|{resource.Name}");
+        //             });
+        //             UI.ToggleDisplay(template.Q("Increment"), true);
+        //             UI.ToggleDisplay(template.Q("Decrement"), true);
+        //             UI.ToggleDisplay(template.Q("Remove"), true);
+        //         }
+        //         else
+        //         {
+        //             UI.ToggleDisplay(template.Q("Increment"), false);
+        //             UI.ToggleDisplay(template.Q("Decrement"), false);
+        //             UI.ToggleDisplay(template.Q("Remove"), false);
+        //         }
+        //         template.Q("Wrapper").style.backgroundColor = Color.gray;
+        //         panel.Q("Resources").Add(template);
+        //     }
+        // }
     }
 
     private void DeserializeToken(GenericTokenPersistence tp)

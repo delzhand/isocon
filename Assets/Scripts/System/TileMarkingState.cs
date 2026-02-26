@@ -6,7 +6,7 @@ public class TileMarkingState : TabletopSubstate
     public override void OnEnter(StateManager sm)
     {
         base.OnEnter(sm);
-        Token.DeselectAll();
+        Token.Deselect();
         Token.UnfocusAll();
         BlockRendering.ToggleAllBorders(true);
         // Cursor.Mode = CursorMode.Marking;

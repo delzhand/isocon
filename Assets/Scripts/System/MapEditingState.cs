@@ -13,7 +13,7 @@ public class MapEditingState : TabletopSubstate
     {
         base.OnEnter(sm);
         Block.DeselectAll();
-        Token.DeselectAll();
+        Token.Deselect();
         Token.UnfocusAll();
         BlockRendering.ToggleSpacers(true);
         BlockRendering.ToggleAllBorders(true);

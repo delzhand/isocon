@@ -36,7 +36,7 @@ public class TokenData : NetworkBehaviour
     [SyncVar]
     public Vector3 LastKnownPosition;
 
-    public bool NeedsRedraw;
+    // public bool NeedsRedraw;
     public Texture2D Graphic;
     public Texture2D GraphicSingle;
     public GameObject WorldObject;
@@ -293,18 +293,18 @@ public class TokenData : NetworkBehaviour
         ISystemToken st = SystemTokenRegistry.DoInterfaceCallback(System, SystemData);
         st.HandleCommand(command, this);
         SystemData = st.Serialize();
-        NeedsRedraw = true;
+        // NeedsRedraw = true;
     }
 
-    public void Select()
-    {
-        NeedsRedraw = true;
-    }
+    // public void Select()
+    // {
+    //     // NeedsRedraw = true;
+    // }
 
-    public void Focus()
-    {
-        NeedsRedraw = true;
-    }
+    // public void Focus()
+    // {
+    //     // NeedsRedraw = true;
+    // }
 
     public void Disconnect()
     {
@@ -374,6 +374,6 @@ public class TokenData : NetworkBehaviour
         UI.System.Q("UnitBar").Remove(UnitBarElement);
         UI.World.Q("Worldspace").Remove(OverheadElement);
         Destroy(WorldObject);
-        Token.DeselectAll();
+        Token.Deselect();
     }
 }

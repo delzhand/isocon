@@ -6,7 +6,6 @@ using UnityEngine.UIElements;
 
 public class NeutralState : TabletopSubstate
 {
-    private Token _dragToken;
     private bool _bottomBarVisible = false;
 
     public override void OnEnter(StateManager sm)
@@ -161,7 +160,7 @@ public class NeutralState : TabletopSubstate
     private void LeftClickRelease()
     {
         // Debug.Log("left click release");
-        Pointer.PickToken()?.ToggleInspect();
+        Pointer.PickToken()?.ToggleSelect();
     }
 
     private void RightClickRelease()
@@ -172,15 +171,13 @@ public class NeutralState : TabletopSubstate
 
     private void LeftDragStart()
     {
-        // Debug.Log("left drag start");
-        _dragToken = Pointer.PickToken();
-        _dragToken?.StartDragging();
+        Token t = Pointer.PickToken();
+        t?.StartDragging();
     }
 
     private void LeftDragRelease()
     {
-        // Debug.Log("left drag release");
-        _dragToken?.StopDragging(Pointer.PickBlock());
+        Token.StopDragging(Pointer.PickBlock());
     }
 
     private void ShowAddTokenModal(ClickEvent evt)

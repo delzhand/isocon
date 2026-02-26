@@ -6,10 +6,8 @@ public enum TokenState
 {
     Neutral,
     Focused,
-    Pending,
     Dragging,
-    MenuOpen,
-    Inspecting,
+    Selected,
 }
 
 public class Token : MonoBehaviour
@@ -23,13 +21,48 @@ public class Token : MonoBehaviour
     public TokenState State = TokenState.Neutral;
 
     public static bool RebuildPanels = false;
+    private static Token _focused;
+    private static Token _selected;
+    private static Token _dragging;
 
     void Update()
     {
         AlignToCamera();
         OffsetForSizeAndSharing();
         GlobalTokenScale();
-        CheckStillFocused();
+
+        State = TokenState.Neutral;
+        if (this == _focused)
+        {
+            State = TokenState.Focused;
+        }
+        if (this == _selected)
+        {
+            State = TokenState.Selected;
+        }
+        if (this == _dragging)
+        {
+            State = TokenState.Dragging;
+        }
+
+        switch (State)
+        {
+            case TokenState.Dragging:
+            case TokenState.Selected:
+                SetVisualSquareYellow();
+                UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true);
+                Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
+                break;
+            case TokenState.Focused:
+                SetVisualSquareBlue();
+                UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true);
+                Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UIFocusBlue;
+                break;
+            default:
+                SetVisualNone();
+                UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), false);
+                break;
+        }
     }
 
     private void AlignToCamera()
@@ -61,14 +94,6 @@ public class Token : MonoBehaviour
         transform.Find("Offset/Avatar/Cutout").localScale = Vector3.one * Preferences.Current.TokenScale;
     }
 
-    private void CheckStillFocused()
-    {
-        if (State == TokenState.Focused && this != LastFocused)
-        {
-            Unfocus();
-        }
-    }
-
     public void SetImage(Texture2D image)
     {
         Image = image;
@@ -83,40 +108,41 @@ public class Token : MonoBehaviour
     private void StateChange(TokenState state)
     {
         State = state;
+        RebuildPanels = true;
         switch (state)
         {
-            case TokenState.Inspecting:
-                RebuildPanels = true;
-                SetVisualSquareYellow();
-                UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true);
-                Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
-                Data.NeedsRedraw = true;
+            case TokenState.Selected:
+                _selected = this;
+                if (_focused == this)
+                {
+                    _focused = null;
+                }
+                SelectionMenu.Hide();
                 break;
             case TokenState.Dragging:
-            case TokenState.MenuOpen:
-                SetVisualSquareYellow();
-                UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true);
-                Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
-                Data.NeedsRedraw = true;
+                _dragging = this;
+                SelectionMenu.Hide();
                 break;
             case TokenState.Focused:
-                Debug.Log($"focused {this.Data.Name}");
-                UnfocusAll();
-                RebuildPanels = true;
-                SetVisualSquareBlue();
-                UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true);
-                Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UIFocusBlue;
+                _focused = this;
                 break;
             case TokenState.Neutral:
-                SetVisualNone();
-                UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), false);
+                if (_focused == this)
+                {
+                    _focused = null;
+                }
+                if (_selected == this)
+                {
+                    _selected = null;
+                }
+                SelectionMenu.Hide();
                 break;
         }
-        SelectionMenu.Hide();
     }
 
     public void StartDragging()
     {
+        StateChange(TokenState.Selected);
         StateChange(TokenState.Dragging);
         BlockRendering.ToggleAllBorders(true);
         string op = Data.Placed ? "Moving" : "Placing";
@@ -124,43 +150,53 @@ public class Token : MonoBehaviour
         Player.Self().GetComponent<DirectionalLine>().Init(Data.Id, op);
     }
 
-    public void StopDragging(Block b)
+    public static void StopDragging(Block b)
     {
-        if (b != null)
+        if (_dragging)
         {
-            StateChange(TokenState.Neutral);
-            Move(b);
+            if (b != null)
+            {
+                _dragging.StateChange(TokenState.Neutral);
+                _dragging.Move(b);
+            }
+            else
+            {
+                _dragging.StateChange(TokenState.Neutral);
+            }
         }
-        else
-        {
-            StateChange(TokenState.Neutral);
-        }
+        _dragging = null;
+        Player.Self().ClearOp();
+        Player.Self().GetComponent<DirectionalLine>().Deinit();
         BlockRendering.ToggleAllBorders(false);
     }
 
-    public void ToggleInspect()
+    public void ToggleSelect()
     {
-        if (State == TokenState.Inspecting)
+        if (this == _selected)
         {
+            _selected = null;
             StateChange(TokenState.Focused);
-            // Player.Self().ClearOp();
+            SelectionMenu.Hide();
         }
         else
         {
-            StateChange(TokenState.Inspecting);
-            // Player.Self().SetOp($"Inspecting {Data.Name}");
+            StateChange(TokenState.Selected);
         }
     }
 
     public void ToggleMenu()
     {
-        if (SelectionMenu.Visible)
+        if (this == _selected && SelectionMenu.Visible)
         {
-            StateChange(TokenState.Neutral);
+            SelectionMenu.Hide();
         }
-        else
+        else if (this != _selected)
         {
-            StateChange(TokenState.MenuOpen);
+            StateChange(TokenState.Selected);
+            TokenMenu.ShowMenu();
+        }
+        else if (this == _selected)
+        {
             TokenMenu.ShowMenu();
         }
     }
@@ -186,125 +222,55 @@ public class Token : MonoBehaviour
         Player.Self().CmdRequestRemoveToken(Data.Id);
     }
 
-    public void Deselect()
+    public static void Deselect()
     {
-        StateChange(TokenState.Neutral);
-        Player.Self().ClearOp();
+        _selected = null;
         Player.Self().GetComponent<DirectionalLine>().Deinit();
         SelectionMenu.Hide();
     }
 
-    public static void DeselectAll()
-    {
-        Token t = GetSelected();
-        if (t)
-        {
-            t.Deselect();
-        }
-    }
-
     public static Token GetSelected()
     {
-        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
-        for (int i = 0; i < tokens.Length; i++)
-        {
-            TokenState ts = tokens[i].GetComponent<Token>().State;
-            if (ts == TokenState.Dragging || ts == TokenState.MenuOpen || ts == TokenState.Inspecting)
-            {
-                return tokens[i].GetComponent<Token>();
-            }
-        }
-        return null;
+        return _selected;
     }
 
     public static Token GetDragging()
     {
-        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
-        for (int i = 0; i < tokens.Length; i++)
-        {
-            TokenState ts = tokens[i].GetComponent<Token>().State;
-            if (ts == TokenState.Dragging)
-            {
-                return tokens[i].GetComponent<Token>();
-            }
-        }
-        return null;
+        return _dragging;
     }
 
     public void Focus()
     {
-        if (GetSelected() == this)
+        if (this == _selected)
         {
             return;
         }
         else
         {
+            _focused = this;
             StateChange(TokenState.Focused);
-            LastFocused = this;
         }
     }
 
     public void Unfocus()
     {
-        if (GetSelected() == this)
+        if (this == _selected)
         {
             return;
         }
-        else
-        {
-            StateChange(TokenState.Neutral);
-        }
+        StateChange(TokenState.Neutral);
     }
 
     public static Token GetFocused()
     {
-        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
-        for (int i = 0; i < tokens.Length; i++)
-        {
-            if (tokens[i].GetComponent<Token>().State == TokenState.Focused)
-            {
-                return tokens[i].GetComponent<Token>();
-            }
-        }
-        return null;
+        return _focused;
     }
 
     public static void UnfocusAll()
     {
-        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
-        for (int i = 0; i < tokens.Length; i++)
-        {
-            if (tokens[i].GetComponent<Token>().State == TokenState.Focused)
-            {
-                tokens[i].GetComponent<Token>().Unfocus();
-            }
-        }
+        _focused?.StateChange(TokenState.Neutral);
+        _focused = null;
     }
-
-    public static void UnfocusOthers(Token exclude)
-    {
-        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
-        for (int i = 0; i < tokens.Length; i++)
-        {
-            if (tokens[i].GetComponent<Token>().State == TokenState.Focused)
-            {
-                if (!tokens[i].Equals(exclude))
-                {
-                    tokens[i].GetComponent<Token>().Unfocus();
-                }
-            }
-        }
-    }
-
-    // public static void UnfocusOthers(Token exclude)
-    // {
-    //     Debug.Log($"unfocus all but {exclude.Data.Name}");
-    //     Token t = GetFocused();
-    //     if (t && t != exclude)
-    //     {
-    //         t.Unfocus();
-    //     }
-    // }
 
     public Block GetBlock()
     {

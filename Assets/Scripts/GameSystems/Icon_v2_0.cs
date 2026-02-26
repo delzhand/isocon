@@ -469,7 +469,7 @@ public class Icon_v2_0 : GameSystem
     {
         string name = Token.GetSelected().Data.Name;
         DiceRoller.DirectDieRoll("sum", "1d6", $"{name}'s save roll");
-        Token.DeselectAll();
+        Token.Deselect();
         Modal.Close();
     }
 
@@ -479,7 +479,7 @@ public class Icon_v2_0 : GameSystem
         int power = UI.Modal.Q<NumberNudger>("PowerField").value;
         string op = power > 0 ? "max" : "min";
         DiceRoller.DirectDieRoll(op, $"{Math.Abs(power) + 1}d10", $"{name}'s attack roll");
-        Token.DeselectAll();
+        Token.Deselect();
         Modal.Close();
     }
 
@@ -513,7 +513,7 @@ public class Icon_v2_0 : GameSystem
         Icon2_0Data sysdata = JsonUtility.FromJson<Icon2_0Data>(data.SystemData);
         sysdata.Change(value, data.WorldObject.GetComponent<Token>(), data.Placed);
         data.SystemData = JsonUtility.ToJson(sysdata);
-        data.NeedsRedraw = true;
+        // data.NeedsRedraw = true;
     }
 
     public override void UpdateTokenPanel(string tokenId, string elementName)
@@ -530,7 +530,7 @@ public class Icon_v2_0 : GameSystem
 
         VisualElement panel = UI.System.Q(elementName);
 
-        UI.ToggleDisplay(panel.Q("Data"), data.WorldObject.GetComponent<Token>().State == TokenState.Inspecting);
+        UI.ToggleDisplay(panel.Q("Data"), data.WorldObject.GetComponent<Token>().State == TokenState.Selected);
 
         panel.Q("ClassBackground").style.borderTopColor = data.Color;
         panel.Q("ClassBackground").style.borderRightColor = data.Color;
@@ -574,47 +574,47 @@ public class Icon_v2_0 : GameSystem
         panel.Q("Defense").Q<Label>("Value").text = $"{sysdata.Defense}";
         UI.ToggleDisplay(panel.Q("Stats"), sysdata.Type != "Object");
 
-        if (data.NeedsRedraw)
-        {
-            data.NeedsRedraw = false;
-            panel.Q("Conditions").Q("List").Clear();
-            foreach (Icon2_0Condition condition in sysdata.Status)
-            {
-                VisualElement template = UI.CreateFromTemplate("UITemplates/GameSystem/ConditionTemplate");
-                string label = $"{condition.Name}";
-                if (condition.ModifierType == "Number")
-                {
-                    label = $"{label} ({condition.NumValue})";
-                }
-                template.Q<Label>("Name").text = label;
-                if (elementName == "SelectedTokenPanel")
-                {
-                    template.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) =>
-                    {
-                        Player.Self().CmdRequestTokenDataCommand(tokenId, $"IncrementStatus|{condition.Name}");
-                    });
-                    template.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) =>
-                    {
-                        Player.Self().CmdRequestTokenDataCommand(tokenId, $"DecrementStatus|{condition.Name}");
-                    });
-                    template.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) =>
-                    {
-                        Player.Self().CmdRequestTokenDataCommand(tokenId, $"LoseStatus|{condition.Name}");
-                    });
-                    UI.ToggleDisplay(template.Q("Increment"), condition.ModifierType == "Number");
-                    UI.ToggleDisplay(template.Q("Decrement"), condition.ModifierType == "Number");
-                    UI.ToggleDisplay(template.Q("Remove"), !condition.Locked);
-                }
-                else
-                {
-                    UI.ToggleDisplay(template.Q("Increment"), false);
-                    UI.ToggleDisplay(template.Q("Decrement"), false);
-                    UI.ToggleDisplay(template.Q("Remove"), false);
-                }
-                template.Q("Wrapper").style.backgroundColor = condition.GetColorFromName();
-                panel.Q("Conditions").Q("List").Add(template);
-            }
-        }
+        // if (data.NeedsRedraw)
+        // {
+        //     data.NeedsRedraw = false;
+        //     panel.Q("Conditions").Q("List").Clear();
+        //     foreach (Icon2_0Condition condition in sysdata.Status)
+        //     {
+        //         VisualElement template = UI.CreateFromTemplate("UITemplates/GameSystem/ConditionTemplate");
+        //         string label = $"{condition.Name}";
+        //         if (condition.ModifierType == "Number")
+        //         {
+        //             label = $"{label} ({condition.NumValue})";
+        //         }
+        //         template.Q<Label>("Name").text = label;
+        //         if (elementName == "SelectedTokenPanel")
+        //         {
+        //             template.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) =>
+        //             {
+        //                 Player.Self().CmdRequestTokenDataCommand(tokenId, $"IncrementStatus|{condition.Name}");
+        //             });
+        //             template.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) =>
+        //             {
+        //                 Player.Self().CmdRequestTokenDataCommand(tokenId, $"DecrementStatus|{condition.Name}");
+        //             });
+        //             template.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) =>
+        //             {
+        //                 Player.Self().CmdRequestTokenDataCommand(tokenId, $"LoseStatus|{condition.Name}");
+        //             });
+        //             UI.ToggleDisplay(template.Q("Increment"), condition.ModifierType == "Number");
+        //             UI.ToggleDisplay(template.Q("Decrement"), condition.ModifierType == "Number");
+        //             UI.ToggleDisplay(template.Q("Remove"), !condition.Locked);
+        //         }
+        //         else
+        //         {
+        //             UI.ToggleDisplay(template.Q("Increment"), false);
+        //             UI.ToggleDisplay(template.Q("Decrement"), false);
+        //             UI.ToggleDisplay(template.Q("Remove"), false);
+        //         }
+        //         template.Q("Wrapper").style.backgroundColor = condition.GetColorFromName();
+        //         panel.Q("Conditions").Q("List").Add(template);
+        //     }
+        // }
     }
 }
 

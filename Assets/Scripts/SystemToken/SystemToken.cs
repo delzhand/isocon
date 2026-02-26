@@ -59,13 +59,13 @@ public abstract class SystemToken : ISystemToken
     private static void ClickFlip(ClickEvent evt)
     {
         Token.GetSelected().transform.Find("Offset/Avatar/Cutout/Cutout Quad").Rotate(new Vector3(0, 180, 0));
-        Token.DeselectAll();
+        Token.Deselect();
     }
 
     private static void ClickRemove(ClickEvent evt)
     {
         Token.GetSelected().Remove();
-        Token.DeselectAll();
+        Token.Deselect();
     }
 
     private static void ClickDelete(ClickEvent evt)
@@ -74,7 +74,7 @@ public abstract class SystemToken : ISystemToken
         string name = data.Name.Length == 0 ? "this token" : data.Name;
         Modal.DoubleConfirm("Delete Token", $"Are you sure you want to delete {name}? This action cannot be undone.", () =>
         {
-            Token.DeselectAll();
+            Token.Deselect();
             Player.Self().CmdRequestDeleteToken(data.Id);
         });
     }
@@ -86,7 +86,7 @@ public abstract class SystemToken : ISystemToken
         Modal.DoubleConfirm("Clone Token", $"Are you sure you want to clone {name}?", () =>
         {
             Player.Self().CmdCreateToken(data.System, data.TokenMeta, data.Name, data.Size, data.Color, data.SystemData);
-            Token.DeselectAll();
+            Token.Deselect();
         });
     }
 
@@ -100,7 +100,7 @@ public abstract class SystemToken : ISystemToken
             string newName = UI.Modal.Q<TextField>("Name").value.Trim();
             Player.Self().CmdRequestTokenDataCommand(data.Id, $"Rename|{newName}");
             Modal.Close();
-            Token.DeselectAll();
+            Token.Deselect();
         });
         Modal.AddButton("Cancel", Modal.CloseEvent);
     }

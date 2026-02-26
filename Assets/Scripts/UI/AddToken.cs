@@ -7,7 +7,7 @@ public class AddToken
     public static void OpenModal(ClickEvent evt)
     {
         Player.Self().SetOp("Adding a Token");
-        Token.DeselectAll();
+        Token.Deselect();
         Modal.Reset("Add Token");
         Modal.AddDropdownField("TokenType", "Token Type", "Basic", SystemTokenRegistry.GetAllSystems().ToArray(), (evt) =>
         {
