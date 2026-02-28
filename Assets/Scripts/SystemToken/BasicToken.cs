@@ -89,21 +89,16 @@ public class BasicToken : SystemToken
 
         List<MenuItem> items = new();
         // items.Add(new MenuItem("AddResource", "Add Resource", AddResourceClicked));
-        items.Add(new MenuItem("GainHP", "Gain HP", (evt) => { NumberPicker.NumberCommand("GainHP"); }));
-        items.Add(new MenuItem("LoseHP", "Lose HP", (evt) => { NumberPicker.NumberCommand("LoseHP"); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.NumberCommand("ModHP"); }));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
     public override void HandleCommand(string command, TokenData tokenData)
     {
         base.HandleCommand(command, tokenData);
-        if (command.StartsWith("GainHP|"))
+        if (command.StartsWith("ModHP|"))
         {
-            GainHP(command, tokenData);
-        }
-        if (command.StartsWith("LoseHP|"))
-        {
-            LoseHP(command, tokenData);
+            ModHP(command, tokenData);
         }
         if (command.StartsWith("Rename|"))
         {
@@ -120,28 +115,43 @@ public class BasicToken : SystemToken
 
     public override void UpdateTokenPanel(TokenData tokenData, string elementName)
     {
+        base.UpdateTokenPanel(tokenData, elementName);
         VisualElement panel = UI.System.Q(elementName);
-        panel.Q<ProgressBar>("HpBar").style.minWidth = 150;
-        panel.Q<Label>("CHP").text = $"{CurrentHP}";
-        panel.Q<Label>("MHP").text = $"/{MaxHP}";
-        panel.Q<ProgressBar>("HpBar").value = CurrentHP;
-        panel.Q<ProgressBar>("HpBar").highValue = MaxHP;
+        VisualElement bar = panel.Q("Bars").Q("MainHPBar");
+        bar.Q<ProgressBar>("HpBar").style.minWidth = 150;
+        bar.Q<Label>("CHP").text = $"{CurrentHP}";
+        bar.Q<Label>("MHP").text = $"/{MaxHP}";
+        bar.Q<ProgressBar>("HpBar").value = CurrentHP;
+        bar.Q<ProgressBar>("HpBar").highValue = MaxHP;
     }
 
-    public override void InitTokenPanel(string elementName)
+    public override void InitTokenPanel(string elementName, bool selected)
     {
+        base.InitTokenPanel(elementName, selected);
+
         VisualElement panel = UI.System.Q(elementName);
-        panel.Q("Data").Clear();
-        panel.Q("ExtraInfo").Clear();
         VisualElement hpBar = UI.CreateFromTemplate("UITemplates/GameSystem/SimpleHPBar");
-        panel.Q("Data").Add(hpBar);
-        panel.Q("Data").style.flexDirection = FlexDirection.Column;
+        hpBar.name = "MainHPBar";
+        panel.Q("Bars").Add(hpBar);
     }
 
-    private void GainHP(string command, TokenData tokenData)
+    private void ModHP(string command, TokenData token)
+    {
+        int value = int.Parse(command.Split("|")[1]);
+        if (value <= 0)
+        {
+            LoseHP(value, token);
+        }
+        else
+        {
+            GainHP(value, token);
+        }
+    }
+
+    private void GainHP(int value, TokenData tokenData)
     {
         Token token = tokenData.GetToken();
-        int diff = int.Parse(command.Split("|")[1]);
+        int diff = Math.Abs(value);
         if (CurrentHP + diff > MaxHP)
         {
             diff = MaxHP - CurrentHP;
@@ -157,10 +167,10 @@ public class BasicToken : SystemToken
         UpdateGraphic(tokenData);
     }
 
-    private void LoseHP(string command, TokenData tokenData)
+    private void LoseHP(int value, TokenData tokenData)
     {
         Token token = tokenData.GetToken();
-        int diff = int.Parse(command.Split("|")[1]);
+        int diff = Math.Abs(value);
         if (CurrentHP - diff < 0)
         {
             diff = CurrentHP;

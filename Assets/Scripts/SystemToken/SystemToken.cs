@@ -1,7 +1,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Mono.Cecil;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -14,7 +16,7 @@ public interface ISystemToken
     void HandleCommand(string command, TokenData tokenData);
     void UpdateOverhead(TokenData tokenData);
     void UpdateTokenPanel(TokenData tokenData, string elementName);
-    void InitTokenPanel(string elementName);
+    void InitTokenPanel(string elementName, bool selected = false);
 
 }
 
@@ -25,6 +27,10 @@ public abstract class SystemToken : ISystemToken
     public TokenMeta TokenMeta;
     public string Shape;
     public Color Color;
+    public List<SystemTokenTag> Tags;
+    public List<SystemTokenBar> Bars;
+    public List<SystemTokenStat> Stats;
+    // public SystemTokenStat[] Stats;
 
     public virtual string Label()
     {
@@ -53,7 +59,16 @@ public abstract class SystemToken : ISystemToken
         items.Add(new MenuItem("EditName", "Rename", ClickEditName));
         items.Add(new MenuItem("Clone", "Clone", ClickClone));
         items.Add(new MenuItem("Delete", "Delete", ClickDelete));
+        items.Add(new MenuItem("AddTag", "Add Tag", AddTagModal));
+        items.Add(new MenuItem("AddBar", "Add Bar", AddBarModal));
+        items.Add(new MenuItem("AddStat", "Add Stat", AddStatModal));
+        items.Add(new MenuItem("Debug", "Debug", DebugToken));
         return items.ToArray();
+    }
+
+    private void DebugToken(ClickEvent evt)
+    {
+        Debug.Log(Serialize());
     }
 
     private static void ClickFlip(ClickEvent evt)
@@ -77,6 +92,90 @@ public abstract class SystemToken : ISystemToken
             Token.Deselect();
             Player.Self().CmdRequestDeleteToken(data.Id);
         });
+    }
+
+    private static void AddTagModal(ClickEvent evt)
+    {
+        Modal.Reset("Add Tag");
+        Modal.AddTextField("TagName", "Tag Name", "");
+        Modal.AddDropdownField("ColorField", "Color", "Gray", ColorUtility.CommonColors());
+        Modal.AddToggleField("HasNumberField", "Has Number Value?", false, (evt) => { AddTagModalEvaluateConditions(); });
+        Modal.AddIntField("TagValue", "Tag Initial Value", 0);
+        Modal.AddPreferredButton("Add", AddTagSubmit);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+        AddTagModalEvaluateConditions();
+
+        SelectionMenu.Hide();
+    }
+
+    private static void AddTagModalEvaluateConditions()
+    {
+        bool hasNumberValue = UI.Modal.Q<Toggle>("HasNumberField").value;
+        UI.ToggleDisplay(UI.Modal.Q("TagValue"), hasNumberValue);
+    }
+
+
+    private static void AddTagSubmit(ClickEvent evt)
+    {
+        string tagName = UI.Modal.Q<TextField>("TagName").value;
+        int tagValue = UI.Modal.Q<IntegerField>("TagValue").value;
+        string colorValue = UI.Modal.Q<DropdownField>("ColorField").value;
+        bool hasNumber = UI.Modal.Q<Toggle>("HasNumberField").value;
+        SystemTokenTag tag = new();
+        tag.Name = tagName;
+        tag.Value = tagValue;
+        tag.HasNumber = hasNumber;
+        tag.Color = ColorUtility.GetCommonColor(colorValue);
+        Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
+        Modal.Close();
+    }
+
+    private static void AddBarModal(ClickEvent evt)
+    {
+        Modal.Reset("Add Bar");
+        Modal.AddTextField("BarName", "Bar Name", "");
+        Modal.AddDropdownField("ColorField", "Color", "Red", ColorUtility.CommonColors());
+        Modal.AddIntField("BarValue", "Bar Max Value", 0);
+        Modal.AddPreferredButton("Add", AddBarSubmit);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+
+        SelectionMenu.Hide();
+    }
+
+    private static void AddBarSubmit(ClickEvent evt)
+    {
+        string barName = UI.Modal.Q<TextField>("BarName").value;
+        int barValue = UI.Modal.Q<IntegerField>("BarValue").value;
+        string colorValue = UI.Modal.Q<DropdownField>("ColorField").value;
+        SystemTokenBar bar = new();
+        bar.Name = barName;
+        bar.Value = barValue;
+        bar.MaxValue = barValue;
+        bar.Color = ColorUtility.GetCommonColor(colorValue);
+        Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"AddBar|{JsonUtility.ToJson(bar)}");
+        Modal.Close();
+    }
+
+    private static void AddStatModal(ClickEvent evt)
+    {
+        Modal.Reset("Add Stat");
+        Modal.AddTextField("StatName", "Stat Name", "");
+        Modal.AddIntField("StatValue", "Stat Value", 0);
+        Modal.AddPreferredButton("Add", AddStatSubmit);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+
+        SelectionMenu.Hide();
+    }
+
+    private static void AddStatSubmit(ClickEvent evt)
+    {
+        string statName = UI.Modal.Q<TextField>("StatName").value;
+        int statValue = UI.Modal.Q<IntegerField>("StatValue").value;
+        SystemTokenStat stat = new();
+        stat.Name = statName;
+        stat.Value = statValue;
+        Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"AddStat|{JsonUtility.ToJson(stat)}");
+        Modal.Close();
     }
 
     private static void ClickClone(ClickEvent evt)
@@ -105,8 +204,60 @@ public abstract class SystemToken : ISystemToken
         Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
-    public virtual void HandleCommand(string command, TokenData tokenData)
+    public virtual void HandleCommand(string value, TokenData tokenData)
     {
+        Token token = tokenData.GetToken();
+        if (value.StartsWith("AddTag"))
+        {
+            string[] parts = value.Split("|");
+            SystemTokenTag tag = JsonUtility.FromJson<SystemTokenTag>(parts[1]);
+            Tags.Add(tag);
+            PopoverText.Create(token, $"_+{tag.Name.ToUpper()}", Color.white);
+            Token.RebuildPanels = true;
+        }
+        if (value.StartsWith("IncrementTag"))
+        {
+            string[] parts = value.Split("|");
+            CounterTag(parts[1], 1);
+            if (tokenData.Placed)
+            {
+                PopoverText.Create(token, $"/+1|_{parts[1].ToUpper()}", Color.white);
+            }
+            Token.RebuildPanels = true;
+        }
+        if (value.StartsWith("DecrementTag"))
+        {
+            string[] parts = value.Split("|");
+            CounterTag(parts[1], -1);
+            if (tokenData.Placed)
+            {
+                PopoverText.Create(token, $"/-1|_{parts[1].ToUpper()}", Color.white);
+            }
+            Token.RebuildPanels = true;
+        }
+        if (value.StartsWith("RemoveTag"))
+        {
+            string[] parts = value.Split("|");
+            RemoveTag(parts[1]);
+            if (tokenData.Placed)
+            {
+                PopoverText.Create(token, $"/-|_{parts[1].ToUpper()}", Color.white);
+            }
+            Token.RebuildPanels = true;
+        }
+        if (value.StartsWith("AddBar"))
+        {
+            string[] parts = value.Split("|");
+            SystemTokenBar bar = JsonUtility.FromJson<SystemTokenBar>(parts[1]);
+            Bars.Add(bar);
+            Token.RebuildPanels = true;
+        }
+        if (value.StartsWith("AddStat"))
+        {
+            string[] parts = value.Split("|");
+            SystemTokenStat stat = JsonUtility.FromJson<SystemTokenStat>(parts[1]);
+            Stats.Add(stat);
+        }
     }
 
     public virtual void UpdateOverhead(TokenData tokenData)
@@ -117,8 +268,63 @@ public abstract class SystemToken : ISystemToken
     {
     }
 
-    public virtual void InitTokenPanel(string elementName)
+    public virtual void InitTokenPanel(string elementName, bool selected = false)
     {
+        VisualElement panel = UI.System.Q(elementName);
+        panel.Q("Pills").Clear();
+        panel.Q("Stats").Clear();
+        panel.Q("Bars").Clear();
+        foreach (SystemTokenBar bar in Bars)
+        {
+            VisualElement bart = UI.CreateFromTemplate("UITemplates/GameSystem/SimpleHPBar");
+            bart.Q<Label>("StatLabel").text = bar.Name;
+            bart.Q<Label>("CHP").text = $"{bar.Value - 4}";
+            bart.Q<Label>("MHP").text = $"/{bar.MaxValue}";
+            bart.Q<ProgressBar>("HpBar").value = bar.Value - 4;
+            bart.Q<ProgressBar>("HpBar").highValue = bar.MaxValue;
+            bart.Query(null, "unity-progress-bar__progress").First().style.backgroundColor = bar.Color;
+            bart.Query(null, "unity-progress-bar__background").First().style.backgroundColor = ColorUtility.DarkenColor(bar.Color, .5f);
+            panel.Q("Bars").Add(bart);
+        }
+        foreach (SystemTokenStat stat in Stats)
+        {
+            VisualElement statt = UI.CreateFromTemplate("UITemplates/GameSystem/StatTemplate");
+            statt.Q<Label>("Label").text = stat.Name;
+            statt.Q<Label>("Value").text = $"{stat.Value}";
+            panel.Q("Stats").Add(statt);
+        }
+        foreach (SystemTokenTag tag in Tags)
+        {
+            VisualElement pill = UI.CreateFromTemplate("UITemplates/GameSystem/Pill");
+            string text = $"{tag.Name}";
+            if (tag.HasNumber)
+            {
+                text += $"   {tag.Value}";
+                pill.Q("Decrement").style.color = tag.Color;
+                pill.Q("Increment").style.color = tag.Color;
+                pill.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) =>
+                {
+                    Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"IncrementTag|{tag.Name}");
+                });
+                pill.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) =>
+                {
+                    Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"DecrementTag|{tag.Name}");
+                });
+            }
+            else
+            {
+                UI.ToggleDisplay(pill.Q("Increment"), false);
+                UI.ToggleDisplay(pill.Q("Decrement"), false);
+            }
+            pill.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) =>
+            {
+                Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"RemoveTag|{tag.Name}");
+            });
+            pill.Q("Pill").style.backgroundColor = tag.Color;
+            pill.Q("Remove").style.color = tag.Color;
+            pill.Q<Label>("Name").text = text;
+            panel.Q("Pills").Add(pill);
+        }
     }
 
     public string SymbolString(string character, int value, int max)
@@ -141,6 +347,44 @@ public abstract class SystemToken : ISystemToken
         Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, command);
         SelectionMenu.Hide();
     }
+
+    private void CounterTag(string name, int num)
+    {
+        int i = Tags.FindIndex(a => a.Name == name);
+        Tags[i].Value += num;
+    }
+
+    private void RemoveTag(string name)
+    {
+        int i = Tags.FindIndex(a => a.Name == name);
+        Tags.RemoveAt(i);
+    }
+
+}
+
+[Serializable]
+public class SystemTokenTag
+{
+    public string Name;
+    public int Value;
+    public Color Color;
+    public bool HasNumber;
+}
+
+[Serializable]
+public class SystemTokenBar
+{
+    public string Name;
+    public int Value;
+    public int MaxValue;
+    public Color Color;
+}
+
+[Serializable]
+public class SystemTokenStat
+{
+    public string Name;
+    public int Value;
 }
 
 [Serializable]

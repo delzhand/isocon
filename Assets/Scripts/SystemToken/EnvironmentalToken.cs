@@ -70,7 +70,7 @@ public class EnvironmentalToken : SystemToken
         return Name;
     }
 
-    public override void InitTokenPanel(string elementName)
+    public override void InitTokenPanel(string elementName, bool selected)
     {
         VisualElement panel = UI.System.Q(elementName);
         panel.Q("Data").Clear();

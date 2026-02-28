@@ -1,0 +1,33 @@
+#Pill {
+    -unity-font-definition: resource("Fonts/MusticaPro-SemiBold SDF");
+    border-radius: 14px;
+    padding: 4px 8px;
+    color: rgb(255, 255, 255);
+    background-color: red;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+#Pill .roundbutton {
+    border-radius: 50%;
+    border-width: 0;
+    background-color: #FFFFFF;
+    color: #000;
+    height: 16px;
+    width: 16px;
+    margin: 0;
+    font-size: 24px;
+    padding: 0;
+}
+
+#Pill #Decrement {
+    margin-right: 4px;
+}
+
+#Pill #Increment {
+    margin-left: 4px;
+}
+
+#Pill #Remove {
+    margin-left: 4px;
+}

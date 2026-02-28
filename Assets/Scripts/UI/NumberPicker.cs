@@ -10,6 +10,7 @@ public class NumberPicker
     private static string NumberString = "";
     private static bool initialized = false;
     private static EventCallback<ClickEvent> Callback;
+    private static bool negative = false;
 
     private static void AddDigit(ClickEvent evt, int i)
     {
@@ -49,6 +50,11 @@ public class NumberPicker
         {
             UI.NumberPicker.Q<Button>($"Digit{i}").RegisterCallback<ClickEvent, int>(AddDigit, i);
         }
+
+        UI.NumberPicker.Q("DigitAdd").RegisterCallback<ClickEvent>(SetPositive);
+        UI.NumberPicker.Q("DigitSub").RegisterCallback<ClickEvent>(SetNegative);
+        Debug.Log("bind neg");
+
         UI.NumberPicker.Q<Button>("DigitBack").RegisterCallback<ClickEvent>(RemoveDigit);
         UI.NumberPicker.Q<Button>("Exit").RegisterCallback<ClickEvent>((evt) =>
         {
@@ -58,28 +64,42 @@ public class NumberPicker
 
     public static void Open(EventCallback<ClickEvent> numberCommandCallback)
     {
-        Callback = numberCommandCallback;
-        UI.NumberPicker.Q("DigitEnter").RegisterCallback<ClickEvent>(numberCommandCallback);
-        UI.ToggleDisplay("NumberPickerModal", true);
-        UI.ToggleDisplay("Backdrop", true);
-        NumberString = "0";
-        UpdateValue();
         if (!initialized)
         {
             BindCallbacks();
         }
+        Callback = numberCommandCallback;
+        UI.NumberPicker.Q("DigitAdd").RegisterCallback<ClickEvent>(numberCommandCallback);
+        UI.NumberPicker.Q("DigitSub").RegisterCallback<ClickEvent>(numberCommandCallback);
+        UI.ToggleDisplay("NumberPickerModal", true);
+        UI.ToggleDisplay("Backdrop", true);
+        NumberString = "0";
+        UpdateValue();
     }
 
     public static void Close()
     {
-        UI.NumberPicker.Q("DigitEnter").UnregisterCallback<ClickEvent>(Callback);
+        UI.NumberPicker.Q("DigitAdd").UnregisterCallback<ClickEvent>(Callback);
+        UI.NumberPicker.Q("DigitSub").UnregisterCallback<ClickEvent>(Callback);
         UI.ToggleDisplay("NumberPickerModal", false);
         UI.ToggleDisplay("Backdrop", false);
     }
 
     public static int GetNumber()
     {
-        return int.Parse(NumberString);
+        int value = int.Parse(NumberString);
+        return negative ? -value : value;
+    }
+
+    private static void SetNegative(ClickEvent evt)
+    {
+        Debug.Log("do neg");
+        negative = true;
+    }
+
+    private static void SetPositive(ClickEvent evt)
+    {
+        negative = false;
     }
 
     public static void NumberCommand(string command)
@@ -91,6 +111,7 @@ public class NumberPicker
     private static void NumberCommandCallback(ClickEvent evt, string command)
     {
         int v = NumberPicker.GetNumber();
+        Debug.Log(v);
         NumberPicker.Close();
         Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"{command}|{v}");
     }
