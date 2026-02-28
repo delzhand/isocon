@@ -30,7 +30,6 @@ public abstract class SystemToken : ISystemToken
     public List<SystemTokenTag> Tags;
     public List<SystemTokenBar> Bars;
     public List<SystemTokenStat> Stats;
-    // public SystemTokenStat[] Stats;
 
     public virtual string Label()
     {
@@ -278,9 +277,9 @@ public abstract class SystemToken : ISystemToken
         {
             VisualElement bart = UI.CreateFromTemplate("UITemplates/GameSystem/SimpleHPBar");
             bart.Q<Label>("StatLabel").text = bar.Name;
-            bart.Q<Label>("CHP").text = $"{bar.Value - 4}";
+            bart.Q<Label>("CHP").text = $"{bar.Value}";
             bart.Q<Label>("MHP").text = $"/{bar.MaxValue}";
-            bart.Q<ProgressBar>("HpBar").value = bar.Value - 4;
+            bart.Q<ProgressBar>("HpBar").value = bar.Value;
             bart.Q<ProgressBar>("HpBar").highValue = bar.MaxValue;
             bart.Query(null, "unity-progress-bar__progress").First().style.backgroundColor = bar.Color;
             bart.Query(null, "unity-progress-bar__background").First().style.backgroundColor = ColorUtility.DarkenColor(bar.Color, .5f);
