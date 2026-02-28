@@ -236,12 +236,12 @@
 }
 
 #RightTokenPanel {
-    right: -270px;
+    right: -200px;
     opacity: 0;
 }
 
 #RightTokenPanel.active {
-    right: 80px;
+    right: 10px;
     opacity: 1;
 }
 
@@ -430,4 +430,16 @@
 #File #unity-text-input {
     max-width: 360px;
     min-width: 360px;
+}
+
+#BottomBar {
+    height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#BottomBar.active {
+    height: 100px;
+    padding-top: 8px;
+    padding-bottom: 8px;
 }

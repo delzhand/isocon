@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class NeutralState : TabletopSubstate
 {
-    private bool _bottomBarVisible = false;
+    // private bool _bottomBarVisible = true;
 
     public override void OnEnter(StateManager sm)
     {
@@ -16,7 +16,7 @@ public class NeutralState : TabletopSubstate
     protected override void EnableInterface()
     {
         base.EnableInterface();
-        UI.ToggleDisplay(UI.System.Q("BottomBar"), _bottomBarVisible);
+        UI.ToggleDisplay(UI.System.Q("BottomBar"), true);
         UI.ToggleDisplay(UI.System.Q("BottomRight"), true);
     }
 
@@ -34,6 +34,12 @@ public class NeutralState : TabletopSubstate
         base.HandleKeypresses();
         if (DisallowShortcutKeys())
         {
+            return;
+        }
+
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            AddToken.OpenModal(new ClickEvent());
             return;
         }
 
@@ -130,8 +136,8 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("Session").RegisterCallback<ClickEvent>(GoToSession);
         UI.TopBar.Q("FixedView").RegisterCallback<ClickEvent>(FixView);
         UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
-        UI.System.Q("BottomRight").Q("AddToken").RegisterCallback<ClickEvent>(ShowAddTokenModal);
-        UI.System.Q("BottomRight").Q("DeployToken").RegisterCallback<ClickEvent>(ToggleBottomBar);
+        UI.TopBar.Q("AddToken").RegisterCallback<ClickEvent>(ShowAddTokenModal);
+        UI.System.Q("DeployToggle").RegisterCallback<ClickEvent>(ToggleBottomBar);
         UI.System.Q<Button>("TurnAdvance").RegisterCallback<ClickEvent>(AdvanceRound);
         Dragger.LeftClickRelease += LeftClickRelease;
         Dragger.RightClickRelease += RightClickRelease;
@@ -147,8 +153,8 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("Config").UnregisterCallback<ClickEvent>(GoToConfig);
         UI.TopBar.Q("Session").UnregisterCallback<ClickEvent>(GoToSession);
         UI.TopBar.Q("Dice").UnregisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
-        UI.System.Q("BottomRight").Q("AddToken").UnregisterCallback<ClickEvent>(ShowAddTokenModal);
-        UI.System.Q("BottomRight").Q("DeployToken").UnregisterCallback<ClickEvent>(ToggleBottomBar);
+        UI.TopBar.Q("AddToken").UnregisterCallback<ClickEvent>(ShowAddTokenModal);
+        UI.System.Q("DeployToggle").UnregisterCallback<ClickEvent>(ToggleBottomBar);
         UI.System.Q<Button>("TurnAdvance").UnregisterCallback<ClickEvent>(AdvanceRound);
         Dragger.LeftClickRelease -= LeftClickRelease;
         Dragger.RightClickRelease -= RightClickRelease;
@@ -187,8 +193,8 @@ public class NeutralState : TabletopSubstate
 
     private void ToggleBottomBar(ClickEvent evt)
     {
-        _bottomBarVisible = !_bottomBarVisible;
-        UI.ToggleDisplay(UI.System.Q("BottomBar"), _bottomBarVisible);
+        UI.ToggleActiveClass(UI.System.Q("BottomBar"));
+        UI.ToggleDisplay(UI.System.Q("DeployToggle").Q("Attn"), false);
     }
 
     private void ShowConsole(ClickEvent evt)

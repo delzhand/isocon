@@ -241,6 +241,19 @@ public class UI : MonoBehaviour
         }
     }
 
+    public static void ToggleActiveClass(VisualElement e)
+    {
+        bool active = !e.ClassListContains("active");
+        if (active)
+        {
+            e.AddToClassList("active");
+        }
+        else
+        {
+            e.RemoveFromClassList("active");
+        }
+    }
+
     public static void HoverSetup(VisualElement e)
     {
         e.RegisterCallback<MouseEnterEvent>((evt) =>

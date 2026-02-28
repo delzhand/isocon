@@ -39,6 +39,11 @@ public class AddToken
         Player.Self().CmdCreateSystemToken(json);
         Player.Self().ClearOp();
         Modal.Close();
+
+        if (!UI.System.Q("BottomBar").ClassListContains("active"))
+        {
+            UI.ToggleDisplay(UI.System.Q("DeployToggle").Q("Attn"), true);
+        }
     }
 
     public static void CancelAddToken(ClickEvent evt)
