@@ -95,20 +95,20 @@ public class ColorUtility
 
     public static Color GetCommonColor(string dataColor)
     {
-
+        dataColor = dataColor.ToLower();
         switch (dataColor)
         {
-            case "Red":
+            case "red":
                 return ColorUtility.NormalizeRGB(238, 34, 12);
-            case "Blue":
+            case "blue":
                 return ColorUtility.NormalizeRGB(0, 162, 255);
-            case "Yellow":
+            case "yellow":
                 return ColorUtility.NormalizeRGB(254, 174, 0);
-            case "Green":
+            case "green":
                 return ColorUtility.NormalizeRGB(97, 216, 54);
-            case "Purple":
+            case "purple":
                 return ColorUtility.NormalizeRGB(202, 85, 239);
-            case "Gray":
+            case "gray":
                 return ColorUtility.NormalizeRGB(146, 146, 146);
         }
         return Color.black;

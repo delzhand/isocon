@@ -460,6 +460,11 @@ public abstract class SystemToken : ISystemToken
         }
         Bars[index] = bar;
     }
+
+    protected int Clamped(int min, int value, int max)
+    {
+        return Math.Max(min, Math.Min(value, max));
+    }
 }
 
 [Serializable]

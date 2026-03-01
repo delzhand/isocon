@@ -151,35 +151,38 @@ public class IconMobToken : SystemToken
     {
         VisualElement o = tokenData.OverheadElement;
         o.Q<Label>("Pips").text = SymbolString("▰", Hits, 2);
+
+        UI.ToggleDisplay(o, Hits > 0);
+
     }
 
-    private static string GetStatColor(string job)
-    {
-        string statColor = "Gray";
-        switch (job)
-        {
-            case "Wright":
-            case "Artillery":
-                statColor = "Blue";
-                break;
-            case "Vagabond":
-            case "Skirmisher":
-                statColor = "Yellow";
-                break;
-            case "Stalwart":
-            case "Heavy":
-                statColor = "Red";
-                break;
-            case "Leader":
-            case "Mendicant":
-                statColor = "Green";
-                break;
-            case "Legend":
-                statColor = "Purple";
-                break;
-        }
-        return statColor;
-    }
+    // private static string GetStatColor(string job)
+    // {
+    //     string statColor = "Gray";
+    //     switch (job)
+    //     {
+    //         case "Wright":
+    //         case "Artillery":
+    //             statColor = "Blue";
+    //             break;
+    //         case "Vagabond":
+    //         case "Skirmisher":
+    //             statColor = "Yellow";
+    //             break;
+    //         case "Stalwart":
+    //         case "Heavy":
+    //             statColor = "Red";
+    //             break;
+    //         case "Leader":
+    //         case "Mendicant":
+    //             statColor = "Green";
+    //             break;
+    //         case "Legend":
+    //             statColor = "Purple";
+    //             break;
+    //     }
+    //     return statColor;
+    // }
 
     private void UpdateGraphic(TokenData tokenData)
     {

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using IsoconUILibrary;
 using SimpleJSON;
 using UnityEngine;
@@ -10,6 +9,8 @@ using UnityEngine.UIElements;
 [Serializable]
 public class Icon1x5PlayerToken : SystemToken
 {
+    private readonly static string TypeName = "Icon 1.5 Player";
+
     public string Name;
     public int CurrentHP;
     public int MaxHP;
@@ -26,13 +27,16 @@ public class Icon1x5PlayerToken : SystemToken
     public int Defense;
     public string ColorName;
 
+    public static int PartyResolve = 0;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        SystemTokenRegistry.RegisterSystem("Icon 1.5 Player");
-        SystemTokenRegistry.RegisterInterfaceCallback("Icon 1.5 Player", DeserializeAsInterface);
-        SystemTokenRegistry.RegisterSimpleCallback("Icon 1.5 Player|AddTokenModal", AddTokenModal);
+        SystemTokenRegistry.RegisterSystem($"{TypeName}");
+        SystemTokenRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
+        SystemTokenRegistry.RegisterSimpleCallback($"{TypeName}|AddTokenModal", AddTokenModal);
     }
+
 
     public override string Label()
     {
@@ -54,41 +58,126 @@ public class Icon1x5PlayerToken : SystemToken
         MenuItem[] baseItems = base.GetTokenMenuItems(placed);
 
         List<MenuItem> items = new();
+        items.Add(new MenuItem("Damage", "Damage HP/VIG", (evt) => { NumberPicker.NumberCommand("Damage"); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.NumberCommand("ModHP"); }));
+        items.Add(new MenuItem("ModVIG", "Modify Vigor", (evt) => { NumberPicker.NumberCommand("ModVIG"); }));
+        items.Add(new MenuItem("ModRES", "Modify Resolve", (evt) => { NumberPicker.NumberCommand("ModRES"); }));
+        items.Add(new MenuItem("ModPRES", "Modify Party Resolve", (evt) => { NumberPicker.NumberCommand("ModPRES"); }));
+        items.Add(new MenuItem("GainWound", "Take Wound", (evt) => DirectCommand("GainWound")));
+        items.Add(new MenuItem("HealWound", "Heal Wound", (evt) => DirectCommand("LoseWound")));
+
         items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRollClicked));
         items.Add(new MenuItem("SaveRoll", "Save Roll", SaveRollClicked));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
-    private void AttackRollClicked(ClickEvent evt)
-    {
-        Modal.Reset("Attack Roll");
-        Modal.AddNumberNudgerField("PowerField", "Weakness/Power", 0, -20);
-        Modal.AddPreferredButton("Roll", AttackRoll);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
-    }
-
-    private void SaveRollClicked(ClickEvent evt)
-    {
-        string name = Token.GetSelected().Data.Name;
-        DiceRoller.DirectDieRoll("sum", "1d6", $"{name}'s save roll");
-        Token.Deselect();
-        Modal.Close();
-    }
-
-    private void AttackRoll(ClickEvent evt)
-    {
-        string name = Token.GetSelected().Data.Name;
-        int power = UI.Modal.Q<NumberNudger>("PowerField").value;
-        string op = power > 0 ? "max" : "min";
-        DiceRoller.DirectDieRoll(op, $"{Math.Abs(power) + 1}d10", $"{name}'s attack roll");
-        Token.Deselect();
-        Modal.Close();
-    }
-
-
     public override void HandleCommand(string command, TokenData tokenData)
     {
         base.HandleCommand(command, tokenData);
+        Token token = tokenData.GetToken();
+        if (command.StartsWith("GainWound"))
+        {
+            Wounds++;
+            Wounds = Math.Min(Wounds, 3);
+            int woundMaxHP = MaxHP / 4 * (4 - Wounds);
+            CurrentHP = Math.Min(CurrentHP, woundMaxHP);
+        }
+        if (command.StartsWith("LoseWound"))
+        {
+            Wounds--;
+            Wounds = Math.Max(Wounds, 0);
+        }
+        if (command.StartsWith("ModHP"))
+        {
+            int original = CurrentHP;
+            int changeValue = int.Parse(command.Split("|")[1]);
+            CurrentHP = Clamped(0, CurrentHP + changeValue, MaxHP);
+            int diff = CurrentHP - original;
+            if (diff != 0 && tokenData.Placed)
+            {
+                string plus = diff > 0 ? "+" : "";
+                PopoverText.Create(token, $"/{plus}{diff}|_HP", Color.white);
+                UpdateGraphic(tokenData);
+            }
+        }
+        if (command.StartsWith("ModVIG"))
+        {
+            int original = Vigor;
+            int changeValue = int.Parse(command.Split("|")[1]);
+            Vigor = Clamped(0, Vigor + changeValue, MaxHP / 4);
+            int diff = Vigor - original;
+            if (diff != 0 && tokenData.Placed)
+            {
+                string plus = diff > 0 ? "+" : "";
+                PopoverText.Create(token, $"/{plus}{diff}|_VIG", Color.white);
+            }
+        }
+        if (command.StartsWith("ModRES"))
+        {
+            int original = Resolve;
+            int changeValue = int.Parse(command.Split("|")[1]);
+            Resolve = Clamped(0, Resolve + changeValue, 6);
+            int diff = Resolve - original;
+            if (diff != 0 && tokenData.Placed)
+            {
+                string plus = diff > 0 ? "+" : "";
+                PopoverText.Create(token, $"/{plus}{diff}|_RES", Color.white);
+            }
+        }
+        if (command.StartsWith("ModPRES"))
+        {
+            int original = PartyResolve;
+            int changeValue = int.Parse(command.Split("|")[1]);
+            Resolve = Clamped(0, Resolve + changeValue, 6);
+            int diff = Resolve - original;
+            if (diff != 0 && tokenData.Placed)
+            {
+                string plus = diff > 0 ? "+" : "";
+                PopoverText.Create(token, $"/{plus}{diff}|_RES", Color.white);
+            }
+        }
+        if (command.StartsWith("Damage"))
+        {
+            int diff = int.Parse(command.Split("|")[1]);
+            if (Vigor + CurrentHP - diff < 0)
+            {
+                diff = Vigor + CurrentHP;
+            }
+            if (diff <= 0)
+            {
+                return;
+            }
+            if (diff < Vigor)
+            {
+                // Vig damage only
+                Vigor -= diff;
+                if (tokenData.Placed)
+                {
+                    PopoverText.Create(token, $"/-{diff}|_VIG", Color.white);
+                }
+            }
+            else if (diff > Vigor && Vigor > 0)
+            {
+                // Vig zeroed and HP damage
+                CurrentHP -= (diff - Vigor);
+                Vigor = 0;
+                if (tokenData.Placed)
+                {
+                    PopoverText.Create(token, $"/-{diff}|_HP/VIG", Color.white);
+                    UpdateGraphic(tokenData);
+                }
+            }
+            else if (Vigor <= 0)
+            {
+                // HP damage only
+                CurrentHP -= diff;
+                if (tokenData.Placed)
+                {
+                    PopoverText.Create(token, $"/-{diff}|_HP", Color.white);
+                    UpdateGraphic(tokenData);
+                }
+            }
+        }
     }
 
     public override void UpdateOverhead(TokenData tokenData)
@@ -106,7 +195,7 @@ public class Icon1x5PlayerToken : SystemToken
         UI.ToggleDisplay(o.Q("Wound2"), Wounds >= 2);
         UI.ToggleDisplay(o.Q("Wound3"), Wounds >= 3);
 
-        UI.ToggleDisplay(o.Q("HpBar"), CurrentHP > 0);
+        UI.ToggleDisplay(o, CurrentHP > 0);
     }
 
     public override void UpdateTokenPanel(TokenData tokenData, string elementName)
@@ -115,36 +204,51 @@ public class Icon1x5PlayerToken : SystemToken
         VisualElement panel = UI.System.Q(elementName);
 
         VisualElement mainHPBar = panel.Q("MainHPBar");
-
         mainHPBar.Q<Label>("CHP").text = $"{CurrentHP}";
         mainHPBar.Q<Label>("MHP").text = $"/{MaxHP}";
         mainHPBar.Q<ProgressBar>("HpBar").value = CurrentHP;
         mainHPBar.Q<ProgressBar>("HpBar").highValue = MaxHP;
-
         mainHPBar.Q<Label>("VIG").text = $"+{Vigor}";
         mainHPBar.Q<ProgressBar>("VigorBar").value = Vigor;
         mainHPBar.Q<ProgressBar>("VigorBar").highValue = MaxHP;
         UI.ToggleDisplay(mainHPBar.Q("VigorBar"), Vigor > 0);
         UI.ToggleDisplay(mainHPBar.Q("VIG"), Vigor > 0);
-
         UI.ToggleDisplay(mainHPBar.Q("Wound1"), Wounds >= 1);
         UI.ToggleDisplay(mainHPBar.Q("Wound2"), Wounds >= 2);
         UI.ToggleDisplay(mainHPBar.Q("Wound3"), Wounds >= 3);
 
+        VisualElement RESBar = panel.Q("ResBar");
+        RESBar.Q<Label>("ResolveNum").text = $"{Resolve}";
+        RESBar.Q<ProgressBar>("ResolveBar").value = Resolve + PartyResolve;
+        RESBar.Q<ProgressBar>("ResolveBar").highValue = 6;
+        RESBar.Q<Label>("PartyResolveNum").text = $"+{PartyResolve}";
+        RESBar.Q<ProgressBar>("PartyResolveBar").value = PartyResolve;
+        RESBar.Q<ProgressBar>("PartyResolveBar").highValue = 6;
+        UI.ToggleDisplay(panel.Q("PartyResolveBar"), PartyResolve > 0);
+        UI.ToggleDisplay(panel.Q("PartyResolveNum"), PartyResolve > 0);
+
+        UI.ToggleDisplay(panel.Q("BloodiedPill"), CurrentHP > 0 && CurrentHP <= MaxHP / 2);
     }
 
     public override void InitTokenPanel(string elementName, bool selected)
     {
         base.InitTokenPanel(elementName, selected);
-
         VisualElement panel = UI.System.Q(elementName);
+
+        VisualElement resBar = UI.CreateFromTemplate("UITemplates/GameSystem/IconResolveBar");
+        resBar.name = "ResBar";
+        resBar.Q<ProgressBar>("ResolveBar").value = Resolve;
+        resBar.Q<ProgressBar>("ResolveBar").highValue = 6;
+        panel.Q("Bars").Add(resBar);
+
         VisualElement hpBar = UI.CreateFromTemplate("UITemplates/GameSystem/IconHPBar");
         hpBar.name = "MainHPBar";
+        hpBar.Q<ProgressBar>("HpBar").value = CurrentHP;
         panel.Q("Bars").Add(hpBar);
 
         VisualElement s1 = UI.CreateFromTemplate("UITemplates/GameSystem/StatTemplate");
         s1.Q<Label>("Label").text = "DMG/FRAY";
-        s1.Q<Label>("Value").text = $"{Damage}/{Fray}";
+        s1.Q<Label>("Value").text = $"1d{Damage}/{Fray}";
         panel.Q("Stats").Add(s1);
 
         VisualElement s2 = UI.CreateFromTemplate("UITemplates/GameSystem/StatTemplate");
@@ -161,6 +265,16 @@ public class Icon1x5PlayerToken : SystemToken
         s4.Q<Label>("Label").text = "DEF";
         s4.Q<Label>("Value").text = $"{Defense}";
         panel.Q("Stats").Add(s4);
+
+        VisualElement p1 = UI.CreateFromTemplate("UITemplates/GameSystem/Pill");
+        p1.name = "BloodiedPill";
+        p1.Q<Label>("Name").text = "Bloodied";
+        p1.Q("Pill").style.backgroundColor = Color.red;
+        p1.Query(null, "roundbutton").ForEach((v) =>
+        {
+            v.style.display = DisplayStyle.None;
+        });
+        panel.Q("Pills").Add(p1);
     }
 
     public static void AddTokenModal()
@@ -202,7 +316,7 @@ public class Icon1x5PlayerToken : SystemToken
 
         Icon1x5PlayerToken t = new()
         {
-            System = "Icon 1.5 Player",
+            System = TypeName,
             Name = name,
             Job = job,
             Class = pclass,
@@ -258,5 +372,34 @@ public class Icon1x5PlayerToken : SystemToken
         return statColor;
     }
 
+    private void AttackRollClicked(ClickEvent evt)
+    {
+        Modal.Reset("Attack Roll");
+        Modal.AddNumberNudgerField("PowerField", "Weakness/Power", 0, -20);
+        Modal.AddPreferredButton("Roll", AttackRoll);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+    }
+
+    private void SaveRollClicked(ClickEvent evt)
+    {
+        string name = Token.GetSelected().Data.Name;
+        DiceRoller.DirectDieRoll("sum", "1d6", $"{name}'s save roll");
+        Modal.Close();
+    }
+
+    private void AttackRoll(ClickEvent evt)
+    {
+        string name = Token.GetSelected().Data.Name;
+        int power = UI.Modal.Q<NumberNudger>("PowerField").value;
+        string op = power > 0 ? "max" : "min";
+        DiceRoller.DirectDieRoll(op, $"{Math.Abs(power) + 1}d10", $"{name}'s attack roll");
+        Modal.Close();
+    }
+
+    private void UpdateGraphic(TokenData tokenData)
+    {
+        Token token = tokenData.GetToken();
+        token.SetDefeated(CurrentHP <= 0);
+    }
     #endregion
 }

@@ -247,6 +247,9 @@ public class ExampleToken : SystemToken
         This function updates every frame for a user's currently selected and/or focused
         token(s). Use it to keep the panel updated. If not implemented, values will
         only be updated when a token is focused or selected.
+
+        NEVER add elements in this function. Add them in InitTokenPanel and toggle
+        their visibility here.
     */
     public override void UpdateTokenPanel(TokenData tokenData, string elementName)
     {
@@ -266,6 +269,8 @@ public class ExampleToken : SystemToken
         elements can be omitted otherwise.
         
         Every token can have elements added to Stats, Bars, and Pills.
+
+        This function is required, even if it's just calling the base function.
     */
     public override void InitTokenPanel(string elementName, bool selected)
     {
