@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using IsoconUILibrary;
 using SimpleJSON;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -53,26 +54,41 @@ public class Icon1x5PlayerToken : SystemToken
         MenuItem[] baseItems = base.GetTokenMenuItems(placed);
 
         List<MenuItem> items = new();
-        // items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRollClicked));
-        // items.Add(new MenuItem("SaveRoll", "Save Roll", SaveRollClicked));
+        items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRollClicked));
+        items.Add(new MenuItem("SaveRoll", "Save Roll", SaveRollClicked));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
+    private void AttackRollClicked(ClickEvent evt)
+    {
+        Modal.Reset("Attack Roll");
+        Modal.AddNumberNudgerField("PowerField", "Weakness/Power", 0, -20);
+        Modal.AddPreferredButton("Roll", AttackRoll);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+    }
+
+    private void SaveRollClicked(ClickEvent evt)
+    {
+        string name = Token.GetSelected().Data.Name;
+        DiceRoller.DirectDieRoll("sum", "1d6", $"{name}'s save roll");
+        Token.Deselect();
+        Modal.Close();
+    }
+
+    private void AttackRoll(ClickEvent evt)
+    {
+        string name = Token.GetSelected().Data.Name;
+        int power = UI.Modal.Q<NumberNudger>("PowerField").value;
+        string op = power > 0 ? "max" : "min";
+        DiceRoller.DirectDieRoll(op, $"{Math.Abs(power) + 1}d10", $"{name}'s attack roll");
+        Token.Deselect();
+        Modal.Close();
+    }
+
+
     public override void HandleCommand(string command, TokenData tokenData)
     {
-        // base.HandleCommand(command, tokenData);
-        // if (command.StartsWith("GainHeat|"))
-        // {
-        //     GainHeat(command, tokenData);
-        // }
-        // if (command.StartsWith("LoseStructure|"))
-        // {
-        //     LoseStructure(command, tokenData);
-        // }
-        // if (command.StartsWith("LoseStress|"))
-        // {
-        //     LoseStress(command, tokenData);
-        // }
+        base.HandleCommand(command, tokenData);
     }
 
     public override void UpdateOverhead(TokenData tokenData)
@@ -91,6 +107,60 @@ public class Icon1x5PlayerToken : SystemToken
         UI.ToggleDisplay(o.Q("Wound3"), Wounds >= 3);
 
         UI.ToggleDisplay(o.Q("HpBar"), CurrentHP > 0);
+    }
+
+    public override void UpdateTokenPanel(TokenData tokenData, string elementName)
+    {
+        base.UpdateTokenPanel(tokenData, elementName);
+        VisualElement panel = UI.System.Q(elementName);
+
+        VisualElement mainHPBar = panel.Q("MainHPBar");
+
+        mainHPBar.Q<Label>("CHP").text = $"{CurrentHP}";
+        mainHPBar.Q<Label>("MHP").text = $"/{MaxHP}";
+        mainHPBar.Q<ProgressBar>("HpBar").value = CurrentHP;
+        mainHPBar.Q<ProgressBar>("HpBar").highValue = MaxHP;
+
+        mainHPBar.Q<Label>("VIG").text = $"+{Vigor}";
+        mainHPBar.Q<ProgressBar>("VigorBar").value = Vigor;
+        mainHPBar.Q<ProgressBar>("VigorBar").highValue = MaxHP;
+        UI.ToggleDisplay(mainHPBar.Q("VigorBar"), Vigor > 0);
+        UI.ToggleDisplay(mainHPBar.Q("VIG"), Vigor > 0);
+
+        UI.ToggleDisplay(mainHPBar.Q("Wound1"), Wounds >= 1);
+        UI.ToggleDisplay(mainHPBar.Q("Wound2"), Wounds >= 2);
+        UI.ToggleDisplay(mainHPBar.Q("Wound3"), Wounds >= 3);
+
+    }
+
+    public override void InitTokenPanel(string elementName, bool selected)
+    {
+        base.InitTokenPanel(elementName, selected);
+
+        VisualElement panel = UI.System.Q(elementName);
+        VisualElement hpBar = UI.CreateFromTemplate("UITemplates/GameSystem/IconHPBar");
+        hpBar.name = "MainHPBar";
+        panel.Q("Bars").Add(hpBar);
+
+        VisualElement s1 = UI.CreateFromTemplate("UITemplates/GameSystem/StatTemplate");
+        s1.Q<Label>("Label").text = "DMG/FRAY";
+        s1.Q<Label>("Value").text = $"{Damage}/{Fray}";
+        panel.Q("Stats").Add(s1);
+
+        VisualElement s2 = UI.CreateFromTemplate("UITemplates/GameSystem/StatTemplate");
+        s2.Q<Label>("Label").text = "RNG";
+        s2.Q<Label>("Value").text = $"{Range}";
+        panel.Q("Stats").Add(s2);
+
+        VisualElement s3 = UI.CreateFromTemplate("UITemplates/GameSystem/StatTemplate");
+        s3.Q<Label>("Label").text = "SPD/DASH";
+        s3.Q<Label>("Value").text = $"{Speed}/{Dash}";
+        panel.Q("Stats").Add(s3);
+
+        VisualElement s4 = UI.CreateFromTemplate("UITemplates/GameSystem/StatTemplate");
+        s4.Q<Label>("Label").text = "DEF";
+        s4.Q<Label>("Value").text = $"{Defense}";
+        panel.Q("Stats").Add(s4);
     }
 
     public static void AddTokenModal()
