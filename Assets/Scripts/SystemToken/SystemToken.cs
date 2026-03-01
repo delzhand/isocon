@@ -61,7 +61,15 @@ public abstract class SystemToken : ISystemToken
         items.Add(new MenuItem("AddTag", "Add Tag", AddTagModal));
         items.Add(new MenuItem("AddBar", "Add Bar", AddBarModal));
         items.Add(new MenuItem("AddStat", "Add Stat", AddStatModal));
-        items.Add(new MenuItem("Debug", "Debug", DebugToken));
+        items.Add(new MenuItem("EditStats", "Edit Stats/Bars", EditStatBarModal));
+        // items.Add(new MenuItem("Debug", "Debug", DebugToken));
+        foreach (SystemTokenBar bar in Bars)
+        {
+            items.Add(new MenuItem($"Modify{bar.Name}", $"Modify {bar.Name}", (evt) =>
+            {
+                NumberPicker.NumberCommand($"ModBar|{bar.Name}");
+            }));
+        }
         return items.ToArray();
     }
 
@@ -155,6 +163,42 @@ public abstract class SystemToken : ISystemToken
         Modal.Close();
     }
 
+    private void EditStatBarModal(ClickEvent evt)
+    {
+        Modal.Reset("Edit Stats/Bars");
+        foreach (SystemTokenBar bar in Bars)
+        {
+            Modal.AddToggleField(bar.Name, $"Bar: {bar.Name}", true);
+        }
+        foreach (SystemTokenStat stat in Stats)
+        {
+            Modal.AddToggleField(stat.Name, $"Stat: {stat.Name}", true);
+        }
+        Modal.AddPreferredButton("Save", EditStatBarSubmit);
+        SelectionMenu.Hide();
+    }
+
+    private void EditStatBarSubmit(ClickEvent evt)
+    {
+        foreach (SystemTokenBar bar in Bars)
+        {
+            bool keep = UI.Modal.Q<Toggle>(bar.Name).value;
+            if (!keep)
+            {
+                Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"RemoveBar|{bar.Name}");
+            }
+        }
+        foreach (SystemTokenStat stat in Stats)
+        {
+            bool keep = UI.Modal.Q<Toggle>(stat.Name).value;
+            if (!keep)
+            {
+                Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"RemoveStat|{stat.Name}");
+            }
+        }
+        Modal.Close();
+    }
+
     private static void AddStatModal(ClickEvent evt)
     {
         Modal.Reset("Add Stat");
@@ -211,7 +255,7 @@ public abstract class SystemToken : ISystemToken
             string[] parts = value.Split("|");
             SystemTokenTag tag = JsonUtility.FromJson<SystemTokenTag>(parts[1]);
             Tags.Add(tag);
-            PopoverText.Create(token, $"_+{tag.Name.ToUpper()}", Color.white);
+            PopoverText.Create(token, $"/+|_{tag.Name.ToUpper()}", Color.white);
             Token.RebuildPanels = true;
         }
         if (value.StartsWith("IncrementTag"))
@@ -244,6 +288,20 @@ public abstract class SystemToken : ISystemToken
             }
             Token.RebuildPanels = true;
         }
+        if (value.StartsWith("RemoveStat"))
+        {
+            string[] parts = value.Split("|");
+            int i = Stats.FindIndex(a => a.Name == parts[1]);
+            Stats.RemoveAt(i);
+            Token.RebuildPanels = true;
+        }
+        if (value.StartsWith("RemoveBar"))
+        {
+            string[] parts = value.Split("|");
+            int i = Bars.FindIndex(a => a.Name == parts[1]);
+            Bars.RemoveAt(i);
+            Token.RebuildPanels = true;
+        }
         if (value.StartsWith("AddBar"))
         {
             string[] parts = value.Split("|");
@@ -256,6 +314,12 @@ public abstract class SystemToken : ISystemToken
             string[] parts = value.Split("|");
             SystemTokenStat stat = JsonUtility.FromJson<SystemTokenStat>(parts[1]);
             Stats.Add(stat);
+            Token.RebuildPanels = true;
+        }
+        if (value.StartsWith("ModBar"))
+        {
+            ModBar(value, tokenData);
+            Token.RebuildPanels = true;
         }
     }
 
@@ -359,6 +423,45 @@ public abstract class SystemToken : ISystemToken
         Tags.RemoveAt(i);
     }
 
+    private void ModBar(string command, TokenData tokenData)
+    {
+        Token token = tokenData.GetToken();
+        string name = command.Split("|")[1];
+        int index = Bars.FindIndex(a => a.Name == name);
+        SystemTokenBar bar = Bars[index];
+        int value = int.Parse(command.Split("|")[2]);
+        string popoverText = "";
+        int diff = Math.Abs(value);
+        if (value <= 0)
+        {
+            if (bar.Value - diff < 0)
+            {
+                diff = bar.Value;
+            }
+            bar.Value -= diff;
+            if (diff > 0)
+            {
+                popoverText = $"/-{diff}|{bar.Name}";
+            }
+        }
+        else
+        {
+            if (bar.Value + diff > bar.MaxValue)
+            {
+                diff = bar.MaxValue - bar.Value;
+            }
+            bar.Value += diff;
+            if (diff > 0)
+            {
+                popoverText = $"/+{diff}|{bar.Name}";
+            }
+        }
+        if (tokenData.Placed && popoverText?.Length > 0)
+        {
+            PopoverText.Create(token, popoverText, Color.white);
+        }
+        Bars[index] = bar;
+    }
 }
 
 [Serializable]
