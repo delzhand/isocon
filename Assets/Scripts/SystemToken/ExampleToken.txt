@@ -1,0 +1,367 @@
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Reflection.Metadata;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+/**
+    You can name your class anything but for consistency end it with "Token". It must
+    extend SystemToken (or another class that extends SystemToken).
+*/
+[Serializable]
+public class ExampleToken : SystemToken
+{
+    /**
+        Define the string identifier of your class. This must be unique.
+    */
+    private readonly string TypeName = "Example";
+
+    #region Registration
+    /**
+        The register function is responsible for defining several required hooks. Do not
+        change this function.
+    */
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void Register()
+    {
+        SystemTokenRegistry.RegisterSystem($"{TypeName}");
+        SystemTokenRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
+        SystemTokenRegistry.RegisterSimpleCallback($"{TypeName}|AddTokenModal", AddTokenModal);
+    }
+
+    /**
+        The serialize function converts an object to JSON. Do not change this function.
+    */
+    public override string Serialize()
+    {
+        return JsonUtility.ToJson(this);
+    }
+
+    /**
+        This function is how other classes will convert a JSON object of unknown type
+        into an instance of class. You must change the generic type of FromJson to the
+        name of this class.
+    */
+    public static ISystemToken DeserializeAsInterface(string json)
+    {
+        return JsonUtility.FromJson<BasicToken>(json);
+    }
+    #endregion
+
+    #region Stats
+    /**
+        Here you define the unique values of this token type. These will depend on the 
+        game system you want to implement
+    */
+    public string Name;
+    public int MaxHP;
+    public int CurrentHP;
+    public int Defense;
+    #endregion
+
+    #region Creation
+    /**
+        This function defines the fields a user needs to create a token of this type.
+        This uses the Modal API defined elsewhere.
+    */
+    public static void AddTokenModal()
+    {
+        /**
+            A description is highly recommended.
+        */
+        Modal.AddMarkup("Description", "Basic tokens have a primary HP stat by default, but custom resources can be assigned and tracked once created.");
+
+        /**
+            A TokenField is required.
+        */
+        Modal.AddTokenField("TokenSearchField");
+
+        /**
+            The remaining fields depend on the type.
+        */
+        Modal.AddTextField("NameField", "Token Name", "Token");
+        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", StringUtility.CreateArray("Square 1x1", "Square 2x2", "Square 3x3", "Hex 1", "Hex 2", "Hex 3"));
+        Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
+        Modal.AddIntField("MaxHPField", "Max HP", 100);
+
+        /**
+            Buttons are required. These can be left as they are.
+        */
+        Modal.AddPreferredButton("Create Token", CreateClicked);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+
+        /**
+            This line is required for the add token modal to function correctly and is also
+            used to define the order in which your fields appear. Every field added to the
+            modal must appear in this list.
+        */
+        AddToken.OrderFields(StringUtility.CreateArray("Description", "TokenSearchField", "NameField", "ShapeField", "ColorField", "MaxHPField"));
+    }
+
+    /**
+        This is the submit callback for creating a token.
+    */
+    private static void CreateClicked(ClickEvent evt)
+    {
+        /**
+            Validating that a token has been selected is helpful to the user.
+        */
+        if (!TokenLibrary.TokenSelected())
+        {
+            Toast.AddError("A token has not been selected");
+            return;
+        }
+
+        /**
+            Here you'll use UI.Modal to get the values from the fields you defined
+            in AddTokenModal.
+        */
+        string name = UI.Modal.Q<TextField>("NameField").value;
+        string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
+        int maxHP = UI.Modal.Q<IntegerField>("MaxHPField").value;
+        string color = UI.Modal.Q<DropdownField>("ColorField").value;
+
+        /**
+            Build a complete instance of your class
+        */
+        ExampleToken t = new()
+        {
+            System = TypeName, // required, do not change
+            Name = name,
+            MaxHP = maxHP,
+            CurrentHP = maxHP,
+            Shape = shape,
+            Color = ColorUtility.GetCommonColor(color),
+            TokenMeta = TokenLibrary.GetSelectedMeta() // required, do not change
+        };
+
+        /**
+            This line is required.
+        */
+        AddToken.FinalizeToken(t.Serialize());
+    }
+    #endregion
+
+    /**
+        Label defines how the system displays an instance of this class. It is usually
+        a name field you define, but could be anything. It does not need to be unique.
+    */
+    public override string Label()
+    {
+        return Name;
+    }
+
+    /**
+        There are several options for overhead assets. These are the mini-displays
+        that float above the token in world-space. You can omit this function if you
+        don't want to show anything (for example, enemies whose HP you don't want
+        to reveal to the player).
+        
+        SingleBar - A simple bar, typically for HP or another value with min/max.
+        Pips - A display that shows pips out of a total. Useful for single-digit values.
+        Icon1x5 - A game specific bar with HP, Vigor, and Wound elements.
+        Icon2 - A game specific bar with HP and Vigor.
+        LancerMech - A game specific bar with Heat, Structure, and Stress.
+    */
+    public override string GetOverheadAsset()
+    {
+        return "UITemplates/GameSystem/Overheads/SingleBar";
+    }
+
+    /**
+        This function defines the right-click menu for a token of this type.
+    */
+    public override MenuItem[] GetTokenMenuItems(bool placed)
+    {
+        /**
+            Always start with the universal options by calling the base version. This
+            is not strictly required but without it you won't be able to delete, clone,
+            rename, etc. unless you reimplement those commands here.
+        */
+        MenuItem[] baseItems = base.GetTokenMenuItems(placed);
+
+        /**
+            Append any items you want to the array. Creating a List make writing the
+            code for adding new items a little easier. Leave this line here if you want
+            to follow the pattern.
+        */
+        List<MenuItem> items = new();
+
+        /**
+            A MenuItem has three parameters:
+            - Name (used internally, must be unique)
+            - Label (what the user sees)
+            - Callback (a ClickEvent that can be either a function name or a lambda)
+        */
+        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.NumberCommand("ModHP"); }));
+
+        /**
+            Again this is for ease of use. Leave it alone unless you know what you're
+            doing.
+        */
+        return baseItems.Concat(items.ToArray()).ToArray();
+    }
+
+    /**
+        Token values are modified during play by network commands. Any changes you want
+        to make to values MUST be handled here. If you change a token's values elsewhere
+        the changes won't be made for other connected users. This is where the bulk of
+        your game logic will start.
+    */
+    public override void HandleCommand(string command, TokenData tokenData)
+    {
+        /**
+            Always call the base function first. This is used for universal commands
+            like handling tags, stats, and bars.
+        */
+        base.HandleCommand(command, tokenData);
+
+        /**
+            The logic here is entirely up to you. Core token types will often use pipes
+            to separate command values, such as ModHP|-3, which allows them to be
+            parsed more easily.
+        */
+        if (command.StartsWith("ModHP|"))
+        {
+            ModHP(command, tokenData);
+        }
+        if (command.StartsWith("Rename|"))
+        {
+            Name = command.Split("|")[1];
+        }
+    }
+
+    /**
+        This function updates every frame for all tokens. Use it to keep an overhead
+        element updated.
+    */
+    public override void UpdateOverhead(TokenData tokenData)
+    {
+        tokenData.OverheadElement.Q<ProgressBar>("HpBar").value = CurrentHP;
+        tokenData.OverheadElement.Q<ProgressBar>("HpBar").highValue = MaxHP;
+    }
+
+    /**
+        This function updates every frame for a user's currently selected and/or focused
+        token(s). Use it to keep the panel updated. If not implemented, values will
+        only be updated when a token is focused or selected.
+    */
+    public override void UpdateTokenPanel(TokenData tokenData, string elementName)
+    {
+        base.UpdateTokenPanel(tokenData, elementName);
+        VisualElement panel = UI.System.Q(elementName);
+        VisualElement bar = panel.Q("Bars").Q("MainHPBar");
+        bar.Q<ProgressBar>("HpBar").style.minWidth = 150;
+        bar.Q<Label>("CHP").text = $"{CurrentHP}";
+        bar.Q<Label>("MHP").text = $"/{MaxHP}";
+        bar.Q<ProgressBar>("HpBar").value = CurrentHP;
+        bar.Q<ProgressBar>("HpBar").highValue = MaxHP;
+    }
+
+    /**
+        This function is used to draw the token panel when it is selected or focused.
+        A panel can only be intereacted with when a token is selected, so interactive
+        elements can be omitted otherwise.
+        
+        Every token can have elements added to Stats, Bars, and Pills.
+    */
+    public override void InitTokenPanel(string elementName, bool selected)
+    {
+        /**
+            This provides the base framework for tokens, but experts can opt to build
+            an entirely custom panel if desired.
+        */
+        base.InitTokenPanel(elementName, selected);
+
+        /**
+            An example of how to add a type-specific bar.
+        */
+        VisualElement hpBarTemplate = UI.CreateFromTemplate("UITemplates/GameSystem/SimpleHPBar");
+        hpBarTemplate.name = "MainHPBar";
+        UI.System.Q(elementName).Q("Bars").Add(hpBarTemplate);
+
+        /**
+            An example of how to add a type-specific stat.
+        */
+        VisualElement statTemplate = UI.CreateFromTemplate("UITemplates/GameSystem/StatTemplate");
+        statTemplate.Q<Label>("Label").text = "AC";
+        statTemplate.Q<Label>("Value").text = $"{Defense}";
+        UI.System.Q(elementName).Q("Stats").Add(s3);
+
+        /**
+            An example of how to add a non-interactive type-specific pill. For a more
+            detailed example of interactive pills, see the base SystemToken class.
+        */
+        if (CurrentHP < (MaxHP * .5f))
+        {
+            VisualElement pill = UI.CreateFromTemplate("UITemplates/GameSystem/Pill");
+            pill.Q("Pill").style.backgroundColor = Color.Red;
+            pill.Q<Label>("Name").text = "Bloodied";
+            panel.Q("Pills").Add(pill);
+        }
+    }
+
+    /**
+        Everything below this point is private helper methods, typically for executing
+        custom menu item callbacks or commands.
+    */
+    private void ModHP(string command, TokenData token)
+    {
+        int value = int.Parse(command.Split("|")[1]);
+        if (value <= 0)
+        {
+            LoseHP(value, token);
+        }
+        else
+        {
+            GainHP(value, token);
+        }
+    }
+
+    private void GainHP(int value, TokenData tokenData)
+    {
+        Token token = tokenData.GetToken();
+        int diff = Math.Abs(value);
+        if (CurrentHP + diff > MaxHP)
+        {
+            diff = MaxHP - CurrentHP;
+        }
+        if (diff > 0)
+        {
+            CurrentHP += diff;
+            if (tokenData.Placed)
+            {
+                PopoverText.Create(token, $"/+{diff}|_HP", Color.white);
+            }
+        }
+        UpdateGraphic(tokenData);
+    }
+
+    private void LoseHP(int value, TokenData tokenData)
+    {
+        Token token = tokenData.GetToken();
+        int diff = Math.Abs(value);
+        if (CurrentHP - diff < 0)
+        {
+            diff = CurrentHP;
+        }
+        if (diff > 0)
+        {
+            CurrentHP -= diff;
+            if (tokenData.Placed)
+            {
+                PopoverText.Create(token, $"/-{diff}|_HP", Color.white);
+            }
+        }
+        UpdateGraphic(tokenData);
+    }
+
+    private void UpdateGraphic(TokenData tokenData)
+    {
+        Token token = tokenData.GetToken();
+        token.SetDefeated(CurrentHP <= 0);
+    }
+
+}
