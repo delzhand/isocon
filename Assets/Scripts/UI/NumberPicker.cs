@@ -53,7 +53,6 @@ public class NumberPicker
 
         UI.NumberPicker.Q("DigitAdd").RegisterCallback<ClickEvent>(SetPositive);
         UI.NumberPicker.Q("DigitSub").RegisterCallback<ClickEvent>(SetNegative);
-        Debug.Log("bind neg");
 
         UI.NumberPicker.Q<Button>("DigitBack").RegisterCallback<ClickEvent>(RemoveDigit);
         UI.NumberPicker.Q<Button>("Exit").RegisterCallback<ClickEvent>((evt) =>
@@ -93,7 +92,6 @@ public class NumberPicker
 
     private static void SetNegative(ClickEvent evt)
     {
-        Debug.Log("do neg");
         negative = true;
     }
 
@@ -111,7 +109,6 @@ public class NumberPicker
     private static void NumberCommandCallback(ClickEvent evt, string command)
     {
         int v = NumberPicker.GetNumber();
-        Debug.Log(v);
         NumberPicker.Close();
         Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"{command}|{v}");
     }
