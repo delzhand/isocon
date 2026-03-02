@@ -144,30 +144,30 @@ public class LauncherState : BaseState
         {
             string system = Preferences.Current.System;
 
-            string[] systemOptions = GameSystem.SystemOptions();
-            Modal.AddDropdownField("GameSystem", "Game System", system, systemOptions, (evt) =>
-            {
-                Preferences.SetSystem(evt.newValue);
-                ConfigModalEvaluateConditions();
-            });
+            // string[] systemOptions = GameSystem.SystemOptions();
+            // Modal.AddDropdownField("GameSystem", "Game System", system, systemOptions, (evt) =>
+            // {
+            //     Preferences.SetSystem(evt.newValue);
+            //     ConfigModalEvaluateConditions();
+            // });
 
             string gridType = Preferences.Current.Grid;
             Modal.AddDropdownField("GridType", "Grid Type", gridType, new string[] { "Square", "Hex" }, (evt) =>
             {
                 Preferences.SetGrid(evt.newValue);
-                ConfigModalEvaluateConditions();
+                // ConfigModalEvaluateConditions();
             });
-            Modal.AddDescription("HexMessage", "Warning! Hex support is experimental. Some visual effects may not display correctly.");
+            // Modal.AddDescription("HexMessage", "Warning! Hex support is experimental. Some visual effects may not display correctly.");
 
-            bool overrideRules = Preferences.Current.OverrideRules;
-            Modal.AddToggleField("HomebrewToggle", "Use Homebrew Data", overrideRules, (evt) =>
-            {
-                Preferences.SetOverrideRules(evt.newValue);
-                ConfigModalEvaluateConditions();
-            });
+            // bool overrideRules = Preferences.Current.OverrideRules;
+            // Modal.AddToggleField("HomebrewToggle", "Use Homebrew Data", overrideRules, (evt) =>
+            // {
+            //     Preferences.SetOverrideRules(evt.newValue);
+            //     ConfigModalEvaluateConditions();
+            // });
 
-            string rulesFile = Preferences.Current.RulesFile;
-            Modal.AddFileField("RulesFile", "Homebrew File", rulesFile, "rules");
+            // string rulesFile = Preferences.Current.RulesFile;
+            // Modal.AddFileField("RulesFile", "Homebrew File", rulesFile, "rules");
         }
 
         if (_mode == ConnectMode.Host)
@@ -191,30 +191,30 @@ public class LauncherState : BaseState
         Modal.AddPreferredButton("Confirm", ConfirmConfig);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
-        ConfigModalEvaluateConditions();
+        // ConfigModalEvaluateConditions();
 
     }
 
-    private void ConfigModalEvaluateConditions()
-    {
-        if (UI.Modal.Q("GameSystem") != null)
-        {
-            /**
-             * Game System Grid Type
-             */
-            string[] hexSystems = GameSystem.HexOptionalSystems();
-            bool grid = StringUtility.CheckInList(UI.Modal.Q<DropdownField>("GameSystem").value, hexSystems);
-            bool hex = Preferences.Current.Grid == "Hex";
-            UI.ToggleDisplay(UI.Modal.Q("GridType"), grid);
-            UI.ToggleDisplay("HexMessage", grid && hex);
-        }
-        if (UI.Modal.Q("RulesFile") != null)
-        {
-            UI.ToggleDisplay(UI.Modal.Q("RulesFile"), UI.Modal.Q<Toggle>("HomebrewToggle").value);
-        }
-        UI.Redraw();
+    // private void ConfigModalEvaluateConditions()
+    // {
+    //     if (UI.Modal.Q("GameSystem") != null)
+    //     {
+    //         /**
+    //          * Game System Grid Type
+    //          */
+    //         string[] hexSystems = GameSystem.HexOptionalSystems();
+    //         bool grid = StringUtility.CheckInList(UI.Modal.Q<DropdownField>("GameSystem").value, hexSystems);
+    //         bool hex = Preferences.Current.Grid == "Hex";
+    //         UI.ToggleDisplay(UI.Modal.Q("GridType"), grid);
+    //         UI.ToggleDisplay("HexMessage", grid && hex);
+    //     }
+    //     if (UI.Modal.Q("RulesFile") != null)
+    //     {
+    //         UI.ToggleDisplay(UI.Modal.Q("RulesFile"), UI.Modal.Q<Toggle>("HomebrewToggle").value);
+    //     }
+    //     UI.Redraw();
 
-    }
+    // }
 
     private void ConfirmConfig(ClickEvent evt)
     {
