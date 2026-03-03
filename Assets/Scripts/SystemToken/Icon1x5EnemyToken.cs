@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using IsoconUILibrary;
-using SimpleJSON;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class Icon1x5EnemyToken : SystemToken
+public class Icon1x5EnemyToken : UnitToken
 {
     private readonly static string TypeName = "Icon 1.5 Enemy";
 
     public string Name;
     public int CurrentHP;
     public int MaxHP;
+    public int Vigor;
     public string FoeClass;
     public int Fray;
     public int Speed;
@@ -25,9 +25,9 @@ public class Icon1x5EnemyToken : SystemToken
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        SystemTokenRegistry.RegisterSystem($"{TypeName}");
-        SystemTokenRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
-        SystemTokenRegistry.RegisterSimpleCallback($"{TypeName}|AddTokenModal", AddTokenModal);
+        UnitTokenRegistry.RegisterSystem($"{TypeName}");
+        UnitTokenRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
+        UnitTokenRegistry.RegisterSimpleCallback($"{TypeName}|AddTokenModal", AddTokenModal);
     }
 
     public override string Serialize()
@@ -35,7 +35,7 @@ public class Icon1x5EnemyToken : SystemToken
         return JsonUtility.ToJson(this);
     }
 
-    public static ISystemToken DeserializeAsInterface(string json)
+    public static IUnitToken DeserializeAsInterface(string json)
     {
         return JsonUtility.FromJson<Icon1x5EnemyToken>(json);
     }
@@ -166,7 +166,7 @@ public class Icon1x5EnemyToken : SystemToken
 
     public override string GetOverheadAsset()
     {
-        return "UITemplates/GameSystem/Overheads/SingleBar";
+        return "UITemplates/GameSystem/Overheads/Icon1x5";
     }
 
     public override void UpdateTokenPanel(TokenData tokenData, string elementName)
@@ -179,6 +179,14 @@ public class Icon1x5EnemyToken : SystemToken
         mainHPBar.Q<Label>("MHP").text = $"/{MaxHP}";
         mainHPBar.Q<ProgressBar>("HpBar").value = CurrentHP;
         mainHPBar.Q<ProgressBar>("HpBar").highValue = MaxHP;
+        mainHPBar.Q<Label>("VIG").text = $"+{Vigor}";
+        mainHPBar.Q<ProgressBar>("VigorBar").value = Vigor;
+        mainHPBar.Q<ProgressBar>("VigorBar").highValue = MaxHP;
+        UI.ToggleDisplay(mainHPBar.Q("VigorBar"), Vigor > 0);
+        UI.ToggleDisplay(mainHPBar.Q("VIG"), Vigor > 0);
+        UI.ToggleDisplay(mainHPBar.Q("Wound1"), false);
+        UI.ToggleDisplay(mainHPBar.Q("Wound2"), false);
+        UI.ToggleDisplay(mainHPBar.Q("Wound3"), false);
 
         UI.ToggleDisplay(panel.Q("ElitePill"), Elite);
     }
@@ -186,9 +194,19 @@ public class Icon1x5EnemyToken : SystemToken
     public override void UpdateOverhead(TokenData tokenData)
     {
         VisualElement o = tokenData.OverheadElement;
+
+        o.Q<ProgressBar>("VigorBar").value = Vigor;
+        o.Q<ProgressBar>("VigorBar").highValue = MaxHP;
+        UI.ToggleDisplay(o.Q("VigorBar"), Vigor > 0);
+
         o.Q<ProgressBar>("HpBar").value = CurrentHP;
         o.Q<ProgressBar>("HpBar").highValue = MaxHP;
-        UI.ToggleDisplay(o, CurrentHP > 0);
+
+        UI.ToggleDisplay(o.Q("Wound1"), false);
+        UI.ToggleDisplay(o.Q("Wound2"), false);
+        UI.ToggleDisplay(o.Q("Wound3"), false);
+
+        UI.ToggleDisplay(o, CurrentHP > 0 && tokenData.Placed);
     }
 
     public override void InitTokenPanel(string elementName, bool selected)
@@ -196,7 +214,7 @@ public class Icon1x5EnemyToken : SystemToken
         base.InitTokenPanel(elementName, selected);
         VisualElement panel = UI.System.Q(elementName);
 
-        VisualElement hpBar = UI.CreateFromTemplate("UITemplates/GameSystem/SimpleHPBar");
+        VisualElement hpBar = UI.CreateFromTemplate("UITemplates/GameSystem/IconHPBar");
         hpBar.name = "MainHPBar";
         hpBar.Q<ProgressBar>("HpBar").value = CurrentHP;
         panel.Q("Bars").Add(hpBar);
@@ -243,6 +261,7 @@ public class Icon1x5EnemyToken : SystemToken
 
         List<MenuItem> items = new();
         items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.NumberCommand("ModHP"); }));
+        items.Add(new MenuItem("ModVIG", "Modify VIG", (evt) => { NumberPicker.NumberCommand("ModVIG"); }));
         items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRollClicked));
         items.Add(new MenuItem("SaveRoll", "Save Roll", SaveRollClicked));
         return baseItems.Concat(items.ToArray()).ToArray();
@@ -263,6 +282,18 @@ public class Icon1x5EnemyToken : SystemToken
                 string plus = diff > 0 ? "+" : "";
                 PopoverText.Create(token, $"/{plus}{diff}|_HP", Color.white);
                 UpdateGraphic(tokenData);
+            }
+        }
+        if (command.StartsWith("ModVIG"))
+        {
+            int original = Vigor;
+            int changeValue = int.Parse(command.Split("|")[1]);
+            Vigor = Clamped(0, Vigor + changeValue, MaxHP / 4);
+            int diff = Vigor - original;
+            if (diff != 0 && tokenData.Placed)
+            {
+                string plus = diff > 0 ? "+" : "";
+                PopoverText.Create(token, $"/{plus}{diff}|_VIG", Color.white);
             }
         }
     }

@@ -13,11 +13,11 @@ public class TileMenu
         {
             SelectionMenu.AddItem(m.Name, m.Label, m.OnClick);
         }
-        MenuItem[] systemItems = GameSystem.Current().GetTileMenuItems();
-        foreach (MenuItem m in systemItems)
-        {
-            SelectionMenu.AddItem(m.Name, m.Label, m.OnClick);
-        }
+        // MenuItem[] systemItems = GameSystem.Current().GetTileMenuItems();
+        // foreach (MenuItem m in systemItems)
+        // {
+        //     SelectionMenu.AddItem(m.Name, m.Label, m.OnClick);
+        // }
 
     }
 

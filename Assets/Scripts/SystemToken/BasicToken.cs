@@ -5,21 +5,21 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class BasicToken : SystemToken
+public class BasicToken : UnitToken
 {
     #region Registration
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        SystemTokenRegistry.RegisterSystem("Basic");
-        SystemTokenRegistry.RegisterInterfaceCallback("Basic", DeserializeAsInterface);
-        SystemTokenRegistry.RegisterSimpleCallback("Basic|AddTokenModal", AddTokenModal);
+        UnitTokenRegistry.RegisterSystem("Basic");
+        UnitTokenRegistry.RegisterInterfaceCallback("Basic", DeserializeAsInterface);
+        UnitTokenRegistry.RegisterSimpleCallback("Basic|AddTokenModal", AddTokenModal);
     }
     public override string Serialize()
     {
         return JsonUtility.ToJson(this);
     }
-    public static ISystemToken DeserializeAsInterface(string json)
+    public static IUnitToken DeserializeAsInterface(string json)
     {
         return JsonUtility.FromJson<BasicToken>(json);
     }

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 
 public delegate void SimpleCallback();
-public delegate ISystemToken InterfaceCallback(string input);
+public delegate IUnitToken InterfaceCallback(string input);
 
-public static class SystemTokenRegistry
+public static class UnitTokenRegistry
 {
     private static readonly List<string> _systems = new();
     private static readonly Dictionary<string, SimpleCallback> _simpleCallbacks = new();
@@ -27,7 +27,7 @@ public static class SystemTokenRegistry
         }
     }
 
-    public static ISystemToken DoInterfaceCallback(string system, string json)
+    public static IUnitToken DoInterfaceCallback(string system, string json)
     {
         if (_interfaceCallbacks.TryGetValue(system, out var callback))
         {

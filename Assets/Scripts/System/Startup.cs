@@ -25,7 +25,7 @@ public class Startup
         MapEdit.Setup();
         TokenLibrary.Setup();
 
-        UI.SetBlocking(UI.System, StringUtility.CreateArray(@"SelectionMenu", "TopBar", "BottomBar", "ToolsPanel", "ToolOptions", "LeftTokenPanel", "RightTokenPanel", "Backdrop", "NumberPickerModal"));
+        UI.SetBlocking(UI.System, StringUtility.CreateArray(@"SelectionMenu", "TopBar", "BottomBar", "ToolsPanel", "ToolOptions", "LeftTokenPanel", "RightTokenPanel", "Backdrop", "NumberPickerModal", "TopRight"));
         Application.targetFrameRate = Preferences.Current.TargetFramerate;
 
         // Useful during development when editing UI

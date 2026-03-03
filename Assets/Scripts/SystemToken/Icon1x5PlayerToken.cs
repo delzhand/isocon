@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class Icon1x5PlayerToken : SystemToken
+public class Icon1x5PlayerToken : UnitToken
 {
     private readonly static string TypeName = "Icon 1.5 Player";
 
@@ -32,9 +32,9 @@ public class Icon1x5PlayerToken : SystemToken
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        SystemTokenRegistry.RegisterSystem($"{TypeName}");
-        SystemTokenRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
-        SystemTokenRegistry.RegisterSimpleCallback($"{TypeName}|AddTokenModal", AddTokenModal);
+        UnitTokenRegistry.RegisterSystem($"{TypeName}");
+        UnitTokenRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
+        UnitTokenRegistry.RegisterSimpleCallback($"{TypeName}|AddTokenModal", AddTokenModal);
     }
 
 
@@ -195,7 +195,7 @@ public class Icon1x5PlayerToken : SystemToken
         UI.ToggleDisplay(o.Q("Wound2"), Wounds >= 2);
         UI.ToggleDisplay(o.Q("Wound3"), Wounds >= 3);
 
-        UI.ToggleDisplay(o, CurrentHP > 0);
+        UI.ToggleDisplay(o, CurrentHP > 0 && tokenData.Placed);
     }
 
     public override void UpdateTokenPanel(TokenData tokenData, string elementName)
@@ -266,30 +266,36 @@ public class Icon1x5PlayerToken : SystemToken
         s4.Q<Label>("Value").text = $"{Defense}";
         panel.Q("Stats").Add(s4);
 
-        VisualElement p1 = UI.CreateFromTemplate("UITemplates/GameSystem/Pill");
-        p1.name = "BloodiedPill";
-        p1.Q<Label>("Name").text = "Bloodied";
-        p1.Q("Pill").style.backgroundColor = Color.red;
-        p1.Query(null, "roundbutton").ForEach((v) =>
-        {
-            v.style.display = DisplayStyle.None;
-        });
-        panel.Q("Pills").Add(p1);
+        panel.Q("Pills").Add(Pill.InitStatic("JobPill", Job, Color));
+        panel.Q("Pills").Add(Pill.InitStatic("ClassPill", Class, Color));
+        panel.Q("Pills").Add(Pill.InitStatic("BloodiedPill", "Bloodied", Color.red));
     }
 
     public static void AddTokenModal()
     {
-        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
-        List<string> playerJobs = new();
-        foreach (JSONNode pjob in gamedata["Icon1_5"]["PlayerJobs"].AsArray)
-        {
-            playerJobs.Add(pjob);
-        }
+        string[] playerJobs = StringUtility.CreateArray(
+            "Stalwart/Bastion",
+            "Stalwart/Demon Slayer",
+            "Stalwart/Colossus",
+            "Stalwart/Knave",
+            "Vagabond/Fool",
+            "Vagabond/Freelancer",
+            "Vagabond/Shade",
+            "Vagabond/Warden",
+            "Mendicant/Chanter",
+            "Mendicant/Harvester",
+            "Mendicant/Sealer",
+            "Mendicant/Seer",
+            "Wright/Enochian",
+            "Wright/Geomancer",
+            "Wright/Spellblade",
+            "Wright/Stormbender"
+        );
 
         Modal.AddMarkup("Description", "ICON 1.5 Player tokens derive their stats from Icon1_5 data in the ruleset file.");
         Modal.AddTokenField("TokenSearchField");
         Modal.AddTextField("NameField", "Token Name", "Token");
-        Modal.AddSearchField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs.ToArray());
+        Modal.AddSearchField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs);
 
         Modal.AddPreferredButton("Create Token", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
@@ -310,9 +316,6 @@ public class Icon1x5PlayerToken : SystemToken
         string playerJob = SearchField.GetValue(UI.Modal.Q("PlayerJob"));
         string pclass = playerJob.Split("/")[0];
         string job = playerJob.Split("/")[1];
-        string color = GetStatColor(pclass); // hate this function, ought to be in ruledata
-        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
-        JSONNode stats = gamedata["Icon1_5"]["Stats"][color];
 
         Icon1x5PlayerToken t = new()
         {
@@ -320,24 +323,69 @@ public class Icon1x5PlayerToken : SystemToken
             Name = name,
             Job = job,
             Class = pclass,
-            MaxHP = stats["MaxHP"],
-            CurrentHP = stats["MaxHP"],
+            // MaxHP = stats["MaxHP"],
+            // CurrentHP = stats["MaxHP"],
             Vigor = 0,
             Wounds = 0,
-            Damage = stats["Damage"],
-            Fray = stats["Fray"],
-            Range = stats["Range"],
-            Speed = stats["Speed"],
-            Dash = stats["Dash"],
-            Defense = stats["Defense"],
-            Color = ColorUtility.GetCommonColor(color),
+            // Damage = stats["Damage"],
+            // Fray = stats["Fray"],
+            // Range = stats["Range"],
+            // Speed = stats["Speed"],
+            // Dash = stats["Dash"],
+            // Defense = stats["Defense"],
+            // Color = ColorUtility.GetCommonColor(color),
             TokenMeta = TokenLibrary.GetSelectedMeta()
         };
+
+        switch (pclass)
+        {
+            case "Stalwart":
+                t.MaxHP = 40;
+                t.CurrentHP = 40;
+                t.Speed = 4;
+                t.Dash = 2;
+                t.Defense = 6;
+                t.Fray = 4;
+                t.Damage = 6;
+                t.Color = ColorUtility.GetCommonColor("red");
+                break;
+            case "Vagabond":
+                t.MaxHP = 28;
+                t.CurrentHP = 28;
+                t.Speed = 4;
+                t.Dash = 4;
+                t.Defense = 10;
+                t.Fray = 2;
+                t.Damage = 10;
+                t.Color = ColorUtility.GetCommonColor("yellow");
+                break;
+            case "Mendicant":
+                t.MaxHP = 40;
+                t.CurrentHP = 40;
+                t.Speed = 4;
+                t.Dash = 2;
+                t.Defense = 8;
+                t.Fray = 3;
+                t.Damage = 6;
+                t.Color = ColorUtility.GetCommonColor("green");
+                break;
+            case "Wright":
+                t.MaxHP = 32;
+                t.CurrentHP = 32;
+                t.Speed = 4;
+                t.Dash = 2;
+                t.Defense = 7;
+                t.Fray = 3;
+                t.Damage = 8;
+                t.Color = ColorUtility.GetCommonColor("blue");
+                break;
+        }
+
 
         AddToken.FinalizeToken(t.Serialize());
     }
 
-    public static ISystemToken DeserializeAsInterface(string json)
+    public static IUnitToken DeserializeAsInterface(string json)
     {
         return JsonUtility.FromJson<Icon1x5PlayerToken>(json);
     }

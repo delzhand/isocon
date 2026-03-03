@@ -6,21 +6,21 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class LancerMechToken : SystemToken
+public class LancerMechToken : UnitToken
 {
     #region Registration
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        SystemTokenRegistry.RegisterSystem("Lancer Mech");
-        SystemTokenRegistry.RegisterInterfaceCallback("Lancer Mech", DeserializeAsInterface);
-        SystemTokenRegistry.RegisterSimpleCallback("Lancer Mech|AddTokenModal", AddTokenModal);
+        UnitTokenRegistry.RegisterSystem("Lancer Mech");
+        UnitTokenRegistry.RegisterInterfaceCallback("Lancer Mech", DeserializeAsInterface);
+        UnitTokenRegistry.RegisterSimpleCallback("Lancer Mech|AddTokenModal", AddTokenModal);
     }
     public override string Serialize()
     {
         return JsonUtility.ToJson(this);
     }
-    public static ISystemToken DeserializeAsInterface(string json)
+    public static IUnitToken DeserializeAsInterface(string json)
     {
         return JsonUtility.FromJson<LancerMechToken>(json);
     }

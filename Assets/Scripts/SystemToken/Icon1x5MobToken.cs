@@ -7,29 +7,32 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class IconMobToken : SystemToken
+public class Icon1x5MobToken : UnitToken
 {
+    private readonly static string TypeName = "Icon 1.5 Mob";
+
     #region Registration
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        SystemTokenRegistry.RegisterSystem("Icon Mob");
-        SystemTokenRegistry.RegisterInterfaceCallback("Icon Mob", DeserializeAsInterface);
-        SystemTokenRegistry.RegisterSimpleCallback("Icon Mob|AddTokenModal", AddTokenModal);
+        UnitTokenRegistry.RegisterSystem($"{TypeName}");
+        UnitTokenRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
+        UnitTokenRegistry.RegisterSimpleCallback($"{TypeName}|AddTokenModal", AddTokenModal);
     }
     public override string Serialize()
     {
         return JsonUtility.ToJson(this);
     }
-    public static ISystemToken DeserializeAsInterface(string json)
+    public static IUnitToken DeserializeAsInterface(string json)
     {
-        return JsonUtility.FromJson<IconMobToken>(json);
+        return JsonUtility.FromJson<Icon1x5MobToken>(json);
     }
     #endregion
 
     #region Stats
     public string Name;
     public int Hits;
+    public int Vigor;
     public int Damage;
     public int Fray;
     public int Range;
@@ -41,7 +44,7 @@ public class IconMobToken : SystemToken
     #region Creation
     public static void AddTokenModal()
     {
-        Modal.AddMarkup("Description", "ICON Mob tokens have two hit counters instead of an HP bar.");
+        Modal.AddMarkup("Description", "ICON 1.5 Mob tokens have two hit counters instead of an HP bar.");
         Modal.AddTokenField("TokenSearchField");
         Modal.AddTextField("NameField", "Token Name", "Token");
 
@@ -61,20 +64,18 @@ public class IconMobToken : SystemToken
         }
 
         string name = UI.Modal.Q<TextField>("NameField").value;
-        JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
-        JSONNode stats = gamedata["Icon1_5"]["Stats"]["Gray"];
 
-        IconMobToken t = new()
+        Icon1x5MobToken t = new()
         {
-            System = "Icon Mob",
+            System = TypeName,
             Name = name,
             Hits = 2,
-            Damage = stats["Damage"],
-            Fray = stats["Fray"],
-            Range = stats["Range"],
-            Speed = stats["Speed"],
-            Dash = stats["Dash"],
-            Defense = stats["Defense"],
+            Damage = 6,
+            Fray = 3,
+            Speed = 4,
+            Dash = 2,
+            Defense = 8,
+            Vigor = 0,
             Color = ColorUtility.GetCommonColor("Gray"),
             TokenMeta = TokenLibrary.GetSelectedMeta()
         };
@@ -98,14 +99,9 @@ public class IconMobToken : SystemToken
         MenuItem[] baseItems = base.GetTokenMenuItems(placed);
 
         List<MenuItem> items = new();
-        if (Hits > 0)
-        {
-            items.Add(new MenuItem("TakeHit", "Take Hit", (evt) =>
-            {
-                Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, "TakeHit");
-                SelectionMenu.Hide();
-            }));
-        }
+        items.Add(new MenuItem("Damage", "Damage HP/VIG", (evt) => { NumberPicker.NumberCommand("Damage"); }));
+
+        items.Add(new MenuItem("ModVig", "Modify VIG", (evt) => { NumberPicker.NumberCommand("ModVIG"); }));
         if (Hits < 2)
         {
             items.Add(new MenuItem("RestoreHit", "Restore Hit", (evt) =>
@@ -122,12 +118,19 @@ public class IconMobToken : SystemToken
     {
         Token token = tokenData.GetToken();
         base.HandleCommand(command, tokenData);
-        if (command == "TakeHit")
+        if (command.StartsWith("Damage"))
         {
-            if (Hits > 0)
+            int diff = Math.Abs(int.Parse(command.Split("|")[1]));
+            if (diff < Vigor)
             {
-                Hits -= 1;
-                PopoverText.Create(token, $"-/1|_HIT", Color.white);
+                Vigor -= diff;
+                PopoverText.Create(token, $"/-{diff}|_VIG", Color.white);
+            }
+            else if (diff > 0)
+            {
+                Vigor = 0;
+                Hits--;
+                PopoverText.Create(token, $"/-1|_HIT", Color.white);
             }
             UpdateGraphic(tokenData);
         }
@@ -136,9 +139,21 @@ public class IconMobToken : SystemToken
             if (Hits < 2)
             {
                 Hits += 1;
-                PopoverText.Create(token, $"+/1|_HIT", Color.white);
+                PopoverText.Create(token, $"/+1|_HIT", Color.white);
             }
             UpdateGraphic(tokenData);
+        }
+        if (command.StartsWith("ModVIG"))
+        {
+            int original = Vigor;
+            int changeValue = int.Parse(command.Split("|")[1]);
+            Vigor = Clamped(0, Vigor + changeValue, 6);
+            int diff = Vigor - original;
+            if (diff != 0 && tokenData.Placed)
+            {
+                string plus = diff > 0 ? "+" : "";
+                PopoverText.Create(token, $"/{plus}{diff}|_VIG", Color.white);
+            }
         }
         if (command.StartsWith("Rename|"))
         {
@@ -150,10 +165,37 @@ public class IconMobToken : SystemToken
     public override void UpdateOverhead(TokenData tokenData)
     {
         VisualElement o = tokenData.OverheadElement;
-        o.Q<Label>("Pips").text = SymbolString("▰", Hits, 2);
+        if (Vigor > 0)
+        {
+            o.Q<Label>("Pips").text = MobHPString();
+        }
+        else
+        {
+            o.Q<Label>("Pips").text = SymbolString("■", Hits, 2);
+        }
 
-        UI.ToggleDisplay(o, Hits > 0);
+        UI.ToggleDisplay(o, Hits > 0 && tokenData.Placed);
+    }
 
+    private string MobHPString()
+    {
+        string x = "■";
+        StringBuilder sb = new();
+        for (int i = 0; i < Hits; i++)
+        {
+            // if (i == value)
+            // {
+            //     sb.Append("<color=white>");
+            // }
+            sb.Append(x);
+        }
+        sb.Append("<color=#25E1F2>");
+        for (int i = 0; i < Vigor; i++)
+        {
+            sb.Append(x);
+        }
+        sb.Append("</color>");
+        return sb.ToString();
     }
 
     // private static string GetStatColor(string job)

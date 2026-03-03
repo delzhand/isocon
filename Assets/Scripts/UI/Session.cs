@@ -17,16 +17,16 @@ public class Session
 
     private static void LoadSession(ClickEvent evt)
     {
-        string filename = UI.Modal.Q("SessionFile").Q<TextField>("File").value;
-        GameSystem.Current().DeserializeSession(filename);
-        Modal.Close();
+        // string filename = UI.Modal.Q("SessionFile").Q<TextField>("File").value;
+        // GameSystem.Current().DeserializeSession(filename);
+        // Modal.Close();
     }
 
     private static void SaveSession(ClickEvent evt)
     {
-        string filename = UI.Modal.Q("SessionFile").Q<TextField>("File").value;
-        GameSystem.Current().SerializeSession(filename);
-        Modal.Close();
+        // string filename = UI.Modal.Q("SessionFile").Q<TextField>("File").value;
+        // GameSystem.Current().SerializeSession(filename);
+        // Modal.Close();
     }
 
     private static void CloseModal(ClickEvent evt)

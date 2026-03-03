@@ -92,7 +92,7 @@ public class TokenData : NetworkBehaviour
             {
                 UI.FollowTransform(WorldObject.GetComponent<Token>().transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").transform, OverheadElement, UI.World, Camera.main, Vector2.zero);
             }
-            ISystemToken st = SystemTokenRegistry.DoInterfaceCallback(System, SystemData);
+            IUnitToken st = UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
             st.UpdateOverhead(this);
         }
 
@@ -138,7 +138,7 @@ public class TokenData : NetworkBehaviour
 
     public void CreateOverheadElement()
     {
-        ISystemToken st = SystemTokenRegistry.DoInterfaceCallback(System, SystemData);
+        IUnitToken st = UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
         string asset = st.GetOverheadAsset();
         if (asset != null)
         {
@@ -290,7 +290,7 @@ public class TokenData : NetworkBehaviour
             Name = command.Split("|")[1];
         }
 
-        ISystemToken st = SystemTokenRegistry.DoInterfaceCallback(System, SystemData);
+        IUnitToken st = UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
         st.HandleCommand(command, this);
         SystemData = st.Serialize();
         // NeedsRedraw = true;
@@ -326,7 +326,7 @@ public class TokenData : NetworkBehaviour
         {
             panel.Q("Portrait").style.backgroundImage = GraphicSingle;
         }
-        ISystemToken st = SystemTokenRegistry.DoInterfaceCallback(System, SystemData);
+        IUnitToken st = UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
         st.UpdateTokenPanel(this, elementName);
         Name = st.Label();
         panel.Q<Label>("Name").text = Name;
@@ -364,9 +364,9 @@ public class TokenData : NetworkBehaviour
     //     }
     // }
 
-    public ISystemToken GetSystemToken()
+    public IUnitToken GetSystemToken()
     {
-        return SystemTokenRegistry.DoInterfaceCallback(System, SystemData);
+        return UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
     }
 
     public void Delete()

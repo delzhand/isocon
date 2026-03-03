@@ -9,7 +9,7 @@ public class AddToken
         Player.Self().SetOp("Adding a Token");
         Token.Deselect();
         Modal.Reset("Add Token");
-        Modal.AddDropdownField("TokenType", "Token Type", "Basic", SystemTokenRegistry.GetAllSystems().ToArray(), (evt) =>
+        Modal.AddDropdownField("TokenType", "Token Type", "Basic", UnitTokenRegistry.GetAllSystems().ToArray(), (evt) =>
         {
             VisualElement v = UI.Modal.Q("Contents").Q("TypeData_0");
             if (v != null)
@@ -19,10 +19,10 @@ public class AddToken
             }
 
             string type = UI.Modal.Q<DropdownField>("TokenType").value;
-            SystemTokenRegistry.DoCallback($"{type}|AddTokenModal");
+            UnitTokenRegistry.DoCallback($"{type}|AddTokenModal");
         });
         Modal.AddColumns("TypeData", 1);
-        SystemTokenRegistry.DoCallback($"Basic|AddTokenModal");
+        UnitTokenRegistry.DoCallback($"Basic|AddTokenModal");
         Modal.AddCloseCallback(CancelAddToken);
     }
 

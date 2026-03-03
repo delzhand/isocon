@@ -9,7 +9,7 @@ public class AddTerrainEffect
     public static void OpenModal(ClickEvent evt)
     {
         Modal.Reset("Add Terrain Effect");
-        Modal.AddSearchField("SearchField", "Effect Name", "", GameSystem.Current().GetEffectList());
+        // Modal.AddSearchField("SearchField", "Effect Name", "", GameSystem.Current().GetEffectList());
         Modal.AddDropdownField("VisualMarker", "Visual Marker", "None", StringUtility.CreateArray("None", "Spiky", "Wavy", "Hole", "Hand", "Skull", "Blocked", "Corners", "Border"));
         Modal.AddDropdownField("Color", "Color", "None", StringUtility.CreateArray("Black", "White", "Yellow", "Red", "Blue", "Green"));
 

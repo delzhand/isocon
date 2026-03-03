@@ -5,7 +5,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public interface ISystemToken
+public interface IUnitToken
 {
     string Serialize();
     string Label();
@@ -19,15 +19,15 @@ public interface ISystemToken
 }
 
 [Serializable]
-public abstract class SystemToken : ISystemToken
+public abstract class UnitToken : IUnitToken
 {
     public string System;
     public TokenMeta TokenMeta;
     public string Shape;
     public Color Color;
-    public List<SystemTokenTag> Tags;
-    public List<SystemTokenBar> Bars;
-    public List<SystemTokenStat> Stats;
+    public List<UnitTag> Tags;
+    public List<UnitBar> Bars;
+    public List<UnitStat> Stats;
 
     public virtual string Label()
     {
@@ -61,7 +61,7 @@ public abstract class SystemToken : ISystemToken
         items.Add(new MenuItem("AddStat", "Add Stat", AddStatModal));
         items.Add(new MenuItem("EditStats", "Edit Stats/Bars", EditStatBarModal));
         // items.Add(new MenuItem("Debug", "Debug", DebugToken));
-        foreach (SystemTokenBar bar in Bars)
+        foreach (UnitBar bar in Bars)
         {
             items.Add(new MenuItem($"Modify{bar.Name}", $"Modify {bar.Name}", (evt) =>
             {
@@ -126,7 +126,7 @@ public abstract class SystemToken : ISystemToken
         int tagValue = UI.Modal.Q<IntegerField>("TagValue").value;
         string colorValue = UI.Modal.Q<DropdownField>("ColorField").value;
         bool hasNumber = UI.Modal.Q<Toggle>("HasNumberField").value;
-        SystemTokenTag tag = new();
+        UnitTag tag = new();
         tag.Name = tagName;
         tag.Value = tagValue;
         tag.HasNumber = hasNumber;
@@ -152,7 +152,7 @@ public abstract class SystemToken : ISystemToken
         string barName = UI.Modal.Q<TextField>("BarName").value;
         int barValue = UI.Modal.Q<IntegerField>("BarValue").value;
         string colorValue = UI.Modal.Q<DropdownField>("ColorField").value;
-        SystemTokenBar bar = new();
+        UnitBar bar = new();
         bar.Name = barName;
         bar.Value = barValue;
         bar.MaxValue = barValue;
@@ -164,11 +164,11 @@ public abstract class SystemToken : ISystemToken
     private void EditStatBarModal(ClickEvent evt)
     {
         Modal.Reset("Edit Stats/Bars");
-        foreach (SystemTokenBar bar in Bars)
+        foreach (UnitBar bar in Bars)
         {
             Modal.AddToggleField(bar.Name, $"Bar: {bar.Name}", true);
         }
-        foreach (SystemTokenStat stat in Stats)
+        foreach (UnitStat stat in Stats)
         {
             Modal.AddToggleField(stat.Name, $"Stat: {stat.Name}", true);
         }
@@ -178,7 +178,7 @@ public abstract class SystemToken : ISystemToken
 
     private void EditStatBarSubmit(ClickEvent evt)
     {
-        foreach (SystemTokenBar bar in Bars)
+        foreach (UnitBar bar in Bars)
         {
             bool keep = UI.Modal.Q<Toggle>(bar.Name).value;
             if (!keep)
@@ -186,7 +186,7 @@ public abstract class SystemToken : ISystemToken
                 Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"RemoveBar|{bar.Name}");
             }
         }
-        foreach (SystemTokenStat stat in Stats)
+        foreach (UnitStat stat in Stats)
         {
             bool keep = UI.Modal.Q<Toggle>(stat.Name).value;
             if (!keep)
@@ -212,7 +212,7 @@ public abstract class SystemToken : ISystemToken
     {
         string statName = UI.Modal.Q<TextField>("StatName").value;
         int statValue = UI.Modal.Q<IntegerField>("StatValue").value;
-        SystemTokenStat stat = new();
+        UnitStat stat = new();
         stat.Name = statName;
         stat.Value = statValue;
         Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"AddStat|{JsonUtility.ToJson(stat)}");
@@ -251,7 +251,7 @@ public abstract class SystemToken : ISystemToken
         if (value.StartsWith("AddTag"))
         {
             string[] parts = value.Split("|");
-            SystemTokenTag tag = JsonUtility.FromJson<SystemTokenTag>(parts[1]);
+            UnitTag tag = JsonUtility.FromJson<UnitTag>(parts[1]);
             Tags.Add(tag);
             PopoverText.Create(token, $"/+|_{tag.Name.ToUpper()}", Color.white);
             Token.RebuildPanels = true;
@@ -303,14 +303,14 @@ public abstract class SystemToken : ISystemToken
         if (value.StartsWith("AddBar"))
         {
             string[] parts = value.Split("|");
-            SystemTokenBar bar = JsonUtility.FromJson<SystemTokenBar>(parts[1]);
+            UnitBar bar = JsonUtility.FromJson<UnitBar>(parts[1]);
             Bars.Add(bar);
             Token.RebuildPanels = true;
         }
         if (value.StartsWith("AddStat"))
         {
             string[] parts = value.Split("|");
-            SystemTokenStat stat = JsonUtility.FromJson<SystemTokenStat>(parts[1]);
+            UnitStat stat = JsonUtility.FromJson<UnitStat>(parts[1]);
             Stats.Add(stat);
             Token.RebuildPanels = true;
         }
@@ -335,7 +335,7 @@ public abstract class SystemToken : ISystemToken
         panel.Q("Pills").Clear();
         panel.Q("Stats").Clear();
         panel.Q("Bars").Clear();
-        foreach (SystemTokenBar bar in Bars)
+        foreach (UnitBar bar in Bars)
         {
             VisualElement bart = UI.CreateFromTemplate("UITemplates/GameSystem/SimpleHPBar");
             bart.Q<Label>("StatLabel").text = bar.Name;
@@ -347,14 +347,14 @@ public abstract class SystemToken : ISystemToken
             bart.Query(null, "unity-progress-bar__background").First().style.backgroundColor = ColorUtility.DarkenColor(bar.Color, .5f);
             panel.Q("Bars").Add(bart);
         }
-        foreach (SystemTokenStat stat in Stats)
+        foreach (UnitStat stat in Stats)
         {
             VisualElement statt = UI.CreateFromTemplate("UITemplates/GameSystem/StatTemplate");
             statt.Q<Label>("Label").text = stat.Name;
             statt.Q<Label>("Value").text = $"{stat.Value}";
             panel.Q("Stats").Add(statt);
         }
-        foreach (SystemTokenTag tag in Tags)
+        foreach (UnitTag tag in Tags)
         {
             VisualElement pill = UI.CreateFromTemplate("UITemplates/GameSystem/Pill");
             string text = $"{tag.Name}";
@@ -426,7 +426,7 @@ public abstract class SystemToken : ISystemToken
         Token token = tokenData.GetToken();
         string name = command.Split("|")[1];
         int index = Bars.FindIndex(a => a.Name == name);
-        SystemTokenBar bar = Bars[index];
+        UnitBar bar = Bars[index];
         int value = int.Parse(command.Split("|")[2]);
         string popoverText = "";
         int diff = Math.Abs(value);
@@ -468,7 +468,7 @@ public abstract class SystemToken : ISystemToken
 }
 
 [Serializable]
-public class SystemTokenTag
+public class UnitTag
 {
     public string Name;
     public int Value;
@@ -477,7 +477,7 @@ public class SystemTokenTag
 }
 
 [Serializable]
-public class SystemTokenBar
+public class UnitBar
 {
     public string Name;
     public int Value;
@@ -486,7 +486,7 @@ public class SystemTokenBar
 }
 
 [Serializable]
-public class SystemTokenStat
+public class UnitStat
 {
     public string Name;
     public int Value;

@@ -3,21 +3,21 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class EnvironmentalToken : SystemToken
+public class EnvironmentalToken : UnitToken
 {
     #region Registration
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        SystemTokenRegistry.RegisterSystem("Environmental");
-        SystemTokenRegistry.RegisterInterfaceCallback("Environmental", DeserializeAsInterface);
-        SystemTokenRegistry.RegisterSimpleCallback("Environmental|AddTokenModal", AddTokenModal);
+        UnitTokenRegistry.RegisterSystem("Environmental");
+        UnitTokenRegistry.RegisterInterfaceCallback("Environmental", DeserializeAsInterface);
+        UnitTokenRegistry.RegisterSimpleCallback("Environmental|AddTokenModal", AddTokenModal);
     }
     public override string Serialize()
     {
         return JsonUtility.ToJson(this);
     }
-    public static ISystemToken DeserializeAsInterface(string json)
+    public static IUnitToken DeserializeAsInterface(string json)
     {
         return JsonUtility.FromJson<EnvironmentalToken>(json);
     }

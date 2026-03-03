@@ -6,6 +6,12 @@
     background-color: red;
     margin-left: 2px;
     margin-right: 2px;
+    margin-top: 2px;
+    padding: 4px;
+}
+
+#Pill.static {
+    padding: 4px 8px;
 }
 
 #Pill .roundbutton {

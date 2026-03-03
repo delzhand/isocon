@@ -36,7 +36,7 @@ public class Player : NetworkBehaviour
             {
                 Host = true;
                 Toast.AddSimple("Connected as host.");
-                TabletopState.IngestRuleData();
+                // TabletopState.IngestRuleData();
                 MaxConnections = GameObject.Find("NetworkController").GetComponent<NetworkManager>().maxConnections;
             }
             else
@@ -75,31 +75,16 @@ public class Player : NetworkBehaviour
     public void CmdRequestClientInit()
     {
         FileLogger.Write($"Client {connectionToClient.connectionId} requested a system sync");
-        string system = Preferences.Current.System;
-        string systemVars = GameSystem.Current().GetSystemVars();
         string grid = TerrainController.GridType;
         BlockRendering.ToggleHex(grid == "Hex");
-        string data = GameSystem.DataJson;
-        byte[] dataBytes = Compression.CompressString(data);
-
-        TargetClientInit(connectionToClient, system, systemVars, grid, dataBytes);
+        TargetClientInit(connectionToClient, grid);
     }
 
     [TargetRpc]
-    public void TargetClientInit(NetworkConnectionToClient target, string system, string systemVars, string grid, byte[] dataBytes)
+    public void TargetClientInit(NetworkConnectionToClient target, string grid)
     {
-        GameSystem.Set(system);
-        GameSystem.Current().SetSystemVars(systemVars);
-        FileLogger.Write($"Local game system set to {system}");
-
         TerrainController.GridType = grid;
         BlockRendering.ToggleHex(grid == "Hex");
-
-        FileLogger.Write($"Local grid type set to {grid}");
-
-        GameSystem.DataJson = Compression.DecompressString(dataBytes);
-        FileLogger.Write($"Game data received has length of {GameSystem.DataJson.Length}");
-
         CmdRequestMapSync();
     }
     #endregion
@@ -241,14 +226,14 @@ public class Player : NetworkBehaviour
 
     #region Token Status
     [Command]
-    public void CmdRequestGameDataSetValue(string value)
+    public void CmdRequestGameSystemCommand(string value)
     {
-        RpcGameDataSetValue(value);
+        RpcGameSystemCommand(value);
     }
     [ClientRpc]
-    public void RpcGameDataSetValue(string value)
+    public void RpcGameSystemCommand(string value)
     {
-        GameSystem.Current().GameDataSetValue(value);
+        GameSystem.Current().Command(value);
     }
     [Command]
     public void CmdRequestTokenDataCommand(string tokenId, string value)

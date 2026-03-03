@@ -138,7 +138,7 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
         UI.TopBar.Q("AddToken").RegisterCallback<ClickEvent>(ShowAddTokenModal);
         UI.System.Q("DeployToggle").RegisterCallback<ClickEvent>(ToggleBottomBar);
-        UI.System.Q<Button>("TurnAdvance").RegisterCallback<ClickEvent>(AdvanceRound);
+        UI.System.Q("AddSystemTag").RegisterCallback<ClickEvent>(ShowSystemTagModal);
         Dragger.LeftClickRelease += LeftClickRelease;
         Dragger.RightClickRelease += RightClickRelease;
         Dragger.LeftDragStart += LeftDragStart;
@@ -155,7 +155,7 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("Dice").UnregisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
         UI.TopBar.Q("AddToken").UnregisterCallback<ClickEvent>(ShowAddTokenModal);
         UI.System.Q("DeployToggle").UnregisterCallback<ClickEvent>(ToggleBottomBar);
-        UI.System.Q<Button>("TurnAdvance").UnregisterCallback<ClickEvent>(AdvanceRound);
+        UI.System.Q("AddSystemTag").UnregisterCallback<ClickEvent>(ShowSystemTagModal);
         Dragger.LeftClickRelease -= LeftClickRelease;
         Dragger.RightClickRelease -= RightClickRelease;
         Dragger.LeftDragStart -= LeftDragStart;
@@ -204,10 +204,45 @@ public class NeutralState : TabletopSubstate
 
     private void AdvanceRound(ClickEvent evt)
     {
-        Modal.DoubleConfirm("Advance Turn", GameSystem.Current().TurnAdvanceMessage(), () =>
-        {
-            Player.Self().CmdRequestGameDataSetValue("IncrementTurn");
-        });
+        // Modal.DoubleConfirm("Advance Turn", GameSystem.Current().TurnAdvanceMessage(), () =>
+        // {
+        //     Player.Self().CmdRequestGameSystemCommand("IncrementTurn");
+        // });
+    }
+
+    private void ShowSystemTagModal(ClickEvent evt)
+    {
+        Modal.Reset("Add Tag");
+        Modal.AddTextField("TagName", "Tag Name", "");
+        Modal.AddDropdownField("ColorField", "Color", "Gray", ColorUtility.CommonColors());
+        Modal.AddDropdownField("TagType", "Type", "Simple", StringUtility.CreateArray("Simple", "Number", "Clock"), (evt) => AddSystemTagModalConditions());
+        Modal.AddIntField("TagValue", "Tag Initial Value", 0);
+        Modal.AddPreferredButton("Add", AddSystemTagSubmit);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+        AddSystemTagModalConditions();
+
+        SelectionMenu.Hide();
+    }
+
+    private void AddSystemTagSubmit(ClickEvent evt)
+    {
+        string tagName = UI.Modal.Q<TextField>("TagName").value;
+        int tagValue = UI.Modal.Q<IntegerField>("TagValue").value;
+        string colorValue = UI.Modal.Q<DropdownField>("ColorField").value;
+        string tagType = UI.Modal.Q<DropdownField>("TagType").value;
+        GameSystemTag tag = new();
+        tag.Name = tagName;
+        tag.Value = tagValue;
+        tag.Type = tagType;
+        tag.Color = ColorUtility.GetCommonColor(colorValue);
+        Player.Self().CmdRequestGameSystemCommand($"AddTag|{JsonUtility.ToJson(tag)}");
+        Modal.Close();
+    }
+
+    private void AddSystemTagModalConditions()
+    {
+        string tagType = UI.Modal.Q<DropdownField>("TagType").value;
+        UI.ToggleDisplay(UI.Modal.Q("TagValue"), tagType != "Simple");
     }
 
     #endregion

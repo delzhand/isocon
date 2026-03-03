@@ -33,6 +33,7 @@ public abstract class TabletopSubstate : BaseState
         UI.ToggleDisplay("TopBar", true);
         UI.ToggleDisplay(UI.System.Q("TopRight"), true);
 
+        UI.ToggleDisplay(UI.TopBar.Q("AddToken"), true);
         UI.ToggleDisplay(UI.TopBar.Q("EditMap"), true);
         UI.ToggleDisplay(UI.TopBar.Q("MarkerMode"), true);
         UI.ToggleDisplay(UI.TopBar.Q("Dice"), true);
