@@ -61,7 +61,7 @@ public class NeutralState : TabletopSubstate
 
         if (Input.GetKeyUp(KeyCode.A))
         {
-            ShowAddTokenModal(new ClickEvent());
+            GoToAddToken(new ClickEvent());
         }
 
         if (Input.GetKeyUp(KeyCode.X))
@@ -132,11 +132,11 @@ public class NeutralState : TabletopSubstate
     {
         UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>(GoToEditing);
         UI.TopBar.Q("MarkerMode").RegisterCallback<ClickEvent>(GoToMarking);
+        UI.TopBar.Q("AddToken").RegisterCallback<ClickEvent>(GoToAddToken);
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(GoToConfig);
         UI.TopBar.Q("Session").RegisterCallback<ClickEvent>(GoToSession);
         UI.TopBar.Q("FixedView").RegisterCallback<ClickEvent>(FixView);
         UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
-        UI.TopBar.Q("AddToken").RegisterCallback<ClickEvent>(ShowAddTokenModal);
         UI.System.Q("DeployToggle").RegisterCallback<ClickEvent>(ToggleBottomBar);
         UI.System.Q("AddSystemTag").RegisterCallback<ClickEvent>(ShowSystemTagModal);
         Dragger.LeftClickRelease += LeftClickRelease;
@@ -150,10 +150,10 @@ public class NeutralState : TabletopSubstate
     {
         UI.TopBar.Q("EditMap").UnregisterCallback<ClickEvent>(GoToEditing);
         UI.TopBar.Q("MarkerMode").UnregisterCallback<ClickEvent>(GoToMarking);
+        UI.TopBar.Q("AddToken").UnregisterCallback<ClickEvent>(GoToAddToken);
         UI.TopBar.Q("Config").UnregisterCallback<ClickEvent>(GoToConfig);
         UI.TopBar.Q("Session").UnregisterCallback<ClickEvent>(GoToSession);
         UI.TopBar.Q("Dice").UnregisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
-        UI.TopBar.Q("AddToken").UnregisterCallback<ClickEvent>(ShowAddTokenModal);
         UI.System.Q("DeployToggle").UnregisterCallback<ClickEvent>(ToggleBottomBar);
         UI.System.Q("AddSystemTag").UnregisterCallback<ClickEvent>(ShowSystemTagModal);
         Dragger.LeftClickRelease -= LeftClickRelease;
@@ -186,11 +186,6 @@ public class NeutralState : TabletopSubstate
         Token.StopDragging(Pointer.PickBlock());
     }
 
-    private void ShowAddTokenModal(ClickEvent evt)
-    {
-        AddToken.OpenModal(new ClickEvent());
-    }
-
     private void ToggleBottomBar(ClickEvent evt)
     {
         UI.ToggleActiveClass(UI.System.Q("BottomBar"));
@@ -200,14 +195,6 @@ public class NeutralState : TabletopSubstate
     private void ShowConsole(ClickEvent evt)
     {
         IsoConsole.OpenModal(evt);
-    }
-
-    private void AdvanceRound(ClickEvent evt)
-    {
-        // Modal.DoubleConfirm("Advance Turn", GameSystem.Current().TurnAdvanceMessage(), () =>
-        // {
-        //     Player.Self().CmdRequestGameSystemCommand("IncrementTurn");
-        // });
     }
 
     private void ShowSystemTagModal(ClickEvent evt)

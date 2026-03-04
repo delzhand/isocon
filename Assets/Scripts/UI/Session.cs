@@ -8,11 +8,18 @@ public class Session
     public static void OpenModal(ClickEvent evt)
     {
         Modal.Reset("Session");
+        Modal.AddCloseCallback(BackToNeutral);
+
         Modal.AddMarkup("SnapshotDesc", "Session snapshots capture the current status and position of all tokens, but not the map state.");
         Modal.AddFileField("SessionFile", "Session File", "", "sessions");
         Modal.AddButton("Save Session", SaveSession);
         Modal.AddButton("Load Session", LoadSession);
         Modal.AddButton("Cancel", CloseModal);
+    }
+
+    private static void BackToNeutral(ClickEvent evt)
+    {
+        StateManager.Find().ChangeSubState(new NeutralState());
     }
 
     private static void LoadSession(ClickEvent evt)

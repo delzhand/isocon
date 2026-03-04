@@ -8,6 +8,7 @@ public class Config
     public static void OpenModal(ClickEvent evt)
     {
         Modal.Reset("Configuration");
+        Modal.AddCloseCallback(BackToNeutral);
 
 #if !UNITY_WEBGL
         string path = Preferences.Current.DataPath;
@@ -89,6 +90,11 @@ public class Config
     private static void CloseModal(ClickEvent evt)
     {
         Modal.Close();
+    }
+
+    private static void BackToNeutral(ClickEvent evt)
+    {
+        StateManager.Find().ChangeSubState(new NeutralState());
     }
 
     // public static string[] GetAllRuleFiles()

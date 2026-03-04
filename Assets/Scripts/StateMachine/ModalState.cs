@@ -29,9 +29,10 @@ public class ModalState : TabletopSubstate
 
     protected override void EnableInterface()
     {
+        base.EnableInterface();
         UI.ToggleDisplay("BottomBar", false);
         UI.ToggleDisplay("TopBar", false);
-        UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
+        UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), false);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("TerrainInfo"), false);
     }
 

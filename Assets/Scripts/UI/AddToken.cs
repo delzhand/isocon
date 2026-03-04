@@ -49,6 +49,7 @@ public class AddToken
     public static void CancelAddToken(ClickEvent evt)
     {
         Player.Self().ClearOp();
+        StateManager.Find().ChangeSubState(new NeutralState());
     }
 
     private static bool FileExists(string filename)
