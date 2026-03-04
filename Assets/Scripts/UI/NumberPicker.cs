@@ -102,17 +102,30 @@ public class NumberPicker
         negative = false;
     }
 
-    public static void NumberCommand(string command, bool allowNeg = true)
+    public static void TokenCommand(string command, bool allowNeg = true)
     {
         SelectionMenu.Hide();
-        NumberPicker.Open(allowNeg, (evt) => NumberCommandCallback(evt, command));
+        NumberPicker.Open(allowNeg, (evt) => TokenCommandCallback(evt, command));
     }
 
-    private static void NumberCommandCallback(ClickEvent evt, string command)
+    private static void TokenCommandCallback(ClickEvent evt, string command)
     {
         int v = NumberPicker.GetNumber();
         NumberPicker.Close();
         Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"{command}|{v}");
+    }
+
+    public static void AllTokensCommand(string command, bool allowNeg = true)
+    {
+        SelectionMenu.Hide();
+        NumberPicker.Open(allowNeg, (evt) => AllTokensCommandCallback(evt, command));
+    }
+
+    private static void AllTokensCommandCallback(ClickEvent evt, string command)
+    {
+        int v = NumberPicker.GetNumber();
+        NumberPicker.Close();
+        Player.Self().CmdRequestAllTokenDataCommand($"{command}|{v}");
     }
 
 }

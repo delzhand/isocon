@@ -100,8 +100,8 @@ public class LancerMechUnit : UnitData
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("GainHP", "HP Up", (evt) => { NumberPicker.NumberCommand("HpUp"); }));
-        items.Add(new MenuItem("LoseHP", "HP Down", (evt) => { NumberPicker.NumberCommand("HpDown"); }));
+        items.Add(new MenuItem("GainHP", "HP Up", (evt) => { NumberPicker.TokenCommand("HpUp"); }));
+        items.Add(new MenuItem("LoseHP", "HP Down", (evt) => { NumberPicker.TokenCommand("HpDown"); }));
         items.Add(new MenuItem("HeatUp", "Heat Up", (evt) => { DirectCommand("HeatUp|1"); }));
         items.Add(new MenuItem("HeatDown", "Heat Down", (evt) => { DirectCommand("HeatDown|1"); }));
         items.Add(new MenuItem("StressUp", "Stress Up", (evt) => { DirectCommand("StressUp|1"); }));

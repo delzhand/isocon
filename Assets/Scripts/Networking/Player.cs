@@ -245,6 +245,20 @@ public class Player : NetworkBehaviour
     {
         TokenData.Command(tokenId, value);
     }
+    [Command]
+    public void CmdRequestAllTokenDataCommand(string value)
+    {
+        RpcAllTokenDataCommand(value);
+    }
+    [ClientRpc]
+    public void RpcAllTokenDataCommand(string value)
+    {
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("TokenData"))
+        {
+            TokenData data = g.GetComponent<TokenData>();
+            TokenData.Command(data.Id, value);
+        }
+    }
     #endregion
 
     #region MapChange

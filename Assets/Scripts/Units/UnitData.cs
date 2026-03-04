@@ -64,7 +64,7 @@ public abstract class UnitData : IUnitData
         {
             items.Add(new MenuItem($"Modify{bar.Name}", $"Modify {bar.Name}", (evt) =>
             {
-                NumberPicker.NumberCommand($"ModBar|{bar.Name}");
+                NumberPicker.TokenCommand($"ModBar|{bar.Name}");
             }));
         }
         return items.ToArray();

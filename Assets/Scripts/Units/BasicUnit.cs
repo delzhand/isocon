@@ -91,7 +91,7 @@ public class BasicUnit : UnitData
 
         List<MenuItem> items = new();
         // items.Add(new MenuItem("AddResource", "Add Resource", AddResourceClicked));
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.NumberCommand("ModHP"); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.TokenCommand("ModHP"); }));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 

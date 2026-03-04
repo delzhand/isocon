@@ -98,9 +98,9 @@ public class Icon1x5MobUnit : UnitData
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("Damage", "Damage HP/VIG", (evt) => { NumberPicker.NumberCommand("Damage"); }));
+        items.Add(new MenuItem("Damage", "Damage HP/VIG", (evt) => { NumberPicker.TokenCommand("Damage"); }));
 
-        items.Add(new MenuItem("ModVig", "Modify VIG", (evt) => { NumberPicker.NumberCommand("ModVIG"); }));
+        items.Add(new MenuItem("ModVig", "Modify VIG", (evt) => { NumberPicker.TokenCommand("ModVIG"); }));
         if (Hits < 2)
         {
             items.Add(new MenuItem("RestoreHit", "Restore Hit", (evt) =>

@@ -56,14 +56,13 @@ public class Icon1x5PlayerUnit : UnitData
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("Damage", "Damage HP/VIG", (evt) => { NumberPicker.NumberCommand("Damage", false); }));
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.NumberCommand("ModHP"); }));
-        items.Add(new MenuItem("ModVIG", "Modify Vigor", (evt) => { NumberPicker.NumberCommand("ModVIG"); }));
-        items.Add(new MenuItem("ModRES", "Modify Resolve", (evt) => { NumberPicker.NumberCommand("ModRES"); }));
-        items.Add(new MenuItem("ModPRES", "Modify Party Resolve", (evt) => { NumberPicker.NumberCommand("ModPRES"); }));
+        items.Add(new MenuItem("Damage", "Damage HP/VIG", (evt) => { NumberPicker.TokenCommand("Damage", false); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.TokenCommand("ModHP"); }));
+        items.Add(new MenuItem("ModVIG", "Modify Vigor", (evt) => { NumberPicker.TokenCommand("ModVIG"); }));
+        items.Add(new MenuItem("ModRES", "Modify Resolve", (evt) => { NumberPicker.TokenCommand("ModRES"); }));
+        items.Add(new MenuItem("ModPRES", "Modify Party Resolve", (evt) => { NumberPicker.AllTokensCommand("ModPRES"); }));
         items.Add(new MenuItem("GainWound", "Take Wound", (evt) => DirectCommand("GainWound")));
         items.Add(new MenuItem("HealWound", "Heal Wound", (evt) => DirectCommand("LoseWound")));
-
         items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRollClicked));
         items.Add(new MenuItem("SaveRoll", "Save Roll", SaveRollClicked));
         return baseItems.Concat(items.ToArray()).ToArray();
@@ -126,12 +125,12 @@ public class Icon1x5PlayerUnit : UnitData
         {
             int original = PartyResolve;
             int changeValue = int.Parse(command.Split("|")[1]);
-            Resolve = Clamped(0, Resolve + changeValue, 6);
-            int diff = Resolve - original;
+            PartyResolve = Clamped(0, PartyResolve + changeValue, 6);
+            int diff = PartyResolve - original;
             if (diff != 0 && tokenData.Placed)
             {
                 string plus = diff > 0 ? "+" : "";
-                PopoverText.Create(token, $"/{plus}{diff}|_RES", Color.white);
+                PopoverText.Create(token, $"/{plus}{diff}|_P-RES", Color.white);
             }
         }
         if (command.StartsWith("Damage"))

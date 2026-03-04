@@ -260,8 +260,8 @@ public class Icon1x5EnemyUnit : UnitData
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.NumberCommand("ModHP"); }));
-        items.Add(new MenuItem("ModVIG", "Modify VIG", (evt) => { NumberPicker.NumberCommand("ModVIG"); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.TokenCommand("ModHP"); }));
+        items.Add(new MenuItem("ModVIG", "Modify VIG", (evt) => { NumberPicker.TokenCommand("ModVIG"); }));
         items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRollClicked));
         items.Add(new MenuItem("SaveRoll", "Save Roll", SaveRollClicked));
         return baseItems.Concat(items.ToArray()).ToArray();
