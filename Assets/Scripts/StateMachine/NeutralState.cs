@@ -137,6 +137,7 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("Session").RegisterCallback<ClickEvent>(GoToSession);
         UI.TopBar.Q("FixedView").RegisterCallback<ClickEvent>(FixView);
         UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
+        UI.System.Q("TopBarToggle").RegisterCallback<ClickEvent>(ToggleTopBar);
         UI.System.Q("DeployToggle").RegisterCallback<ClickEvent>(ToggleBottomBar);
         UI.System.Q("AddSystemTag").RegisterCallback<ClickEvent>(ShowSystemTagModal);
         Dragger.LeftClickRelease += LeftClickRelease;
@@ -154,6 +155,7 @@ public class NeutralState : TabletopSubstate
         UI.TopBar.Q("Config").UnregisterCallback<ClickEvent>(GoToConfig);
         UI.TopBar.Q("Session").UnregisterCallback<ClickEvent>(GoToSession);
         UI.TopBar.Q("Dice").UnregisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
+        UI.System.Q("TopBarToggle").UnregisterCallback<ClickEvent>(ToggleTopBar);
         UI.System.Q("DeployToggle").UnregisterCallback<ClickEvent>(ToggleBottomBar);
         UI.System.Q("AddSystemTag").UnregisterCallback<ClickEvent>(ShowSystemTagModal);
         Dragger.LeftClickRelease -= LeftClickRelease;
@@ -184,6 +186,11 @@ public class NeutralState : TabletopSubstate
     private void LeftDragRelease()
     {
         Token.StopDragging(Pointer.PickBlock());
+    }
+
+    private void ToggleTopBar(ClickEvent evt)
+    {
+        UI.ToggleActiveClass(UI.System.Q("TopBar"));
     }
 
     private void ToggleBottomBar(ClickEvent evt)
