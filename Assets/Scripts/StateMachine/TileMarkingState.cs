@@ -29,6 +29,8 @@ public class TileMarkingState : TabletopSubstate
         UI.ToggleDisplay(UI.TopBar.Q("Session"), false);
         UI.ToggleDisplay(UI.TopBar.Q("Isocon"), false);
         UI.ToggleDisplay(UI.TopBar.Q("AddToken"), false);
+        UI.ToggleDisplay(UI.TopBar.Q("EditMap"), false);
+
         UI.ToggleDisplay("DiceRoller", false);
         UI.ToggleDisplay("BottomBar", false);
         UI.ToggleDisplay("BottomRight", false);

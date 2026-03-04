@@ -8,6 +8,7 @@ public class MapEditingState : TabletopSubstate
 {
     public static List<Column> MarkedColumns;
     public static bool AltMode;
+    private State revertState;
 
     public override void OnEnter(StateManager sm)
     {
@@ -18,6 +19,7 @@ public class MapEditingState : TabletopSubstate
         BlockRendering.ToggleSpacers(true);
         BlockRendering.ToggleAllBorders(true);
         Player.Self().SetOp("Editing Map");
+        revertState = State.GetStateFromScene();
         Tutorial.Init("Edit Mode");
     }
 
@@ -44,6 +46,7 @@ public class MapEditingState : TabletopSubstate
         UI.ToggleDisplay(UI.TopBar.Q("Isocon"), false);
         UI.ToggleDisplay(UI.TopBar.Q("Session"), false);
         UI.ToggleDisplay(UI.TopBar.Q("AddToken"), false);
+        UI.ToggleDisplay(UI.TopBar.Q("MarkerMode"), false);
         UI.ToggleDisplay("ToolsPanel", true);
         UI.ToggleDisplay("DiceRoller", false);
         UI.ToggleDisplay("BottomBar", false);
@@ -51,6 +54,7 @@ public class MapEditingState : TabletopSubstate
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), false);
         UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), true);
         UI.TopBar.Q("EditMap").Q<Label>("Label").text = "Save <u>M</u>ap";
+        UI.ToggleDisplay(UI.TopBar.Q("CancelEditMap"), true);
     }
 
     protected override void DisableInterface()
@@ -75,7 +79,7 @@ public class MapEditingState : TabletopSubstate
     protected override void BindCallbacks()
     {
         UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>(GoToNeutral);
-        UI.TopBar.Q("MarkerMode").RegisterCallback<ClickEvent>(GoToMarking);
+        UI.TopBar.Q("CancelEditMap").RegisterCallback<ClickEvent>(Cancel);
         Dragger.LeftClickStart += LeftClickStart;
         Dragger.LeftDragUpdate += LeftDragUpdate;
     }
@@ -83,7 +87,7 @@ public class MapEditingState : TabletopSubstate
     protected override void UnbindCallbacks()
     {
         UI.TopBar.Q("EditMap").UnregisterCallback<ClickEvent>(GoToNeutral);
-        UI.TopBar.Q("MarkerMode").UnregisterCallback<ClickEvent>(GoToMarking);
+        UI.TopBar.Q("CancelEditMap").UnregisterCallback<ClickEvent>(Cancel);
         Dragger.LeftClickStart -= LeftClickStart;
         Dragger.LeftDragUpdate -= LeftDragUpdate;
     }
@@ -146,6 +150,12 @@ public class MapEditingState : TabletopSubstate
         base.GoToNeutral(evt);
         Player.Self().ClearOp();
         BlockRendering.ToggleAllBorders(false);
+    }
+
+    private void Cancel(ClickEvent evt)
+    {
+        State.SetSceneFromState(revertState);
+        GoToNeutral(evt);
     }
 }
 
