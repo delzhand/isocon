@@ -25,8 +25,7 @@ public class Icon1x5PlayerUnit : UnitData
     public int Dash;
     public int Defense;
     public string ColorName;
-
-    public static int PartyResolve = 0;
+    public int PartyResolve = 0;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
@@ -57,7 +56,7 @@ public class Icon1x5PlayerUnit : UnitData
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("Damage", "Damage HP/VIG", (evt) => { NumberPicker.NumberCommand("Damage"); }));
+        items.Add(new MenuItem("Damage", "Damage HP/VIG", (evt) => { NumberPicker.NumberCommand("Damage", false); }));
         items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.NumberCommand("ModHP"); }));
         items.Add(new MenuItem("ModVIG", "Modify Vigor", (evt) => { NumberPicker.NumberCommand("ModVIG"); }));
         items.Add(new MenuItem("ModRES", "Modify Resolve", (evt) => { NumberPicker.NumberCommand("ModRES"); }));
@@ -313,6 +312,11 @@ public class Icon1x5PlayerUnit : UnitData
 
         string name = UI.Modal.Q<TextField>("NameField").value;
         string playerJob = SearchField.GetValue(UI.Modal.Q("PlayerJob"));
+        if (playerJob.Length == 0)
+        {
+            Toast.AddError("You must select a job");
+            return;
+        }
         string pclass = playerJob.Split("/")[0];
         string job = playerJob.Split("/")[1];
 

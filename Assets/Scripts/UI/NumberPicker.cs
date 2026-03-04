@@ -61,7 +61,7 @@ public class NumberPicker
         });
     }
 
-    public static void Open(EventCallback<ClickEvent> numberCommandCallback)
+    public static void Open(bool allowNeg, EventCallback<ClickEvent> numberCommandCallback)
     {
         if (!initialized)
         {
@@ -70,6 +70,8 @@ public class NumberPicker
         Callback = numberCommandCallback;
         UI.NumberPicker.Q("DigitAdd").RegisterCallback<ClickEvent>(numberCommandCallback);
         UI.NumberPicker.Q("DigitSub").RegisterCallback<ClickEvent>(numberCommandCallback);
+        UI.ToggleDisplay("DigitSub", allowNeg);
+        UI.NumberPicker.Q("DigitAdd").Q<Label>().text = allowNeg ? "ADD" : "ENTER";
         UI.ToggleDisplay("NumberPickerModal", true);
         UI.ToggleDisplay("Backdrop", true);
         NumberString = "0";
@@ -100,10 +102,10 @@ public class NumberPicker
         negative = false;
     }
 
-    public static void NumberCommand(string command)
+    public static void NumberCommand(string command, bool allowNeg = true)
     {
         SelectionMenu.Hide();
-        NumberPicker.Open((evt) => NumberCommandCallback(evt, command));
+        NumberPicker.Open(allowNeg, (evt) => NumberCommandCallback(evt, command));
     }
 
     private static void NumberCommandCallback(ClickEvent evt, string command)
