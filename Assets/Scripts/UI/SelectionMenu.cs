@@ -75,7 +75,7 @@ public class SelectionMenu
     public static void AddItem(string name, string label, Action<ClickEvent> clickHandler)
     {
         VisualElement menu = Find();
-        VisualElement element = UI.CreateFromTemplate("UITemplates/MenuItem");
+        VisualElement element = UI.CreateFromTemplate("UI/MenuItem");
         element.Q<Label>("Label").text = label;
         element.name = name;
         element.RegisterCallback<ClickEvent>((evt) =>

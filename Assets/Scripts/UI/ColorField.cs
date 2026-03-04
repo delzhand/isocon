@@ -10,7 +10,7 @@ public class ColorField
 
     public static VisualElement Create(string name, Color initial)
     {
-        VisualElement element = UI.CreateFromTemplate("UITemplates/ColorSelect");
+        VisualElement element = UI.CreateFromTemplate("UI/ColorSelect");
         CurrentName = name;
 
         element.Q<TextField>("EditColorHex").RegisterValueChangedCallback<string>((evt) =>

@@ -28,7 +28,7 @@
 //     private void SetupPanel(string elementName, bool editable)
 //     {
 //         VisualElement panel = UI.System.Q(elementName);
-//         VisualElement unitPanel = UI.CreateFromTemplate("UITemplates/GameSystem/MaleghastUnitPanel");
+//         VisualElement unitPanel = UI.CreateFromTemplate("UI/TableTop/MaleghastUnitPanel");
 //         unitPanel.Q("SOUL").Q<ProgressBar>("HpBar").value = 0;
 //         unitPanel.Q("SOUL").Q<ProgressBar>("HpBar").highValue = 6;
 //         unitPanel.Q("SOUL").Q<Label>("StatLabel").text = "SOUL";

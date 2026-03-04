@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
     extend SystemToken (or another class that extends SystemToken).
 */
 [Serializable]
-public class ExampleToken : SystemToken
+public class ExampleUnit : UnitData
 {
     /**
         Define the string identifier of your class. This must be unique.
@@ -167,7 +167,7 @@ public class ExampleToken : SystemToken
     */
     public override string GetOverheadAsset()
     {
-        return "UITemplates/GameSystem/Overheads/SingleBar";
+        return "UI/TableTop/Overheads/SingleBar";
     }
 
     /**
@@ -283,14 +283,14 @@ public class ExampleToken : SystemToken
         /**
             An example of how to add a type-specific bar.
         */
-        VisualElement hpBarTemplate = UI.CreateFromTemplate("UITemplates/GameSystem/SimpleHPBar");
+        VisualElement hpBarTemplate = UI.CreateFromTemplate("UI/TableTop/SimpleHPBar");
         hpBarTemplate.name = "MainHPBar";
         UI.System.Q(elementName).Q("Bars").Add(hpBarTemplate);
 
         /**
             An example of how to add a type-specific stat.
         */
-        VisualElement statTemplate = UI.CreateFromTemplate("UITemplates/GameSystem/StatTemplate");
+        VisualElement statTemplate = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
         statTemplate.Q<Label>("Label").text = "AC";
         statTemplate.Q<Label>("Value").text = $"{Defense}";
         UI.System.Q(elementName).Q("Stats").Add(s3);
@@ -301,7 +301,7 @@ public class ExampleToken : SystemToken
         */
         if (CurrentHP < (MaxHP * .5f))
         {
-            VisualElement pill = UI.CreateFromTemplate("UITemplates/GameSystem/Pill");
+            VisualElement pill = UI.CreateFromTemplate("UI/TableTop/Pill");
             pill.Q("Pill").style.backgroundColor = Color.Red;
             pill.Q<Label>("Name").text = "Bloodied";
             panel.Q("Pills").Add(pill);

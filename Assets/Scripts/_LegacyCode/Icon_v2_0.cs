@@ -33,7 +33,7 @@
 
 //     public override string GetOverheadAsset()
 //     {
-//         return "UITemplates/GameSystem/IconOverhead";
+//         return "UI/TableTop/IconOverhead";
 //     }
 
 //     public override string TurnAdvanceMessage()
@@ -51,7 +51,7 @@
 //     private void SetupPanel(string elementName, bool editable)
 //     {
 //         VisualElement panel = UI.System.Q(elementName);
-//         VisualElement unitPanel = UI.CreateFromTemplate("UITemplates/GameSystem/Icon2UnitPanel");
+//         VisualElement unitPanel = UI.CreateFromTemplate("UI/TableTop/Icon2UnitPanel");
 
 //         unitPanel.Q("Move").Q<Label>("Label").text = "MOV";
 //         unitPanel.Q("Defense").Q<Label>("Label").text = "DEF";
@@ -580,7 +580,7 @@
 //         //     panel.Q("Conditions").Q("List").Clear();
 //         //     foreach (Icon2_0Condition condition in sysdata.Status)
 //         //     {
-//         //         VisualElement template = UI.CreateFromTemplate("UITemplates/GameSystem/ConditionTemplate");
+//         //         VisualElement template = UI.CreateFromTemplate("UI/TableTop/ConditionTemplate");
 //         //         string label = $"{condition.Name}";
 //         //         if (condition.ModifierType == "Number")
 //         //         {

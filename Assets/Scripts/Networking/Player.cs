@@ -93,7 +93,7 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdCreateSystemToken(string json)
     {
-        SystemTokenMeta stm = JsonUtility.FromJson<SystemTokenMeta>(json);
+        UnitMeta stm = JsonUtility.FromJson<UnitMeta>(json);
         GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData"));
         TokenData data = g.GetComponent<TokenData>();
         data.Id = Guid.NewGuid().ToString(); ;

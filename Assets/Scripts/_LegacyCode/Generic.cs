@@ -24,7 +24,7 @@
 //     private void SetupPanel(string elementName, bool editable)
 //     {
 //         VisualElement panel = UI.System.Q(elementName);
-//         VisualElement hpBar = UI.CreateFromTemplate("UITemplates/GameSystem/SimpleHPBar");
+//         VisualElement hpBar = UI.CreateFromTemplate("UI/TableTop/SimpleHPBar");
 //         panel.Q("Data").Add(hpBar);
 //         panel.Q("Data").style.flexDirection = FlexDirection.Column;
 //         VisualElement resourceContainer = new VisualElement();
@@ -205,7 +205,7 @@
 //         //     panel.Q("Resources").Clear();
 //         //     foreach (GenericTokenResource resource in sysdata.Resources)
 //         //     {
-//         //         VisualElement template = UI.CreateFromTemplate("UITemplates/GameSystem/ConditionTemplate");
+//         //         VisualElement template = UI.CreateFromTemplate("UI/TableTop/ConditionTemplate");
 //         //         string label = $"{resource.Name} ({resource.Value})";
 //         //         template.Q<Label>("Name").text = label;
 //         //         if (elementName == "SelectedTokenPanel")

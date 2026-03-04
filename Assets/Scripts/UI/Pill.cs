@@ -5,7 +5,7 @@ public class Pill
 {
     public static VisualElement InitStatic(string name, string text, Color color)
     {
-        VisualElement p = UI.CreateFromTemplate("UITemplates/GameSystem/Pill");
+        VisualElement p = UI.CreateFromTemplate("UI/TableTop/Pill");
         p.name = name;
         p.Q<Label>("Name").text = text;
         p.Q("Pill").AddToClassList("static");
@@ -19,7 +19,7 @@ public class Pill
 
     public static VisualElement InitNumber(string name, string text, int number, Color color, bool forToken)
     {
-        VisualElement p = UI.CreateFromTemplate("UITemplates/GameSystem/Pill");
+        VisualElement p = UI.CreateFromTemplate("UI/TableTop/Pill");
         p.name = name;
         p.Q<Label>("Name").text = $"{text}  {number}";
         p.Q("Pill").style.backgroundColor = color;

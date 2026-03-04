@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 public delegate void SimpleCallback();
-public delegate IUnitToken InterfaceCallback(string input);
+public delegate IUnitData InterfaceCallback(string input);
 
 public static class UnitTokenRegistry
 {
@@ -27,7 +27,7 @@ public static class UnitTokenRegistry
         }
     }
 
-    public static IUnitToken DoInterfaceCallback(string system, string json)
+    public static IUnitData DoInterfaceCallback(string system, string json)
     {
         if (_interfaceCallbacks.TryGetValue(system, out var callback))
         {

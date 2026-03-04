@@ -92,7 +92,7 @@ public class TokenData : NetworkBehaviour
             {
                 UI.FollowTransform(WorldObject.GetComponent<Token>().transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").transform, OverheadElement, UI.World, Camera.main, Vector2.zero);
             }
-            IUnitToken st = UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
+            IUnitData st = UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
             st.UpdateOverhead(this);
         }
 
@@ -138,7 +138,7 @@ public class TokenData : NetworkBehaviour
 
     public void CreateOverheadElement()
     {
-        IUnitToken st = UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
+        IUnitData st = UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
         string asset = st.GetOverheadAsset();
         if (asset != null)
         {
@@ -200,7 +200,7 @@ public class TokenData : NetworkBehaviour
     private void CreateUnitBarElement()
     {
         // Create the element in the UI
-        VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/UnitTemplate");
+        VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UI/UnitTemplate");
         UnitBarElement = template.Instantiate();
         UnitBarElement.style.display = DisplayStyle.Flex;
 
@@ -290,8 +290,8 @@ public class TokenData : NetworkBehaviour
             Name = command.Split("|")[1];
         }
 
-        IUnitToken st = UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
-        st.HandleCommand(command, this);
+        IUnitData st = UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
+        st.Command(command, this);
         SystemData = st.Serialize();
         // NeedsRedraw = true;
     }
@@ -326,8 +326,8 @@ public class TokenData : NetworkBehaviour
         {
             panel.Q("Portrait").style.backgroundImage = GraphicSingle;
         }
-        IUnitToken st = UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
-        st.UpdateTokenPanel(this, elementName);
+        IUnitData st = UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
+        st.UpdatePanel(this, elementName);
         Name = st.Label();
         panel.Q<Label>("Name").text = Name;
         panel.Q("ClassBackground").style.borderTopColor = Color;
@@ -364,7 +364,7 @@ public class TokenData : NetworkBehaviour
     //     }
     // }
 
-    public IUnitToken GetSystemToken()
+    public IUnitData GetSystemToken()
     {
         return UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
     }

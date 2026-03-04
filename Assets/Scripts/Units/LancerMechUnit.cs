@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class LancerMechToken : UnitToken
+public class LancerMechUnit : UnitData
 {
     #region Registration
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -20,9 +20,9 @@ public class LancerMechToken : UnitToken
     {
         return JsonUtility.ToJson(this);
     }
-    public static IUnitToken DeserializeAsInterface(string json)
+    public static IUnitData DeserializeAsInterface(string json)
     {
-        return JsonUtility.FromJson<LancerMechToken>(json);
+        return JsonUtility.FromJson<LancerMechUnit>(json);
     }
     #endregion
 
@@ -67,7 +67,7 @@ public class LancerMechToken : UnitToken
         int maxHP = UI.Modal.Q<IntegerField>("MaxHPField").value;
         int maxHeat = UI.Modal.Q<IntegerField>("MaxHeatField").value;
         string color = UI.Modal.Q<DropdownField>("ColorField").value;
-        LancerMechToken t = new()
+        LancerMechUnit t = new()
         {
             System = "Lancer Mech",
             Name = name,
@@ -92,12 +92,12 @@ public class LancerMechToken : UnitToken
 
     public override string GetOverheadAsset()
     {
-        return "UITemplates/GameSystem/Overheads/LancerMech";
+        return "UI/TableTop/Overheads/LancerMech";
     }
 
-    public override MenuItem[] GetTokenMenuItems(bool placed)
+    public override MenuItem[] GetMenuItems(bool placed)
     {
-        MenuItem[] baseItems = base.GetTokenMenuItems(placed);
+        MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
         items.Add(new MenuItem("GainHP", "HP Up", (evt) => { NumberPicker.NumberCommand("HpUp"); }));
@@ -112,9 +112,9 @@ public class LancerMechToken : UnitToken
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
-    public override void HandleCommand(string command, TokenData tokenData)
+    public override void Command(string command, TokenData tokenData)
     {
-        base.HandleCommand(command, tokenData);
+        base.Command(command, tokenData);
         if (command.StartsWith("HpUp|"))
         {
             GainHP(command, tokenData);

@@ -32,7 +32,7 @@
 
 //     public override string GetOverheadAsset()
 //     {
-//         return "UITemplates/GameSystem/IconOverhead";
+//         return "UI/TableTop/IconOverhead";
 //     }
 
 //     public override string TurnAdvanceMessage()
@@ -50,7 +50,7 @@
 //     private void SetupPanel(string elementName, bool editable)
 //     {
 //         VisualElement panel = UI.System.Q(elementName);
-//         VisualElement unitPanel = UI.CreateFromTemplate("UITemplates/GameSystem/IconUnitPanel");
+//         VisualElement unitPanel = UI.CreateFromTemplate("UI/TableTop/IconUnitPanel");
 
 //         unitPanel.Q("Damage").Q<Label>("Label").text = "DMG/FRAY";
 //         unitPanel.Q("Range").Q<Label>("Label").text = "RNG";
@@ -620,7 +620,7 @@
 //         //     panel.Q("Conditions").Q("List").Clear();
 //         //     foreach (Icon1_5Condition condition in sysdata.Status)
 //         //     {
-//         //         VisualElement template = UI.CreateFromTemplate("UITemplates/GameSystem/ConditionTemplate");
+//         //         VisualElement template = UI.CreateFromTemplate("UI/TableTop/ConditionTemplate");
 //         //         string label = $"{condition.Name}";
 //         //         if (condition.ModifierType == "Number")
 //         //         {

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class Icon1x5EnemyToken : UnitToken
+public class Icon1x5EnemyUnit : UnitData
 {
     private readonly static string TypeName = "Icon 1.5 Enemy";
 
@@ -35,9 +35,9 @@ public class Icon1x5EnemyToken : UnitToken
         return JsonUtility.ToJson(this);
     }
 
-    public static IUnitToken DeserializeAsInterface(string json)
+    public static IUnitData DeserializeAsInterface(string json)
     {
-        return JsonUtility.FromJson<Icon1x5EnemyToken>(json);
+        return JsonUtility.FromJson<Icon1x5EnemyUnit>(json);
     }
 
     public static void AddTokenModal()
@@ -93,7 +93,7 @@ public class Icon1x5EnemyToken : UnitToken
             hpMulti = 2;
         }
 
-        Icon1x5EnemyToken t = new()
+        Icon1x5EnemyUnit t = new()
         {
             System = TypeName,
             Name = name,
@@ -166,12 +166,12 @@ public class Icon1x5EnemyToken : UnitToken
 
     public override string GetOverheadAsset()
     {
-        return "UITemplates/GameSystem/Overheads/Icon1x5";
+        return "UI/TableTop/Overheads/Icon1x5";
     }
 
-    public override void UpdateTokenPanel(TokenData tokenData, string elementName)
+    public override void UpdatePanel(TokenData tokenData, string elementName)
     {
-        base.UpdateTokenPanel(tokenData, elementName);
+        base.UpdatePanel(tokenData, elementName);
         VisualElement panel = UI.System.Q(elementName);
 
         VisualElement mainHPBar = panel.Q("MainHPBar");
@@ -209,32 +209,32 @@ public class Icon1x5EnemyToken : UnitToken
         UI.ToggleDisplay(o, CurrentHP > 0 && tokenData.Placed);
     }
 
-    public override void InitTokenPanel(string elementName, bool selected)
+    public override void InitPanel(string elementName, bool selected)
     {
-        base.InitTokenPanel(elementName, selected);
+        base.InitPanel(elementName, selected);
         VisualElement panel = UI.System.Q(elementName);
 
-        VisualElement hpBar = UI.CreateFromTemplate("UITemplates/GameSystem/IconHPBar");
+        VisualElement hpBar = UI.CreateFromTemplate("UI/TableTop/IconHPBar");
         hpBar.name = "MainHPBar";
         hpBar.Q<ProgressBar>("HpBar").value = CurrentHP;
         panel.Q("Bars").Add(hpBar);
 
-        VisualElement s1 = UI.CreateFromTemplate("UITemplates/GameSystem/StatTemplate");
+        VisualElement s1 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
         s1.Q<Label>("Label").text = "DMG/FRAY";
         s1.Q<Label>("Value").text = $"1d{Damage}/{Fray}";
         panel.Q("Stats").Add(s1);
 
-        VisualElement s3 = UI.CreateFromTemplate("UITemplates/GameSystem/StatTemplate");
+        VisualElement s3 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
         s3.Q<Label>("Label").text = "SPD/DASH";
         s3.Q<Label>("Value").text = $"{Speed}/{Dash}";
         panel.Q("Stats").Add(s3);
 
-        VisualElement s4 = UI.CreateFromTemplate("UITemplates/GameSystem/StatTemplate");
+        VisualElement s4 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
         s4.Q<Label>("Label").text = "DEF";
         s4.Q<Label>("Value").text = $"{Defense}";
         panel.Q("Stats").Add(s4);
 
-        VisualElement p1 = UI.CreateFromTemplate("UITemplates/GameSystem/Pill");
+        VisualElement p1 = UI.CreateFromTemplate("UI/TableTop/Pill");
         p1.name = "ElitePill";
         p1.Q<Label>("Name").text = "Elite";
         p1.Q("Pill").style.backgroundColor = ColorUtility.GetCommonColor("Purple");
@@ -244,7 +244,7 @@ public class Icon1x5EnemyToken : UnitToken
         });
         panel.Q("Pills").Add(p1);
 
-        VisualElement p2 = UI.CreateFromTemplate("UITemplates/GameSystem/Pill");
+        VisualElement p2 = UI.CreateFromTemplate("UI/TableTop/Pill");
         p2.name = "ClassPill";
         p2.Q<Label>("Name").text = FoeClass;
         p2.Q("Pill").style.backgroundColor = Color;
@@ -255,9 +255,9 @@ public class Icon1x5EnemyToken : UnitToken
         panel.Q("Pills").Add(p2);
     }
 
-    public override MenuItem[] GetTokenMenuItems(bool placed)
+    public override MenuItem[] GetMenuItems(bool placed)
     {
-        MenuItem[] baseItems = base.GetTokenMenuItems(placed);
+        MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
         items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.NumberCommand("ModHP"); }));
@@ -267,9 +267,9 @@ public class Icon1x5EnemyToken : UnitToken
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
-    public override void HandleCommand(string command, TokenData tokenData)
+    public override void Command(string command, TokenData tokenData)
     {
-        base.HandleCommand(command, tokenData);
+        base.Command(command, tokenData);
         Token token = tokenData.GetToken();
         if (command.StartsWith("ModHP"))
         {

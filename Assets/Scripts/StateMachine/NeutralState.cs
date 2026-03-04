@@ -91,8 +91,8 @@ public class NeutralState : TabletopSubstate
             UI.ToggleActiveClass("RightTokenPanel", true);
             if (Token.RebuildPanels)
             {
-                selected.Data.GetSystemToken().InitTokenPanel("LeftTokenPanel", true);
-                focused.Data.GetSystemToken().InitTokenPanel("RightTokenPanel");
+                selected.Data.GetSystemToken().InitPanel("LeftTokenPanel", true);
+                focused.Data.GetSystemToken().InitPanel("RightTokenPanel");
                 Token.RebuildPanels = false;
             }
             selected.Data.UpdateTokenPanel("LeftTokenPanel");
@@ -104,7 +104,7 @@ public class NeutralState : TabletopSubstate
             UI.ToggleActiveClass("RightTokenPanel", false);
             if (Token.RebuildPanels)
             {
-                focused.Data.GetSystemToken().InitTokenPanel("LeftTokenPanel");
+                focused.Data.GetSystemToken().InitPanel("LeftTokenPanel");
                 Token.RebuildPanels = false;
             }
             focused.Data.UpdateTokenPanel("LeftTokenPanel");
@@ -115,7 +115,7 @@ public class NeutralState : TabletopSubstate
             UI.ToggleActiveClass("RightTokenPanel", false);
             if (Token.RebuildPanels)
             {
-                selected.Data.GetSystemToken().InitTokenPanel("LeftTokenPanel", true);
+                selected.Data.GetSystemToken().InitPanel("LeftTokenPanel", true);
                 Token.RebuildPanels = false;
             }
             selected.Data.UpdateTokenPanel("LeftTokenPanel");

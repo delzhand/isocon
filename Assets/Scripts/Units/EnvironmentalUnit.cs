@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class EnvironmentalToken : UnitToken
+public class EnvironmentalUnit : UnitData
 {
     #region Registration
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -17,9 +17,9 @@ public class EnvironmentalToken : UnitToken
     {
         return JsonUtility.ToJson(this);
     }
-    public static IUnitToken DeserializeAsInterface(string json)
+    public static IUnitData DeserializeAsInterface(string json)
     {
-        return JsonUtility.FromJson<EnvironmentalToken>(json);
+        return JsonUtility.FromJson<EnvironmentalUnit>(json);
     }
     #endregion
 
@@ -53,7 +53,7 @@ public class EnvironmentalToken : UnitToken
         string name = UI.Modal.Q<TextField>("NameField").value;
         string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
         string color = UI.Modal.Q<DropdownField>("ColorField").value;
-        EnvironmentalToken t = new()
+        EnvironmentalUnit t = new()
         {
             System = "Environmental",
             Name = name,
@@ -70,12 +70,12 @@ public class EnvironmentalToken : UnitToken
         return Name;
     }
 
-    public override void InitTokenPanel(string elementName, bool selected)
+    public override void InitPanel(string elementName, bool selected)
     {
-        base.InitTokenPanel(elementName, selected);
+        base.InitPanel(elementName, selected);
     }
 
-    public override void HandleCommand(string command, TokenData tokenData)
+    public override void Command(string command, TokenData tokenData)
     {
         if (command.StartsWith("Rename|"))
         {

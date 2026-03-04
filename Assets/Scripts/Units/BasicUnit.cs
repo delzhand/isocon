@@ -5,23 +5,25 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class BasicToken : UnitToken
+public class BasicUnit : UnitData
 {
+    private readonly static string TypeName = "Basic";
+
     #region Registration
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        UnitTokenRegistry.RegisterSystem("Basic");
-        UnitTokenRegistry.RegisterInterfaceCallback("Basic", DeserializeAsInterface);
-        UnitTokenRegistry.RegisterSimpleCallback("Basic|AddTokenModal", AddTokenModal);
+        UnitTokenRegistry.RegisterSystem($"{TypeName}");
+        UnitTokenRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
+        UnitTokenRegistry.RegisterSimpleCallback($"{TypeName}|AddTokenModal", AddTokenModal);
     }
     public override string Serialize()
     {
         return JsonUtility.ToJson(this);
     }
-    public static IUnitToken DeserializeAsInterface(string json)
+    public static IUnitData DeserializeAsInterface(string json)
     {
-        return JsonUtility.FromJson<BasicToken>(json);
+        return JsonUtility.FromJson<BasicUnit>(json);
     }
     #endregion
 
@@ -59,9 +61,9 @@ public class BasicToken : UnitToken
         string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
         int maxHP = UI.Modal.Q<IntegerField>("MaxHPField").value;
         string color = UI.Modal.Q<DropdownField>("ColorField").value;
-        BasicToken t = new()
+        BasicUnit t = new()
         {
-            System = "Basic",
+            System = TypeName,
             Name = name,
             MaxHP = maxHP,
             CurrentHP = maxHP,
@@ -80,12 +82,12 @@ public class BasicToken : UnitToken
 
     public override string GetOverheadAsset()
     {
-        return "UITemplates/GameSystem/Overheads/SingleBar";
+        return "UI/TableTop/Overheads/SingleBar";
     }
 
-    public override MenuItem[] GetTokenMenuItems(bool placed)
+    public override MenuItem[] GetMenuItems(bool placed)
     {
-        MenuItem[] baseItems = base.GetTokenMenuItems(placed);
+        MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
         // items.Add(new MenuItem("AddResource", "Add Resource", AddResourceClicked));
@@ -93,9 +95,9 @@ public class BasicToken : UnitToken
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
-    public override void HandleCommand(string command, TokenData tokenData)
+    public override void Command(string command, TokenData tokenData)
     {
-        base.HandleCommand(command, tokenData);
+        base.Command(command, tokenData);
         if (command.StartsWith("ModHP|"))
         {
             ModHP(command, tokenData);
@@ -113,9 +115,9 @@ public class BasicToken : UnitToken
         tokenData.OverheadElement.Q<ProgressBar>("HpBar").highValue = MaxHP;
     }
 
-    public override void UpdateTokenPanel(TokenData tokenData, string elementName)
+    public override void UpdatePanel(TokenData tokenData, string elementName)
     {
-        base.UpdateTokenPanel(tokenData, elementName);
+        base.UpdatePanel(tokenData, elementName);
         VisualElement panel = UI.System.Q(elementName);
         VisualElement bar = panel.Q("Bars").Q("MainHPBar");
         bar.Q<ProgressBar>("HpBar").style.minWidth = 150;
@@ -125,12 +127,12 @@ public class BasicToken : UnitToken
         bar.Q<ProgressBar>("HpBar").highValue = MaxHP;
     }
 
-    public override void InitTokenPanel(string elementName, bool selected)
+    public override void InitPanel(string elementName, bool selected)
     {
-        base.InitTokenPanel(elementName, selected);
+        base.InitPanel(elementName, selected);
 
         VisualElement panel = UI.System.Q(elementName);
-        VisualElement hpBar = UI.CreateFromTemplate("UITemplates/GameSystem/SimpleHPBar");
+        VisualElement hpBar = UI.CreateFromTemplate("UI/TableTop/SimpleHPBar");
         hpBar.name = "MainHPBar";
         panel.Q("Bars").Add(hpBar);
     }

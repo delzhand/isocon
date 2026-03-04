@@ -5,21 +5,21 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public interface IUnitToken
+public interface IUnitData
 {
     string Serialize();
     string Label();
     string GetOverheadAsset();
-    MenuItem[] GetTokenMenuItems(bool placed);
-    void HandleCommand(string command, TokenData tokenData);
+    MenuItem[] GetMenuItems(bool placed);
+    void Command(string command, TokenData tokenData);
     void UpdateOverhead(TokenData tokenData);
-    void UpdateTokenPanel(TokenData tokenData, string elementName);
-    void InitTokenPanel(string elementName, bool selected = false);
+    void UpdatePanel(TokenData tokenData, string elementName);
+    void InitPanel(string elementName, bool selected = false);
 
 }
 
 [Serializable]
-public abstract class UnitToken : IUnitToken
+public abstract class UnitData : IUnitData
 {
     public string System;
     public TokenMeta TokenMeta;
@@ -44,7 +44,7 @@ public abstract class UnitToken : IUnitToken
         return null;
     }
 
-    public virtual MenuItem[] GetTokenMenuItems(bool placed)
+    public virtual MenuItem[] GetMenuItems(bool placed)
     {
         List<MenuItem> items = new();
         if (placed)
@@ -60,7 +60,6 @@ public abstract class UnitToken : IUnitToken
         items.Add(new MenuItem("AddBar", "Add Bar", AddBarModal));
         items.Add(new MenuItem("AddStat", "Add Stat", AddStatModal));
         items.Add(new MenuItem("EditStats", "Edit Stats/Bars", EditStatBarModal));
-        // items.Add(new MenuItem("Debug", "Debug", DebugToken));
         foreach (UnitBar bar in Bars)
         {
             items.Add(new MenuItem($"Modify{bar.Name}", $"Modify {bar.Name}", (evt) =>
@@ -69,11 +68,6 @@ public abstract class UnitToken : IUnitToken
             }));
         }
         return items.ToArray();
-    }
-
-    private void DebugToken(ClickEvent evt)
-    {
-        Debug.Log(Serialize());
     }
 
     private static void ClickFlip(ClickEvent evt)
@@ -245,7 +239,7 @@ public abstract class UnitToken : IUnitToken
         Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
-    public virtual void HandleCommand(string value, TokenData tokenData)
+    public virtual void Command(string value, TokenData tokenData)
     {
         Token token = tokenData.GetToken();
         if (value.StartsWith("AddTag"))
@@ -325,11 +319,11 @@ public abstract class UnitToken : IUnitToken
     {
     }
 
-    public virtual void UpdateTokenPanel(TokenData tokenData, string elementName)
+    public virtual void UpdatePanel(TokenData tokenData, string elementName)
     {
     }
 
-    public virtual void InitTokenPanel(string elementName, bool selected = false)
+    public virtual void InitPanel(string elementName, bool selected = false)
     {
         VisualElement panel = UI.System.Q(elementName);
         panel.Q("Pills").Clear();
@@ -337,7 +331,7 @@ public abstract class UnitToken : IUnitToken
         panel.Q("Bars").Clear();
         foreach (UnitBar bar in Bars)
         {
-            VisualElement bart = UI.CreateFromTemplate("UITemplates/GameSystem/SimpleHPBar");
+            VisualElement bart = UI.CreateFromTemplate("UI/TableTop/SimpleHPBar");
             bart.Q<Label>("StatLabel").text = bar.Name;
             bart.Q<Label>("CHP").text = $"{bar.Value}";
             bart.Q<Label>("MHP").text = $"/{bar.MaxValue}";
@@ -349,14 +343,14 @@ public abstract class UnitToken : IUnitToken
         }
         foreach (UnitStat stat in Stats)
         {
-            VisualElement statt = UI.CreateFromTemplate("UITemplates/GameSystem/StatTemplate");
+            VisualElement statt = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
             statt.Q<Label>("Label").text = stat.Name;
             statt.Q<Label>("Value").text = $"{stat.Value}";
             panel.Q("Stats").Add(statt);
         }
         foreach (UnitTag tag in Tags)
         {
-            VisualElement pill = UI.CreateFromTemplate("UITemplates/GameSystem/Pill");
+            VisualElement pill = UI.CreateFromTemplate("UI/TableTop/Pill");
             string text = $"{tag.Name}";
             if (tag.HasNumber)
             {
@@ -493,7 +487,7 @@ public class UnitStat
 }
 
 [Serializable]
-public class SystemTokenMeta
+public class UnitMeta
 {
     public string Name;
     public string System;

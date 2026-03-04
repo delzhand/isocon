@@ -16,7 +16,7 @@
 
 //     public override string GetOverheadAsset()
 //     {
-//         return "UITemplates/GameSystem/LancerOverhead";
+//         return "UI/TableTop/LancerOverhead";
 //     }
 
 //     // public override void Setup()

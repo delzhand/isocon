@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SimpleJSON;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class Icon1x5MobToken : UnitToken
+public class Icon1x5MobUnit : UnitData
 {
     private readonly static string TypeName = "Icon 1.5 Mob";
 
@@ -23,9 +22,9 @@ public class Icon1x5MobToken : UnitToken
     {
         return JsonUtility.ToJson(this);
     }
-    public static IUnitToken DeserializeAsInterface(string json)
+    public static IUnitData DeserializeAsInterface(string json)
     {
-        return JsonUtility.FromJson<Icon1x5MobToken>(json);
+        return JsonUtility.FromJson<Icon1x5MobUnit>(json);
     }
     #endregion
 
@@ -65,7 +64,7 @@ public class Icon1x5MobToken : UnitToken
 
         string name = UI.Modal.Q<TextField>("NameField").value;
 
-        Icon1x5MobToken t = new()
+        Icon1x5MobUnit t = new()
         {
             System = TypeName,
             Name = name,
@@ -91,12 +90,12 @@ public class Icon1x5MobToken : UnitToken
 
     public override string GetOverheadAsset()
     {
-        return "UITemplates/GameSystem/Overheads/PipCounter";
+        return "UI/TableTop/Overheads/PipCounter";
     }
 
-    public override MenuItem[] GetTokenMenuItems(bool placed)
+    public override MenuItem[] GetMenuItems(bool placed)
     {
-        MenuItem[] baseItems = base.GetTokenMenuItems(placed);
+        MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
         items.Add(new MenuItem("Damage", "Damage HP/VIG", (evt) => { NumberPicker.NumberCommand("Damage"); }));
@@ -114,10 +113,10 @@ public class Icon1x5MobToken : UnitToken
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
-    public override void HandleCommand(string command, TokenData tokenData)
+    public override void Command(string command, TokenData tokenData)
     {
         Token token = tokenData.GetToken();
-        base.HandleCommand(command, tokenData);
+        base.Command(command, tokenData);
         if (command.StartsWith("Damage"))
         {
             int diff = Math.Abs(int.Parse(command.Split("|")[1]));

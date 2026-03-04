@@ -142,7 +142,7 @@
 
 //     public override string GetOverheadAsset()
 //     {
-//         return "UITemplates/GameSystem/Overheads/PipCounter";
+//         return "UI/TableTop/Overheads/PipCounter";
 //     }
 
 //     public override MenuItem[] GetTokenMenuItems(bool placed)
