@@ -424,6 +424,7 @@ public abstract class UnitData : IUnitData
         int value = int.Parse(command.Split("|")[2]);
         string popoverText = "";
         int diff = Math.Abs(value);
+
         if (value <= 0)
         {
             if (bar.Value - diff < 0)
@@ -433,7 +434,7 @@ public abstract class UnitData : IUnitData
             bar.Value -= diff;
             if (diff > 0)
             {
-                popoverText = $"/-{diff}|{bar.Name}";
+                popoverText = $"/-{diff}|_{bar.Name}";
             }
         }
         else
@@ -445,7 +446,7 @@ public abstract class UnitData : IUnitData
             bar.Value += diff;
             if (diff > 0)
             {
-                popoverText = $"/+{diff}|{bar.Name}";
+                popoverText = $"/+{diff}|_{bar.Name}";
             }
         }
         if (tokenData.Placed && popoverText?.Length > 0)
