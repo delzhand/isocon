@@ -1,6 +1,6 @@
 #Pill {
     -unity-font-definition: resource("Fonts/MusticaPro-SemiBold SDF");
-    border-radius: 14px;
+    border-radius: 12px;
     padding: 4px 8px;
     color: rgb(255, 255, 255);
     background-color: red;
@@ -11,7 +11,7 @@
 }
 
 #Pill.static {
-    padding: 4px 8px;
+    padding: 4px 10px;
 }
 
 #Pill .roundbutton {
