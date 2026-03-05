@@ -52,6 +52,7 @@ public class Toast : MonoBehaviour
                     break;
             }
         }
+        element.RegisterCallback<ClickEvent>((evt) => { duration = 0; });
         UI.System.Q("Toasts").Add(element);
         UI.System.Q("Toasts").style.display = DisplayStyle.Flex;
     }
