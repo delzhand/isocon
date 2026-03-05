@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class Icon1x5MobUnit : UnitData
+public class Icon1x5MobUnit : Icon1x5Base
 {
     private readonly static string TypeName = "Icon 1.5 Mob";
 
@@ -98,8 +98,6 @@ public class Icon1x5MobUnit : UnitData
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("Damage", "Damage HP/VIG", (evt) => { NumberPicker.TokenCommand("Damage"); }));
-
         items.Add(new MenuItem("ModVig", "Modify VIG", (evt) => { NumberPicker.TokenCommand("ModVIG"); }));
         if (Hits < 2)
         {

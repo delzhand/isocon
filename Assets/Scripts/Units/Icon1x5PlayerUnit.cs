@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using IsoconUILibrary;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
 [Serializable]
-public class Icon1x5PlayerUnit : UnitData
+public class Icon1x5PlayerUnit : Icon1x5Base
 {
     private readonly static string TypeName = "Icon 1.5 Player";
 
@@ -56,15 +58,12 @@ public class Icon1x5PlayerUnit : UnitData
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("Damage", "Damage HP/VIG", (evt) => { NumberPicker.TokenCommand("Damage", false); }));
         items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.TokenCommand("ModHP"); }));
         items.Add(new MenuItem("ModVIG", "Modify Vigor", (evt) => { NumberPicker.TokenCommand("ModVIG"); }));
         items.Add(new MenuItem("ModRES", "Modify Resolve", (evt) => { NumberPicker.TokenCommand("ModRES"); }));
         items.Add(new MenuItem("ModPRES", "Modify Party Resolve", (evt) => { NumberPicker.AllTokensCommand("ModPRES"); }));
         items.Add(new MenuItem("GainWound", "Take Wound", (evt) => DirectCommand("GainWound")));
         items.Add(new MenuItem("HealWound", "Heal Wound", (evt) => DirectCommand("LoseWound")));
-        items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRollClicked));
-        items.Add(new MenuItem("SaveRoll", "Save Roll", SaveRollClicked));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
@@ -420,30 +419,6 @@ public class Icon1x5PlayerUnit : UnitData
                 break;
         }
         return statColor;
-    }
-
-    private void AttackRollClicked(ClickEvent evt)
-    {
-        Modal.Reset("Attack Roll");
-        Modal.AddNumberNudgerField("PowerField", "Weakness/Power", 0, -20);
-        Modal.AddPreferredButton("Roll", AttackRoll);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
-    }
-
-    private void SaveRollClicked(ClickEvent evt)
-    {
-        string name = Token.GetSelected().Data.Name;
-        DiceRoller.DirectDieRoll("sum", "1d6", $"{name}'s save roll");
-        Modal.Close();
-    }
-
-    private void AttackRoll(ClickEvent evt)
-    {
-        string name = Token.GetSelected().Data.Name;
-        int power = UI.Modal.Q<NumberNudger>("PowerField").value;
-        string op = power > 0 ? "max" : "min";
-        DiceRoller.DirectDieRoll(op, $"{Math.Abs(power) + 1}d10", $"{name}'s attack roll");
-        Modal.Close();
     }
 
     private void UpdateGraphic(TokenData tokenData)

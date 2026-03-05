@@ -59,7 +59,10 @@ public abstract class UnitData : IUnitData
         items.Add(new MenuItem("AddTag", "Add Tag", AddTagModal));
         items.Add(new MenuItem("AddBar", "Add Bar", AddBarModal));
         items.Add(new MenuItem("AddStat", "Add Stat", AddStatModal));
-        items.Add(new MenuItem("EditStats", "Edit Stats/Bars", EditStatBarModal));
+        if (Stats.Count > 0 || Bars.Count > 0)
+        {
+            items.Add(new MenuItem("EditStats", "Edit Stats/Bars", EditStatBarModal));
+        }
         foreach (UnitBar bar in Bars)
         {
             items.Add(new MenuItem($"Modify{bar.Name}", $"Modify {bar.Name}", (evt) =>
@@ -91,6 +94,7 @@ public abstract class UnitData : IUnitData
             Token.Deselect();
             Player.Self().CmdRequestDeleteToken(data.Id);
         });
+        SelectionMenu.Hide();
     }
 
     private static void AddTagModal(ClickEvent evt)
@@ -222,6 +226,7 @@ public abstract class UnitData : IUnitData
             Player.Self().CmdCreateToken(data.System, data.TokenMeta, data.Name, data.Size, data.Color, data.SystemData);
             Token.Deselect();
         });
+        SelectionMenu.Hide();
     }
 
     private static void ClickEditName(ClickEvent evt)
@@ -237,6 +242,7 @@ public abstract class UnitData : IUnitData
             Token.Deselect();
         });
         Modal.AddButton("Cancel", Modal.CloseEvent);
+        SelectionMenu.Hide();
     }
 
     public virtual void Command(string value, TokenData tokenData)

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class Icon1x5EnemyUnit : UnitData
+public class Icon1x5EnemyUnit : Icon1x5Base
 {
     private readonly static string TypeName = "Icon 1.5 Enemy";
 
@@ -294,6 +294,48 @@ public class Icon1x5EnemyUnit : UnitData
             {
                 string plus = diff > 0 ? "+" : "";
                 PopoverText.Create(token, $"/{plus}{diff}|_VIG", Color.white);
+            }
+        }
+        if (command.StartsWith("Damage"))
+        {
+            int diff = int.Parse(command.Split("|")[1]);
+            if (Vigor + CurrentHP - diff < 0)
+            {
+                diff = Vigor + CurrentHP;
+            }
+            if (diff <= 0)
+            {
+                return;
+            }
+            if (diff < Vigor)
+            {
+                // Vig damage only
+                Vigor -= diff;
+                if (tokenData.Placed)
+                {
+                    PopoverText.Create(token, $"/-{diff}|_VIG", Color.white);
+                }
+            }
+            else if (diff > Vigor && Vigor > 0)
+            {
+                // Vig zeroed and HP damage
+                CurrentHP -= (diff - Vigor);
+                Vigor = 0;
+                if (tokenData.Placed)
+                {
+                    PopoverText.Create(token, $"/-{diff}|_HP/VIG", Color.white);
+                    UpdateGraphic(tokenData);
+                }
+            }
+            else if (Vigor <= 0)
+            {
+                // HP damage only
+                CurrentHP -= diff;
+                if (tokenData.Placed)
+                {
+                    PopoverText.Create(token, $"/-{diff}|_HP", Color.white);
+                    UpdateGraphic(tokenData);
+                }
             }
         }
     }
