@@ -48,6 +48,11 @@ public class Icon1x5PlayerUnit : Icon1x5Base
         return JsonUtility.ToJson(this);
     }
 
+    public static IUnitData DeserializeAsInterface(string json)
+    {
+        return JsonUtility.FromJson<Icon1x5PlayerUnit>(json);
+    }
+
     public override string GetOverheadAsset()
     {
         return "UI/TableTop/Overheads/Icon1x5";
@@ -288,7 +293,7 @@ public class Icon1x5PlayerUnit : Icon1x5Base
             "Wright/Stormbender"
         );
 
-        Modal.AddMarkup("Description", "ICON 1.5 Player tokens derive their stats from Icon1_5 data in the ruleset file.");
+        Modal.AddMarkup("Description", "Tokens for ICON 1.5 player characters.");
         Modal.AddTokenField("TokenSearchField");
         Modal.AddTextField("NameField", "Token Name", "Token");
         Modal.AddSearchField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs);
@@ -324,17 +329,8 @@ public class Icon1x5PlayerUnit : Icon1x5Base
             Name = name,
             Job = job,
             Class = pclass,
-            // MaxHP = stats["MaxHP"],
-            // CurrentHP = stats["MaxHP"],
             Vigor = 0,
             Wounds = 0,
-            // Damage = stats["Damage"],
-            // Fray = stats["Fray"],
-            // Range = stats["Range"],
-            // Speed = stats["Speed"],
-            // Dash = stats["Dash"],
-            // Defense = stats["Defense"],
-            // Color = ColorUtility.GetCommonColor(color),
             TokenMeta = TokenLibrary.GetSelectedMeta()
         };
 
@@ -384,11 +380,6 @@ public class Icon1x5PlayerUnit : Icon1x5Base
 
 
         AddToken.FinalizeToken(t.Serialize());
-    }
-
-    public static IUnitData DeserializeAsInterface(string json)
-    {
-        return JsonUtility.FromJson<Icon1x5PlayerUnit>(json);
     }
 
     #region Private functions
