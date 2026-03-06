@@ -6,9 +6,9 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class Icon1x5MobUnit : Icon1x5Base
+public class Icon2x0MobUnit : Icon1x5Base
 {
-    private readonly static string TypeName = "Icon 1.5 Mob";
+    private readonly static string TypeName = "Icon 2.0 Mob";
 
     #region Registration
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -24,7 +24,7 @@ public class Icon1x5MobUnit : Icon1x5Base
     }
     public static IUnitData DeserializeAsInterface(string json)
     {
-        return JsonUtility.FromJson<Icon1x5MobUnit>(json);
+        return JsonUtility.FromJson<Icon2x0MobUnit>(json);
     }
     #endregion
 
@@ -32,25 +32,20 @@ public class Icon1x5MobUnit : Icon1x5Base
     public string Name;
     public int Hits;
     public int Vigor;
-    public int Damage;
-    public int Fray;
-    public int Range;
-    public int Speed;
-    public int Dash;
+    public int Move;
     public int Defense;
     #endregion
 
     #region Creation
     public static void AddTokenModal()
     {
-        Modal.AddMarkup("Description", "ICON 1.5 Mob tokens have two hit counters instead of an HP bar.");
+        Modal.AddMarkup("Description", "ICON 2.0 Mob tokens have two hit counters instead of an HP bar.");
         Modal.AddTokenField("TokenSearchField");
         Modal.AddTextField("NameField", "Token Name", "Token");
 
         Modal.AddPreferredButton("Create Token", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
-        // Necessary to ensure fields are in order and can be cleared when changing type dropdown
         AddToken.OrderFields(StringUtility.CreateArray("Description", "TokenSearchField", "NameField"));
     }
 
@@ -64,16 +59,13 @@ public class Icon1x5MobUnit : Icon1x5Base
 
         string name = UI.Modal.Q<TextField>("NameField").value;
 
-        Icon1x5MobUnit t = new()
+        Icon2x0MobUnit t = new()
         {
             System = TypeName,
             Name = name,
             Hits = 2,
-            Damage = 6,
-            Fray = 3,
-            Speed = 4,
-            Dash = 2,
-            Defense = 8,
+            Move = 4,
+            Defense = 4,
             Vigor = 0,
             Color = ColorUtility.GetCommonColor("Gray"),
             TokenMeta = TokenLibrary.GetSelectedMeta()
@@ -146,6 +138,7 @@ public class Icon1x5MobUnit : Icon1x5Base
             int changeValue = int.Parse(command.Split("|")[1]);
             Vigor = Clamped(0, Vigor + changeValue, 6);
             int diff = Vigor - original;
+            diff = Math.Min(diff, 6);
             if (diff != 0 && tokenData.Placed)
             {
                 string plus = diff > 0 ? "+" : "";
@@ -188,14 +181,9 @@ public class Icon1x5MobUnit : Icon1x5Base
         l.style.fontSize = 26;
         panel.Q("Bars").Add(l);
 
-        VisualElement s1 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
-        s1.Q<Label>("Label").text = "DMG/FRAY";
-        s1.Q<Label>("Value").text = $"1d{Damage}/{Fray}";
-        panel.Q("Stats").Add(s1);
-
         VisualElement s3 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
-        s3.Q<Label>("Label").text = "SPD/DASH";
-        s3.Q<Label>("Value").text = $"{Speed}/{Dash}";
+        s3.Q<Label>("Label").text = "MOVE";
+        s3.Q<Label>("Value").text = $"{Move}";
         panel.Q("Stats").Add(s3);
 
         VisualElement s4 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
@@ -212,10 +200,6 @@ public class Icon1x5MobUnit : Icon1x5Base
         StringBuilder sb = new();
         for (int i = 0; i < Hits; i++)
         {
-            // if (i == value)
-            // {
-            //     sb.Append("<color=white>");
-            // }
             sb.Append(x);
         }
         sb.Append("<color=#25E1F2>");
@@ -226,34 +210,6 @@ public class Icon1x5MobUnit : Icon1x5Base
         sb.Append("</color>");
         return sb.ToString();
     }
-
-    // private static string GetStatColor(string job)
-    // {
-    //     string statColor = "Gray";
-    //     switch (job)
-    //     {
-    //         case "Wright":
-    //         case "Artillery":
-    //             statColor = "Blue";
-    //             break;
-    //         case "Vagabond":
-    //         case "Skirmisher":
-    //             statColor = "Yellow";
-    //             break;
-    //         case "Stalwart":
-    //         case "Heavy":
-    //             statColor = "Red";
-    //             break;
-    //         case "Leader":
-    //         case "Mendicant":
-    //             statColor = "Green";
-    //             break;
-    //         case "Legend":
-    //             statColor = "Purple";
-    //             break;
-    //     }
-    //     return statColor;
-    // }
 
     public override void UpdatePanel(TokenData tokenData, string elementName)
     {

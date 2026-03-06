@@ -1,25 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using IsoconUILibrary;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[Serializable]
-public class Icon1x5EnemyUnit : Icon1x5Base
+public class Icon2x0EnemyUnit : Icon2x0Base
 {
-    private readonly static string TypeName = "Icon 1.5 Enemy";
+    private readonly static string TypeName = "Icon 2.0 Enemy";
 
     public string Name;
     public int CurrentHP;
     public int MaxHP;
     public int Vigor;
     public string FoeClass;
-    public int Fray;
-    public int Speed;
-    public int Dash;
+    public int Move;
     public int Defense;
-    public int Damage;
     public bool Elite;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -37,7 +32,7 @@ public class Icon1x5EnemyUnit : Icon1x5Base
 
     public static IUnitData DeserializeAsInterface(string json)
     {
-        return JsonUtility.FromJson<Icon1x5EnemyUnit>(json);
+        return JsonUtility.FromJson<Icon2x0EnemyUnit>(json);
     }
 
     public static void AddTokenModal()
@@ -97,7 +92,7 @@ public class Icon1x5EnemyUnit : Icon1x5Base
             hpMulti = 1;
         }
 
-        Icon1x5EnemyUnit t = new()
+        Icon2x0EnemyUnit t = new()
         {
             System = TypeName,
             Name = name,
@@ -112,51 +107,36 @@ public class Icon1x5EnemyUnit : Icon1x5Base
             case "Heavy":
                 t.MaxHP = 40 * hpMulti;
                 t.CurrentHP = 40 * hpMulti;
-                t.Speed = 4;
-                t.Dash = 2;
-                t.Defense = 6;
-                t.Fray = 4;
-                t.Damage = 6;
+                t.Move = 4;
+                t.Defense = 3;
                 t.Color = ColorUtility.GetCommonColor("red");
                 break;
             case "Skirmisher":
                 t.MaxHP = 28 * hpMulti;
                 t.CurrentHP = 28 * hpMulti;
-                t.Speed = 4;
-                t.Dash = 4;
-                t.Defense = 10;
-                t.Fray = 2;
-                t.Damage = 10;
+                t.Move = 4;
+                t.Defense = 6;
                 t.Color = ColorUtility.GetCommonColor("yellow");
                 break;
             case "Leader":
-                t.MaxHP = 40 * hpMulti;
-                t.CurrentHP = 40 * hpMulti;
-                t.Speed = 4;
-                t.Dash = 2;
-                t.Defense = 7;
-                t.Fray = 3;
-                t.Damage = 8;
+                t.MaxHP = 48 * hpMulti;
+                t.CurrentHP = 48 * hpMulti;
+                t.Move = 4;
+                t.Defense = 4;
                 t.Color = ColorUtility.GetCommonColor("green");
                 break;
             case "Artillery":
                 t.MaxHP = 32 * hpMulti;
                 t.CurrentHP = 32 * hpMulti;
-                t.Speed = 4;
-                t.Dash = 2;
-                t.Defense = 7;
-                t.Fray = 3;
-                t.Damage = 8;
+                t.Move = 4;
+                t.Defense = 4;
                 t.Color = ColorUtility.GetCommonColor("blue");
                 break;
             case "Legend":
-                t.MaxHP = 50 * hpMulti;
-                t.CurrentHP = 50 * hpMulti;
-                t.Speed = 4;
-                t.Dash = 2;
+                t.MaxHP = 40 * hpMulti;
+                t.CurrentHP = 40 * hpMulti;
                 t.Defense = 8;
-                t.Fray = 3;
-                t.Damage = 8;
+                t.Move = 5;
                 t.Color = ColorUtility.GetCommonColor("purple");
                 break;
         }
@@ -170,7 +150,7 @@ public class Icon1x5EnemyUnit : Icon1x5Base
 
     public override string GetOverheadAsset()
     {
-        return "UI/TableTop/Overheads/Icon1x5";
+        return "UI/TableTop/Overheads/Icon2";
     }
 
     public override void UpdatePanel(TokenData tokenData, string elementName)
@@ -193,7 +173,9 @@ public class Icon1x5EnemyUnit : Icon1x5Base
         UI.ToggleDisplay(mainHPBar.Q("Wound3"), false);
 
         UI.ToggleDisplay(panel.Q("ElitePill"), Elite);
-        UI.ToggleDisplay(panel.Q("BloodiedPill"), CurrentHP > 0 && CurrentHP <= MaxHP / 2);
+        UI.ToggleDisplay(panel.Q("BloodiedPill"), CurrentHP > 0 && CurrentHP <= MaxHP / 2 && CurrentHP > MaxHP / 4);
+        UI.ToggleDisplay(panel.Q("CrisisPill"), CurrentHP > 0 && CurrentHP <= MaxHP / 4);
+
     }
 
     public override void UpdateOverhead(TokenData tokenData)
@@ -206,10 +188,6 @@ public class Icon1x5EnemyUnit : Icon1x5Base
 
         o.Q<ProgressBar>("HpBar").value = CurrentHP;
         o.Q<ProgressBar>("HpBar").highValue = MaxHP;
-
-        UI.ToggleDisplay(o.Q("Wound1"), false);
-        UI.ToggleDisplay(o.Q("Wound2"), false);
-        UI.ToggleDisplay(o.Q("Wound3"), false);
 
         UI.ToggleDisplay(o, CurrentHP > 0 && tokenData.Placed);
     }
@@ -224,14 +202,9 @@ public class Icon1x5EnemyUnit : Icon1x5Base
         hpBar.Q<ProgressBar>("HpBar").value = CurrentHP;
         panel.Q("Bars").Add(hpBar);
 
-        VisualElement s1 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
-        s1.Q<Label>("Label").text = "DMG/FRAY";
-        s1.Q<Label>("Value").text = $"1d{Damage}/{Fray}";
-        panel.Q("Stats").Add(s1);
-
         VisualElement s3 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
-        s3.Q<Label>("Label").text = "SPD/DASH";
-        s3.Q<Label>("Value").text = $"{Speed}/{Dash}";
+        s3.Q<Label>("Label").text = "MOVE";
+        s3.Q<Label>("Value").text = $"{Move}";
         panel.Q("Stats").Add(s3);
 
         VisualElement s4 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
@@ -239,9 +212,10 @@ public class Icon1x5EnemyUnit : Icon1x5Base
         s4.Q<Label>("Value").text = $"{Defense}";
         panel.Q("Stats").Add(s4);
 
-        panel.Q("Pills").Add(Pill.InitStatic("ElitePill", "Elite", ColorUtility.GetCommonColor("Purple")));
+        panel.Q("Pills").Add(Pill.InitStatic("ElitePill", "Elite", Color.purple));
         panel.Q("Pills").Add(Pill.InitStatic("ClassPill", FoeClass, Color));
         panel.Q("Pills").Add(Pill.InitStatic("BloodiedPill", "Bloodied", Color.red));
+        panel.Q("Pills").Add(Pill.InitStatic("CrisisPill", "Crisis", Color.red));
     }
 
     public override MenuItem[] GetMenuItems(bool placed)
@@ -277,6 +251,9 @@ public class Icon1x5EnemyUnit : Icon1x5Base
             int changeValue = int.Parse(command.Split("|")[1]);
             Vigor = Clamped(0, Vigor + changeValue, MaxHP / 4);
             int diff = Vigor - original;
+            int maxVigor = (FoeClass == "Legend") ? 15 : MaxHP / 4;
+            diff = Math.Min(maxVigor, diff);
+            if (FoeClass == "Legend") { }
             if (diff != 0 && tokenData.Placed)
             {
                 string plus = diff > 0 ? "+" : "";
@@ -326,10 +303,10 @@ public class Icon1x5EnemyUnit : Icon1x5Base
             }
         }
     }
-
     private void UpdateGraphic(TokenData tokenData)
     {
         Token token = tokenData.GetToken();
         token.SetDefeated(CurrentHP <= 0);
     }
+
 }
