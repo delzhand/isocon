@@ -88,8 +88,9 @@ public class NumberPicker
 
     public static int GetNumber()
     {
-        int value = int.Parse(NumberString);
-        return negative ? -value : value;
+        string value = UI.NumberPicker.Q<TextField>("ValueField").value;
+        int ivalue = int.Parse(value);
+        return negative ? -ivalue : ivalue;
     }
 
     private static void SetNegative(ClickEvent evt)
