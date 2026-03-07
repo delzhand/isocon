@@ -21,7 +21,7 @@ public interface IUnitData
 [Serializable]
 public abstract class UnitData : IUnitData
 {
-    public string System;
+    public string Type;
     public TokenMeta TokenMeta;
     public string Shape;
     public Color Color;

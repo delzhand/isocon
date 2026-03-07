@@ -325,7 +325,7 @@ public class Icon1x5PlayerUnit : Icon1x5Base
 
         Icon1x5PlayerUnit t = new()
         {
-            System = TypeName,
+            Type = TypeName,
             Name = name,
             Job = job,
             Class = pclass,

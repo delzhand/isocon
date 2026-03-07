@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 using SimpleFileBrowser;
 using System.Linq;
 using System.Collections.Generic;
+using SimpleJSON;
 
 public class LauncherState : BaseState
 {
@@ -142,7 +143,7 @@ public class LauncherState : BaseState
 
         if (_mode == ConnectMode.Solo || _mode == ConnectMode.Host)
         {
-            string system = Preferences.Current.System;
+            // string system = Preferences.Current.System;
 
             // string[] systemOptions = GameSystem.SystemOptions();
             // Modal.AddDropdownField("GameSystem", "Game System", system, systemOptions, (evt) =>
@@ -218,12 +219,12 @@ public class LauncherState : BaseState
 
     private void ConfirmConfig(ClickEvent evt)
     {
-        if (UI.Modal.Q("RulesFile") != null)
-        {
-            Preferences.Current.RulesFile = UI.Modal.Q("RulesFile").Q<TextField>("File").value;
-        }
+        // if (UI.Modal.Q("RulesFile") != null)
+        // {
+        //     Preferences.Current.RulesFile = UI.Modal.Q("RulesFile").Q<TextField>("File").value;
+        // }
 
-        TerrainController.GridType = DefaultGridType();
+        // TerrainController.GridType = DefaultGridType();
         NetworkManager netManager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
         switch (_mode)
         {
@@ -248,19 +249,19 @@ public class LauncherState : BaseState
         UI.ToggleDisplay("ConnectingMessage", true);
     }
 
-    private string DefaultGridType()
-    {
-        switch (Preferences.Current.System)
-        {
-            case "ICON 1.5":
-            case "Maleghast":
-                return "Square";
-            case "Lancer":
-                return "Hex";
-            default:
-                return Preferences.Current.Grid;
-        }
-    }
+    // private string DefaultGridType()
+    // {
+    //     switch (Preferences.Current.System)
+    //     {
+    //         case "ICON 1.5":
+    //         case "Maleghast":
+    //             return "Square";
+    //         case "Lancer":
+    //             return "Hex";
+    //         default:
+    //             return Preferences.Current.Grid;
+    //     }
+    // }
 
     #endregion
 

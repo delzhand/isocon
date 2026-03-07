@@ -133,7 +133,7 @@ public class Icon2x0PlayerUnit : Icon2x0Base
 
         Icon2x0PlayerUnit t = new()
         {
-            System = TypeName,
+            Type = TypeName,
             Name = name,
             Job = job,
             Class = pclass,

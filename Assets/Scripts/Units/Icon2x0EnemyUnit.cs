@@ -94,7 +94,7 @@ public class Icon2x0EnemyUnit : Icon2x0Base
 
         Icon2x0EnemyUnit t = new()
         {
-            System = TypeName,
+            Type = TypeName,
             Name = name,
             Shape = shape,
             Elite = elite,
@@ -110,6 +110,9 @@ public class Icon2x0EnemyUnit : Icon2x0Base
                 t.Move = 4;
                 t.Defense = 3;
                 t.Color = ColorUtility.GetCommonColor("red");
+                t.Tags = new();
+                t.Tags.Add(new UnitTag() { Name = "Guard", Color = ColorUtility.GetCommonColor("blue"), HasNumber = false });
+                t.Tags.Add(new UnitTag() { Name = "Armor", Color = ColorUtility.GetCommonColor("blue"), HasNumber = true, Value = 1 });
                 break;
             case "Skirmisher":
                 t.MaxHP = 28 * hpMulti;
@@ -131,6 +134,8 @@ public class Icon2x0EnemyUnit : Icon2x0Base
                 t.Move = 4;
                 t.Defense = 4;
                 t.Color = ColorUtility.GetCommonColor("blue");
+                t.Tags = new();
+                t.Tags.Add(new UnitTag() { Name = "Aetherwall", Color = ColorUtility.GetCommonColor("blue"), HasNumber = false });
                 break;
             case "Legend":
                 t.MaxHP = 40 * hpMulti;
@@ -138,6 +143,8 @@ public class Icon2x0EnemyUnit : Icon2x0Base
                 t.Defense = 8;
                 t.Move = 5;
                 t.Color = ColorUtility.GetCommonColor("purple");
+                t.Tags = new();
+                t.Tags.Add(new UnitTag() { Name = "Juggernaut", Color = ColorUtility.GetCommonColor("blue"), HasNumber = false });
                 break;
         }
 

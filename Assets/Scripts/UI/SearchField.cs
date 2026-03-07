@@ -7,15 +7,15 @@ public class SearchField
 {
     public static VisualElement Create(string[] options, string title)
     {
-        VisualElement element = UI.CreateFromTemplate("UI/SearchInput");
+        VisualElement element = UI.CreateFromTemplate("UI/SearchInput2");
 
         if (title.Length == 0)
         {
             element.AddToClassList("no-title");
         }
-
+        Label mainLabel = element.Q<Label>("Label");
+        mainLabel.text = title;
         TextField input = element.Q<TextField>("SearchInput");
-        input.label = title;
         VisualElement results = element.Q("SearchResults");
 
         for (int i = 0; i < options.Length; i++)
@@ -41,10 +41,12 @@ public class SearchField
         {
             UI.ToggleDisplay(results, true);
         });
-        input.RegisterCallback<FocusOutEvent>((evt) =>
-        {
-            UI.ToggleDisplay(results, false);
-        });
+        // element.RegisterCallback<MouseLeaveEvent>((evt) =>
+        // {
+        //     Debug.Log("exit");
+
+        //     UI.ToggleDisplay(results, false);
+        // });
         input.RegisterValueChangedCallback((evt) =>
         {
             FilterElements(element);

@@ -55,7 +55,7 @@ public class EnvironmentalUnit : UnitData
         string color = UI.Modal.Q<DropdownField>("ColorField").value;
         EnvironmentalUnit t = new()
         {
-            System = "Environmental",
+            Type = "Environmental",
             Name = name,
             Shape = shape,
             Color = ColorUtility.GetCommonColor(color),

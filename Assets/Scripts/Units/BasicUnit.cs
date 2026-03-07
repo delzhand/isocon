@@ -63,7 +63,7 @@ public class BasicUnit : UnitData
         string color = UI.Modal.Q<DropdownField>("ColorField").value;
         BasicUnit t = new()
         {
-            System = TypeName,
+            Type = TypeName,
             Name = name,
             MaxHP = maxHP,
             CurrentHP = maxHP,

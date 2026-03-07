@@ -99,7 +99,7 @@ public class Icon1x5EnemyUnit : Icon1x5Base
 
         Icon1x5EnemyUnit t = new()
         {
-            System = TypeName,
+            Type = TypeName,
             Name = name,
             Shape = shape,
             Elite = elite,

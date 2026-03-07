@@ -400,7 +400,7 @@ public class Modal
         Modal.AddContents(wrapper);
     }
 
-    public static void AddFileField(string name, string label, string defaultValue, string type)
+    public static void AddFileField(string name, string label, string defaultValue, string type, EventCallback<ChangeEvent<string>> onChange = null)
     {
         TextField field = new(label);
         field.name = "File";
@@ -408,10 +408,11 @@ public class Modal
         field.AddToClassList("no-margin");
         field.AddToClassList("filefield");
         field.isReadOnly = true;
+        field.RegisterValueChangedCallback(onChange);
 
         Button search = new();
         search.text = "Search";
-        ClickEvent ce = null;
+        // ClickEvent ce = null;
         switch (type)
         {
             case "rules":

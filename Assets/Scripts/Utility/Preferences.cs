@@ -7,7 +7,6 @@ public class StoredPreferences
 {
     public string DataPath;
     public string PlayerName;
-    public string System;
     public string UIScale;
     public string WorldUIScale = "100%";
     public float TokenScale;
@@ -20,10 +19,10 @@ public class StoredPreferences
     public string ReleaseNotesSeen;
     public int SkipTutorials;
     public bool OverrideRules;
-    public string RulesFile;
     public bool ShowHUD;
     public int TargetFramerate;
     public bool DragPan;
+    public string MaleghastFile;
 }
 
 public class Preferences
@@ -50,7 +49,6 @@ public class Preferences
             {
                 DataPath = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath),
                 PlayerName = PlayerPrefs.GetString("PlayerName", "New Player"),
-                System = PlayerPrefs.GetString("System", "Generic"),
                 UIScale = PlayerPrefs.GetString("UIScale", "100%"),
                 WorldUIScale = PlayerPrefs.GetString("WorldUIScale", "100%"),
                 TokenScale = PlayerPrefs.GetFloat("TokenScale", 1f),
@@ -64,6 +62,7 @@ public class Preferences
                 TargetFramerate = PlayerPrefs.GetInt("TargetFramerate", 30),
                 ShowHUD = true,
                 DragPan = true,
+                MaleghastFile = PlayerPrefs.GetString("MaleghastFile", ""),
             };
             Save();
         }
@@ -172,33 +171,21 @@ public class Preferences
         Save();
     }
 
-    public static void SetSystem(string value)
-    {
-        _current.System = value;
-        Save();
-    }
-
     public static void SetBlockBorderOpacity(float value)
     {
         _current.BlockBorderOpacity = value;
         Save();
     }
 
-    public static void SetOverrideRules(bool value)
-    {
-        _current.OverrideRules = value;
-        Save();
-    }
-
-    public static void SetRulesFile(string value)
-    {
-        _current.RulesFile = value;
-        Save();
-    }
-
     public static void SetTargetFramerate(int value)
     {
         _current.TargetFramerate = value;
+        Save();
+    }
+
+    public static void SetMaleghastFile(string value)
+    {
+        _current.MaleghastFile = value;
         Save();
     }
 

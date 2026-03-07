@@ -69,7 +69,7 @@ public class LancerMechUnit : UnitData
         string color = UI.Modal.Q<DropdownField>("ColorField").value;
         LancerMechUnit t = new()
         {
-            System = "Lancer Mech",
+            Type = "Lancer Mech",
             Name = name,
             MaxHP = maxHP,
             CurrentHP = maxHP,

@@ -84,6 +84,9 @@ public class Config
             Viewport.SetPanMode(dragValue);
         });
 
+        // string maleghastData = Preferences.Current.RulesFile;
+        // Modal.AddFileField("RulesFile", "Maleghast Data", maleghastData, "rules");
+
         Modal.AddPreferredButton("Confirm", CloseModal);
     }
 

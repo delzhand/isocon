@@ -66,7 +66,7 @@ public class Icon1x5MobUnit : Icon1x5Base
 
         Icon1x5MobUnit t = new()
         {
-            System = TypeName,
+            Type = TypeName,
             Name = name,
             Hits = 2,
             Damage = 6,
@@ -212,10 +212,6 @@ public class Icon1x5MobUnit : Icon1x5Base
         StringBuilder sb = new();
         for (int i = 0; i < Hits; i++)
         {
-            // if (i == value)
-            // {
-            //     sb.Append("<color=white>");
-            // }
             sb.Append(x);
         }
         sb.Append("<color=#25E1F2>");
@@ -226,34 +222,6 @@ public class Icon1x5MobUnit : Icon1x5Base
         sb.Append("</color>");
         return sb.ToString();
     }
-
-    // private static string GetStatColor(string job)
-    // {
-    //     string statColor = "Gray";
-    //     switch (job)
-    //     {
-    //         case "Wright":
-    //         case "Artillery":
-    //             statColor = "Blue";
-    //             break;
-    //         case "Vagabond":
-    //         case "Skirmisher":
-    //             statColor = "Yellow";
-    //             break;
-    //         case "Stalwart":
-    //         case "Heavy":
-    //             statColor = "Red";
-    //             break;
-    //         case "Leader":
-    //         case "Mendicant":
-    //             statColor = "Green";
-    //             break;
-    //         case "Legend":
-    //             statColor = "Purple";
-    //             break;
-    //     }
-    //     return statColor;
-    // }
 
     public override void UpdatePanel(TokenData tokenData, string elementName)
     {

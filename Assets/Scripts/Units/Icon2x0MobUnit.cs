@@ -61,7 +61,7 @@ public class Icon2x0MobUnit : Icon1x5Base
 
         Icon2x0MobUnit t = new()
         {
-            System = TypeName,
+            Type = TypeName,
             Name = name,
             Hits = 2,
             Move = 4,
