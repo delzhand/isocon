@@ -12,7 +12,7 @@ public class TokenMenu
         TokenData data = Token.GetSelected().Data;
         SelectionMenu.Reset("TOKEN MENU", new Vector2(30, 50), Token.GetSelected().transform);
 
-        IUnitData st = UnitTokenRegistry.DoInterfaceCallback(data.System, data.SystemData);
+        IUnitData st = UnitTokenRegistry.DoInterfaceCallback(data.Type, data.SystemData);
         MenuItem[] systemItems = st.GetMenuItems(data.Placed);
         foreach (MenuItem m in systemItems)
         {

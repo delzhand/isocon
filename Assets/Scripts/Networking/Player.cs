@@ -91,13 +91,13 @@ public class Player : NetworkBehaviour
 
     #region Create Token
     [Command]
-    public void CmdCreateSystemToken(string json)
+    public void CmdCreateToken(string json)
     {
         UnitMeta stm = JsonUtility.FromJson<UnitMeta>(json);
         GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData"));
         TokenData data = g.GetComponent<TokenData>();
         data.Id = Guid.NewGuid().ToString(); ;
-        data.System = stm.System;
+        data.Type = stm.Type;
         data.TokenMeta = stm.TokenMeta;
         data.Name = stm.Name;
         data.Shape = stm.Shape;
@@ -106,21 +106,21 @@ public class Player : NetworkBehaviour
         NetworkServer.Spawn(g);
     }
 
-    [Command]
-    public void CmdCreateToken(string system, TokenMeta tokenMeta, string name, int size, Color color, string systemData)
-    {
-        string id = Guid.NewGuid().ToString();
-        GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData"));
-        TokenData data = g.GetComponent<TokenData>();
-        data.Id = id;
-        data.System = system;
-        data.TokenMeta = tokenMeta;
-        data.Name = name;
-        data.Size = size;
-        data.Color = color;
-        data.SystemData = systemData;
-        NetworkServer.Spawn(g);
-    }
+    // [Command]
+    // public void CmdCreateToken(string system, TokenMeta tokenMeta, string name, int size, Color color, string systemData)
+    // {
+    //     string id = Guid.NewGuid().ToString();
+    //     GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData"));
+    //     TokenData data = g.GetComponent<TokenData>();
+    //     data.Id = id;
+    //     data.System = system;
+    //     data.TokenMeta = tokenMeta;
+    //     data.Name = name;
+    //     data.Size = size;
+    //     data.Color = color;
+    //     data.SystemData = systemData;
+    //     NetworkServer.Spawn(g);
+    // }
 
     public void CmdCreateTokenPlaced(string system, TokenMeta tokenMeta, string name, int size, Color color, string systemData, Vector3 position)
     {
@@ -128,7 +128,7 @@ public class Player : NetworkBehaviour
         GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData"));
         TokenData data = g.GetComponent<TokenData>();
         data.Id = id;
-        data.System = system;
+        data.Type = system;
         data.TokenMeta = tokenMeta;
         data.Name = name;
         data.Size = size;

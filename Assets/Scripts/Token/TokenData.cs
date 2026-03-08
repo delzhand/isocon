@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 public class TokenData : NetworkBehaviour
 {
     [SyncVar]
-    public string System;
+    public string Type;
     [SyncVar]
     public string Id;
     [SyncVar]
@@ -92,7 +92,7 @@ public class TokenData : NetworkBehaviour
             {
                 UI.FollowTransform(WorldObject.GetComponent<Token>().transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").transform, OverheadElement, UI.World, Camera.main, Vector2.zero);
             }
-            IUnitData st = UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
+            IUnitData st = UnitTokenRegistry.DoInterfaceCallback(Type, SystemData);
             st.UpdateOverhead(this);
         }
 
@@ -138,7 +138,7 @@ public class TokenData : NetworkBehaviour
 
     public void CreateOverheadElement()
     {
-        IUnitData st = UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
+        IUnitData st = UnitTokenRegistry.DoInterfaceCallback(Type, SystemData);
         string asset = st.GetOverheadAsset();
         if (asset != null)
         {
@@ -290,7 +290,7 @@ public class TokenData : NetworkBehaviour
             Name = command.Split("|")[1];
         }
 
-        IUnitData st = UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
+        IUnitData st = UnitTokenRegistry.DoInterfaceCallback(Type, SystemData);
         st.Command(command, this);
         SystemData = st.Serialize();
         // NeedsRedraw = true;
@@ -326,7 +326,7 @@ public class TokenData : NetworkBehaviour
         {
             panel.Q("Portrait").style.backgroundImage = GraphicSingle;
         }
-        IUnitData st = UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
+        IUnitData st = UnitTokenRegistry.DoInterfaceCallback(Type, SystemData);
         st.UpdatePanel(this, elementName);
         Name = st.Label();
         panel.Q<Label>("Name").text = Name;
@@ -366,7 +366,7 @@ public class TokenData : NetworkBehaviour
 
     public IUnitData GetSystemToken()
     {
-        return UnitTokenRegistry.DoInterfaceCallback(System, SystemData);
+        return UnitTokenRegistry.DoInterfaceCallback(Type, SystemData);
     }
 
     public void Delete()

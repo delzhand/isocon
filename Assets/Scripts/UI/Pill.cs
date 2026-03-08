@@ -60,4 +60,31 @@ public class Pill
         return p;
     }
 
+    public static VisualElement InitRemovable(string name, string text, Color color, bool forToken)
+    {
+        VisualElement p = UI.CreateFromTemplate("UI/TableTop/Pill");
+        p.name = name;
+        p.Q("Pill").AddToClassList("removable");
+        p.Q<Label>("Name").text = $"{text}";
+        p.Q("Pill").style.backgroundColor = color;
+        p.Q("Decrement").style.display = DisplayStyle.None;
+        p.Q("Increment").style.display = DisplayStyle.None;
+        p.Q("Pill").style.backgroundColor = color;
+        p.Q("Remove").style.color = color;
+        if (forToken)
+        {
+            p.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) =>
+            {
+                Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"RemoveTag|{name}");
+            });
+        }
+        else
+        {
+            p.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) =>
+            {
+                Player.Self().CmdRequestGameSystemCommand($"RemoveTag|{name}");
+            });
+        }
+        return p;
+    }
 }

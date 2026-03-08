@@ -14,6 +14,10 @@
     padding: 4px 10px;
 }
 
+#Pill.removable {
+    padding-left: 10px;
+}
+
 #Pill .roundbutton {
     border-radius: 50%;
     border-width: 0;

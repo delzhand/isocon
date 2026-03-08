@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine.UIElements;
+using UnityEngine;
 
 public class AddToken
 {
@@ -36,7 +37,7 @@ public class AddToken
 
     public static void FinalizeToken(string json)
     {
-        Player.Self().CmdCreateSystemToken(json);
+        Player.Self().CmdCreateToken(json);
         Player.Self().ClearOp();
         Modal.Close();
 

@@ -75,4 +75,29 @@ public class SearchField
             }
         }
     }
+
+    public static void ChangeOptions(VisualElement field, string[] options)
+    {
+        TextField input = field.Q<TextField>("SearchInput");
+        VisualElement results = field.Q("SearchResults");
+        results.Clear();
+        for (int i = 0; i < options.Length; i++)
+        {
+            Label label = new Label(options[i]);
+            label.RegisterCallback<ClickEvent>((evt) =>
+            {
+                input.SetValueWithoutNotify(label.text);
+                UI.ToggleDisplay(results, false);
+            });
+            label.RegisterCallback<MouseEnterEvent>((evt) =>
+            {
+                label.AddToClassList("selected");
+            });
+            label.RegisterCallback<MouseLeaveEvent>((evt) =>
+            {
+                label.RemoveFromClassList("selected");
+            });
+            results.Add(label);
+        }
+    }
 }

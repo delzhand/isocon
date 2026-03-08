@@ -73,19 +73,19 @@ public abstract class UnitData : IUnitData
         return items.ToArray();
     }
 
-    private static void ClickFlip(ClickEvent evt)
+    protected static void ClickFlip(ClickEvent evt)
     {
         Token.GetSelected().transform.Find("Offset/Avatar/Cutout/Cutout Quad").Rotate(new Vector3(0, 180, 0));
         Token.Deselect();
     }
 
-    private static void ClickRemove(ClickEvent evt)
+    protected static void ClickRemove(ClickEvent evt)
     {
         Token.GetSelected().Remove();
         Token.Deselect();
     }
 
-    private static void ClickDelete(ClickEvent evt)
+    protected static void ClickDelete(ClickEvent evt)
     {
         TokenData data = Token.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
@@ -217,13 +217,13 @@ public abstract class UnitData : IUnitData
         Modal.Close();
     }
 
-    private static void ClickClone(ClickEvent evt)
+    protected static void ClickClone(ClickEvent evt)
     {
         TokenData data = Token.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
         Modal.DoubleConfirm("Clone Token", $"Are you sure you want to clone {name}?", () =>
         {
-            Player.Self().CmdCreateToken(data.System, data.TokenMeta, data.Name, data.Size, data.Color, data.SystemData);
+            Player.Self().CmdCreateToken(data.SystemData);
             Token.Deselect();
         });
         SelectionMenu.Hide();
@@ -356,35 +356,44 @@ public abstract class UnitData : IUnitData
         }
         foreach (UnitTag tag in Tags)
         {
-            VisualElement pill = UI.CreateFromTemplate("UI/TableTop/Pill");
-            string text = $"{tag.Name}";
             if (tag.HasNumber)
             {
-                text += $"   {tag.Value}";
-                pill.Q("Decrement").style.color = tag.Color;
-                pill.Q("Increment").style.color = tag.Color;
-                pill.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) =>
-                {
-                    Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"IncrementTag|{tag.Name}");
-                });
-                pill.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) =>
-                {
-                    Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"DecrementTag|{tag.Name}");
-                });
+                panel.Q("Pills").Add(Pill.InitNumber(tag.Name, tag.Name, tag.Value, tag.Color, true));
             }
             else
             {
-                UI.ToggleDisplay(pill.Q("Increment"), false);
-                UI.ToggleDisplay(pill.Q("Decrement"), false);
+                panel.Q("Pills").Add(Pill.InitRemovable(tag.Name, tag.Name, tag.Color, true));
             }
-            pill.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) =>
-            {
-                Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"RemoveTag|{tag.Name}");
-            });
-            pill.Q("Pill").style.backgroundColor = tag.Color;
-            pill.Q("Remove").style.color = tag.Color;
-            pill.Q<Label>("Name").text = text;
-            panel.Q("Pills").Add(pill);
+
+            // VisualElement pill = UI.CreateFromTemplate("UI/TableTop/Pill");
+            // string text = $"{tag.Name}";
+            // if (tag.HasNumber)
+            // {
+            //     text += $"   {tag.Value}";
+            //     pill.Q("Decrement").style.color = tag.Color;
+            //     pill.Q("Increment").style.color = tag.Color;
+            //     pill.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) =>
+            //     {
+            //         Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"IncrementTag|{tag.Name}");
+            //     });
+            //     pill.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) =>
+            //     {
+            //         Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"DecrementTag|{tag.Name}");
+            //     });
+            // }
+            // else
+            // {
+            //     UI.ToggleDisplay(pill.Q("Increment"), false);
+            //     UI.ToggleDisplay(pill.Q("Decrement"), false);
+            // }
+            // pill.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) =>
+            // {
+            //     Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"RemoveTag|{tag.Name}");
+            // });
+            // pill.Q("Pill").style.backgroundColor = tag.Color;
+            // pill.Q("Remove").style.color = tag.Color;
+            // pill.Q<Label>("Name").text = text;
+            // panel.Q("Pills").Add(pill);
         }
     }
 
@@ -497,7 +506,7 @@ public class UnitStat
 public class UnitMeta
 {
     public string Name;
-    public string System;
+    public string Type;
     public TokenMeta TokenMeta;
     public string Shape;
     public Color Color;
