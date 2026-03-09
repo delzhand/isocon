@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -52,7 +53,7 @@ public abstract class UnitData : IUnitData
             items.Add(new MenuItem("Remove", "Remove", ClickRemove));
             items.Add(new MenuItem("Flip", "Flip", ClickFlip));
         }
-        // items.Add(new MenuItem("Reshape", "Reshape", ClickReshape));
+        items.Add(new MenuItem("Reshape", "Reshape", ReshapeModal));
         items.Add(new MenuItem("EditName", "Rename", ClickEditName));
         items.Add(new MenuItem("Clone", "Clone", ClickClone));
         items.Add(new MenuItem("Delete", "Delete", ClickDelete));
@@ -229,6 +230,37 @@ public abstract class UnitData : IUnitData
         SelectionMenu.Hide();
     }
 
+    public static string[] ShapeOptions()
+    {
+        return StringUtility.CreateArray("Square 1x1", "Square 2x2", "Square 3x3", "Square 4x4", "Hex 1", "Hex 2", "Hex 3", "Hex 4");
+    }
+
+    public static string[] SquareShapeOptions()
+    {
+        return StringUtility.CreateArray("Square 1x1", "Square 2x2", "Square 3x3", "Square 4x4");
+    }
+
+    public static string[] HexShapeOptions()
+    {
+        return StringUtility.CreateArray("Hex 1", "Hex 2", "Hex 3", "Hex 4");
+    }
+
+    private static void ReshapeModal(ClickEvent evt)
+    {
+        TokenData data = Token.GetSelected().Data;
+        Modal.Reset("Reshape");
+        Modal.AddDropdownField("Reshape", "New Shape", data.Shape, ShapeOptions());
+        Modal.AddPreferredButton("Update", (evt) =>
+        {
+            string newShape = UI.Modal.Q<DropdownField>("Reshape").value;
+            Player.Self().CmdRequestTokenDataCommand(data.Id, $"Reshape|{newShape}");
+            Modal.Close();
+            Token.Deselect();
+        });
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+        SelectionMenu.Hide();
+    }
+
     private static void ClickEditName(ClickEvent evt)
     {
         TokenData data = Token.GetSelected().Data;
@@ -318,6 +350,13 @@ public abstract class UnitData : IUnitData
         {
             ModBar(value, tokenData);
             Token.RebuildPanels = true;
+        }
+        if (value.StartsWith("Reshape"))
+        {
+            string[] parts = value.Split("|");
+            Shape = parts[1];
+            tokenData.Shape = parts[1];
+            tokenData.SetShape();
         }
     }
 
@@ -418,16 +457,25 @@ public abstract class UnitData : IUnitData
         SelectionMenu.Hide();
     }
 
-    private void CounterTag(string name, int num)
+    protected void CounterTag(string name, int num)
     {
         int i = Tags.FindIndex(a => a.Name == name);
         Tags[i].Value += num;
     }
 
-    private void RemoveTag(string name)
+    protected bool HasTag(string name)
     {
         int i = Tags.FindIndex(a => a.Name == name);
-        Tags.RemoveAt(i);
+        return i >= 0;
+    }
+
+    protected void RemoveTag(string name)
+    {
+        int i = Tags.FindIndex(a => a.Name == name);
+        if (i >= 0)
+        {
+            Tags.RemoveAt(i);
+        }
     }
 
     private void ModBar(string command, TokenData tokenData)

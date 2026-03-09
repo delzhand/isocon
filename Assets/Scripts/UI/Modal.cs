@@ -201,6 +201,18 @@ public class Modal
         Modal.AddContents(field);
     }
 
+    public static void AddHelpText(string name, string contents)
+    {
+        Label label = new Label(contents);
+        label.enableRichText = true;
+        label.style.whiteSpace = WhiteSpace.Normal;
+
+        label.name = name;
+        label.AddToClassList("no-margin");
+        label.AddToClassList("help-text");
+        Modal.AddContents(label);
+    }
+
     public static void AddSeparator()
     {
         VisualElement v = new VisualElement();

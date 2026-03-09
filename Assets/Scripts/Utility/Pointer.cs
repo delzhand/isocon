@@ -27,9 +27,24 @@ public class Pointer
         return null;
     }
 
-    public static Token PickToken()
+    public static Vector3 PickPoint()
     {
-        if (_unitBarMouseoverToken)
+        if (UI.ClicksSuspended || Modal.IsOpen())
+        {
+            return Vector3.zero;
+        }
+        _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        bool isHit = Physics.Raycast(_ray, out RaycastHit hit, 9999f, LayerMask.GetMask("Block"));
+        if (isHit && hit.collider.CompareTag("Block"))
+        {
+            return hit.collider.GetComponent<Block>().GetNearestCorner(hit.point);
+        }
+        return Vector3.zero;
+    }
+
+    public static Token PickToken(bool worldOnly = false)
+    {
+        if (_unitBarMouseoverToken && !worldOnly)
         {
             return _unitBarMouseoverToken;
         }
@@ -59,7 +74,8 @@ public class Pointer
         {
             focusMode = BlockFocusMode.Row;
         }
-        PointWithMask(LayerMask.GetMask("Block"), focusMode);
+        if (Token.GetSelected()?.Data.Shape == "Square 2x2")
+            PointWithMask(LayerMask.GetMask("Block"), focusMode);
     }
 
     public static void Point()
@@ -156,6 +172,17 @@ public class Pointer
         if (!b.Focused)
         {
             FocusBlocks(b, mode);
+        }
+
+        if (Token.GetSelected() != null && Token.GetSelected().Data.CornerTargeting())
+        {
+            Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Physics.Raycast(_ray, out RaycastHit hit, 9999f, LayerMask.GetMask("Block"));
+            Player.Self().GetComponent<DirectionalLine>().SetTarget(b.GetNearestCorner(hit.point));
+        }
+        else
+        {
+            Player.Self().GetComponent<DirectionalLine>().SetTarget(b.GetMidpoint());
         }
     }
 

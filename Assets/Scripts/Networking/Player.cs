@@ -122,25 +122,25 @@ public class Player : NetworkBehaviour
     //     NetworkServer.Spawn(g);
     // }
 
-    public void CmdCreateTokenPlaced(string system, TokenMeta tokenMeta, string name, int size, Color color, string systemData, Vector3 position)
-    {
-        string id = Guid.NewGuid().ToString();
-        GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData"));
-        TokenData data = g.GetComponent<TokenData>();
-        data.Id = id;
-        data.Type = system;
-        data.TokenMeta = tokenMeta;
-        data.Name = name;
-        data.Size = size;
-        data.Color = color;
-        data.SystemData = systemData;
+    // public void CmdCreateTokenPlaced(string system, TokenMeta tokenMeta, string name, int size, Color color, string systemData, Vector3 position)
+    // {
+    //     string id = Guid.NewGuid().ToString();
+    //     GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData"));
+    //     TokenData data = g.GetComponent<TokenData>();
+    //     data.Id = id;
+    //     data.Type = system;
+    //     data.TokenMeta = tokenMeta;
+    //     data.Name = name;
+    //     data.Size = size;
+    //     data.Color = color;
+    //     data.SystemData = systemData;
 
-        data.Placed = true;
-        data.LastKnownPosition = position;
-        g.transform.localScale = Vector3.one;
+    //     data.Placed = true;
+    //     data.LastKnownPosition = position;
+    //     g.transform.localScale = Vector3.one;
 
-        NetworkServer.Spawn(g);
-    }
+    //     NetworkServer.Spawn(g);
+    // }
     #endregion
 
     #region Delete Token

@@ -43,7 +43,7 @@ public class LancerMechUnit : UnitData
         Modal.AddMarkup("Description", "Lancer Mech tokens have primary HP, Structure, Stress, and Heat stats by default.");
         Modal.AddTokenField("TokenSearchField");
         Modal.AddTextField("NameField", "Token Name", "Token");
-        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", StringUtility.CreateArray("Square 1x1", "Square 2x2", "Square 3x3", "Hex 1", "Hex 2", "Hex 3"));
+        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", UnitData.HexShapeOptions());
         Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
         Modal.AddIntField("MaxHPField", "Max HP", 10);
         Modal.AddIntField("MaxHeatField", "Heat Cap", 4);

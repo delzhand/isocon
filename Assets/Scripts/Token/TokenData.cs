@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Mirror;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -18,8 +19,6 @@ public class TokenData : NetworkBehaviour
     public string Name = "";
     [SyncVar]
     public TokenMeta TokenMeta;
-    [SyncVar]
-    public int Size;
     [SyncVar]
     public string Shape;
     [SyncVar]
@@ -133,7 +132,7 @@ public class TokenData : NetworkBehaviour
             WorldObject.transform.position = LastKnownPosition;
         }
         WorldObject.GetComponent<Token>().Data = this;
-        SetSize();
+        SetShape();
     }
 
     public void CreateOverheadElement()
@@ -164,25 +163,56 @@ public class TokenData : NetworkBehaviour
         }
     }
 
-    private void SetSize()
+    public bool CornerTargeting()
     {
-        if (Size == 1)
+        string[] cornerShapes = StringUtility.CreateArray("Square 2x2", "Square 4x4", "Hex 2", "Hex 4");
+        return cornerShapes.Contains(Shape);
+    }
+
+    public void SetShape()
+    {
+        switch (Shape)
         {
-            WorldObject.GetComponent<Token>().Size = 1;
-            WorldObject.transform.Find("Offset").transform.localScale = new Vector3(1, 1, 1);
-            WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(.7f, .7f, 4);
-        }
-        if (Size == 2)
-        {
-            WorldObject.GetComponent<Token>().Size = 2;
-            WorldObject.transform.Find("Offset").transform.localScale = new Vector3(2, 2, 2);
-            WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(1.7f, 1.7f, 4);
-        }
-        else if (Size == 3)
-        {
-            WorldObject.GetComponent<Token>().Size = 3;
-            WorldObject.transform.Find("Offset").transform.localScale = new Vector3(3, 3, 3);
-            WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2.7f, 2.7f, 4);
+            case "Square 1x1":
+                WorldObject.transform.Find("Offset").transform.localScale = new Vector3(1, 1, 1);
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.SquareShadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(.7f, .7f, 4);
+                break;
+            case "Square 2x2":
+                WorldObject.transform.Find("Offset").transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.SquareShadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(1.7f, 1.7f, 4);
+                break;
+            case "Square 3x3":
+                WorldObject.transform.Find("Offset").transform.localScale = new Vector3(2f, 2f, 2f);
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.SquareShadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2.7f, 2.7f, 4);
+                break;
+            case "Square 4x4":
+                WorldObject.transform.Find("Offset").transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.SquareShadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(3.7f, 3.7f, 4);
+                break;
+            case "Hex 1":
+                WorldObject.transform.Find("Offset").transform.localScale = new Vector3(1, 1, 1);
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.Hex1Shadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(1.12f, 1.12f, 4);
+                break;
+            case "Hex 2":
+                WorldObject.transform.Find("Offset").transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.Hex2Shadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2.2f, 2.2f, 4);
+                break;
+            case "Hex 3":
+                WorldObject.transform.Find("Offset").transform.localScale = new Vector3(2, 2, 2);
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.Hex3Shadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2.7f, 2.7f, 4);
+                break;
+            case "Hex 4":
+                WorldObject.transform.Find("Offset").transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.Hex4Shadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(5f, 5f, 4);
+                break;
         }
     }
 
@@ -191,11 +221,11 @@ public class TokenData : NetworkBehaviour
         return WorldObject.GetComponent<Token>();
     }
 
-    public void UpdateSize(int size)
-    {
-        Size = size;
-        SetSize();
-    }
+    // public void UpdateSize(int size)
+    // {
+    //     Size = size;
+    //     SetSize();
+    // }
 
     private void CreateUnitBarElement()
     {

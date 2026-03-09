@@ -28,7 +28,7 @@ public class Token : MonoBehaviour
     void Update()
     {
         AlignToCamera();
-        OffsetForSizeAndSharing();
+        // OffsetForSizeAndSharing();
         GlobalTokenScale();
 
         State = TokenState.Neutral;
@@ -71,23 +71,23 @@ public class Token : MonoBehaviour
         t.rotation = Camera.main.transform.rotation;
     }
 
-    private void OffsetForSizeAndSharing()
-    {
-        float x = ShareOffsetX;
-        float y = ShareOffsetY;
-        if (Size == 2)
-        {
-            x = 0;
-            y = -.73f;
-        }
-        else if (Size == 3)
-        {
-            x = 0;
-            y = 0;
-        }
-        transform.Find("Offset").transform.localPosition = new Vector3(x, 0, y);
-        transform.Find("Base").transform.localPosition = new Vector3(x, 0, y);
-    }
+    // private void OffsetForSizeAndSharing()
+    // {
+    //     float x = ShareOffsetX;
+    //     float y = ShareOffsetY;
+    //     if (Size == 2)
+    //     {
+    //         x = 0;
+    //         y = -.73f;
+    //     }
+    //     else if (Size == 3)
+    //     {
+    //         x = 0;
+    //         y = 0;
+    //     }
+    //     transform.Find("Offset").transform.localPosition = new Vector3(x, 0, y);
+    //     transform.Find("Base").transform.localPosition = new Vector3(x, 0, y);
+    // }
 
     private void GlobalTokenScale()
     {
@@ -150,14 +150,21 @@ public class Token : MonoBehaviour
         Player.Self().GetComponent<DirectionalLine>().Init(Data.Id, op);
     }
 
-    public static void StopDragging(Block b)
+    public static void StopDragging(Block b, Vector3 v)
     {
         if (_dragging)
         {
             if (b != null)
             {
                 _dragging.StateChange(TokenState.Neutral);
-                _dragging.Move(b);
+                if (_dragging.Data.CornerTargeting())
+                {
+                    _dragging.Move(v);
+                }
+                else
+                {
+                    _dragging.Move(b);
+                }
             }
             else
             {
@@ -203,10 +210,16 @@ public class Token : MonoBehaviour
 
     public void Move(Block block)
     {
-        Deselect();
         Vector3 v = block.GetMidpoint();
         Block optimal = Block.FindOptimalFromPosition(v);
         v = optimal.GetMidpoint();
+        Move(v);
+    }
+
+    public void Move(Vector3 v)
+    {
+        Deselect();
+
         if (Data.Placed)
         {
             Player.Self().CmdMoveToken(Data.Id, v, false);
@@ -360,6 +373,11 @@ public class Token : MonoBehaviour
     private void MoveToOptimalBlock()
     {
         Block optimal = Block.FindOptimalFromPosition(transform.position);
-        Player.Self().CmdMoveToken(Data.Id, optimal.GetMidpoint(), false);
+        Vector3 v = optimal.GetMidpoint();
+        if (Data.CornerTargeting())
+        {
+            v = optimal.GetNearestCorner(transform.position + new Vector3(0, -20, 0));
+        }
+        Player.Self().CmdMoveToken(Data.Id, v, false);
     }
 }

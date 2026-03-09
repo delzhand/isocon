@@ -125,6 +125,13 @@
     margin: 0;
 }
 
+.help-text {
+    margin: -6px 0px 8px 156px;
+    font-size: 12px;
+    padding: 0;
+    color: #FFFFFFBB;
+}
+
 .element-spacing {
     margin-bottom: 2px;
 }

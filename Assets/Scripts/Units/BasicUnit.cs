@@ -39,7 +39,7 @@ public class BasicUnit : UnitData
         Modal.AddMarkup("Description", "Basic tokens have a primary HP stat by default, but custom resources can be assigned and tracked once created.");
         Modal.AddTokenField("TokenSearchField");
         Modal.AddTextField("NameField", "Token Name", "Token");
-        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", StringUtility.CreateArray("Square 1x1", "Square 2x2", "Square 3x3", "Hex 1", "Hex 2", "Hex 3"));
+        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", UnitData.ShapeOptions());
         Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
         Modal.AddIntField("MaxHPField", "Max HP", 100);
         Modal.AddPreferredButton("Create Token", CreateClicked);

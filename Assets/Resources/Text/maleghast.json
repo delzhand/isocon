@@ -11,7 +11,8 @@
             "def": 4,
             "hp": 2,
             "type": "Thrall",
-            "traits": "=Formation|=Thrall"
+            "traits": "=Formation",
+            "tokens": "Loaded"
         },
         {
             "conditions": "",
@@ -37,7 +38,8 @@
             "def": 3,
             "hp": 4,
             "type": "Scion",
-            "traits": "=Formation"
+            "traits": "=Formation",
+            "tokens": "Loaded"
         },
         {
             "conditions": "",
@@ -50,7 +52,8 @@
             "def": 4,
             "hp": 4,
             "type": "Hunter",
-            "traits": "=Formation"
+            "traits": "=Formation",
+            "tokens": "Loaded"
         },
         {
             "conditions": "Physical Armor",
@@ -63,7 +66,8 @@
             "def": 2,
             "hp": 6,
             "type": "Tyrant",
-            "traits": "=Formation|=Siege Shield|=Tyrant"
+            "traits": "=Formation|=Siege Shield",
+            "tokens": "Loaded"
         },
         {
             "conditions": "Physical Armor",
@@ -76,7 +80,8 @@
             "def": 4,
             "hp": 8,
             "type": "Necromancer",
-            "traits": "=Formation|=Hot Clip|-Bone Wall|-Gun Kata|-Clutch Reload"
+            "traits": "=Formation|=Hot Clip|=Loaded|-Bone Wall|-Gun Kata|-Clutch Reload",
+            "tokens": "Loaded"
         },
         {
             "conditions": "",

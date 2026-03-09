@@ -63,12 +63,13 @@ public class MaleghastUnit : UnitData
         Modal.AddTokenField("TokenSearchField");
 
         string maleghastData = Preferences.Current.MaleghastFile;
-        Modal.AddFileField("RulesFile", "Maleghast Data", maleghastData, "rules", (evt) =>
+        Modal.AddFileField("RulesFile", "Data Override", maleghastData, "rules", (evt) =>
         {
             Preferences.Current.MaleghastFile = evt.newValue;
             UI.Modal.Q<DropdownField>("PlayerColor").choices = GetHouses();
             SearchField.ChangeOptions(UI.Modal.Q("UnitTypeField"), GetUnits().ToArray());
         });
+        Modal.AddHelpText("RulesHelp", "If blank, stats will be derived from the core rules + updates. You can change these values or add homebrew units by copying and editing the maleghast_data/base.json file in the data directory.");
 
 
         Modal.AddSearchField("UnitTypeField", "Unit Type", "", GetUnits().ToArray());
@@ -78,7 +79,7 @@ public class MaleghastUnit : UnitData
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddToken.OrderFields(StringUtility.CreateArray("Description", "TokenSearchField", "RulesFile", "UnitType", "PlayerColor", "UnitTypeField"));
+        AddToken.OrderFields(StringUtility.CreateArray("Description", "TokenSearchField", "RulesFile", "RulesHelp", "UnitType", "PlayerColor", "UnitTypeField"));
     }
 
     private static void CreateClicked(ClickEvent evt)
@@ -153,14 +154,26 @@ public class MaleghastUnit : UnitData
         {
             foreach (string s in initTokens.Split("|"))
             {
-                UnitTag ut = new()
+                if (s.IndexOf("#") >= 0)
                 {
-                    Name = s.Split("#")[0],
-                    Color = ColorUtility.GetCommonColor("blue"),
-                    HasNumber = true,
-                    Value = int.Parse(s.Split("#")[1])
-                };
-                t.Tags.Add(ut);
+                    UnitTag ut = new()
+                    {
+                        Name = s.Split("#")[0],
+                        Color = t.Color,
+                        HasNumber = true,
+                        Value = int.Parse(s.Split("#")[1])
+                    };
+                    t.Tags.Add(ut);
+                }
+                else
+                {
+                    UnitTag ut = new()
+                    {
+                        Name = s,
+                        Color = t.Color,
+                    };
+                    t.Tags.Add(ut);
+                }
             }
         }
 
@@ -253,6 +266,12 @@ public class MaleghastUnit : UnitData
         items.Add(new MenuItem("Clone", "Clone", ClickClone));
         items.Add(new MenuItem("Delete", "Delete", ClickDelete));
         items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.TokenCommand("ModHP"); }));
+
+        if (House == "CARCASS" && !HasTag("Loaded"))
+        {
+            items.Add(new MenuItem("Reload", "Reload", (evt) => DirectCommand("Reload")));
+        }
+
         return items.ToArray();
     }
 
@@ -271,6 +290,20 @@ public class MaleghastUnit : UnitData
                 string plus = diff > 0 ? "+" : "";
                 PopoverText.Create(token, $"/{plus}{diff}|_HP", Color.white);
                 UpdateGraphic(tokenData);
+            }
+        }
+        if (command == "Reload")
+        {
+            if (!HasTag("Loaded"))
+            {
+                UnitTag tag = new()
+                {
+                    Name = "Loaded",
+                    Color = GetHouseColor("CARCASS")
+                };
+                Tags.Add(tag);
+                PopoverText.Create(token, $"_RELOADED", Color.white);
+                Token.RebuildPanels = true;
             }
         }
     }

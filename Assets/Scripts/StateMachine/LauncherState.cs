@@ -175,9 +175,9 @@ public class LauncherState : BaseState
         {
             int maxPlayers = Preferences.Current.PlayerCount;
             Modal.AddIntField("PlayerCount", "Max Player Count", maxPlayers, (evt) =>
-                    {
-                        Preferences.SetPlayerCount(evt.newValue);
-                    });
+            {
+                Preferences.SetPlayerCount(evt.newValue);
+            });
         }
 
         if (_mode == ConnectMode.Client)
@@ -224,7 +224,7 @@ public class LauncherState : BaseState
         //     Preferences.Current.RulesFile = UI.Modal.Q("RulesFile").Q<TextField>("File").value;
         // }
 
-        // TerrainController.GridType = DefaultGridType();
+        TerrainController.GridType = Preferences.Current.Grid;
         NetworkManager netManager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
         switch (_mode)
         {

@@ -174,7 +174,7 @@ public class NeutralState : TabletopSubstate
     private void RightClickRelease()
     {
         // Debug.Log("right click release");
-        Pointer.PickToken()?.ToggleMenu();
+        Pointer.PickToken(true)?.ToggleMenu();
     }
 
     private void LeftDragStart()
@@ -185,7 +185,7 @@ public class NeutralState : TabletopSubstate
 
     private void LeftDragRelease()
     {
-        Token.StopDragging(Pointer.PickBlock());
+        Token.StopDragging(Pointer.PickBlock(), Pointer.PickPoint());
     }
 
     private void ToggleTopBar(ClickEvent evt)
