@@ -43,7 +43,6 @@ public class Icon1x5EnemyUnit : Icon1x5Base
     public static void AddTokenModal()
     {
         Modal.AddMarkup("Description", "Icon 1.5 enemy tokens are used to create non-mob foes. Their stats come from ruledata.");
-        Modal.AddTokenField("TokenSearchField");
         Modal.AddTextField("NameField", "Token Name", "Token");
         Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", UnitData.SquareShapeOptions());
         Modal.AddDropdownField("FoeClassField", "Class", "Heavy", StringUtility.CreateArray("Heavy", "Artillery", "Skirmisher", "Leader", "Legend"), (evt) => { AddModalEvaluateConditions(); });
@@ -53,7 +52,6 @@ public class Icon1x5EnemyUnit : Icon1x5Base
         Modal.AddButton("Cancel", Modal.CloseEvent);
         string[] fieldOrder = StringUtility.CreateArray(
             "Description",
-            "TokenSearchField",
             "NameField",
             "ShapeField",
             "FoeClassField",

@@ -60,7 +60,6 @@ public class MaleghastUnit : UnitData
         System.IO.File.WriteAllText(filename, baseline.text);
 
         Modal.AddMarkup("Description", "Maleghast Unit tokens have stats automatically derived from ruledata.");
-        Modal.AddTokenField("TokenSearchField");
 
         string maleghastData = Preferences.Current.MaleghastFile;
         Modal.AddFileField("RulesFile", "Data Override", maleghastData, "rules", (evt) =>
@@ -79,7 +78,7 @@ public class MaleghastUnit : UnitData
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddToken.OrderFields(StringUtility.CreateArray("Description", "TokenSearchField", "RulesFile", "RulesHelp", "UnitType", "PlayerColor", "UnitTypeField"));
+        AddToken.OrderFields(StringUtility.CreateArray("Description", "RulesFile", "RulesHelp", "UnitType", "PlayerColor", "UnitTypeField"));
     }
 
     private static void CreateClicked(ClickEvent evt)

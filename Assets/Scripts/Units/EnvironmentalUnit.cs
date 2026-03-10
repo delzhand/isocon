@@ -31,7 +31,6 @@ public class EnvironmentalUnit : UnitData
     public static void AddTokenModal()
     {
         Modal.AddMarkup("Description", "Environmental tokens have no stats but are useful for interactive or indestructible objects.");
-        Modal.AddTokenField("TokenSearchField");
         Modal.AddTextField("NameField", "Token Name", "Token");
         Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", UnitData.ShapeOptions());
         Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
@@ -39,7 +38,7 @@ public class EnvironmentalUnit : UnitData
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddToken.OrderFields(StringUtility.CreateArray("Description", "TokenSearchField", "NameField", "ShapeField", "ColorField"));
+        AddToken.OrderFields(StringUtility.CreateArray("Description", "NameField", "ShapeField", "ColorField"));
     }
 
     private static void CreateClicked(ClickEvent evt)

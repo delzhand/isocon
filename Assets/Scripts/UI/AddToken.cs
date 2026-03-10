@@ -10,6 +10,7 @@ public class AddToken
         Player.Self().SetOp("Adding a Token");
         Token.Deselect();
         Modal.Reset("Add Token");
+        Modal.AddTokenField("TokenSearchField");
         Modal.AddDropdownField("TokenType", "Token Type", "Basic", UnitTokenRegistry.GetAllSystems().ToArray(), (evt) =>
         {
             VisualElement v = UI.Modal.Q("Contents").Q("TypeData_0");

@@ -40,13 +40,12 @@ public class Icon2x0MobUnit : Icon1x5Base
     public static void AddTokenModal()
     {
         Modal.AddMarkup("Description", "ICON 2.0 Mob tokens have two hit counters instead of an HP bar.");
-        Modal.AddTokenField("TokenSearchField");
         Modal.AddTextField("NameField", "Token Name", "Token");
 
         Modal.AddPreferredButton("Create Token", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
-        AddToken.OrderFields(StringUtility.CreateArray("Description", "TokenSearchField", "NameField"));
+        AddToken.OrderFields(StringUtility.CreateArray("Description", "NameField"));
     }
 
     private static void CreateClicked(ClickEvent evt)

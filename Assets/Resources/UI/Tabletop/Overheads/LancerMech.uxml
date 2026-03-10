@@ -1,11 +1,11 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/Styles/v3/Overhead.uss?fileID=7433441132597879392&amp;guid=db9f5488cbd5b104699c060ac772337b&amp;type=3#Overhead"/>
+    <Style src="project://database/Assets/Resources/Styles/Overhead.uss?fileID=7433441132597879392&amp;guid=db9f5488cbd5b104699c060ac772337b&amp;type=3#Overhead"/>
     <ui:VisualElement name="Overhead" class="token" style="translate: -50% -50%; height: 20px; width: 60px;">
         <ui:VisualElement name="StructureStress" style="flex-grow: 0; flex-direction: row; min-height: auto; justify-content: space-between; height: 7px; align-items: flex-start; align-content: auto; margin-bottom: 0; position: relative; display: flex;">
             <ui:Label text="◆&lt;color=white&gt;◆◆◆&lt;/color&gt;" name="Structure" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: upper-right; -unity-text-outline-width: 1px; -unity-text-outline-color: rgb(255, 255, 255); color: rgb(255, 0, 147); font-size: 6px; letter-spacing: 12px; height: 7px;"/>
             <ui:Label text="▼&lt;color=white&gt;▼▼▼&lt;/color&gt;" name="Stress" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: middle-left; -unity-text-outline-width: 1px; -unity-text-outline-color: rgb(255, 255, 255); color: rgb(255, 115, 0); font-size: 6px; letter-spacing: 12px; height: 7px;"/>
         </ui:VisualElement>
         <ui:ProgressBar value="3.09" high-value="24" name="HpBar" style="display: flex;"/>
-        <ui:Label text="▰▰▰&lt;color=white&gt;▰▰▰&lt;/color&gt;" name="Heat" style="margin-top: -4px; margin-right: 0; margin-bottom: -4px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: middle-left; -unity-text-outline-width: 1px; -unity-text-outline-color: rgb(255, 255, 255); color: rgb(228, 0, 22); font-size: 14px; -unity-paragraph-spacing: 0; top: auto; display: flex;"/>
+        <ui:Label text="▰▰▰&lt;color=white&gt;▰▰▰&lt;/color&gt;" name="Heat" style="margin-top: -4px; margin-right: 0; margin-bottom: -4px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: middle-left; -unity-text-outline-width: 1px; -unity-text-outline-color: rgb(255, 255, 255); color: rgb(228, 0, 76); font-size: 14px; -unity-paragraph-spacing: 0; top: auto; display: flex;"/>
     </ui:VisualElement>
 </ui:UXML>

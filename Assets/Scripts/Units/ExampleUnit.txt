@@ -74,11 +74,6 @@ public class ExampleUnit : UnitData
         Modal.AddMarkup("Description", "Basic tokens have a primary HP stat by default, but custom resources can be assigned and tracked once created.");
 
         /**
-            A TokenField is required.
-        */
-        Modal.AddTokenField("TokenSearchField");
-
-        /**
             The remaining fields depend on the type.
         */
         Modal.AddTextField("NameField", "Token Name", "Token");
@@ -97,7 +92,7 @@ public class ExampleUnit : UnitData
             used to define the order in which your fields appear. Every field added to the
             modal must appear in this list.
         */
-        AddToken.OrderFields(StringUtility.CreateArray("Description", "TokenSearchField", "NameField", "ShapeField", "ColorField", "MaxHPField"));
+        AddToken.OrderFields(StringUtility.CreateArray("Description", "NameField", "ShapeField", "ColorField", "MaxHPField"));
     }
 
     /**

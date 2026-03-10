@@ -294,7 +294,6 @@ public class Icon1x5PlayerUnit : Icon1x5Base
         );
 
         Modal.AddMarkup("Description", "Tokens for ICON 1.5 player characters.");
-        Modal.AddTokenField("TokenSearchField");
         Modal.AddTextField("NameField", "Token Name", "Token");
         Modal.AddSearchField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs);
 
@@ -302,7 +301,7 @@ public class Icon1x5PlayerUnit : Icon1x5Base
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddToken.OrderFields(StringUtility.CreateArray("Description", "TokenSearchField", "NameField", "PlayerJob"));
+        AddToken.OrderFields(StringUtility.CreateArray("Description", "NameField", "PlayerJob"));
     }
 
     private static void CreateClicked(ClickEvent evt)

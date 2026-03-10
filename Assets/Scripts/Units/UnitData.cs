@@ -54,7 +54,7 @@ public abstract class UnitData : IUnitData
             items.Add(new MenuItem("Flip", "Flip", ClickFlip));
         }
         items.Add(new MenuItem("Reshape", "Reshape", ReshapeModal));
-        items.Add(new MenuItem("EditName", "Rename", ClickEditName));
+        items.Add(new MenuItem("EditName", "Rename", RenameModal));
         items.Add(new MenuItem("Clone", "Clone", ClickClone));
         items.Add(new MenuItem("Delete", "Delete", ClickDelete));
         items.Add(new MenuItem("AddTag", "Add Tag", AddTagModal));
@@ -261,7 +261,7 @@ public abstract class UnitData : IUnitData
         SelectionMenu.Hide();
     }
 
-    private static void ClickEditName(ClickEvent evt)
+    private static void RenameModal(ClickEvent evt)
     {
         TokenData data = Token.GetSelected().Data;
         Modal.Reset("Edit Name");
@@ -271,7 +271,6 @@ public abstract class UnitData : IUnitData
             string newName = UI.Modal.Q<TextField>("Name").value.Trim();
             Player.Self().CmdRequestTokenDataCommand(data.Id, $"Rename|{newName}");
             Modal.Close();
-            Token.Deselect();
         });
         Modal.AddButton("Cancel", Modal.CloseEvent);
         SelectionMenu.Hide();
