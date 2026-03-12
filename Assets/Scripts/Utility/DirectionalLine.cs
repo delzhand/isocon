@@ -130,7 +130,7 @@ public class DirectionalLine : NetworkBehaviour
         }
 
         // Calculate the number of points based on density
-        int numPoints = Mathf.CeilToInt(distance / density);
+        int numPoints = Mathf.CeilToInt(distance / density) + 2;
 
         // Iterate through the points and calculate their positions along the parabola
         for (int i = 0; i <= numPoints; i++)
