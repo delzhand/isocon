@@ -3,23 +3,23 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class EnvironmentalUnit : UnitData
+public class EnvironmentalActorType : ActorType
 {
     #region Registration
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        UnitTokenRegistry.RegisterSystem("Environmental");
-        UnitTokenRegistry.RegisterInterfaceCallback("Environmental", DeserializeAsInterface);
-        UnitTokenRegistry.RegisterSimpleCallback("Environmental|AddTokenModal", AddTokenModal);
+        ActorTypeRegistry.RegisterSystem("Environmental");
+        ActorTypeRegistry.RegisterInterfaceCallback("Environmental", DeserializeAsInterface);
+        ActorTypeRegistry.RegisterSimpleCallback("Environmental|AddActorModal", AddActorModal);
     }
     public override string Serialize()
     {
         return JsonUtility.ToJson(this);
     }
-    public static IUnitData DeserializeAsInterface(string json)
+    public static IActorType DeserializeAsInterface(string json)
     {
-        return JsonUtility.FromJson<EnvironmentalUnit>(json);
+        return JsonUtility.FromJson<EnvironmentalActorType>(json);
     }
     #endregion
 
@@ -28,11 +28,11 @@ public class EnvironmentalUnit : UnitData
     #endregion
 
     #region Creation
-    public static void AddTokenModal()
+    public static void AddActorModal()
     {
         Modal.AddMarkup("Description", "Environmental tokens have no stats but are useful for interactive or indestructible objects.");
         Modal.AddTextField("NameField", "Token Name", "Token");
-        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", UnitData.ShapeOptions());
+        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", ActorType.ShapeOptions());
         Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
         Modal.AddPreferredButton("Create Token", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
@@ -52,7 +52,7 @@ public class EnvironmentalUnit : UnitData
         string name = UI.Modal.Q<TextField>("NameField").value;
         string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
         string color = UI.Modal.Q<DropdownField>("ColorField").value;
-        EnvironmentalUnit t = new()
+        EnvironmentalActorType t = new()
         {
             Type = "Environmental",
             Name = name,
@@ -74,7 +74,7 @@ public class EnvironmentalUnit : UnitData
         base.InitPanel(elementName, selected);
     }
 
-    public override void Command(string command, TokenData tokenData)
+    public override void Command(string command, ActorData tokenData)
     {
         if (command.StartsWith("Rename|"))
         {

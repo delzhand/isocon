@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class Cutout : MonoBehaviour
 {
-    public Token GetToken()
+    public Actor GetToken()
     {
         Transform t = transform;
         while (t.parent != null)
         {
             if (t.parent.tag == "Token")
             {
-                return t.parent.GetComponent<Token>();
+                return t.parent.GetComponent<Actor>();
             }
             t = t.parent.transform;
         }

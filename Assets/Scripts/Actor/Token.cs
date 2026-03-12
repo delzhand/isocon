@@ -7,7 +7,7 @@ using System.Text;
 using UnityEngine;
 
 [Serializable]
-public class TokenMeta
+public class Token
 {
     public string Name = "";
     public int FPS = 0;
@@ -18,11 +18,11 @@ public class TokenMeta
     public int Height;
     public int ChunkCount;
 
-    public TokenMeta()
+    public Token()
     {
     }
 
-    public TokenMeta(Texture2D image, string filename, int chunkCount)
+    public Token(Texture2D image, string filename, int chunkCount)
     {
         if (image == null)
         {
@@ -39,7 +39,7 @@ public class TokenMeta
         Height = image.height;
     }
 
-    private TokenMeta(TokenMeta original)
+    private Token(Token original)
     {
         Name = original.Name;
         FPS = original.FPS;
@@ -51,9 +51,9 @@ public class TokenMeta
         ChunkCount = original.ChunkCount;
     }
 
-    public static TokenMeta Copy(TokenMeta meta)
+    public static Token Copy(Token meta)
     {
-        return new TokenMeta(meta);
+        return new Token(meta);
     }
 
     public static string GetHash(Texture2D texture)

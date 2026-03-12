@@ -19,17 +19,17 @@ public class TokenLibrary : MonoBehaviour
 
     private class TokenLibraryFile
     {
-        public TokenMeta[] Tokens;
+        public Token[] Tokens;
     }
 
-    public static Dictionary<string, TokenMeta> Tokens;
-    public static Dictionary<string, (TokenMeta, VisualElement)> ElementMap;
+    public static Dictionary<string, Token> Tokens;
+    public static Dictionary<string, (Token, VisualElement)> ElementMap;
 
     private static int LibraryItemSize = 120;
 
     private static bool AllowSelect = false;
     private static bool Editing = false;
-    private static TokenMeta BackupMeta;
+    private static Token BackupMeta;
     private static string SelectedHash;
     private static LibraryCallback OnSelect;
 
@@ -43,7 +43,7 @@ public class TokenLibrary : MonoBehaviour
 
     void Update()
     {
-        foreach ((TokenMeta, VisualElement) item in ElementMap.Values)
+        foreach ((Token, VisualElement) item in ElementMap.Values)
         {
             var meta = item.Item1;
             var element = item.Item2;
@@ -85,7 +85,7 @@ public class TokenLibrary : MonoBehaviour
         UpdateVisibility();
     }
 
-    public static TokenMeta GetSelectedMeta()
+    public static Token GetSelectedMeta()
     {
         return Tokens[SelectedHash];
     }
@@ -133,8 +133,8 @@ public class TokenLibrary : MonoBehaviour
         UpdateVisibility();
         UI.Redraw();
 
-        TokenMeta meta = Tokens[SelectedHash];
-        BackupMeta = TokenMeta.Copy(meta);
+        Token meta = Tokens[SelectedHash];
+        BackupMeta = Token.Copy(meta);
         VisualElement root = UI.System.Q("TokenLibraryModal");
         root.Q<TextField>("NameField").value = meta.Name;
         root.Q<IntegerField>("FramesField").value = meta.Frames;
@@ -222,7 +222,7 @@ public class TokenLibrary : MonoBehaviour
             Texture2D texture = new Texture2D(2, 2);
             texture.LoadImage(imageData);
             texture.filterMode = FilterMode.Point;
-            var tokenMeta = new TokenMeta(texture, filename, TokenSync.GetChunkCount(imageData.Length));
+            var tokenMeta = new Token(texture, filename, TokenSync.GetChunkCount(imageData.Length));
             File.WriteAllBytes($"{directory}/{tokenMeta.Hash}.png", imageData);
             Tokens[tokenMeta.Hash] = tokenMeta;
             AddToUI(tokenMeta);
@@ -245,7 +245,7 @@ public class TokenLibrary : MonoBehaviour
         return directory;
     }
 
-    private static void AddToUI(TokenMeta meta)
+    private static void AddToUI(Token meta)
     {
         VisualElement wrapper = new();
         wrapper.name = meta.Hash;
@@ -312,7 +312,7 @@ public class TokenLibrary : MonoBehaviour
         UpdateAnimation(tokenDisplay, meta);
     }
 
-    private static void UpdateAnimation(VisualElement element, TokenMeta meta)
+    private static void UpdateAnimation(VisualElement element, Token meta)
     {
         Texture2D graphic = element.Q("Sprite").resolvedStyle.backgroundImage.texture;
         if (graphic == null)

@@ -5,7 +5,7 @@ using IsoconUILibrary;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
-public abstract class Icon2x0Base : UnitData
+public abstract class Icon2x0Base : ActorType
 {
     public override MenuItem[] GetMenuItems(bool placed)
     {
@@ -28,19 +28,19 @@ public abstract class Icon2x0Base : UnitData
 
     private void SaveRollClicked(ClickEvent evt)
     {
-        string name = Token.GetSelected().Data.Name;
+        string name = Actor.GetSelected().Data.Name;
         DiceRoller.DirectDieRoll("sum", "1d6", $"{name}'s save roll");
-        Token.Deselect();
+        Actor.Deselect();
         Modal.Close();
     }
 
     private void AttackRoll(ClickEvent evt)
     {
-        string name = Token.GetSelected().Data.Name;
+        string name = Actor.GetSelected().Data.Name;
         int power = UI.Modal.Q<NumberNudger>("PowerField").value;
         string op = power > 0 ? "max" : "min";
         DiceRoller.DirectDieRoll(op, $"{Math.Abs(power) + 1}d10", $"{name}'s attack roll");
-        Token.Deselect();
+        Actor.Deselect();
         Modal.Close();
     }
 

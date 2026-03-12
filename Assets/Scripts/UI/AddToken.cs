@@ -8,10 +8,10 @@ public class AddToken
     public static void OpenModal(ClickEvent evt)
     {
         Player.Self().SetOp("Adding a Token");
-        Token.Deselect();
-        Modal.Reset("Add Token");
+        Actor.Deselect();
+        Modal.Reset("Add Actor");
         Modal.AddTokenField("TokenSearchField");
-        Modal.AddDropdownField("TokenType", "Token Type", "Basic", UnitTokenRegistry.GetAllSystems().ToArray(), (evt) =>
+        Modal.AddDropdownField("ActorType", "Actor Type", "Basic", ActorTypeRegistry.GetAllSystems().ToArray(), (evt) =>
         {
             VisualElement v = UI.Modal.Q("Contents").Q("TypeData_0");
             if (v != null)
@@ -20,11 +20,11 @@ public class AddToken
                 Modal.ResetPreferredButtons();
             }
 
-            string type = UI.Modal.Q<DropdownField>("TokenType").value;
-            UnitTokenRegistry.DoCallback($"{type}|AddTokenModal");
+            string type = UI.Modal.Q<DropdownField>("ActorType").value;
+            ActorTypeRegistry.DoCallback($"{type}|AddActorModal");
         });
         Modal.AddColumns("TypeData", 1);
-        UnitTokenRegistry.DoCallback($"Basic|AddTokenModal");
+        ActorTypeRegistry.DoCallback($"Basic|AddActorModal");
         Modal.AddCloseCallback(CancelAddToken);
     }
 

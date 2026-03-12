@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 [Serializable]
-public class Icon1x5PlayerUnit : Icon1x5Base
+public class Icon1x5PlayerActorType : Icon1x5Base
 {
     private readonly static string TypeName = "Icon 1.5 Player";
 
@@ -32,9 +32,9 @@ public class Icon1x5PlayerUnit : Icon1x5Base
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        UnitTokenRegistry.RegisterSystem($"{TypeName}");
-        UnitTokenRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
-        UnitTokenRegistry.RegisterSimpleCallback($"{TypeName}|AddTokenModal", AddTokenModal);
+        ActorTypeRegistry.RegisterSystem($"{TypeName}");
+        ActorTypeRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
+        ActorTypeRegistry.RegisterSimpleCallback($"{TypeName}|AddActorModal", AddActorModal);
     }
 
 
@@ -48,9 +48,9 @@ public class Icon1x5PlayerUnit : Icon1x5Base
         return JsonUtility.ToJson(this);
     }
 
-    public static IUnitData DeserializeAsInterface(string json)
+    public static IActorType DeserializeAsInterface(string json)
     {
-        return JsonUtility.FromJson<Icon1x5PlayerUnit>(json);
+        return JsonUtility.FromJson<Icon1x5PlayerActorType>(json);
     }
 
     public override string GetOverheadAsset()
@@ -72,10 +72,10 @@ public class Icon1x5PlayerUnit : Icon1x5Base
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
-    public override void Command(string command, TokenData tokenData)
+    public override void Command(string command, ActorData tokenData)
     {
         base.Command(command, tokenData);
-        Token token = tokenData.GetToken();
+        Actor token = tokenData.GetToken();
         if (command.StartsWith("GainWound"))
         {
             Wounds++;
@@ -181,7 +181,7 @@ public class Icon1x5PlayerUnit : Icon1x5Base
         }
     }
 
-    public override void UpdateOverhead(TokenData tokenData)
+    public override void UpdateOverhead(ActorData tokenData)
     {
         VisualElement o = tokenData.OverheadElement;
 
@@ -199,7 +199,7 @@ public class Icon1x5PlayerUnit : Icon1x5Base
         UI.ToggleDisplay(o, CurrentHP > 0 && tokenData.Placed);
     }
 
-    public override void UpdatePanel(TokenData tokenData, string elementName)
+    public override void UpdatePanel(ActorData tokenData, string elementName)
     {
         base.UpdatePanel(tokenData, elementName);
         VisualElement panel = UI.System.Q(elementName);
@@ -272,7 +272,7 @@ public class Icon1x5PlayerUnit : Icon1x5Base
         panel.Q("Pills").Add(Pill.InitStatic("BloodiedPill", "Bloodied", Color.red));
     }
 
-    public static void AddTokenModal()
+    public static void AddActorModal()
     {
         string[] playerJobs = StringUtility.CreateArray(
             "Stalwart/Bastion",
@@ -322,7 +322,7 @@ public class Icon1x5PlayerUnit : Icon1x5Base
         string pclass = playerJob.Split("/")[0];
         string job = playerJob.Split("/")[1];
 
-        Icon1x5PlayerUnit t = new()
+        Icon1x5PlayerActorType t = new()
         {
             Type = TypeName,
             Name = name,
@@ -411,9 +411,9 @@ public class Icon1x5PlayerUnit : Icon1x5Base
         return statColor;
     }
 
-    private void UpdateGraphic(TokenData tokenData)
+    private void UpdateGraphic(ActorData tokenData)
     {
-        Token token = tokenData.GetToken();
+        Actor token = tokenData.GetToken();
         token.SetDefeated(CurrentHP <= 0);
     }
     #endregion

@@ -206,7 +206,7 @@
 //         return new string[] { "Difficult", "Pit", "Dangerous", "Impassable", "Interactive", "Demon Slayer/Flash Step - Afterimage", "Demon Slayer/Six Hells Trigram", "Demon Slayer/Heroic Six Hells Trigram", "Fool/Party Favor", "Freelancer/Showdown - Quench", "Freelancer/Warding Bolts", "Shade/Shadow Cloud (Blinded+ exc Caster)", "Harvester/Plant", "Harvester/Blood Grove", "Harvester/Mote of Life (Blessing))", "Harvester/Mote of Life (Regen)", "Spellblade/Lightning Spike 1", "Spellblade/Lightning Spike 2", "Spellblade/Lightning Spike 3", "Spellblade/Lightning Spike 4", "Spellblade/Lightning Spike 5", "Spellblade/Lightning Spike 6", "Stormbender/Selkie", "Stormbender/Salt Sprite", "Stormbender/Pit", "Stormbender/Tsunami", "Stormbender/Tsunami - Stormlash", "Stormbender/Dangerous", "Stormbender/Geyser I", "Stormbender/Gust", "Stormbender/Gust I", "Stormbender/Gust II", "Stormbender/Waterspout", "Stormbender/Waterspout - Hurricane", "Stormbender/Waterspout I", "Stormbender/Waterspout I - Hurricane", "Stormbender/Waterspout II", "Stormbender/Waterspout II - Hurricane" };
 //     }
 
-//     public override void AddTokenModal()
+//     public override void AddActorModal()
 //     {
 //         JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
 //         List<string> playerJobs = new();
@@ -220,10 +220,10 @@
 //             foeClasses.Add(fclass);
 //         }
 
-//         base.AddTokenModal();
-//         Modal.AddDropdownField("Type", "Type", "Player", new string[] { "Player", "Foe", "Object" }, (evt) => AddTokenModalEvaluateConditions());
+//         base.AddActorModal();
+//         Modal.AddDropdownField("Type", "Type", "Player", new string[] { "Player", "Foe", "Object" }, (evt) => AddActorModalEvaluateConditions());
 //         Modal.AddSearchField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs.ToArray());
-//         Modal.AddDropdownField("FoeClass", "Class", foeClasses[0], foeClasses.ToArray(), (evt) => AddTokenModalEvaluateConditions());
+//         Modal.AddDropdownField("FoeClass", "Class", foeClasses[0], foeClasses.ToArray(), (evt) => AddActorModalEvaluateConditions());
 //         Modal.AddTextField("FoeJob", "Job", "");
 //         Modal.AddToggleField("Elite", "Elite", false);
 //         Modal.AddDropdownField("LegendHP", "Legend HP Multiplier", "x4", new string[] { "x2", "x3", "x4", "x5", "x6", "x7", "x8" });
@@ -231,10 +231,10 @@
 //         Modal.AddIntField("ObjectHP", "Object HP", 1);
 //         Modal.AddIntField("CloneCount", "Clone Count", 1);
 
-//         AddTokenModalEvaluateConditions();
+//         AddActorModalEvaluateConditions();
 //     }
 
-//     private static void AddTokenModalEvaluateConditions()
+//     private static void AddActorModalEvaluateConditions()
 //     {
 //         bool playerJob = UI.Modal.Q<DropdownField>("Type").value == "Player";
 //         bool foeClass = UI.Modal.Q<DropdownField>("Type").value == "Foe";

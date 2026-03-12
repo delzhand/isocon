@@ -5,8 +5,8 @@ using UnityEngine;
 public class Pointer
 {
     private static Ray _ray;
-    private static Token _unitBarMouseoverToken;
-    public static Token UnitBarMouseoverToken
+    private static Actor _unitBarMouseoverToken;
+    public static Actor UnitBarMouseoverToken
     {
         get => _unitBarMouseoverToken;
         set => _unitBarMouseoverToken = value;
@@ -42,7 +42,7 @@ public class Pointer
         return Vector3.zero;
     }
 
-    public static Token PickToken(bool worldOnly = false)
+    public static Actor PickToken(bool worldOnly = false)
     {
         if (_unitBarMouseoverToken && !worldOnly)
         {
@@ -74,7 +74,7 @@ public class Pointer
         {
             focusMode = BlockFocusMode.Row;
         }
-        if (Token.GetSelected()?.Data.Shape == "Square 2x2")
+        if (Actor.GetSelected()?.Data.Shape == "Square 2x2")
             PointWithMask(LayerMask.GetMask("Block"), focusMode);
     }
 
@@ -102,7 +102,7 @@ public class Pointer
         if (isHit && hit.collider.CompareTag("Block"))
         {
             Block b = hit.collider.GetComponent<Block>();
-            Token t = Token.GetAtBlock(b);
+            Actor t = Actor.GetAtBlock(b);
             if (t != null && MaskContainsLayer(mask, "Token"))
             {
                 TokenHit(t);
@@ -111,25 +111,25 @@ public class Pointer
             else
             {
                 BlockHit(b, focusMode);
-                Token.UnfocusAll();
+                Actor.UnfocusAll();
             }
         }
         else if (isHit && hit.collider.CompareTag("TokenCollider"))
         {
-            Token t = hit.collider.GetComponent<Cutout>().GetToken();
+            Actor t = hit.collider.GetComponent<Cutout>().GetToken();
             FocusBlocks(t.GetBlock(), focusMode);
             TokenHit(t);
         }
         else if (!isHit)
         {
-            Token.UnfocusAll();
+            Actor.UnfocusAll();
             Block.UnfocusAll();
         }
     }
 
-    private static void TokenHit(Token t)
+    private static void TokenHit(Actor t)
     {
-        if (t.State != TokenState.Focused)
+        if (t.State != ActorState.Focused)
         {
             t.Focus();
         }
@@ -164,7 +164,7 @@ public class Pointer
 
     private static void BlockHit(Block b, BlockFocusMode mode)
     {
-        if (Token.GetDragging() != null)
+        if (Actor.GetDragging() != null)
         {
             HighlightSizeArea(b);
         }
@@ -174,7 +174,7 @@ public class Pointer
             FocusBlocks(b, mode);
         }
 
-        if (Token.GetSelected() != null && Token.GetSelected().Data.CornerTargeting())
+        if (Actor.GetSelected() != null && Actor.GetSelected().Data.CornerTargeting())
         {
             Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Physics.Raycast(_ray, out RaycastHit hit, 9999f, LayerMask.GetMask("Block"));
@@ -189,7 +189,7 @@ public class Pointer
     private static void HighlightSizeArea(Block block)
     {
         block.Highlight();
-        int size = Token.GetDragging().Size;
+        int size = Actor.GetDragging().Size;
         Block[] neighbors = TerrainController.FindNeighbors(block, size);
         for (int i = 0; i < neighbors.Length; i++)
         {

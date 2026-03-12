@@ -7,28 +7,29 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class LancerMechUnit : UnitData
+public class LancerMechActorType : ActorType
 {
     #region Registration
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        UnitTokenRegistry.RegisterSystem("Lancer Mech");
-        UnitTokenRegistry.RegisterInterfaceCallback("Lancer Mech", DeserializeAsInterface);
-        UnitTokenRegistry.RegisterSimpleCallback("Lancer Mech|AddTokenModal", AddTokenModal);
+        ActorTypeRegistry.RegisterSystem("Lancer Mech");
+        ActorTypeRegistry.RegisterInterfaceCallback("Lancer Mech", DeserializeAsInterface);
+        ActorTypeRegistry.RegisterSimpleCallback("Lancer Mech|AddActorModal", AddActorModal);
     }
     public override string Serialize()
     {
         return JsonUtility.ToJson(this);
     }
-    public static IUnitData DeserializeAsInterface(string json)
+    public static IActorType DeserializeAsInterface(string json)
     {
-        return JsonUtility.FromJson<LancerMechUnit>(json);
+        return JsonUtility.FromJson<LancerMechActorType>(json);
     }
     #endregion
 
     #region Stats
-    public string Name;
+    public string Callsign;
+    public string Pilot;
     public int MaxHP;
     public int CurrentHP;
     public int Overshield;
@@ -49,17 +50,18 @@ public class LancerMechUnit : UnitData
     #endregion
 
     #region Creation
-    public static void AddTokenModal()
+    public static void AddActorModal()
     {
         Modal.AddMarkup("Description", "Lancer Mech tokens have primary HP, Structure, Stress, and Heat stats by default.");
-        Modal.AddTextField("NameField", "Token Name", "Token");
-        Modal.AddDropdownField("ShapeField", "Shape", "Hex 1", UnitData.HexShapeOptions());
+        Modal.AddTextField("Callsign", "Callsign", "");
+        Modal.AddTextField("PilotName", "Pilot", "");
+        Modal.AddDropdownField("ShapeField", "Shape", "Hex 1", ActorType.HexShapeOptions());
         Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
         Modal.AddPreferredButton("Create Token", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddToken.OrderFields(StringUtility.CreateArray("Description", "NameField", "ShapeField", "ColorField"));
+        AddToken.OrderFields(StringUtility.CreateArray("Description", "Callsign", "PilotName", "ShapeField", "ColorField"));
     }
 
     private static void CreateClicked(ClickEvent evt)
@@ -70,13 +72,15 @@ public class LancerMechUnit : UnitData
             return;
         }
 
-        string name = UI.Modal.Q<TextField>("NameField").value;
+        string callsign = UI.Modal.Q<TextField>("Callsign").value;
+        string pilot = UI.Modal.Q<TextField>("PilotName").value;
         string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
         string color = UI.Modal.Q<DropdownField>("ColorField").value;
-        LancerMechUnit t = new()
+        LancerMechActorType t = new()
         {
             Type = "Lancer Mech",
-            Name = name,
+            Callsign = callsign,
+            Pilot = pilot,
             MaxHP = 10,
             CurrentHP = 10,
             MaxStructure = 4,
@@ -100,7 +104,7 @@ public class LancerMechUnit : UnitData
 
     public override string Label()
     {
-        return Name;
+        return $"{Callsign}/{Pilot}";
     }
 
     public override string GetOverheadAsset()
@@ -120,9 +124,9 @@ public class LancerMechUnit : UnitData
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
-    public override void Command(string command, TokenData tokenData)
+    public override void Command(string command, ActorData tokenData)
     {
-        Token token = tokenData.GetToken();
+        Actor token = tokenData.GetToken();
         base.Command(command, tokenData);
         if (command.StartsWith("ModHP"))
         {
@@ -227,7 +231,7 @@ public class LancerMechUnit : UnitData
         else if (command.StartsWith("UpdateStats"))
         {
             string json = command.Split("|")[1];
-            LancerMechUnit lmu = JsonUtility.FromJson<LancerMechUnit>(json);
+            LancerMechActorType lmu = JsonUtility.FromJson<LancerMechActorType>(json);
             MaxHP = lmu.MaxHP;
             MaxHeat = lmu.MaxHeat;
             MaxStress = lmu.MaxStress;
@@ -242,6 +246,11 @@ public class LancerMechUnit : UnitData
             SensorRange = lmu.SensorRange;
             PopoverText.Create(token, $"_STAT|_CHANGE", Color.white);
         }
+        if (command.StartsWith("Rename|"))
+        {
+            Callsign = command.Split("|")[1];
+            Pilot = command.Split("|")[2];
+        }
         else
         {
             Debug.Log(command);
@@ -249,7 +258,7 @@ public class LancerMechUnit : UnitData
 
     }
 
-    public override void UpdatePanel(TokenData tokenData, string elementName)
+    public override void UpdatePanel(ActorData tokenData, string elementName)
     {
         base.UpdatePanel(tokenData, elementName);
         VisualElement panel = UI.System.Q(elementName);
@@ -273,7 +282,7 @@ public class LancerMechUnit : UnitData
         panel.Q("Heat").Q<Label>("Pips").text = SymbolString("▰", Heat, MaxHeat);
     }
 
-    public override void UpdateOverhead(TokenData tokenData)
+    public override void UpdateOverhead(ActorData tokenData)
     {
         VisualElement o = tokenData.OverheadElement;
         o.Q<ProgressBar>("HpBar").value = CurrentHP;
@@ -288,22 +297,31 @@ public class LancerMechUnit : UnitData
         base.InitPanel(elementName, selected);
         VisualElement panel = UI.System.Q(elementName);
 
+        bool left = elementName == "LeftTokenPanel";
+
         VisualElement container = new();
-        container.style.flexDirection = FlexDirection.Row;
+        container.style.flexDirection = left ? FlexDirection.Row : FlexDirection.RowReverse;
         container.style.position = Position.Absolute;
-        int mr = 8;
+        if (!left)
+        {
+            container.style.right = 0;
+        }
+        int mr = left ? 8 : 0;
+        int ml = left ? 0 : 8;
 
         VisualElement hpBar = UI.CreateFromTemplate("UI/TableTop/IconHPBar");
         hpBar.style.marginRight = mr;
+        hpBar.style.marginLeft = ml;
         hpBar.name = "MainHPBar";
         hpBar.Q<ProgressBar>("HpBar").style.minWidth = 100;
 
         container.Add(hpBar);
 
-        TokenData data = selected ? Token.GetSelected().Data : null;
+        ActorData data = selected ? Actor.GetSelected().Data : null;
 
         VisualElement structure = UI.CreateFromTemplate("UI/TableTop/LancerCoreStat");
         structure.style.marginRight = mr;
+        structure.style.marginLeft = ml;
         structure.name = "Structure";
         structure.Q<Label>("StatName").text = "STRUCTURE";
         structure.Q<Label>("Pips").style.color = ColorUtility.GetColor("#FF0093");
@@ -322,6 +340,7 @@ public class LancerMechUnit : UnitData
 
         VisualElement stress = UI.CreateFromTemplate("UI/TableTop/LancerCoreStat");
         stress.style.marginRight = mr;
+        stress.style.marginLeft = ml;
         stress.name = "Stress";
         stress.Q<Label>("StatName").text = "STRESS";
         stress.Q<Label>("Pips").style.color = ColorUtility.GetColor("#FF7300");
@@ -431,10 +450,27 @@ public class LancerMechUnit : UnitData
             SensorRange = UI.Modal.Q<NumberNudger>("Sensor").value;
             string serialized = Serialize();
 
-            Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"UpdateStats|{serialized}");
+            Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"UpdateStats|{serialized}");
             Modal.Close();
             this.InitPanel("LeftTokenPanel", true);
         });
         Modal.AddButton("Cancel", Modal.CloseEvent);
+    }
+
+    protected override void RenameModal(ClickEvent evt)
+    {
+        ActorData data = Actor.GetSelected().Data;
+        Modal.Reset("Edit Name");
+        Modal.AddTextField("Name", "Callsign", Callsign);
+        Modal.AddTextField("Pilot", "Pilot Name", Pilot);
+        Modal.AddPreferredButton("Confirm", (evt) =>
+        {
+            string newName = UI.Modal.Q<TextField>("Name").value.Trim();
+            string newPilotName = UI.Modal.Q<TextField>("Pilot").value.Trim();
+            Player.Self().CmdRequestTokenDataCommand(data.Id, $"Rename|{newName}|{newPilotName}");
+            Modal.Close();
+        });
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+        SelectionMenu.Hide();
     }
 }

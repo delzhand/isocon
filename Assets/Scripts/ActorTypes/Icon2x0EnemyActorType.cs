@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Icon2x0EnemyUnit : Icon2x0Base
+public class Icon2x0EnemyActorType : Icon2x0Base
 {
     private readonly static string TypeName = "Icon 2.0 Enemy";
 
@@ -20,9 +20,9 @@ public class Icon2x0EnemyUnit : Icon2x0Base
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        UnitTokenRegistry.RegisterSystem($"{TypeName}");
-        UnitTokenRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
-        UnitTokenRegistry.RegisterSimpleCallback($"{TypeName}|AddTokenModal", AddTokenModal);
+        ActorTypeRegistry.RegisterSystem($"{TypeName}");
+        ActorTypeRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
+        ActorTypeRegistry.RegisterSimpleCallback($"{TypeName}|AddActorModal", AddActorModal);
     }
 
     public override string Serialize()
@@ -30,16 +30,16 @@ public class Icon2x0EnemyUnit : Icon2x0Base
         return JsonUtility.ToJson(this);
     }
 
-    public static IUnitData DeserializeAsInterface(string json)
+    public static IActorType DeserializeAsInterface(string json)
     {
-        return JsonUtility.FromJson<Icon2x0EnemyUnit>(json);
+        return JsonUtility.FromJson<Icon2x0EnemyActorType>(json);
     }
 
-    public static void AddTokenModal()
+    public static void AddActorModal()
     {
         Modal.AddMarkup("Description", "Icon 1.5 enemy tokens are used to create non-mob foes. Their stats come from ruledata.");
         Modal.AddTextField("NameField", "Token Name", "Token");
-        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", UnitData.SquareShapeOptions());
+        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", ActorType.SquareShapeOptions());
         Modal.AddDropdownField("FoeClassField", "Class", "Heavy", StringUtility.CreateArray("Heavy", "Artillery", "Skirmisher", "Leader", "Legend"), (evt) => { AddModalEvaluateConditions(); });
         Modal.AddToggleField("EliteField", "Elite", false);
         Modal.AddIntField("LegendHPField", "Legend HP Multiplier", 1);
@@ -90,7 +90,7 @@ public class Icon2x0EnemyUnit : Icon2x0Base
             hpMulti = 1;
         }
 
-        Icon2x0EnemyUnit t = new()
+        Icon2x0EnemyActorType t = new()
         {
             Type = TypeName,
             Name = name,
@@ -158,7 +158,7 @@ public class Icon2x0EnemyUnit : Icon2x0Base
         return "UI/TableTop/Overheads/Icon2";
     }
 
-    public override void UpdatePanel(TokenData tokenData, string elementName)
+    public override void UpdatePanel(ActorData tokenData, string elementName)
     {
         base.UpdatePanel(tokenData, elementName);
         VisualElement panel = UI.System.Q(elementName);
@@ -183,7 +183,7 @@ public class Icon2x0EnemyUnit : Icon2x0Base
 
     }
 
-    public override void UpdateOverhead(TokenData tokenData)
+    public override void UpdateOverhead(ActorData tokenData)
     {
         VisualElement o = tokenData.OverheadElement;
 
@@ -233,10 +233,10 @@ public class Icon2x0EnemyUnit : Icon2x0Base
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
-    public override void Command(string command, TokenData tokenData)
+    public override void Command(string command, ActorData tokenData)
     {
         base.Command(command, tokenData);
-        Token token = tokenData.GetToken();
+        Actor token = tokenData.GetToken();
         if (command.StartsWith("ModHP"))
         {
             int original = CurrentHP;
@@ -308,9 +308,9 @@ public class Icon2x0EnemyUnit : Icon2x0Base
             }
         }
     }
-    private void UpdateGraphic(TokenData tokenData)
+    private void UpdateGraphic(ActorData tokenData)
     {
-        Token token = tokenData.GetToken();
+        Actor token = tokenData.GetToken();
         token.SetDefeated(CurrentHP <= 0);
     }
 

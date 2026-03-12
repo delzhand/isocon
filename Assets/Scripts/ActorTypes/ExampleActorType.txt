@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
     extend SystemToken (or another class that extends SystemToken).
 */
 [Serializable]
-public class ExampleUnit : UnitData
+public class ExampleTypeData : ActorTypeData
 {
     /**
         Define the string identifier of your class. This must be unique.
@@ -28,7 +28,7 @@ public class ExampleUnit : UnitData
     {
         SystemTokenRegistry.RegisterSystem($"{TypeName}");
         SystemTokenRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
-        SystemTokenRegistry.RegisterSimpleCallback($"{TypeName}|AddTokenModal", AddTokenModal);
+        SystemTokenRegistry.RegisterSimpleCallback($"{TypeName}|AddActorModal", AddActorModal);
     }
 
     /**
@@ -66,7 +66,7 @@ public class ExampleUnit : UnitData
         This function defines the fields a user needs to create a token of this type.
         This uses the Modal API defined elsewhere.
     */
-    public static void AddTokenModal()
+    public static void AddActorModal()
     {
         /**
             A description is highly recommended.
@@ -111,7 +111,7 @@ public class ExampleUnit : UnitData
 
         /**
             Here you'll use UI.Modal to get the values from the fields you defined
-            in AddTokenModal.
+            in AddActorModal.
         */
         string name = UI.Modal.Q<TextField>("NameField").value;
         string shape = UI.Modal.Q<DropdownField>("ShapeField").value;

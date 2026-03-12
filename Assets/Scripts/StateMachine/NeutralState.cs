@@ -82,18 +82,18 @@ public class NeutralState : TabletopSubstate
 
     private void ShowTokenPanels()
     {
-        Token selected = Token.GetSelected();
-        Token focused = Token.GetFocused();
+        Actor selected = Actor.GetSelected();
+        Actor focused = Actor.GetFocused();
 
         if (focused && selected)
         {
             UI.ToggleActiveClass("LeftTokenPanel", true);
             UI.ToggleActiveClass("RightTokenPanel", true);
-            if (Token.RebuildPanels)
+            if (Actor.RebuildPanels)
             {
                 selected.Data.GetSystemToken().InitPanel("LeftTokenPanel", true);
                 focused.Data.GetSystemToken().InitPanel("RightTokenPanel");
-                Token.RebuildPanels = false;
+                Actor.RebuildPanels = false;
             }
             selected.Data.UpdateTokenPanel("LeftTokenPanel");
             focused.Data.UpdateTokenPanel("RightTokenPanel");
@@ -102,10 +102,10 @@ public class NeutralState : TabletopSubstate
         {
             UI.ToggleActiveClass("LeftTokenPanel", true);
             UI.ToggleActiveClass("RightTokenPanel", false);
-            if (Token.RebuildPanels)
+            if (Actor.RebuildPanels)
             {
                 focused.Data.GetSystemToken().InitPanel("LeftTokenPanel");
-                Token.RebuildPanels = false;
+                Actor.RebuildPanels = false;
             }
             focused.Data.UpdateTokenPanel("LeftTokenPanel");
         }
@@ -113,10 +113,10 @@ public class NeutralState : TabletopSubstate
         {
             UI.ToggleActiveClass("LeftTokenPanel", true);
             UI.ToggleActiveClass("RightTokenPanel", false);
-            if (Token.RebuildPanels)
+            if (Actor.RebuildPanels)
             {
                 selected.Data.GetSystemToken().InitPanel("LeftTokenPanel", true);
-                Token.RebuildPanels = false;
+                Actor.RebuildPanels = false;
             }
             selected.Data.UpdateTokenPanel("LeftTokenPanel");
         }
@@ -132,7 +132,7 @@ public class NeutralState : TabletopSubstate
     {
         UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>(GoToEditing);
         UI.TopBar.Q("MarkerMode").RegisterCallback<ClickEvent>(GoToMarking);
-        UI.TopBar.Q("AddToken").RegisterCallback<ClickEvent>(GoToAddToken);
+        UI.TopBar.Q("AddActor").RegisterCallback<ClickEvent>(GoToAddToken);
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>(GoToConfig);
         UI.TopBar.Q("Session").RegisterCallback<ClickEvent>(GoToSession);
         UI.TopBar.Q("FixedView").RegisterCallback<ClickEvent>(FixView);
@@ -151,7 +151,7 @@ public class NeutralState : TabletopSubstate
     {
         UI.TopBar.Q("EditMap").UnregisterCallback<ClickEvent>(GoToEditing);
         UI.TopBar.Q("MarkerMode").UnregisterCallback<ClickEvent>(GoToMarking);
-        UI.TopBar.Q("AddToken").UnregisterCallback<ClickEvent>(GoToAddToken);
+        UI.TopBar.Q("AddActor").UnregisterCallback<ClickEvent>(GoToAddToken);
         UI.TopBar.Q("Config").UnregisterCallback<ClickEvent>(GoToConfig);
         UI.TopBar.Q("Session").UnregisterCallback<ClickEvent>(GoToSession);
         UI.TopBar.Q("Dice").UnregisterCallback<ClickEvent>(DiceRoller.ToggleVisible);
@@ -179,13 +179,13 @@ public class NeutralState : TabletopSubstate
 
     private void LeftDragStart()
     {
-        Token t = Pointer.PickToken();
+        Actor t = Pointer.PickToken();
         t?.StartDragging();
     }
 
     private void LeftDragRelease()
     {
-        Token.StopDragging(Pointer.PickBlock(), Pointer.PickPoint());
+        Actor.StopDragging(Pointer.PickBlock(), Pointer.PickPoint());
     }
 
     private void ToggleTopBar(ClickEvent evt)

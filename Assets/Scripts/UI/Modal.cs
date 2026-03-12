@@ -388,7 +388,7 @@ public class Modal
 
     public static void AddTokenField(string name)
     {
-        TextField field = new("Token Graphic");
+        TextField field = new("Token");
         field.name = "Token";
         field.AddToClassList("no-margin");
         field.isReadOnly = true;

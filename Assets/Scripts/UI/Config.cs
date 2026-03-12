@@ -73,7 +73,7 @@ public class Config
         Modal.AddDropdownField("TokenOutlineField", "Token Outline", tokenOutline, StringUtility.CreateArray("White", "Black", "None"), (evt) =>
         {
             Preferences.SetTokenOutline(evt.newValue);
-            Token.SetAllTokenOutlines();
+            Actor.SetAllTokenOutlines();
         });
 
         string dragMode = Preferences.Current.DragPan ? "Pan" : "Rotate";

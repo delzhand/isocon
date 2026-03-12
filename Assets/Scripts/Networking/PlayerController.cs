@@ -30,7 +30,7 @@ public class PlayerController : NetworkBehaviour
         GameObject[] objs = GameObject.FindGameObjectsWithTag("TokenData");
         for (int i = 0; i < objs.Length; i++)
         {
-            objs[i].GetComponent<TokenData>().Disconnect();
+            objs[i].GetComponent<ActorData>().Disconnect();
         }
         TerrainController.DestroyAllBlocks();
     }

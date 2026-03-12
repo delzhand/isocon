@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public enum TokenState
+public enum ActorState
 {
     Neutral,
     Focused,
@@ -10,20 +10,20 @@ public enum TokenState
     Selected,
 }
 
-public class Token : MonoBehaviour
+public class Actor : MonoBehaviour
 {
     public int Size = 1;
     public Texture2D Image;
-    public TokenData Data;
+    public ActorData Data;
     public float ShareOffsetX;
     public float ShareOffsetY;
-    public Token LastFocused;
-    public TokenState State = TokenState.Neutral;
+    public Actor LastFocused;
+    public ActorState State = ActorState.Neutral;
 
     public static bool RebuildPanels = false;
-    private static Token _focused;
-    private static Token _selected;
-    private static Token _dragging;
+    private static Actor _focused;
+    private static Actor _selected;
+    private static Actor _dragging;
 
     void Update()
     {
@@ -31,29 +31,29 @@ public class Token : MonoBehaviour
         // OffsetForSizeAndSharing();
         GlobalTokenScale();
 
-        State = TokenState.Neutral;
+        State = ActorState.Neutral;
         if (this == _focused)
         {
-            State = TokenState.Focused;
+            State = ActorState.Focused;
         }
         if (this == _selected)
         {
-            State = TokenState.Selected;
+            State = ActorState.Selected;
         }
         if (this == _dragging)
         {
-            State = TokenState.Dragging;
+            State = ActorState.Dragging;
         }
 
         switch (State)
         {
-            case TokenState.Dragging:
-            case TokenState.Selected:
+            case ActorState.Dragging:
+            case ActorState.Selected:
                 SetVisualSquareYellow();
                 UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true);
                 Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UISelectYellow;
                 break;
-            case TokenState.Focused:
+            case ActorState.Focused:
                 SetVisualSquareBlue();
                 UI.ToggleDisplay(Data.UnitBarElement.Q("Selected"), true);
                 Data.UnitBarElement.Q("Selected").style.backgroundColor = ColorUtility.UIFocusBlue;
@@ -97,21 +97,21 @@ public class Token : MonoBehaviour
     public void SetImage(Texture2D image)
     {
         Image = image;
-        float aspectRatio = Image.width / Data.TokenMeta.Frames / (float)Image.height;
+        float aspectRatio = Image.width / Data.Token.Frames / (float)Image.height;
         transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetTexture("_Image", Image);
-        transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetInt("_XFrames", Data.TokenMeta.Frames);
-        transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetInt("_FPS", Data.TokenMeta.FPS);
+        transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetInt("_XFrames", Data.Token.Frames);
+        transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetInt("_FPS", Data.Token.FPS);
         transform.Find("Offset/Avatar/Cutout/Cutout Quad").transform.localScale = new Vector3(aspectRatio, 1f, 1f);
         SetAllTokenOutlines();
     }
 
-    private void StateChange(TokenState state)
+    private void StateChange(ActorState state)
     {
         State = state;
         RebuildPanels = true;
         switch (state)
         {
-            case TokenState.Selected:
+            case ActorState.Selected:
                 _selected = this;
                 if (_focused == this)
                 {
@@ -119,14 +119,14 @@ public class Token : MonoBehaviour
                 }
                 SelectionMenu.Hide();
                 break;
-            case TokenState.Dragging:
+            case ActorState.Dragging:
                 _dragging = this;
                 SelectionMenu.Hide();
                 break;
-            case TokenState.Focused:
+            case ActorState.Focused:
                 _focused = this;
                 break;
-            case TokenState.Neutral:
+            case ActorState.Neutral:
                 if (_focused == this)
                 {
                     _focused = null;
@@ -142,8 +142,8 @@ public class Token : MonoBehaviour
 
     public void StartDragging()
     {
-        StateChange(TokenState.Selected);
-        StateChange(TokenState.Dragging);
+        StateChange(ActorState.Selected);
+        StateChange(ActorState.Dragging);
         BlockRendering.ToggleAllBorders(true);
         string op = Data.Placed ? "Moving" : "Placing";
         Player.Self().SetOp($"{op} {Data.Name}");
@@ -156,7 +156,7 @@ public class Token : MonoBehaviour
         {
             if (b != null)
             {
-                _dragging.StateChange(TokenState.Neutral);
+                _dragging.StateChange(ActorState.Neutral);
                 if (_dragging.Data.CornerTargeting())
                 {
                     _dragging.Move(v);
@@ -168,7 +168,7 @@ public class Token : MonoBehaviour
             }
             else
             {
-                _dragging.StateChange(TokenState.Neutral);
+                _dragging.StateChange(ActorState.Neutral);
             }
         }
         _dragging = null;
@@ -182,12 +182,12 @@ public class Token : MonoBehaviour
         if (this == _selected)
         {
             _selected = null;
-            StateChange(TokenState.Focused);
+            StateChange(ActorState.Focused);
             SelectionMenu.Hide();
         }
         else
         {
-            StateChange(TokenState.Selected);
+            StateChange(ActorState.Selected);
         }
     }
 
@@ -199,7 +199,7 @@ public class Token : MonoBehaviour
         }
         else if (this != _selected)
         {
-            StateChange(TokenState.Selected);
+            StateChange(ActorState.Selected);
             TokenMenu.ShowMenu();
         }
         else if (this == _selected)
@@ -242,12 +242,12 @@ public class Token : MonoBehaviour
         SelectionMenu.Hide();
     }
 
-    public static Token GetSelected()
+    public static Actor GetSelected()
     {
         return _selected;
     }
 
-    public static Token GetDragging()
+    public static Actor GetDragging()
     {
         return _dragging;
     }
@@ -261,7 +261,7 @@ public class Token : MonoBehaviour
         else
         {
             _focused = this;
-            StateChange(TokenState.Focused);
+            StateChange(ActorState.Focused);
         }
     }
 
@@ -271,17 +271,17 @@ public class Token : MonoBehaviour
         {
             return;
         }
-        StateChange(TokenState.Neutral);
+        StateChange(ActorState.Neutral);
     }
 
-    public static Token GetFocused()
+    public static Actor GetFocused()
     {
         return _focused;
     }
 
     public static void UnfocusAll()
     {
-        _focused?.StateChange(TokenState.Neutral);
+        _focused?.StateChange(ActorState.Neutral);
         _focused = null;
     }
 
@@ -290,9 +290,9 @@ public class Token : MonoBehaviour
         return Block.GetClosest(transform.position);
     }
 
-    public static Token GetAtBlock(Block b)
+    public static Actor GetAtBlock(Block b)
     {
-        List<Token> nearby = TileShare.GetNearbyTokens(b.transform.position, .5f);
+        List<Actor> nearby = TileShare.GetNearbyTokens(b.transform.position, .5f);
         if (nearby.Count > 0)
         {
             return nearby[0];
@@ -333,7 +333,7 @@ public class Token : MonoBehaviour
         GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
         for (int i = 0; i < tokens.Length; i++)
         {
-            tokens[i].GetComponent<Token>().SetTokenOutline();
+            tokens[i].GetComponent<Actor>().SetTokenOutline();
         }
     }
 
@@ -365,7 +365,7 @@ public class Token : MonoBehaviour
     {
         foreach (var gameObject in GameObject.FindGameObjectsWithTag("Token"))
         {
-            gameObject.GetComponent<Token>().MoveToOptimalBlock();
+            gameObject.GetComponent<Actor>().MoveToOptimalBlock();
         }
 
     }

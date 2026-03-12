@@ -6,8 +6,8 @@ public class TileMarkingState : TabletopSubstate
     public override void OnEnter(StateManager sm)
     {
         base.OnEnter(sm);
-        Token.Deselect();
-        Token.UnfocusAll();
+        Actor.Deselect();
+        Actor.UnfocusAll();
         BlockRendering.ToggleAllBorders(true);
         // Cursor.Mode = CursorMode.Marking;
         Player.Self().SetOp("Marking Tiles");
@@ -28,7 +28,7 @@ public class TileMarkingState : TabletopSubstate
         UI.ToggleDisplay(UI.TopBar.Q("Config"), false);
         UI.ToggleDisplay(UI.TopBar.Q("Session"), false);
         UI.ToggleDisplay(UI.TopBar.Q("Isocon"), false);
-        UI.ToggleDisplay(UI.TopBar.Q("AddToken"), false);
+        UI.ToggleDisplay(UI.TopBar.Q("AddActor"), false);
         UI.ToggleDisplay(UI.TopBar.Q("EditMap"), false);
 
         UI.ToggleDisplay("DiceRoller", false);

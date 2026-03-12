@@ -11,18 +11,18 @@ public class TokenSync : MonoBehaviour
 
     private class SyncImage
     {
-        public TokenMeta Meta;
+        public Token Token;
         public ImageChunk[] Chunks;
-        public TokenData Data;
+        public ActorData Data;
 
         public bool Complete { get => GetMissingChunks().Length == 0; }
 
-        public float Percent { get => Mathf.RoundToInt((Meta.ChunkCount - GetMissingChunks().Length) / (float)Meta.ChunkCount * 100); }
+        public float Percent { get => Mathf.RoundToInt((Token.ChunkCount - GetMissingChunks().Length) / (float)Token.ChunkCount * 100); }
 
         public int[] GetMissingChunks()
         {
             List<int> missingChunks = new();
-            for (int i = 0; i < Meta.ChunkCount; i++)
+            for (int i = 0; i < Token.ChunkCount; i++)
             {
                 if (Chunks[i] == null)
                 {
@@ -78,7 +78,7 @@ public class TokenSync : MonoBehaviour
         }
     }
 
-    public static void Add(TokenMeta meta, TokenData data)
+    public static void Add(Token meta, ActorData data)
     {
         if (SyncImages == null)
         {
@@ -87,7 +87,7 @@ public class TokenSync : MonoBehaviour
 
         var syncImage = new SyncImage
         {
-            Meta = meta,
+            Token = meta,
             Data = data,
             Chunks = new ImageChunk[meta.ChunkCount]
         };
@@ -105,7 +105,7 @@ public class TokenSync : MonoBehaviour
             }
             foreach (var syncImage in SyncImages.Values)
             {
-                Player.Self().CmdRequestMissingChunks(syncImage.Meta.Hash, syncImage.GetMissingChunks());
+                Player.Self().CmdRequestMissingChunks(syncImage.Token.Hash, syncImage.GetMissingChunks());
             }
         }
         catch (Exception e)
@@ -200,8 +200,8 @@ public class TokenSync : MonoBehaviour
         int total = 0;
         foreach (var syncImage in SyncImages.Values)
         {
-            total += syncImage.Meta.ChunkCount;
-            received += (syncImage.Meta.ChunkCount - syncImage.GetMissingChunks().Length);
+            total += syncImage.Token.ChunkCount;
+            received += (syncImage.Token.ChunkCount - syncImage.GetMissingChunks().Length);
         }
         int percent = total > 0 ? Mathf.RoundToInt(received / (float)total * 100) : 100;
         return (percent, received, total);
@@ -274,8 +274,8 @@ public class TokenSync : MonoBehaviour
 
     private static void AssembleImageFromChunks(string hash, SyncImage syncImage)
     {
-        FileLogger.Write($"Assembly file {TokenMeta.TruncateHash(hash)}");
-        Byte[] allBytes = new Byte[syncImage.Meta.ChunkCount * _chunkSize];
+        FileLogger.Write($"Assembly file {Token.TruncateHash(hash)}");
+        Byte[] allBytes = new Byte[syncImage.Token.ChunkCount * _chunkSize];
         foreach (var imageChunk in syncImage.Chunks)
         {
             int startIndex = imageChunk.Index * _chunkSize;

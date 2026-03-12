@@ -11,7 +11,6 @@ public class Shadow
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void InitMaterials()
     {
-        Debug.Log("foo");
         SquareShadow = Resources.Load<Material>("Materials/Token/BorderBase");
         Hex1Shadow = Resources.Load<Material>("Materials/Token/HexBase1");
         Hex2Shadow = Resources.Load<Material>("Materials/Token/HexBase2");

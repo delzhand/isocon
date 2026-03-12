@@ -113,7 +113,7 @@ public class NumberPicker
     {
         int v = NumberPicker.GetNumber();
         NumberPicker.Close();
-        Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"{command}|{v}");
+        Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"{command}|{v}");
     }
 
     public static void AllTokensCommand(string command, bool allowNeg = true)

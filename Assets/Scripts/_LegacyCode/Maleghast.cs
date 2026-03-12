@@ -82,7 +82,7 @@
 //     }
 
 
-//     public override void AddTokenModal()
+//     public override void AddActorModal()
 //     {
 //         JSONNode gamedata = JSON.Parse(GameSystem.DataJson);
 //         List<string> units = new();
@@ -97,7 +97,7 @@
 //             }
 //         }
 
-//         base.AddTokenModal();
+//         base.AddActorModal();
 
 //         Modal.AddSearchField("UnitType", "Unit Type", "", units.ToArray());
 //         Modal.AddDropdownField("PlayerColor", "Player Color", "House Default", houses.ToArray());

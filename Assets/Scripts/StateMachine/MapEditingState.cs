@@ -14,8 +14,8 @@ public class MapEditingState : TabletopSubstate
     {
         base.OnEnter(sm);
         Block.DeselectAll();
-        Token.Deselect();
-        Token.UnfocusAll();
+        Actor.Deselect();
+        Actor.UnfocusAll();
         BlockRendering.ToggleSpacers(true);
         BlockRendering.ToggleAllBorders(true);
         Player.Self().SetOp("Editing Map");
@@ -45,7 +45,7 @@ public class MapEditingState : TabletopSubstate
         UI.ToggleDisplay(UI.TopBar.Q("Config"), false);
         UI.ToggleDisplay(UI.TopBar.Q("Isocon"), false);
         UI.ToggleDisplay(UI.TopBar.Q("Session"), false);
-        UI.ToggleDisplay(UI.TopBar.Q("AddToken"), false);
+        UI.ToggleDisplay(UI.TopBar.Q("AddActor"), false);
         UI.ToggleDisplay(UI.TopBar.Q("MarkerMode"), false);
         UI.ToggleDisplay("ToolsPanel", true);
         UI.ToggleDisplay("DiceRoller", false);
@@ -72,7 +72,7 @@ public class MapEditingState : TabletopSubstate
     {
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
-        Token.MoveAllTokensToOptimalBlock();
+        Actor.MoveAllTokensToOptimalBlock();
         Player.Self().CmdMapSync(Compression.CompressString(json));
     }
 

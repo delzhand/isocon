@@ -5,7 +5,7 @@ using IsoconUILibrary;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
-public abstract class Icon1x5Base : UnitData
+public abstract class Icon1x5Base : ActorType
 {
     public override MenuItem[] GetMenuItems(bool placed)
     {
@@ -38,7 +38,7 @@ public abstract class Icon1x5Base : UnitData
 
     private void AttackRoll(ClickEvent evt)
     {
-        string name = Token.GetSelected().Data.Name;
+        string name = Actor.GetSelected().Data.Name;
         string desc = $"{name}'s attack roll";
         BoonCurseRoll(desc);
         Modal.Close();
@@ -46,7 +46,7 @@ public abstract class Icon1x5Base : UnitData
 
     private void SaveRoll(ClickEvent evt)
     {
-        string name = Token.GetSelected().Data.Name;
+        string name = Actor.GetSelected().Data.Name;
         string desc = $"{name}'s save";
         BoonCurseRoll(desc);
         Modal.Close();

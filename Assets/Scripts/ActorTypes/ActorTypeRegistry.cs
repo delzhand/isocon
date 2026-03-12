@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 
 public delegate void SimpleCallback();
-public delegate IUnitData InterfaceCallback(string input);
+public delegate IActorType InterfaceCallback(string input);
 
-public static class UnitTokenRegistry
+public static class ActorTypeRegistry
 {
     private static readonly List<string> _systems = new();
     private static readonly Dictionary<string, SimpleCallback> _simpleCallbacks = new();
@@ -28,7 +28,7 @@ public static class UnitTokenRegistry
         }
     }
 
-    public static IUnitData DoInterfaceCallback(string system, string json)
+    public static IActorType DoInterfaceCallback(string system, string json)
     {
         if (_interfaceCallbacks.TryGetValue(system, out var callback))
         {

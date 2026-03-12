@@ -6,24 +6,24 @@ using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public interface IUnitData
+public interface IActorType
 {
     string Serialize();
     string Label();
     string GetOverheadAsset();
     MenuItem[] GetMenuItems(bool placed);
-    void Command(string command, TokenData tokenData);
-    void UpdateOverhead(TokenData tokenData);
-    void UpdatePanel(TokenData tokenData, string elementName);
+    void Command(string command, ActorData tokenData);
+    void UpdateOverhead(ActorData tokenData);
+    void UpdatePanel(ActorData tokenData, string elementName);
     void InitPanel(string elementName, bool selected = false);
 
 }
 
 [Serializable]
-public abstract class UnitData : IUnitData
+public abstract class ActorType : IActorType
 {
     public string Type;
-    public TokenMeta TokenMeta;
+    public Token TokenMeta;
     public string Shape;
     public Color Color;
     public List<UnitTag> Tags;
@@ -76,23 +76,23 @@ public abstract class UnitData : IUnitData
 
     protected static void ClickFlip(ClickEvent evt)
     {
-        Token.GetSelected().transform.Find("Offset/Avatar/Cutout/Cutout Quad").Rotate(new Vector3(0, 180, 0));
-        Token.Deselect();
+        Actor.GetSelected().transform.Find("Offset/Avatar/Cutout/Cutout Quad").Rotate(new Vector3(0, 180, 0));
+        Actor.Deselect();
     }
 
     protected static void ClickRemove(ClickEvent evt)
     {
-        Token.GetSelected().Remove();
-        Token.Deselect();
+        Actor.GetSelected().Remove();
+        Actor.Deselect();
     }
 
     protected static void ClickDelete(ClickEvent evt)
     {
-        TokenData data = Token.GetSelected().Data;
+        ActorData data = Actor.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
         Modal.DoubleConfirm("Delete Token", $"Are you sure you want to delete {name}? This action cannot be undone.", () =>
         {
-            Token.Deselect();
+            Actor.Deselect();
             Player.Self().CmdRequestDeleteToken(data.Id);
         });
         SelectionMenu.Hide();
@@ -130,7 +130,7 @@ public abstract class UnitData : IUnitData
         tag.Value = tagValue;
         tag.HasNumber = hasNumber;
         tag.Color = ColorUtility.GetCommonColor(colorValue);
-        Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
+        Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
         Modal.Close();
     }
 
@@ -156,7 +156,7 @@ public abstract class UnitData : IUnitData
         bar.Value = barValue;
         bar.MaxValue = barValue;
         bar.Color = ColorUtility.GetCommonColor(colorValue);
-        Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"AddBar|{JsonUtility.ToJson(bar)}");
+        Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"AddBar|{JsonUtility.ToJson(bar)}");
         Modal.Close();
     }
 
@@ -182,7 +182,7 @@ public abstract class UnitData : IUnitData
             bool keep = UI.Modal.Q<Toggle>(bar.Name).value;
             if (!keep)
             {
-                Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"RemoveBar|{bar.Name}");
+                Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"RemoveBar|{bar.Name}");
             }
         }
         foreach (UnitStat stat in Stats)
@@ -190,7 +190,7 @@ public abstract class UnitData : IUnitData
             bool keep = UI.Modal.Q<Toggle>(stat.Name).value;
             if (!keep)
             {
-                Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"RemoveStat|{stat.Name}");
+                Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"RemoveStat|{stat.Name}");
             }
         }
         Modal.Close();
@@ -214,18 +214,18 @@ public abstract class UnitData : IUnitData
         UnitStat stat = new();
         stat.Name = statName;
         stat.Value = statValue;
-        Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"AddStat|{JsonUtility.ToJson(stat)}");
+        Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"AddStat|{JsonUtility.ToJson(stat)}");
         Modal.Close();
     }
 
     protected static void ClickClone(ClickEvent evt)
     {
-        TokenData data = Token.GetSelected().Data;
+        ActorData data = Actor.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
         Modal.DoubleConfirm("Clone Token", $"Are you sure you want to clone {name}?", () =>
         {
             Player.Self().CmdCreateToken(data.SystemData);
-            Token.Deselect();
+            Actor.Deselect();
         });
         SelectionMenu.Hide();
     }
@@ -247,7 +247,7 @@ public abstract class UnitData : IUnitData
 
     private static void ReshapeModal(ClickEvent evt)
     {
-        TokenData data = Token.GetSelected().Data;
+        ActorData data = Actor.GetSelected().Data;
         Modal.Reset("Reshape");
         Modal.AddDropdownField("Reshape", "New Shape", data.Shape, ShapeOptions());
         Modal.AddPreferredButton("Update", (evt) =>
@@ -255,15 +255,15 @@ public abstract class UnitData : IUnitData
             string newShape = UI.Modal.Q<DropdownField>("Reshape").value;
             Player.Self().CmdRequestTokenDataCommand(data.Id, $"Reshape|{newShape}");
             Modal.Close();
-            Token.Deselect();
+            Actor.Deselect();
         });
         Modal.AddButton("Cancel", Modal.CloseEvent);
         SelectionMenu.Hide();
     }
 
-    private static void RenameModal(ClickEvent evt)
+    protected virtual void RenameModal(ClickEvent evt)
     {
-        TokenData data = Token.GetSelected().Data;
+        ActorData data = Actor.GetSelected().Data;
         Modal.Reset("Edit Name");
         Modal.AddTextField("Name", "Name", data.Name);
         Modal.AddPreferredButton("Confirm", (evt) =>
@@ -276,16 +276,16 @@ public abstract class UnitData : IUnitData
         SelectionMenu.Hide();
     }
 
-    public virtual void Command(string value, TokenData tokenData)
+    public virtual void Command(string value, ActorData tokenData)
     {
-        Token token = tokenData.GetToken();
+        Actor token = tokenData.GetToken();
         if (value.StartsWith("AddTag"))
         {
             string[] parts = value.Split("|");
             UnitTag tag = JsonUtility.FromJson<UnitTag>(parts[1]);
             Tags.Add(tag);
             PopoverText.Create(token, $"/+|_{tag.Name.ToUpper()}", Color.white);
-            Token.RebuildPanels = true;
+            Actor.RebuildPanels = true;
         }
         if (value.StartsWith("IncrementTag"))
         {
@@ -295,7 +295,7 @@ public abstract class UnitData : IUnitData
             {
                 PopoverText.Create(token, $"/+1|_{parts[1].ToUpper()}", Color.white);
             }
-            Token.RebuildPanels = true;
+            Actor.RebuildPanels = true;
         }
         if (value.StartsWith("DecrementTag"))
         {
@@ -305,7 +305,7 @@ public abstract class UnitData : IUnitData
             {
                 PopoverText.Create(token, $"/-1|_{parts[1].ToUpper()}", Color.white);
             }
-            Token.RebuildPanels = true;
+            Actor.RebuildPanels = true;
         }
         if (value.StartsWith("RemoveTag"))
         {
@@ -315,40 +315,40 @@ public abstract class UnitData : IUnitData
             {
                 PopoverText.Create(token, $"/-|_{parts[1].ToUpper()}", Color.white);
             }
-            Token.RebuildPanels = true;
+            Actor.RebuildPanels = true;
         }
         if (value.StartsWith("RemoveStat"))
         {
             string[] parts = value.Split("|");
             int i = Stats.FindIndex(a => a.Name == parts[1]);
             Stats.RemoveAt(i);
-            Token.RebuildPanels = true;
+            Actor.RebuildPanels = true;
         }
         if (value.StartsWith("RemoveBar"))
         {
             string[] parts = value.Split("|");
             int i = Bars.FindIndex(a => a.Name == parts[1]);
             Bars.RemoveAt(i);
-            Token.RebuildPanels = true;
+            Actor.RebuildPanels = true;
         }
         if (value.StartsWith("AddBar"))
         {
             string[] parts = value.Split("|");
             UnitBar bar = JsonUtility.FromJson<UnitBar>(parts[1]);
             Bars.Add(bar);
-            Token.RebuildPanels = true;
+            Actor.RebuildPanels = true;
         }
         if (value.StartsWith("AddStat"))
         {
             string[] parts = value.Split("|");
             UnitStat stat = JsonUtility.FromJson<UnitStat>(parts[1]);
             Stats.Add(stat);
-            Token.RebuildPanels = true;
+            Actor.RebuildPanels = true;
         }
         if (value.StartsWith("ModBar"))
         {
             ModBar(value, tokenData);
-            Token.RebuildPanels = true;
+            Actor.RebuildPanels = true;
         }
         if (value.StartsWith("Reshape"))
         {
@@ -359,11 +359,11 @@ public abstract class UnitData : IUnitData
         }
     }
 
-    public virtual void UpdateOverhead(TokenData tokenData)
+    public virtual void UpdateOverhead(ActorData tokenData)
     {
     }
 
-    public virtual void UpdatePanel(TokenData tokenData, string elementName)
+    public virtual void UpdatePanel(ActorData tokenData, string elementName)
     {
     }
 
@@ -452,7 +452,7 @@ public abstract class UnitData : IUnitData
 
     public void DirectCommand(string command)
     {
-        Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, command);
+        Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, command);
         SelectionMenu.Hide();
     }
 
@@ -477,9 +477,9 @@ public abstract class UnitData : IUnitData
         }
     }
 
-    private void ModBar(string command, TokenData tokenData)
+    private void ModBar(string command, ActorData tokenData)
     {
-        Token token = tokenData.GetToken();
+        Actor token = tokenData.GetToken();
         string name = command.Split("|")[1];
         int index = Bars.FindIndex(a => a.Name == name);
         UnitBar bar = Bars[index];
@@ -554,7 +554,7 @@ public class UnitMeta
 {
     public string Name;
     public string Type;
-    public TokenMeta TokenMeta;
+    public Token TokenMeta;
     public string Shape;
     public Color Color;
 }

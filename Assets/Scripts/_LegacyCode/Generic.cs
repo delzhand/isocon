@@ -88,9 +88,9 @@
 //         }
 //     }
 
-//     public override void AddTokenModal()
+//     public override void AddActorModal()
 //     {
-//         base.AddTokenModal();
+//         base.AddActorModal();
 //         Modal.AddDropdownField("SizeField", "Size", "1x1", new string[] { "1x1", "2x2", "3x3" });
 //         Modal.AddTextField("ExtraInfo", "Extra Info", "");
 //         Modal.AddIntField("HPField", "HP", 1);

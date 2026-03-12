@@ -95,10 +95,10 @@ public class Player : NetworkBehaviour
     {
         UnitMeta stm = JsonUtility.FromJson<UnitMeta>(json);
         GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData"));
-        TokenData data = g.GetComponent<TokenData>();
+        ActorData data = g.GetComponent<ActorData>();
         data.Id = Guid.NewGuid().ToString(); ;
         data.Type = stm.Type;
-        data.TokenMeta = stm.TokenMeta;
+        data.Token = stm.TokenMeta;
         data.Name = stm.Name;
         data.Shape = stm.Shape;
         data.Color = stm.Color;
@@ -147,7 +147,7 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdRequestDeleteToken(string tokenId)
     {
-        TokenData data = TokenData.Find(tokenId);
+        ActorData data = ActorData.Find(tokenId);
         FileLogger.Write($"Client {connectionToClient.connectionId} requested to delete token {data.Name}");
         RpcDeleteToken(tokenId);
         data.Destroyed = true;
@@ -158,7 +158,7 @@ public class Player : NetworkBehaviour
         FileLogger.Write($"Client {connectionToClient.connectionId} requested to delete all tokens");
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("TokenData"))
         {
-            TokenData data = g.GetComponent<TokenData>();
+            ActorData data = g.GetComponent<ActorData>();
             if (data.Deletable && !data.Destroyed)
             {
                 FileLogger.Write($"Client {connectionToClient.connectionId} requested to delete token {data.Name} ({data.Id})");
@@ -170,7 +170,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void RpcDeleteToken(string tokenId)
     {
-        TokenData data = TokenData.Find(tokenId);
+        ActorData data = ActorData.Find(tokenId);
         data.Delete();
         FileLogger.Write($"Token {data.Name} was deleted");
         Toast.AddSuccess($"{data.Name} deleted.");
@@ -188,7 +188,7 @@ public class Player : NetworkBehaviour
     public void CmdRequestPlaceToken(string tokenId, Vector3 target)
     {
         RpcPlaceToken(tokenId, true);
-        Vector2 v = TokenData.Find(tokenId).UnitBarElement.worldBound.center * Preferences.GetUIScale();
+        Vector2 v = ActorData.Find(tokenId).UnitBarElement.worldBound.center * Preferences.GetUIScale();
         Vector3 origin = Camera.main.ScreenToWorldPoint(new Vector3(v.x, Screen.height - v.y, 0));
 
         RpcDoMoveToken(tokenId, origin, true);
@@ -204,7 +204,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     private void RpcDoMoveToken(string tokenId, Vector3 v, bool immediate)
     {
-        TokenData data = TokenData.Find(tokenId);
+        ActorData data = ActorData.Find(tokenId);
         data.LastKnownPosition = v;
         if (immediate)
         {
@@ -219,7 +219,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     private void RpcPlaceToken(string tokenId, bool place)
     {
-        TokenData data = TokenData.Find(tokenId);
+        ActorData data = ActorData.Find(tokenId);
         data.Place(place);
     }
     #endregion
@@ -243,7 +243,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void RpcTokenDataCommand(string tokenId, string value)
     {
-        TokenData.Command(tokenId, value);
+        ActorData.Command(tokenId, value);
     }
     [Command]
     public void CmdRequestAllTokenDataCommand(string value)
@@ -255,8 +255,8 @@ public class Player : NetworkBehaviour
     {
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("TokenData"))
         {
-            TokenData data = g.GetComponent<TokenData>();
-            TokenData.Command(data.Id, value);
+            ActorData data = g.GetComponent<ActorData>();
+            ActorData.Command(data.Id, value);
         }
     }
     #endregion

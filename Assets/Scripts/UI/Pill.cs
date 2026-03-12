@@ -31,15 +31,15 @@ public class Pill
         {
             p.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) =>
             {
-                Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"IncrementTag|{name}");
+                Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"IncrementTag|{name}");
             });
             p.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) =>
             {
-                Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"DecrementTag|{name}");
+                Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"DecrementTag|{name}");
             });
             p.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) =>
             {
-                Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"RemoveTag|{name}");
+                Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"RemoveTag|{name}");
             });
         }
         else
@@ -75,7 +75,7 @@ public class Pill
         {
             p.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) =>
             {
-                Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"RemoveTag|{name}");
+                Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"RemoveTag|{name}");
             });
         }
         else

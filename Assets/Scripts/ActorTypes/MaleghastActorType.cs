@@ -8,7 +8,7 @@ using System.IO;
 using System.Text;
 
 [Serializable]
-public class MaleghastUnit : UnitData
+public class MaleghastActorType : ActorType
 {
     private readonly static string TypeName = "Maleghast Unit";
 
@@ -16,17 +16,17 @@ public class MaleghastUnit : UnitData
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        UnitTokenRegistry.RegisterSystem($"{TypeName}");
-        UnitTokenRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
-        UnitTokenRegistry.RegisterSimpleCallback($"{TypeName}|AddTokenModal", AddTokenModal);
+        ActorTypeRegistry.RegisterSystem($"{TypeName}");
+        ActorTypeRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
+        ActorTypeRegistry.RegisterSimpleCallback($"{TypeName}|AddActorModal", AddActorModal);
     }
     public override string Serialize()
     {
         return JsonUtility.ToJson(this);
     }
-    public static IUnitData DeserializeAsInterface(string json)
+    public static IActorType DeserializeAsInterface(string json)
     {
-        return JsonUtility.FromJson<MaleghastUnit>(json);
+        return JsonUtility.FromJson<MaleghastActorType>(json);
     }
     #endregion
 
@@ -47,7 +47,7 @@ public class MaleghastUnit : UnitData
     #endregion
 
     #region Creation
-    public static void AddTokenModal()
+    public static void AddActorModal()
     {
         // Copy the static asset to the user folder        
         TextAsset baseline = Resources.Load<TextAsset>("Text/maleghast");
@@ -100,7 +100,7 @@ public class MaleghastUnit : UnitData
             color = GetHouseColor(colorValue);
         }
 
-        MaleghastUnit t = new()
+        MaleghastActorType t = new()
         {
             Type = TypeName,
             Job = job,
@@ -191,14 +191,14 @@ public class MaleghastUnit : UnitData
         return "UI/TableTop/Overheads/PipCounter";
     }
 
-    public override void UpdateOverhead(TokenData tokenData)
+    public override void UpdateOverhead(ActorData tokenData)
     {
         VisualElement o = tokenData.OverheadElement;
         o.Q<Label>("Pips").text = SymbolString("■", CurrentHP, MaxHP);
         UI.ToggleDisplay(o, CurrentHP > 0 && tokenData.Placed);
     }
 
-    public override void UpdatePanel(TokenData tokenData, string elementName)
+    public override void UpdatePanel(ActorData tokenData, string elementName)
     {
         base.UpdatePanel(tokenData, elementName);
         VisualElement panel = UI.System.Q(elementName);
@@ -274,9 +274,9 @@ public class MaleghastUnit : UnitData
         return items.ToArray();
     }
 
-    public override void Command(string command, TokenData tokenData)
+    public override void Command(string command, ActorData tokenData)
     {
-        Token token = tokenData.GetToken();
+        Actor token = tokenData.GetToken();
         base.Command(command, tokenData);
         if (command.StartsWith("ModHP"))
         {
@@ -302,14 +302,14 @@ public class MaleghastUnit : UnitData
                 };
                 Tags.Add(tag);
                 PopoverText.Create(token, $"_RELOADED", Color.white);
-                Token.RebuildPanels = true;
+                Actor.RebuildPanels = true;
             }
         }
     }
 
-    private void UpdateGraphic(TokenData tokenData)
+    private void UpdateGraphic(ActorData tokenData)
     {
-        Token token = tokenData.GetToken();
+        Actor token = tokenData.GetToken();
         token.SetDefeated(CurrentHP <= 0);
     }
 

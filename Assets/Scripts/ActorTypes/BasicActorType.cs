@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class BasicUnit : UnitData
+public class BasicActorType : ActorType
 {
     private readonly static string TypeName = "Basic";
 
@@ -13,17 +13,17 @@ public class BasicUnit : UnitData
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        UnitTokenRegistry.RegisterSystem($"{TypeName}");
-        UnitTokenRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
-        UnitTokenRegistry.RegisterSimpleCallback($"{TypeName}|AddTokenModal", AddTokenModal);
+        ActorTypeRegistry.RegisterSystem($"{TypeName}");
+        ActorTypeRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
+        ActorTypeRegistry.RegisterSimpleCallback($"{TypeName}|AddActorModal", AddActorModal);
     }
     public override string Serialize()
     {
         return JsonUtility.ToJson(this);
     }
-    public static IUnitData DeserializeAsInterface(string json)
+    public static IActorType DeserializeAsInterface(string json)
     {
-        return JsonUtility.FromJson<BasicUnit>(json);
+        return JsonUtility.FromJson<BasicActorType>(json);
     }
     #endregion
 
@@ -34,11 +34,11 @@ public class BasicUnit : UnitData
     #endregion
 
     #region Creation
-    public static void AddTokenModal()
+    public static void AddActorModal()
     {
         Modal.AddMarkup("Description", "Basic tokens have a primary HP stat by default, but custom resources can be assigned and tracked once created.");
         Modal.AddTextField("NameField", "Token Name", "Token");
-        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", UnitData.ShapeOptions());
+        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", ActorType.ShapeOptions());
         Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
         Modal.AddIntField("MaxHPField", "Max HP", 100);
         Modal.AddPreferredButton("Create Token", CreateClicked);
@@ -60,7 +60,7 @@ public class BasicUnit : UnitData
         string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
         int maxHP = UI.Modal.Q<IntegerField>("MaxHPField").value;
         string color = UI.Modal.Q<DropdownField>("ColorField").value;
-        BasicUnit t = new()
+        BasicActorType t = new()
         {
             Type = TypeName,
             Name = name,
@@ -94,7 +94,7 @@ public class BasicUnit : UnitData
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
-    public override void Command(string command, TokenData tokenData)
+    public override void Command(string command, ActorData tokenData)
     {
         base.Command(command, tokenData);
         if (command.StartsWith("ModHP|"))
@@ -108,13 +108,13 @@ public class BasicUnit : UnitData
 
     }
 
-    public override void UpdateOverhead(TokenData tokenData)
+    public override void UpdateOverhead(ActorData tokenData)
     {
         tokenData.OverheadElement.Q<ProgressBar>("HpBar").value = CurrentHP;
         tokenData.OverheadElement.Q<ProgressBar>("HpBar").highValue = MaxHP;
     }
 
-    public override void UpdatePanel(TokenData tokenData, string elementName)
+    public override void UpdatePanel(ActorData tokenData, string elementName)
     {
         base.UpdatePanel(tokenData, elementName);
         VisualElement panel = UI.System.Q(elementName);
@@ -136,7 +136,7 @@ public class BasicUnit : UnitData
         panel.Q("Bars").Add(hpBar);
     }
 
-    private void ModHP(string command, TokenData token)
+    private void ModHP(string command, ActorData token)
     {
         int value = int.Parse(command.Split("|")[1]);
         if (value <= 0)
@@ -149,9 +149,9 @@ public class BasicUnit : UnitData
         }
     }
 
-    private void GainHP(int value, TokenData tokenData)
+    private void GainHP(int value, ActorData tokenData)
     {
-        Token token = tokenData.GetToken();
+        Actor token = tokenData.GetToken();
         int diff = Math.Abs(value);
         if (CurrentHP + diff > MaxHP)
         {
@@ -168,9 +168,9 @@ public class BasicUnit : UnitData
         UpdateGraphic(tokenData);
     }
 
-    private void LoseHP(int value, TokenData tokenData)
+    private void LoseHP(int value, ActorData tokenData)
     {
-        Token token = tokenData.GetToken();
+        Actor token = tokenData.GetToken();
         int diff = Math.Abs(value);
         if (CurrentHP - diff < 0)
         {
@@ -187,9 +187,9 @@ public class BasicUnit : UnitData
         UpdateGraphic(tokenData);
     }
 
-    private void UpdateGraphic(TokenData tokenData)
+    private void UpdateGraphic(ActorData tokenData)
     {
-        Token token = tokenData.GetToken();
+        Actor token = tokenData.GetToken();
         token.SetDefeated(CurrentHP <= 0);
     }
 

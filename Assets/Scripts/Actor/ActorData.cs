@@ -9,7 +9,7 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
-public class TokenData : NetworkBehaviour
+public class ActorData : NetworkBehaviour
 {
     [SyncVar]
     public string Type;
@@ -18,7 +18,7 @@ public class TokenData : NetworkBehaviour
     [SyncVar]
     public string Name = "";
     [SyncVar]
-    public TokenMeta TokenMeta;
+    public Token Token;
     [SyncVar]
     public string Shape;
     [SyncVar]
@@ -75,7 +75,7 @@ public class TokenData : NetworkBehaviour
                 TokenSync.SyncStep();
                 GraphicSyncInterval = .4f;
 
-                var texture = TokenSync.LoadHashedFileAsTexture(TokenMeta.Hash);
+                var texture = TokenSync.LoadHashedFileAsTexture(Token.Hash);
                 if (texture != null)
                 {
                     SetGraphic(texture);
@@ -89,9 +89,9 @@ public class TokenData : NetworkBehaviour
             OverheadElement.style.display = Placed ? DisplayStyle.Flex : DisplayStyle.None;
             if (WorldObject != null)
             {
-                UI.FollowTransform(WorldObject.GetComponent<Token>().transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").transform, OverheadElement, UI.World, Camera.main, Vector2.zero);
+                UI.FollowTransform(WorldObject.GetComponent<Actor>().transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").transform, OverheadElement, UI.World, Camera.main, Vector2.zero);
             }
-            IUnitData st = UnitTokenRegistry.DoInterfaceCallback(Type, SystemData);
+            IActorType st = ActorTypeRegistry.DoInterfaceCallback(Type, SystemData);
             st.UpdateOverhead(this);
         }
 
@@ -104,17 +104,17 @@ public class TokenData : NetworkBehaviour
 
     private void LoadGraphic()
     {
-        FileLogger.Write($"Load graphic for {TokenMeta.TruncateHash(TokenMeta.Hash)}");
-        Texture2D graphic = TokenSync.LoadHashedFileAsTexture(TokenMeta.Hash);
+        FileLogger.Write($"Load graphic for {Token.TruncateHash(Token.Hash)}");
+        Texture2D graphic = TokenSync.LoadHashedFileAsTexture(Token.Hash);
         if (graphic)
         {
-            FileLogger.Write($"Hashed image {TokenMeta.TruncateHash(TokenMeta.Hash)} found locally");
+            FileLogger.Write($"Hashed image {Token.TruncateHash(Token.Hash)} found locally");
             SetGraphic(graphic);
         }
         else
         {
-            FileLogger.Write($"Hashed image {TokenMeta.TruncateHash(TokenMeta.Hash)} not found locally, starting sync");
-            TokenSync.Add(TokenMeta, this);
+            FileLogger.Write($"Hashed image {Token.TruncateHash(Token.Hash)} not found locally, starting sync");
+            TokenSync.Add(Token, this);
         }
     }
 
@@ -131,13 +131,13 @@ public class TokenData : NetworkBehaviour
             Place();
             WorldObject.transform.position = LastKnownPosition;
         }
-        WorldObject.GetComponent<Token>().Data = this;
+        WorldObject.GetComponent<Actor>().Data = this;
         SetShape();
     }
 
     public void CreateOverheadElement()
     {
-        IUnitData st = UnitTokenRegistry.DoInterfaceCallback(Type, SystemData);
+        IActorType st = ActorTypeRegistry.DoInterfaceCallback(Type, SystemData);
         string asset = st.GetOverheadAsset();
         if (asset != null)
         {
@@ -216,9 +216,9 @@ public class TokenData : NetworkBehaviour
         }
     }
 
-    public Token GetToken()
+    public Actor GetToken()
     {
-        return WorldObject.GetComponent<Token>();
+        return WorldObject.GetComponent<Actor>();
     }
 
     // public void UpdateSize(int size)
@@ -234,7 +234,7 @@ public class TokenData : NetworkBehaviour
         UnitBarElement = template.Instantiate();
         UnitBarElement.style.display = DisplayStyle.Flex;
 
-        Token t = WorldObject.GetComponent<Token>();
+        Actor t = WorldObject.GetComponent<Actor>();
         UnitBarElement.RegisterCallback<MouseEnterEvent>((evt) =>
         {
             t.Focus();
@@ -256,7 +256,7 @@ public class TokenData : NetworkBehaviour
         SetGraphicSingle();
 
         // Set the world object graphic
-        Token token = WorldObject.GetComponent<Token>();
+        Actor token = WorldObject.GetComponent<Actor>();
         token.SetImage(Graphic);
 
         // Set the UI portrait
@@ -286,19 +286,19 @@ public class TokenData : NetworkBehaviour
 
     private void SetGraphicSingle()
     {
-        Color[] pixels = Graphic.GetPixels(0, 0, Graphic.width / TokenMeta.Frames, Graphic.height);
-        GraphicSingle = new Texture2D(Graphic.width / TokenMeta.Frames, Graphic.height);
+        Color[] pixels = Graphic.GetPixels(0, 0, Graphic.width / Token.Frames, Graphic.height);
+        GraphicSingle = new Texture2D(Graphic.width / Token.Frames, Graphic.height);
         GraphicSingle.SetPixels(pixels);
         GraphicSingle.Apply();
         GraphicSingle.wrapMode = TextureWrapMode.Clamp;
         GraphicSingle.filterMode = FilterMode.Point;
     }
 
-    public static TokenData Find(string id)
+    public static ActorData Find(string id)
     {
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("TokenData"))
         {
-            TokenData data = g.GetComponent<TokenData>();
+            ActorData data = g.GetComponent<ActorData>();
             if (data.Id == id)
             {
                 return data;
@@ -309,7 +309,7 @@ public class TokenData : NetworkBehaviour
 
     public static void Command(string tokenId, string command)
     {
-        TokenData data = TokenData.Find(tokenId);
+        ActorData data = ActorData.Find(tokenId);
         data.HandleCommand(command);
     }
 
@@ -320,7 +320,7 @@ public class TokenData : NetworkBehaviour
             Name = command.Split("|")[1];
         }
 
-        IUnitData st = UnitTokenRegistry.DoInterfaceCallback(Type, SystemData);
+        IActorType st = ActorTypeRegistry.DoInterfaceCallback(Type, SystemData);
         st.Command(command, this);
         SystemData = st.Serialize();
         // NeedsRedraw = true;
@@ -356,7 +356,7 @@ public class TokenData : NetworkBehaviour
         {
             panel.Q("Portrait").style.backgroundImage = GraphicSingle;
         }
-        IUnitData st = UnitTokenRegistry.DoInterfaceCallback(Type, SystemData);
+        IActorType st = ActorTypeRegistry.DoInterfaceCallback(Type, SystemData);
         st.UpdatePanel(this, elementName);
         Name = st.Label();
         panel.Q<Label>("Name").text = Name;
@@ -368,35 +368,9 @@ public class TokenData : NetworkBehaviour
 
     }
 
-    // public void InitTokenPanels()
-    // {
-    //     Token selected = Token.GetSelected();
-    //     Token focused = Token.GetFocused();
-
-    //     // Debug.Log($"{selected?.Data.Name} | {focused?.Data.Name} set as panel tokens");
-
-    //     if (focused && selected)
-    //     {
-    //         selected.Data.InitTokenPanel("LeftTokenPanel");
-    //         focused.Data.InitTokenPanel("RightTokenPanel");
-    //     }
-    //     else if (focused && !selected)
-    //     {
-    //         UI.ToggleActiveClass("LeftTokenPanel", true);
-    //         UI.ToggleActiveClass("RightTokenPanel", false);
-    //         focused.Data.UpdateTokenPanel("LeftTokenPanel");
-    //     }
-    //     else if (selected && !focused)
-    //     {
-    //         UI.ToggleActiveClass("LeftTokenPanel", true);
-    //         UI.ToggleActiveClass("RightTokenPanel", false);
-    //         selected.Data.UpdateTokenPanel("LeftTokenPanel");
-    //     }
-    // }
-
-    public IUnitData GetSystemToken()
+    public IActorType GetSystemToken()
     {
-        return UnitTokenRegistry.DoInterfaceCallback(Type, SystemData);
+        return ActorTypeRegistry.DoInterfaceCallback(Type, SystemData);
     }
 
     public void Delete()
@@ -404,6 +378,6 @@ public class TokenData : NetworkBehaviour
         UI.System.Q("UnitBar").Remove(UnitBarElement);
         UI.World.Q("Worldspace").Remove(OverheadElement);
         Destroy(WorldObject);
-        Token.Deselect();
+        Actor.Deselect();
     }
 }

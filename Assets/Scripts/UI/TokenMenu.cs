@@ -9,10 +9,10 @@ public class TokenMenu
     {
         Block.DeselectAll();
         Block.DehighlightAll();
-        TokenData data = Token.GetSelected().Data;
-        SelectionMenu.Reset("TOKEN MENU", new Vector2(30, 50), Token.GetSelected().transform);
+        ActorData data = Actor.GetSelected().Data;
+        SelectionMenu.Reset("TOKEN MENU", new Vector2(30, 50), Actor.GetSelected().transform);
 
-        IUnitData st = UnitTokenRegistry.DoInterfaceCallback(data.Type, data.SystemData);
+        IActorType st = ActorTypeRegistry.DoInterfaceCallback(data.Type, data.SystemData);
         MenuItem[] systemItems = st.GetMenuItems(data.Placed);
         foreach (MenuItem m in systemItems)
         {

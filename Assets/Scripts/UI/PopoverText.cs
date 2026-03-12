@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 public class PopoverText : MonoBehaviour
 {
-    private Token Token;
+    private Actor Token;
     private VisualElement Element;
     private float timer;
     private static float duration = .15f;
@@ -34,7 +34,7 @@ public class PopoverText : MonoBehaviour
         UI.FollowTransform(Token.transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor"), Element, UI.World, Camera.main, new Vector2(0, -22));
     }
 
-    public static void Create(Token token, string text, Color color)
+    public static void Create(Actor token, string text, Color color)
     {
         // String is split on |
         // A leading / means large, sub-split characters

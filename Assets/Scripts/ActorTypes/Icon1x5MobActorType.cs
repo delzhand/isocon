@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class Icon1x5MobUnit : Icon1x5Base
+public class Icon1x5MobActorType : Icon1x5Base
 {
     private readonly static string TypeName = "Icon 1.5 Mob";
 
@@ -14,17 +14,17 @@ public class Icon1x5MobUnit : Icon1x5Base
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        UnitTokenRegistry.RegisterSystem($"{TypeName}");
-        UnitTokenRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
-        UnitTokenRegistry.RegisterSimpleCallback($"{TypeName}|AddTokenModal", AddTokenModal);
+        ActorTypeRegistry.RegisterSystem($"{TypeName}");
+        ActorTypeRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
+        ActorTypeRegistry.RegisterSimpleCallback($"{TypeName}|AddActorModal", AddActorModal);
     }
     public override string Serialize()
     {
         return JsonUtility.ToJson(this);
     }
-    public static IUnitData DeserializeAsInterface(string json)
+    public static IActorType DeserializeAsInterface(string json)
     {
-        return JsonUtility.FromJson<Icon1x5MobUnit>(json);
+        return JsonUtility.FromJson<Icon1x5MobActorType>(json);
     }
     #endregion
 
@@ -41,7 +41,7 @@ public class Icon1x5MobUnit : Icon1x5Base
     #endregion
 
     #region Creation
-    public static void AddTokenModal()
+    public static void AddActorModal()
     {
         Modal.AddMarkup("Description", "ICON 1.5 Mob tokens have two hit counters instead of an HP bar.");
         Modal.AddTextField("NameField", "Token Name", "Token");
@@ -63,7 +63,7 @@ public class Icon1x5MobUnit : Icon1x5Base
 
         string name = UI.Modal.Q<TextField>("NameField").value;
 
-        Icon1x5MobUnit t = new()
+        Icon1x5MobActorType t = new()
         {
             Type = TypeName,
             Name = name,
@@ -102,7 +102,7 @@ public class Icon1x5MobUnit : Icon1x5Base
         {
             items.Add(new MenuItem("RestoreHit", "Restore Hit", (evt) =>
             {
-                Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, "RestoreHit");
+                Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, "RestoreHit");
                 SelectionMenu.Hide();
             }));
         }
@@ -110,9 +110,9 @@ public class Icon1x5MobUnit : Icon1x5Base
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
-    public override void Command(string command, TokenData tokenData)
+    public override void Command(string command, ActorData tokenData)
     {
-        Token token = tokenData.GetToken();
+        Actor token = tokenData.GetToken();
         base.Command(command, tokenData);
         if (command.StartsWith("Damage"))
         {
@@ -158,7 +158,7 @@ public class Icon1x5MobUnit : Icon1x5Base
 
     }
 
-    public override void UpdateOverhead(TokenData tokenData)
+    public override void UpdateOverhead(ActorData tokenData)
     {
         VisualElement o = tokenData.OverheadElement;
         if (Vigor > 0)
@@ -222,7 +222,7 @@ public class Icon1x5MobUnit : Icon1x5Base
         return sb.ToString();
     }
 
-    public override void UpdatePanel(TokenData tokenData, string elementName)
+    public override void UpdatePanel(ActorData tokenData, string elementName)
     {
         base.UpdatePanel(tokenData, elementName);
         VisualElement panel = UI.System.Q(elementName);
@@ -231,9 +231,9 @@ public class Icon1x5MobUnit : Icon1x5Base
         mainHPLabel.text = MobHPString();
     }
 
-    private void UpdateGraphic(TokenData tokenData)
+    private void UpdateGraphic(ActorData tokenData)
     {
-        Token token = tokenData.GetToken();
+        Actor token = tokenData.GetToken();
         token.SetDefeated(Hits <= 0);
     }
 }
