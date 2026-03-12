@@ -43,36 +43,4 @@ public abstract class Icon2x0Base : ActorType
         Actor.Deselect();
         Modal.Close();
     }
-
-    private void BoonCurseRoll(string desc)
-    {
-        int power = UI.Modal.Q<NumberNudger>("PowerField").value;
-        int powerDice = Math.Abs(power);
-        int x = 1 + Random.Range(0, 20);
-        int y = 0;
-        string plusMinus = "+";
-        List<int> bcRolls = new();
-        for (int i = 0; i < powerDice; i++)
-        {
-            int z = 1 + Random.Range(0, 6);
-            bcRolls.Add(z);
-            y = Math.Max(y, z);
-        }
-        if (power < 0)
-        {
-            y *= -1;
-            plusMinus = "-";
-        }
-        string rolls = $"{x}";
-        if (powerDice == 1)
-        {
-            rolls += $"{plusMinus}{Math.Abs(y)}";
-        }
-        else if (powerDice > 1)
-        {
-            string r = string.Join("|", bcRolls.ToArray());
-            rolls += $"{plusMinus}max({r})";
-        }
-        Player.Self().CmdShareDiceRoll(desc, $"{x + y}", rolls, 20);
-    }
 }

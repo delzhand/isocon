@@ -1,21 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using IsoconUILibrary;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class LancerMechActorType : ActorType
+public class LancerMechActorType : LancerBase
 {
+    private readonly static string TypeName = "Lancer Mech";
+
     #region Registration
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        ActorTypeRegistry.RegisterSystem("Lancer Mech");
-        ActorTypeRegistry.RegisterInterfaceCallback("Lancer Mech", DeserializeAsInterface);
-        ActorTypeRegistry.RegisterSimpleCallback("Lancer Mech|AddActorModal", AddActorModal);
+        ActorTypeRegistry.RegisterSystem($"{TypeName}");
+        ActorTypeRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
+        ActorTypeRegistry.RegisterSimpleCallback($"{TypeName}|AddActorModal", AddActorModal);
     }
     public override string Serialize()
     {
