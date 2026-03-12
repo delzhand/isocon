@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using IsoconUILibrary;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -32,7 +33,9 @@ public class LancerMechUnit : UnitData
     public int CurrentHP;
     public int Overshield;
     public int Stress;
+    public int MaxStress;
     public int Structure;
+    public int MaxStructure;
     public int Heat;
     public int MaxHeat;
     public int Armor;
@@ -42,6 +45,7 @@ public class LancerMechUnit : UnitData
     public int Evade;
     public int EDefense;
     public int SensorRange;
+    public int SaveTarget;
     #endregion
 
     #region Creation
@@ -51,13 +55,11 @@ public class LancerMechUnit : UnitData
         Modal.AddTextField("NameField", "Token Name", "Token");
         Modal.AddDropdownField("ShapeField", "Shape", "Hex 1", UnitData.HexShapeOptions());
         Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
-        Modal.AddIntField("MaxHPField", "Max HP", 10);
-        Modal.AddIntField("MaxHeatField", "Heat Cap", 4);
         Modal.AddPreferredButton("Create Token", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddToken.OrderFields(StringUtility.CreateArray("Description", "NameField", "ShapeField", "ColorField", "MaxHPField", "MaxHeatField"));
+        AddToken.OrderFields(StringUtility.CreateArray("Description", "NameField", "ShapeField", "ColorField"));
     }
 
     private static void CreateClicked(ClickEvent evt)
@@ -70,19 +72,24 @@ public class LancerMechUnit : UnitData
 
         string name = UI.Modal.Q<TextField>("NameField").value;
         string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
-        int maxHP = UI.Modal.Q<IntegerField>("MaxHPField").value;
-        int maxHeat = UI.Modal.Q<IntegerField>("MaxHeatField").value;
         string color = UI.Modal.Q<DropdownField>("ColorField").value;
         LancerMechUnit t = new()
         {
             Type = "Lancer Mech",
             Name = name,
-            MaxHP = maxHP,
-            CurrentHP = maxHP,
+            MaxHP = 10,
+            CurrentHP = 10,
+            MaxStructure = 4,
             Structure = 4,
+            MaxStress = 4,
             Stress = 4,
-            MaxHeat = maxHeat,
+            MaxHeat = 6,
             Heat = 0,
+            Speed = 4,
+            Evade = 8,
+            EDefense = 8,
+            SensorRange = 10,
+            SaveTarget = 10,
             Shape = shape,
             Color = ColorUtility.GetCommonColor(color),
             TokenMeta = TokenLibrary.GetSelectedMeta()
@@ -106,6 +113,7 @@ public class LancerMechUnit : UnitData
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
+        items.Add(new MenuItem("CoreStats", "Alter Stats", (evt) => { AlterStatModal(); }));
         items.Add(new MenuItem("Damage", "Damage HP/Shield", (evt) => { NumberPicker.TokenCommand("Damage", false); }));
         items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.TokenCommand("ModHP"); }));
         items.Add(new MenuItem("ModShield", "Modify Shield", (evt) => { NumberPicker.TokenCommand("ModShield"); }));
@@ -116,7 +124,19 @@ public class LancerMechUnit : UnitData
     {
         Token token = tokenData.GetToken();
         base.Command(command, tokenData);
-        if (command.StartsWith("ModShield"))
+        if (command.StartsWith("ModHP"))
+        {
+            int original = CurrentHP;
+            int changeValue = int.Parse(command.Split("|")[1]);
+            CurrentHP = Clamped(0, CurrentHP + changeValue, MaxHP);
+            int diff = CurrentHP - original;
+            if (diff != 0 && tokenData.Placed)
+            {
+                string plus = diff > 0 ? "+" : "";
+                PopoverText.Create(tokenData.GetToken(), $"/{plus}{diff}|_HP", Color.white);
+            }
+        }
+        else if (command.StartsWith("ModShield"))
         {
             int original = Overshield;
             int changeValue = int.Parse(command.Split("|")[1]);
@@ -184,7 +204,7 @@ public class LancerMechUnit : UnitData
         {
             int original = Structure;
             int changeValue = int.Parse(command.Split("|")[1]);
-            Structure = Clamped(0, Structure + changeValue, 4);
+            Structure = Clamped(0, Structure + changeValue, MaxStructure);
             int diff = Structure - original;
             if (diff != 0 && tokenData.Placed)
             {
@@ -196,7 +216,7 @@ public class LancerMechUnit : UnitData
         {
             int original = Stress;
             int changeValue = int.Parse(command.Split("|")[1]);
-            Stress = Clamped(0, Stress + changeValue, 4);
+            Stress = Clamped(0, Stress + changeValue, MaxStress);
             int diff = Stress - original;
             if (diff != 0 && tokenData.Placed)
             {
@@ -204,22 +224,24 @@ public class LancerMechUnit : UnitData
                 PopoverText.Create(token, $"/{plus}{diff}|_STRESS", Color.white);
             }
         }
-        // if (command.StartsWith("HeatUp|"))
-        // {
-        //     GainHeat(command, tokenData);
-        // }
-        // if (command.StartsWith("StructureDown|"))
-        // {
-        //     LoseStructure(command, tokenData);
-        // }
-        // if (command.StartsWith("StressDown|"))
-        // {
-        //     LoseStress(command, tokenData);
-        // }
-        // if (command.StartsWith("Rename|"))
-        // {
-        //     Name = command.Split("|")[1];
-        // }
+        else if (command.StartsWith("UpdateStats"))
+        {
+            string json = command.Split("|")[1];
+            LancerMechUnit lmu = JsonUtility.FromJson<LancerMechUnit>(json);
+            MaxHP = lmu.MaxHP;
+            MaxHeat = lmu.MaxHeat;
+            MaxStress = lmu.MaxStress;
+            MaxStructure = lmu.MaxStructure;
+            Attack = lmu.Attack;
+            TechAttack = lmu.TechAttack;
+            Armor = lmu.Armor;
+            EDefense = lmu.EDefense;
+            Evade = lmu.Evade;
+            Speed = lmu.Speed;
+            SaveTarget = lmu.SaveTarget;
+            SensorRange = lmu.SensorRange;
+            PopoverText.Create(token, $"_STAT|_CHANGE", Color.white);
+        }
         else
         {
             Debug.Log(command);
@@ -229,15 +251,6 @@ public class LancerMechUnit : UnitData
 
     public override void UpdatePanel(TokenData tokenData, string elementName)
     {
-        MaxHP = 16;
-        MaxHeat = 6;
-        Speed = 4;
-        Evade = 8;
-        EDefense = 8;
-        SensorRange = 10;
-        Armor = 0;
-        Overshield = 4;
-
         base.UpdatePanel(tokenData, elementName);
         VisualElement panel = UI.System.Q(elementName);
 
@@ -255,39 +268,23 @@ public class LancerMechUnit : UnitData
         UI.ToggleDisplay(mainHPBar.Q("Wound2"), false);
         UI.ToggleDisplay(mainHPBar.Q("Wound3"), false);
 
-        panel.Q("Structure").Q<Label>("Pips").text = SymbolString("◆", Structure, 4);
-        panel.Q("Stress").Q<Label>("Pips").text = SymbolString("●", Stress, 4);
+        panel.Q("Structure").Q<Label>("Pips").text = SymbolString("◆", Structure, MaxStructure);
+        panel.Q("Stress").Q<Label>("Pips").text = SymbolString("●", Stress, MaxStress);
         panel.Q("Heat").Q<Label>("Pips").text = SymbolString("▰", Heat, MaxHeat);
     }
 
     public override void UpdateOverhead(TokenData tokenData)
     {
-        MaxHP = 16;
-        MaxHeat = 6;
-        Speed = 4;
-        Evade = 8;
-        EDefense = 8;
-        SensorRange = 10;
-        Armor = 0;
-
         VisualElement o = tokenData.OverheadElement;
         o.Q<ProgressBar>("HpBar").value = CurrentHP;
         o.Q<ProgressBar>("HpBar").highValue = MaxHP;
-        o.Q<Label>("Structure").text = SymbolString("◆", Structure, 4);
-        o.Q<Label>("Stress").text = SymbolString("●", Stress, 4);
+        o.Q<Label>("Structure").text = SymbolString("◆", Structure, MaxStructure);
+        o.Q<Label>("Stress").text = SymbolString("●", Stress, MaxStress);
         o.Q<Label>("Heat").text = SymbolString("▰", Heat, MaxHeat);
     }
 
     public override void InitPanel(string elementName, bool selected)
     {
-        MaxHP = 16;
-        MaxHeat = 6;
-        Speed = 4;
-        Evade = 8;
-        EDefense = 8;
-        SensorRange = 10;
-        Armor = 0;
-
         base.InitPanel(elementName, selected);
         VisualElement panel = UI.System.Q(elementName);
 
@@ -310,7 +307,7 @@ public class LancerMechUnit : UnitData
         structure.name = "Structure";
         structure.Q<Label>("StatName").text = "STRUCTURE";
         structure.Q<Label>("Pips").style.color = ColorUtility.GetColor("#FF0093");
-        structure.Q<Label>("Pips").text = SymbolString("◆", Structure, 4);
+        structure.Q<Label>("Pips").text = SymbolString("◆", Structure, MaxStructure);
         if (data != null)
         {
             structure.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) => { Player.Self().CmdRequestTokenDataCommand(data.Id, "ModStructure|1"); });
@@ -328,7 +325,7 @@ public class LancerMechUnit : UnitData
         stress.name = "Stress";
         stress.Q<Label>("StatName").text = "STRESS";
         stress.Q<Label>("Pips").style.color = ColorUtility.GetColor("#FF7300");
-        stress.Q<Label>("Pips").text = SymbolString("●", Stress, 4);
+        stress.Q<Label>("Pips").text = SymbolString("●", Stress, MaxStress);
         if (data != null)
         {
             stress.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) => { Player.Self().CmdRequestTokenDataCommand(data.Id, "ModStress|1"); });
@@ -362,11 +359,11 @@ public class LancerMechUnit : UnitData
 
         List<string> stats = new();
         stats.Add($"ATK/TECH|+{Attack}/{TechAttack}");
-        stats.Add($"ARMOR|{Armor}");
+        stats.Add($"ARMOR/EVADE|{Armor}/{Evade}");
         stats.Add($"E-DEFENSE|{EDefense}");
-        stats.Add($"EVADE|{Evade}");
         stats.Add($"SPEED|{Speed}");
         stats.Add($"SENSOR|{SensorRange}");
+        stats.Add($"SAVE|{SaveTarget}");
         foreach (string s in stats)
         {
             VisualElement sTemplate = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
@@ -375,7 +372,6 @@ public class LancerMechUnit : UnitData
             sTemplate.Q<Label>("Value").text = s.Split("|")[1];
             panel.Q("Stats").Add(sTemplate);
         }
-
 
         // VisualElement s4 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
         // s4.Q<Label>("Label").text = "DEF";
@@ -388,94 +384,57 @@ public class LancerMechUnit : UnitData
         // panel.Q("Pills").Add(Pill.InitStatic("CrisisPill", "Crisis", Color.red));
     }
 
-
-    private void GainHeat(string command, TokenData tokenData)
+    private void AlterStatModal()
     {
-        Token token = tokenData.GetToken();
-        int diff = int.Parse(command.Split("|")[1]);
-        if (Heat + diff > MaxHeat)
-        {
-            diff = MaxHeat - Heat;
-        }
-        if (diff > 0)
-        {
-            Heat += diff;
-            if (tokenData.Placed)
-            {
-                PopoverText.Create(token, $"/+{diff}|_HEAT", Color.white);
-            }
-        }
-    }
+        SelectionMenu.Hide();
+        Modal.Reset("Alter Core Stats");
+        Modal.AddNumberNudgerField("MaxHP", "Max HP", MaxHP, 0);
+        Modal.AddNumberNudgerField("MaxHeat", "Max Heat", MaxHeat, 1);
+        Modal.AddNumberNudgerField("Stress", "Max Stress", MaxStress, 1);
+        Modal.AddNumberNudgerField("Struct", "Max Structure", MaxStructure, 1);
+        Modal.AddNumberNudgerField("Attack", "Attack Bonus", Attack, 0);
+        Modal.AddNumberNudgerField("Tech", "Tech Attack", TechAttack, 0);
+        Modal.AddNumberNudgerField("Armor", "Armor", Armor, 0);
+        Modal.AddNumberNudgerField("EDef", "E-Defense", EDefense, 0);
+        Modal.AddNumberNudgerField("Evade", "Evade", Evade, 0);
+        Modal.AddNumberNudgerField("Speed", "Speed", Speed, 0);
+        Modal.AddNumberNudgerField("Save", "Save Target", SaveTarget, 0);
+        Modal.AddNumberNudgerField("Sensor", "Sensor Range", SensorRange, 0);
+        Modal.AddColumns("Stats", 2);
+        Modal.MoveToColumn("Stats_0", "MaxHP");
+        Modal.MoveToColumn("Stats_0", "MaxHeat");
+        Modal.MoveToColumn("Stats_0", "Struct");
+        Modal.MoveToColumn("Stats_0", "Stress");
+        Modal.MoveToColumn("Stats_0", "Attack");
+        Modal.MoveToColumn("Stats_0", "Tech");
 
-    private void LoseStress(string command, TokenData tokenData)
-    {
-        Token token = tokenData.GetToken();
-        int diff = int.Parse(command.Split("|")[1]);
-        if (Stress - diff < 0)
-        {
-            diff = Stress;
-        }
-        if (diff > 0)
-        {
-            Stress -= diff;
-            if (tokenData.Placed)
-            {
-                PopoverText.Create(token, $"/-{diff}|_STRESS", Color.white);
-            }
-        }
-    }
+        Modal.MoveToColumn("Stats_1", "Armor");
+        Modal.MoveToColumn("Stats_1", "EDef");
+        Modal.MoveToColumn("Stats_1", "Evade");
+        Modal.MoveToColumn("Stats_1", "Speed");
+        Modal.MoveToColumn("Stats_1", "Save");
+        Modal.MoveToColumn("Stats_1", "Sensor");
 
-    private void LoseStructure(string command, TokenData tokenData)
-    {
-        Token token = tokenData.GetToken();
-        int diff = int.Parse(command.Split("|")[1]);
-        if (Structure - diff < 0)
+        Modal.AddPreferredButton("Save", (evt) =>
         {
-            diff = Structure;
-        }
-        if (diff > 0)
-        {
-            Structure -= diff;
-            if (tokenData.Placed)
-            {
-                PopoverText.Create(token, $"/-{diff}|_STRUCT", Color.white);
-            }
-        }
-    }
+            MaxHP = UI.Modal.Q<NumberNudger>("MaxHP").value;
+            MaxHeat = UI.Modal.Q<NumberNudger>("MaxHeat").value;
+            MaxStress = UI.Modal.Q<NumberNudger>("Stress").value;
+            MaxStructure = UI.Modal.Q<NumberNudger>("Struct").value;
+            Attack = UI.Modal.Q<NumberNudger>("Attack").value;
+            TechAttack = UI.Modal.Q<NumberNudger>("Tech").value;
+            Armor = UI.Modal.Q<NumberNudger>("Armor").value;
+            EDefense = UI.Modal.Q<NumberNudger>("EDef").value;
+            Evade = UI.Modal.Q<NumberNudger>("Evade").value;
+            Speed = UI.Modal.Q<NumberNudger>("Speed").value;
+            SaveTarget = UI.Modal.Q<NumberNudger>("Save").value;
+            SensorRange = UI.Modal.Q<NumberNudger>("Sensor").value;
+            string serialized = Serialize();
 
-    private void GainHP(string command, TokenData tokenData)
-    {
-        Token token = tokenData.GetToken();
-        int diff = int.Parse(command.Split("|")[1]);
-        if (CurrentHP + diff > MaxHP)
-        {
-            diff = MaxHP - CurrentHP;
-        }
-        if (diff > 0)
-        {
-            CurrentHP += diff;
-            if (tokenData.Placed)
-            {
-                PopoverText.Create(token, $"/+{diff}|_HP", Color.white);
-            }
-        }
-    }
-
-    private void LoseHP(string command, TokenData tokenData)
-    {
-        Token token = tokenData.GetToken();
-        int diff = int.Parse(command.Split("|")[1]);
-        if (CurrentHP - diff < 0)
-        {
-            diff = CurrentHP;
-        }
-        if (diff > 0)
-        {
-            CurrentHP -= diff;
-            if (tokenData.Placed)
-            {
-                PopoverText.Create(token, $"/-{diff}|_HP", Color.white);
-            }
-        }
+            Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"UpdateStats|{serialized}");
+            Modal.Close();
+            this.InitPanel("LeftTokenPanel", true);
+        });
+        Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 }
