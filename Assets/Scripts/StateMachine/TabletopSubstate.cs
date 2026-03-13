@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Mirror;
+using SimpleFileBrowser;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -49,12 +50,16 @@ public abstract class TabletopSubstate : BaseState
 
     protected virtual void HandleKeypresses()
     {
+        if (DisallowShortcutKeys())
+        {
+            return;
+        }
         Modal.HandleKeypresses();
     }
 
     protected bool DisallowShortcutKeys()
     {
-        return UI.System.panel.focusController.focusedElement is TextField;
+        return FileBrowser.IsOpen || UI.System.panel.focusController.focusedElement is TextField;
     }
 
     #region Callbacks

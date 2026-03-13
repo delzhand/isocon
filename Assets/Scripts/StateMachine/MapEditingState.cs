@@ -121,12 +121,6 @@ public class MapEditingState : TabletopSubstate
             return;
         }
 
-        if (Input.GetKeyUp(KeyCode.T))
-        {
-            GoToMarking(new ClickEvent());
-            return;
-        }
-
         if (Input.GetKeyDown(KeyCode.LeftAlt) && MapEdit.EditOp == "StyleBlock")
         {
             AltMode = true;
