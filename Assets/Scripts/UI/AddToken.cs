@@ -3,7 +3,7 @@ using System.IO;
 using UnityEngine.UIElements;
 using UnityEngine;
 
-public class AddToken
+public class AddActor
 {
     public static void OpenModal(ClickEvent evt)
     {
@@ -38,7 +38,7 @@ public class AddToken
 
     public static void FinalizeToken(string json)
     {
-        Player.Self().CmdCreateToken(json);
+        Player.Self().CmdCreateActor(json);
         Player.Self().ClearOp();
         Modal.Close();
 

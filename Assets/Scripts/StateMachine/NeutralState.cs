@@ -39,7 +39,7 @@ public class NeutralState : TabletopSubstate
 
         if (Input.GetKeyUp(KeyCode.A))
         {
-            AddToken.OpenModal(new ClickEvent());
+            AddActor.OpenModal(new ClickEvent());
             return;
         }
 
@@ -91,12 +91,12 @@ public class NeutralState : TabletopSubstate
             UI.ToggleActiveClass("RightTokenPanel", true);
             if (Actor.RebuildPanels)
             {
-                selected.Data.GetSystemToken().InitPanel("LeftTokenPanel", true);
-                focused.Data.GetSystemToken().InitPanel("RightTokenPanel");
+                selected.Data.GetActorType().InitPanel("LeftTokenPanel", true);
+                focused.Data.GetActorType().InitPanel("RightTokenPanel");
                 Actor.RebuildPanels = false;
             }
-            selected.Data.UpdateTokenPanel("LeftTokenPanel");
-            focused.Data.UpdateTokenPanel("RightTokenPanel");
+            selected.Data.UpdateActorPanel("LeftTokenPanel");
+            focused.Data.UpdateActorPanel("RightTokenPanel");
         }
         else if (focused && !selected)
         {
@@ -104,10 +104,10 @@ public class NeutralState : TabletopSubstate
             UI.ToggleActiveClass("RightTokenPanel", false);
             if (Actor.RebuildPanels)
             {
-                focused.Data.GetSystemToken().InitPanel("LeftTokenPanel");
+                focused.Data.GetActorType().InitPanel("LeftTokenPanel");
                 Actor.RebuildPanels = false;
             }
-            focused.Data.UpdateTokenPanel("LeftTokenPanel");
+            focused.Data.UpdateActorPanel("LeftTokenPanel");
         }
         else if (selected && !focused)
         {
@@ -115,10 +115,10 @@ public class NeutralState : TabletopSubstate
             UI.ToggleActiveClass("RightTokenPanel", false);
             if (Actor.RebuildPanels)
             {
-                selected.Data.GetSystemToken().InitPanel("LeftTokenPanel", true);
+                selected.Data.GetActorType().InitPanel("LeftTokenPanel", true);
                 Actor.RebuildPanels = false;
             }
-            selected.Data.UpdateTokenPanel("LeftTokenPanel");
+            selected.Data.UpdateActorPanel("LeftTokenPanel");
         }
         else
         {

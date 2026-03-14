@@ -6,7 +6,7 @@ public class Pointer
 {
     private static Ray _ray;
     private static Actor _unitBarMouseoverToken;
-    public static Actor UnitBarMouseoverToken
+    public static Actor UnitBarMouseoverActor
     {
         get => _unitBarMouseoverToken;
         set => _unitBarMouseoverToken = value;
@@ -54,10 +54,10 @@ public class Pointer
             return null;
         }
         _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        bool isHit = Physics.Raycast(_ray, out RaycastHit hit, 9999f, LayerMask.GetMask("Token"));
+        bool isHit = Physics.Raycast(_ray, out RaycastHit hit, 9999f, LayerMask.GetMask("Actor"));
         if (isHit && hit.collider.CompareTag("TokenCollider"))
         {
-            return hit.collider.GetComponent<Cutout>().GetToken();
+            return hit.collider.GetComponent<Cutout>().GetActor();
         }
 
         return null;
@@ -80,7 +80,7 @@ public class Pointer
 
     public static void Point()
     {
-        PointWithMask(LayerMask.GetMask("Token", "Block"), BlockFocusMode.Single);
+        PointWithMask(LayerMask.GetMask("Actor", "Block"), BlockFocusMode.Single);
     }
 
     private static bool MaskContainsLayer(LayerMask layermask, string layer)
@@ -103,7 +103,7 @@ public class Pointer
         {
             Block b = hit.collider.GetComponent<Block>();
             Actor t = Actor.GetAtBlock(b);
-            if (t != null && MaskContainsLayer(mask, "Token"))
+            if (t != null && MaskContainsLayer(mask, "Actor"))
             {
                 TokenHit(t);
                 FocusBlocks(b, focusMode);
@@ -116,7 +116,7 @@ public class Pointer
         }
         else if (isHit && hit.collider.CompareTag("TokenCollider"))
         {
-            Actor t = hit.collider.GetComponent<Cutout>().GetToken();
+            Actor t = hit.collider.GetComponent<Cutout>().GetActor();
             FocusBlocks(t.GetBlock(), focusMode);
             TokenHit(t);
         }

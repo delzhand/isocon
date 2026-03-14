@@ -27,7 +27,7 @@ public class PlayerController : NetworkBehaviour
 
     public static void Disconnect()
     {
-        GameObject[] objs = GameObject.FindGameObjectsWithTag("TokenData");
+        GameObject[] objs = GameObject.FindGameObjectsWithTag("ActorData");
         for (int i = 0; i < objs.Length; i++)
         {
             objs[i].GetComponent<ActorData>().Disconnect();

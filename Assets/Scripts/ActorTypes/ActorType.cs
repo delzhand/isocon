@@ -23,12 +23,12 @@ public interface IActorType
 public abstract class ActorType : IActorType
 {
     public string Type;
-    public Token TokenMeta;
+    public Token Token;
     public string Shape;
     public Color Color;
-    public List<UnitTag> Tags;
-    public List<UnitBar> Bars;
-    public List<UnitStat> Stats;
+    public List<ActorTag> Tags;
+    public List<ActorBar> Bars;
+    public List<ActorStat> Stats;
 
     public virtual string Label()
     {
@@ -64,11 +64,11 @@ public abstract class ActorType : IActorType
         {
             items.Add(new MenuItem("EditStats", "Edit Stats/Bars", EditStatBarModal));
         }
-        foreach (UnitBar bar in Bars)
+        foreach (ActorBar bar in Bars)
         {
             items.Add(new MenuItem($"Modify{bar.Name}", $"Modify {bar.Name}", (evt) =>
             {
-                NumberPicker.TokenCommand($"ModBar|{bar.Name}");
+                NumberPicker.ActorCommand($"ModBar|{bar.Name}");
             }));
         }
         return items.ToArray();
@@ -90,10 +90,10 @@ public abstract class ActorType : IActorType
     {
         ActorData data = Actor.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
-        Modal.DoubleConfirm("Delete Token", $"Are you sure you want to delete {name}? This action cannot be undone.", () =>
+        Modal.DoubleConfirm("Delete Actor", $"Are you sure you want to delete {name}? This action cannot be undone.", () =>
         {
             Actor.Deselect();
-            Player.Self().CmdRequestDeleteToken(data.Id);
+            Player.Self().CmdRequestDeleteActor(data.Id);
         });
         SelectionMenu.Hide();
     }
@@ -125,12 +125,12 @@ public abstract class ActorType : IActorType
         int tagValue = UI.Modal.Q<IntegerField>("TagValue").value;
         string colorValue = UI.Modal.Q<DropdownField>("ColorField").value;
         bool hasNumber = UI.Modal.Q<Toggle>("HasNumberField").value;
-        UnitTag tag = new();
+        ActorTag tag = new();
         tag.Name = tagName;
         tag.Value = tagValue;
         tag.HasNumber = hasNumber;
         tag.Color = ColorUtility.GetCommonColor(colorValue);
-        Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
+        Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
         Modal.Close();
     }
 
@@ -151,23 +151,23 @@ public abstract class ActorType : IActorType
         string barName = UI.Modal.Q<TextField>("BarName").value;
         int barValue = UI.Modal.Q<IntegerField>("BarValue").value;
         string colorValue = UI.Modal.Q<DropdownField>("ColorField").value;
-        UnitBar bar = new();
+        ActorBar bar = new();
         bar.Name = barName;
         bar.Value = barValue;
         bar.MaxValue = barValue;
         bar.Color = ColorUtility.GetCommonColor(colorValue);
-        Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"AddBar|{JsonUtility.ToJson(bar)}");
+        Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddBar|{JsonUtility.ToJson(bar)}");
         Modal.Close();
     }
 
     private void EditStatBarModal(ClickEvent evt)
     {
         Modal.Reset("Edit Stats/Bars");
-        foreach (UnitBar bar in Bars)
+        foreach (ActorBar bar in Bars)
         {
             Modal.AddToggleField(bar.Name, $"Bar: {bar.Name}", true);
         }
-        foreach (UnitStat stat in Stats)
+        foreach (ActorStat stat in Stats)
         {
             Modal.AddToggleField(stat.Name, $"Stat: {stat.Name}", true);
         }
@@ -177,20 +177,20 @@ public abstract class ActorType : IActorType
 
     private void EditStatBarSubmit(ClickEvent evt)
     {
-        foreach (UnitBar bar in Bars)
+        foreach (ActorBar bar in Bars)
         {
             bool keep = UI.Modal.Q<Toggle>(bar.Name).value;
             if (!keep)
             {
-                Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"RemoveBar|{bar.Name}");
+                Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"RemoveBar|{bar.Name}");
             }
         }
-        foreach (UnitStat stat in Stats)
+        foreach (ActorStat stat in Stats)
         {
             bool keep = UI.Modal.Q<Toggle>(stat.Name).value;
             if (!keep)
             {
-                Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"RemoveStat|{stat.Name}");
+                Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"RemoveStat|{stat.Name}");
             }
         }
         Modal.Close();
@@ -211,10 +211,10 @@ public abstract class ActorType : IActorType
     {
         string statName = UI.Modal.Q<TextField>("StatName").value;
         int statValue = UI.Modal.Q<IntegerField>("StatValue").value;
-        UnitStat stat = new();
+        ActorStat stat = new();
         stat.Name = statName;
         stat.Value = statValue;
-        Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"AddStat|{JsonUtility.ToJson(stat)}");
+        Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddStat|{JsonUtility.ToJson(stat)}");
         Modal.Close();
     }
 
@@ -224,7 +224,7 @@ public abstract class ActorType : IActorType
         string name = data.Name.Length == 0 ? "this token" : data.Name;
         Modal.DoubleConfirm("Clone Token", $"Are you sure you want to clone {name}?", () =>
         {
-            Player.Self().CmdCreateToken(data.SystemData);
+            Player.Self().CmdCreateActor(data.TypeData);
             Actor.Deselect();
         });
         SelectionMenu.Hide();
@@ -253,7 +253,7 @@ public abstract class ActorType : IActorType
         Modal.AddPreferredButton("Update", (evt) =>
         {
             string newShape = UI.Modal.Q<DropdownField>("Reshape").value;
-            Player.Self().CmdRequestTokenDataCommand(data.Id, $"Reshape|{newShape}");
+            Player.Self().CmdRequestActorCommand(data.Id, $"Reshape|{newShape}");
             Modal.Close();
             Actor.Deselect();
         });
@@ -269,7 +269,7 @@ public abstract class ActorType : IActorType
         Modal.AddPreferredButton("Confirm", (evt) =>
         {
             string newName = UI.Modal.Q<TextField>("Name").value.Trim();
-            Player.Self().CmdRequestTokenDataCommand(data.Id, $"Rename|{newName}");
+            Player.Self().CmdRequestActorCommand(data.Id, $"Rename|{newName}");
             Modal.Close();
         });
         Modal.AddButton("Cancel", Modal.CloseEvent);
@@ -278,11 +278,11 @@ public abstract class ActorType : IActorType
 
     public virtual void Command(string value, ActorData tokenData)
     {
-        Actor token = tokenData.GetToken();
+        Actor token = tokenData.GetActor();
         if (value.StartsWith("AddTag"))
         {
             string[] parts = value.Split("|");
-            UnitTag tag = JsonUtility.FromJson<UnitTag>(parts[1]);
+            ActorTag tag = JsonUtility.FromJson<ActorTag>(parts[1]);
             Tags.Add(tag);
             PopoverText.Create(token, $"/+|_{tag.Name.ToUpper()}", Color.white);
             Actor.RebuildPanels = true;
@@ -334,14 +334,14 @@ public abstract class ActorType : IActorType
         if (value.StartsWith("AddBar"))
         {
             string[] parts = value.Split("|");
-            UnitBar bar = JsonUtility.FromJson<UnitBar>(parts[1]);
+            ActorBar bar = JsonUtility.FromJson<ActorBar>(parts[1]);
             Bars.Add(bar);
             Actor.RebuildPanels = true;
         }
         if (value.StartsWith("AddStat"))
         {
             string[] parts = value.Split("|");
-            UnitStat stat = JsonUtility.FromJson<UnitStat>(parts[1]);
+            ActorStat stat = JsonUtility.FromJson<ActorStat>(parts[1]);
             Stats.Add(stat);
             Actor.RebuildPanels = true;
         }
@@ -373,7 +373,7 @@ public abstract class ActorType : IActorType
         panel.Q("Pills").Clear();
         panel.Q("Stats").Clear();
         panel.Q("Bars").Clear();
-        foreach (UnitBar bar in Bars)
+        foreach (ActorBar bar in Bars)
         {
             VisualElement bart = UI.CreateFromTemplate("UI/TableTop/SimpleHPBar");
             bart.Q<Label>("StatLabel").text = bar.Name;
@@ -385,14 +385,14 @@ public abstract class ActorType : IActorType
             bart.Query(null, "unity-progress-bar__background").First().style.backgroundColor = ColorUtility.DarkenColor(bar.Color, .5f);
             panel.Q("Bars").Add(bart);
         }
-        foreach (UnitStat stat in Stats)
+        foreach (ActorStat stat in Stats)
         {
             VisualElement statt = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
             statt.Q<Label>("Label").text = stat.Name;
             statt.Q<Label>("Value").text = $"{stat.Value}";
             panel.Q("Stats").Add(statt);
         }
-        foreach (UnitTag tag in Tags)
+        foreach (ActorTag tag in Tags)
         {
             if (tag.HasNumber)
             {
@@ -452,7 +452,7 @@ public abstract class ActorType : IActorType
 
     public void DirectCommand(string command)
     {
-        Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, command);
+        Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, command);
         SelectionMenu.Hide();
     }
 
@@ -479,10 +479,10 @@ public abstract class ActorType : IActorType
 
     private void ModBar(string command, ActorData tokenData)
     {
-        Actor token = tokenData.GetToken();
+        Actor actor = tokenData.GetActor();
         string name = command.Split("|")[1];
         int index = Bars.FindIndex(a => a.Name == name);
-        UnitBar bar = Bars[index];
+        ActorBar bar = Bars[index];
         int value = int.Parse(command.Split("|")[2]);
         string popoverText = "";
         int diff = Math.Abs(value);
@@ -513,7 +513,7 @@ public abstract class ActorType : IActorType
         }
         if (tokenData.Placed && popoverText?.Length > 0)
         {
-            PopoverText.Create(token, popoverText, Color.white);
+            PopoverText.Create(actor, popoverText, Color.white);
         }
         Bars[index] = bar;
     }
@@ -525,7 +525,7 @@ public abstract class ActorType : IActorType
 }
 
 [Serializable]
-public class UnitTag
+public class ActorTag
 {
     public string Name;
     public int Value;
@@ -534,7 +534,7 @@ public class UnitTag
 }
 
 [Serializable]
-public class UnitBar
+public class ActorBar
 {
     public string Name;
     public int Value;
@@ -543,7 +543,7 @@ public class UnitBar
 }
 
 [Serializable]
-public class UnitStat
+public class ActorStat
 {
     public string Name;
     public int Value;
@@ -554,7 +554,7 @@ public class UnitMeta
 {
     public string Name;
     public string Type;
-    public Token TokenMeta;
+    public Token Token;
     public string Shape;
     public Color Color;
 }

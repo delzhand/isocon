@@ -5,16 +5,16 @@ public class TileShare
 {
     public static void Offsets()
     {
-        GameObject[] tokenObjs = GameObject.FindGameObjectsWithTag("Token");
-        foreach (GameObject tokenObj in tokenObjs)
+        GameObject[] actorObjs = GameObject.FindGameObjectsWithTag("Actor");
+        foreach (GameObject actorObj in actorObjs)
         {
-            SetOffset(tokenObj.GetComponent<Actor>());
+            SetOffset(actorObj.GetComponent<Actor>());
         }
     }
 
     private static void SetOffset(Actor t)
     {
-        List<Actor> sharing = GetNearbyTokens(t.transform.position);
+        List<Actor> sharing = GetNearbyActors(t.transform.position);
         if (sharing.Count < 2)
         {
             // Nobody else at tile
@@ -44,13 +44,13 @@ public class TileShare
         }
     }
 
-    public static List<Actor> GetNearbyTokens(Vector3 v, float threshold = .1f)
+    public static List<Actor> GetNearbyActors(Vector3 v, float threshold = .1f)
     {
         List<Actor> sharing = new();
-        GameObject[] tokenObjects = GameObject.FindGameObjectsWithTag("Token");
-        for (int i = 0; i < tokenObjects.Length; i++)
+        GameObject[] actorObjs = GameObject.FindGameObjectsWithTag("Actor");
+        for (int i = 0; i < actorObjs.Length; i++)
         {
-            Actor t = tokenObjects[i].GetComponent<Actor>();
+            Actor t = actorObjs[i].GetComponent<Actor>();
             float distance = Vector3.Distance(t.transform.localPosition, v);
             if (distance < threshold)
             {

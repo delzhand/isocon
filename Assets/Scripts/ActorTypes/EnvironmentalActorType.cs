@@ -30,15 +30,14 @@ public class EnvironmentalActorType : ActorType
     #region Creation
     public static void AddActorModal()
     {
-        Modal.AddMarkup("Description", "Environmental tokens have no stats but are useful for interactive or indestructible objects.");
-        Modal.AddTextField("NameField", "Token Name", "Token");
+        Modal.AddTextField("NameField", "Actor Name", "Actor");
         Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", ActorType.ShapeOptions());
         Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
-        Modal.AddPreferredButton("Create Token", CreateClicked);
+        Modal.AddPreferredButton("Create Actor", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddToken.OrderFields(StringUtility.CreateArray("Description", "NameField", "ShapeField", "ColorField"));
+        AddActor.OrderFields(StringUtility.CreateArray("NameField", "ShapeField", "ColorField"));
     }
 
     private static void CreateClicked(ClickEvent evt)
@@ -58,9 +57,9 @@ public class EnvironmentalActorType : ActorType
             Name = name,
             Shape = shape,
             Color = ColorUtility.GetCommonColor(color),
-            TokenMeta = TokenLibrary.GetSelectedMeta()
+            Token = TokenLibrary.GetSelectedMeta()
         };
-        AddToken.FinalizeToken(t.Serialize());
+        AddActor.FinalizeToken(t.Serialize());
     }
     #endregion
 

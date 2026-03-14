@@ -267,7 +267,7 @@ public class LauncherState : BaseState
 
     private void DestroyLeftoverNetworkData()
     {
-        foreach (Transform child in GameObject.Find("Tokens").transform)
+        foreach (Transform child in GameObject.Find("Actors").transform)
         {
             Object.DestroyImmediate(child.gameObject);
         }

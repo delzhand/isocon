@@ -100,15 +100,14 @@ public class Icon2x0PlayerActorType : Icon2x0Base
             "Wright/Wayfarer"
         );
 
-        Modal.AddMarkup("Description", "Tokens for ICON 2.0 player characters.");
-        Modal.AddTextField("NameField", "Token Name", "Token");
+        Modal.AddTextField("NameField", "Actor Name", "Actor");
         Modal.AddSearchField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs);
 
-        Modal.AddPreferredButton("Create Token", CreateClicked);
+        Modal.AddPreferredButton("Create Actor", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddToken.OrderFields(StringUtility.CreateArray("Description", "NameField", "PlayerJob"));
+        AddActor.OrderFields(StringUtility.CreateArray("NameField", "PlayerJob"));
 
     }
 
@@ -137,7 +136,7 @@ public class Icon2x0PlayerActorType : Icon2x0Base
             Job = job,
             Class = pclass,
             Vigor = 0,
-            TokenMeta = TokenLibrary.GetSelectedMeta()
+            Token = TokenLibrary.GetSelectedMeta()
         };
 
         switch (pclass)
@@ -172,7 +171,7 @@ public class Icon2x0PlayerActorType : Icon2x0Base
                 break;
         }
 
-        AddToken.FinalizeToken(t.Serialize());
+        AddActor.FinalizeToken(t.Serialize());
     }
 
     public override MenuItem[] GetMenuItems(bool placed)
@@ -180,9 +179,9 @@ public class Icon2x0PlayerActorType : Icon2x0Base
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.TokenCommand("ModHP"); }));
-        items.Add(new MenuItem("ModVIG", "Modify Vigor", (evt) => { NumberPicker.TokenCommand("ModVIG"); }));
-        items.Add(new MenuItem("ModRES", "Modify Resolve", (evt) => { NumberPicker.TokenCommand("ModRES"); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
+        items.Add(new MenuItem("ModVIG", "Modify Vigor", (evt) => { NumberPicker.ActorCommand("ModVIG"); }));
+        items.Add(new MenuItem("ModRES", "Modify Resolve", (evt) => { NumberPicker.ActorCommand("ModRES"); }));
         items.Add(new MenuItem("ModPRES", "Modify Party Resolve", (evt) => { NumberPicker.AllTokensCommand("ModPRES"); }));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
@@ -190,7 +189,7 @@ public class Icon2x0PlayerActorType : Icon2x0Base
     public override void Command(string command, ActorData tokenData)
     {
         base.Command(command, tokenData);
-        Actor token = tokenData.GetToken();
+        Actor token = tokenData.GetActor();
         if (command.StartsWith("ModHP"))
         {
             int original = CurrentHP;
@@ -366,7 +365,7 @@ public class Icon2x0PlayerActorType : Icon2x0Base
 
     private void UpdateGraphic(ActorData tokenData)
     {
-        Actor token = tokenData.GetToken();
+        Actor token = tokenData.GetActor();
         token.SetDefeated(CurrentHP <= 0);
     }
 }

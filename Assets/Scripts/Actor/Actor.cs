@@ -200,11 +200,11 @@ public class Actor : MonoBehaviour
         else if (this != _selected)
         {
             StateChange(ActorState.Selected);
-            TokenMenu.ShowMenu();
+            ActorMenu.ShowMenu();
         }
         else if (this == _selected)
         {
-            TokenMenu.ShowMenu();
+            ActorMenu.ShowMenu();
         }
     }
 
@@ -222,17 +222,17 @@ public class Actor : MonoBehaviour
 
         if (Data.Placed)
         {
-            Player.Self().CmdMoveToken(Data.Id, v, false);
+            Player.Self().CmdMoveActor(Data.Id, v, false);
         }
         else
         {
-            Player.Self().CmdRequestPlaceToken(Data.Id, v);
+            Player.Self().CmdRequestPlaceActor(Data.Id, v);
         }
     }
 
     public void Remove()
     {
-        Player.Self().CmdRequestRemoveToken(Data.Id);
+        Player.Self().CmdRequestRemoveActor(Data.Id);
     }
 
     public static void Deselect()
@@ -292,7 +292,7 @@ public class Actor : MonoBehaviour
 
     public static Actor GetAtBlock(Block b)
     {
-        List<Actor> nearby = TileShare.GetNearbyTokens(b.transform.position, .5f);
+        List<Actor> nearby = TileShare.GetNearbyActors(b.transform.position, .5f);
         if (nearby.Count > 0)
         {
             return nearby[0];
@@ -330,10 +330,10 @@ public class Actor : MonoBehaviour
 
     public static void SetAllTokenOutlines()
     {
-        GameObject[] tokens = GameObject.FindGameObjectsWithTag("Token");
-        for (int i = 0; i < tokens.Length; i++)
+        GameObject[] actors = GameObject.FindGameObjectsWithTag("Actor");
+        for (int i = 0; i < actors.Length; i++)
         {
-            tokens[i].GetComponent<Actor>().SetTokenOutline();
+            actors[i].GetComponent<Actor>().SetTokenOutline();
         }
     }
 
@@ -361,9 +361,9 @@ public class Actor : MonoBehaviour
         }
     }
 
-    public static void MoveAllTokensToOptimalBlock()
+    public static void MoveAllActorsToOptimalBlock()
     {
-        foreach (var gameObject in GameObject.FindGameObjectsWithTag("Token"))
+        foreach (var gameObject in GameObject.FindGameObjectsWithTag("Actor"))
         {
             gameObject.GetComponent<Actor>().MoveToOptimalBlock();
         }
@@ -378,6 +378,6 @@ public class Actor : MonoBehaviour
         {
             v = optimal.GetNearestCorner(transform.position + new Vector3(0, -20, 0));
         }
-        Player.Self().CmdMoveToken(Data.Id, v, false);
+        Player.Self().CmdMoveActor(Data.Id, v, false);
     }
 }

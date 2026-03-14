@@ -37,23 +37,21 @@ public class Icon2x0EnemyActorType : Icon2x0Base
 
     public static void AddActorModal()
     {
-        Modal.AddMarkup("Description", "Icon 1.5 enemy tokens are used to create non-mob foes. Their stats come from ruledata.");
-        Modal.AddTextField("NameField", "Token Name", "Token");
+        Modal.AddTextField("NameField", "Actor Name", "Actor");
         Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", ActorType.SquareShapeOptions());
         Modal.AddDropdownField("FoeClassField", "Class", "Heavy", StringUtility.CreateArray("Heavy", "Artillery", "Skirmisher", "Leader", "Legend"), (evt) => { AddModalEvaluateConditions(); });
         Modal.AddToggleField("EliteField", "Elite", false);
         Modal.AddIntField("LegendHPField", "Legend HP Multiplier", 1);
-        Modal.AddPreferredButton("Create Token", CreateClicked);
+        Modal.AddPreferredButton("Create Actor", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
         string[] fieldOrder = StringUtility.CreateArray(
-            "Description",
             "NameField",
             "ShapeField",
             "FoeClassField",
             "EliteField",
             "LegendHPField"
         );
-        AddToken.OrderFields(fieldOrder);
+        AddActor.OrderFields(fieldOrder);
         AddModalEvaluateConditions();
     }
 
@@ -97,7 +95,7 @@ public class Icon2x0EnemyActorType : Icon2x0Base
             Shape = shape,
             Elite = elite,
             FoeClass = foeClass,
-            TokenMeta = TokenLibrary.GetSelectedMeta() // required, do not change
+            Token = TokenLibrary.GetSelectedMeta() // required, do not change
         };
 
         switch (foeClass)
@@ -109,8 +107,8 @@ public class Icon2x0EnemyActorType : Icon2x0Base
                 t.Defense = 3;
                 t.Color = ColorUtility.GetCommonColor("red");
                 t.Tags = new();
-                t.Tags.Add(new UnitTag() { Name = "Guard", Color = ColorUtility.GetCommonColor("blue"), HasNumber = false });
-                t.Tags.Add(new UnitTag() { Name = "Armor", Color = ColorUtility.GetCommonColor("blue"), HasNumber = true, Value = 1 });
+                t.Tags.Add(new ActorTag() { Name = "Guard", Color = ColorUtility.GetCommonColor("blue"), HasNumber = false });
+                t.Tags.Add(new ActorTag() { Name = "Armor", Color = ColorUtility.GetCommonColor("blue"), HasNumber = true, Value = 1 });
                 break;
             case "Skirmisher":
                 t.MaxHP = 28 * hpMulti;
@@ -133,7 +131,7 @@ public class Icon2x0EnemyActorType : Icon2x0Base
                 t.Defense = 4;
                 t.Color = ColorUtility.GetCommonColor("blue");
                 t.Tags = new();
-                t.Tags.Add(new UnitTag() { Name = "Aetherwall", Color = ColorUtility.GetCommonColor("blue"), HasNumber = false });
+                t.Tags.Add(new ActorTag() { Name = "Aetherwall", Color = ColorUtility.GetCommonColor("blue"), HasNumber = false });
                 break;
             case "Legend":
                 t.MaxHP = 40 * hpMulti;
@@ -142,11 +140,11 @@ public class Icon2x0EnemyActorType : Icon2x0Base
                 t.Move = 5;
                 t.Color = ColorUtility.GetCommonColor("purple");
                 t.Tags = new();
-                t.Tags.Add(new UnitTag() { Name = "Juggernaut", Color = ColorUtility.GetCommonColor("blue"), HasNumber = false });
+                t.Tags.Add(new ActorTag() { Name = "Juggernaut", Color = ColorUtility.GetCommonColor("blue"), HasNumber = false });
                 break;
         }
 
-        AddToken.FinalizeToken(t.Serialize());
+        AddActor.FinalizeToken(t.Serialize());
     }
     public override string Label()
     {
@@ -228,15 +226,15 @@ public class Icon2x0EnemyActorType : Icon2x0Base
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.TokenCommand("ModHP"); }));
-        items.Add(new MenuItem("ModVIG", "Modify VIG", (evt) => { NumberPicker.TokenCommand("ModVIG"); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
+        items.Add(new MenuItem("ModVIG", "Modify VIG", (evt) => { NumberPicker.ActorCommand("ModVIG"); }));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
     public override void Command(string command, ActorData tokenData)
     {
         base.Command(command, tokenData);
-        Actor token = tokenData.GetToken();
+        Actor token = tokenData.GetActor();
         if (command.StartsWith("ModHP"))
         {
             int original = CurrentHP;
@@ -310,7 +308,7 @@ public class Icon2x0EnemyActorType : Icon2x0Base
     }
     private void UpdateGraphic(ActorData tokenData)
     {
-        Actor token = tokenData.GetToken();
+        Actor token = tokenData.GetActor();
         token.SetDefeated(CurrentHP <= 0);
     }
 

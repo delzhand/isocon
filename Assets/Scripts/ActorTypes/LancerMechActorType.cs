@@ -53,16 +53,15 @@ public class LancerMechActorType : LancerBase
     #region Creation
     public static void AddActorModal()
     {
-        Modal.AddMarkup("Description", "Lancer Mech tokens have primary HP, Structure, Stress, and Heat stats by default.");
         Modal.AddTextField("Callsign", "Callsign", "");
         Modal.AddTextField("PilotName", "Pilot", "");
         Modal.AddDropdownField("ShapeField", "Shape", "Hex 1", ActorType.HexShapeOptions());
         Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
-        Modal.AddPreferredButton("Create Token", CreateClicked);
+        Modal.AddPreferredButton("Create Actor", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddToken.OrderFields(StringUtility.CreateArray("Description", "Callsign", "PilotName", "ShapeField", "ColorField"));
+        AddActor.OrderFields(StringUtility.CreateArray("Callsign", "PilotName", "ShapeField", "ColorField"));
     }
 
     private static void CreateClicked(ClickEvent evt)
@@ -97,9 +96,9 @@ public class LancerMechActorType : LancerBase
             SaveTarget = 10,
             Shape = shape,
             Color = ColorUtility.GetCommonColor(color),
-            TokenMeta = TokenLibrary.GetSelectedMeta()
+            Token = TokenLibrary.GetSelectedMeta()
         };
-        AddToken.FinalizeToken(t.Serialize());
+        AddActor.FinalizeToken(t.Serialize());
     }
     #endregion
 
@@ -119,15 +118,15 @@ public class LancerMechActorType : LancerBase
 
         List<MenuItem> items = new();
         items.Add(new MenuItem("CoreStats", "Alter Stats", (evt) => { AlterStatModal(); }));
-        items.Add(new MenuItem("Damage", "Damage HP/Shield", (evt) => { NumberPicker.TokenCommand("Damage", false); }));
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.TokenCommand("ModHP"); }));
-        items.Add(new MenuItem("ModShield", "Modify Shield", (evt) => { NumberPicker.TokenCommand("ModShield"); }));
+        items.Add(new MenuItem("Damage", "Damage HP/Shield", (evt) => { NumberPicker.ActorCommand("Damage", false); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
+        items.Add(new MenuItem("ModShield", "Modify Shield", (evt) => { NumberPicker.ActorCommand("ModShield"); }));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
     public override void Command(string command, ActorData tokenData)
     {
-        Actor token = tokenData.GetToken();
+        Actor token = tokenData.GetActor();
         base.Command(command, tokenData);
         if (command.StartsWith("ModHP"))
         {
@@ -138,7 +137,7 @@ public class LancerMechActorType : LancerBase
             if (diff != 0 && tokenData.Placed)
             {
                 string plus = diff > 0 ? "+" : "";
-                PopoverText.Create(tokenData.GetToken(), $"/{plus}{diff}|_HP", Color.white);
+                PopoverText.Create(tokenData.GetActor(), $"/{plus}{diff}|_HP", Color.white);
             }
         }
         else if (command.StartsWith("ModShield"))
@@ -150,7 +149,7 @@ public class LancerMechActorType : LancerBase
             if (diff != 0 && tokenData.Placed)
             {
                 string plus = diff > 0 ? "+" : "";
-                PopoverText.Create(tokenData.GetToken(), $"/{plus}{diff}|_OVERSHIELD", Color.white);
+                PopoverText.Create(tokenData.GetActor(), $"/{plus}{diff}|_OVERSHIELD", Color.white);
             }
         }
         else if (command.StartsWith("Damage"))
@@ -329,8 +328,8 @@ public class LancerMechActorType : LancerBase
         structure.Q<Label>("Pips").text = SymbolString("◆", Structure, MaxStructure);
         if (data != null)
         {
-            structure.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) => { Player.Self().CmdRequestTokenDataCommand(data.Id, "ModStructure|1"); });
-            structure.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) => { Player.Self().CmdRequestTokenDataCommand(data.Id, "ModStructure|-1"); });
+            structure.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) => { Player.Self().CmdRequestActorCommand(data.Id, "ModStructure|1"); });
+            structure.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) => { Player.Self().CmdRequestActorCommand(data.Id, "ModStructure|-1"); });
         }
         else
         {
@@ -348,8 +347,8 @@ public class LancerMechActorType : LancerBase
         stress.Q<Label>("Pips").text = SymbolString("●", Stress, MaxStress);
         if (data != null)
         {
-            stress.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) => { Player.Self().CmdRequestTokenDataCommand(data.Id, "ModStress|1"); });
-            stress.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) => { Player.Self().CmdRequestTokenDataCommand(data.Id, "ModStress|-1"); });
+            stress.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) => { Player.Self().CmdRequestActorCommand(data.Id, "ModStress|1"); });
+            stress.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) => { Player.Self().CmdRequestActorCommand(data.Id, "ModStress|-1"); });
         }
         else
         {
@@ -365,8 +364,8 @@ public class LancerMechActorType : LancerBase
         heat.Q<Label>("Pips").text = SymbolString("▰", Heat, MaxHeat);
         if (data != null)
         {
-            heat.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) => { Player.Self().CmdRequestTokenDataCommand(data.Id, "ModHeat|1"); });
-            heat.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) => { Player.Self().CmdRequestTokenDataCommand(data.Id, "ModHeat|-1"); });
+            heat.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) => { Player.Self().CmdRequestActorCommand(data.Id, "ModHeat|1"); });
+            heat.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) => { Player.Self().CmdRequestActorCommand(data.Id, "ModHeat|-1"); });
         }
         else
         {
@@ -451,7 +450,7 @@ public class LancerMechActorType : LancerBase
             SensorRange = UI.Modal.Q<NumberNudger>("Sensor").value;
             string serialized = Serialize();
 
-            Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"UpdateStats|{serialized}");
+            Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"UpdateStats|{serialized}");
             Modal.Close();
             this.InitPanel("LeftTokenPanel", true);
         });
@@ -468,7 +467,7 @@ public class LancerMechActorType : LancerBase
         {
             string newName = UI.Modal.Q<TextField>("Name").value.Trim();
             string newPilotName = UI.Modal.Q<TextField>("Pilot").value.Trim();
-            Player.Self().CmdRequestTokenDataCommand(data.Id, $"Rename|{newName}|{newPilotName}");
+            Player.Self().CmdRequestActorCommand(data.Id, $"Rename|{newName}|{newPilotName}");
             Modal.Close();
         });
         Modal.AddButton("Cancel", Modal.CloseEvent);

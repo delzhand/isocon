@@ -36,16 +36,15 @@ public class BasicActorType : ActorType
     #region Creation
     public static void AddActorModal()
     {
-        Modal.AddMarkup("Description", "Basic tokens have a primary HP stat by default, but custom resources can be assigned and tracked once created.");
-        Modal.AddTextField("NameField", "Token Name", "Token");
+        Modal.AddTextField("NameField", "Actor Name", "Actor");
         Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", ActorType.ShapeOptions());
         Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
         Modal.AddIntField("MaxHPField", "Max HP", 100);
-        Modal.AddPreferredButton("Create Token", CreateClicked);
+        Modal.AddPreferredButton("Create Actor", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddToken.OrderFields(StringUtility.CreateArray("Description", "NameField", "ShapeField", "ColorField", "MaxHPField"));
+        AddActor.OrderFields(StringUtility.CreateArray("NameField", "ShapeField", "ColorField", "MaxHPField"));
     }
 
     private static void CreateClicked(ClickEvent evt)
@@ -68,9 +67,9 @@ public class BasicActorType : ActorType
             CurrentHP = maxHP,
             Shape = shape,
             Color = ColorUtility.GetCommonColor(color),
-            TokenMeta = TokenLibrary.GetSelectedMeta()
+            Token = TokenLibrary.GetSelectedMeta()
         };
-        AddToken.FinalizeToken(t.Serialize());
+        AddActor.FinalizeToken(t.Serialize());
     }
     #endregion
 
@@ -90,7 +89,7 @@ public class BasicActorType : ActorType
 
         List<MenuItem> items = new();
         // items.Add(new MenuItem("AddResource", "Add Resource", AddResourceClicked));
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.TokenCommand("ModHP"); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
@@ -151,7 +150,7 @@ public class BasicActorType : ActorType
 
     private void GainHP(int value, ActorData tokenData)
     {
-        Actor token = tokenData.GetToken();
+        Actor token = tokenData.GetActor();
         int diff = Math.Abs(value);
         if (CurrentHP + diff > MaxHP)
         {
@@ -170,7 +169,7 @@ public class BasicActorType : ActorType
 
     private void LoseHP(int value, ActorData tokenData)
     {
-        Actor token = tokenData.GetToken();
+        Actor token = tokenData.GetActor();
         int diff = Math.Abs(value);
         if (CurrentHP - diff < 0)
         {
@@ -189,7 +188,7 @@ public class BasicActorType : ActorType
 
     private void UpdateGraphic(ActorData tokenData)
     {
-        Actor token = tokenData.GetToken();
+        Actor token = tokenData.GetActor();
         token.SetDefeated(CurrentHP <= 0);
     }
 

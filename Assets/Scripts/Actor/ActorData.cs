@@ -24,7 +24,7 @@ public class ActorData : NetworkBehaviour
     [SyncVar]
     public Color Color;
     [SyncVar]
-    public string SystemData;
+    public string TypeData;
 
     [SyncVar]
     public bool Destroyed;
@@ -50,7 +50,7 @@ public class ActorData : NetworkBehaviour
         {
             return;
         }
-        CreateWorldToken();
+        CreateWorldActor();
         CreateUnitBarElement();
         CreateOverheadElement();
         LoadGraphic();
@@ -91,7 +91,7 @@ public class ActorData : NetworkBehaviour
             {
                 UI.FollowTransform(WorldObject.GetComponent<Actor>().transform.Find("Offset/Avatar/Cutout/Cutout Quad/LabelAnchor").transform, OverheadElement, UI.World, Camera.main, Vector2.zero);
             }
-            IActorType st = ActorTypeRegistry.DoInterfaceCallback(Type, SystemData);
+            IActorType st = ActorTypeRegistry.DoInterfaceCallback(Type, TypeData);
             st.UpdateOverhead(this);
         }
 
@@ -99,7 +99,7 @@ public class ActorData : NetworkBehaviour
         // {
         //     GameSystem.Current().UpdateData(this);
         // }
-        gameObject.name = $"TokenData:{Name}";
+        gameObject.name = $"ActorData:{Name}";
     }
 
     private void LoadGraphic()
@@ -118,10 +118,10 @@ public class ActorData : NetworkBehaviour
         }
     }
 
-    private void CreateWorldToken()
+    private void CreateWorldActor()
     {
-        WorldObject = Instantiate(Resources.Load<GameObject>("Prefabs/Token"));
-        WorldObject.transform.parent = GameObject.Find("Tokens").transform;
+        WorldObject = Instantiate(Resources.Load<GameObject>("Prefabs/Actor"));
+        WorldObject.transform.parent = GameObject.Find("Actors").transform;
         if (!Placed)
         {
             Place(false);
@@ -137,7 +137,7 @@ public class ActorData : NetworkBehaviour
 
     public void CreateOverheadElement()
     {
-        IActorType st = ActorTypeRegistry.DoInterfaceCallback(Type, SystemData);
+        IActorType st = ActorTypeRegistry.DoInterfaceCallback(Type, TypeData);
         string asset = st.GetOverheadAsset();
         if (asset != null)
         {
@@ -221,7 +221,7 @@ public class ActorData : NetworkBehaviour
         }
     }
 
-    public Actor GetToken()
+    public Actor GetActor()
     {
         return WorldObject.GetComponent<Actor>();
     }
@@ -243,12 +243,12 @@ public class ActorData : NetworkBehaviour
         UnitBarElement.RegisterCallback<MouseEnterEvent>((evt) =>
         {
             t.Focus();
-            Pointer.UnitBarMouseoverToken = t;
+            Pointer.UnitBarMouseoverActor = t;
         });
         UnitBarElement.RegisterCallback<MouseLeaveEvent>((evt) =>
         {
             t.Unfocus();
-            Pointer.UnitBarMouseoverToken = null;
+            Pointer.UnitBarMouseoverActor = null;
         });
 
         // Add it to the UI
@@ -261,8 +261,8 @@ public class ActorData : NetworkBehaviour
         SetGraphicSingle();
 
         // Set the world object graphic
-        Actor token = WorldObject.GetComponent<Actor>();
-        token.SetImage(Graphic);
+        Actor actor = WorldObject.GetComponent<Actor>();
+        actor.SetImage(Graphic);
 
         // Set the UI portrait
         float height = 60;
@@ -301,7 +301,7 @@ public class ActorData : NetworkBehaviour
 
     public static ActorData Find(string id)
     {
-        foreach (GameObject g in GameObject.FindGameObjectsWithTag("TokenData"))
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("ActorData"))
         {
             ActorData data = g.GetComponent<ActorData>();
             if (data.Id == id)
@@ -312,9 +312,9 @@ public class ActorData : NetworkBehaviour
         return null;
     }
 
-    public static void Command(string tokenId, string command)
+    public static void Command(string actorId, string command)
     {
-        ActorData data = ActorData.Find(tokenId);
+        ActorData data = ActorData.Find(actorId);
         data.HandleCommand(command);
     }
 
@@ -325,9 +325,9 @@ public class ActorData : NetworkBehaviour
             Name = command.Split("|")[1];
         }
 
-        IActorType st = ActorTypeRegistry.DoInterfaceCallback(Type, SystemData);
+        IActorType st = ActorTypeRegistry.DoInterfaceCallback(Type, TypeData);
         st.Command(command, this);
-        SystemData = st.Serialize();
+        TypeData = st.Serialize();
         // NeedsRedraw = true;
     }
 
@@ -354,14 +354,14 @@ public class ActorData : NetworkBehaviour
         Destroy(WorldObject);
     }
 
-    public void UpdateTokenPanel(string elementName)
+    public void UpdateActorPanel(string elementName)
     {
         VisualElement panel = UI.System.Q(elementName);
         if (Graphic != null)
         {
             panel.Q("Portrait").style.backgroundImage = GraphicSingle;
         }
-        IActorType st = ActorTypeRegistry.DoInterfaceCallback(Type, SystemData);
+        IActorType st = ActorTypeRegistry.DoInterfaceCallback(Type, TypeData);
         st.UpdatePanel(this, elementName);
         Name = st.Label();
         panel.Q<Label>("Name").text = Name;
@@ -373,9 +373,9 @@ public class ActorData : NetworkBehaviour
 
     }
 
-    public IActorType GetSystemToken()
+    public IActorType GetActorType()
     {
-        return ActorTypeRegistry.DoInterfaceCallback(Type, SystemData);
+        return ActorTypeRegistry.DoInterfaceCallback(Type, TypeData);
     }
 
     public void Delete()

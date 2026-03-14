@@ -72,7 +72,7 @@ public class MapEditingState : TabletopSubstate
     {
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
-        Actor.MoveAllTokensToOptimalBlock();
+        Actor.MoveAllActorsToOptimalBlock();
         Player.Self().CmdMapSync(Compression.CompressString(json));
     }
 

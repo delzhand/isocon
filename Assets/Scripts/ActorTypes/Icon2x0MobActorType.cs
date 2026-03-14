@@ -39,13 +39,12 @@ public class Icon2x0MobActorType : Icon2x0Base
     #region Creation
     public static void AddActorModal()
     {
-        Modal.AddMarkup("Description", "ICON 2.0 Mob tokens have two hit counters instead of an HP bar.");
-        Modal.AddTextField("NameField", "Token Name", "Token");
+        Modal.AddTextField("NameField", "Actor Name", "Actor");
 
-        Modal.AddPreferredButton("Create Token", CreateClicked);
+        Modal.AddPreferredButton("Create Actor", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
-        AddToken.OrderFields(StringUtility.CreateArray("Description", "NameField"));
+        AddActor.OrderFields(StringUtility.CreateArray("NameField"));
     }
 
     private static void CreateClicked(ClickEvent evt)
@@ -67,10 +66,10 @@ public class Icon2x0MobActorType : Icon2x0Base
             Defense = 4,
             Vigor = 0,
             Color = ColorUtility.GetCommonColor("Gray"),
-            TokenMeta = TokenLibrary.GetSelectedMeta()
+            Token = TokenLibrary.GetSelectedMeta()
         };
 
-        AddToken.FinalizeToken(t.Serialize());
+        AddActor.FinalizeToken(t.Serialize());
     }
     #endregion
 
@@ -89,12 +88,12 @@ public class Icon2x0MobActorType : Icon2x0Base
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("ModVig", "Modify VIG", (evt) => { NumberPicker.TokenCommand("ModVIG"); }));
+        items.Add(new MenuItem("ModVig", "Modify VIG", (evt) => { NumberPicker.ActorCommand("ModVIG"); }));
         if (Hits < 2)
         {
             items.Add(new MenuItem("RestoreHit", "Restore Hit", (evt) =>
             {
-                Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, "RestoreHit");
+                Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, "RestoreHit");
                 SelectionMenu.Hide();
             }));
         }
@@ -104,7 +103,7 @@ public class Icon2x0MobActorType : Icon2x0Base
 
     public override void Command(string command, ActorData tokenData)
     {
-        Actor token = tokenData.GetToken();
+        Actor token = tokenData.GetActor();
         base.Command(command, tokenData);
         if (command.StartsWith("Damage"))
         {
@@ -221,7 +220,7 @@ public class Icon2x0MobActorType : Icon2x0Base
 
     private void UpdateGraphic(ActorData tokenData)
     {
-        Actor token = tokenData.GetToken();
+        Actor token = tokenData.GetActor();
         token.SetDefeated(Hits <= 0);
     }
 }

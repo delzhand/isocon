@@ -59,8 +59,6 @@ public class MaleghastActorType : ActorType
         }
         System.IO.File.WriteAllText(filename, baseline.text);
 
-        Modal.AddMarkup("Description", "Maleghast Unit tokens have stats automatically derived from ruledata.");
-
         string maleghastData = Preferences.Current.MaleghastFile;
         Modal.AddFileField("RulesFile", "Data Override", maleghastData, "rules", (evt) =>
         {
@@ -74,11 +72,11 @@ public class MaleghastActorType : ActorType
         Modal.AddSearchField("UnitTypeField", "Unit Type", "", GetUnits().ToArray());
         Modal.AddDropdownField("PlayerColor", "Player Color", "House Default", GetHouses().ToArray());
 
-        Modal.AddPreferredButton("Create Token", CreateClicked);
+        Modal.AddPreferredButton("Create Actor", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddToken.OrderFields(StringUtility.CreateArray("Description", "RulesFile", "RulesHelp", "UnitType", "PlayerColor", "UnitTypeField"));
+        AddActor.OrderFields(StringUtility.CreateArray("RulesFile", "RulesHelp", "UnitType", "PlayerColor", "UnitTypeField"));
     }
 
     private static void CreateClicked(ClickEvent evt)
@@ -110,7 +108,7 @@ public class MaleghastActorType : ActorType
             MaxHP = jobdata["hp"],
             CurrentHP = jobdata["hp"],
             Defense = jobdata["def"],
-            TokenMeta = TokenLibrary.GetSelectedMeta(),
+            Token = TokenLibrary.GetSelectedMeta(),
             Color = color
         };
 
@@ -140,7 +138,7 @@ public class MaleghastActorType : ActorType
         {
             foreach (string s in initConditions.Split("|"))
             {
-                UnitTag ut = new()
+                ActorTag ut = new()
                 {
                     Name = s,
                     Color = Color.gray
@@ -155,7 +153,7 @@ public class MaleghastActorType : ActorType
             {
                 if (s.IndexOf("#") >= 0)
                 {
-                    UnitTag ut = new()
+                    ActorTag ut = new()
                     {
                         Name = s.Split("#")[0],
                         Color = t.Color,
@@ -166,7 +164,7 @@ public class MaleghastActorType : ActorType
                 }
                 else
                 {
-                    UnitTag ut = new()
+                    ActorTag ut = new()
                     {
                         Name = s,
                         Color = t.Color,
@@ -177,7 +175,7 @@ public class MaleghastActorType : ActorType
         }
 
 
-        AddToken.FinalizeToken(t.Serialize());
+        AddActor.FinalizeToken(t.Serialize());
     }
     #endregion
 
@@ -264,7 +262,7 @@ public class MaleghastActorType : ActorType
         // items.Add(new MenuItem("Reshape", "Reshape", ClickReshape));
         items.Add(new MenuItem("Clone", "Clone", ClickClone));
         items.Add(new MenuItem("Delete", "Delete", ClickDelete));
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.TokenCommand("ModHP"); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
 
         if (House == "CARCASS" && !HasTag("Loaded"))
         {
@@ -276,7 +274,7 @@ public class MaleghastActorType : ActorType
 
     public override void Command(string command, ActorData tokenData)
     {
-        Actor token = tokenData.GetToken();
+        Actor token = tokenData.GetActor();
         base.Command(command, tokenData);
         if (command.StartsWith("ModHP"))
         {
@@ -295,7 +293,7 @@ public class MaleghastActorType : ActorType
         {
             if (!HasTag("Loaded"))
             {
-                UnitTag tag = new()
+                ActorTag tag = new()
                 {
                     Name = "Loaded",
                     Color = GetHouseColor("CARCASS")
@@ -309,7 +307,7 @@ public class MaleghastActorType : ActorType
 
     private void UpdateGraphic(ActorData tokenData)
     {
-        Actor token = tokenData.GetToken();
+        Actor token = tokenData.GetActor();
         token.SetDefeated(CurrentHP <= 0);
     }
 

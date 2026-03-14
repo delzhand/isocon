@@ -103,7 +103,7 @@ public class NumberPicker
         negative = false;
     }
 
-    public static void TokenCommand(string command, bool allowNeg = true)
+    public static void ActorCommand(string command, bool allowNeg = true)
     {
         SelectionMenu.Hide();
         NumberPicker.Open(allowNeg, (evt) => TokenCommandCallback(evt, command));
@@ -113,7 +113,7 @@ public class NumberPicker
     {
         int v = NumberPicker.GetNumber();
         NumberPicker.Close();
-        Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"{command}|{v}");
+        Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"{command}|{v}");
     }
 
     public static void AllTokensCommand(string command, bool allowNeg = true)
@@ -126,7 +126,7 @@ public class NumberPicker
     {
         int v = NumberPicker.GetNumber();
         NumberPicker.Close();
-        Player.Self().CmdRequestAllTokenDataCommand($"{command}|{v}");
+        Player.Self().CmdRequestAllActorsCommand($"{command}|{v}");
     }
 
 }

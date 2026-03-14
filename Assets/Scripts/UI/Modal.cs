@@ -420,7 +420,10 @@ public class Modal
         field.AddToClassList("no-margin");
         field.AddToClassList("filefield");
         field.isReadOnly = true;
-        field.RegisterValueChangedCallback(onChange);
+        if (onChange != null)
+        {
+            field.RegisterValueChangedCallback(onChange);
+        }
 
         Button search = new();
         search.text = "Search";

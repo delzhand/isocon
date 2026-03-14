@@ -58,7 +58,7 @@ public class ExampleActorType : ActorTypeData
     public int Defense;
 
     /**
-        This function defines the fields a user needs to create a token of this type.
+        This function defines the fields a user needs to create an actor of this type.
         This uses the Modal API defined elsewhere.
     */
     public static void AddActorModal()
@@ -67,7 +67,7 @@ public class ExampleActorType : ActorTypeData
             The remaining fields depend on the type. There are several types of fields you can
             add to the modal. See the Modal class for a complete list.
         */
-        Modal.AddTextField("NameField", "Token Name", "Token");
+        Modal.AddTextField("NameField", "Actor Name", "Actor");
         Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", UnitData.ShapeOptions());
         Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
         Modal.AddIntField("MaxHPField", "Max HP", 100);
@@ -75,7 +75,7 @@ public class ExampleActorType : ActorTypeData
         /**
             Buttons are required. These can be left as they are.
         */
-        Modal.AddPreferredButton("Create Token", CreateClicked);
+        Modal.AddPreferredButton("Create Actor", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         /**
@@ -83,7 +83,7 @@ public class ExampleActorType : ActorTypeData
             used to define the order in which your fields appear. Every field added to the
             modal must appear in this list.
         */
-        AddToken.OrderFields(StringUtility.CreateArray("NameField", "ShapeField", "ColorField", "MaxHPField"));
+        AddActor.OrderFields(StringUtility.CreateArray("NameField", "ShapeField", "ColorField", "MaxHPField"));
     }
 
     /**

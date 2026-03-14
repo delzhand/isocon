@@ -63,9 +63,9 @@ public class Icon1x5PlayerActorType : Icon1x5Base
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.TokenCommand("ModHP"); }));
-        items.Add(new MenuItem("ModVIG", "Modify Vigor", (evt) => { NumberPicker.TokenCommand("ModVIG"); }));
-        items.Add(new MenuItem("ModRES", "Modify Resolve", (evt) => { NumberPicker.TokenCommand("ModRES"); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
+        items.Add(new MenuItem("ModVIG", "Modify Vigor", (evt) => { NumberPicker.ActorCommand("ModVIG"); }));
+        items.Add(new MenuItem("ModRES", "Modify Resolve", (evt) => { NumberPicker.ActorCommand("ModRES"); }));
         items.Add(new MenuItem("ModPRES", "Modify Party Resolve", (evt) => { NumberPicker.AllTokensCommand("ModPRES"); }));
         items.Add(new MenuItem("GainWound", "Take Wound", (evt) => DirectCommand("GainWound")));
         items.Add(new MenuItem("HealWound", "Heal Wound", (evt) => DirectCommand("LoseWound")));
@@ -75,7 +75,7 @@ public class Icon1x5PlayerActorType : Icon1x5Base
     public override void Command(string command, ActorData tokenData)
     {
         base.Command(command, tokenData);
-        Actor token = tokenData.GetToken();
+        Actor token = tokenData.GetActor();
         if (command.StartsWith("GainWound"))
         {
             Wounds++;
@@ -293,15 +293,14 @@ public class Icon1x5PlayerActorType : Icon1x5Base
             "Wright/Stormbender"
         );
 
-        Modal.AddMarkup("Description", "Tokens for ICON 1.5 player characters.");
-        Modal.AddTextField("NameField", "Token Name", "Token");
+        Modal.AddTextField("NameField", "Actor Name", "Actor");
         Modal.AddSearchField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs);
 
-        Modal.AddPreferredButton("Create Token", CreateClicked);
+        Modal.AddPreferredButton("Create Actor", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddToken.OrderFields(StringUtility.CreateArray("Description", "NameField", "PlayerJob"));
+        AddActor.OrderFields(StringUtility.CreateArray("NameField", "PlayerJob"));
     }
 
     private static void CreateClicked(ClickEvent evt)
@@ -330,7 +329,7 @@ public class Icon1x5PlayerActorType : Icon1x5Base
             Class = pclass,
             Vigor = 0,
             Wounds = 0,
-            TokenMeta = TokenLibrary.GetSelectedMeta()
+            Token = TokenLibrary.GetSelectedMeta()
         };
 
         switch (pclass)
@@ -378,7 +377,7 @@ public class Icon1x5PlayerActorType : Icon1x5Base
         }
 
 
-        AddToken.FinalizeToken(t.Serialize());
+        AddActor.FinalizeToken(t.Serialize());
     }
 
     #region Private functions
@@ -413,7 +412,7 @@ public class Icon1x5PlayerActorType : Icon1x5Base
 
     private void UpdateGraphic(ActorData tokenData)
     {
-        Actor token = tokenData.GetToken();
+        Actor token = tokenData.GetActor();
         token.SetDefeated(CurrentHP <= 0);
     }
     #endregion

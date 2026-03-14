@@ -42,11 +42,11 @@ public class LancerPilotActorType : LancerBase
     {
         Modal.AddTextField("Name", "Name", "");
         Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
-        Modal.AddPreferredButton("Create Token", CreateClicked);
+        Modal.AddPreferredButton("Create Actor", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddToken.OrderFields(StringUtility.CreateArray("Name", "ColorField"));
+        AddActor.OrderFields(StringUtility.CreateArray("Name", "ColorField"));
     }
 
     private static void CreateClicked(ClickEvent evt)
@@ -70,9 +70,9 @@ public class LancerPilotActorType : LancerBase
             EDefense = 8,
             Shape = "Hex 1/2",
             Color = ColorUtility.GetCommonColor(color),
-            TokenMeta = TokenLibrary.GetSelectedMeta()
+            Token = TokenLibrary.GetSelectedMeta()
         };
-        AddToken.FinalizeToken(t.Serialize());
+        AddActor.FinalizeToken(t.Serialize());
     }
 
     public override string Label()
@@ -91,13 +91,13 @@ public class LancerPilotActorType : LancerBase
 
         List<MenuItem> items = new();
         items.Add(new MenuItem("CoreStats", "Alter Stats", (evt) => { AlterStatModal(); }));
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.TokenCommand("ModHP"); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
     public override void Command(string command, ActorData tokenData)
     {
-        Actor token = tokenData.GetToken();
+        Actor token = tokenData.GetActor();
         base.Command(command, tokenData);
         if (command.StartsWith("ModHP|"))
         {
@@ -108,7 +108,7 @@ public class LancerPilotActorType : LancerBase
             if (diff != 0 && tokenData.Placed)
             {
                 string plus = diff > 0 ? "+" : "";
-                PopoverText.Create(tokenData.GetToken(), $"/{plus}{diff}|_HP", Color.white);
+                PopoverText.Create(tokenData.GetActor(), $"/{plus}{diff}|_HP", Color.white);
             }
         }
         else if (command.StartsWith("Rename|"))
@@ -176,7 +176,7 @@ public class LancerPilotActorType : LancerBase
             Speed = UI.Modal.Q<NumberNudger>("Speed").value;
             string serialized = Serialize();
 
-            Player.Self().CmdRequestTokenDataCommand(Actor.GetSelected().Data.Id, $"UpdateStats|{serialized}");
+            Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"UpdateStats|{serialized}");
             Modal.Close();
             this.InitPanel("LeftTokenPanel", true);
         });
