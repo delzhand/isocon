@@ -108,9 +108,12 @@ public class MaleghastActorType : ActorType
             MaxHP = jobdata["hp"],
             CurrentHP = jobdata["hp"],
             Defense = jobdata["def"],
-            Token = TokenLibrary.GetSelectedMeta(),
-            Color = color
         };
+        string shape = "Square 1x1";
+        if (jobdata["size"] == 2)
+        {
+            shape = "Square 2x2";
+        }
 
         string upgrades = jobdata["upgrades"];
         if (upgrades != null)
@@ -156,7 +159,7 @@ public class MaleghastActorType : ActorType
                     ActorTag ut = new()
                     {
                         Name = s.Split("#")[0],
-                        Color = t.Color,
+                        Color = color,
                         HasNumber = true,
                         Value = int.Parse(s.Split("#")[1])
                     };
@@ -167,15 +170,24 @@ public class MaleghastActorType : ActorType
                     ActorTag ut = new()
                     {
                         Name = s,
-                        Color = t.Color,
+                        Color = color,
                     };
                     t.Tags.Add(ut);
                 }
             }
         }
 
-
-        AddActor.FinalizeToken(t.Serialize());
+        ActorPersistence a = new();
+        a.Name = t.Label();
+        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Color = color;
+        a.Shape = shape;
+        a.Position = Vector3.zero;
+        a.Placed = false;
+        a.ActorType = JsonUtility.ToJson(t);
+        a.ActorTypeId = TypeName;
+        string json = JsonUtility.ToJson(a);
+        AddActor.FinalizeToken(json);
     }
     #endregion
 
@@ -205,9 +217,9 @@ public class MaleghastActorType : ActorType
         mainHPLabel.text = SymbolString("■", CurrentHP, MaxHP);
     }
 
-    public override void InitPanel(string elementName, bool selected)
+    public override void InitPanel(ActorData actorData, string elementName, bool selected)
     {
-        base.InitPanel(elementName, selected);
+        base.InitPanel(actorData, elementName, selected);
         VisualElement panel = UI.System.Q(elementName);
 
         Label l = new();
@@ -247,7 +259,7 @@ public class MaleghastActorType : ActorType
             panel.Q("Stats").Add(template);
         }
 
-        panel.Q("Pills").Add(Pill.InitStatic("HousePill", $"{House} {PType}", Color));
+        panel.Q("Pills").Add(Pill.InitStatic("HousePill", $"{House} {PType}", actorData.Color));
         panel.Q("Pills").Q("HousePill").SendToBack();
     }
 

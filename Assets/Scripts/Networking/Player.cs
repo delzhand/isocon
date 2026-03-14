@@ -93,38 +93,23 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdCreateActor(string json)
     {
-        UnitMeta stm = JsonUtility.FromJson<UnitMeta>(json);
+        ActorPersistence ap = JsonUtility.FromJson<ActorPersistence>(json);
         GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/ActorData"));
         ActorData data = g.GetComponent<ActorData>();
-        data.Id = Guid.NewGuid().ToString(); ;
-        data.Type = stm.Type;
-        data.Token = stm.Token;
-        data.Name = stm.Name;
-        data.Shape = stm.Shape;
-        data.Color = stm.Color;
-        data.TypeData = json;
+        data.Id = Guid.NewGuid().ToString();
+        data.Token = ap.Token;
+        data.Name = ap.Name;
+        data.Type = ap.ActorTypeId;
+        data.TypeData = ap.ActorType;
+        data.Shape = ap.Shape;
+        data.Color = ap.Color;
+
+        data.Placed = ap.Placed;
+        data.LastKnownPosition = ap.Position;
+        g.transform.localScale = ap.Placed ? Vector3.one : Vector3.zero;
+
         NetworkServer.Spawn(g);
     }
-
-    // public void CmdCreateTokenPlaced(string system, TokenMeta tokenMeta, string name, int size, Color color, string systemData, Vector3 position)
-    // {
-    //     string id = Guid.NewGuid().ToString();
-    //     GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData"));
-    //     TokenData data = g.GetComponent<TokenData>();
-    //     data.Id = id;
-    //     data.Type = system;
-    //     data.TokenMeta = tokenMeta;
-    //     data.Name = name;
-    //     data.Size = size;
-    //     data.Color = color;
-    //     data.SystemData = systemData;
-
-    //     data.Placed = true;
-    //     data.LastKnownPosition = position;
-    //     g.transform.localScale = Vector3.one;
-
-    //     NetworkServer.Spawn(g);
-    // }
     #endregion
 
     #region Delete Actor

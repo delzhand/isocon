@@ -76,7 +76,6 @@ public class Token
 
     public static string TruncateHash(string hash)
     {
-        Debug.Log(hash);
         string firstThree = hash.Substring(0, 3);
         string lastThree = hash.Substring(hash.Length - 3);
         return $"{firstThree}...{lastThree}";

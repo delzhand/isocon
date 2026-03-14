@@ -91,8 +91,8 @@ public class NeutralState : TabletopSubstate
             UI.ToggleActiveClass("RightTokenPanel", true);
             if (Actor.RebuildPanels)
             {
-                selected.Data.GetActorType().InitPanel("LeftTokenPanel", true);
-                focused.Data.GetActorType().InitPanel("RightTokenPanel");
+                selected.Data.GetActorType().InitPanel(selected.Data, "LeftTokenPanel", true);
+                focused.Data.GetActorType().InitPanel(focused.Data, "RightTokenPanel");
                 Actor.RebuildPanels = false;
             }
             selected.Data.UpdateActorPanel("LeftTokenPanel");
@@ -104,7 +104,7 @@ public class NeutralState : TabletopSubstate
             UI.ToggleActiveClass("RightTokenPanel", false);
             if (Actor.RebuildPanels)
             {
-                focused.Data.GetActorType().InitPanel("LeftTokenPanel");
+                focused.Data.GetActorType().InitPanel(focused.Data, "LeftTokenPanel");
                 Actor.RebuildPanels = false;
             }
             focused.Data.UpdateActorPanel("LeftTokenPanel");
@@ -115,7 +115,7 @@ public class NeutralState : TabletopSubstate
             UI.ToggleActiveClass("RightTokenPanel", false);
             if (Actor.RebuildPanels)
             {
-                selected.Data.GetActorType().InitPanel("LeftTokenPanel", true);
+                selected.Data.GetActorType().InitPanel(selected.Data, "LeftTokenPanel", true);
                 Actor.RebuildPanels = false;
             }
             selected.Data.UpdateActorPanel("LeftTokenPanel");

@@ -5,13 +5,15 @@ using UnityEngine.UIElements;
 [Serializable]
 public class EnvironmentalActorType : ActorType
 {
+    private readonly static string TypeName = "Environmental";
+
     #region Registration
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
     {
-        ActorTypeRegistry.RegisterSystem("Environmental");
-        ActorTypeRegistry.RegisterInterfaceCallback("Environmental", DeserializeAsInterface);
-        ActorTypeRegistry.RegisterSimpleCallback("Environmental|AddActorModal", AddActorModal);
+        ActorTypeRegistry.RegisterSystem($"{TypeName}");
+        ActorTypeRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
+        ActorTypeRegistry.RegisterSimpleCallback($"{TypeName}|AddActorModal", AddActorModal);
     }
     public override string Serialize()
     {
@@ -53,13 +55,20 @@ public class EnvironmentalActorType : ActorType
         string color = UI.Modal.Q<DropdownField>("ColorField").value;
         EnvironmentalActorType t = new()
         {
-            Type = "Environmental",
+            Type = TypeName,
             Name = name,
-            Shape = shape,
-            Color = ColorUtility.GetCommonColor(color),
-            Token = TokenLibrary.GetSelectedMeta()
         };
-        AddActor.FinalizeToken(t.Serialize());
+        ActorPersistence a = new();
+        a.Name = t.Label();
+        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Color = ColorUtility.GetCommonColor(color);
+        a.Shape = shape;
+        a.Position = Vector3.zero;
+        a.Placed = false;
+        a.ActorType = JsonUtility.ToJson(t);
+        a.ActorTypeId = TypeName;
+        string json = JsonUtility.ToJson(a);
+        AddActor.FinalizeToken(json);
     }
     #endregion
 
@@ -68,9 +77,9 @@ public class EnvironmentalActorType : ActorType
         return Name;
     }
 
-    public override void InitPanel(string elementName, bool selected)
+    public override void InitPanel(ActorData actorData, string elementName, bool selected)
     {
-        base.InitPanel(elementName, selected);
+        base.InitPanel(actorData, elementName, selected);
     }
 
     public override void Command(string command, ActorData tokenData)

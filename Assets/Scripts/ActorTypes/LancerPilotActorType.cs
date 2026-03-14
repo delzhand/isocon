@@ -68,10 +68,19 @@ public class LancerPilotActorType : LancerBase
             Speed = 4,
             Evade = 8,
             EDefense = 8,
-            Shape = "Hex 1/2",
-            Color = ColorUtility.GetCommonColor(color),
-            Token = TokenLibrary.GetSelectedMeta()
         };
+        ActorPersistence a = new();
+        a.Name = t.Label();
+        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Color = ColorUtility.GetCommonColor(color);
+        a.Shape = "Hex 1/2";
+        a.Position = Vector3.zero;
+        a.Placed = false;
+        a.ActorType = JsonUtility.ToJson(t);
+        a.ActorTypeId = TypeName;
+        string json = JsonUtility.ToJson(a);
+        AddActor.FinalizeToken(json);
+
         AddActor.FinalizeToken(t.Serialize());
     }
 
@@ -147,9 +156,9 @@ public class LancerPilotActorType : LancerBase
         bar.Q<ProgressBar>("HpBar").highValue = MaxHP;
     }
 
-    public override void InitPanel(string elementName, bool selected)
+    public override void InitPanel(ActorData actorData, string elementName, bool selected)
     {
-        base.InitPanel(elementName, selected);
+        base.InitPanel(actorData, elementName, selected);
 
         VisualElement panel = UI.System.Q(elementName);
         VisualElement hpBar = UI.CreateFromTemplate("UI/TableTop/SimpleHPBar");
@@ -178,7 +187,7 @@ public class LancerPilotActorType : LancerBase
 
             Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"UpdateStats|{serialized}");
             Modal.Close();
-            this.InitPanel("LeftTokenPanel", true);
+            this.InitPanel(Actor.GetSelected().Data, "LeftTokenPanel", true);
         });
         Modal.AddButton("Cancel", Modal.CloseEvent);
     }

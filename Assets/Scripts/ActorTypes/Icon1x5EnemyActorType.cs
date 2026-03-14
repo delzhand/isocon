@@ -84,6 +84,7 @@ public class Icon1x5EnemyActorType : Icon1x5Base
         string foeClass = UI.Modal.Q<DropdownField>("FoeClassField").value;
         int hpMulti = UI.Modal.Q<IntegerField>("LegendHPField").value;
         bool elite = UI.Modal.Q<Toggle>("EliteField").value;
+        string color = "black";
         if (elite)
         {
             hpMulti = 2;
@@ -97,10 +98,8 @@ public class Icon1x5EnemyActorType : Icon1x5Base
         {
             Type = TypeName,
             Name = name,
-            Shape = shape,
             Elite = elite,
             FoeClass = foeClass,
-            Token = TokenLibrary.GetSelectedMeta() // required, do not change
         };
 
         switch (foeClass)
@@ -113,7 +112,7 @@ public class Icon1x5EnemyActorType : Icon1x5Base
                 t.Defense = 6;
                 t.Fray = 4;
                 t.Damage = 6;
-                t.Color = ColorUtility.GetCommonColor("red");
+                color = "red";
                 break;
             case "Skirmisher":
                 t.MaxHP = 28 * hpMulti;
@@ -123,7 +122,7 @@ public class Icon1x5EnemyActorType : Icon1x5Base
                 t.Defense = 10;
                 t.Fray = 2;
                 t.Damage = 10;
-                t.Color = ColorUtility.GetCommonColor("yellow");
+                color = "yellow";
                 break;
             case "Leader":
                 t.MaxHP = 40 * hpMulti;
@@ -133,7 +132,7 @@ public class Icon1x5EnemyActorType : Icon1x5Base
                 t.Defense = 7;
                 t.Fray = 3;
                 t.Damage = 8;
-                t.Color = ColorUtility.GetCommonColor("green");
+                color = "green";
                 break;
             case "Artillery":
                 t.MaxHP = 32 * hpMulti;
@@ -143,7 +142,7 @@ public class Icon1x5EnemyActorType : Icon1x5Base
                 t.Defense = 7;
                 t.Fray = 3;
                 t.Damage = 8;
-                t.Color = ColorUtility.GetCommonColor("blue");
+                color = "blue";
                 break;
             case "Legend":
                 t.MaxHP = 50 * hpMulti;
@@ -153,11 +152,21 @@ public class Icon1x5EnemyActorType : Icon1x5Base
                 t.Defense = 8;
                 t.Fray = 3;
                 t.Damage = 8;
-                t.Color = ColorUtility.GetCommonColor("purple");
+                color = "purple";
                 break;
         }
 
-        AddActor.FinalizeToken(t.Serialize());
+        ActorPersistence a = new();
+        a.Name = t.Label();
+        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Color = ColorUtility.GetCommonColor(color);
+        a.Shape = shape;
+        a.Position = Vector3.zero;
+        a.Placed = false;
+        a.ActorType = JsonUtility.ToJson(t);
+        a.ActorTypeId = TypeName;
+        string json = JsonUtility.ToJson(a);
+        AddActor.FinalizeToken(json);
     }
     public override string Label()
     {
@@ -210,9 +219,9 @@ public class Icon1x5EnemyActorType : Icon1x5Base
         UI.ToggleDisplay(o, CurrentHP > 0 && tokenData.Placed);
     }
 
-    public override void InitPanel(string elementName, bool selected)
+    public override void InitPanel(ActorData actorData, string elementName, bool selected)
     {
-        base.InitPanel(elementName, selected);
+        base.InitPanel(actorData, elementName, selected);
         VisualElement panel = UI.System.Q(elementName);
 
         VisualElement hpBar = UI.CreateFromTemplate("UI/TableTop/IconHPBar");
@@ -236,7 +245,7 @@ public class Icon1x5EnemyActorType : Icon1x5Base
         panel.Q("Stats").Add(s4);
 
         panel.Q("Pills").Add(Pill.InitStatic("ElitePill", "Elite", ColorUtility.GetCommonColor("Purple")));
-        panel.Q("Pills").Add(Pill.InitStatic("ClassPill", FoeClass, Color));
+        panel.Q("Pills").Add(Pill.InitStatic("ClassPill", FoeClass, actorData.Color));
         panel.Q("Pills").Add(Pill.InitStatic("BloodiedPill", "Bloodied", Color.red));
     }
 

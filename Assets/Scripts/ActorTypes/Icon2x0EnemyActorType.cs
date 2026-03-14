@@ -16,6 +16,7 @@ public class Icon2x0EnemyActorType : Icon2x0Base
     public int Move;
     public int Defense;
     public bool Elite;
+    public Color Color;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
@@ -92,10 +93,8 @@ public class Icon2x0EnemyActorType : Icon2x0Base
         {
             Type = TypeName,
             Name = name,
-            Shape = shape,
             Elite = elite,
             FoeClass = foeClass,
-            Token = TokenLibrary.GetSelectedMeta() // required, do not change
         };
 
         switch (foeClass)
@@ -144,7 +143,17 @@ public class Icon2x0EnemyActorType : Icon2x0Base
                 break;
         }
 
-        AddActor.FinalizeToken(t.Serialize());
+        ActorPersistence a = new();
+        a.Name = t.Label();
+        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Color = t.Color;
+        a.Shape = shape;
+        a.Position = Vector3.zero;
+        a.Placed = false;
+        a.ActorType = JsonUtility.ToJson(t);
+        a.ActorTypeId = TypeName;
+        string json = JsonUtility.ToJson(a);
+        AddActor.FinalizeToken(json);
     }
     public override string Label()
     {
@@ -195,9 +204,9 @@ public class Icon2x0EnemyActorType : Icon2x0Base
         UI.ToggleDisplay(o, CurrentHP > 0 && tokenData.Placed);
     }
 
-    public override void InitPanel(string elementName, bool selected)
+    public override void InitPanel(ActorData actorData, string elementName, bool selected)
     {
-        base.InitPanel(elementName, selected);
+        base.InitPanel(actorData, elementName, selected);
         VisualElement panel = UI.System.Q(elementName);
 
         VisualElement hpBar = UI.CreateFromTemplate("UI/TableTop/IconHPBar");

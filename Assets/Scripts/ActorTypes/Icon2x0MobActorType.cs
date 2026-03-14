@@ -40,11 +40,12 @@ public class Icon2x0MobActorType : Icon2x0Base
     public static void AddActorModal()
     {
         Modal.AddTextField("NameField", "Actor Name", "Actor");
+        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", ActorType.ShapeOptions());
 
         Modal.AddPreferredButton("Create Actor", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
-        AddActor.OrderFields(StringUtility.CreateArray("NameField"));
+        AddActor.OrderFields(StringUtility.CreateArray("NameField", "ShapeField"));
     }
 
     private static void CreateClicked(ClickEvent evt)
@@ -56,6 +57,7 @@ public class Icon2x0MobActorType : Icon2x0Base
         }
 
         string name = UI.Modal.Q<TextField>("NameField").value;
+        string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
 
         Icon2x0MobActorType t = new()
         {
@@ -65,11 +67,19 @@ public class Icon2x0MobActorType : Icon2x0Base
             Move = 4,
             Defense = 4,
             Vigor = 0,
-            Color = ColorUtility.GetCommonColor("Gray"),
-            Token = TokenLibrary.GetSelectedMeta()
         };
 
-        AddActor.FinalizeToken(t.Serialize());
+        ActorPersistence a = new();
+        a.Name = t.Label();
+        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Color = ColorUtility.GetCommonColor("gray");
+        a.Shape = shape;
+        a.Position = Vector3.zero;
+        a.Placed = false;
+        a.ActorType = JsonUtility.ToJson(t);
+        a.ActorTypeId = TypeName;
+        string json = JsonUtility.ToJson(a);
+        AddActor.FinalizeToken(json);
     }
     #endregion
 
@@ -165,9 +175,9 @@ public class Icon2x0MobActorType : Icon2x0Base
         UI.ToggleDisplay(o, Hits > 0 && tokenData.Placed);
     }
 
-    public override void InitPanel(string elementName, bool selected)
+    public override void InitPanel(ActorData actorData, string elementName, bool selected)
     {
-        base.InitPanel(elementName, selected);
+        base.InitPanel(actorData, elementName, selected);
         VisualElement panel = UI.System.Q(elementName);
 
         Label l = new();
@@ -189,7 +199,7 @@ public class Icon2x0MobActorType : Icon2x0Base
         s4.Q<Label>("Value").text = $"{Defense}";
         panel.Q("Stats").Add(s4);
 
-        panel.Q("Pills").Add(Pill.InitStatic("ClassPill", "Mob", Color));
+        panel.Q("Pills").Add(Pill.InitStatic("ClassPill", "Mob", ColorUtility.GetCommonColor("gray")));
     }
 
     private string MobHPString()

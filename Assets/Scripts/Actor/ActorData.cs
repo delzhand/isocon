@@ -226,12 +226,6 @@ public class ActorData : NetworkBehaviour
         return WorldObject.GetComponent<Actor>();
     }
 
-    // public void UpdateSize(int size)
-    // {
-    //     Size = size;
-    //     SetSize();
-    // }
-
     private void CreateUnitBarElement()
     {
         // Create the element in the UI
@@ -331,16 +325,6 @@ public class ActorData : NetworkBehaviour
         // NeedsRedraw = true;
     }
 
-    // public void Select()
-    // {
-    //     // NeedsRedraw = true;
-    // }
-
-    // public void Focus()
-    // {
-    //     // NeedsRedraw = true;
-    // }
-
     public void Disconnect()
     {
         if (UnitBarElement != null)
@@ -385,4 +369,31 @@ public class ActorData : NetworkBehaviour
         Destroy(WorldObject);
         Actor.Deselect();
     }
+
+    public ActorPersistence Persist()
+    {
+        ActorPersistence ap = new();
+        ap.ActorType = TypeData;
+        ap.Name = Name;
+        ap.Token = Token;
+        ap.Shape = Shape;
+        ap.Color = Color;
+        ap.ActorTypeId = Type;
+        ap.Placed = Placed;
+        ap.Position = GetActor().transform.position;
+        return ap;
+    }
+}
+
+[Serializable]
+public class ActorPersistence
+{
+    public string Name;
+    public Token Token;
+    public string ActorTypeId;
+    public string ActorType;
+    public string Shape;
+    public Vector3 Position;
+    public Color Color;
+    public bool Placed;
 }

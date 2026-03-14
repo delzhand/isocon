@@ -8,14 +8,15 @@ using UnityEngine.UIElements;
 
 public interface IActorType
 {
+    string TypeId();
     string Serialize();
     string Label();
     string GetOverheadAsset();
     MenuItem[] GetMenuItems(bool placed);
-    void Command(string command, ActorData tokenData);
-    void UpdateOverhead(ActorData tokenData);
-    void UpdatePanel(ActorData tokenData, string elementName);
-    void InitPanel(string elementName, bool selected = false);
+    void Command(string command, ActorData actorData);
+    void UpdateOverhead(ActorData actorData);
+    void UpdatePanel(ActorData actorData, string elementName);
+    void InitPanel(ActorData actorData, string elementName, bool selected = false);
 
 }
 
@@ -23,12 +24,14 @@ public interface IActorType
 public abstract class ActorType : IActorType
 {
     public string Type;
-    public Token Token;
-    public string Shape;
-    public Color Color;
     public List<ActorTag> Tags;
     public List<ActorBar> Bars;
     public List<ActorStat> Stats;
+
+    public string TypeId()
+    {
+        return Type;
+    }
 
     public virtual string Label()
     {
@@ -37,6 +40,7 @@ public abstract class ActorType : IActorType
 
     public virtual string Serialize()
     {
+
         throw new NotImplementedException();
     }
 
@@ -353,7 +357,6 @@ public abstract class ActorType : IActorType
         if (value.StartsWith("Reshape"))
         {
             string[] parts = value.Split("|");
-            Shape = parts[1];
             tokenData.Shape = parts[1];
             tokenData.SetShape();
         }
@@ -367,7 +370,7 @@ public abstract class ActorType : IActorType
     {
     }
 
-    public virtual void InitPanel(string elementName, bool selected = false)
+    public virtual void InitPanel(ActorData actorData, string elementName, bool selected = false)
     {
         VisualElement panel = UI.System.Q(elementName);
         panel.Q("Pills").Clear();
@@ -547,14 +550,4 @@ public class ActorStat
 {
     public string Name;
     public int Value;
-}
-
-[Serializable]
-public class UnitMeta
-{
-    public string Name;
-    public string Type;
-    public Token Token;
-    public string Shape;
-    public Color Color;
 }

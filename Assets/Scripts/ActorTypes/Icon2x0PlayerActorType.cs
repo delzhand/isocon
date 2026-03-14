@@ -17,6 +17,7 @@ public class Icon2x0PlayerActorType : Icon2x0Base
     public string Class;
     public int Move;
     public int Defense;
+    public Color Color;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Register()
@@ -136,7 +137,6 @@ public class Icon2x0PlayerActorType : Icon2x0Base
             Job = job,
             Class = pclass,
             Vigor = 0,
-            Token = TokenLibrary.GetSelectedMeta()
         };
 
         switch (pclass)
@@ -330,9 +330,9 @@ public class Icon2x0PlayerActorType : Icon2x0Base
         UI.ToggleDisplay(panel.Q("CrisisPill"), CurrentHP > 0 && CurrentHP <= MaxHP / 4);
     }
 
-    public override void InitPanel(string elementName, bool selected)
+    public override void InitPanel(ActorData actorData, string elementName, bool selected)
     {
-        base.InitPanel(elementName, selected);
+        base.InitPanel(actorData, elementName, selected);
         VisualElement panel = UI.System.Q(elementName);
 
         VisualElement resBar = UI.CreateFromTemplate("UI/TableTop/IconResolveBar");

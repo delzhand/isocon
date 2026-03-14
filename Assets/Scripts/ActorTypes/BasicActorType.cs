@@ -65,11 +65,18 @@ public class BasicActorType : ActorType
             Name = name,
             MaxHP = maxHP,
             CurrentHP = maxHP,
-            Shape = shape,
-            Color = ColorUtility.GetCommonColor(color),
-            Token = TokenLibrary.GetSelectedMeta()
         };
-        AddActor.FinalizeToken(t.Serialize());
+        ActorPersistence a = new();
+        a.Name = t.Label();
+        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Color = ColorUtility.GetCommonColor(color);
+        a.Shape = shape;
+        a.Position = Vector3.zero;
+        a.Placed = false;
+        a.ActorType = JsonUtility.ToJson(t);
+        a.ActorTypeId = TypeName;
+        string json = JsonUtility.ToJson(a);
+        AddActor.FinalizeToken(json);
     }
     #endregion
 
@@ -125,9 +132,9 @@ public class BasicActorType : ActorType
         bar.Q<ProgressBar>("HpBar").highValue = MaxHP;
     }
 
-    public override void InitPanel(string elementName, bool selected)
+    public override void InitPanel(ActorData actorData, string elementName, bool selected)
     {
-        base.InitPanel(elementName, selected);
+        base.InitPanel(actorData, elementName, selected);
 
         VisualElement panel = UI.System.Q(elementName);
         VisualElement hpBar = UI.CreateFromTemplate("UI/TableTop/SimpleHPBar");

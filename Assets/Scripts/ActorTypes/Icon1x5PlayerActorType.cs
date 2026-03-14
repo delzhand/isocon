@@ -231,9 +231,9 @@ public class Icon1x5PlayerActorType : Icon1x5Base
         UI.ToggleDisplay(panel.Q("BloodiedPill"), CurrentHP > 0 && CurrentHP <= MaxHP / 2);
     }
 
-    public override void InitPanel(string elementName, bool selected)
+    public override void InitPanel(ActorData actorData, string elementName, bool selected)
     {
-        base.InitPanel(elementName, selected);
+        base.InitPanel(actorData, elementName, selected);
         VisualElement panel = UI.System.Q(elementName);
 
         VisualElement resBar = UI.CreateFromTemplate("UI/TableTop/IconResolveBar");
@@ -267,8 +267,8 @@ public class Icon1x5PlayerActorType : Icon1x5Base
         s4.Q<Label>("Value").text = $"{Defense}";
         panel.Q("Stats").Add(s4);
 
-        panel.Q("Pills").Add(Pill.InitStatic("JobPill", Job, Color));
-        panel.Q("Pills").Add(Pill.InitStatic("ClassPill", Class, Color));
+        panel.Q("Pills").Add(Pill.InitStatic("JobPill", Job, actorData.Color));
+        panel.Q("Pills").Add(Pill.InitStatic("ClassPill", Class, actorData.Color));
         panel.Q("Pills").Add(Pill.InitStatic("BloodiedPill", "Bloodied", Color.red));
     }
 
@@ -320,6 +320,7 @@ public class Icon1x5PlayerActorType : Icon1x5Base
         }
         string pclass = playerJob.Split("/")[0];
         string job = playerJob.Split("/")[1];
+        string color = "black";
 
         Icon1x5PlayerActorType t = new()
         {
@@ -329,7 +330,6 @@ public class Icon1x5PlayerActorType : Icon1x5Base
             Class = pclass,
             Vigor = 0,
             Wounds = 0,
-            Token = TokenLibrary.GetSelectedMeta()
         };
 
         switch (pclass)
@@ -342,7 +342,7 @@ public class Icon1x5PlayerActorType : Icon1x5Base
                 t.Defense = 6;
                 t.Fray = 4;
                 t.Damage = 6;
-                t.Color = ColorUtility.GetCommonColor("red");
+                color = "red";
                 break;
             case "Vagabond":
                 t.MaxHP = 28;
@@ -352,7 +352,7 @@ public class Icon1x5PlayerActorType : Icon1x5Base
                 t.Defense = 10;
                 t.Fray = 2;
                 t.Damage = 10;
-                t.Color = ColorUtility.GetCommonColor("yellow");
+                color = "yellow";
                 break;
             case "Mendicant":
                 t.MaxHP = 40;
@@ -362,7 +362,7 @@ public class Icon1x5PlayerActorType : Icon1x5Base
                 t.Defense = 8;
                 t.Fray = 3;
                 t.Damage = 6;
-                t.Color = ColorUtility.GetCommonColor("green");
+                color = "green";
                 break;
             case "Wright":
                 t.MaxHP = 32;
@@ -372,12 +372,21 @@ public class Icon1x5PlayerActorType : Icon1x5Base
                 t.Defense = 7;
                 t.Fray = 3;
                 t.Damage = 8;
-                t.Color = ColorUtility.GetCommonColor("blue");
+                color = "blue";
                 break;
         }
 
-
-        AddActor.FinalizeToken(t.Serialize());
+        ActorPersistence a = new();
+        a.Name = t.Label();
+        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Color = ColorUtility.GetCommonColor(color);
+        a.Shape = "Square 1x1";
+        a.Position = Vector3.zero;
+        a.Placed = false;
+        a.ActorType = JsonUtility.ToJson(t);
+        a.ActorTypeId = TypeName;
+        string json = JsonUtility.ToJson(a);
+        AddActor.FinalizeToken(json);
     }
 
     #region Private functions

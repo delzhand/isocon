@@ -7,7 +7,7 @@ public class AddActor
 {
     public static void OpenModal(ClickEvent evt)
     {
-        Player.Self().SetOp("Adding a Token");
+        Player.Self().SetOp("Adding an Actor");
         Actor.Deselect();
         Modal.Reset("Add Actor");
         Modal.AddTokenField("TokenSearchField");

@@ -94,11 +94,18 @@ public class LancerMechActorType : LancerBase
             EDefense = 8,
             SensorRange = 10,
             SaveTarget = 10,
-            Shape = shape,
-            Color = ColorUtility.GetCommonColor(color),
-            Token = TokenLibrary.GetSelectedMeta()
         };
-        AddActor.FinalizeToken(t.Serialize());
+        ActorPersistence a = new();
+        a.Name = t.Label();
+        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Color = ColorUtility.GetCommonColor(color);
+        a.Shape = shape;
+        a.Position = Vector3.zero;
+        a.Placed = false;
+        a.ActorType = JsonUtility.ToJson(t);
+        a.ActorTypeId = TypeName;
+        string json = JsonUtility.ToJson(a);
+        AddActor.FinalizeToken(json);
     }
     #endregion
 
@@ -292,9 +299,9 @@ public class LancerMechActorType : LancerBase
         o.Q<Label>("Heat").text = SymbolString("▰", Heat, MaxHeat);
     }
 
-    public override void InitPanel(string elementName, bool selected)
+    public override void InitPanel(ActorData actorData, string elementName, bool selected)
     {
-        base.InitPanel(elementName, selected);
+        base.InitPanel(actorData, elementName, selected);
         VisualElement panel = UI.System.Q(elementName);
 
         bool left = elementName == "LeftTokenPanel";
@@ -452,7 +459,7 @@ public class LancerMechActorType : LancerBase
 
             Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"UpdateStats|{serialized}");
             Modal.Close();
-            this.InitPanel("LeftTokenPanel", true);
+            this.InitPanel(Actor.GetSelected().Data, "LeftTokenPanel", true);
         });
         Modal.AddButton("Cancel", Modal.CloseEvent);
     }
