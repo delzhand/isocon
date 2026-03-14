@@ -67,7 +67,8 @@
             "hp": 6,
             "type": "Tyrant",
             "traits": "=Formation|=Siege Shield",
-            "tokens": "Loaded"
+            "tokens": "Loaded",
+            "size": 2
         },
         {
             "conditions": "Physical Armor",
@@ -146,7 +147,8 @@
             "def": 2,
             "hp": 6,
             "type": "Tyrant",
-            "traits": "=Blood Rage|=Steaming Rage|=Tyrant"
+            "traits": "=Blood Rage|=Steaming Rage|=Tyrant",
+            "size": 2
         },
         {
             "conditions": "",
@@ -302,7 +304,8 @@
             "def": 2,
             "hp": 6,
             "type": "Tyrant",
-            "traits": "=Labyrinth Master|=Tyrant"
+            "traits": "=Labyrinth Master|=Tyrant",
+            "size": 2
         },
         {
             "conditions": "Magic Armor",
@@ -381,7 +384,8 @@
             "hp": 3,
             "type": "Tyrant",
             "traits": "=Flight|=Tyrant|=Miraculous Flesh",
-            "tokens": "Vitality#6"
+            "tokens": "Vitality#6",
+            "size": 2
         },
         {
             "conditions": "",
@@ -459,7 +463,8 @@
             "def": 3,
             "hp": 6,
             "type": "Tyrant",
-            "traits": "=Tyrant|=Warpflesh"
+            "traits": "=Tyrant|=Warpflesh",
+            "size": 2
         },
         {
             "conditions": "Magic Armor",
@@ -537,7 +542,8 @@
             "def": 4,
             "hp": 5,
             "type": "Tyrant",
-            "traits": "=Tyrant|=Circling|=Flesh Sacrifice"
+            "traits": "=Tyrant|=Circling|=Flesh Sacrifice",
+            "size": 2
         },
         {
             "conditions": "",
