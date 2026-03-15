@@ -55,7 +55,7 @@ public class LancerMechActorType : LancerBase
     {
         Modal.AddTextField("Callsign", "Callsign", "");
         Modal.AddTextField("PilotName", "Pilot", "");
-        Modal.AddDropdownField("ShapeField", "Shape", "Hex 1", ActorType.HexShapeOptions());
+        Modal.AddDropdownField("ShapeField", "Shape", "Hex 1", ActorType.ShapeOptions());
         Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
         Modal.AddPreferredButton("Create Actor", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);

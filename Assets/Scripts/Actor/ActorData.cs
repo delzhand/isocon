@@ -173,6 +173,11 @@ public class ActorData : NetworkBehaviour
     {
         switch (Shape)
         {
+            case "Square 1/2":
+                WorldObject.transform.Find("Offset").transform.localScale = new Vector3(.75f, .75f, .75f);
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.SquareShadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(.6f, .6f, 4);
+                break;
             case "Square 1x1":
                 WorldObject.transform.Find("Offset").transform.localScale = new Vector3(1, 1, 1);
                 WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.SquareShadow;
@@ -194,7 +199,7 @@ public class ActorData : NetworkBehaviour
                 WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(3.7f, 3.7f, 4);
                 break;
             case "Hex 1/2":
-                WorldObject.transform.Find("Offset").transform.localScale = new Vector3(.5f, .5f, .5f);
+                WorldObject.transform.Find("Offset").transform.localScale = new Vector3(.75f, .75f, .75f);
                 WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.Hex1Shadow;
                 WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(.6f, .6f, 4);
                 break;

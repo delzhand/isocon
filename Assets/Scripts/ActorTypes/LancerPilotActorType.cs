@@ -42,11 +42,12 @@ public class LancerPilotActorType : LancerBase
     {
         Modal.AddTextField("Name", "Name", "");
         Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
+        Modal.AddDropdownField("ShapeField", "Shape", "Hex 1/2", StringUtility.CreateArray("Hex 1/2", "Square 1/2"));
         Modal.AddPreferredButton("Create Actor", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddActor.OrderFields(StringUtility.CreateArray("Name", "ColorField"));
+        AddActor.OrderFields(StringUtility.CreateArray("Name", "ColorField", "ShapeField"));
     }
 
     private static void CreateClicked(ClickEvent evt)
@@ -59,6 +60,7 @@ public class LancerPilotActorType : LancerBase
 
         string name = UI.Modal.Q<TextField>("Name").value;
         string color = UI.Modal.Q<DropdownField>("ColorField").value;
+        string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
         LancerPilotActorType t = new()
         {
             Type = TypeName,
@@ -73,15 +75,13 @@ public class LancerPilotActorType : LancerBase
         a.Name = t.Label();
         a.Token = TokenLibrary.GetSelectedMeta();
         a.Color = ColorUtility.GetCommonColor(color);
-        a.Shape = "Hex 1/2";
+        a.Shape = shape;
         a.Position = Vector3.zero;
         a.Placed = false;
         a.ActorType = JsonUtility.ToJson(t);
         a.ActorTypeId = TypeName;
         string json = JsonUtility.ToJson(a);
         AddActor.FinalizeToken(json);
-
-        AddActor.FinalizeToken(t.Serialize());
     }
 
     public override string Label()
