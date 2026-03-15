@@ -27,6 +27,7 @@ public class NeutralState : TabletopSubstate
         SelectionMenu.Update();
         TileShare.Offsets();
         Pointer.Point();
+        Autosaver.Tick();
     }
 
     protected override void HandleKeypresses()

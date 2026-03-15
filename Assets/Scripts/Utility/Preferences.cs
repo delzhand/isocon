@@ -23,6 +23,7 @@ public class StoredPreferences
     public int TargetFramerate;
     public bool DragPan;
     public string MaleghastFile;
+    public int AutosaveInterval = 300;
 }
 
 public class Preferences
@@ -35,36 +36,48 @@ public class Preferences
 
     public static void Init()
     {
+        _current = new()
+        {
+            DataPath = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath),
+            PlayerName = PlayerPrefs.GetString("PlayerName", "New Player"),
+            UIScale = PlayerPrefs.GetString("UIScale", "100%"),
+            WorldUIScale = PlayerPrefs.GetString("WorldUIScale", "100%"),
+            TokenScale = PlayerPrefs.GetFloat("TokenScale", 1f),
+            Grid = PlayerPrefs.GetString("Grid", "Square"),
+            TokenOutline = PlayerPrefs.GetString("TokenOutline", "White"),
+            PlayerCount = PlayerPrefs.GetInt("PlayerCount", 4),
+            HostIP = PlayerPrefs.GetString("HostIP", ""),
+            TutorialsSeen = PlayerPrefs.GetString("TutorialsSeen", ""),
+            ReleaseNotesSeen = PlayerPrefs.GetString("ReleaseNotesSeen", ""),
+            SkipTutorials = PlayerPrefs.GetInt("SkipTutorials", 0),
+            TargetFramerate = PlayerPrefs.GetInt("TargetFramerate", 30),
+            ShowHUD = true,
+            DragPan = true,
+            MaleghastFile = PlayerPrefs.GetString("MaleghastFile", ""),
+            AutosaveInterval = PlayerPrefs.GetInt("AutosaveInterval", 300),
+        };
+
         string fileName = GetConfigFileName();
         // Load preferences from application directory if found
         if (File.Exists(fileName))
         {
             string json = File.ReadAllText(fileName);
-            _current = JsonUtility.FromJson<StoredPreferences>(json);
-        }
-        // Otherwise set defaults from PlayerPrefs if they exist (legacy users) or static value
-        else
-        {
-            _current = new()
-            {
-                DataPath = PlayerPrefs.GetString("DataFolder", Application.persistentDataPath),
-                PlayerName = PlayerPrefs.GetString("PlayerName", "New Player"),
-                UIScale = PlayerPrefs.GetString("UIScale", "100%"),
-                WorldUIScale = PlayerPrefs.GetString("WorldUIScale", "100%"),
-                TokenScale = PlayerPrefs.GetFloat("TokenScale", 1f),
-                Grid = PlayerPrefs.GetString("Grid", "Square"),
-                TokenOutline = PlayerPrefs.GetString("TokenOutline", "White"),
-                PlayerCount = PlayerPrefs.GetInt("PlayerCount", 4),
-                HostIP = PlayerPrefs.GetString("HostIP", ""),
-                TutorialsSeen = PlayerPrefs.GetString("TutorialsSeen", ""),
-                ReleaseNotesSeen = PlayerPrefs.GetString("ReleaseNotesSeen", ""),
-                SkipTutorials = PlayerPrefs.GetInt("SkipTutorials", 0),
-                TargetFramerate = PlayerPrefs.GetInt("TargetFramerate", 30),
-                ShowHUD = true,
-                DragPan = true,
-                MaleghastFile = PlayerPrefs.GetString("MaleghastFile", ""),
-            };
-            Save();
+            StoredPreferences loaded = JsonUtility.FromJson<StoredPreferences>(json);
+
+            _current.DataPath = loaded.DataPath.Length > 0 ? loaded.DataPath : _current.DataPath;
+            _current.PlayerName = loaded.PlayerName.Length > 0 ? loaded.PlayerName : _current.PlayerName;
+            _current.UIScale = loaded.UIScale.Length > 0 ? loaded.UIScale : _current.UIScale;
+            _current.WorldUIScale = loaded.WorldUIScale.Length > 0 ? loaded.WorldUIScale : _current.WorldUIScale;
+            _current.TokenScale = loaded.TokenScale > 0 ? loaded.TokenScale : _current.TokenScale;
+            _current.Grid = loaded.Grid.Length > 0 ? loaded.Grid : _current.Grid;
+            _current.TokenOutline = loaded.TokenOutline.Length > 0 ? loaded.TokenOutline : _current.TokenOutline;
+            _current.PlayerCount = loaded.PlayerCount > 0 ? loaded.PlayerCount : _current.PlayerCount;
+            _current.HostIP = loaded.HostIP.Length > 0 ? loaded.HostIP : _current.HostIP;
+            _current.ReleaseNotesSeen = loaded.ReleaseNotesSeen.Length > 0 ? loaded.ReleaseNotesSeen : _current.ReleaseNotesSeen;
+            _current.SkipTutorials = loaded.SkipTutorials;
+            _current.TargetFramerate = loaded.TargetFramerate > 0 ? loaded.TargetFramerate : _current.TargetFramerate;
+            _current.MaleghastFile = loaded.MaleghastFile.Length > 0 ? loaded.MaleghastFile : _current.MaleghastFile;
+            _current.AutosaveInterval = loaded.AutosaveInterval > 0 ? loaded.AutosaveInterval : _current.AutosaveInterval;
         }
     }
 

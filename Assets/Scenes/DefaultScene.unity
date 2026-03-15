@@ -1021,6 +1021,7 @@ GameObject:
   - component: {fileID: 1395978831}
   - component: {fileID: 1395978832}
   - component: {fileID: 1395978833}
+  - component: {fileID: 1395978834}
   m_Layer: 0
   m_Name: AppState
   m_TagString: Untagged
@@ -1139,6 +1140,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33fd647b4f2e8f14d96209026d29a6c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1395978834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395978823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bedbcca0c2f2d4b498aa0a5cdfa95d7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Autosaver
 --- !u!1 &1480977434
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,6 +24,7 @@ public class Startup
         DiceRoller.Setup();
         MapEdit.Setup();
         TokenLibrary.Setup();
+        Autosaver.Setup();
 
         UI.SetBlocking(UI.System, StringUtility.CreateArray(@"SelectionMenu", "TopBar", "BottomBar", "ToolsPanel", "ToolOptions", "LeftTokenPanel", "RightTokenPanel", "Backdrop", "NumberPickerModal", "TopRight"));
         Application.targetFrameRate = Preferences.Current.TargetFramerate;

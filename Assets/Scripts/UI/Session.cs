@@ -94,6 +94,7 @@ public class Session
 
         SessionPersistence sp = new();
         sp.Actors = a.ToArray();
+        sp.State = State.GetStateFromScene();
         string session = JsonUtility.ToJson(sp);
         WriteSessionToFile(session, filename);
     }
@@ -128,6 +129,7 @@ public class Session
             string json = JsonUtility.ToJson(ap);
             Player.Self().CmdCreateActor(json);
         }
+        State.SetSceneFromState(sp.State);
         Player.Self().CmdRequestClientInit();
     }
 }
@@ -136,4 +138,5 @@ public class Session
 public class SessionPersistence
 {
     public ActorPersistence[] Actors;
+    public State State;
 }
