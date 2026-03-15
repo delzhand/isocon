@@ -76,6 +76,7 @@ public class Player : NetworkBehaviour
         FileLogger.Write($"Client {connectionToClient.connectionId} requested a system sync");
         string grid = TerrainController.GridType;
         BlockRendering.ToggleHex(grid == "Hex");
+        GameSystem.Current().ClearTags();
         TargetClientInit(connectionToClient, grid);
     }
 

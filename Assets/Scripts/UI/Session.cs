@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -132,13 +133,21 @@ public class Session
         }
         State.SetSceneFromState(sp.State);
         Player.Self().CmdRequestClientInit();
+
+
+        foreach (GameSystemTag gst in sp.Tags)
+        {
+            // Reserialize for network transmission
+            string json = JsonUtility.ToJson(gst);
+            Player.Self().CmdRequestGameSystemCommand($"AddTag|{json}");
+        }
     }
 }
 
 [Serializable]
 public class SessionPersistence
 {
+    public GameSystemTag[] Tags;
     public ActorPersistence[] Actors;
     public State State;
-    public GameSystemTag[] Tags;
 }
