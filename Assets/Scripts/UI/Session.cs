@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Mirror;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -13,21 +14,27 @@ public class Session
         Modal.Reset("Session");
         Modal.AddCloseCallback(BackToNeutral);
 
-        Modal.AddColumns("Tabs", 2);
-        Modal.AddContentButton("LoadSettings", "Load", (evt) =>
+        if (NetworkClient.activeHost)
         {
+            Modal.AddColumns("Tabs", 2);
+            Modal.AddContentButton("LoadSettings", "Load", (evt) =>
+            {
+                AddLoadFields();
+            });
+            Modal.MoveToColumn("Tabs_0", "LoadSettings");
+            Modal.AddContentButton("SaveSettings", "Save", (evt) =>
+            {
+                AddSaveFields();
+            });
+            Modal.MoveToColumn("Tabs_1", "SaveSettings");
+            Modal.AddColumns("Fields", 1);
+            UI.Modal.Q("Tabs").style.justifyContent = Justify.Center;
             AddLoadFields();
-        });
-        Modal.MoveToColumn("Tabs_0", "LoadSettings");
-
-        Modal.AddContentButton("SaveSettings", "Save", (evt) =>
+        }
+        else
         {
             AddSaveFields();
-        });
-        Modal.MoveToColumn("Tabs_1", "SaveSettings");
-        Modal.AddColumns("Fields", 1);
-        UI.Modal.Q("Tabs").style.justifyContent = Justify.Center;
-        AddLoadFields();
+        }
     }
 
     private static void ClearFields()
@@ -55,8 +62,11 @@ public class Session
         ClearFields();
         Modal.AddTextField("SaveFileName", "Filename", "latest.json");
         Modal.AddContentButton("SaveSession", "Save Session", SaveSession);
-        Modal.MoveToColumn("Fields_0", "SaveFileName");
-        Modal.MoveToColumn("Fields_0", "SaveSession");
+        if (NetworkClient.activeHost)
+        {
+            Modal.MoveToColumn("Fields_0", "SaveFileName");
+            Modal.MoveToColumn("Fields_0", "SaveSession");
+        }
     }
 
     private static void BackToNeutral(ClickEvent evt)
