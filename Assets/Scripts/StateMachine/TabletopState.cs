@@ -103,28 +103,6 @@ public class TabletopState : BaseState
         SM.ChangeState(new LauncherState());
     }
 
-    // public static void IngestRuleData()
-    // {
-    //     string filename = $"{Preferences.Current.DataPath}/ruledata/latest.json";
-    //     bool usingDefault = true;
-    //     if (Preferences.Current.OverrideRules)
-    //     {
-    //         if (File.Exists(Preferences.Current.RulesFile))
-    //         {
-    //             filename = Preferences.Current.RulesFile;
-    //             usingDefault = false;
-    //         }
-    //         else
-    //         {
-    //             Toast.AddError($"Could not locate {filename}. Reverting to default.");
-    //         }
-    //     }
-    //     string json = File.ReadAllText(filename);
-    //     GameSystem.DataJson = json;
-    //     string message = usingDefault ? "Default rule data loaded." : "Homebrew rule data loaded.";
-    //     Toast.AddSimple(message);
-    // }
-
     #region Callbacks
     private void BindCallbacks()
     {
