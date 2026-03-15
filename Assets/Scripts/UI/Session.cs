@@ -156,6 +156,18 @@ public class Session
             Player.Self().CmdRequestGameSystemCommand($"AddTag|{json}");
         }
     }
+
+    public static void LauncherMap()
+    {
+        string path = Preferences.Current.DataPath;
+        string filename = $"{path}/sessions/autosave.json";
+        if (File.Exists(filename))
+        {
+            string session = File.ReadAllText(filename);
+            SessionPersistence sp = JsonUtility.FromJson<SessionPersistence>(session);
+            State.SetSceneFromState(sp.State);
+        }
+    }
 }
 
 [Serializable]

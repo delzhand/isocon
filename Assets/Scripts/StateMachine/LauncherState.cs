@@ -23,6 +23,7 @@ public class LauncherState : BaseState
         DestroyLeftoverNetworkData();
         BindCallbacks();
         sm.ChangeSubState(null);
+        // Session.LauncherMap();
     }
 
     public override void OnExit()
