@@ -118,6 +118,7 @@ public class Session
         string session = File.ReadAllText(filename);
         SessionPersistence sp = JsonUtility.FromJson<SessionPersistence>(session);
 
+        string json = "";
         // This runs immediately, locally, whereas the Cmd to delete all runs later async
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("ActorData"))
         {
@@ -128,17 +129,20 @@ public class Session
         foreach (ActorPersistence ap in sp.Actors)
         {
             // Reserialize for network transmission
-            string json = JsonUtility.ToJson(ap);
+            json = JsonUtility.ToJson(ap);
             Player.Self().CmdCreateActor(json);
         }
-        State.SetSceneFromState(sp.State);
-        Player.Self().CmdRequestClientInit();
 
+        json = JsonUtility.ToJson(sp.State);
+        Actor.MoveAllActorsToOptimalBlock();
+        Player.Self().CmdMapSync(Compression.CompressString(json));
+
+        // Player.Self().CmdRequestClientInit();
 
         foreach (GameSystemTag gst in sp.Tags)
         {
             // Reserialize for network transmission
-            string json = JsonUtility.ToJson(gst);
+            json = JsonUtility.ToJson(gst);
             Player.Self().CmdRequestGameSystemCommand($"AddTag|{json}");
         }
     }
