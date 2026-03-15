@@ -33,7 +33,7 @@ public abstract class TabletopSubstate : BaseState
         UI.ToggleDisplay("BottomBar", true);
         UI.ToggleDisplay("TopBar", true);
         UI.ToggleDisplay(UI.System.Q("TopRight"), true);
-
+        UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), true);
         UI.ToggleDisplay(UI.TopBar.Q("AddActor"), true);
         UI.ToggleDisplay(UI.TopBar.Q("EditMap"), true);
         UI.ToggleDisplay(UI.TopBar.Q("CancelEditMap"), false);

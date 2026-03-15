@@ -36,7 +36,6 @@ public class Player : NetworkBehaviour
             {
                 Host = true;
                 Toast.AddSimple("Connected as host.");
-                // TabletopState.IngestRuleData();
                 MaxConnections = GameObject.Find("NetworkController").GetComponent<NetworkManager>().maxConnections;
             }
             else

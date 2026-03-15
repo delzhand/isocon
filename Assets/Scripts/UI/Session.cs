@@ -95,6 +95,7 @@ public class Session
         SessionPersistence sp = new();
         sp.Actors = a.ToArray();
         sp.State = State.GetStateFromScene();
+        sp.Tags = GameSystem.Current().Tags.ToArray();
         string session = JsonUtility.ToJson(sp);
         WriteSessionToFile(session, filename);
     }
@@ -139,4 +140,5 @@ public class SessionPersistence
 {
     public ActorPersistence[] Actors;
     public State State;
+    public GameSystemTag[] Tags;
 }

@@ -17,11 +17,16 @@ public class Pill
         return p;
     }
 
-    public static VisualElement InitNumber(string name, string text, int number, Color color, bool forToken)
+    public static VisualElement InitNumber(string name, string text, int number, int max, Color color, bool forToken)
     {
         VisualElement p = UI.CreateFromTemplate("UI/TableTop/Pill");
         p.name = name;
         p.Q<Label>("Name").text = $"{text}  {number}";
+        if (max > 0)
+        {
+            string s = ActorType.SymbolString("▰", number, max);
+            p.Q<Label>("Name").text = $"{text}  <color=black>{s}</color>";
+        }
         p.Q("Pill").style.backgroundColor = color;
         p.Q("Decrement").style.color = color;
         p.Q("Increment").style.color = color;

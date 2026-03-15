@@ -399,7 +399,7 @@ public abstract class ActorType : IActorType
         {
             if (tag.HasNumber)
             {
-                panel.Q("Pills").Add(Pill.InitNumber(tag.Name, tag.Name, tag.Value, tag.Color, true));
+                panel.Q("Pills").Add(Pill.InitNumber(tag.Name, tag.Name, tag.Value, 0, tag.Color, true));
             }
             else
             {
@@ -438,7 +438,7 @@ public abstract class ActorType : IActorType
         }
     }
 
-    public string SymbolString(string character, int value, int max)
+    public static string SymbolString(string character, int value, int max)
     {
         StringBuilder sb = new();
         for (int i = 0; i < max; i++)

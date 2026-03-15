@@ -34,7 +34,7 @@ public class TileMarkingState : TabletopSubstate
         UI.ToggleDisplay("DiceRoller", false);
         UI.ToggleDisplay("BottomBar", false);
         UI.ToggleDisplay("BottomRight", false);
-        UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), false);
+        // UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), false);
         UI.ToggleActiveClass(UI.TopBar.Q("MarkerMode"), true);
         UI.TopBar.Q("MarkerMode").Q<Label>("Label").text = "Stop Marking <u>T</u>iles";
     }
@@ -43,7 +43,7 @@ public class TileMarkingState : TabletopSubstate
     {
         base.DisableInterface();
         UI.ToggleDisplay(UI.TopBar.Q("Isocon"), true);
-        UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), true);
+        // UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), true);
         UI.ToggleActiveClass(UI.TopBar.Q("MarkerMode"), false);
         UI.TopBar.Q("MarkerMode").Q<Label>("Label").text = "Mark <u>T</u>iles";
     }

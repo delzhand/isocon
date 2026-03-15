@@ -211,7 +211,8 @@ public class NeutralState : TabletopSubstate
         Modal.AddTextField("TagName", "Tag Name", "");
         Modal.AddDropdownField("ColorField", "Color", "Gray", ColorUtility.CommonColors());
         Modal.AddDropdownField("TagType", "Type", "Simple", StringUtility.CreateArray("Simple", "Number", "Clock"), (evt) => AddSystemTagModalConditions());
-        Modal.AddIntField("TagValue", "Tag Initial Value", 0);
+        Modal.AddIntField("TagValue", "Initial Value", 0);
+        Modal.AddIntField("TagMaxValue", "Segments", 4);
         Modal.AddPreferredButton("Add", AddSystemTagSubmit);
         Modal.AddButton("Cancel", Modal.CloseEvent);
         AddSystemTagModalConditions();
@@ -223,12 +224,14 @@ public class NeutralState : TabletopSubstate
     {
         string tagName = UI.Modal.Q<TextField>("TagName").value;
         int tagValue = UI.Modal.Q<IntegerField>("TagValue").value;
+        int tagMaxValue = UI.Modal.Q<IntegerField>("TagMaxValue").value;
         string colorValue = UI.Modal.Q<DropdownField>("ColorField").value;
         string tagType = UI.Modal.Q<DropdownField>("TagType").value;
         GameSystemTag tag = new();
         tag.Name = tagName;
         tag.Value = tagValue;
         tag.Type = tagType;
+        tag.MaxValue = tagMaxValue;
         tag.Color = ColorUtility.GetCommonColor(colorValue);
         Player.Self().CmdRequestGameSystemCommand($"AddTag|{JsonUtility.ToJson(tag)}");
         Modal.Close();
@@ -238,6 +241,7 @@ public class NeutralState : TabletopSubstate
     {
         string tagType = UI.Modal.Q<DropdownField>("TagType").value;
         UI.ToggleDisplay(UI.Modal.Q("TagValue"), tagType != "Simple");
+        UI.ToggleDisplay(UI.Modal.Q("TagMaxValue"), tagType == "Clock");
     }
 
     #endregion
