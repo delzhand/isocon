@@ -44,7 +44,7 @@ public class SelectionMenu
         {
             if (FollowTransform != null)
             {
-                UI.FollowTransform(FollowTransform, UI.System.Q("SelectionMenu"), Camera.main, Offset);
+                UI.FollowTransform(FollowTransform, UI.System.Q("SelectionMenu"), UI.System, Camera.main, Offset);
                 UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, Length.Percent(-100)));
             }
             else
@@ -75,7 +75,7 @@ public class SelectionMenu
     public static void AddItem(string name, string label, Action<ClickEvent> clickHandler)
     {
         VisualElement menu = Find();
-        VisualElement element = UI.CreateFromTemplate("UITemplates/MenuItem");
+        VisualElement element = UI.CreateFromTemplate("UI/MenuItem");
         element.Q<Label>("Label").text = label;
         element.name = name;
         element.RegisterCallback<ClickEvent>((evt) =>

@@ -45,7 +45,7 @@ public class DirectionalLine : NetworkBehaviour
             return;
         }
 
-        TokenData data = TokenData.Find(TokenId);
+        ActorData data = ActorData.Find(TokenId);
         // Don't show while token is moving
         if (data.WorldObject.GetComponent<MoveLerp>())
         {
@@ -53,11 +53,11 @@ public class DirectionalLine : NetworkBehaviour
         }
 
         float density = .25f;
-        float amplitude = 1f;
+        float amplitude = 1.5f;
         Color color = ColorUtility.UISelectYellow;
         _line.textureScale = new Vector2(5f, 1f);
-        Vector3 originOffset = new Vector3(0, .25f, 0);
-        Vector3 targetOffset = new Vector3(0, .25f, 0);
+        Vector3 originOffset = new Vector3(0, .1f, 0);
+        Vector3 targetOffset = new Vector3(0, .1f, 0);
 
         if (Op == "Placing")
         {
@@ -130,7 +130,7 @@ public class DirectionalLine : NetworkBehaviour
         }
 
         // Calculate the number of points based on density
-        int numPoints = Mathf.CeilToInt(distance / density);
+        int numPoints = Mathf.CeilToInt(distance / density) + 2;
 
         // Iterate through the points and calculate their positions along the parabola
         for (int i = 0; i <= numPoints; i++)
@@ -150,7 +150,8 @@ public class DirectionalLine : NetworkBehaviour
     private float ParabolaFunction(float t, float startY, float endY, float amplitude)
     {
         float straightLine = Mathf.Lerp(startY, endY, t);
-        float sineWave = amplitude * Mathf.Sin(Mathf.PI * t);
+        // float sineWave = amplitude * Mathf.Sin(Mathf.PI * t);
+        float sineWave = amplitude * Mathf.Sin(Mathf.Sin(Mathf.Sin(Mathf.PI * t)));
 
         return straightLine + sineWave;
     }

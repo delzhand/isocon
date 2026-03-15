@@ -421,7 +421,6 @@ public class Block : MonoBehaviour
         UnfocusAll();
         Focused = true;
         TerrainController.SetInfo();
-        Player.Self().GetComponent<DirectionalLine>().SetTarget(GetMidpoint());
     }
 
     /// <summary>
@@ -450,6 +449,49 @@ public class Block : MonoBehaviour
         _highlighted = true;
         MarkForRedraw();
         TerrainController.SetInfo();
+    }
+
+    public Vector3 GetNearestCorner(Vector3 point)
+    {
+        // Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        // Physics.Raycast(_ray, out RaycastHit hit, 9999f, LayerMask.GetMask("Block"));
+        // Vector3 point = hit.point;
+
+        List<Vector3> corners = GetCorners();
+        Vector3 closest = corners[0];
+        foreach (Vector3 v in corners)
+        {
+            float currentClosestDistance = Vector3.Distance(point, closest);
+            float thisDistance = Vector3.Distance(point, v);
+            if (thisDistance < currentClosestDistance)
+            {
+                closest = v;
+            }
+        }
+        return closest;
+    }
+
+    private List<Vector3> GetCorners()
+    {
+        Vector3 mid = GetMidpoint();
+        List<Vector3> corners = new();
+        if (TerrainController.GridType == "Square")
+        {
+            corners.Add(mid + new Vector3(.5f, 0, .5f));
+            corners.Add(mid + new Vector3(-.5f, 0, .5f));
+            corners.Add(mid + new Vector3(.5f, 0, -.5f));
+            corners.Add(mid + new Vector3(-.5f, 0, -.5f));
+        }
+        else
+        {
+            // corners.Add(mid + new Vector3(.5f, 0, .3f));
+            corners.Add(mid + new Vector3(.5f, 0, -.3f));
+            // corners.Add(mid + new Vector3(-.5f, 0, .3f));
+            corners.Add(mid + new Vector3(-.5f, 0, -.3f));
+            corners.Add(mid + new Vector3(0, 0, .57f));
+            // corners.Add(mid + new Vector3(0, 0, -.57f));
+        }
+        return corners;
     }
 
     /// <summary>

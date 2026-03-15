@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Styles/v3/Pill.uss?fileID=7433441132597879392&amp;guid=f1fbed9d17826db43baf398abf3a5689&amp;type=3#Pill"/>
+    <ui:VisualElement name="Pill" style="flex-direction: row; justify-content: flex-start; align-self: auto; align-items: center; position: relative; flex-grow: 0; flex-shrink: 1; align-content: auto;">
+        <ui:Button text="" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="true" name="Decrement" class="roundbutton" style="padding-top: 0; margin-top: 0;">
+            <ui:Label text="-" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: -6px; margin-right: 0; margin-bottom: 0; margin-left: 0;"/>
+        </ui:Button>
+        <ui:Label tabindex="-1" text="Tagname" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Name" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 12px;"/>
+        <ui:Button text="" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Increment" class="roundbutton" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; padding-top: 0;">
+            <ui:Label text="+" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: -2px; margin-right: 0; margin-bottom: 0; margin-left: 0;"/>
+        </ui:Button>
+        <ui:Button text="" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Remove" class="roundbutton" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; padding-top: 0;">
+            <ui:Label text="×" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: -2px; margin-right: 0; margin-bottom: 0; margin-left: 0;"/>
+        </ui:Button>
+    </ui:VisualElement>
+</ui:UXML>

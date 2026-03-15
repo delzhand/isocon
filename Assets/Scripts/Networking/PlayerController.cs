@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Mirror;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : NetworkBehaviour
@@ -27,11 +28,12 @@ public class PlayerController : NetworkBehaviour
 
     public static void Disconnect()
     {
-        GameObject[] objs = GameObject.FindGameObjectsWithTag("TokenData");
+        GameObject[] objs = GameObject.FindGameObjectsWithTag("ActorData");
         for (int i = 0; i < objs.Length; i++)
         {
-            objs[i].GetComponent<TokenData>().Disconnect();
+            objs[i].GetComponent<ActorData>().Disconnect();
         }
         TerrainController.DestroyAllBlocks();
+        GameSystem.Current().ClearTags();
     }
 }

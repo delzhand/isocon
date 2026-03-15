@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using Mirror;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -37,7 +36,6 @@ public class Player : NetworkBehaviour
             {
                 Host = true;
                 Toast.AddSimple("Connected as host.");
-                TabletopState.IngestRuleData();
                 MaxConnections = GameObject.Find("NetworkController").GetComponent<NetworkManager>().maxConnections;
             }
             else
@@ -76,135 +74,106 @@ public class Player : NetworkBehaviour
     public void CmdRequestClientInit()
     {
         FileLogger.Write($"Client {connectionToClient.connectionId} requested a system sync");
-        string system = Preferences.Current.System;
-        string systemVars = GameSystem.Current().GetSystemVars();
         string grid = TerrainController.GridType;
         BlockRendering.ToggleHex(grid == "Hex");
-        string data = GameSystem.DataJson;
-        byte[] dataBytes = Compression.CompressString(data);
-
-        TargetClientInit(connectionToClient, system, systemVars, grid, dataBytes);
+        GameSystem.Current().ClearTags();
+        TargetClientInit(connectionToClient, grid);
     }
 
     [TargetRpc]
-    public void TargetClientInit(NetworkConnectionToClient target, string system, string systemVars, string grid, byte[] dataBytes)
+    public void TargetClientInit(NetworkConnectionToClient target, string grid)
     {
-        GameSystem.Set(system);
-        GameSystem.Current().SetSystemVars(systemVars);
-        FileLogger.Write($"Local game system set to {system}");
-
         TerrainController.GridType = grid;
         BlockRendering.ToggleHex(grid == "Hex");
-
-        FileLogger.Write($"Local grid type set to {grid}");
-
-        GameSystem.DataJson = Compression.DecompressString(dataBytes);
-        FileLogger.Write($"Game data received has length of {GameSystem.DataJson.Length}");
-
         CmdRequestMapSync();
     }
     #endregion
 
-    #region Create Token
+    #region Create Actor
     [Command]
-    public void CmdCreateToken(string system, TokenMeta tokenMeta, string name, int size, Color color, string systemData)
+    public void CmdCreateActor(string json)
     {
-        string id = Guid.NewGuid().ToString();
-        GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData"));
-        TokenData data = g.GetComponent<TokenData>();
-        data.Id = id;
-        data.System = system;
-        data.TokenMeta = tokenMeta;
-        data.Name = name;
-        data.Size = size;
-        data.Color = color;
-        data.SystemData = systemData;
-        NetworkServer.Spawn(g);
-    }
+        ActorPersistence ap = JsonUtility.FromJson<ActorPersistence>(json);
+        GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/ActorData"));
+        ActorData data = g.GetComponent<ActorData>();
+        data.Id = Guid.NewGuid().ToString();
+        data.Token = ap.Token;
+        data.Name = ap.Name;
+        data.Type = ap.ActorTypeId;
+        data.TypeData = ap.ActorType;
+        data.Shape = ap.Shape;
+        data.Color = ap.Color;
 
-    public void CmdCreateTokenPlaced(string system, TokenMeta tokenMeta, string name, int size, Color color, string systemData, Vector3 position)
-    {
-        string id = Guid.NewGuid().ToString();
-        GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/TokenData"));
-        TokenData data = g.GetComponent<TokenData>();
-        data.Id = id;
-        data.System = system;
-        data.TokenMeta = tokenMeta;
-        data.Name = name;
-        data.Size = size;
-        data.Color = color;
-        data.SystemData = systemData;
-
-        data.Placed = true;
-        data.LastKnownPosition = position;
-        g.transform.localScale = Vector3.one;
+        data.Placed = ap.Placed;
+        data.LastKnownPosition = ap.Position;
+        g.transform.localScale = ap.Placed ? Vector3.one : Vector3.zero;
 
         NetworkServer.Spawn(g);
     }
     #endregion
 
-    #region Delete Token
+    #region Delete Actor
     [Command]
-    public void CmdRequestDeleteToken(string tokenId)
+    public void CmdRequestDeleteActor(string actorId)
     {
-        TokenData data = TokenData.Find(tokenId);
-        FileLogger.Write($"Client {connectionToClient.connectionId} requested to delete token {data.Name}");
-        RpcDeleteToken(tokenId);
+        ActorData data = ActorData.Find(actorId);
+        FileLogger.Write($"Client {connectionToClient.connectionId} requested to delete actor {data.Name}");
+        RpcDeleteActor(actorId);
         data.Destroyed = true;
     }
     [Command]
-    public void CmdRequestDeleteAllTokens()
+    public void CmdRequestDeleteAllActors()
     {
-        FileLogger.Write($"Client {connectionToClient.connectionId} requested to delete all tokens");
-        foreach (GameObject g in GameObject.FindGameObjectsWithTag("TokenData"))
+        FileLogger.Write($"Client {connectionToClient.connectionId} requested to delete all actors");
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("ActorData"))
         {
-            TokenData data = g.GetComponent<TokenData>();
+            ActorData data = g.GetComponent<ActorData>();
             if (data.Deletable && !data.Destroyed)
             {
-                FileLogger.Write($"Client {connectionToClient.connectionId} requested to delete token {data.Name} ({data.Id})");
-                RpcDeleteToken(data.Id);
+                FileLogger.Write($"Client {connectionToClient.connectionId} requested to delete actor {data.Name} ({data.Id})");
+                RpcDeleteActor(data.Id);
                 data.Destroyed = true;
             }
         }
     }
     [ClientRpc]
-    public void RpcDeleteToken(string tokenId)
+    public void RpcDeleteActor(string actorId)
     {
-        TokenData data = TokenData.Find(tokenId);
+        ActorData data = ActorData.Find(actorId);
         data.Delete();
-        FileLogger.Write($"Token {data.Name} was deleted");
+        FileLogger.Write($"Actor {data.Name} was deleted");
         Toast.AddSuccess($"{data.Name} deleted.");
     }
     #endregion 
 
-    #region Token Movement
+    #region Actor Movement
     [Command]
-    public void CmdMoveToken(string tokenId, Vector3 v, bool immediate)
+    public void CmdMoveActor(string actorId, Vector3 v, bool immediate)
     {
-        RpcDoMoveToken(tokenId, v, immediate);
+        RpcDoMoveActor(actorId, v, immediate);
     }
 
     [Command]
-    public void CmdRequestPlaceToken(string tokenId, Vector3 target)
+    public void CmdRequestPlaceActor(string actorId, Vector3 target)
     {
-        RpcPlaceToken(tokenId, true);
-        Vector2 v = TokenData.Find(tokenId).UnitBarElement.worldBound.center * Preferences.GetUIScale();
+        RpcPlaceActor(actorId, true);
+        Vector2 v = ActorData.Find(actorId).UnitBarElement.worldBound.center * Preferences.GetUIScale();
         Vector3 origin = Camera.main.ScreenToWorldPoint(new Vector3(v.x, Screen.height - v.y, 0));
 
-        RpcDoMoveToken(tokenId, origin, true);
-        RpcDoMoveToken(tokenId, target, false);
+        RpcDoMoveActor(actorId, origin, true);
+        RpcDoMoveActor(actorId, target, false);
     }
     [Command]
-    public void CmdRequestRemoveToken(string tokenId)
+    public void CmdRequestRemoveActor(string actorId)
     {
-        RpcPlaceToken(tokenId, false);
-        RpcDoMoveToken(tokenId, new Vector3(0, -10f, 0), true);
+        RpcPlaceActor(actorId, false);
+        RpcDoMoveActor(actorId, new Vector3(0, -10f, 0), true);
     }
 
     [ClientRpc]
-    private void RpcDoMoveToken(string tokenId, Vector3 v, bool immediate)
+    private void RpcDoMoveActor(string actorId, Vector3 v, bool immediate)
     {
-        TokenData data = TokenData.Find(tokenId);
+        ActorData data = ActorData.Find(actorId);
         data.LastKnownPosition = v;
         if (immediate)
         {
@@ -217,33 +186,47 @@ public class Player : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void RpcPlaceToken(string tokenId, bool place)
+    private void RpcPlaceActor(string actorId, bool place)
     {
-        TokenData data = TokenData.Find(tokenId);
+        ActorData data = ActorData.Find(actorId);
         data.Place(place);
     }
     #endregion
 
-    #region Token Status
+    #region Actor Status
     [Command]
-    public void CmdRequestGameDataSetValue(string value)
+    public void CmdRequestGameSystemCommand(string value)
     {
-        RpcGameDataSetValue(value);
+        RpcGameSystemCommand(value);
     }
     [ClientRpc]
-    public void RpcGameDataSetValue(string value)
+    public void RpcGameSystemCommand(string value)
     {
-        GameSystem.Current().GameDataSetValue(value);
+        GameSystem.Current().Command(value);
     }
     [Command]
-    public void CmdRequestTokenDataSetValue(string tokenId, string value)
+    public void CmdRequestActorCommand(string actorId, string value)
     {
-        RpcTokenDataSetValue(tokenId, value);
+        RpcActorCommand(actorId, value);
     }
     [ClientRpc]
-    public void RpcTokenDataSetValue(string tokenId, string value)
+    public void RpcActorCommand(string actorId, string value)
     {
-        GameSystem.Current().TokenDataSetValue(tokenId, value);
+        ActorData.Command(actorId, value);
+    }
+    [Command]
+    public void CmdRequestAllActorsCommand(string value)
+    {
+        RpcAllActorsCommand(value);
+    }
+    [ClientRpc]
+    public void RpcAllActorsCommand(string value)
+    {
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("ActorData"))
+        {
+            ActorData data = g.GetComponent<ActorData>();
+            ActorData.Command(data.Id, value);
+        }
     }
     #endregion
 

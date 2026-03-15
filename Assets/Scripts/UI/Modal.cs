@@ -63,6 +63,12 @@ public class Modal
         isModalOpen = true;
     }
 
+    public static void ResetPreferredButtons()
+    {
+        UI.Modal.Q("Buttons").Clear();
+        preferredAction = null;
+    }
+
     private static void AddContents(VisualElement e)
     {
         UI.Modal.Q("Contents").Add(e);
@@ -195,6 +201,18 @@ public class Modal
         Modal.AddContents(field);
     }
 
+    public static void AddHelpText(string name, string contents)
+    {
+        Label label = new Label(contents);
+        label.enableRichText = true;
+        label.style.whiteSpace = WhiteSpace.Normal;
+
+        label.name = name;
+        label.AddToClassList("no-margin");
+        label.AddToClassList("help-text");
+        Modal.AddContents(label);
+    }
+
     public static void AddSeparator()
     {
         VisualElement v = new VisualElement();
@@ -215,6 +233,7 @@ public class Modal
             v2.name = $"{name}_{i}";
             v2.style.marginLeft = 8;
             v2.style.marginRight = 8;
+            v2.AddToClassList("column");
             v.Add(v2);
         }
         Modal.AddContents(v);
@@ -293,6 +312,7 @@ public class Modal
             field.RegisterValueChangedCallback<string>(onChange);
         }
         field.AddToClassList("no-margin");
+        field.style.minWidth = 400;
         field.focusable = false;
         Modal.AddContents(field);
     }
@@ -392,7 +412,7 @@ public class Modal
         Modal.AddContents(wrapper);
     }
 
-    public static void AddFileField(string name, string label, string defaultValue, string type)
+    public static void AddFileField(string name, string label, string defaultValue, string type, EventCallback<ChangeEvent<string>> onChange = null)
     {
         TextField field = new(label);
         field.name = "File";
@@ -400,10 +420,14 @@ public class Modal
         field.AddToClassList("no-margin");
         field.AddToClassList("filefield");
         field.isReadOnly = true;
+        if (onChange != null)
+        {
+            field.RegisterValueChangedCallback(onChange);
+        }
 
         Button search = new();
         search.text = "Search";
-        ClickEvent ce = null;
+        // ClickEvent ce = null;
         switch (type)
         {
             case "rules":

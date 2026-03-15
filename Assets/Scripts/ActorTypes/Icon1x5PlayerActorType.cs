@@ -1,0 +1,428 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using IsoconUILibrary;
+using Unity.Mathematics;
+using UnityEngine;
+using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
+
+[Serializable]
+public class Icon1x5PlayerActorType : Icon1x5Base
+{
+    private readonly static string TypeName = "Icon 1.5 Player";
+
+    public string Name;
+    public int CurrentHP;
+    public int MaxHP;
+    public int Vigor;
+    public int Resolve;
+    public string Job;
+    public string Class;
+    public int Wounds;
+    public int Damage;
+    public int Fray;
+    public int Range;
+    public int Speed;
+    public int Dash;
+    public int Defense;
+    public string ColorName;
+    public int PartyResolve = 0;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void Register()
+    {
+        ActorTypeRegistry.RegisterSystem($"{TypeName}");
+        ActorTypeRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
+        ActorTypeRegistry.RegisterSimpleCallback($"{TypeName}|AddActorModal", AddActorModal);
+    }
+
+
+    public override string Label()
+    {
+        return Name;
+    }
+
+    public override string Serialize()
+    {
+        return JsonUtility.ToJson(this);
+    }
+
+    public static IActorType DeserializeAsInterface(string json)
+    {
+        return JsonUtility.FromJson<Icon1x5PlayerActorType>(json);
+    }
+
+    public override string GetOverheadAsset()
+    {
+        return "UI/TableTop/Overheads/Icon1x5";
+    }
+
+    public override MenuItem[] GetMenuItems(bool placed)
+    {
+        MenuItem[] baseItems = base.GetMenuItems(placed);
+
+        List<MenuItem> items = new();
+        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
+        items.Add(new MenuItem("ModVIG", "Modify Vigor", (evt) => { NumberPicker.ActorCommand("ModVIG"); }));
+        items.Add(new MenuItem("ModRES", "Modify Resolve", (evt) => { NumberPicker.ActorCommand("ModRES"); }));
+        items.Add(new MenuItem("ModPRES", "Modify Party Resolve", (evt) => { NumberPicker.AllTokensCommand("ModPRES"); }));
+        items.Add(new MenuItem("GainWound", "Take Wound", (evt) => DirectCommand("GainWound")));
+        items.Add(new MenuItem("HealWound", "Heal Wound", (evt) => DirectCommand("LoseWound")));
+        return baseItems.Concat(items.ToArray()).ToArray();
+    }
+
+    public override void Command(string command, ActorData tokenData)
+    {
+        base.Command(command, tokenData);
+        Actor token = tokenData.GetActor();
+        if (command.StartsWith("GainWound"))
+        {
+            Wounds++;
+            Wounds = Math.Min(Wounds, 3);
+            int woundMaxHP = MaxHP / 4 * (4 - Wounds);
+            CurrentHP = Math.Min(CurrentHP, woundMaxHP);
+        }
+        if (command.StartsWith("LoseWound"))
+        {
+            Wounds--;
+            Wounds = Math.Max(Wounds, 0);
+        }
+        if (command.StartsWith("ModHP"))
+        {
+            int original = CurrentHP;
+            int changeValue = int.Parse(command.Split("|")[1]);
+            CurrentHP = Clamped(0, CurrentHP + changeValue, MaxHP);
+            int diff = CurrentHP - original;
+            if (diff != 0 && tokenData.Placed)
+            {
+                string plus = diff > 0 ? "+" : "";
+                PopoverText.Create(token, $"/{plus}{diff}|_HP", Color.white);
+                UpdateGraphic(tokenData);
+            }
+        }
+        if (command.StartsWith("ModVIG"))
+        {
+            int original = Vigor;
+            int changeValue = int.Parse(command.Split("|")[1]);
+            Vigor = Clamped(0, Vigor + changeValue, MaxHP / 4);
+            int diff = Vigor - original;
+            if (diff != 0 && tokenData.Placed)
+            {
+                string plus = diff > 0 ? "+" : "";
+                PopoverText.Create(token, $"/{plus}{diff}|_VIG", Color.white);
+            }
+        }
+        if (command.StartsWith("ModRES"))
+        {
+            int original = Resolve;
+            int changeValue = int.Parse(command.Split("|")[1]);
+            Resolve = Clamped(0, Resolve + changeValue, 6);
+            int diff = Resolve - original;
+            if (diff != 0 && tokenData.Placed)
+            {
+                string plus = diff > 0 ? "+" : "";
+                PopoverText.Create(token, $"/{plus}{diff}|_RES", Color.white);
+            }
+        }
+        if (command.StartsWith("ModPRES"))
+        {
+            int original = PartyResolve;
+            int changeValue = int.Parse(command.Split("|")[1]);
+            PartyResolve = Clamped(0, PartyResolve + changeValue, 6);
+            int diff = PartyResolve - original;
+            if (diff != 0 && tokenData.Placed)
+            {
+                string plus = diff > 0 ? "+" : "";
+                PopoverText.Create(token, $"/{plus}{diff}|_P-RES", Color.white);
+            }
+        }
+        if (command.StartsWith("Damage"))
+        {
+            int diff = int.Parse(command.Split("|")[1]);
+            if (Vigor + CurrentHP - diff < 0)
+            {
+                diff = Vigor + CurrentHP;
+            }
+            if (diff <= 0)
+            {
+                return;
+            }
+            if (diff < Vigor)
+            {
+                // Vig damage only
+                Vigor -= diff;
+                if (tokenData.Placed)
+                {
+                    PopoverText.Create(token, $"/-{diff}|_VIG", Color.white);
+                }
+            }
+            else if (diff > Vigor && Vigor > 0)
+            {
+                // Vig zeroed and HP damage
+                CurrentHP -= (diff - Vigor);
+                Vigor = 0;
+                if (tokenData.Placed)
+                {
+                    PopoverText.Create(token, $"/-{diff}|_HP/VIG", Color.white);
+                    UpdateGraphic(tokenData);
+                }
+            }
+            else if (Vigor <= 0)
+            {
+                // HP damage only
+                CurrentHP -= diff;
+                if (tokenData.Placed)
+                {
+                    PopoverText.Create(token, $"/-{diff}|_HP", Color.white);
+                    UpdateGraphic(tokenData);
+                }
+            }
+        }
+    }
+
+    public override void UpdateOverhead(ActorData tokenData)
+    {
+        VisualElement o = tokenData.OverheadElement;
+
+        o.Q<ProgressBar>("VigorBar").value = Vigor;
+        o.Q<ProgressBar>("VigorBar").highValue = MaxHP;
+        UI.ToggleDisplay(o.Q("VigorBar"), Vigor > 0);
+
+        o.Q<ProgressBar>("HpBar").value = CurrentHP;
+        o.Q<ProgressBar>("HpBar").highValue = MaxHP;
+
+        UI.ToggleDisplay(o.Q("Wound1"), Wounds >= 1);
+        UI.ToggleDisplay(o.Q("Wound2"), Wounds >= 2);
+        UI.ToggleDisplay(o.Q("Wound3"), Wounds >= 3);
+
+        UI.ToggleDisplay(o, CurrentHP > 0 && tokenData.Placed);
+    }
+
+    public override void UpdatePanel(ActorData tokenData, string elementName)
+    {
+        base.UpdatePanel(tokenData, elementName);
+        VisualElement panel = UI.System.Q(elementName);
+
+        VisualElement mainHPBar = panel.Q("MainHPBar");
+        mainHPBar.Q<Label>("CHP").text = $"{CurrentHP}";
+        mainHPBar.Q<Label>("MHP").text = $"/{MaxHP}";
+        mainHPBar.Q<ProgressBar>("HpBar").value = CurrentHP;
+        mainHPBar.Q<ProgressBar>("HpBar").highValue = MaxHP;
+        mainHPBar.Q<Label>("VIG").text = $"+{Vigor}";
+        mainHPBar.Q<ProgressBar>("VigorBar").value = Vigor;
+        mainHPBar.Q<ProgressBar>("VigorBar").highValue = MaxHP;
+        UI.ToggleDisplay(mainHPBar.Q("VigorBar"), Vigor > 0);
+        UI.ToggleDisplay(mainHPBar.Q("VIG"), Vigor > 0);
+        UI.ToggleDisplay(mainHPBar.Q("Wound1"), Wounds >= 1);
+        UI.ToggleDisplay(mainHPBar.Q("Wound2"), Wounds >= 2);
+        UI.ToggleDisplay(mainHPBar.Q("Wound3"), Wounds >= 3);
+
+        VisualElement RESBar = panel.Q("ResBar");
+        RESBar.Q<Label>("ResolveNum").text = $"{Resolve}";
+        RESBar.Q<ProgressBar>("ResolveBar").value = Resolve + PartyResolve;
+        RESBar.Q<ProgressBar>("ResolveBar").highValue = 6;
+        RESBar.Q<Label>("PartyResolveNum").text = $"+{PartyResolve}";
+        RESBar.Q<ProgressBar>("PartyResolveBar").value = PartyResolve;
+        RESBar.Q<ProgressBar>("PartyResolveBar").highValue = 6;
+        UI.ToggleDisplay(panel.Q("PartyResolveBar"), PartyResolve > 0);
+        UI.ToggleDisplay(panel.Q("PartyResolveNum"), PartyResolve > 0);
+
+        UI.ToggleDisplay(panel.Q("BloodiedPill"), CurrentHP > 0 && CurrentHP <= MaxHP / 2);
+    }
+
+    public override void InitPanel(ActorData actorData, string elementName, bool selected)
+    {
+        base.InitPanel(actorData, elementName, selected);
+        VisualElement panel = UI.System.Q(elementName);
+
+        VisualElement resBar = UI.CreateFromTemplate("UI/TableTop/IconResolveBar");
+        resBar.name = "ResBar";
+        resBar.Q<ProgressBar>("ResolveBar").value = Resolve;
+        resBar.Q<ProgressBar>("ResolveBar").highValue = 6;
+        panel.Q("Bars").Add(resBar);
+
+        VisualElement hpBar = UI.CreateFromTemplate("UI/TableTop/IconHPBar");
+        hpBar.name = "MainHPBar";
+        hpBar.Q<ProgressBar>("HpBar").value = CurrentHP;
+        panel.Q("Bars").Add(hpBar);
+
+        VisualElement s1 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
+        s1.Q<Label>("Label").text = "DMG/FRAY";
+        s1.Q<Label>("Value").text = $"1d{Damage}/{Fray}";
+        panel.Q("Stats").Add(s1);
+
+        VisualElement s2 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
+        s2.Q<Label>("Label").text = "RNG";
+        s2.Q<Label>("Value").text = $"{Range}";
+        panel.Q("Stats").Add(s2);
+
+        VisualElement s3 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
+        s3.Q<Label>("Label").text = "SPD/DASH";
+        s3.Q<Label>("Value").text = $"{Speed}/{Dash}";
+        panel.Q("Stats").Add(s3);
+
+        VisualElement s4 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
+        s4.Q<Label>("Label").text = "DEF";
+        s4.Q<Label>("Value").text = $"{Defense}";
+        panel.Q("Stats").Add(s4);
+
+        panel.Q("Pills").Add(Pill.InitStatic("JobPill", Job, actorData.Color));
+        panel.Q("Pills").Add(Pill.InitStatic("ClassPill", Class, actorData.Color));
+        panel.Q("Pills").Add(Pill.InitStatic("BloodiedPill", "Bloodied", Color.red));
+    }
+
+    public static void AddActorModal()
+    {
+        string[] playerJobs = StringUtility.CreateArray(
+            "Stalwart/Bastion",
+            "Stalwart/Demon Slayer",
+            "Stalwart/Colossus",
+            "Stalwart/Knave",
+            "Vagabond/Fool",
+            "Vagabond/Freelancer",
+            "Vagabond/Shade",
+            "Vagabond/Warden",
+            "Mendicant/Chanter",
+            "Mendicant/Harvester",
+            "Mendicant/Sealer",
+            "Mendicant/Seer",
+            "Wright/Enochian",
+            "Wright/Geomancer",
+            "Wright/Spellblade",
+            "Wright/Stormbender"
+        );
+
+        Modal.AddTextField("NameField", "Actor Name", "Actor");
+        Modal.AddSearchField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs);
+
+        Modal.AddPreferredButton("Create Actor", CreateClicked);
+        Modal.AddButton("Cancel", Modal.CloseEvent);
+
+        // Necessary to ensure fields are in order and can be cleared when changing type dropdown
+        AddActor.OrderFields(StringUtility.CreateArray("NameField", "PlayerJob"));
+    }
+
+    private static void CreateClicked(ClickEvent evt)
+    {
+        if (!TokenLibrary.TokenSelected())
+        {
+            Toast.AddError("A token has not been selected");
+            return;
+        }
+
+        string name = UI.Modal.Q<TextField>("NameField").value;
+        string playerJob = SearchField.GetValue(UI.Modal.Q("PlayerJob"));
+        if (playerJob.Length == 0)
+        {
+            Toast.AddError("You must select a job");
+            return;
+        }
+        string pclass = playerJob.Split("/")[0];
+        string job = playerJob.Split("/")[1];
+        string color = "black";
+
+        Icon1x5PlayerActorType t = new()
+        {
+            Type = TypeName,
+            Name = name,
+            Job = job,
+            Class = pclass,
+            Vigor = 0,
+            Wounds = 0,
+        };
+
+        switch (pclass)
+        {
+            case "Stalwart":
+                t.MaxHP = 40;
+                t.CurrentHP = 40;
+                t.Speed = 4;
+                t.Dash = 2;
+                t.Defense = 6;
+                t.Fray = 4;
+                t.Damage = 6;
+                color = "red";
+                break;
+            case "Vagabond":
+                t.MaxHP = 28;
+                t.CurrentHP = 28;
+                t.Speed = 4;
+                t.Dash = 4;
+                t.Defense = 10;
+                t.Fray = 2;
+                t.Damage = 10;
+                color = "yellow";
+                break;
+            case "Mendicant":
+                t.MaxHP = 40;
+                t.CurrentHP = 40;
+                t.Speed = 4;
+                t.Dash = 2;
+                t.Defense = 8;
+                t.Fray = 3;
+                t.Damage = 6;
+                color = "green";
+                break;
+            case "Wright":
+                t.MaxHP = 32;
+                t.CurrentHP = 32;
+                t.Speed = 4;
+                t.Dash = 2;
+                t.Defense = 7;
+                t.Fray = 3;
+                t.Damage = 8;
+                color = "blue";
+                break;
+        }
+
+        ActorPersistence a = new();
+        a.Name = t.Label();
+        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Color = ColorUtility.GetCommonColor(color);
+        a.Shape = "Square 1x1";
+        a.Position = Vector3.zero;
+        a.Placed = false;
+        a.ActorType = JsonUtility.ToJson(t);
+        a.ActorTypeId = TypeName;
+        string json = JsonUtility.ToJson(a);
+        AddActor.FinalizeToken(json);
+    }
+
+    #region Private functions
+
+    private static string GetStatColor(string job)
+    {
+        string statColor = "Gray";
+        switch (job)
+        {
+            case "Wright":
+            case "Artillery":
+                statColor = "Blue";
+                break;
+            case "Vagabond":
+            case "Skirmisher":
+                statColor = "Yellow";
+                break;
+            case "Stalwart":
+            case "Heavy":
+                statColor = "Red";
+                break;
+            case "Leader":
+            case "Mendicant":
+                statColor = "Green";
+                break;
+            case "Legend":
+                statColor = "Purple";
+                break;
+        }
+        return statColor;
+    }
+
+    private void UpdateGraphic(ActorData tokenData)
+    {
+        Actor token = tokenData.GetActor();
+        token.SetDefeated(CurrentHP <= 0);
+    }
+    #endregion
+}

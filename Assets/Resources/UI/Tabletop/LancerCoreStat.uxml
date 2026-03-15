@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/Styles/Pill.uss?fileID=7433441132597879392&amp;guid=f1fbed9d17826db43baf398abf3a5689&amp;type=3#Pill"/>
+    <ui:VisualElement name="" style="flex-direction: column; justify-content: flex-start; align-self: stretch; align-items: stretch; position: relative; flex-grow: 0; flex-shrink: 1; align-content: auto; background-color: rgba(0, 0, 0, 0); padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+        <ui:Label tabindex="-1" text="HEAT" parse-escape-sequences="true" display-tooltip-when-elided="true" name="StatName" style="margin-top: 0; margin-right: 0; margin-bottom: -3px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 10px; -unity-font-definition: resource(&quot;Fonts/MusticaPro-SemiBold&quot;); -unity-font-style: normal; color: rgb(255, 255, 255);"/>
+        <ui:VisualElement name="" style="flex-direction: row; align-self: flex-start; align-items: center; justify-content: space-between; flex-grow: 1;">
+            <ui:Button text="" parse-escape-sequences="true" display-tooltip-when-elided="true" enable-rich-text="true" name="Decrement" class="roundbutton" style="padding-top: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; background-color: rgba(188, 188, 188, 0);">
+                <ui:Label text="-" style="padding-top: 0; padding-right: 4px; padding-bottom: 0; padding-left: 4px; margin-top: -3px; margin-right: 0; margin-bottom: 0; margin-left: 0; color: rgb(255, 255, 255);"/>
+            </ui:Button>
+            <ui:Label text="▰▰▰▰▰▰" name="Pips" style="margin-top: -7px; margin-right: 0; margin-bottom: -7px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 30px; color: rgb(228, 0, 76); -unity-text-outline-width: 1px; -unity-text-outline-color: rgb(255, 255, 255);"/>
+            <ui:Button text="" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Increment" class="roundbutton" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; background-color: rgba(188, 188, 188, 0);">
+                <ui:Label text="+" style="padding-top: 0; padding-right: 4px; padding-bottom: 0; padding-left: 4px; margin-top: -3px; margin-right: 0; margin-bottom: 0; margin-left: 0; background-color: rgba(0, 0, 0, 0); color: rgb(255, 255, 255);"/>
+            </ui:Button>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

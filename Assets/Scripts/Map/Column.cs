@@ -29,6 +29,7 @@ public class Column : MonoBehaviour
 
     public Block GetTopBlock()
     {
+
         return transform.GetChild(transform.childCount - 1).GetComponent<Block>();
     }
 }

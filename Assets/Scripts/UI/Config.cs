@@ -8,6 +8,7 @@ public class Config
     public static void OpenModal(ClickEvent evt)
     {
         Modal.Reset("Configuration");
+        Modal.AddCloseCallback(BackToNeutral);
 
 #if !UNITY_WEBGL
         string path = Preferences.Current.DataPath;
@@ -24,17 +25,26 @@ public class Config
             UI.ToggleDisplay("DetailsHud", evt.newValue);
         });
 
-        string uiScale = Preferences.Current.UIScale;
         List<string> scaleOptions = new();
         for (int i = 75; i <= 250; i += 25)
         {
             scaleOptions.Add(i + "%");
         }
+
+        string uiScale = Preferences.Current.UIScale;
         Modal.AddDropdownField("UIScaleField", "UI Scale", uiScale, scaleOptions.ToArray(), (evt) =>
         {
             Preferences.SetUIScale(evt.newValue);
             float value = float.Parse(evt.newValue.Replace("%", "")) / 100f;
             GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = value;
+        });
+
+        string worldUiScale = Preferences.Current.WorldUIScale;
+        Modal.AddDropdownField("WorldUIScaleField", "World UI Scale", worldUiScale, scaleOptions.ToArray(), (evt) =>
+        {
+            Preferences.SetWorldUIScale(evt.newValue);
+            float value = float.Parse(evt.newValue.Replace("%", "")) / 100f;
+            GameObject.Find("UICanvas/WorldUI").GetComponent<UIDocument>().panelSettings.scale = value;
         });
 
         float tokenScale = Preferences.Current.TokenScale;
@@ -63,7 +73,7 @@ public class Config
         Modal.AddDropdownField("TokenOutlineField", "Token Outline", tokenOutline, StringUtility.CreateArray("White", "Black", "None"), (evt) =>
         {
             Preferences.SetTokenOutline(evt.newValue);
-            Token.SetAllTokenOutlines();
+            Actor.SetAllTokenOutlines();
         });
 
         string dragMode = Preferences.Current.DragPan ? "Pan" : "Rotate";
@@ -74,12 +84,20 @@ public class Config
             Viewport.SetPanMode(dragValue);
         });
 
+        // string maleghastData = Preferences.Current.RulesFile;
+        // Modal.AddFileField("RulesFile", "Maleghast Data", maleghastData, "rules");
+
         Modal.AddPreferredButton("Confirm", CloseModal);
     }
 
     private static void CloseModal(ClickEvent evt)
     {
         Modal.Close();
+    }
+
+    private static void BackToNeutral(ClickEvent evt)
+    {
+        StateManager.Find().ChangeSubState(new NeutralState());
     }
 
     // public static string[] GetAllRuleFiles()

@@ -9,6 +9,7 @@ using System;
 public class UI : MonoBehaviour
 {
     private static VisualElement systemUI;
+    private static VisualElement worldUI;
 
     private static List<string> suspensions = new List<string>();
     private static bool hardSuspend = false;
@@ -66,6 +67,18 @@ public class UI : MonoBehaviour
         }
     }
 
+    public static VisualElement World
+    {
+        get
+        {
+            if (worldUI == null)
+            {
+                worldUI = GameObject.Find("WorldUI").GetComponent<UIDocument>().rootVisualElement;
+            }
+            return worldUI;
+        }
+    }
+
     public static VisualElement Modal
     {
         get
@@ -79,6 +92,14 @@ public class UI : MonoBehaviour
         get
         {
             return UI.System.Q("TopBar");
+        }
+    }
+
+    public static VisualElement NumberPicker
+    {
+        get
+        {
+            return UI.System.Q("NumberPickerModal");
         }
     }
 
@@ -116,16 +137,17 @@ public class UI : MonoBehaviour
     public static void SetScale()
     {
         GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = Preferences.GetUIScale();
+        GameObject.Find("UICanvas/WorldUI").GetComponent<UIDocument>().panelSettings.scale = Preferences.GetWorldUIScale();
     }
 
-    public static void FollowTransform(Transform transform, VisualElement element, Camera camera, Vector2 offset)
+    public static void FollowTransform(Transform transform, VisualElement element, VisualElement space, Camera camera, Vector2 offset)
     {
         Vector3 viewportPos = camera.WorldToViewportPoint(transform.position);
         if (element.resolvedStyle.width != float.NaN)
         {
             Vector2 screenPos = new Vector2(
-                Mathf.RoundToInt((viewportPos.x * UI.System.resolvedStyle.width)),
-                Mathf.RoundToInt((1f - viewportPos.y) * UI.System.resolvedStyle.height)
+                Mathf.RoundToInt((viewportPos.x * space.resolvedStyle.width)),
+                Mathf.RoundToInt((1f - viewportPos.y) * space.resolvedStyle.height)
             );
             Vector2 pos = screenPos + offset;
             element.style.position = Position.Absolute;
@@ -209,6 +231,19 @@ public class UI : MonoBehaviour
 
     public static void ToggleActiveClass(VisualElement e, bool active)
     {
+        if (active)
+        {
+            e.AddToClassList("active");
+        }
+        else
+        {
+            e.RemoveFromClassList("active");
+        }
+    }
+
+    public static void ToggleActiveClass(VisualElement e)
+    {
+        bool active = !e.ClassListContains("active");
         if (active)
         {
             e.AddToClassList("active");

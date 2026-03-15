@@ -519,7 +519,7 @@ public class TerrainController
         {
             block.Marks.ForEach(effect =>
             {
-                VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UITemplates/TerrainEffect");
+                VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UI/TerrainEffect");
                 VisualElement instance = template.Instantiate();
                 instance.Q<Label>("Label").text = effect.ToUpper().Split("::")[0];
                 root.Q("CurrentEffects").Add(instance);

@@ -208,7 +208,7 @@ public class DiceRoller
 
     public static void AddOutcome(DiceTray tray)
     {
-        VisualTreeAsset resultTemplate = Resources.Load<VisualTreeAsset>("UITemplates/DiceResult");
+        VisualTreeAsset resultTemplate = Resources.Load<VisualTreeAsset>("UI/DiceResult");
         VisualElement resultElement = resultTemplate.Instantiate();
 
         TrayResult r = GetResult(tray);
@@ -280,7 +280,7 @@ public class DiceRoller
 
     public static void AddOutcome(string description, string result, string rolls, int die)
     {
-        VisualTreeAsset resultTemplate = Resources.Load<VisualTreeAsset>("UITemplates/DiceResult");
+        VisualTreeAsset resultTemplate = Resources.Load<VisualTreeAsset>("UI/DiceResult");
         VisualElement resultElement = resultTemplate.Instantiate();
         resultElement.Q<Label>("Label").text = description;
         resultElement.Q("Icon").style.backgroundImage = Resources.Load<Texture2D>($"Textures/die_{die}");

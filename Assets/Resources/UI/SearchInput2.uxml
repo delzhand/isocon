@@ -1,0 +1,11 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="" class="no-margin" style="flex-grow: 1; flex-direction: row;">
+        <ui:Label text="Label" name="Label" style="min-width: 150px;"/>
+        <ui:VisualElement style="flex-grow: 1;">
+            <ui:TextField label="" placeholder-text="" name="SearchInput" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; height: 32px;"/>
+            <ui:VisualElement name="" style="flex-grow: 1; position: relative;">
+                <ui:ScrollView name="SearchResults" class="search-results" style="display: none; position: absolute; top: 0; width: 100%; background-color: rgb(255, 255, 255);"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
