@@ -129,6 +129,7 @@ public class Icon2x0PlayerActorType : Icon2x0Base
         }
         string pclass = playerJob.Split("/")[0];
         string job = playerJob.Split("/")[1];
+        string color = "black";
 
         Icon2x0PlayerActorType t = new()
         {
@@ -146,32 +147,42 @@ public class Icon2x0PlayerActorType : Icon2x0Base
                 t.CurrentHP = 40;
                 t.Move = 4;
                 t.Defense = 3;
-                t.Color = ColorUtility.GetCommonColor("red");
+                color = "red";
                 break;
             case "Vagabond":
                 t.MaxHP = 32;
                 t.CurrentHP = 32;
                 t.Move = 4;
                 t.Defense = 6;
-                t.Color = ColorUtility.GetCommonColor("orange");
+                color = "orange";
                 break;
             case "Mendicant":
                 t.MaxHP = 48;
                 t.CurrentHP = 48;
                 t.Move = 4;
                 t.Defense = 4;
-                t.Color = ColorUtility.GetCommonColor("green");
+                color = "green";
                 break;
             case "Wright":
                 t.MaxHP = 32;
                 t.CurrentHP = 32;
                 t.Move = 4;
                 t.Defense = 4;
-                t.Color = ColorUtility.GetCommonColor("blue");
+                color = "blue";
                 break;
         }
 
-        AddActor.FinalizeToken(t.Serialize());
+        ActorPersistence a = new();
+        a.Name = t.Label();
+        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Color = ColorUtility.GetCommonColor(color);
+        a.Shape = "Square 1x1";
+        a.Position = Vector3.zero;
+        a.Placed = false;
+        a.ActorType = JsonUtility.ToJson(t);
+        a.ActorTypeId = TypeName;
+        string json = JsonUtility.ToJson(a);
+        AddActor.FinalizeToken(json);
     }
 
     public override MenuItem[] GetMenuItems(bool placed)
