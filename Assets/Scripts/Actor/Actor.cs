@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 
 public enum ActorState
@@ -19,6 +21,7 @@ public class Actor : MonoBehaviour
     public float ShareOffsetY;
     public Actor LastFocused;
     public ActorState State = ActorState.Neutral;
+    private GameObject dragBaseIndicator;
 
     public static bool RebuildPanels = false;
     private static Actor _focused;
@@ -148,6 +151,28 @@ public class Actor : MonoBehaviour
         string op = Data.Placed ? "Moving" : "Placing";
         Player.Self().SetOp($"{op} {Data.Name}");
         Player.Self().GetComponent<DirectionalLine>().Init(Data.Id, op);
+        CreateDragIndicator();
+    }
+
+    private void CreateDragIndicator()
+    {
+        Vector3 size = transform.Find("Base").GetComponent<DecalProjector>().size;
+        dragBaseIndicator = Instantiate(transform.Find("Base").gameObject, transform);
+        dragBaseIndicator.name = "DragIndicator";
+        dragBaseIndicator.GetComponent<DecalProjector>().size = size;
+    }
+
+    public void UpdateDragIndicator(Vector3 v)
+    {
+        dragBaseIndicator.transform.position = v;
+    }
+
+    public void ClearDragIndicator()
+    {
+        if (dragBaseIndicator)
+        {
+            Destroy(dragBaseIndicator);
+        }
     }
 
     public static void StopDragging(Block b, Vector3 v)
@@ -165,6 +190,7 @@ public class Actor : MonoBehaviour
                 {
                     _dragging.Move(b);
                 }
+                _dragging.ClearDragIndicator();
             }
             else
             {
