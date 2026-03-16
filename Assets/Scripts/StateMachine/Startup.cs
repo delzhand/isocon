@@ -54,9 +54,9 @@ public class Startup
 * Actor focus/selection behavior changed
 * Actor size changed to shape, more hex options added
 * Top bar and actor list can be hidden
-* Certain large actor shapes can be dragged to intersections to remain centered
 * Hellminth units added to Maleghast data
 * Maleghast actors can now alter their core stats
+* Actor colors now show as a border on their base shadow
 
 <size=+2><b>New Actor Types</b></size>
 * Environmental - a type with no stats
@@ -68,6 +68,7 @@ public class Startup
 
 <size=+2><b>Fixes</b></size>
 * Shortcut keystrokes no longer trigger when modals are open
+* Certain large actor shapes can be dragged to intersections to remain centered
 
 <size=+2><b>Known Issues</b></size>
 * Custom cursor prevents window resize handles from being shown, though resizing still works
