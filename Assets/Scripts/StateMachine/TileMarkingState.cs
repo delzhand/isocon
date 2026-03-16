@@ -11,7 +11,7 @@ public class TileMarkingState : TabletopSubstate
         BlockRendering.ToggleAllBorders(true);
         // Cursor.Mode = CursorMode.Marking;
         Player.Self().SetOp("Marking Tiles");
-        Tutorial.Init("Marking Mode");
+        Tutorial.Init("marking mode");
     }
 
     public override void UpdateState()

@@ -20,7 +20,7 @@ public class MapEditingState : TabletopSubstate
         BlockRendering.ToggleAllBorders(true);
         Player.Self().SetOp("Editing Map");
         revertState = State.GetStateFromScene();
-        Tutorial.Init("Edit Mode");
+        Tutorial.Init("edit mode");
     }
 
     public override void OnExit()
