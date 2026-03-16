@@ -30,15 +30,15 @@ public class Tutorial
             return;
         }
 
-        // string seen = Preferences.Current.TutorialsSeen;
-        // List<string> seenParts = seen.Split("|").ToList();
-        // if (seenParts.Contains(id))
-        // {
-        //     return;
-        // }
+        string seen = Preferences.Current.TutorialsSeen;
+        List<string> seenParts = seen.Split("|").ToList();
+        if (seenParts.Contains(id))
+        {
+            return;
+        }
 
-        // seenParts.Add(id);
-        // Preferences.SetTutorialsSeen(string.Join("|", seenParts.ToArray()));
+        seenParts.Add(id);
+        Preferences.SetTutorialsSeen(string.Join("|", seenParts.ToArray()));
 
         (string, string) tutorial = GetTutorial(id);
         Modal.Reset(tutorial.Item1);
