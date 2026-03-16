@@ -175,52 +175,52 @@ public class ActorData : NetworkBehaviour
         {
             case "Square 1/2":
                 WorldObject.transform.Find("Offset").transform.localScale = new Vector3(.75f, .75f, .75f);
-                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.SquareShadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.GetMaterial("Square", ColorUtility.GetHex(Color));
                 WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(.6f, .6f, 4);
                 break;
             case "Square 1x1":
                 WorldObject.transform.Find("Offset").transform.localScale = new Vector3(1, 1, 1);
-                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.SquareShadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.GetMaterial("Square", ColorUtility.GetHex(Color));
                 WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(.7f, .7f, 4);
                 break;
             case "Square 2x2":
                 WorldObject.transform.Find("Offset").transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.SquareShadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.GetMaterial("Square", ColorUtility.GetHex(Color));
                 WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(1.7f, 1.7f, 4);
                 break;
             case "Square 3x3":
                 WorldObject.transform.Find("Offset").transform.localScale = new Vector3(2f, 2f, 2f);
-                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.SquareShadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.GetMaterial("Square", ColorUtility.GetHex(Color));
                 WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2.7f, 2.7f, 4);
                 break;
             case "Square 4x4":
                 WorldObject.transform.Find("Offset").transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
-                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.SquareShadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.GetMaterial("Square", ColorUtility.GetHex(Color));
                 WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(3.7f, 3.7f, 4);
                 break;
             case "Hex 1/2":
                 WorldObject.transform.Find("Offset").transform.localScale = new Vector3(.75f, .75f, .75f);
-                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.Hex1Shadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.GetMaterial("Hex1", ColorUtility.GetHex(Color));
                 WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(.6f, .6f, 4);
                 break;
             case "Hex 1":
                 WorldObject.transform.Find("Offset").transform.localScale = new Vector3(1, 1, 1);
-                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.Hex1Shadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.GetMaterial("Hex1", ColorUtility.GetHex(Color));
                 WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(1.12f, 1.12f, 4);
                 break;
             case "Hex 2":
                 WorldObject.transform.Find("Offset").transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.Hex2Shadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.GetMaterial("Hex2", ColorUtility.GetHex(Color));
                 WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2.2f, 2.2f, 4);
                 break;
             case "Hex 3":
                 WorldObject.transform.Find("Offset").transform.localScale = new Vector3(2, 2, 2);
-                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.Hex3Shadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.GetMaterial("Hex3", ColorUtility.GetHex(Color));
                 WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(2.7f, 2.7f, 4);
                 break;
             case "Hex 4":
                 WorldObject.transform.Find("Offset").transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
-                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.Hex4Shadow;
+                WorldObject.transform.Find("Base").GetComponent<DecalProjector>().material = Shadow.GetMaterial("Hex4", ColorUtility.GetHex(Color));
                 WorldObject.transform.Find("Base").GetComponent<DecalProjector>().size = new Vector3(5f, 5f, 4);
                 break;
         }
