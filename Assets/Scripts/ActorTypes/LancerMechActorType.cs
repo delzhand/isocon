@@ -253,7 +253,7 @@ public class LancerMechActorType : LancerBase
             SensorRange = lmu.SensorRange;
             PopoverText.Create(token, $"_STAT|_CHANGE", Color.white);
         }
-        if (command.StartsWith("Rename|"))
+        else if (command.StartsWith("Rename|"))
         {
             Callsign = command.Split("|")[1];
             Pilot = command.Split("|")[2];
