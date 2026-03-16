@@ -75,7 +75,10 @@ public class Pointer
             focusMode = BlockFocusMode.Row;
         }
         if (Actor.GetSelected()?.Data.Shape == "Square 2x2")
-            PointWithMask(LayerMask.GetMask("Block"), focusMode);
+        {
+
+        }
+        PointWithMask(LayerMask.GetMask("Block"), focusMode);
     }
 
     public static void Point()
