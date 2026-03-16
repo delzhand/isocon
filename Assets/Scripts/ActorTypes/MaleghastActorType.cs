@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using System.IO;
 using System.Text;
+using IsoconUILibrary;
 
 [Serializable]
 public class MaleghastActorType : ActorType
@@ -39,7 +40,6 @@ public class MaleghastActorType : ActorType
     public int MaxHP;
     public int Move;
     public int Defense;
-    public int Armor;
     public string[] Upgrades;
     public string[] Traits;
     public string[] ActAbilities;
@@ -271,7 +271,7 @@ public class MaleghastActorType : ActorType
             items.Add(new MenuItem("Remove", "Remove", ClickRemove));
             items.Add(new MenuItem("Flip", "Flip", ClickFlip));
         }
-        // items.Add(new MenuItem("Reshape", "Reshape", ClickReshape));
+        items.Add(new MenuItem("CoreStats", "Alter Stats", (evt) => { AlterStatModal(); }));
         items.Add(new MenuItem("Clone", "Clone", ClickClone));
         items.Add(new MenuItem("Delete", "Delete", ClickDelete));
         items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
@@ -301,7 +301,7 @@ public class MaleghastActorType : ActorType
                 UpdateGraphic(tokenData);
             }
         }
-        if (command == "Reload")
+        else if (command == "Reload")
         {
             if (!HasTag("Loaded"))
             {
@@ -315,6 +315,16 @@ public class MaleghastActorType : ActorType
                 Actor.RebuildPanels = true;
             }
         }
+        else if (command.StartsWith("UpdateStats"))
+        {
+            string json = command.Split("|")[1];
+            MaleghastActorType lmu = JsonUtility.FromJson<MaleghastActorType>(json);
+            MaxHP = lmu.MaxHP;
+            Defense = lmu.Defense;
+            Move = lmu.Move;
+            PopoverText.Create(token, $"_STAT|_CHANGE", Color.white);
+        }
+
     }
 
     private void UpdateGraphic(ActorData tokenData)
@@ -393,6 +403,28 @@ public class MaleghastActorType : ActorType
             }
         }
         return Color.black;
+    }
+
+    private void AlterStatModal()
+    {
+        SelectionMenu.Hide();
+        Modal.Reset("Alter Core Stats");
+        Modal.AddNumberNudgerField("MaxHP", "Max HP", MaxHP, 0);
+        Modal.AddNumberNudgerField("Move", "Move", Move, 0);
+        Modal.AddNumberNudgerField("Defense", "Defense", Defense, 0);
+
+        Modal.AddPreferredButton("Save", (evt) =>
+        {
+            MaxHP = UI.Modal.Q<NumberNudger>("MaxHP").value;
+            Defense = UI.Modal.Q<NumberNudger>("Defense").value;
+            Move = UI.Modal.Q<NumberNudger>("Move").value;
+            string serialized = Serialize();
+
+            Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"UpdateStats|{serialized}");
+            Modal.Close();
+            this.InitPanel(Actor.GetSelected().Data, "LeftTokenPanel", true);
+        });
+        Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
     #endregion
