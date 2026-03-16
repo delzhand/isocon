@@ -274,6 +274,19 @@ public class MaleghastActorType : ActorType
         items.Add(new MenuItem("CoreStats", "Alter Stats", (evt) => { AlterStatModal(); }));
         items.Add(new MenuItem("Clone", "Clone", ClickClone));
         items.Add(new MenuItem("Delete", "Delete", ClickDelete));
+        items.Add(new MenuItem("EndTurn", "End Turn", (evt) =>
+        {
+            ActorTag tag = new();
+            tag.Name = "Turn Ended";
+            tag.Color = ColorUtility.GetCommonColor("gray");
+            Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
+            SelectionMenu.Hide();
+        }));
+        items.Add(new MenuItem("ResetTurns", "Reset All Turns", (evt) =>
+        {
+            Player.Self().CmdRequestAllActorsCommand("RemoveTag|Turn Ended");
+            SelectionMenu.Hide();
+        }));
         items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
 
         if (House == "CARCASS" && !HasTag("Loaded"))
