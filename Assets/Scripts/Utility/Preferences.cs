@@ -78,6 +78,7 @@ public class Preferences
             _current.TargetFramerate = loaded.TargetFramerate > 0 ? loaded.TargetFramerate : _current.TargetFramerate;
             _current.MaleghastFile = loaded.MaleghastFile.Length > 0 ? loaded.MaleghastFile : _current.MaleghastFile;
             _current.AutosaveInterval = loaded.AutosaveInterval > 0 ? loaded.AutosaveInterval : _current.AutosaveInterval;
+            _current.TutorialsSeen = loaded.TutorialsSeen.Length > 0 ? loaded.TutorialsSeen : _current.TutorialsSeen;
         }
     }
 
