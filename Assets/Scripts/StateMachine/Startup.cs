@@ -66,6 +66,10 @@ public class Startup
 
 <size=+2><b>Fixes</b></size>
 * Shortcut keystrokes no longer trigger when modals are open
+
+<size=+2><b>Known Issues</b></size>
+* Custom cursor prevents window resize handles from being shown, though resizing still works
+* Under certain circumstances, selecting a tile or dragging an actor to a tile will select a tile of lower elevation than intended
 ";
 
         string seen = Preferences.GetReleaseNotesSeen();
