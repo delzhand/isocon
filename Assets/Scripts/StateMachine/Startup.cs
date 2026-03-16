@@ -41,18 +41,30 @@ public class Startup
 
 <size=+2><b>Features</b></size>
 * Sessions can now be saved and loaded
-* Added support for <b>Icon 2.0 Playtest</b> game system
-* Added a <b>Lowest</b> option to the dice roller
-* Updated documentation
-* Custom GameSystems can now more easily make direct dice rolls
-* Added a button to immediately switch to a fixed overhead camera view
-* Per-token <b>Resources</b> can be added to <b>Generic</b> tokens via the right-click menu
-* Tokens can be resized at any time via the right-click menu
+* Session will autosave every 5 minutes or when exiting to launcher
+* GameSystems replaced by Actor Types
+* Multiple Actor Types can be active in the same session
+* Actors can be customized with resources and stats
+* Fixed view button added to top bar
+* Tags and clocks can be added to sessions
+
 <size=+2><b>Changes</b></size>
-* Tokens in <b>Generic</b> system can now set a color
-* Rotate/Pan camera toggle moved to Configuration
+* Tokens renamed Actors
+* Actor focus/selection behavior changed
+* Actor size changed to shape, more hex options added
+* Top bar and actor list can be hidden
+* Certain actor shapes can be dragged to intersections to remain centered
+
+<size=+2><b>New Actor Types</b></size>
+* Environmental - a type with no stats
+* Lancer Mech - a player type for LANCER
+* Lancer Pilot - a player type for LANCER
+* ICON 1.5 split into Player, Enemy, and Mob
+* ICON 2.0 split into Player, Enemy, and Mob
+* Generic renamed to Basic
+
 <size=+2><b>Fixes</b></size>
-* Elevation display on slopes and steps is now correct
+* Shortcut keystrokes no longer trigger when modals are open
 ";
 
         string seen = Preferences.GetReleaseNotesSeen();
