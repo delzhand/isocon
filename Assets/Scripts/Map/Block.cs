@@ -544,7 +544,11 @@ public class Block : MonoBehaviour
                 closestDistance = distance;
             }
         }
-        return closestObject.GetComponent<Block>();
+        if (closestObject)
+        {
+            return closestObject.GetComponent<Block>();
+        }
+        return null;
     }
 
     /// <summary>
