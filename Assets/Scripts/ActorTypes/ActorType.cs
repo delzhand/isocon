@@ -228,7 +228,8 @@ public abstract class ActorType : IActorType
         string name = data.Name.Length == 0 ? "this token" : data.Name;
         Modal.DoubleConfirm("Clone Token", $"Are you sure you want to clone {name}?", () =>
         {
-            Player.Self().CmdCreateActor(data.TypeData);
+            string json = JsonUtility.ToJson(data.Persist());
+            Player.Self().CmdCreateActor(json);
             Actor.Deselect();
         });
         SelectionMenu.Hide();
