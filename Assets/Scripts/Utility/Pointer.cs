@@ -176,19 +176,19 @@ public class Pointer
             FocusBlocks(b, mode);
         }
 
-        if (Actor.GetSelected() != null)
+        if (Actor.GetDragging() != null)
         {
-            if (Actor.GetSelected().Data.CornerTargeting())
+            if (Actor.GetDragging().Data.CornerTargeting())
             {
                 Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 Physics.Raycast(_ray, out RaycastHit hit, 9999f, LayerMask.GetMask("Block"));
                 Player.Self().GetComponent<DirectionalLine>().SetTarget(b.GetNearestCorner(hit.point));
-                Actor.GetSelected().UpdateDragIndicator(b.GetNearestCorner(hit.point));
+                Actor.GetDragging().UpdateDragIndicator(b.GetNearestCorner(hit.point));
             }
             else
             {
                 Player.Self().GetComponent<DirectionalLine>().SetTarget(b.GetMidpoint());
-                Actor.GetSelected().UpdateDragIndicator(b.GetMidpoint());
+                Actor.GetDragging().UpdateDragIndicator(b.GetMidpoint());
             }
         }
     }
