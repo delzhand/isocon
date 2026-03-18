@@ -19,7 +19,7 @@ public class AddTerrainEffect
 
     private static void ConfirmAddEffect(ClickEvent evt)
     {
-        string effect = UI.Modal.Q("SearchField").Q<TextField>("SearchInput").value;
+        // string effect = UI.Modal.Q("SearchField").Q<TextField>("SearchInput").value;
         string marker = UI.Modal.Q<DropdownField>("VisualMarker").value;
         string color = UI.Modal.Q<DropdownField>("Color").value;
         Modal.Close();
@@ -30,6 +30,6 @@ public class AddTerrainEffect
         {
             blockNames.Add(block.name);
         });
-        Player.Self().CmdRequestMapSetValue(blockNames.ToArray(), "AddEffect", $"{effect}::{marker}::{color}");
+        Player.Self().CmdRequestMapSetValue(blockNames.ToArray(), "AddEffect", $"???::{marker}::{color}");
     }
 }
