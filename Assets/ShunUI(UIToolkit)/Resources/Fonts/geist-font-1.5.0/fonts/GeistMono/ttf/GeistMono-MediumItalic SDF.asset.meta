@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 482dedb4804bbc04585095be29e0c24f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Resources/Fonts/geist-font-1.5.0/fonts/GeistMono/ttf/GeistMono-MediumItalic
+    SDF.asset
+  uploadId: 870216

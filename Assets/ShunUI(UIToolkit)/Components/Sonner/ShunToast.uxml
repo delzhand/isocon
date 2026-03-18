@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    <ui:VisualElement style="flex-grow: 1; padding: 40px; justify-content: center; align-items: center;">
+        <shun:ShunToast variant="Default" title="Event created" description="Your event has been created successfully." showCloseButton="true" showActionButton="false" showIcon="true" icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/circle-alert.png" />
+    </ui:VisualElement>
+</ui:UXML>

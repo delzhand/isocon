@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <shun:ShunRadioGroup style="flex-grow: 1;">
+        <shun:ShunRadio label="Default" value="default" />
+        <shun:ShunRadio label="Comfortable" value="comfortable" />
+        <shun:ShunRadio label="Compact" value="compact" />
+    </shun:ShunRadioGroup>
+</ui:UXML>

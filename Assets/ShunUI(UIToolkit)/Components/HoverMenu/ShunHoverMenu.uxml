@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" xmlns:primitives="ShunUI.Primitives" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    
+    <ui:VisualElement style="flex-grow: 1;">
+        <shun:ShunHoverMenu>
+            <!-- Trigger -->
+            <ui:Label text="Hover" />
+            
+            <!-- Menu Items -->
+            <primitives:ShunMenuItemBase label="Action 1" />
+            <primitives:ShunMenuItemBase label="Action 2" />
+            <primitives:ShunMenuSeparator />
+            <primitives:ShunMenuItemBase label="Action 3" />
+            <primitives:ShunMenuItemBase label="Disabled" />
+        </shun:ShunHoverMenu>
+    </ui:VisualElement>
+</ui:UXML>

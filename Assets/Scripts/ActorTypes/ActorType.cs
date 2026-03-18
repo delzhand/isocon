@@ -70,7 +70,7 @@ public abstract class ActorType : IActorType
         }
         foreach (ActorBar bar in Bars)
         {
-            items.Add(new MenuItem($"Modify{bar.Name}", $"Modify {bar.Name}", (evt) =>
+            items.Add(new MenuItem($"Modify{bar.Name}", $"Modify {bar.Name}", () =>
             {
                 NumberPicker.ActorCommand($"ModBar|{bar.Name}");
             }));
@@ -78,19 +78,19 @@ public abstract class ActorType : IActorType
         return items.ToArray();
     }
 
-    protected static void ClickFlip(ClickEvent evt)
+    protected static void ClickFlip()
     {
         Actor.GetSelected().transform.Find("Offset/Avatar/Cutout/Cutout Quad").Rotate(new Vector3(0, 180, 0));
         Actor.Deselect();
     }
 
-    protected static void ClickRemove(ClickEvent evt)
+    protected static void ClickRemove()
     {
         Actor.GetSelected().Remove();
         Actor.Deselect();
     }
 
-    protected static void ClickDelete(ClickEvent evt)
+    protected static void ClickDelete()
     {
         ActorData data = Actor.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
@@ -102,7 +102,7 @@ public abstract class ActorType : IActorType
         SelectionMenu.Hide();
     }
 
-    private static void AddTagModal(ClickEvent evt)
+    private static void AddTagModal()
     {
         Modal.Reset("Add Tag");
         Modal.AddTextField("TagName", "Tag Name", "");
@@ -138,7 +138,7 @@ public abstract class ActorType : IActorType
         Modal.Close();
     }
 
-    private static void AddBarModal(ClickEvent evt)
+    private static void AddBarModal()
     {
         Modal.Reset("Add Bar");
         Modal.AddTextField("BarName", "Bar Name", "");
@@ -164,7 +164,7 @@ public abstract class ActorType : IActorType
         Modal.Close();
     }
 
-    private void EditStatBarModal(ClickEvent evt)
+    private void EditStatBarModal()
     {
         Modal.Reset("Edit Stats/Bars");
         foreach (ActorBar bar in Bars)
@@ -200,7 +200,7 @@ public abstract class ActorType : IActorType
         Modal.Close();
     }
 
-    private static void AddStatModal(ClickEvent evt)
+    private static void AddStatModal()
     {
         Modal.Reset("Add Stat");
         Modal.AddTextField("StatName", "Stat Name", "");
@@ -222,7 +222,7 @@ public abstract class ActorType : IActorType
         Modal.Close();
     }
 
-    protected static void ClickClone(ClickEvent evt)
+    protected static void ClickClone()
     {
         ActorData data = Actor.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
@@ -250,7 +250,7 @@ public abstract class ActorType : IActorType
         return StringUtility.CreateArray("Hex 1/2", "Hex 1", "Hex 2", "Hex 3", "Hex 4");
     }
 
-    private static void ReshapeModal(ClickEvent evt)
+    private static void ReshapeModal()
     {
         ActorData data = Actor.GetSelected().Data;
         Modal.Reset("Reshape");
@@ -266,7 +266,7 @@ public abstract class ActorType : IActorType
         SelectionMenu.Hide();
     }
 
-    protected virtual void RenameModal(ClickEvent evt)
+    protected virtual void RenameModal()
     {
         ActorData data = Actor.GetSelected().Data;
         Modal.Reset("Edit Name");

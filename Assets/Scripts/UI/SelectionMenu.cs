@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ShunUI;
+using ShunUI.Primitives;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,14 +10,13 @@ public struct MenuItem
 {
     public string Name;
     public string Label;
-    public Action<ClickEvent> OnClick;
+    public Action Action;
 
-
-    public MenuItem(string name, string label, Action<ClickEvent> onClick)
+    public MenuItem(string name, string label, Action onClick)
     {
         Name = name;
         Label = label;
-        OnClick = onClick;
+        Action = onClick;
     }
 }
 
@@ -26,6 +27,8 @@ public class SelectionMenu
     public static bool Visible;
 
     public static Vector2 Offset;
+
+    private static ShunContextMenu CMenu;
 
     public static void Setup()
     {
@@ -58,31 +61,39 @@ public class SelectionMenu
 
     public static void Reset(string title, Vector2 offset, Transform follow = null)
     {
-        Offset = offset;
-        VisualElement menu = Find();
-        menu.Q<Label>("Label").text = title;
-        menu.Q("Contents").Clear();
-        FollowTransform = follow;
-        Visible = true;
+        if (CMenu == null)
+        {
+            VisualElement tabletop = UI.System.Q("Tabletop");
+            CMenu = new ShunContextMenu();
+            tabletop.Add(CMenu);
+            CMenu.AttachTo(tabletop);
+        }
+
+        CMenu.ClearItems();
+        CMenu.name = "CMenu";
+
+        var test = CMenu.AddItem("Test", null, null);
+        var test2 = new ShunMenuItem();
+        test2.label = "Child";
+        test2.clicked += () => { Debug.Log("child"); };
+        test2.clicked += () => { CMenu.Close(); };
+        test.AddSubmenuItem(test2);
+
+        CMenu.Open();
     }
 
     public static void Hide()
     {
         Visible = false;
         FollowTransform = null;
+        if (CMenu != null)
+        {
+            CMenu.ClearItems();
+        }
     }
 
-    public static void AddItem(string name, string label, Action<ClickEvent> clickHandler)
+    public static void AddItem(string name, string label, Action action)
     {
-        VisualElement menu = Find();
-        VisualElement element = UI.CreateFromTemplate("UI/MenuItem");
-        element.Q<Label>("Label").text = label;
-        element.name = name;
-        element.RegisterCallback<ClickEvent>((evt) =>
-        {
-            clickHandler.Invoke(evt);
-        });
-        UI.HoverSetup(element);
-        menu.Q("Contents").Add(element);
+        CMenu.AddItem(label, null, action);
     }
 }

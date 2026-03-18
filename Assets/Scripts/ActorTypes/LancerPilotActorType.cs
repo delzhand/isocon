@@ -99,8 +99,8 @@ public class LancerPilotActorType : LancerBase
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("CoreStats", "Alter Stats", (evt) => { AlterStatModal(); }));
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
+        items.Add(new MenuItem("CoreStats", "Alter Stats", () => { AlterStatModal(); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 

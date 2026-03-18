@@ -235,8 +235,8 @@ public class Icon2x0EnemyActorType : Icon2x0Base
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
-        items.Add(new MenuItem("ModVIG", "Modify VIG", (evt) => { NumberPicker.ActorCommand("ModVIG"); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+        items.Add(new MenuItem("ModVIG", "Modify VIG", () => { NumberPicker.ActorCommand("ModVIG"); }));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 

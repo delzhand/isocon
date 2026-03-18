@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    <ui:VisualElement>
+        <shun:ShunInputOTP maxLength="6" groupSize="0" />
+    </ui:VisualElement>
+</ui:UXML>

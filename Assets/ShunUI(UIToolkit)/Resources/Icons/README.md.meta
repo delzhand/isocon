@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dfd5474dd5bfb1d46996930b8d87e823
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Resources/Icons/README.md
+  uploadId: 870216

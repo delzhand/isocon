@@ -16,7 +16,7 @@ public class ActorMenu
         MenuItem[] systemItems = st.GetMenuItems(data.Placed);
         foreach (MenuItem m in systemItems)
         {
-            SelectionMenu.AddItem(m.Name, m.Label, m.OnClick);
+            SelectionMenu.AddItem(m.Name, m.Label, m.Action);
         }
     }
 

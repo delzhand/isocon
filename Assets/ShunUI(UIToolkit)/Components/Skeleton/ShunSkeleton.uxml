@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss?fileID=7433441132597879392&amp;guid=812bff3d2981add4fa9165957ba1034b&amp;type=3#ShunStyle"/>
+    <ui:VisualElement style="flex-direction: column; padding: 16px; width: 256px;">
+        <shun:ShunSkeleton style="height: 125px; border-radius: 8px; margin-bottom: 8px;"/>
+    </ui:VisualElement>
+</ui:UXML>

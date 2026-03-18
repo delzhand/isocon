@@ -96,7 +96,7 @@ public class BasicActorType : ActorType
 
         List<MenuItem> items = new();
         // items.Add(new MenuItem("AddResource", "Add Resource", AddResourceClicked));
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 

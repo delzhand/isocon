@@ -11,7 +11,7 @@ public class TileMenu
         MenuItem[] defaultItems = GetTileMenuItems();
         foreach (MenuItem m in defaultItems)
         {
-            SelectionMenu.AddItem(m.Name, m.Label, m.OnClick);
+            SelectionMenu.AddItem(m.Name, m.Label, m.Action);
         }
         // MenuItem[] systemItems = GameSystem.Current().GetTileMenuItems();
         // foreach (MenuItem m in systemItems)
@@ -38,7 +38,7 @@ public class TileMenu
                     string effectName = effect.Split("::")[0];
                     if (!effects.Contains(effectName))
                     {
-                        items.Add(new MenuItem($"Remove_{effectName}", $"Remove {effectName}", (evt) =>
+                        items.Add(new MenuItem($"Remove_{effectName}", $"Remove {effectName}", () =>
                         {
                             Player.Self().CmdRequestMapSetValue(SelectedBlockNames(), "RemoveEffect", effect);
                             SelectionMenu.Hide();
@@ -52,25 +52,25 @@ public class TileMenu
         return items.ToArray();
     }
 
-    public static void ClickAddEffect(ClickEvent evt)
+    public static void ClickAddEffect()
     {
-        AddTerrainEffect.OpenModal(evt);
+        AddTerrainEffect.OpenModal();
         SelectionMenu.Hide();
     }
 
-    public static void ClickDeselectAll(ClickEvent evt)
+    public static void ClickDeselectAll()
     {
         Block.DeselectAll();
         SelectionMenu.Hide();
     }
 
-    public static void ClickClearEffects(ClickEvent evt)
+    public static void ClickClearEffects()
     {
         Player.Self().CmdRequestMapSetValue(SelectedBlockNames(), "Effect", "None");
         SelectionMenu.Hide();
     }
 
-    public static void ClickClearMap(ClickEvent evt)
+    public static void ClickClearMap()
     {
         Player.Self().CmdRequestMapSetValue(AllBlockNames(), "Effect", "None");
         SelectionMenu.Hide();

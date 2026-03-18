@@ -12,13 +12,13 @@ public abstract class Icon1x5Base : ActorType
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("Damage", "Damage HP/VIG", (evt) => { NumberPicker.ActorCommand("Damage", false); }));
+        items.Add(new MenuItem("Damage", "Damage HP/VIG", () => { NumberPicker.ActorCommand("Damage", false); }));
         items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRollClicked));
         items.Add(new MenuItem("SaveRoll", "Save Roll", SaveRollClicked));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
-    private void AttackRollClicked(ClickEvent evt)
+    private void AttackRollClicked()
     {
         Modal.Reset("Attack Roll");
         Modal.AddNumberNudgerField("PowerField", "Curse/Boon", 0, -20);
@@ -27,7 +27,7 @@ public abstract class Icon1x5Base : ActorType
         SelectionMenu.Hide();
     }
 
-    private void SaveRollClicked(ClickEvent evt)
+    private void SaveRollClicked()
     {
         Modal.Reset("Save Roll");
         Modal.AddNumberNudgerField("PowerField", "Curse/Boon", 0, -20);

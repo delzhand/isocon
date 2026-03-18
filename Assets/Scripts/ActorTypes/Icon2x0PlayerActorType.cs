@@ -190,10 +190,10 @@ public class Icon2x0PlayerActorType : Icon2x0Base
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
-        items.Add(new MenuItem("ModVIG", "Modify Vigor", (evt) => { NumberPicker.ActorCommand("ModVIG"); }));
-        items.Add(new MenuItem("ModRES", "Modify Resolve", (evt) => { NumberPicker.ActorCommand("ModRES"); }));
-        items.Add(new MenuItem("ModPRES", "Modify Party Resolve", (evt) => { NumberPicker.AllTokensCommand("ModPRES"); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+        items.Add(new MenuItem("ModVIG", "Modify Vigor", () => { NumberPicker.ActorCommand("ModVIG"); }));
+        items.Add(new MenuItem("ModRES", "Modify Resolve", () => { NumberPicker.ActorCommand("ModRES"); }));
+        items.Add(new MenuItem("ModPRES", "Modify Party Resolve", () => { NumberPicker.AllTokensCommand("ModPRES"); }));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 

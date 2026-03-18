@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: a352a92e50deec24da31428471c8bc64
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Components/HoverMenu/ShunHoverMenuItem.cs
+  uploadId: 870216

@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    
+    <ui:VisualElement>
+        <shun:ShunBreadcrumb>
+            <shun:ShunBreadcrumbItem label="Home" />
+            <shun:ShunBreadcrumbEllipsis>
+                <shun:ShunBreadcrumbEllipsisItem label="Documentation" />
+                <shun:ShunBreadcrumbEllipsisItem label="Themes" />
+                <shun:ShunBreadcrumbEllipsisItem label="GitHub" />
+            </shun:ShunBreadcrumbEllipsis>
+            <shun:ShunBreadcrumbItem label="Components" />
+            <shun:ShunBreadcrumbItem label="Breadcrumb" isCurrentPage="true" />
+        </shun:ShunBreadcrumb>
+    </ui:VisualElement>
+</ui:UXML>

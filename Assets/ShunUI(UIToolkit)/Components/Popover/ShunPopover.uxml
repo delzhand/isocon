@@ -1,0 +1,35 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:shun="ShunUI">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    
+    <shun:ShunPopover is-open="true">
+        <shun:ShunPopoverTrigger text="Open popover" />
+        
+        <shun:ShunPopoverContent>
+            <shun:ShunContainer>
+                <ui:Label text="Dimensions" class="shun-popover__title" />
+                <ui:Label text="Set the dimensions for the layer." class="shun-popover__description" />
+                
+                <ui:VisualElement class="shun-popover__field">
+                    <ui:Label text="Width" class="shun-popover__label" />
+                    <shun:ShunInput text="100%" />
+                </ui:VisualElement>
+                
+                <ui:VisualElement class="shun-popover__field">
+                    <ui:Label text="Max. width" class="shun-popover__label" />
+                    <shun:ShunInput text="300px" />
+                </ui:VisualElement>
+                
+                <ui:VisualElement class="shun-popover__field">
+                    <ui:Label text="Height" class="shun-popover__label" />
+                    <shun:ShunInput text="25px" />
+                </ui:VisualElement>
+                
+                <ui:VisualElement class="shun-popover__field">
+                    <ui:Label text="Max. height" class="shun-popover__label" />
+                    <shun:ShunInput text="none" />
+                </ui:VisualElement>
+            </shun:ShunContainer>
+        </shun:ShunPopoverContent>
+    </shun:ShunPopover>
+</ui:UXML>
+

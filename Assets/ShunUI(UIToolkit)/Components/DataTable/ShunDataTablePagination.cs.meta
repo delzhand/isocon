@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: f460520e75d107b45be95a387268a208
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Components/DataTable/ShunDataTablePagination.cs
+  uploadId: 870216

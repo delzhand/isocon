@@ -1,0 +1,93 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss?fileID=7433441132597879392&amp;guid=812bff3d2981add4fa9165957ba1034b&amp;type=3#ShunStyle" />
+    <shun:SimpleMainMenu style="flex-grow: 1;">
+        <ui:VisualElement style="flex-grow: 1; background-image: url(&quot;project://database/Assets/ShunUI(UIToolkit)/Blocks/SimpleMainMenu/menu-background.png?fileID=2800000&amp;guid=a256ce2e143fd8245be83c070cedc7c1&amp;type=3#menu-background&quot;); background-repeat: no-repeat no-repeat; -unity-background-scale-mode: scale-and-crop; width: auto;">
+            <ui:VisualElement xmlns:shun="ShunUI" template="ShunCard" enabled="true" name="MainMenu" style="flex-grow: 1; display: flex;">
+                <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss?fileID=7433441132597879392&amp;guid=812bff3d2981add4fa9165957ba1034b&amp;type=3#ShunStyle" />
+                <shun:ShunCard style="width: 400px; left: 50px; transform-origin: center; flex-grow: 0; flex-shrink: 1; top: 50%; translate: 0 -50%;">
+                    <shun:ShunContainer class="card__header">
+                        <ui:VisualElement style="flex-direction: row; justify-content: space-between; align-items: flex-start;">
+                            <ui:VisualElement>
+                                <shun:ShunCardTitle text="Awesome Title Game" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </shun:ShunContainer>
+                    <shun:ShunContainer class="card__content" style="height: 200px;">
+                        <ui:VisualElement template="ShunButton">
+                            <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss?fileID=7433441132597879392&amp;guid=812bff3d2981add4fa9165957ba1034b&amp;type=3#ShunStyle" />
+                            <shun:ShunButton text="Continue" variant="Primary" size="Default" icon-image="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/play.png?fileID=2800000&amp;guid=e8e1b4b9f54c24de88a93d67e0508230&amp;type=3#play" text-alignment="Left" icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/play.png?fileID=2800000&amp;guid=e8e1b4b9f54c24de88a93d67e0508230&amp;type=3#play" alignment="Left" style="-unity-font-definition: resource(&apos;Fonts/geist-font-1.5.0/fonts/Geist/ttf/Geist-Regular&apos;); width: 100%; margin-left: 0; margin-right: 0; margin-bottom: 4px;" />
+                            <shun:ShunAlertDialog is-open="false" title="Are You Sure?" description="This will erase all your progress and you will start a new game." cancelText="Cancel" actionText="Continue" action-text="Start New Game" style="margin-bottom: 4px;">
+                                <shun:ShunAlertDialogTrigger text="New Game" icon-image="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/plus.png?fileID=2800000&amp;guid=72830a6ab518542fe90e6b8227c6db62&amp;type=3#plus" icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/plus.png?fileID=2800000&amp;guid=72830a6ab518542fe90e6b8227c6db62&amp;type=3#plus" style="height: 38px; -unity-font-style: normal; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; width: 100%; justify-content: flex-start;" />
+                            </shun:ShunAlertDialog>
+                            <shun:ShunButton text="Settings" variant="Primary" size="Default" icon-image="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/settings.png?fileID=2800000&amp;guid=55ced57f0b5234b7f8f69982b18d48d3&amp;type=3#settings" text-alignment="Left" icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/settings.png?fileID=2800000&amp;guid=55ced57f0b5234b7f8f69982b18d48d3&amp;type=3#settings" alignment="Left" name="BtnSettings" style="-unity-font-definition: resource(&apos;Fonts/geist-font-1.5.0/fonts/Geist/ttf/Geist-Regular&apos;); width: 100%; margin-left: 0; margin-right: 0; margin-bottom: 4px;" />
+                        </ui:VisualElement>
+                    </shun:ShunContainer>
+                    <shun:ShunContainer class="card__content" style="height: auto;">
+                        <ui:VisualElement template="ShunButton">
+                            <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss?fileID=7433441132597879392&amp;guid=812bff3d2981add4fa9165957ba1034b&amp;type=3#ShunStyle" />
+                            <shun:ShunButton text="Quit" variant="Outline" size="Default" text-alignment="Left" icon-image="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/door-open.png?fileID=2800000&amp;guid=35c2889bd32a8497395533cf488fc38b&amp;type=3#door-open" icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/door-open.png?fileID=2800000&amp;guid=35c2889bd32a8497395533cf488fc38b&amp;type=3#door-open" alignment="Left" style="-unity-font-definition: resource(&apos;Fonts/geist-font-1.5.0/fonts/Geist/ttf/Geist-Regular&apos;); width: 100%; margin-left: 0; margin-right: 0;" />
+                        </ui:VisualElement>
+                    </shun:ShunContainer>
+                </shun:ShunCard>
+            </ui:VisualElement>
+            <ui:VisualElement name="Settings" style="flex-grow: 1; justify-content: center; align-items: center; padding: 40px; display: none;">
+                <shun:ShunCard style="width: 400px;">
+                    <shun:ShunContainer class="card__header">
+                        <ui:VisualElement style="flex-direction: row; justify-content: space-between; align-items: flex-start;">
+                            <ui:VisualElement>
+                                <shun:ShunCardTitle text="Options" />
+                                <shun:ShunCardDescription text="Here you can modify all aspects of your game." />
+                            </ui:VisualElement>
+                            <shun:ShunButton variant="link" icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/x.png?fileID=2800000&amp;guid=2f82f4cc998474f1297bf2d63b86194d&amp;type=3#x" name="BtnClose" />
+                        </ui:VisualElement>
+                    </shun:ShunContainer>
+                    <shun:ShunContainer class="card__content">
+                        <ui:VisualElement template="ShunTabs">
+                            <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss?fileID=7433441132597879392&amp;guid=812bff3d2981add4fa9165957ba1034b&amp;type=3#ShunStyle" />
+                            <shun:ShunTabs style="flex-grow: 1;">
+                                <shun:ShunTab text="Graphics" tab-id="graphics" is-active="true" />
+                                <shun:ShunTab text="Audio" tab-id="audio" is-active="false" />
+                                <shun:ShunTabsContent style="max-height: 200px; min-height: 200px;">
+                                    <shun:ShunTabPanel tab-id="graphics" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+                                        <shun:ShunScrollArea mode="Vertical" style="height: auto; width: 100%; border-width: 1px; border-color: rgb(60, 60, 60); border-radius: 8px; padding: 16px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+                                            <shun:ShunScrollAreaContent style="padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px;">
+                                                <shun:ShunContainer>
+                                                    <ui:Label text="Resolution" style="margin-bottom: 8px; font-size: 14px; -unity-font-style: bold;" />
+                                                    <shun:ShunSelect placeholder="Select a resolution" choices="3840x2160,2560x1440,1920x1080,1280x720" selected-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/check.png?fileID=2800000&amp;guid=8065da38cbd784dc2be8f7cfdb7dc829&amp;type=3#check" selected-value="1920x1080" />
+                                                    <ui:Label text="Details" style="margin-bottom: 8px; font-size: 14px; -unity-font-style: bold;" />
+                                                    <shun:ShunSelect placeholder="Select details level" choices="Ultra,High,Medium,Low" selected-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/check.png?fileID=2800000&amp;guid=8065da38cbd784dc2be8f7cfdb7dc829&amp;type=3#check" selected-value="Medium" />
+                                                    <ui:Label text="Shadows" style="margin-bottom: 8px; font-size: 14px; -unity-font-style: bold;" />
+                                                    <shun:ShunSwitch value="true" />
+                                                    <ui:Label text="VSync" style="margin-bottom: 8px; font-size: 14px; -unity-font-style: bold;" />
+                                                    <shun:ShunSwitch value="false" />
+                                                    <ui:Label text="Subtitles" style="margin-bottom: 8px; font-size: 14px; -unity-font-style: bold;" />
+                                                    <shun:ShunSwitch value="false" />
+                                                </shun:ShunContainer>
+                                            </shun:ShunScrollAreaContent>
+                                        </shun:ShunScrollArea>
+                                    </shun:ShunTabPanel>
+                                    <shun:ShunTabPanel tab-id="audio" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+                                        <shun:ShunScrollArea mode="Vertical" style="height: auto; width: 100%; border-width: 1px; border-color: rgb(60, 60, 60); border-radius: 8px; padding: 16px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+                                            <shun:ShunScrollAreaContent style="padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px;">
+                                                <shun:ShunContainer>
+                                                    <ui:Label text="Master Volume" style="margin-bottom: 8px; font-size: 14px; -unity-font-style: bold;" />
+                                                    <shun:ShunSlider min="0" max="100" default-value="50" value="90" style="justify-content: flex-start; align-self: auto; align-content: auto; align-items: flex-start;" />
+                                                    <ui:Label text="Music Volume" style="margin-bottom: 8px; font-size: 14px; -unity-font-style: bold;" />
+                                                    <shun:ShunSlider min="0" max="100" default-value="50" value="80" style="justify-content: flex-start; align-self: auto; align-content: auto; align-items: flex-start;" />
+                                                    <ui:Label text="Voice Volume" style="margin-bottom: 8px; font-size: 14px; -unity-font-style: bold;" />
+                                                    <shun:ShunSlider min="0" max="100" default-value="50" value="60" style="justify-content: flex-start; align-self: auto; align-content: auto; align-items: flex-start;" />
+                                                    <ui:Label text="FX Volume" style="margin-bottom: 8px; font-size: 14px; -unity-font-style: bold;" />
+                                                    <shun:ShunSlider min="0" max="100" default-value="50" value="75" style="justify-content: flex-start; align-self: auto; align-content: auto; align-items: flex-start;" />
+                                                </shun:ShunContainer>
+                                            </shun:ShunScrollAreaContent>
+                                        </shun:ShunScrollArea>
+                                    </shun:ShunTabPanel>
+                                </shun:ShunTabsContent>
+                            </shun:ShunTabs>
+                        </ui:VisualElement>
+                    </shun:ShunContainer>
+                </shun:ShunCard>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </shun:SimpleMainMenu>
+</ui:UXML>

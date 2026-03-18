@@ -1,0 +1,25 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" xmlns:primitives="ShunUI.Primitives" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    <shun:ShunDropdownMenu trigger-text="Open">
+        <primitives:ShunMenuItemBase label="My Account" />
+        <primitives:ShunMenuItemBase label="Profile" shortcut="⌘P" />
+        <primitives:ShunMenuItemBase label="Billing" shortcut="⌘B" />
+        <primitives:ShunMenuItemBase label="Settings" shortcut="⌘S" />
+        <primitives:ShunMenuItemBase label="Keyboard shortcuts" shortcut="⌘K" />
+        <primitives:ShunMenuSeparator />
+        <primitives:ShunMenuItemBase label="Team" />
+        <primitives:ShunMenuItemBase label="Invite users" has-arrow="true">
+            <primitives:ShunMenuItemBase label="Email" />
+            <primitives:ShunMenuItemBase label="Message" />
+            <primitives:ShunMenuSeparator />
+            <primitives:ShunMenuItemBase label="More..." />
+        </primitives:ShunMenuItemBase>
+        <primitives:ShunMenuItemBase label="New Team" shortcut="⌘+T" />
+        <primitives:ShunMenuSeparator />
+        <primitives:ShunMenuItemBase label="GitHub" />
+        <primitives:ShunMenuItemBase label="Support" />
+        <primitives:ShunMenuItemBase label="API" />
+        <primitives:ShunMenuSeparator />
+        <primitives:ShunMenuItemBase label="Log out" shortcut="⌘⇧Q" />
+    </shun:ShunDropdownMenu>
+</ui:UXML>

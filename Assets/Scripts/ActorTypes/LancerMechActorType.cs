@@ -124,10 +124,10 @@ public class LancerMechActorType : LancerBase
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("CoreStats", "Alter Stats", (evt) => { AlterStatModal(); }));
-        items.Add(new MenuItem("Damage", "Damage HP/Shield", (evt) => { NumberPicker.ActorCommand("Damage", false); }));
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
-        items.Add(new MenuItem("ModShield", "Modify Shield", (evt) => { NumberPicker.ActorCommand("ModShield"); }));
+        items.Add(new MenuItem("CoreStats", "Alter Stats", () => { AlterStatModal(); }));
+        items.Add(new MenuItem("Damage", "Damage HP/Shield", () => { NumberPicker.ActorCommand("Damage", false); }));
+        items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+        items.Add(new MenuItem("ModShield", "Modify Shield", () => { NumberPicker.ActorCommand("ModShield"); }));
         return baseItems.Concat(items.ToArray()).ToArray();
     }
 
@@ -464,7 +464,7 @@ public class LancerMechActorType : LancerBase
         Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
-    protected override void RenameModal(ClickEvent evt)
+    protected override void RenameModal()
     {
         ActorData data = Actor.GetSelected().Data;
         Modal.Reset("Edit Name");

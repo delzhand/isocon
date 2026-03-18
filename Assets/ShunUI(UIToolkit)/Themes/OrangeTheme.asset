@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3e4b613a6306994a9edd6d098a5def1, type: 3}
+  m_Name: OrangeTheme
+  m_EditorClassIdentifier: 
+  BorderRadius: 10
+  BorderWidth: 2
+  Background: {r: 1, g: 1, b: 1, a: 1}
+  Foreground: {r: 0.145, g: 0.145, b: 0.145, a: 1}
+  Border: {r: 0.9, g: 0.774, b: 0.72, a: 1}
+  Ring: {r: 0.708, g: 0.708, b: 0.708, a: 1}
+  Input: {r: 0.922, g: 0.922, b: 0.922, a: 1}
+  Primary: {r: 0.961, g: 0.29, b: 0, a: 1}
+  PrimaryForeground: {r: 0.985, g: 0.985, b: 0.985, a: 1}
+  Secondary: {r: 0.97, g: 0.97, b: 0.97, a: 1}
+  SecondaryForeground: {r: 0.205, g: 0.205, b: 0.205, a: 1}
+  Accent: {r: 0.97, g: 0.97, b: 0.97, a: 1}
+  AccentForeground: {r: 0.205, g: 0.205, b: 0.205, a: 1}
+  Muted: {r: 0.97, g: 0.97, b: 0.97, a: 1}
+  MutedForeground: {r: 0.556, g: 0.556, b: 0.556, a: 1}
+  Card: {r: 1, g: 1, b: 1, a: 1}
+  CardForeground: {r: 0.145, g: 0.145, b: 0.145, a: 1}
+  Popover: {r: 1, g: 1, b: 1, a: 1}
+  PopoverForeground: {r: 0.145, g: 0.145, b: 0.145, a: 1}
+  Destructive: {r: 0.796, g: 0.298, b: 0.255, a: 1}
+  DestructiveForeground: {r: 0.985, g: 0.985, b: 0.985, a: 1}
+  StyleSheet: {fileID: 7433441132597879392, guid: 7b5cdeae14a3a0e44b669bac4aa69dea, type: 3}

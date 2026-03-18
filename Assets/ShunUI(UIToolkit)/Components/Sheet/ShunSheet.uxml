@@ -1,0 +1,26 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss?fileID=7433441132597879392&amp;guid=812bff3d2981add4fa9165957ba1034b&amp;type=3#ShunStyle" />
+    <shun:ShunSheet is-open="false" side="right">
+        <shun:ShunSheetTrigger text="Open" />
+        <shun:ShunSheetContent>
+            <shun:ShunContainer class="shun-sheet__header">
+                <ui:Label text="Edit profile" class="shun-sheet__title" />
+                <ui:Label text="Make changes to your profile here. Click save when you&apos;re done." class="shun-sheet__description" />
+            </shun:ShunContainer>
+            <shun:ShunContainer class="shun-sheet__body">
+                <ui:VisualElement class="shun-sheet__field">
+                    <ui:Label text="Name" class="shun-sheet__label" />
+                    <shun:ShunInput value="Pedro Duarte" />
+                </ui:VisualElement>
+                <ui:VisualElement class="shun-sheet__field">
+                    <ui:Label text="Username" class="shun-sheet__label" />
+                    <shun:ShunInput value="@peduarte" />
+                </ui:VisualElement>
+            </shun:ShunContainer>
+            <shun:ShunContainer class="shun-sheet__footer">
+                <shun:ShunSheetClose text="Close" variant="Outline" />
+                <shun:ShunSheetClose text="Save changes" />
+            </shun:ShunContainer>
+        </shun:ShunSheetContent>
+    </shun:ShunSheet>
+</ui:UXML>

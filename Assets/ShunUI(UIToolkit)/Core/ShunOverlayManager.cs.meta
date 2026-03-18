@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 511ce13f2c2f3f142ad486deba6ff766
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Core/ShunOverlayManager.cs
+  uploadId: 870216

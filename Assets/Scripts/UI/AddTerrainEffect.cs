@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class AddTerrainEffect
 {
-    public static void OpenModal(ClickEvent evt)
+    public static void OpenModal()
     {
         Modal.Reset("Add Terrain Effect");
         // Modal.AddSearchField("SearchField", "Effect Name", "", GameSystem.Current().GetEffectList());

@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    
+    <ui:VisualElement>
+        <shun:ShunTooltip text="Add to library">
+            <shun:ShunButton text="Hover" variant="Default" />
+        </shun:ShunTooltip>
+    </ui:VisualElement>
+</ui:UXML>

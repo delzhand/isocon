@@ -1,0 +1,45 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss?fileID=7433441132597879392&amp;guid=812bff3d2981add4fa9165957ba1034b&amp;type=3#ShunStyle" />
+    <shun:ShunNavigationMenu>
+        <shun:ShunNavigationMenuItem label="Home" icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/chevron-down.png?fileID=2800000&amp;guid=0eb1578cae4cc4b32b4344039472ce65&amp;type=3#chevron-down">
+            <shun:ShunNavigationMenuFeature title="ShunUI" description="Beautifully designed components built for Unity UI Toolkit." href="/home" />
+            <shun:ShunNavigationMenuList>
+                <shun:ShunNavigationMenuListItem title="Introduction" description="Re-usable components built for Unity UI Toolkit." />
+                <shun:ShunNavigationMenuListItem title="Installation" description="How to install dependencies and structure your app." />
+                <shun:ShunNavigationMenuListItem title="Typography" description="Styles for headings, paragraphs, lists...etc" />
+            </shun:ShunNavigationMenuList>
+        </shun:ShunNavigationMenuItem>
+        <shun:ShunNavigationMenuItem label="Components" icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/chevron-down.png?fileID=2800000&amp;guid=0eb1578cae4cc4b32b4344039472ce65&amp;type=3#chevron-down">
+            <shun:ShunNavigationMenuList class="shun-navigation-menu__list--grid">
+                <shun:ShunNavigationMenuListItem title="Alert Dialog" description="A modal dialog that interrupts the user with important content and expects a..." />
+                <shun:ShunNavigationMenuListItem title="Hover Card" description="For sighted users to preview content available behind a link." />
+                <shun:ShunNavigationMenuListItem title="Progress" description="Displays an indicator showing the completion progress of a task, typically..." />
+                <shun:ShunNavigationMenuListItem title="Scroll-area" description="Visually or semantically separates content." />
+                <shun:ShunNavigationMenuListItem title="Tabs" description="A set of layered sections of content—known as tab panels—that are displaye..." />
+                <shun:ShunNavigationMenuListItem title="Tooltip" description="A popup that displays information related to an element when the element receiv..." />
+            </shun:ShunNavigationMenuList>
+        </shun:ShunNavigationMenuItem>
+        <shun:ShunNavigationMenuItem label="Docs" href="/docs" />
+        <shun:ShunNavigationMenuItem label="List" icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/chevron-down.png?fileID=2800000&amp;guid=0eb1578cae4cc4b32b4344039472ce65&amp;type=3#chevron-down">
+            <shun:ShunNavigationMenuList>
+                <shun:ShunNavigationMenuListItem title="Components" description="Browse all components in the library." />
+                <shun:ShunNavigationMenuListItem title="Documentation" description="Learn how to use the library." />
+                <shun:ShunNavigationMenuListItem title="Blog" description="Read our latest blog posts." />
+            </shun:ShunNavigationMenuList>
+        </shun:ShunNavigationMenuItem>
+        <shun:ShunNavigationMenuItem label="Simple" icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/chevron-down.png?fileID=2800000&amp;guid=0eb1578cae4cc4b32b4344039472ce65&amp;type=3#chevron-down">
+            <shun:ShunNavigationMenuList>
+                <shun:ShunNavigationMenuListItem title="Components" />
+                <shun:ShunNavigationMenuListItem title="Documentation" />
+                <shun:ShunNavigationMenuListItem title="Blog" />
+            </shun:ShunNavigationMenuList>
+        </shun:ShunNavigationMenuItem>
+        <shun:ShunNavigationMenuItem label="With Icon" icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/chevron-down.png?fileID=2800000&amp;guid=0eb1578cae4cc4b32b4344039472ce65&amp;type=3#chevron-down">
+            <shun:ShunNavigationMenuList>
+                <shun:ShunNavigationMenuListItem title="Backlog" icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/circle-question-mark.png?fileID=2800000&amp;guid=2485fea10d562461388bc9687619ebf6&amp;type=3#circle-question-mark" />
+                <shun:ShunNavigationMenuListItem title="To Do" icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/circle.png?fileID=2800000&amp;guid=a3f92c9de70c040e89813aa2d3932abc&amp;type=3#circle" />
+                <shun:ShunNavigationMenuListItem title="Done" icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/circle-check.png?fileID=2800000&amp;guid=1cefb94f1d40b4b41bc7df5d2e985011&amp;type=3#circle-check" />
+            </shun:ShunNavigationMenuList>
+        </shun:ShunNavigationMenuItem>
+    </shun:ShunNavigationMenu>
+</ui:UXML>

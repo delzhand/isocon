@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: bc568289dbef4c848ac202df20805d12
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Resources/Fonts/geist-font-1.5.0/fonts/GeistMono/ttf/GeistMono-Regular
+    SDF.asset
+  uploadId: 870216

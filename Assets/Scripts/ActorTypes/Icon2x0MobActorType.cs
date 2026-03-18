@@ -98,10 +98,10 @@ public class Icon2x0MobActorType : Icon2x0Base
         MenuItem[] baseItems = base.GetMenuItems(placed);
 
         List<MenuItem> items = new();
-        items.Add(new MenuItem("ModVig", "Modify VIG", (evt) => { NumberPicker.ActorCommand("ModVIG"); }));
+        items.Add(new MenuItem("ModVig", "Modify VIG", () => { NumberPicker.ActorCommand("ModVIG"); }));
         if (Hits < 2)
         {
-            items.Add(new MenuItem("RestoreHit", "Restore Hit", (evt) =>
+            items.Add(new MenuItem("RestoreHit", "Restore Hit", () =>
             {
                 Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, "RestoreHit");
                 SelectionMenu.Hide();

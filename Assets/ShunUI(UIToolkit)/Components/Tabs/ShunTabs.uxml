@@ -1,0 +1,46 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    <shun:ShunTabs style="flex-grow: 1;">
+        <shun:ShunTab text="Account" tab-id="account" is-active="true" />
+        <shun:ShunTab text="Password" tab-id="password" is-active="false" />
+        
+        <shun:ShunTabsContent>
+            <!-- Account Panel -->
+            <shun:ShunTabPanel tab-id="account">
+                <shun:ShunContainer>
+                    <ui:Label text="Account" class="text-2xl" style="margin-bottom: 8px; -unity-font-style: bold;" />
+                    <ui:Label text="Make changes to your account here. Click save when you're done." class="text-muted-foreground" style="margin-bottom: 24px;" />
+                    
+                    <ui:Label text="Name" class="label" style="margin-bottom: 8px;" />
+                    <shun:ShunInput placeholder-text="Pedro Experir" style="margin-bottom: 16px;" />
+                    
+                    <ui:Label text="Username" class="label" style="margin-bottom: 8px;" />
+                    <shun:ShunInput placeholder-text="@experir" style="margin-bottom: 24px;" />
+                    
+                    <ui:VisualElement style="flex-direction: row; justify-content: flex-end;">
+                        <shun:ShunButton text="Save changes" variant="Primary" />
+                    </ui:VisualElement>
+                </shun:ShunContainer>
+            </shun:ShunTabPanel>
+            
+            <!-- Password Panel -->
+            <shun:ShunTabPanel tab-id="password">
+                <shun:ShunContainer>
+                    <ui:Label text="Password" class="text-2xl" style="margin-bottom: 8px; -unity-font-style: bold;" />
+                    <ui:Label text="Change your password here. After saving, you'll be logged out." class="text-muted-foreground" style="margin-bottom: 24px;" />
+                    
+                    <ui:Label text="Current password" class="label" style="margin-bottom: 8px;" />
+                    <shun:ShunInput placeholder-text="" style="margin-bottom: 16px;" />
+                    
+                    <ui:Label text="New password" class="label" style="margin-bottom: 8px;" />
+                    <shun:ShunInput placeholder-text="" style="margin-bottom: 24px;" />
+                    
+                    <ui:VisualElement style="flex-direction: row; justify-content: flex-end;">
+                        <shun:ShunButton text="Save password" variant="Primary" />
+                    </ui:VisualElement>
+                </shun:ShunContainer>
+            </shun:ShunTabPanel>
+        </shun:ShunTabsContent>
+    </shun:ShunTabs>
+</ui:UXML>
+

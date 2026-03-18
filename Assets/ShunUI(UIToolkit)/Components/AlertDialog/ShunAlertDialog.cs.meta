@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: f3acdc9c8f4405f448e03d5c9032b586
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Components/AlertDialog/ShunAlertDialog.cs
+  uploadId: 870216
