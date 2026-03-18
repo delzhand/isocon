@@ -11,8 +11,8 @@ using UnityEngine.UIElements;
 
 public class Startup
 {
-    private static string _version = "0.8.0";
-    private static string _latestVersion = "0.8.0";
+    private static string _version = "0.8.1";
+    private static string _latestVersion = "0.8.1";
 
     public static void RunTasks()
     {
