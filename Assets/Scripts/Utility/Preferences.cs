@@ -64,21 +64,21 @@ public class Preferences
             string json = File.ReadAllText(fileName);
             StoredPreferences loaded = JsonUtility.FromJson<StoredPreferences>(json);
 
-            _current.DataPath = loaded.DataPath.Length > 0 ? loaded.DataPath : _current.DataPath;
-            _current.PlayerName = loaded.PlayerName.Length > 0 ? loaded.PlayerName : _current.PlayerName;
-            _current.UIScale = loaded.UIScale.Length > 0 ? loaded.UIScale : _current.UIScale;
-            _current.WorldUIScale = loaded.WorldUIScale.Length > 0 ? loaded.WorldUIScale : _current.WorldUIScale;
+            _current.DataPath = loaded.DataPath?.Length > 0 ? loaded.DataPath : _current.DataPath;
+            _current.PlayerName = loaded.PlayerName?.Length > 0 ? loaded.PlayerName : _current.PlayerName;
+            _current.UIScale = loaded.UIScale?.Length > 0 ? loaded.UIScale : _current.UIScale;
+            _current.WorldUIScale = loaded.WorldUIScale?.Length > 0 ? loaded.WorldUIScale : _current.WorldUIScale;
             _current.TokenScale = loaded.TokenScale > 0 ? loaded.TokenScale : _current.TokenScale;
-            _current.Grid = loaded.Grid.Length > 0 ? loaded.Grid : _current.Grid;
-            _current.TokenOutline = loaded.TokenOutline.Length > 0 ? loaded.TokenOutline : _current.TokenOutline;
+            _current.Grid = loaded.Grid?.Length > 0 ? loaded.Grid : _current.Grid;
+            _current.TokenOutline = loaded.TokenOutline?.Length > 0 ? loaded.TokenOutline : _current.TokenOutline;
             _current.PlayerCount = loaded.PlayerCount > 0 ? loaded.PlayerCount : _current.PlayerCount;
-            _current.HostIP = loaded.HostIP.Length > 0 ? loaded.HostIP : _current.HostIP;
-            _current.ReleaseNotesSeen = loaded.ReleaseNotesSeen.Length > 0 ? loaded.ReleaseNotesSeen : _current.ReleaseNotesSeen;
+            _current.HostIP = loaded.HostIP?.Length > 0 ? loaded.HostIP : _current.HostIP;
+            _current.ReleaseNotesSeen = loaded.ReleaseNotesSeen?.Length > 0 ? loaded.ReleaseNotesSeen : _current.ReleaseNotesSeen;
             _current.SkipTutorials = loaded.SkipTutorials;
             _current.TargetFramerate = loaded.TargetFramerate > 0 ? loaded.TargetFramerate : _current.TargetFramerate;
-            _current.MaleghastFile = loaded.MaleghastFile.Length > 0 ? loaded.MaleghastFile : _current.MaleghastFile;
+            _current.MaleghastFile = loaded.MaleghastFile?.Length > 0 ? loaded.MaleghastFile : _current.MaleghastFile;
             _current.AutosaveInterval = loaded.AutosaveInterval > 0 ? loaded.AutosaveInterval : _current.AutosaveInterval;
-            _current.TutorialsSeen = loaded.TutorialsSeen.Length > 0 ? loaded.TutorialsSeen : _current.TutorialsSeen;
+            _current.TutorialsSeen = loaded.TutorialsSeen?.Length > 0 ? loaded.TutorialsSeen : _current.TutorialsSeen;
         }
     }
 
