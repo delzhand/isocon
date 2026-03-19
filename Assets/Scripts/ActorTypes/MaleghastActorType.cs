@@ -222,14 +222,26 @@ public class MaleghastActorType : ActorType
         base.InitPanel(actorData, elementName, selected);
         VisualElement panel = UI.System.Q(elementName);
 
-        Label l = new();
-        l.name = "MainHPLabel";
-        l.text = SymbolString("■", CurrentHP, MaxHP);
-        l.style.color = Color.red;
-        l.style.unityTextOutlineColor = Color.white;
-        l.style.unityTextOutlineWidth = 1;
-        l.style.fontSize = 26;
-        panel.Q("Bars").Add(l);
+        if (selected)
+        {
+            VisualElement hppips = PipsBar("MainHPLabel", "■", CurrentHP, MaxHP, Color.red,
+                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "ModHP|-1"); },
+                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "ModHP|1"); }
+            );
+            panel.Q("Bars").Add(hppips);
+        }
+        else
+        {
+            Label l = new();
+            l.name = "MainHPLabel";
+            l.text = SymbolString("■", CurrentHP, MaxHP);
+            l.style.color = Color.red;
+            l.style.unityTextOutlineColor = Color.white;
+            l.style.unityTextOutlineWidth = 1;
+            l.style.fontSize = 26;
+            panel.Q("Bars").Add(l);
+        }
+
 
         VisualElement s1 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
         s1.Q<Label>("Label").text = "MOVE/DEF";
@@ -274,6 +286,7 @@ public class MaleghastActorType : ActorType
         items.Add(new MenuItem("CoreStats", "Alter Stats", (evt) => { AlterStatModal(); }));
         items.Add(new MenuItem("Clone", "Clone", ClickClone));
         items.Add(new MenuItem("Delete", "Delete", ClickDelete));
+        items.Add(new MenuItem("AddTag", "Add Status/Token", AddTagModal));
         items.Add(new MenuItem("EndTurn", "End Turn", (evt) =>
         {
             ActorTag tag = new();
