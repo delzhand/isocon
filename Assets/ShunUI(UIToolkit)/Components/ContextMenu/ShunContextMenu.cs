@@ -2,6 +2,7 @@
 using UnityEngine.UIElements;
 using System.Collections.Generic;
 using ShunUI.Primitives;
+using Mirror.BouncyCastle.Asn1.X509;
 
 namespace ShunUI
 {
@@ -66,6 +67,9 @@ namespace ShunUI
                 {
                     _items.Add(menuItem);
 
+                    // Set the close action so submenu items can close the root menu
+                    menuItem.closeRootMenu = Close;
+
                     // Close menu when item is clicked (only if it doesn't have a submenu)
                     menuItem.clicked += () =>
                     {
@@ -125,6 +129,12 @@ namespace ShunUI
             });
         }
 
+        public void OpenAtPosition(Vector2 pos)
+        {
+            _mousePosition = pos;
+            Open();
+        }
+
         public ShunMenuItemBase AddItem(string label, string shortcut = "", System.Action onClick = null)
         {
             var item = new ShunMenuItemBase
@@ -140,6 +150,9 @@ namespace ShunUI
 
             _items.Add(item);
             _itemsContainer.Add(item);
+
+            // Set the close action so submenu items can close the root menu
+            item.closeRootMenu = Close;
 
             // Close menu when item is clicked (only if it doesn't have a submenu)
             item.clicked += () =>
@@ -170,6 +183,9 @@ namespace ShunUI
 
             _items.Add(item);
             _itemsContainer.Add(item);
+
+            // Set the close action so submenu items can close the root menu
+            item.closeRootMenu = Close;
 
             // Toggle checkmark on click
             item.clicked += () =>
@@ -313,52 +329,6 @@ namespace ShunUI
         private void OnMouseDown(PointerDownEvent evt)
         {
             evt.StopPropagation();
-        }
-
-        protected override bool IsClickInside(VisualElement clickedElement)
-        {
-            // Check if click is in the context menu content
-            if (_content != null && _content.Contains(clickedElement))
-            {
-                return true;
-            }
-
-            // Check if click is in any submenu
-            foreach (var item in _items)
-            {
-                // Use a helper method to recursively check submenus
-                if (IsClickInSubmenu(item, clickedElement))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private bool IsClickInSubmenu(ShunMenuItemBase item, VisualElement clickedElement)
-        {
-            // Check direct submenu
-            var submenu = item.Q(className: "menu-submenu");
-            if (submenu != null && submenu.Contains(clickedElement))
-            {
-                return true;
-            }
-
-            // Recursively check nested submenus
-            var submenuItems = submenu?.Query<ShunMenuItemBase>().ToList();
-            if (submenuItems != null)
-            {
-                foreach (var subItem in submenuItems)
-                {
-                    if (IsClickInSubmenu(subItem, clickedElement))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
         }
     }
 }

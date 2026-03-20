@@ -156,6 +156,16 @@ public class UI : MonoBehaviour
         }
     }
 
+    public static Vector2 GetTransformScreenPosition(Transform transform, VisualElement space, Camera camera)
+    {
+        Vector3 viewportPos = camera.WorldToViewportPoint(transform.position);
+        Vector2 screenPos = new Vector2(
+            Mathf.RoundToInt((viewportPos.x * space.resolvedStyle.width)),
+            Mathf.RoundToInt((1f - viewportPos.y) * space.resolvedStyle.height)
+        );
+        return screenPos;
+    }
+
     public static bool InElement(string elementName)
     {
         VisualElement v = UI.System.Q(elementName);

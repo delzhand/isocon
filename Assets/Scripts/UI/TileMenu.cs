@@ -7,8 +7,8 @@ public class TileMenu
 {
     public static void ShowMenu(Block b)
     {
-        SelectionMenu.Reset("TILE MENU", new Vector2(30, 0), b.transform);
-        MenuItem[] defaultItems = GetTileMenuItems();
+        SelectionMenu.Reset("TILE MENU", new Vector2(0, 0), b.transform);
+        MenuItem[] defaultItems = GetTileMenuItems(b);
         foreach (MenuItem m in defaultItems)
         {
             SelectionMenu.AddItem(m.Name, m.Label, m.Action);
@@ -21,12 +21,12 @@ public class TileMenu
 
     }
 
-    public static MenuItem[] GetTileMenuItems()
+    public static MenuItem[] GetTileMenuItems(Block b)
     {
         List<MenuItem> items = new();
         if (Block.GetSelected().Length > 0)
         {
-            items.Add(new MenuItem("AddEffect", "Add Effect", ClickAddEffect));
+            items.Add(new MenuItem("AddEffect", "Add Effect", () => ClickAddEffect(null)));
             items.Add(new MenuItem("DeselectAll", "Deselect All", ClickDeselectAll));
             items.Add(new MenuItem("ClearEffects", "Clear Effects", ClickClearEffects));
 
@@ -48,13 +48,17 @@ public class TileMenu
                 });
             }
         }
-        items.Add(new MenuItem("ClearMap", "Clear Map", ClickClearMap));
+        else
+        {
+            items.Add(new MenuItem("AddEffect", "Add Effect", () => ClickAddEffect(b)));
+        }
+        items.Add(new MenuItem("ClearMap", "Clear Map Effects", ClickClearMap));
         return items.ToArray();
     }
 
-    public static void ClickAddEffect()
+    public static void ClickAddEffect(Block b)
     {
-        AddTerrainEffect.OpenModal();
+        AddTerrainEffect.OpenModal(b);
         SelectionMenu.Hide();
     }
 

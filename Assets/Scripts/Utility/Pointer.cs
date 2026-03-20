@@ -12,6 +12,20 @@ public class Pointer
         set => _unitBarMouseoverToken = value;
     }
 
+    public static void PickAny()
+    {
+        if (UI.ClicksSuspended || Modal.IsOpen())
+        {
+            return;
+        }
+        _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] hits = Physics.RaycastAll(_ray, 9999f, LayerMask.GetMask(new string[] { "Block", "Actor" }));
+        foreach (RaycastHit hit in hits)
+        {
+            Debug.Log(hit.collider.name);
+        }
+    }
+
     public static Block PickBlock()
     {
         if (UI.ClicksSuspended || Modal.IsOpen())
@@ -42,7 +56,7 @@ public class Pointer
         return Vector3.zero;
     }
 
-    public static Actor PickToken(bool worldOnly = false)
+    public static Actor PickActor(bool worldOnly = false)
     {
         if (_unitBarMouseoverToken && !worldOnly)
         {

@@ -215,6 +215,7 @@ namespace ShunUI
 
                 if (child is ShunMenuItemBase menuItem)
                 {
+                    menuItem.closeRootMenu = Close;
                     menuItem.clicked += Close;
                 }
             }
@@ -225,6 +226,7 @@ namespace ShunUI
             var item = new ShunMenuItemBase();
             item.label = label;
             item.disabled = disabled;
+            item.closeRootMenu = Close;
             if (onClick != null)
             {
                 item.clicked += onClick;
@@ -249,6 +251,17 @@ namespace ShunUI
 
         public override void Close()
         {
+            if (_itemsContainer != null)
+            {
+                foreach (var child in _itemsContainer.Children())
+                {
+                    if (child is ShunMenuItemBase menuItem)
+                    {
+                        menuItem.HideSubmenu();
+                    }
+                }
+            }
+
             base.Close();
             _trigger?.RemoveFromClassList("trigger--open");
             ShunMenuBar.NotifyMenuClosed(this);
@@ -289,7 +302,7 @@ namespace ShunUI
 
         protected override bool IsClickInside(VisualElement clickedElement)
         {
-            return (_content != null && _content.Contains(clickedElement)) ||
+            return base.IsClickInside(clickedElement) ||
                    (_trigger != null && _trigger.Contains(clickedElement));
         }
     }

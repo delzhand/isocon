@@ -9,6 +9,7 @@ using SimpleFileBrowser;
 using System.Linq;
 using System.Collections.Generic;
 using SimpleJSON;
+using ShunUI;
 
 public class LauncherState : BaseState
 {
@@ -134,67 +135,143 @@ public class LauncherState : BaseState
     {
         _mode = mode;
 
-        Modal.Reset($"Configure {_mode.ToString()} Mode");
+        var dialog = UI.System.Q<ShunDialog>();
+        var contents = dialog.Q<ShunDialogContent>();
+        contents.Clear();
 
-        string name = Preferences.Current.PlayerName;
-        Modal.AddTextField("PlayerName", "Player Name", name, (evt) =>
-        {
-            Preferences.SetPlayerName(evt.newValue);
-        });
+        var hWrapper = new ShunContainer();
+        hWrapper.AddToClassList("shun-dialog__header");
+
+        contents.Add(hWrapper);
+        var hTitle = new ShunDialogTitle();
+        hTitle.text = $"Configure {_mode.ToString()} Mode";
+        hWrapper.Add(hTitle);
+
+        var pnameWrapper = new ShunContainer();
+        pnameWrapper.AddToClassList("shun-dialog__field");
+        contents.Add(pnameWrapper);
+
+        var pnameLabel = new Label("Player Name");
+        pnameLabel.AddToClassList("shun-dialog__label");
+        pnameWrapper.Add(pnameLabel);
+
+        var pname = new ShunInput();
+        pname.name = "PlayerName";
+        pname.value = Preferences.Current.PlayerName;
+        pnameWrapper.Add(pname);
 
         if (_mode == ConnectMode.Solo || _mode == ConnectMode.Host)
         {
-            // string system = Preferences.Current.System;
+            var gridWrapper = new ShunContainer();
+            gridWrapper.AddToClassList("shun-dialog__field");
+            contents.Add(gridWrapper);
 
-            // string[] systemOptions = GameSystem.SystemOptions();
-            // Modal.AddDropdownField("GameSystem", "Game System", system, systemOptions, (evt) =>
-            // {
-            //     Preferences.SetSystem(evt.newValue);
-            //     ConfigModalEvaluateConditions();
-            // });
+            var gridLabel = new Label("Grid Type");
+            gridLabel.AddToClassList("shun-dialog__label");
+            gridWrapper.Add(gridLabel);
 
-            string gridType = Preferences.Current.Grid;
-            Modal.AddDropdownField("GridType", "Grid Type", gridType, new string[] { "Square", "Hex" }, (evt) =>
-            {
-                Preferences.SetGrid(evt.newValue);
-                // ConfigModalEvaluateConditions();
-            });
-            // Modal.AddDescription("HexMessage", "Warning! Hex support is experimental. Some visual effects may not display correctly.");
-
-            // bool overrideRules = Preferences.Current.OverrideRules;
-            // Modal.AddToggleField("HomebrewToggle", "Use Homebrew Data", overrideRules, (evt) =>
-            // {
-            //     Preferences.SetOverrideRules(evt.newValue);
-            //     ConfigModalEvaluateConditions();
-            // });
-
-            // string rulesFile = Preferences.Current.RulesFile;
-            // Modal.AddFileField("RulesFile", "Homebrew File", rulesFile, "rules");
+            var grid = new ShunSelect();
+            grid.name = "GridType";
+            grid.SetOptions(new List<string> { "Square", "Hex" });
+            grid.selectedValue = Preferences.Current.Grid;
+            gridWrapper.Add(grid);
         }
 
-        if (_mode == ConnectMode.Host)
-        {
-            int maxPlayers = Preferences.Current.PlayerCount;
-            Modal.AddIntField("PlayerCount", "Max Player Count", maxPlayers, (evt) =>
-            {
-                Preferences.SetPlayerCount(evt.newValue);
-            });
-        }
+        var footer = new ShunContainer();
+        footer.AddToClassList("shun-dialog__footer");
+        contents.Add(footer);
 
+        var confirm = new ShunDialogClose();
+        confirm.text = "Start Session";
         if (_mode == ConnectMode.Client)
         {
-            string hostIP = Preferences.Current.HostIP;
-            Modal.AddTextField("HostIP", "Host IP", hostIP, (evt) =>
-            {
-                Preferences.SetHostIP(evt.newValue);
-            });
+            confirm.text = "Join Session";
         }
+        confirm.clicked += () =>
+        {
+            StartSession();
+            dialog.Close();
+        };
+        footer.Add(confirm);
 
-        Modal.AddPreferredButton("Confirm", ConfirmConfig);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        var close = new ShunDialogClose();
+        close.text = "Cancel";
+        close.clicked += () =>
+        {
+            dialog.Close();
+        };
+        footer.Add(close);
+
+        dialog.Open();
+
+        // Modal.Reset($"Configure {_mode.ToString()} Mode");
+
+        // string name = Preferences.Current.PlayerName;
+        // Modal.AddTextField("PlayerName", "Player Name", name, (evt) =>
+        // {
+        //     Preferences.SetPlayerName(evt.newValue);
+        // });
+
+        // if (_mode == ConnectMode.Solo || _mode == ConnectMode.Host)
+        // {
+        //     // string system = Preferences.Current.System;
+
+        //     // string[] systemOptions = GameSystem.SystemOptions();
+        //     // Modal.AddDropdownField("GameSystem", "Game System", system, systemOptions, (evt) =>
+        //     // {
+        //     //     Preferences.SetSystem(evt.newValue);
+        //     //     ConfigModalEvaluateConditions();
+        //     // });
+
+        //     string gridType = Preferences.Current.Grid;
+        //     Modal.AddDropdownField("GridType", "Grid Type", gridType, new string[] { "Square", "Hex" }, (evt) =>
+        //     {
+        //         Preferences.SetGrid(evt.newValue);
+        //         // ConfigModalEvaluateConditions();
+        //     });
+        //     // Modal.AddDescription("HexMessage", "Warning! Hex support is experimental. Some visual effects may not display correctly.");
+
+        //     // bool overrideRules = Preferences.Current.OverrideRules;
+        //     // Modal.AddToggleField("HomebrewToggle", "Use Homebrew Data", overrideRules, (evt) =>
+        //     // {
+        //     //     Preferences.SetOverrideRules(evt.newValue);
+        //     //     ConfigModalEvaluateConditions();
+        //     // });
+
+        //     // string rulesFile = Preferences.Current.RulesFile;
+        //     // Modal.AddFileField("RulesFile", "Homebrew File", rulesFile, "rules");
+        // }
+
+        // if (_mode == ConnectMode.Host)
+        // {
+        //     int maxPlayers = Preferences.Current.PlayerCount;
+        //     Modal.AddIntField("PlayerCount", "Max Player Count", maxPlayers, (evt) =>
+        //     {
+        //         Preferences.SetPlayerCount(evt.newValue);
+        //     });
+        // }
+
+        // if (_mode == ConnectMode.Client)
+        // {
+        //     string hostIP = Preferences.Current.HostIP;
+        //     Modal.AddTextField("HostIP", "Host IP", hostIP, (evt) =>
+        //     {
+        //         Preferences.SetHostIP(evt.newValue);
+        //     });
+        // }
+
+        // Modal.AddPreferredButton("Confirm", ConfirmConfig);
+        // Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // ConfigModalEvaluateConditions();
 
+    }
+
+    private void StartSession()
+    {
+        var sdcontent = GameObject.Find("SystemUI").GetComponent<UIDocument>().rootVisualElement.parent.Q<ShunDialogContent>();
+        string playerName = sdcontent.Q<ShunInput>().value;
+        Debug.Log(playerName);
     }
 
     // private void ConfigModalEvaluateConditions()

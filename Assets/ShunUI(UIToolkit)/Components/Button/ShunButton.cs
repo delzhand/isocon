@@ -289,7 +289,7 @@ namespace ShunUI
         // Add click handler (similar to Button's clicked event)
         public event System.Action clicked;
 
-        private void OnClick(ClickEvent evt)
+        protected void OnClick(ClickEvent evt)
         {
             clicked?.Invoke();
         }

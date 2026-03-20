@@ -119,6 +119,7 @@ namespace ShunUI
 
                     if (children[i] is ShunMenuItemBase menuItem)
                     {
+                        menuItem.closeRootMenu = Close;
                         menuItem.clicked += Close;
                     }
                 }
@@ -133,6 +134,7 @@ namespace ShunUI
                 shortcut = shortcut
             };
 
+            item.closeRootMenu = Close;
             if (onClick != null)
             {
                 item.clicked += onClick;
@@ -148,6 +150,22 @@ namespace ShunUI
         {
             var separator = new ShunMenuSeparator();
             _itemsContainer.Add(separator);
+        }
+
+        public override void Close()
+        {
+            if (_itemsContainer != null)
+            {
+                foreach (var child in _itemsContainer.Children())
+                {
+                    if (child is ShunMenuItemBase menuItem)
+                    {
+                        menuItem.HideSubmenu();
+                    }
+                }
+            }
+
+            base.Close();
         }
 
         private void ScheduleOpen()
@@ -206,9 +224,8 @@ namespace ShunUI
 
         protected override bool IsClickInside(VisualElement clickedElement)
         {
-            return (_content != null && _content.Contains(clickedElement)) ||
+            return base.IsClickInside(clickedElement) ||
                    (_trigger != null && _trigger.Contains(clickedElement));
         }
     }
 }
-

@@ -169,18 +169,29 @@ public class NeutralState : TabletopSubstate
     private void LeftClickRelease()
     {
         // Debug.Log("left click release");
-        Pointer.PickToken()?.ToggleSelect();
+        Pointer.PickActor()?.ToggleSelect();
     }
 
     private void RightClickRelease()
     {
         // Debug.Log("right click release");
-        Pointer.PickToken(true)?.ToggleMenu();
+        Actor pickedActor = Pointer.PickActor(true);
+        if (pickedActor)
+        {
+            pickedActor.ToggleMenu();
+            return;
+        }
+        Block pickedBlock = Pointer.PickBlock();
+        if (pickedBlock)
+        {
+            pickedBlock.ToggleMenu();
+            return;
+        }
     }
 
     private void LeftDragStart()
     {
-        Actor t = Pointer.PickToken();
+        Actor t = Pointer.PickActor();
         t?.StartDragging();
     }
 

@@ -61,12 +61,12 @@ namespace ShunUI
             _trigger.variant = ButtonVariant.Outline;
             _trigger.text = "Open";
             _trigger.clicked += Toggle;
-            
+
             // Ensure button takes auto width
             _trigger.style.width = StyleKeyword.Auto;
             _trigger.style.flexShrink = 0;
             _trigger.style.flexGrow = 0;
-            
+
             hierarchy.Add(_trigger);
 
             // Create content using base menu-content style
@@ -83,7 +83,10 @@ namespace ShunUI
 
             RegisterCallback<AttachToPanelEvent>(evt =>
             {
-                CollectItemsFromUXML();
+                schedule.Execute(() =>
+                {
+                    CollectItemsFromUXML();
+                });
             });
 
             UpdatePositionOnGeometryChange();
@@ -108,6 +111,7 @@ namespace ShunUI
 
                 if (child is ShunMenuItemBase menuItem)
                 {
+                    menuItem.closeRootMenu = Close;
                     menuItem.clicked += Close;
                 }
             }
@@ -124,6 +128,7 @@ namespace ShunUI
                 item.clicked += onClick;
             }
             item.clicked += Close;
+            item.closeRootMenu = Close;
             _itemsContainer.Add(item);
             return item;
         }
@@ -142,6 +147,18 @@ namespace ShunUI
 
         public override void Close()
         {
+            // Hide all submenu overlays before closing
+            if (_itemsContainer != null)
+            {
+                foreach (var child in _itemsContainer.Children())
+                {
+                    if (child is ShunMenuItemBase menuItem)
+                    {
+                        menuItem.HideSubmenu();
+                    }
+                }
+            }
+
             base.Close();
             _trigger?.RemoveFromClassList("trigger--open");
         }
@@ -185,7 +202,7 @@ namespace ShunUI
 
         protected override bool IsClickInside(VisualElement clickedElement)
         {
-            return (_content != null && _content.Contains(clickedElement)) ||
+            return base.IsClickInside(clickedElement) ||
                    (_trigger != null && _trigger.Contains(clickedElement));
         }
     }

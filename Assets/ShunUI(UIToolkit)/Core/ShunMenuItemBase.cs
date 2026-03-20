@@ -16,11 +16,24 @@ namespace ShunUI.Primitives
         protected VisualElement _submenu;
         protected VisualElement _submenuItems;
         protected bool _submenuCollected = false;
+
+        /// <summary>
+        /// The submenu overlay element. After ShowSubmenu() this may be reparented to the root,
+        /// so callers should use this property instead of Q(className: "menu-submenu").
+        /// </summary>
+        public VisualElement Submenu => _submenu;
         protected IVisualElementScheduledItem _hideSubmenuScheduler;
         protected IVisualElementScheduledItem _showSubmenuScheduler;
         protected bool _submenuVisible = false;
         protected bool _mouseOverParent = false;
         protected bool _mouseOverSubmenu = false;
+
+        /// <summary>
+        /// Callback set by the root menu (ShunContextMenu, ShunDropdownMenu, etc.)
+        /// to close the entire menu when a leaf submenu item is clicked.
+        /// Automatically propagated to child submenu items.
+        /// </summary>
+        internal System.Action closeRootMenu;
 
         private const int HOVER_DELAY = 200; // ms
 
@@ -127,13 +140,12 @@ namespace ShunUI.Primitives
 
         public ShunMenuItemBase()
         {
-            Initialize();
+            // Note: Initialize() is already called by the base ShunButton() constructor
+            // via virtual dispatch, so we do not call it again here.
         }
 
         protected override void Initialize()
         {
-            base.Initialize();
-
             // Clear any default children added by ShunButton (like the default label and icon)
             // This prevents them from being mistaken as submenu items
             Clear();
@@ -185,6 +197,11 @@ namespace ShunUI.Primitives
             // Register mouse events for submenu behavior
             RegisterCallback<MouseEnterEvent>(OnMouseEnter);
             RegisterCallback<MouseLeaveEvent>(OnMouseLeave);
+
+            // Register click event to fire the inherited 'clicked' event from ShunButton.
+            // We can't call base.Initialize() because it creates UI elements (label, icon)
+            // that conflict with our menu-item structure, so we register the callback directly.
+            RegisterCallback<ClickEvent>(OnClick);
         }
 
         protected virtual void OnAttachedToPanel(AttachToPanelEvent evt)
@@ -270,6 +287,18 @@ namespace ShunUI.Primitives
         {
             if (_submenu != null)
             {
+                // Recursively hide nested submenus first
+                if (_submenuItems != null)
+                {
+                    foreach (var child in _submenuItems.Children())
+                    {
+                        if (child is ShunMenuItemBase childItem)
+                        {
+                            childItem.HideSubmenu();
+                        }
+                    }
+                }
+
                 _submenu.style.display = DisplayStyle.None;
                 _submenuVisible = false;
 
@@ -296,11 +325,26 @@ namespace ShunUI.Primitives
             {
                 CreateSubmenu();
 
-                // Move children to submenu
+                // Move children to submenu and wire close handlers
                 foreach (var child in submenuChildren)
                 {
                     child.RemoveFromHierarchy();
                     _submenuItems.Add(child);
+
+                    if (child is ShunMenuItemBase menuItem)
+                    {
+                        // Propagate the root menu close action
+                        menuItem.closeRootMenu = closeRootMenu;
+
+                        // When a leaf item is clicked, close the root menu
+                        menuItem.clicked += () =>
+                        {
+                            if (!menuItem.hasArrow)
+                            {
+                                menuItem.closeRootMenu?.Invoke();
+                            }
+                        };
+                    }
                 }
             }
         }
@@ -358,6 +402,18 @@ namespace ShunUI.Primitives
             }
 
             _submenuItems.Add(item);
+
+            // Propagate the root menu close action
+            item.closeRootMenu = closeRootMenu;
+
+            // When a leaf item is clicked, close the root menu
+            item.clicked += () =>
+            {
+                if (!item.hasArrow)
+                {
+                    item.closeRootMenu?.Invoke();
+                }
+            };
         }
 
         public virtual void AddSubmenuSeparator()

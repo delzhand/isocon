@@ -6,8 +6,11 @@ using UnityEngine.UIElements;
 
 public class AddTerrainEffect
 {
-    public static void OpenModal()
+    static Block singleBlock;
+
+    public static void OpenModal(Block b)
     {
+        singleBlock = b;
         Modal.Reset("Add Terrain Effect");
         // Modal.AddSearchField("SearchField", "Effect Name", "", GameSystem.Current().GetEffectList());
         Modal.AddDropdownField("VisualMarker", "Visual Marker", "None", StringUtility.CreateArray("None", "Spiky", "Wavy", "Hole", "Hand", "Skull", "Blocked", "Corners", "Border"));
@@ -19,17 +22,25 @@ public class AddTerrainEffect
 
     private static void ConfirmAddEffect(ClickEvent evt)
     {
-        string effect = UI.Modal.Q("SearchField").Q<TextField>("SearchInput").value;
         string marker = UI.Modal.Q<DropdownField>("VisualMarker").value;
         string color = UI.Modal.Q<DropdownField>("Color").value;
         Modal.Close();
 
-        List<Block> selected = Block.GetSelected().ToList();
         List<string> blockNames = new();
-        selected.ForEach(block =>
+        if (singleBlock != null)
         {
-            blockNames.Add(block.name);
-        });
-        Player.Self().CmdRequestMapSetValue(blockNames.ToArray(), "AddEffect", $"{effect}::{marker}::{color}");
+            blockNames.Add(singleBlock.name);
+        }
+        else
+        {
+            List<Block> selected = Block.GetSelected().ToList();
+            selected.ForEach(block =>
+            {
+                blockNames.Add(block.name);
+            });
+        }
+        string command = $"???::{marker}::{color}";
+        Debug.Log(command);
+        Player.Self().CmdRequestMapSetValue(blockNames.ToArray(), "AddEffect", command);
     }
 }

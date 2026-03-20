@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Mirror;
+using ShunUI;
+using ShunUI.Primitives;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.RemoteConfig;
@@ -11,8 +13,8 @@ using UnityEngine.UIElements;
 
 public class Startup
 {
-    private static string _version = "0.8.0";
-    private static string _latestVersion = "0.8.0";
+    private static string _version = "0.8.2";
+    private static string _latestVersion = "0.8.2";
 
     public static void RunTasks()
     {
@@ -26,6 +28,7 @@ public class Startup
         TokenLibrary.Setup();
         Autosaver.Setup();
         Tutorial.Setup();
+        SelectionMenu.Setup();
 
         UI.SetBlocking(UI.System, StringUtility.CreateArray(@"SelectionMenu", "TopBar", "BottomBar", "ToolsPanel", "ToolOptions", "LeftTokenPanel", "RightTokenPanel", "Backdrop", "NumberPickerModal", "TopRight"));
         Application.targetFrameRate = Preferences.Current.TargetFramerate;

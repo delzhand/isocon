@@ -33,6 +33,14 @@ public class SelectionMenu
     public static void Setup()
     {
         UI.SetBlocking(UI.System, "SelectionMenu");
+
+        VisualElement parent = UI.System.Q("Tabletop").Q("Frame");
+        CMenu = new ShunContextMenu();
+        CMenu.name = "ContextMenu";
+        VisualElement menuMount = new();
+        menuMount.style.display = DisplayStyle.None;
+        menuMount.Add(CMenu);
+        parent.Add(menuMount);
     }
 
     public static VisualElement Find()
@@ -61,25 +69,17 @@ public class SelectionMenu
 
     public static void Reset(string title, Vector2 offset, Transform follow = null)
     {
-        if (CMenu == null)
-        {
-            VisualElement tabletop = UI.System.Q("Tabletop");
-            CMenu = new ShunContextMenu();
-            tabletop.Add(CMenu);
-            CMenu.AttachTo(tabletop);
-        }
-
+        FollowTransform = follow;
         CMenu.ClearItems();
-        CMenu.name = "CMenu";
+        // var test = CMenu.AddItem("Test");
 
-        var test = CMenu.AddItem("Test", null, null);
-        var test2 = new ShunMenuItem();
-        test2.label = "Child";
-        test2.clicked += () => { Debug.Log("child"); };
-        test2.clicked += () => { CMenu.Close(); };
-        test.AddSubmenuItem(test2);
+        // var test2 = new ShunMenuItem();
+        // test2.label = "Child";
+        // test2.clicked += () => { Debug.Log("child"); };
+        // test.AddSubmenuItem(test2);
 
-        CMenu.Open();
+        Vector2 pos = UI.GetTransformScreenPosition(FollowTransform, UI.System, Camera.main);
+        CMenu.OpenAtPosition(pos + offset);
     }
 
     public static void Hide()

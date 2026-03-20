@@ -97,7 +97,40 @@ namespace ShunUI.Primitives
 
         protected virtual bool IsClickInside(VisualElement clickedElement)
         {
-            return _content != null && _content.Contains(clickedElement);
+            if (_content != null && _content.Contains(clickedElement))
+                return true;
+
+            // Check reparented submenus — ShowSubmenu() moves them to the root
+            // overlay, so they are no longer in _content's subtree.
+            if (_itemsContainer != null && IsClickInSubmenu(_itemsContainer, clickedElement))
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Recursively checks whether the click landed inside a reparented submenu
+        /// of any ShunMenuItemBase within the given container.
+        /// </summary>
+        protected static bool IsClickInSubmenu(VisualElement container, VisualElement clickedElement)
+        {
+            foreach (var child in container.Children())
+            {
+                if (child is ShunMenuItemBase menuItem)
+                {
+                    var submenu = menuItem.Submenu;
+                    if (submenu != null)
+                    {
+                        if (submenu.Contains(clickedElement))
+                            return true;
+
+                        // Recurse into nested submenu items
+                        if (IsClickInSubmenu(submenu, clickedElement))
+                            return true;
+                    }
+                }
+            }
+            return false;
         }
 
         protected void UpdatePositionOnGeometryChange()
