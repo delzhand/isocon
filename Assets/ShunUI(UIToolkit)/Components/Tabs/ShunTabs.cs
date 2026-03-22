@@ -1,6 +1,7 @@
 using UnityEngine.UIElements;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 
 namespace ShunUI
 {
@@ -47,7 +48,7 @@ namespace ShunUI
                     {
                         tab.RemoveFromHierarchy();
                         _tabList.Add(tab);
-                        
+
                         if (!_tabs.Contains(tab))
                         {
                             _tabs.Add(tab);

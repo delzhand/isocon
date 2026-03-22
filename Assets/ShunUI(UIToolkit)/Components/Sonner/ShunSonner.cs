@@ -29,7 +29,7 @@ namespace ShunUI
     [UxmlElement]
     public partial class ShunSonner : VisualElement
     {
-        private static Dictionary<ToastPosition, ShunSonner> s_Instances = new Dictionary<ToastPosition, ShunSonner>();
+        private static Dictionary<ToastPosition, ShunSonner> s_Instances;
         private List<ToastItem> m_ActiveToasts = new List<ToastItem>();
         private const int MAX_VISIBLE_TOASTS = 3;
         private const float DEFAULT_DURATION = 5000f; // milliseconds
@@ -57,10 +57,10 @@ namespace ShunUI
                     }
 
                     m_Position = value;
-                    
+
                     // Register in new position first
                     s_Instances[m_Position] = this;
-                    
+
                     // Then update visual position
                     if (m_IsInitialized)
                     {
@@ -122,11 +122,16 @@ namespace ShunUI
 
         public ShunSonner()
         {
+            if (s_Instances == null)
+            {
+                s_Instances = new Dictionary<ToastPosition, ShunSonner>();
+            }
+
             AddToClassList("sonner");
-            
+
             style.position = Position.Absolute;
             pickingMode = PickingMode.Ignore; // Container doesn't block clicks, but children (toasts) will
-            
+
             // Make visible by default
             style.display = DisplayStyle.Flex;
 
@@ -150,10 +155,10 @@ namespace ShunUI
         private void OnAttachToPanel(AttachToPanelEvent evt)
         {
             if (m_IsInitialized) return;
-            
+
             // Register this instance for static toast calls FIRST
             s_Instances[m_Position] = this;
-            
+
             // Setup immediately - no delays
             UpdatePosition();
             m_IsInitialized = true;
@@ -192,9 +197,9 @@ namespace ShunUI
         }
 
         public void ShowToast(
-            string message, 
-            string title = null, 
-            ToastVariant variant = ToastVariant.Default, 
+            string message,
+            string title = null,
+            ToastVariant variant = ToastVariant.Default,
             float duration = DEFAULT_DURATION,
             bool showIcon = true,
             Texture2D customIcon = null,
@@ -204,11 +209,11 @@ namespace ShunUI
             System.Action onActionClick = null)
         {
             var toast = new ToastItem(this, message, title, variant, duration, showIcon, customIcon, showDescription, showActionButton, actionButtonText);
-            
+
             // Always add to the end - newest toasts are at the end of the list
             Add(toast.element);
             m_ActiveToasts.Add(toast);
-            
+
             UpdateStackPositions();
 
             // Schedule auto-dismiss (stored so we can pause/resume)
@@ -255,8 +260,8 @@ namespace ShunUI
 
         private void UpdateStackPositions()
         {
-            bool isTopPosition = m_Position == ToastPosition.TopLeft || 
-                                m_Position == ToastPosition.TopCenter || 
+            bool isTopPosition = m_Position == ToastPosition.TopLeft ||
+                                m_Position == ToastPosition.TopCenter ||
                                 m_Position == ToastPosition.TopRight;
 
             // Keep only the most recent MAX_VISIBLE_TOASTS, dismiss the rest
@@ -272,31 +277,31 @@ namespace ShunUI
             }
 
             int count = m_ActiveToasts.Count;
-            
+
             // Starting from a common Y coordinate (0), position each toast
             // Newer toasts get higher positions (appear on top)
             float visibleGap = 12f; // Gap between stacked toasts
-            
+
             for (int i = 0; i < count; i++)
             {
                 var toast = m_ActiveToasts[i];
                 toast.element.style.display = DisplayStyle.Flex;
-                
+
                 // Use absolute positioning from a common reference point
                 toast.element.style.position = Position.Absolute;
                 // Don't set left/right - let the container's alignment handle horizontal positioning
                 toast.element.style.left = StyleKeyword.Auto;
                 toast.element.style.right = StyleKeyword.Auto;
-                
+
                 // Calculate visual index: newest toast (last in list) = 0, oldest (first in list) = count-1
                 int visualIndex = count - 1 - i;
-                
+
                 // Position ALL toasts from base Y=0, offset by their visual index
                 // Toast 0 (newest): yOffset = 0 * 12 = 0
                 // Toast 1 (middle): yOffset = 1 * 12 = 12
                 // Toast 2 (oldest): yOffset = 2 * 12 = 24
                 float yOffset = visualIndex * visibleGap;
-                
+
                 if (isTopPosition)
                 {
                     toast.element.style.top = yOffset;
@@ -307,7 +312,7 @@ namespace ShunUI
                     toast.element.style.top = StyleKeyword.Auto;
                     toast.element.style.bottom = yOffset;
                 }
-                
+
                 // REVERSED: Place older toasts BEHIND newer ones
                 // Newer toasts (higher index) should be on top
                 if (i < count - 1)
@@ -316,11 +321,11 @@ namespace ShunUI
                     var newerToast = m_ActiveToasts[i + 1];
                     toast.element.PlaceBehind(newerToast.element);
                 }
-                
+
                 // Scale down slightly for depth effect (older toasts are smaller)
                 float scale = 1f - (visualIndex * 0.03f); // 3% scale reduction per position
                 toast.element.style.scale = new StyleScale(new Scale(new Vector2(scale, scale)));
-                
+
                 // Reduce opacity slightly for older toasts
                 float opacity = 1f - (visualIndex * 0.1f); // 10% opacity reduction per position
                 toast.element.style.opacity = Mathf.Max(opacity, 0.8f);
@@ -329,10 +334,10 @@ namespace ShunUI
 
         // Static methods for easy usage
         public static void Toast(
-            string message, 
-            string title = null, 
-            ToastVariant variant = ToastVariant.Default, 
-            ToastPosition position = ToastPosition.BottomRight, 
+            string message,
+            string title = null,
+            ToastVariant variant = ToastVariant.Default,
+            ToastPosition position = ToastPosition.BottomRight,
             float duration = DEFAULT_DURATION,
             bool showIcon = true,
             Texture2D customIcon = null,
@@ -374,12 +379,12 @@ namespace ShunUI
         {
             Toast(message, title, ToastVariant.Info, position, duration, showIcon: true, customIcon: customIcon, showDescription: false);
         }
-        
+
         public static void Description(string message, string title, ToastPosition position = ToastPosition.BottomRight, float duration = DEFAULT_DURATION)
         {
             Toast(message, title, ToastVariant.Default, position, duration, showIcon: false, showDescription: true);
         }
-        
+
         public static void Action(string message, string title, string actionButtonText = "Action", System.Action onActionClick = null, ToastPosition position = ToastPosition.BottomRight, float duration = DEFAULT_DURATION)
         {
             Toast(message, title, ToastVariant.Default, position, duration, showIcon: false, showDescription: false, showActionButton: true, actionButtonText: actionButtonText, onActionClick: onActionClick);
@@ -392,7 +397,7 @@ namespace ShunUI
         {
             if (s_Instances.Count == 0)
                 return "No ShunSonner instances registered. Add <shun:ShunSonner> or <shun:ShunSonnerManager> to your UXML.";
-            
+
             return $"Registered positions: {string.Join(", ", s_Instances.Keys)}";
         }
 
@@ -411,9 +416,9 @@ namespace ShunUI
 
             public ToastItem(
                 ShunSonner sonner,
-                string message, 
-                string title, 
-                ToastVariant variant, 
+                string message,
+                string title,
+                ToastVariant variant,
                 float duration,
                 bool showIcon,
                 Texture2D customIcon,
@@ -436,9 +441,9 @@ namespace ShunUI
 
                 // Determine icon visibility based on variant and user preference
                 bool shouldShowIcon = showIcon && (
-                    variant == ToastVariant.Success || 
-                    variant == ToastVariant.Error || 
-                    variant == ToastVariant.Warning || 
+                    variant == ToastVariant.Success ||
+                    variant == ToastVariant.Error ||
+                    variant == ToastVariant.Warning ||
                     variant == ToastVariant.Info ||
                     iconToUse != null
                 );

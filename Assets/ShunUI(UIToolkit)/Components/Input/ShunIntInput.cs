@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 namespace ShunUI
 {
     [UxmlElement]
-    public partial class ShunInput : TextField
+    public partial class ShunIntInput : IntegerField
     {
         private string _placeholder = "";
         private TextElement _textElement;
@@ -19,12 +19,12 @@ namespace ShunUI
             }
         }
 
-        public ShunInput()
+        public ShunIntInput()
         {
             Initialize();
         }
 
-        public ShunInput(string label) : base(label)
+        public ShunIntInput(string label) : base(label)
         {
             Initialize();
         }
@@ -84,7 +84,7 @@ namespace ShunUI
             if (_textElement != null)
             {
                 // Add a class when showing placeholder (empty value)
-                if (string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty($"{value}"))
                 {
                     _textElement.AddToClassList("unity-text-element--placeholder");
                 }

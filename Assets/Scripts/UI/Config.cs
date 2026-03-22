@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -7,23 +10,24 @@ public class Config
 {
     public static void OpenModal(ClickEvent evt)
     {
-        Modal.Reset("Configuration");
-        Modal.AddCloseCallback(BackToNeutral);
+        ShunDialogHelper.SetTargetDialog("ShunDialog1");
+        var dialog = ShunDialogHelper.Dialog;
+        // ShunDialogHelper.SetCloseAction(BackToNeutral);
+        ShunDialogHelper.Contents.Clear();
 
-#if !UNITY_WEBGL
-        string path = Preferences.Current.DataPath;
-        Modal.AddTextField("DataPath", "Data Path", path, (evt) =>
-        {
-            Preferences.SetDataPath(evt.newValue);
-        });
-        Modal.AddDescription("DataPathDesc", "This is the directory where the token library, shared tokens, and log files will be saved.");
-#endif
+        ShunDialogHelper.AddDialogHeader("Settings");
 
-        Modal.AddToggleField("ShowHUD", "Display Info HUD", Preferences.Current.ShowHUD, (evt) =>
-        {
-            Preferences.SetShowHUD(evt.newValue);
-            UI.ToggleDisplay("DetailsHud", evt.newValue);
-        });
+        Dictionary<string, string> tabs = new();
+        tabs.Add("Interface", "Interface");
+        tabs.Add("Actors", "Actors");
+        tabs.Add("Misc", "Other");
+        var configTabs = ShunDialogHelper.AddTabs("ConfigTabs", tabs);
+
+        var dataPathField = ShunDialogHelper.AddTextField("DataPath", "Data Path", Preferences.Current.DataPath, "The directory where tokens, maps, sessions, etc will be saved");
+        ShunDialogHelper.MoveToTab(dataPathField, configTabs, "Misc");
+
+        var hudField = ShunDialogHelper.AddSwitchField("ShowHUD", "Display Info HUD", Preferences.Current.ShowHUD, "Show an overlay with connection and player information");
+        ShunDialogHelper.MoveToTab(hudField, configTabs, "Interface");
 
         List<string> scaleOptions = new();
         for (int i = 75; i <= 250; i += 25)
@@ -31,85 +35,73 @@ public class Config
             scaleOptions.Add(i + "%");
         }
 
-        string uiScale = Preferences.Current.UIScale;
-        Modal.AddDropdownField("UIScaleField", "UI Scale", uiScale, scaleOptions.ToArray(), (evt) =>
+        var uiScaleField = ShunDialogHelper.AddSelectField("UIScale", "UI Scale", Preferences.Current.UIScale, scaleOptions, "Control how large the user interface appears");
+        ShunDialogHelper.MoveToTab(uiScaleField, configTabs, "Interface");
+
+        var wUIScaleField = ShunDialogHelper.AddSelectField("WUIScale", "Actor UI Scale", Preferences.Current.WorldUIScale, scaleOptions, "Control how large the floating elements above actors appear");
+        ShunDialogHelper.MoveToTab(wUIScaleField, configTabs, "Actors");
+
+        List<string> fpsOptions = StringUtility.CreateArray("15", "30", "60", "90", "120").ToList<string>();
+        var fpsField = ShunDialogHelper.AddToggleField("FPSLimit", "FPS Limit", $"{Preferences.Current.TargetFramerate}", fpsOptions, false, "Set a cap on rendering speed");
+        ShunDialogHelper.MoveToTab(fpsField, configTabs, "Misc");
+
+        int bbOpacity = Mathf.RoundToInt(Preferences.Current.BlockBorderOpacity);
+        var blockBorderField = ShunDialogHelper.AddSliderField("BlockBorder", "Block Border Minimum", bbOpacity, "Set a minimum opacity on block borders when not dragging an actor");
+        ShunDialogHelper.MoveToTab(blockBorderField, configTabs, "Misc");
+
+        var actorBorderField = ShunDialogHelper.AddSelectField("ActorBorder", "Token Outline Color", Preferences.Current.TokenOutline, ColorUtility.CommonColors().ToList<string>(), "Set an outline color for improved token contrast");
+        ShunDialogHelper.MoveToTab(actorBorderField, configTabs, "Actors");
+
+        Dictionary<string, string> dragOptions = new();
+        dragOptions.Add("Pan", "Rotate with Middle, Pan with Right");
+        dragOptions.Add("Drag", "Rotate with Right, Pan with Middle");
+        var rightClickField = ShunDialogHelper.AddSelectField("CameraControls", "Camera Controls", dragOptions[Preferences.Current.DragPan ? "Drag" : "Pan"], dragOptions.Values.ToList<string>(), "Choose which mouse buttons rotate and pan the camera");
+        ShunDialogHelper.MoveToTab(rightClickField, configTabs, "Interface");
+
+        var footer = ShunDialogHelper.AddDialogFooter(() =>
         {
-            Preferences.SetUIScale(evt.newValue);
-            float value = float.Parse(evt.newValue.Replace("%", "")) / 100f;
-            GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = value;
+            BackToNeutral();
+            dialog.Close();
         });
 
-        string worldUiScale = Preferences.Current.WorldUIScale;
-        Modal.AddDropdownField("WorldUIScaleField", "World UI Scale", worldUiScale, scaleOptions.ToArray(), (evt) =>
+        var confirm = new ShunDialogClose();
+        confirm.SetVariant(ButtonVariant.Primary);
+        confirm.text = "Save Config";
+        confirm.clicked += () =>
         {
-            Preferences.SetWorldUIScale(evt.newValue);
-            float value = float.Parse(evt.newValue.Replace("%", "")) / 100f;
-            GameObject.Find("UICanvas/WorldUI").GetComponent<UIDocument>().panelSettings.scale = value;
-        });
+            SaveConfig();
+            // BackToNeutral();
+            dialog.Close();
+        };
+        footer.Add(confirm);
 
-        float tokenScale = Preferences.Current.TokenScale;
-        Modal.AddFloatSlider("TokenScaleField", "Token Scale", tokenScale, 2f, .5f, (evt) =>
-        {
-            Preferences.SetTokenScale(evt.newValue);
-        });
-
-        int framerate = Preferences.Current.TargetFramerate;
-        Modal.AddIntField("TargetFramerate", "FPS Limit", framerate, (evt) =>
-        {
-            if (evt.newValue > 3)
-            {
-                Preferences.SetTargetFramerate(evt.newValue);
-                Application.targetFrameRate = evt.newValue;
-            }
-        });
-
-        float borderOpacity = Preferences.Current.BlockBorderOpacity;
-        Modal.AddFloatSlider("BlockBorderOpacity", "Block Border Minimum", borderOpacity, 1, 0, (evt) =>
-        {
-            Preferences.SetBlockBorderOpacity(evt.newValue);
-        });
-
-        string tokenOutline = Preferences.Current.TokenOutline;
-        Modal.AddDropdownField("TokenOutlineField", "Token Outline", tokenOutline, StringUtility.CreateArray("White", "Black", "None"), (evt) =>
-        {
-            Preferences.SetTokenOutline(evt.newValue);
-            Actor.SetAllTokenOutlines();
-        });
-
-        string dragMode = Preferences.Current.DragPan ? "Pan" : "Rotate";
-        Modal.AddDropdownField("CameraDragModeField", "Right Click Drag Behavior", dragMode, StringUtility.CreateArray("Pan", "Rotate"), (evt) =>
-        {
-            bool dragValue = (evt.newValue == "Pan");
-            Preferences.SetDragPan(dragValue);
-            Viewport.SetPanMode(dragValue);
-        });
-
-        // string maleghastData = Preferences.Current.RulesFile;
-        // Modal.AddFileField("RulesFile", "Maleghast Data", maleghastData, "rules");
-
-        Modal.AddPreferredButton("Confirm", CloseModal);
+        dialog.Open();
     }
 
-    private static void CloseModal(ClickEvent evt)
+    private static void SaveConfig()
     {
-        Modal.Close();
+        var results = ShunDialogHelper.Results("ShunDialog1");
+        Preferences.Current.DataPath = results.Q<ShunInput>("DataPath").value;
+        Preferences.Current.ShowHUD = results.Q<ShunSwitch>("ShowHUD").value;
+        Preferences.Current.UIScale = results.Q<ShunSelect>("UIScale").selectedValue;
+        Preferences.Current.WorldUIScale = results.Q<ShunSelect>("WUIScale").selectedValue;
+        Preferences.Current.TargetFramerate = int.Parse(ShunDialogHelper.GetToggleFieldValues(results.Q<ShunToggleGroup>("FPSLimit")).First());
+        Preferences.Current.BlockBorderOpacity = results.Q<ShunSlider>("BlockBorder").value;
+        Preferences.Current.TokenOutline = results.Q<ShunSelect>("ActorBorder").selectedValue;
+        Preferences.Current.DragPan = results.Q<ShunSelect>("CameraControls").selectedValue == "Rotate with Right, Pan with Middle";
+
+        ShunSonner.Toast(
+            message: "Your changes have been saved",
+            title: "Success",
+            variant: ToastVariant.Success,
+            position: ToastPosition.BottomCenter,
+            duration: 300000f
+        );
     }
 
-    private static void BackToNeutral(ClickEvent evt)
+    private static void BackToNeutral()
     {
-        StateManager.Find().ChangeSubState(new NeutralState());
+        // Debug.Log("BTN");
+        // StateManager.Find().ChangeSubState(new NeutralState());
     }
-
-    // public static string[] GetAllRuleFiles()
-    // {
-    //     List<string> ruleFiles = new List<string>();
-    //     FileUtility.GetFilesRecursively(Preferences.Current.DataPath, "/ruledata", ruleFiles);
-
-    //     for (int i = 0; i < ruleFiles.Count; i++)
-    //     {
-    //         ruleFiles[i] = ruleFiles[i].Replace("/ruledata/", "");
-    //     }
-
-    //     return ruleFiles.ToArray();
-    // }
 }

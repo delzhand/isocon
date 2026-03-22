@@ -112,17 +112,17 @@ public class LauncherState : BaseState
 
     private void SoloModeClicked(ClickEvent evt)
     {
-        OpenConfigModal(evt, ConnectMode.Solo);
+        OpenStartSessionModal(evt, ConnectMode.Solo);
     }
 
     private void HostModeClicked(ClickEvent evt)
     {
-        OpenConfigModal(evt, ConnectMode.Host);
+        OpenStartSessionModal(evt, ConnectMode.Host);
     }
 
     private void ClientModeClicked(ClickEvent evt)
     {
-        OpenConfigModal(evt, ConnectMode.Client);
+        OpenStartSessionModal(evt, ConnectMode.Client);
     }
 
     private void CancelConnectionAttemptClicked(ClickEvent evt)
@@ -131,57 +131,28 @@ public class LauncherState : BaseState
         Toast.AddSimple("Connection attempt cancelled.");
     }
 
-    private void OpenConfigModal(ClickEvent evt, ConnectMode mode)
+    private void OpenStartSessionModal(ClickEvent evt, ConnectMode mode)
     {
         _mode = mode;
 
         var dialog = UI.System.Q<ShunDialog>();
-        var contents = dialog.Q<ShunDialogContent>();
-        contents.Clear();
+        ShunDialogHelper.Contents.Clear();
 
-        var hWrapper = new ShunContainer();
-        hWrapper.AddToClassList("shun-dialog__header");
-
-        contents.Add(hWrapper);
-        var hTitle = new ShunDialogTitle();
-        hTitle.text = $"Configure {_mode.ToString()} Mode";
-        hWrapper.Add(hTitle);
-
-        var pnameWrapper = new ShunContainer();
-        pnameWrapper.AddToClassList("shun-dialog__field");
-        contents.Add(pnameWrapper);
-
-        var pnameLabel = new Label("Player Name");
-        pnameLabel.AddToClassList("shun-dialog__label");
-        pnameWrapper.Add(pnameLabel);
-
-        var pname = new ShunInput();
-        pname.name = "PlayerName";
-        pname.value = Preferences.Current.PlayerName;
-        pnameWrapper.Add(pname);
-
+        ShunDialogHelper.AddDialogHeader($"Configure {_mode.ToString()} Mode");
+        ShunDialogHelper.AddTextField("PlayerName", "Player Name", Preferences.Current.PlayerName, "How you appear to other players");
         if (_mode == ConnectMode.Solo || _mode == ConnectMode.Host)
         {
-            var gridWrapper = new ShunContainer();
-            gridWrapper.AddToClassList("shun-dialog__field");
-            contents.Add(gridWrapper);
-
-            var gridLabel = new Label("Grid Type");
-            gridLabel.AddToClassList("shun-dialog__label");
-            gridWrapper.Add(gridLabel);
-
-            var grid = new ShunSelect();
-            grid.name = "GridType";
-            grid.SetOptions(new List<string> { "Square", "Hex" });
-            grid.selectedValue = Preferences.Current.Grid;
-            gridWrapper.Add(grid);
+            ShunDialogHelper.AddSelectField("GridType", "Grid Type", Preferences.Current.Grid, new List<string> { "Square", "Hex" }, "Choose 4 or 6 sided map tiles");
+        }
+        if (_mode == ConnectMode.Host)
+        {
+            ShunDialogHelper.AddIntField("PlayerCount", "Max Players", 4);
         }
 
-        var footer = new ShunContainer();
-        footer.AddToClassList("shun-dialog__footer");
-        contents.Add(footer);
+        var footer = ShunDialogHelper.AddDialogFooter(() => dialog.Close());
 
         var confirm = new ShunDialogClose();
+        confirm.SetVariant(ButtonVariant.Primary);
         confirm.text = "Start Session";
         if (_mode == ConnectMode.Client)
         {
@@ -194,126 +165,33 @@ public class LauncherState : BaseState
         };
         footer.Add(confirm);
 
-        var close = new ShunDialogClose();
-        close.text = "Cancel";
-        close.clicked += () =>
-        {
-            dialog.Close();
-        };
-        footer.Add(close);
-
         dialog.Open();
-
-        // Modal.Reset($"Configure {_mode.ToString()} Mode");
-
-        // string name = Preferences.Current.PlayerName;
-        // Modal.AddTextField("PlayerName", "Player Name", name, (evt) =>
-        // {
-        //     Preferences.SetPlayerName(evt.newValue);
-        // });
-
-        // if (_mode == ConnectMode.Solo || _mode == ConnectMode.Host)
-        // {
-        //     // string system = Preferences.Current.System;
-
-        //     // string[] systemOptions = GameSystem.SystemOptions();
-        //     // Modal.AddDropdownField("GameSystem", "Game System", system, systemOptions, (evt) =>
-        //     // {
-        //     //     Preferences.SetSystem(evt.newValue);
-        //     //     ConfigModalEvaluateConditions();
-        //     // });
-
-        //     string gridType = Preferences.Current.Grid;
-        //     Modal.AddDropdownField("GridType", "Grid Type", gridType, new string[] { "Square", "Hex" }, (evt) =>
-        //     {
-        //         Preferences.SetGrid(evt.newValue);
-        //         // ConfigModalEvaluateConditions();
-        //     });
-        //     // Modal.AddDescription("HexMessage", "Warning! Hex support is experimental. Some visual effects may not display correctly.");
-
-        //     // bool overrideRules = Preferences.Current.OverrideRules;
-        //     // Modal.AddToggleField("HomebrewToggle", "Use Homebrew Data", overrideRules, (evt) =>
-        //     // {
-        //     //     Preferences.SetOverrideRules(evt.newValue);
-        //     //     ConfigModalEvaluateConditions();
-        //     // });
-
-        //     // string rulesFile = Preferences.Current.RulesFile;
-        //     // Modal.AddFileField("RulesFile", "Homebrew File", rulesFile, "rules");
-        // }
-
-        // if (_mode == ConnectMode.Host)
-        // {
-        //     int maxPlayers = Preferences.Current.PlayerCount;
-        //     Modal.AddIntField("PlayerCount", "Max Player Count", maxPlayers, (evt) =>
-        //     {
-        //         Preferences.SetPlayerCount(evt.newValue);
-        //     });
-        // }
-
-        // if (_mode == ConnectMode.Client)
-        // {
-        //     string hostIP = Preferences.Current.HostIP;
-        //     Modal.AddTextField("HostIP", "Host IP", hostIP, (evt) =>
-        //     {
-        //         Preferences.SetHostIP(evt.newValue);
-        //     });
-        // }
-
-        // Modal.AddPreferredButton("Confirm", ConfirmConfig);
-        // Modal.AddButton("Cancel", Modal.CloseEvent);
-
-        // ConfigModalEvaluateConditions();
-
     }
 
     private void StartSession()
     {
-        var sdcontent = GameObject.Find("SystemUI").GetComponent<UIDocument>().rootVisualElement.parent.Q<ShunDialogContent>();
-        string playerName = sdcontent.Q<ShunInput>().value;
-        Debug.Log(playerName);
-    }
+        var results = ShunDialogHelper.Results("ShunDialog1");
+        string playerName = results.Q<ShunInput>("PlayerName").value;
+        Preferences.SetPlayerName(playerName);
 
-    // private void ConfigModalEvaluateConditions()
-    // {
-    //     if (UI.Modal.Q("GameSystem") != null)
-    //     {
-    //         /**
-    //          * Game System Grid Type
-    //          */
-    //         string[] hexSystems = GameSystem.HexOptionalSystems();
-    //         bool grid = StringUtility.CheckInList(UI.Modal.Q<DropdownField>("GameSystem").value, hexSystems);
-    //         bool hex = Preferences.Current.Grid == "Hex";
-    //         UI.ToggleDisplay(UI.Modal.Q("GridType"), grid);
-    //         UI.ToggleDisplay("HexMessage", grid && hex);
-    //     }
-    //     if (UI.Modal.Q("RulesFile") != null)
-    //     {
-    //         UI.ToggleDisplay(UI.Modal.Q("RulesFile"), UI.Modal.Q<Toggle>("HomebrewToggle").value);
-    //     }
-    //     UI.Redraw();
+        if (_mode == ConnectMode.Solo || _mode == ConnectMode.Host)
+        {
+            string gridType = results.Q<ShunSelect>("GridType").selectedValue;
+            Preferences.SetGrid(gridType);
+            TerrainController.GridType = gridType;
+        }
 
-    // }
-
-    private void ConfirmConfig(ClickEvent evt)
-    {
-        // if (UI.Modal.Q("RulesFile") != null)
-        // {
-        //     Preferences.Current.RulesFile = UI.Modal.Q("RulesFile").Q<TextField>("File").value;
-        // }
-
-        TerrainController.GridType = Preferences.Current.Grid;
         NetworkManager netManager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
         switch (_mode)
         {
             case ConnectMode.Solo:
-                // GameSystem.Set(Preferences.Current.System);
                 netManager.maxConnections = 1;
                 netManager.StartHost();
                 break;
             case ConnectMode.Host:
-                // GameSystem.Set(Preferences.Current.System);
-                netManager.maxConnections = Preferences.Current.PlayerCount;
+                int playerCount = results.Q<ShunIntInput>("PlayerCount").value;
+                Preferences.SetPlayerCount(playerCount);
+                netManager.maxConnections = playerCount;
                 netManager.StartHost();
                 break;
             case ConnectMode.Client:
@@ -322,25 +200,9 @@ public class LauncherState : BaseState
                 break;
         }
         _attemptingToConnect = true;
-        Modal.Close();
         UI.ToggleDisplay("StartupOptions", false);
         UI.ToggleDisplay("ConnectingMessage", true);
     }
-
-    // private string DefaultGridType()
-    // {
-    //     switch (Preferences.Current.System)
-    //     {
-    //         case "ICON 1.5":
-    //         case "Maleghast":
-    //             return "Square";
-    //         case "Lancer":
-    //             return "Hex";
-    //         default:
-    //             return Preferences.Current.Grid;
-    //     }
-    // }
-
     #endregion
 
     private void DestroyLeftoverNetworkData()

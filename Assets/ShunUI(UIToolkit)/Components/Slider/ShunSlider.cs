@@ -49,6 +49,14 @@ namespace ShunUI
             }
         }
 
+        public bool isDragging
+        {
+            get
+            {
+                return _isDragging;
+            }
+        }
+
         public ShunSlider()
         {
             Initialize();

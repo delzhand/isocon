@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Linq;
+using System;
 
 namespace ShunUI
 {
@@ -25,10 +26,12 @@ namespace ShunUI
         private bool m_IsInitialized = false;
         private bool m_StylesheetsInitialized = false;
 
+        public Action CloseAction;
+
         public ShunDialog()
         {
             AddToClassList("shun-dialog");
-            
+
             RegisterCallback<AttachToPanelEvent>(OnAttachToPanel);
         }
 
@@ -36,11 +39,14 @@ namespace ShunUI
         {
             if (m_IsInitialized) return;
             m_IsInitialized = true;
-            
+
             // Find the ShunDialogContent element
             var dialogContent = this.Query<ShunDialogContent>().First();
             if (dialogContent == null) return;
-            
+
+            // Set a name so we can find this element later
+            dialogContent.name = $"{parent.name}-Contents";
+
             // Create overlay when needed
             if (m_Overlay == null)
             {
@@ -61,36 +67,38 @@ namespace ShunUI
                 m_ContentContainer.AddToClassList("shun-dialog__content");
                 m_DialogContainer.Add(m_ContentContainer);
             }
-            
+
             // Move the dialog content to the overlay (only once)
             if (dialogContent.parent == this)
             {
                 dialogContent.RemoveFromHierarchy();
                 m_ContentContainer.Add(dialogContent);
-                
+
                 // Add overlay to this element
                 hierarchy.Add(m_Overlay);
             }
-            
+
             // Wire up all buttons in the dialog to close it
-            schedule.Execute(() => {
+            schedule.Execute(() =>
+            {
                 WireDialogButtons();
             }).ExecuteLater(0);
-            
+
             // Ensure overlay has stylesheet references
             EnsureOverlayStylesheets();
-            
-            schedule.Execute(() => {
+
+            schedule.Execute(() =>
+            {
                 SetupOverlayPosition();
             });
-            
+
             UpdateVisibility();
         }
-        
+
         private void WireDialogButtons()
         {
             if (m_ContentContainer == null) return;
-            
+
             // Find all buttons in the footer
             var footerContainers = m_ContentContainer.Query<VisualElement>(className: "shun-dialog__footer").ToList();
             foreach (var footer in footerContainers)
@@ -115,34 +123,34 @@ namespace ShunUI
         private void SetupOverlayPosition()
         {
             if (m_Overlay == null) return;
-            
+
             m_Overlay.style.position = Position.Absolute;
             m_Overlay.style.left = 0;
             m_Overlay.style.top = 0;
             m_Overlay.style.right = 0;
             m_Overlay.style.bottom = 0;
-            
+
             // Update overlay size based on parent container geometry changes
             void UpdateOverlaySize()
             {
                 if (m_Overlay == null) return;
-                
+
                 // At runtime in global container, use pixel-based sizing
                 if (Application.isPlaying && m_Overlay.parent != this)
                 {
                     var sizeSource = Vector2.zero;
-                    
+
                     if (m_Overlay.parent != null)
                     {
                         var parentBounds = m_Overlay.parent.layout;
                         sizeSource = new Vector2(parentBounds.width, parentBounds.height);
                     }
-                    
+
                     if (sizeSource == Vector2.zero)
                     {
                         sizeSource = new Vector2(1920, 1080);
                     }
-                    
+
                     m_Overlay.style.width = sizeSource.x;
                     m_Overlay.style.height = sizeSource.y;
                 }
@@ -153,22 +161,22 @@ namespace ShunUI
                     m_Overlay.style.height = StyleKeyword.Auto;
                 }
             }
-            
+
             // Listen to geometry changes on the overlay
             m_Overlay.RegisterCallback<GeometryChangedEvent>(evt => UpdateOverlaySize());
-            
+
             // Also listen to this element's geometry changes (for UI Builder)
             RegisterCallback<GeometryChangedEvent>(_ => UpdateOverlaySize());
-            
+
             // Listen to parent geometry changes
             if (parent != null)
             {
                 parent.RegisterCallback<GeometryChangedEvent>(_ => UpdateOverlaySize());
             }
-            
+
             // Set initial values
             schedule.Execute(UpdateOverlaySize).ExecuteLater(0);
-            
+
             // Register click handlers
             m_Overlay.RegisterCallback<ClickEvent>(OnRootClick, TrickleDown.TrickleDown);
         }
@@ -195,19 +203,24 @@ namespace ShunUI
         public void Close()
         {
             isOpen = false;
+            if (CloseAction != null)
+            {
+                CloseAction.Invoke();
+                CloseAction = null;
+            }
         }
-        
+
         private void EnsureOverlayStylesheets()
         {
             if (m_Overlay == null || m_StylesheetsInitialized) return;
-            
+
             // Load ShunStyle stylesheet from Resources (works at runtime)
             var shunStyle = Resources.Load<StyleSheet>("ShunStyle");
             if (shunStyle != null && !m_Overlay.styleSheets.Contains(shunStyle))
             {
                 m_Overlay.styleSheets.Add(shunStyle);
             }
-            
+
             // Copy stylesheets from panel root (works in UI Builder)
             if (panel != null && panel.visualTree != null)
             {
@@ -224,7 +237,7 @@ namespace ShunUI
                     }
                 }
             }
-            
+
             // Fallback: Copy from this element (for UI Builder preview)
             if (m_Overlay.styleSheets.count == 0)
             {
@@ -237,7 +250,7 @@ namespace ShunUI
                     }
                 }
             }
-            
+
             m_StylesheetsInitialized = true;
         }
 
@@ -263,17 +276,17 @@ namespace ShunUI
                     {
                         // In UI Builder, find the canvas element that contains the preview
                         VisualElement canvasParent = FindUIBuilderCanvas();
-                        
+
                         if (canvasParent != null && m_Overlay.parent != canvasParent)
                         {
                             EnsureOverlayStylesheets();
                             canvasParent.Add(m_Overlay);
                         }
                     }
-                    
+
                     m_Overlay.style.display = DisplayStyle.Flex;
                     m_Overlay.pickingMode = PickingMode.Position;
-                    
+
                     // Force layout update
                     schedule.Execute(() =>
                     {
@@ -290,16 +303,16 @@ namespace ShunUI
                     {
                         ShunOverlayManager.RemoveOverlay(m_Overlay);
                     }
-                    
+
                     // Move back to this element
                     if (m_Overlay.parent != this)
                     {
                         hierarchy.Add(m_Overlay);
                     }
-                    
+
                     // Clear stylesheets when closing so we don't hold onto old themes
                     ClearOverlayStylesheets();
-                    
+
                     m_Overlay.style.display = DisplayStyle.None;
                     m_Overlay.pickingMode = PickingMode.Ignore;
                 }
