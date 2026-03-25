@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using ShunUI.Primitives;
+using System;
 
 namespace ShunUI
 {
@@ -31,6 +32,7 @@ namespace ShunUI
         private VectorImage _selectedIconSvg;
         private VectorImage _searchIconSvg;
 #endif
+        public Action OnSelect;
 
         [UxmlAttribute]
         public List<string> choices
@@ -211,7 +213,7 @@ namespace ShunUI
             _content.style.display = DisplayStyle.None;
             _content.style.position = Position.Absolute;
             // Don't add to hierarchy yet - will be added to root when opened
-            
+
             // Create search container
             _searchContainer = new VisualElement();
             _searchContainer.AddToClassList("combobox__search-container");
@@ -396,6 +398,10 @@ namespace ShunUI
             _selectedValue = value;
             UpdateTriggerText();
             UpdateCheckmarkIcons();
+            if (OnSelect != null)
+            {
+                OnSelect.Invoke();
+            }
             Close();
         }
 
@@ -405,7 +411,7 @@ namespace ShunUI
             {
                 bool isPlaceholder = string.IsNullOrEmpty(_selectedValue);
                 _valueLabel.text = isPlaceholder ? _placeholder : _selectedValue;
-                
+
                 // Apply placeholder styling
                 if (isPlaceholder)
                 {
@@ -444,8 +450,8 @@ namespace ShunUI
                             checkmark.style.backgroundImage = new StyleBackground(_selectedIconSvg);
                         else
 #endif
-                        if (_selectedIcon != null)
-                            checkmark.style.backgroundImage = new StyleBackground(_selectedIcon);
+                            if (_selectedIcon != null)
+                                checkmark.style.backgroundImage = new StyleBackground(_selectedIcon);
                     }
                 }
             }

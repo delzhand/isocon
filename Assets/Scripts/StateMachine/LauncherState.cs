@@ -135,18 +135,19 @@ public class LauncherState : BaseState
     {
         _mode = mode;
 
-        var dialog = UI.System.Q<ShunDialog>();
-        ShunDialogHelper.Contents.Clear();
+        var dialog = ShunDialogHelper.SetCurrentDialog("ShunDialog1");
+        var dialogContent = ShunDialogHelper.Contents("ShunDialog1");
+        dialogContent.Clear();
 
         ShunDialogHelper.AddDialogHeader($"Configure {_mode.ToString()} Mode");
-        ShunDialogHelper.AddTextField("PlayerName", "Player Name", Preferences.Current.PlayerName, "How you appear to other players");
+        ShunDialogHelper.AddInlineTextField("PlayerName", "Player Name", Preferences.Current.PlayerName, "How you appear to other players");
         if (_mode == ConnectMode.Solo || _mode == ConnectMode.Host)
         {
-            ShunDialogHelper.AddSelectField("GridType", "Grid Type", Preferences.Current.Grid, new List<string> { "Square", "Hex" }, "Choose 4 or 6 sided map tiles");
+            ShunDialogHelper.AddInlineSelectField("GridType", "Grid Type", Preferences.Current.Grid, new List<string> { "Square", "Hex" }, "Choose 4 or 6 sided map tiles");
         }
         if (_mode == ConnectMode.Host)
         {
-            ShunDialogHelper.AddIntField("PlayerCount", "Max Players", 4);
+            ShunDialogHelper.AddInlineIntField("PlayerCount", "Max Players", 4);
         }
 
         var footer = ShunDialogHelper.AddDialogFooter(() => dialog.Close());
@@ -170,14 +171,15 @@ public class LauncherState : BaseState
 
     private void StartSession()
     {
-        var results = ShunDialogHelper.Results("ShunDialog1");
-        string playerName = results.Q<ShunInput>("PlayerName").value;
-        Preferences.SetPlayerName(playerName);
+        var dialogContent = ShunDialogHelper.Contents("ShunDialog1");
+
+        string playerName = dialogContent.Q<ShunInput>("PlayerName").value;
+        Preferences.Current.PlayerName = playerName;
 
         if (_mode == ConnectMode.Solo || _mode == ConnectMode.Host)
         {
-            string gridType = results.Q<ShunSelect>("GridType").selectedValue;
-            Preferences.SetGrid(gridType);
+            string gridType = dialogContent.Q<ShunSelect>("GridType").selectedValue;
+            Preferences.Current.Grid = gridType;
             TerrainController.GridType = gridType;
         }
 
@@ -189,8 +191,8 @@ public class LauncherState : BaseState
                 netManager.StartHost();
                 break;
             case ConnectMode.Host:
-                int playerCount = results.Q<ShunIntInput>("PlayerCount").value;
-                Preferences.SetPlayerCount(playerCount);
+                int playerCount = dialogContent.Q<ShunIntInput>("PlayerCount").value;
+                Preferences.Current.PlayerCount = playerCount;
                 netManager.maxConnections = playerCount;
                 netManager.StartHost();
                 break;
@@ -202,6 +204,7 @@ public class LauncherState : BaseState
         _attemptingToConnect = true;
         UI.ToggleDisplay("StartupOptions", false);
         UI.ToggleDisplay("ConnectingMessage", true);
+        Preferences.Save();
     }
     #endregion
 

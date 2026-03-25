@@ -10,10 +10,10 @@ public class Config
 {
     public static void OpenModal(ClickEvent evt)
     {
-        ShunDialogHelper.SetTargetDialog("ShunDialog1");
-        var dialog = ShunDialogHelper.Dialog;
+        var dialog = ShunDialogHelper.SetCurrentDialog("ShunDialog1");
+        var dialogContent = ShunDialogHelper.Contents("ShunDialog1");
         // ShunDialogHelper.SetCloseAction(BackToNeutral);
-        ShunDialogHelper.Contents.Clear();
+        dialogContent.Clear();
 
         ShunDialogHelper.AddDialogHeader("Settings");
 
@@ -80,15 +80,30 @@ public class Config
 
     private static void SaveConfig()
     {
-        var results = ShunDialogHelper.Results("ShunDialog1");
-        Preferences.Current.DataPath = results.Q<ShunInput>("DataPath").value;
-        Preferences.Current.ShowHUD = results.Q<ShunSwitch>("ShowHUD").value;
-        Preferences.Current.UIScale = results.Q<ShunSelect>("UIScale").selectedValue;
-        Preferences.Current.WorldUIScale = results.Q<ShunSelect>("WUIScale").selectedValue;
-        Preferences.Current.TargetFramerate = int.Parse(ShunDialogHelper.GetToggleFieldValues(results.Q<ShunToggleGroup>("FPSLimit")).First());
-        Preferences.Current.BlockBorderOpacity = results.Q<ShunSlider>("BlockBorder").value;
-        Preferences.Current.TokenOutline = results.Q<ShunSelect>("ActorBorder").selectedValue;
-        Preferences.Current.DragPan = results.Q<ShunSelect>("CameraControls").selectedValue == "Rotate with Right, Pan with Middle";
+        var dialogContent = ShunDialogHelper.Contents("ShunDialog1");
+        Preferences.Current.DataPath = dialogContent.Q<ShunInput>("DataPath").value;
+        Preferences.Current.ShowHUD = dialogContent.Q<ShunSwitch>("ShowHUD").value;
+        Preferences.Current.UIScale = dialogContent.Q<ShunSelect>("UIScale").selectedValue;
+        Preferences.Current.WorldUIScale = dialogContent.Q<ShunSelect>("WUIScale").selectedValue;
+        Preferences.Current.DragPan = dialogContent.Q<ShunSelect>("CameraControls").selectedValue == "Rotate with Right, Pan with Middle";
+
+        Preferences.Current.BlockBorderOpacity = dialogContent.Q<ShunSlider>("BlockBorder").value;
+
+        Preferences.Current.TokenOutline = dialogContent.Q<ShunSelect>("ActorBorder").selectedValue;
+        Actor.SetAllTokenOutlines();
+
+        float uiValue = float.Parse(Preferences.Current.UIScale.Replace("%", "")) / 100f;
+        GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = uiValue;
+
+        float wuiValue = float.Parse(Preferences.Current.WorldUIScale.Replace("%", "")) / 100f;
+        GameObject.Find("UICanvas/WorldUI").GetComponent<UIDocument>().panelSettings.scale = wuiValue;
+
+        int fpsValue = int.Parse(ShunDialogHelper.GetToggleFieldValues(dialogContent.Q<ShunToggleGroup>("FPSLimit")).First());
+        fpsValue = Math.Max(fpsValue, 3);
+        Preferences.Current.TargetFramerate = fpsValue;
+        Application.targetFrameRate = fpsValue;
+
+        Preferences.Save();
 
         ShunSonner.Toast(
             message: "Your changes have been saved",

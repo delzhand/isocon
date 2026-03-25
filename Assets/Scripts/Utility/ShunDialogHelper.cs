@@ -7,30 +7,33 @@ using UnityEngine.UIElements;
 
 public class ShunDialogHelper
 {
+    // We need to maintain references to ShunDialogContent elements because in the process of being created,
+    // they get reparented to the overlay in a way that makes it impossible to positively locate them using
+    // Q functions.
+    private static Dictionary<string, ShunDialogContent> _sdc = new();
+
     private static string _targetDialogName;
 
-    public static void SetTargetDialog(string name)
+    public static ShunDialog SetCurrentDialog(string name)
     {
         _targetDialogName = name;
+        _sdc[name] = UI.System.Q(name).Q<ShunDialogContent>();
+        return CurrentDialog;
     }
 
-    public static ShunDialog Dialog
+    public static ShunDialog CurrentDialog
     {
         get => UI.System.Q(_targetDialogName).Q<ShunDialog>();
     }
 
-    public static ShunDialogContent Contents
+    public static ShunDialog Dialog(string dialogName)
     {
-        get
-        {
-            var dialog = Dialog;
-            return dialog.Q<ShunDialogContent>();
-        }
+        return UI.System.Q(dialogName).Q<ShunDialog>();
     }
 
-    public static ShunDialogContent Results(string dialogName)
+    public static ShunDialogContent Contents(string dialogName)
     {
-        return GameObject.Find("SystemUI").GetComponent<UIDocument>().rootVisualElement.parent.Q<ShunDialogContent>($"{dialogName}-Contents");
+        return _sdc[dialogName];
     }
 
     public static void SetCloseAction(Action closeAction)
@@ -43,7 +46,7 @@ public class ShunDialogHelper
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__header");
-        Contents.Add(wrapper);
+        Contents(_targetDialogName).Add(wrapper);
 
         var title = new ShunDialogTitle();
         title.text = value;
@@ -54,7 +57,7 @@ public class ShunDialogHelper
     {
         var footer = new ShunContainer();
         footer.AddToClassList("shun-dialog__footer");
-        ShunDialogHelper.Contents.Add(footer);
+        Contents(_targetDialogName).Add(footer);
 
         var close = new ShunDialogClose();
         close.text = "Cancel";
@@ -65,11 +68,16 @@ public class ShunDialogHelper
         return footer;
     }
 
+    public static string GetTextFieldValue(string dialog, string name)
+    {
+        return Contents(dialog).Q<ShunInput>(name).value;
+    }
+
     public static VisualElement AddTextField(string name, string label, string defaultValue, string helpText = null)
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents.Add(wrapper);
+        Contents(_targetDialogName).Add(wrapper);
 
         var fieldlabel = new Label(label);
         fieldlabel.AddToClassList("shun-dialog__label");
@@ -90,6 +98,43 @@ public class ShunDialogHelper
         return wrapper;
     }
 
+    public static VisualElement AddInlineTextField(string name, string label, string defaultValue, string helpText = null)
+    {
+        var wrapper = new ShunContainer();
+        wrapper.AddToClassList("shun-dialog__field");
+        Contents(_targetDialogName).Add(wrapper);
+
+        var layout = new VisualElement();
+        layout.style.flexDirection = FlexDirection.Row;
+        layout.style.justifyContent = Justify.SpaceBetween;
+        layout.style.alignItems = Align.FlexStart;
+        wrapper.Add(layout);
+
+        var fieldlabel = new Label(label);
+        fieldlabel.AddToClassList("shun-dialog__label");
+        layout.Add(fieldlabel);
+
+        var layout2 = new VisualElement();
+        layout2.style.flexDirection = FlexDirection.Column;
+        layout2.style.alignItems = Align.Stretch;
+        layout2.style.minWidth = 250;
+        layout.Add(layout2);
+
+        var input = new ShunInput();
+        input.name = name;
+        input.value = defaultValue;
+        layout2.Add(input);
+
+        if (helpText != null)
+        {
+            var help = new Label(helpText);
+            help.AddToClassList("shun-dialog__description");
+            layout2.Add(help);
+        }
+
+        return wrapper;
+    }
+
     public static VisualElement AddToggleField(string name, string label, string defaultValue, List<string> options, bool allowMultiple, string helpText = null)
     {
         List<string> defaultValues = new();
@@ -101,7 +146,7 @@ public class ShunDialogHelper
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents.Add(wrapper);
+        Contents(_targetDialogName).Add(wrapper);
 
         var fieldlabel = new Label(label);
         fieldlabel.AddToClassList("shun-dialog__label");
@@ -148,11 +193,16 @@ public class ShunDialogHelper
         return active;
     }
 
+    public static int GetIntFieldValue(string dialog, string name)
+    {
+        return Contents(dialog).Q<ShunIntInput>(name).value;
+    }
+
     public static VisualElement AddIntField(string name, string label, int defaultValue, string helpText = null)
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents.Add(wrapper);
+        Contents(_targetDialogName).Add(wrapper);
 
         var fieldlabel = new Label(label);
         fieldlabel.AddToClassList("shun-dialog__label");
@@ -173,11 +223,53 @@ public class ShunDialogHelper
         return wrapper;
     }
 
+    public static VisualElement AddInlineIntField(string name, string label, int defaultValue, string helpText = null)
+    {
+        var wrapper = new ShunContainer();
+        wrapper.AddToClassList("shun-dialog__field");
+        Contents(_targetDialogName).Add(wrapper);
+
+        var layout = new VisualElement();
+        layout.style.flexDirection = FlexDirection.Row;
+        layout.style.justifyContent = Justify.SpaceBetween;
+        layout.style.alignItems = Align.FlexStart;
+        wrapper.Add(layout);
+
+        var fieldlabel = new Label(label);
+        fieldlabel.AddToClassList("shun-dialog__label");
+        layout.Add(fieldlabel);
+
+        var layout2 = new VisualElement();
+        layout2.style.flexDirection = FlexDirection.Column;
+        layout2.style.alignItems = Align.Stretch;
+        layout2.style.minWidth = 250;
+        layout.Add(layout2);
+
+        var input = new ShunIntInput();
+        input.name = name;
+        input.value = defaultValue;
+        layout2.Add(input);
+
+        if (helpText != null)
+        {
+            var help = new Label(helpText);
+            help.AddToClassList("shun-dialog__description");
+            layout2.Add(help);
+        }
+
+        return wrapper;
+    }
+
+    public static string GetSelectFieldValue(string dialog, string name)
+    {
+        return Contents(dialog).Q<ShunSelect>(name).selectedValue;
+    }
+
     public static VisualElement AddSelectField(string name, string label, string defaultValue, List<string> options, string helpText = null)
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents.Add(wrapper);
+        Contents(_targetDialogName).Add(wrapper);
 
         var fieldlabel = new Label(label);
         fieldlabel.AddToClassList("shun-dialog__label");
@@ -199,11 +291,50 @@ public class ShunDialogHelper
         return wrapper;
     }
 
+    public static VisualElement AddInlineSelectField(string name, string label, string defaultValue, List<string> options, string helpText = null)
+    {
+        var wrapper = new ShunContainer();
+        wrapper.AddToClassList("shun-dialog__field");
+        Contents(_targetDialogName).Add(wrapper);
+
+        var layout = new VisualElement();
+        layout.style.flexDirection = FlexDirection.Row;
+        layout.style.justifyContent = Justify.SpaceBetween;
+        layout.style.alignItems = Align.FlexStart;
+        wrapper.Add(layout);
+
+        var fieldlabel = new Label(label);
+        fieldlabel.AddToClassList("shun-dialog__label");
+        layout.Add(fieldlabel);
+
+        var layout2 = new VisualElement();
+        layout2.style.flexDirection = FlexDirection.Column;
+        layout2.style.alignItems = Align.Stretch;
+        layout2.style.minWidth = 250;
+        layout.Add(layout2);
+
+        var select = new ShunSelect();
+        select.name = name;
+        select.SetOptions(options);
+        select.selectedValue = defaultValue;
+        layout2.Add(select);
+
+        if (helpText != null)
+        {
+            var help = new Label(helpText);
+            help.AddToClassList("shun-dialog__description");
+            layout2.Add(help);
+        }
+
+        return wrapper;
+    }
+
+
     public static VisualElement AddSwitchField(string name, string label, bool defaultValue, string helpText = null)
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents.Add(wrapper);
+        Contents(_targetDialogName).Add(wrapper);
 
         var layout = new VisualElement();
         layout.style.flexDirection = FlexDirection.Row;
@@ -231,11 +362,16 @@ public class ShunDialogHelper
         return wrapper;
     }
 
+    public static string GetComboboxFieldValue(string dialog, string name)
+    {
+        return Contents(dialog).Q<ShunCombobox>(name).selectedValue;
+    }
+
     public static VisualElement AddComboboxField(string name, string label, string defaultValue, List<string> options, string helpText = null)
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents.Add(wrapper);
+        Contents(_targetDialogName).Add(wrapper);
 
         var fieldlabel = new Label(label);
         fieldlabel.AddToClassList("shun-dialog__label");
@@ -259,11 +395,51 @@ public class ShunDialogHelper
         return wrapper;
     }
 
+    public static VisualElement AddInlineComboboxField(string name, string label, string defaultValue, List<string> options, string helpText = null)
+    {
+        var wrapper = new ShunContainer();
+        wrapper.AddToClassList("shun-dialog__field");
+        Contents(_targetDialogName).Add(wrapper);
+
+        var layout = new VisualElement();
+        layout.style.flexDirection = FlexDirection.Row;
+        layout.style.justifyContent = Justify.SpaceBetween;
+        layout.style.alignItems = Align.FlexStart;
+        wrapper.Add(layout);
+
+        var fieldlabel = new Label(label);
+        fieldlabel.AddToClassList("shun-dialog__label");
+        layout.Add(fieldlabel);
+
+        var layout2 = new VisualElement();
+        layout2.style.flexDirection = FlexDirection.Column;
+        layout2.style.alignItems = Align.Stretch;
+        layout2.style.minWidth = 250;
+        layout.Add(layout2);
+
+        var select = new ShunCombobox();
+        select.name = name;
+        select.SetOptions(options);
+        select.placeholder = "Select an option";
+        select.searchPlaceholder = "Type to search...";
+        select.selectedValue = defaultValue;
+        layout2.Add(select);
+
+        if (helpText != null)
+        {
+            var help = new Label(helpText);
+            help.AddToClassList("shun-dialog__description");
+            layout2.Add(help);
+        }
+
+        return wrapper;
+    }
+
     public static VisualElement AddSliderField(string name, string label, int defaultValue, string helpText = null)
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents.Add(wrapper);
+        Contents(_targetDialogName).Add(wrapper);
 
         var fieldlabel = new Label(label);
         fieldlabel.AddToClassList("shun-dialog__label");
@@ -293,6 +469,10 @@ public class ShunDialogHelper
                 num.text = $"{Mathf.RoundToInt(input.value)}%";
             }
         });
+        input.RegisterCallback<PointerDownEvent>((val) =>
+        {
+            num.text = $"{Mathf.RoundToInt(input.value)}%";
+        });
         layout.Add(input);
 
         layout.Add(num);
@@ -311,7 +491,7 @@ public class ShunDialogHelper
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents.Add(wrapper);
+        Contents(_targetDialogName).Add(wrapper);
 
         var tabs = new ShunTabs();
         tabs.name = name;
@@ -343,21 +523,60 @@ public class ShunDialogHelper
         tabs.Q<ShunTabPanel>(tabPanelId).Add(e);
     }
 
+    public static VisualElement AddScrollArea(string name)
+    {
+        var area = new ShunScrollArea();
+        area.name = name;
+        area.style.height = 400;
+        Contents(_targetDialogName).Add(area);
+
+        var areaContent = new ShunScrollAreaContent();
+        area.Add(areaContent);
+
+        return area;
+    }
+
+    public static void MoveToScrollArea(VisualElement e, VisualElement area)
+    {
+        e.RemoveFromHierarchy();
+        area.Q<ShunScrollAreaContent>().Add(e);
+    }
+
+    public static void MoveToContainer(VisualElement e, VisualElement target)
+    {
+        e.RemoveFromHierarchy();
+        target.Add(e);
+    }
+
     public static VisualElement AddTokenField(string name, string label, string helpText = null)
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents.Add(wrapper);
-
-        var fieldlabel = new Label(label);
-        fieldlabel.AddToClassList("shun-dialog__label");
-        wrapper.Add(fieldlabel);
+        Contents(_targetDialogName).Add(wrapper);
 
         var layout = new VisualElement();
         layout.style.flexDirection = FlexDirection.Row;
         layout.style.justifyContent = Justify.SpaceBetween;
-        layout.style.alignItems = Align.Center;
+        layout.style.alignItems = Align.FlexStart;
         wrapper.Add(layout);
+
+        var fieldlabel = new Label(label);
+        fieldlabel.AddToClassList("shun-dialog__label");
+        layout.Add(fieldlabel);
+
+        var layout2 = new VisualElement();
+        layout2.style.flexDirection = FlexDirection.Column;
+        layout2.style.alignItems = Align.Stretch;
+        layout2.style.minWidth = 250;
+        layout.Add(layout2);
+
+        var select = new ShunCombobox();
+        select.name = name;
+        select.SetOptions(TokenLibrary.Options());
+        select.placeholder = "Select an option";
+        select.searchPlaceholder = "Type to search...";
+        // select.selectedValue = defaultValue;
+        layout2.Add(select);
 
         // ...
 

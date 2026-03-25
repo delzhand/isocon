@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -36,29 +37,41 @@ public class BasicActorType : ActorType
     #region Creation
     public static void AddActorModal()
     {
-        Modal.AddTextField("NameField", "Actor Name", "Actor");
-        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", ActorType.ShapeOptions());
-        Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
-        Modal.AddIntField("MaxHPField", "Max HP", 100);
-        Modal.AddPreferredButton("Create Actor", CreateClicked);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        var contents = ShunDialogHelper.Contents("ShunDialog1");
+        var typeContainer = contents.Q("ActorTypeContainer");
+        typeContainer.Clear();
+        contents.Q("CreateActor")?.RemoveFromHierarchy();
 
-        // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddActor.OrderFields(StringUtility.CreateArray("NameField", "ShapeField", "ColorField", "MaxHPField"));
+        var name = ShunDialogHelper.AddInlineTextField("Name", "Actor Name", "Actor");
+        ShunDialogHelper.MoveToContainer(name, typeContainer);
+        var shape = ShunDialogHelper.AddInlineSelectField("Shape", "Shape", "Square 1x1", ActorType.ShapeOptions().ToList<string>());
+        ShunDialogHelper.MoveToContainer(shape, typeContainer);
+        var color = ShunDialogHelper.AddInlineSelectField("Color", "Color", "Black", ColorUtility.CommonColors().ToList<string>());
+        ShunDialogHelper.MoveToContainer(color, typeContainer);
+        var maxhp = ShunDialogHelper.AddInlineIntField("MaxHP", "Max HP", 100);
+        ShunDialogHelper.MoveToContainer(maxhp, typeContainer);
+
+        var create = new ShunDialogClose();
+        create.name = "CreateActor";
+        create.text = "Create Actor";
+        create.SetVariant(ButtonVariant.Primary);
+        create.clicked += () => CreateClicked();
+        contents.Q(className: "shun-dialog__footer").Add(create);
     }
 
-    private static void CreateClicked(ClickEvent evt)
+    private static void CreateClicked()
     {
-        if (!TokenLibrary.TokenSelected())
+        string token = ShunDialogHelper.GetComboboxFieldValue("ShunDialog1", "Token");
+        if (token == null)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
+        string name = ShunDialogHelper.GetTextFieldValue("ShunDialog1", "Name");
+        string shape = ShunDialogHelper.GetSelectFieldValue("ShunDialog1", "Shape");
+        string color = ShunDialogHelper.GetSelectFieldValue("ShunDialog1", "Color");
+        int maxHP = ShunDialogHelper.GetIntFieldValue("ShunDialog1", "MaxHP");
 
-        string name = UI.Modal.Q<TextField>("NameField").value;
-        string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
-        int maxHP = UI.Modal.Q<IntegerField>("MaxHPField").value;
-        string color = UI.Modal.Q<DropdownField>("ColorField").value;
         BasicActorType t = new()
         {
             Type = TypeName,
@@ -68,7 +81,7 @@ public class BasicActorType : ActorType
         };
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Token = TokenLibrary.GetToken(token);
         a.Color = ColorUtility.GetCommonColor(color);
         a.Shape = shape;
         a.Position = Vector3.zero;

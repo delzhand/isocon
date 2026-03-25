@@ -55,6 +55,7 @@ public class Preferences
             DragPan = true,
             MaleghastFile = PlayerPrefs.GetString("MaleghastFile", ""),
             AutosaveInterval = PlayerPrefs.GetInt("AutosaveInterval", 300),
+            BlockBorderOpacity = PlayerPrefs.GetFloat("BlockBorderOpacity", 0),
         };
 
         string fileName = GetConfigFileName();
@@ -80,6 +81,7 @@ public class Preferences
             _current.AutosaveInterval = loaded.AutosaveInterval > 0 ? loaded.AutosaveInterval : _current.AutosaveInterval;
             _current.TutorialsSeen = loaded.TutorialsSeen.Length > 0 ? loaded.TutorialsSeen : _current.TutorialsSeen;
             _current.ShowHUD = loaded.ShowHUD;
+            _current.BlockBorderOpacity = loaded.BlockBorderOpacity > 0 ? loaded.BlockBorderOpacity : _current.BlockBorderOpacity;
         }
     }
 
@@ -204,11 +206,12 @@ public class Preferences
         Save();
     }
 
-    private static void Save()
+    public static void Save()
     {
         string fileName = GetConfigFileName();
         string json = JsonUtility.ToJson(_current);
         File.WriteAllText(fileName, json);
+        // Toast.AddSuccess("Configuration saved");
     }
 
     private static string GetConfigFileName()

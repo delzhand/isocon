@@ -2,31 +2,80 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine.UIElements;
 using UnityEngine;
+using ShunUI;
 
 public class AddActor
 {
     public static void OpenModal(ClickEvent evt)
     {
-        Player.Self().SetOp("Adding an Actor");
         Actor.Deselect();
-        Modal.Reset("Add Actor");
-        Modal.AddTokenField("TokenSearchField");
-        Modal.AddDropdownField("ActorType", "Actor Type", "Basic", ActorTypeRegistry.GetAllSystems().ToArray(), (evt) =>
-        {
-            VisualElement v = UI.Modal.Q("Contents").Q("TypeData_0");
-            if (v != null)
-            {
-                v.Clear();
-                Modal.ResetPreferredButtons();
-            }
 
-            string type = UI.Modal.Q<DropdownField>("ActorType").value;
+        var dialog = ShunDialogHelper.SetCurrentDialog("ShunDialog1");
+        ShunDialogHelper.SetCloseAction(() => CloseAddToken());
+        var dialogContent = ShunDialogHelper.Contents("ShunDialog1");
+        dialogContent.Clear();
+
+        ShunDialogHelper.SetCloseAction(CloseAddToken);
+
+        ShunDialogHelper.AddDialogHeader("Add Actor");
+
+        var token = ShunDialogHelper.AddTokenField("Token", "Token");
+
+        var actorType = ShunDialogHelper.AddInlineComboboxField("ActorType", "Actor Type", null, ActorTypeRegistry.GetAllSystems());
+        actorType.Q<ShunCombobox>().OnSelect += () =>
+        {
+            string type = dialogContent.Q<ShunCombobox>("ActorType").selectedValue;
             ActorTypeRegistry.DoCallback($"{type}|AddActorModal");
-        });
-        Modal.AddColumns("TypeData", 1);
-        ActorTypeRegistry.DoCallback($"Basic|AddActorModal");
-        Modal.AddCloseCallback(CancelAddToken);
+        };
+
+        var typeContainer = new ShunContainer();
+        typeContainer.name = "ActorTypeContainer";
+        typeContainer.AddToClassList("shun-dialog__field");
+        dialogContent.Add(typeContainer);
+
+        var footer = ShunDialogHelper.AddDialogFooter(() => dialog.Close());
+
+        // var confirm = new ShunDialogClose();
+        // confirm.SetVariant(ButtonVariant.Primary);
+        // confirm.text = "Next";
+        // confirm.clicked += () =>
+        // {
+        //     var results = ShunDialogHelper.Results("ShunDialog1");
+        //     string type = results.Q<ShunCombobox>("ActorType").selectedValue;
+        //     OpenTypeModal(type);
+        // };
+        // footer.Add(confirm);
+
+        dialog.Open();
+
+        // Player.Self().SetOp("Adding an Actor");
+        // Actor.Deselect();
+        // Modal.Reset("Add Actor");
+        // Modal.AddTokenField("TokenSearchField");
+        // Modal.AddDropdownField("ActorType", "Actor Type", "Basic", ActorTypeRegistry.GetAllSystems().ToArray(), (evt) =>
+        // {
+        //     VisualElement v = UI.Modal.Q("Contents").Q("TypeData_0");
+        //     if (v != null)
+        //     {
+        //         v.Clear();
+        //         Modal.ResetPreferredButtons();
+        //     }
+
+        //     string type = UI.Modal.Q<DropdownField>("ActorType").value;
+        //     ActorTypeRegistry.DoCallback($"{type}|AddActorModal");
+        // });
+        // Modal.AddColumns("TypeData", 1);
+        // ActorTypeRegistry.DoCallback($"Basic|AddActorModal");
+        // Modal.AddCloseCallback(CancelAddToken);
     }
+
+    // private static void OpenTypeModal(string actorType)
+    // {
+    //     ShunDialogHelper.Contents.Clear();
+    //     ShunDialogHelper.AddDialogHeader($"Add {actorType}");
+
+    // }
+
 
     public static void OrderFields(string[] fieldNames)
     {
@@ -39,17 +88,17 @@ public class AddActor
     public static void FinalizeToken(string json)
     {
         Player.Self().CmdCreateActor(json);
-        Player.Self().ClearOp();
-        Modal.Close();
-
         if (!UI.System.Q("BottomBar").ClassListContains("active"))
         {
             UI.ToggleDisplay(UI.System.Q("DeployToggle").Q("Attn"), true);
         }
+
+        ShunDialogHelper.Dialog("ShunDialog1").Close();
     }
 
-    public static void CancelAddToken(ClickEvent evt)
+    public static void CloseAddToken()
     {
+        Debug.Log("CancelAddTOken");
         Player.Self().ClearOp();
         StateManager.Find().ChangeSubState(new NeutralState());
     }

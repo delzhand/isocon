@@ -1,0 +1,17 @@
+#TokenLibraryItem:active,
+#TokenLibraryItem:hover {
+    background-color: #2C5D87;
+}
+
+#Frame {
+    overflow: hidden;
+    height: 78px;
+    width: 78px;
+}
+
+#Sprite {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+}

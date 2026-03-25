@@ -392,6 +392,7 @@
     background-color: rgb(10, 129, 26);
 }
 
+/** deprecated **/
 #TokenLibraryModal .wrapper {
     margin: 20px 10px 0px 10px;
 }
