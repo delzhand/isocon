@@ -95,7 +95,7 @@ public abstract class TabletopSubstate : BaseState
     protected virtual void GoToSession(ClickEvent evt)
     {
         SM.ChangeSubState(new ModalState());
-        Session.OpenModal(evt);
+        SessionModal.OpenModal(evt);
     }
 
     protected virtual void GoToAddToken(ClickEvent evt)

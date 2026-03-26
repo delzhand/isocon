@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ShunUI;
+using SimpleFileBrowser;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -133,6 +134,66 @@ public class Modal2
         }
 
         return wrapper;
+    }
+
+    public static VisualElement AddInlineFileField(string name, string label, string defaultValue, FileBrowserType type, bool saveOp, string helpText = null)
+    {
+        var wrapper = new ShunContainer();
+        wrapper.AddToClassList("shun-dialog__field");
+        Contents(_targetDialogName).Add(wrapper);
+
+        var layout = new VisualElement();
+        layout.style.flexDirection = FlexDirection.Row;
+        layout.style.justifyContent = Justify.SpaceBetween;
+        layout.style.alignItems = Align.FlexStart;
+        wrapper.Add(layout);
+
+        var fieldlabel = new Label(label);
+        fieldlabel.AddToClassList("shun-dialog__label");
+        layout.Add(fieldlabel);
+
+        var layout2 = new VisualElement();
+        layout2.style.flexDirection = FlexDirection.Row;
+        layout2.style.alignItems = Align.Stretch;
+        layout2.style.minWidth = 250;
+        layout.Add(layout2);
+
+        var input = new ShunInput();
+        input.name = name;
+        input.value = defaultValue;
+        input.isReadOnly = true;
+        input.style.flexGrow = 1;
+        layout2.Add(input);
+
+        var searchButton = new ShunButton();
+        searchButton.SetVariant(ButtonVariant.Outline);
+        searchButton.style.backgroundImage = Resources.Load<Texture2D>("Textures/search");
+        searchButton.style.height = 40;
+        searchButton.style.width = 40;
+        searchButton.style.marginLeft = 16;
+        searchButton.style.backgroundSize = new BackgroundSize(20, 20);
+        searchButton.RegisterCallback<ClickEvent>((evt) =>
+        {
+            FileBrowserHelper.Open(ConfirmFileFieldSelect, name, type, saveOp);
+        });
+        layout2.Add(searchButton);
+
+        if (helpText != null)
+        {
+            var help = new Label(helpText);
+            help.AddToClassList("shun-dialog__description");
+            layout2.Add(help);
+        }
+
+        return wrapper;
+    }
+
+    private static void ConfirmFileFieldSelect(ClickEvent evt)
+    {
+        string result = FileBrowser.Result[0];
+        Debug.Log(result);
+        // Contents(_targetDialogName).Q
+        // UI.Modal.Q(FileBrowserHelper.FieldOrigin).Q<TextField>("File").value = result;
     }
 
     public static VisualElement AddToggleField(string name, string label, string defaultValue, List<string> options, bool allowMultiple, string helpText = null)
@@ -584,7 +645,6 @@ public class Modal2
         libLabel.style.width = 40;
         libLabel.style.marginLeft = 16;
         libLabel.style.backgroundSize = new BackgroundSize(20, 20);
-        // libLabel.style.backgroundColor = Color.red;
         libLabel.RegisterCallback<ClickEvent>((evt) =>
         {
             TokenLibrary.ShowSelectMode(() =>

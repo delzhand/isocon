@@ -7,69 +7,102 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Session
+public class SessionModal
 {
     public static void OpenModal(ClickEvent evt)
     {
-        Modal.Reset("Session");
-        Modal.AddCloseCallback(BackToNeutral);
+        var dialog = Modal2.SetCurrentDialog("ShunDialog1");
+        Modal2.SetCloseAction(BackToNeutral);
+        var content = Modal2.Contents("ShunDialog1");
+        content.Clear();
 
+        Modal2.AddDialogHeader("Sessions");
+
+        VisualElement sessionTabs = null;
         if (NetworkClient.activeHost)
         {
-            Modal.AddColumns("Tabs", 2);
-            Modal.AddContentButton("LoadSettings", "Load", (evt) =>
-            {
-                AddLoadFields();
-            });
-            Modal.MoveToColumn("Tabs_0", "LoadSettings");
-            Modal.AddContentButton("SaveSettings", "Save", (evt) =>
-            {
-                AddSaveFields();
-            });
-            Modal.MoveToColumn("Tabs_1", "SaveSettings");
-            Modal.AddColumns("Fields", 1);
-            UI.Modal.Q("Tabs").style.justifyContent = Justify.Center;
-            AddLoadFields();
-        }
-        else
-        {
-            AddSaveFields();
-        }
-    }
+            Dictionary<string, string> tabs = new();
+            tabs.Add("Load", "Load");
+            tabs.Add("Save", "Save");
+            sessionTabs = Modal2.AddTabs("SessionTabs", tabs);
 
-    private static void ClearFields()
-    {
-        VisualElement v = UI.Modal.Q("Contents").Q("Fields_0");
-        if (v != null)
-        {
-            v.Clear();
-            Modal.ResetPreferredButtons();
+            var loadFile = Modal2.AddInlineFileField("LoadFile", "Session File", "", FileBrowserType.Sessions, false);
+            Modal2.MoveToTab(loadFile, sessionTabs, "Load");
+            // Modal2.MoveToTab(loadFooter, sessionTabs, "Load");
         }
-        Modal.AddButton("Cancel", CloseModal);
-    }
 
-    private static void AddLoadFields()
-    {
-        ClearFields();
-        Modal.AddFileField("SessionFile", "Session File", "", "sessions", null);
-        Modal.AddContentButton("LoadSession", "Load Session", LoadSession);
-        Modal.MoveToColumn("Fields_0", "SessionFile");
-        Modal.MoveToColumn("Fields_0", "LoadSession");
-    }
-
-    private static void AddSaveFields()
-    {
-        ClearFields();
-        Modal.AddTextField("SaveFileName", "Filename", "latest.json");
-        Modal.AddContentButton("SaveSession", "Save Session", SaveSession);
+        var saveFile = Modal2.AddInlineFileField("LoadFile", "Session File", "", FileBrowserType.Sessions, true);
         if (NetworkClient.activeHost)
         {
-            Modal.MoveToColumn("Fields_0", "SaveFileName");
-            Modal.MoveToColumn("Fields_0", "SaveSession");
+            Modal2.MoveToTab(saveFile, sessionTabs, "Save");
         }
+
+        var saveFooter = Modal2.AddDialogFooter(() =>
+        {
+            dialog.Close();
+        });
+
+        dialog.Open();
+
+        // Modal.Reset("Session");
+        // Modal.AddCloseCallback(BackToNeutral);
+
+        // if (NetworkClient.activeHost)
+        // {
+        //     Modal.AddColumns("Tabs", 2);
+        //     Modal.AddContentButton("LoadSettings", "Load", (evt) =>
+        //     {
+        //         AddLoadFields();
+        //     });
+        //     Modal.MoveToColumn("Tabs_0", "LoadSettings");
+        //     Modal.AddContentButton("SaveSettings", "Save", (evt) =>
+        //     {
+        //         AddSaveFields();
+        //     });
+        //     Modal.MoveToColumn("Tabs_1", "SaveSettings");
+        //     Modal.AddColumns("Fields", 1);
+        //     UI.Modal.Q("Tabs").style.justifyContent = Justify.Center;
+        //     AddLoadFields();
+        // }
+        // else
+        // {
+        //     AddSaveFields();
+        // }
     }
 
-    private static void BackToNeutral(ClickEvent evt)
+    // private static void ClearFields()
+    // {
+    //     VisualElement v = UI.Modal.Q("Contents").Q("Fields_0");
+    //     if (v != null)
+    //     {
+    //         v.Clear();
+    //         Modal.ResetPreferredButtons();
+    //     }
+    //     Modal.AddButton("Cancel", CloseModal);
+    // }
+
+    // private static void AddLoadFields()
+    // {
+    //     ClearFields();
+    //     Modal.AddFileField("SessionFile", "Session File", "", "sessions", null);
+    //     Modal.AddContentButton("LoadSession", "Load Session", LoadSession);
+    //     Modal.MoveToColumn("Fields_0", "SessionFile");
+    //     Modal.MoveToColumn("Fields_0", "LoadSession");
+    // }
+
+    // private static void AddSaveFields()
+    // {
+    //     ClearFields();
+    //     Modal.AddTextField("SaveFileName", "Filename", "latest.json");
+    //     Modal.AddContentButton("SaveSession", "Save Session", SaveSession);
+    //     if (NetworkClient.activeHost)
+    //     {
+    //         Modal.MoveToColumn("Fields_0", "SaveFileName");
+    //         Modal.MoveToColumn("Fields_0", "SaveSession");
+    //     }
+    // }
+
+    private static void BackToNeutral()
     {
         StateManager.Find().ChangeSubState(new NeutralState());
     }

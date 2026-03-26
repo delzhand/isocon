@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml;
 using IsoconUILibrary;
 using SimpleFileBrowser;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -433,13 +434,15 @@ public class Modal
             case "rules":
                 search.RegisterCallback<ClickEvent>((evt) =>
                 {
-                    FileBrowserHelper.OpenLoadRulesBrowser(ConfirmFileFieldSelect, "RulesFile");
+                    Toast.AddError("Obsolete");
+                    // FileBrowserHelper.OpenLoadRulesBrowser(ConfirmFileFieldSelect, "RulesFile");
                 });
                 break;
             case "sessions":
                 search.RegisterCallback<ClickEvent>((evt) =>
                 {
-                    FileBrowserHelper.OpenLoadSessionsBrowser(ConfirmFileFieldSelect, "SessionFile");
+                    Toast.AddError("Obsolete");
+                    // FileBrowserHelper.OpenLoadSessionsBrowser(ConfirmFileFieldSelect, "SessionFile");
                 });
                 break;
         }

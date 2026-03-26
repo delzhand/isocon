@@ -321,26 +321,14 @@ public class MapEdit
 
     private static void OpenSaveModal(ClickEvent evt)
     {
-        FileBrowserHelper.OpenSaveMapBrowser(CurrentFile);
-        // Modal.Reset("Save Map");
-
-        // Modal.AddTextField("Filename", "Filename", CurrentFile.Length > 0 ? CurrentFile : "");
-        // UI.Modal.Q("Filename").style.minWidth = 400;
-
-        // Modal.AddDropdownField("SaveType", "Save Type", "Plaintext JSON", StringUtility.CreateArray("Encoded Screenshot", "Plaintext JSON"));
-
-        // Modal.AddPreferredButton("Confirm", ConfirmMapSave);
-        // Modal.AddButton("Cancel", Modal.CloseEvent);
+        Toast.AddError("Obsolete");
+        // FileBrowserHelper.OpenSaveMapBrowser(CurrentFile);
     }
 
     private static void OpenOpenModal(ClickEvent evt)
     {
-        FileBrowserHelper.OpenLoadMapBrowser();
-
-        // Modal.Reset("Open Map");
-        // Modal.AddSearchField("SearchField", "Filename", "", GetAllMapFiles());
-        // Modal.AddPreferredButton("Confirm", ConfirmMapOpen);
-        // Modal.AddButton("Cancel", Modal.CloseEvent);
+        Toast.AddError("Obsolete");
+        // FileBrowserHelper.OpenLoadMapBrowser();
     }
 
     // private static void ConfirmMapOpen(ClickEvent evt)

@@ -21,7 +21,7 @@ public class Autosaver : MonoBehaviour
 
         if (Timer <= 0)
         {
-            Session.SerializeSession("autosave.json");
+            SessionModal.SerializeSession("autosave.json");
             Timer += Preferences.Current.AutosaveInterval;
         }
 

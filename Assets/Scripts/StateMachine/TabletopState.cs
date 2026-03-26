@@ -130,7 +130,7 @@ public class TabletopState : BaseState
 
     private void ConfirmReturnToLauncher(ClickEvent evt)
     {
-        Session.SerializeSession("autosave.json");
+        SessionModal.SerializeSession("autosave.json");
         string message = "Exit the tabletop and return to the Isocon Launcher?";
         if (NetworkClient.activeHost && _mode == ConnectMode.Host)
         {

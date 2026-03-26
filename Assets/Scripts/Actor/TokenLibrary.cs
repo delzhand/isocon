@@ -124,7 +124,7 @@ public class TokenLibrary : MonoBehaviour
         add.style.marginTop = 16;
         add.SetVariant(ButtonVariant.Secondary);
         add.text = "Add New Token";
-        add.clicked += () => FileBrowserHelper.OpenLoadTokenBrowser();
+        add.clicked += () => FileBrowserHelper.Open(ConfirmSelect, "", FileBrowserType.Tokens);
         PickWrapper.Add(add);
 
         dialog.Open();
