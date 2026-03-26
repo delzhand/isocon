@@ -395,13 +395,13 @@ public class Modal
 
         Button search = new();
         search.text = "Search";
-        search.RegisterCallback<ClickEvent>((evt) =>
-        {
-            TokenLibrary.ShowSelectMode(evt, () =>
-            {
-                UI.Modal.Q(name).Q<TextField>("Token").value = TokenLibrary.GetSelectedMeta().Name;
-            });
-        });
+        // search.RegisterCallback<ClickEvent>((evt) =>
+        // {
+        //     TokenLibrary.ShowSelectMode(evt, () =>
+        //     {
+        //         UI.Modal.Q(name).Q<TextField>("Token").value = TokenLibrary.GetSelectedMeta().Name;
+        //     });
+        // });
 
         VisualElement wrapper = new();
         wrapper.name = name;

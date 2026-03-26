@@ -34,18 +34,18 @@ public class EnvironmentalActorType : ActorType
     #region Creation
     public static void AddActorModal()
     {
-        var contents = ShunDialogHelper.Contents("ShunDialog1");
+        var contents = Modal2.Contents("ShunDialog1");
         var typeContainer = contents.Q("ActorTypeContainer");
         typeContainer.Clear();
         contents.Q("CreateActor")?.RemoveFromHierarchy();
 
 
-        var name = ShunDialogHelper.AddInlineTextField("Name", "Actor Name", "Actor");
-        ShunDialogHelper.MoveToContainer(name, typeContainer);
-        var shape = ShunDialogHelper.AddInlineSelectField("Shape", "Shape", "Square 1x1", ActorType.ShapeOptions().ToList<string>());
-        ShunDialogHelper.MoveToContainer(shape, typeContainer);
-        var color = ShunDialogHelper.AddInlineSelectField("Color", "Color", "Black", ColorUtility.CommonColors().ToList<string>());
-        ShunDialogHelper.MoveToContainer(color, typeContainer);
+        var name = Modal2.AddInlineTextField("Name", "Actor Name", "Actor");
+        Modal2.MoveToContainer(name, typeContainer);
+        var shape = Modal2.AddInlineSelectField("Shape", "Shape", "Square 1x1", ActorType.ShapeOptions().ToList<string>());
+        Modal2.MoveToContainer(shape, typeContainer);
+        var color = Modal2.AddInlineComboboxField("Color", "Color", "Black", ColorUtility.CommonColors().ToList<string>());
+        Modal2.MoveToContainer(color, typeContainer);
 
         var create = new ShunDialogClose();
         create.name = "CreateActor";
@@ -57,21 +57,15 @@ public class EnvironmentalActorType : ActorType
 
     private static void CreateClicked()
     {
-        if (!TokenLibrary.TokenSelected())
-        {
-            Toast.AddError("A token has not been selected.");
-            return;
-        }
-
-        string token = ShunDialogHelper.GetComboboxFieldValue("ShunDialog1", "Token");
+        string token = Modal2.GetComboboxFieldValue("ShunDialog1", "Token");
         if (token == null)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
-        string name = ShunDialogHelper.GetTextFieldValue("ShunDialog1", "Name");
-        string shape = ShunDialogHelper.GetSelectFieldValue("ShunDialog1", "Shape");
-        string color = ShunDialogHelper.GetSelectFieldValue("ShunDialog1", "Color");
+        string name = Modal2.GetTextFieldValue("ShunDialog1", "Name");
+        string shape = Modal2.GetSelectFieldValue("ShunDialog1", "Shape");
+        string color = Modal2.GetComboboxFieldValue("ShunDialog1", "Color");
         EnvironmentalActorType t = new()
         {
             Type = TypeName,

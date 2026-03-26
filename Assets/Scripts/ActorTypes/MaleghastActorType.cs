@@ -179,7 +179,7 @@ public class MaleghastActorType : ActorType
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Token = TokenLibrary.GetToken();
         a.Color = color;
         a.Shape = shape;
         a.Position = Vector3.zero;

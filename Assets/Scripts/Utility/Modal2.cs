@@ -5,7 +5,7 @@ using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class ShunDialogHelper
+public class Modal2
 {
     // We need to maintain references to ShunDialogContent elements because in the process of being created,
     // they get reparented to the overlay in a way that makes it impossible to positively locate them using
@@ -565,7 +565,7 @@ public class ShunDialogHelper
         layout.Add(fieldlabel);
 
         var layout2 = new VisualElement();
-        layout2.style.flexDirection = FlexDirection.Column;
+        layout2.style.flexDirection = FlexDirection.Row;
         layout2.style.alignItems = Align.Stretch;
         layout2.style.minWidth = 250;
         layout.Add(layout2);
@@ -575,10 +575,24 @@ public class ShunDialogHelper
         select.SetOptions(TokenLibrary.Options());
         select.placeholder = "Select an option";
         select.searchPlaceholder = "Type to search...";
-        // select.selectedValue = defaultValue;
         layout2.Add(select);
 
-        // ...
+        var libLabel = new ShunButton();
+        libLabel.SetVariant(ButtonVariant.Outline);
+        libLabel.style.backgroundImage = Resources.Load<Texture2D>("Textures/search");
+        libLabel.style.height = 40;
+        libLabel.style.width = 40;
+        libLabel.style.marginLeft = 16;
+        libLabel.style.backgroundSize = new BackgroundSize(20, 20);
+        // libLabel.style.backgroundColor = Color.red;
+        libLabel.RegisterCallback<ClickEvent>((evt) =>
+        {
+            TokenLibrary.ShowSelectMode(() =>
+            {
+                select.selectedValue = TokenLibrary.GetToken().Name;
+            });
+        });
+        layout2.Add(libLabel);
 
         if (helpText != null)
         {

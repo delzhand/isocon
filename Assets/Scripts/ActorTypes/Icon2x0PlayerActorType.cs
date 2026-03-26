@@ -174,7 +174,7 @@ public class Icon2x0PlayerActorType : Icon2x0Base
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Token = TokenLibrary.GetToken();
         a.Color = ColorUtility.GetCommonColor(color);
         a.Shape = "Square 1x1";
         a.Position = Vector3.zero;

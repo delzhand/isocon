@@ -25,6 +25,7 @@ public class TokenLibrary : MonoBehaviour
 
     private static string EditingHash;
     private static VisualElement EditWrapper;
+    private static VisualElement PickWrapper;
     private static VisualElement ScrollWrapper;
 
     public static void Setup()
@@ -70,27 +71,32 @@ public class TokenLibrary : MonoBehaviour
         return null;
     }
 
-    private static void Open()
+    private static void Open(string dialogName)
     {
+        SelectedHash = null;
+
         ReadLibraryFile();
 
-        var dialog = ShunDialogHelper.SetCurrentDialog("ShunDialog1");
-        var dialogContents = ShunDialogHelper.Contents("ShunDialog1");
+        var dialog = Modal2.SetCurrentDialog(dialogName);
+        var dialogContents = Modal2.Contents(dialogName);
         dialogContents.Clear();
 
-        ShunDialogHelper.AddDialogHeader("Token Library");
+        Modal2.AddDialogHeader("Token Library");
+
+        PickWrapper = new VisualElement();
+        dialogContents.Add(PickWrapper);
+
+        ScrollWrapper = Modal2.AddScrollArea("TokenLibraryModal");
+        Modal2.MoveToContainer(ScrollWrapper, PickWrapper);
 
         EditWrapper = new ShunContainer();
         dialogContents.Add(EditWrapper);
-
-        ScrollWrapper = ShunDialogHelper.AddScrollArea("TokenLibraryModal");
-
-        var editName = ShunDialogHelper.AddTextField("EditName", "Token Name", null, "The name of the token");
-        var editFrames = ShunDialogHelper.AddIntField("EditFrames", "Frame Count", 1, "The number of animation frames, or 1 if not animated");
-        var editFPS = ShunDialogHelper.AddIntField("EditFPS", "FPS", 0, "How fast the animation plays, or 0 if not animated");
-        ShunDialogHelper.MoveToContainer(editName, EditWrapper);
-        ShunDialogHelper.MoveToContainer(editFrames, EditWrapper);
-        ShunDialogHelper.MoveToContainer(editFPS, EditWrapper);
+        var editName = Modal2.AddTextField("EditName", "Token Name", null, "The name of the token");
+        var editFrames = Modal2.AddIntField("EditFrames", "Frame Count", 1, "The number of animation frames, or 1 if not animated");
+        var editFPS = Modal2.AddIntField("EditFPS", "FPS", 0, "How fast the animation plays, or 0 if not animated");
+        Modal2.MoveToContainer(editName, EditWrapper);
+        Modal2.MoveToContainer(editFrames, EditWrapper);
+        Modal2.MoveToContainer(editFPS, EditWrapper);
 
         var saveChanges = new ShunButton();
         saveChanges.text = "Save Metadata";
@@ -101,7 +107,7 @@ public class TokenLibrary : MonoBehaviour
             Tokens[EditingHash].FPS = editFPS.Q<ShunIntInput>().value;
             WriteLibraryFile();
             UI.ToggleDisplay(EditWrapper, false);
-            UI.ToggleDisplay(ScrollWrapper, true);
+            UI.ToggleDisplay(PickWrapper, true);
             SetupTokenDisplay(ElementMap[EditingHash].Item2, Tokens[EditingHash]);
         };
         EditWrapper.Add(saveChanges);
@@ -119,7 +125,7 @@ public class TokenLibrary : MonoBehaviour
         add.SetVariant(ButtonVariant.Secondary);
         add.text = "Add New Token";
         add.clicked += () => FileBrowserHelper.OpenLoadTokenBrowser();
-        dialogContents.Add(add);
+        PickWrapper.Add(add);
 
         dialog.Open();
     }
@@ -134,17 +140,17 @@ public class TokenLibrary : MonoBehaviour
     public static void ShowDefaultMode(ClickEvent evt)
     {
         AllowSelect = false;
-        Open();
+        Open("ShunDialog1");
     }
 
-    public static void ShowSelectMode(ClickEvent evt, LibraryCallback onSelect)
+    public static void ShowSelectMode(LibraryCallback onSelect)
     {
         AllowSelect = true;
         OnSelect = onSelect;
-        Open();
+        Open("ShunDialog2");
     }
 
-    public static Token GetSelectedMeta()
+    public static Token GetToken()
     {
         return Tokens[SelectedHash];
     }
@@ -166,23 +172,37 @@ public class TokenLibrary : MonoBehaviour
         item.Q("Sprite").style.backgroundImage = backgroundImage;
         item.Q<Label>("Name").text = token.Name;
         item.Q<Label>("Name").AddToClassList("shun-dialog__label");
+        if (AllowSelect)
+        {
+            item.RegisterCallback<ClickEvent>((evt) =>
+            {
+                if (OnSelect != null)
+                {
+                    SelectedHash = token.Hash;
+                    OnSelect.Invoke();
+                    Modal2.Dialog("ShunDialog2").Close();
+                }
+            });
+        }
         item.Q<Button>("Favorite").RegisterCallback<ClickEvent>((evt) =>
         {
             token.Favorite = !token.Favorite;
             UpdateFavorite(item, token);
             WriteLibraryFile();
+            evt.StopPropagation();
         });
         UpdateFavorite(item, token);
         item.Q<Button>("Configure").RegisterCallback<ClickEvent>((evt) =>
         {
             UI.ToggleDisplay(EditWrapper, true);
-            UI.ToggleDisplay(ScrollWrapper, false);
+            UI.ToggleDisplay(PickWrapper, false);
             EditingHash = token.Hash;
             EditWrapper.Q<ShunInput>("EditName").value = token.Name;
             EditWrapper.Q<ShunIntInput>("EditFrames").value = token.Frames;
             EditWrapper.Q<ShunIntInput>("EditFPS").value = token.FPS;
+            evt.StopPropagation();
         });
-        ShunDialogHelper.MoveToScrollArea(item, ScrollWrapper);
+        Modal2.MoveToScrollArea(item, ScrollWrapper);
         ElementMap[token.Hash] = (token, item);
         SetupTokenDisplay(item, token);
     }
@@ -400,14 +420,14 @@ public class TokenLibrary : MonoBehaviour
     //     UpdateAnimation(tokenDisplay, meta);
     // }
 
-    private static void SetupTokenDisplay(VisualElement element, Token meta)
+    private static void SetupTokenDisplay(VisualElement element, Token token)
     {
         Texture2D graphic = element.Q("Sprite").resolvedStyle.backgroundImage.texture;
         if (graphic == null)
         {
             return;
         }
-        float aspectRatio = graphic.width / meta.Frames / (float)graphic.height;
+        float aspectRatio = graphic.width / token.Frames / (float)graphic.height;
         int width = LibraryItemSize;
         int height = LibraryItemSize;
         if (aspectRatio >= 1)
@@ -422,8 +442,9 @@ public class TokenLibrary : MonoBehaviour
         element.Q("FrameContainer").style.height = LibraryItemSize;
         element.Q("Frame").style.width = width;
         element.Q("Frame").style.height = height;
-        element.Q("Sprite").style.width = width * meta.Frames;
+        element.Q("Sprite").style.width = width * token.Frames;
         element.Q("Sprite").style.height = height;
+        element.Q<Label>("Name").text = token.Name;
     }
 
     private static void WriteLibraryFile()

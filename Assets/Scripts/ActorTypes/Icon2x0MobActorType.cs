@@ -71,7 +71,7 @@ public class Icon2x0MobActorType : Icon2x0Base
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Token = TokenLibrary.GetToken();
         a.Color = ColorUtility.GetCommonColor("gray");
         a.Shape = shape;
         a.Position = Vector3.zero;

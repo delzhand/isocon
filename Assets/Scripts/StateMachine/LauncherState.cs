@@ -135,22 +135,22 @@ public class LauncherState : BaseState
     {
         _mode = mode;
 
-        var dialog = ShunDialogHelper.SetCurrentDialog("ShunDialog1");
-        var dialogContent = ShunDialogHelper.Contents("ShunDialog1");
+        var dialog = Modal2.SetCurrentDialog("ShunDialog1");
+        var dialogContent = Modal2.Contents("ShunDialog1");
         dialogContent.Clear();
 
-        ShunDialogHelper.AddDialogHeader($"Configure {_mode.ToString()} Mode");
-        ShunDialogHelper.AddInlineTextField("PlayerName", "Player Name", Preferences.Current.PlayerName, "How you appear to other players");
+        Modal2.AddDialogHeader($"Configure {_mode.ToString()} Mode");
+        Modal2.AddInlineTextField("PlayerName", "Player Name", Preferences.Current.PlayerName, "How you appear to other players");
         if (_mode == ConnectMode.Solo || _mode == ConnectMode.Host)
         {
-            ShunDialogHelper.AddInlineSelectField("GridType", "Grid Type", Preferences.Current.Grid, new List<string> { "Square", "Hex" }, "Choose 4 or 6 sided map tiles");
+            Modal2.AddInlineSelectField("GridType", "Grid Type", Preferences.Current.Grid, new List<string> { "Square", "Hex" }, "Choose 4 or 6 sided map tiles");
         }
         if (_mode == ConnectMode.Host)
         {
-            ShunDialogHelper.AddInlineIntField("PlayerCount", "Max Players", 4);
+            Modal2.AddInlineIntField("PlayerCount", "Max Players", 4);
         }
 
-        var footer = ShunDialogHelper.AddDialogFooter(() => dialog.Close());
+        var footer = Modal2.AddDialogFooter(() => dialog.Close());
 
         var confirm = new ShunDialogClose();
         confirm.SetVariant(ButtonVariant.Primary);
@@ -171,7 +171,7 @@ public class LauncherState : BaseState
 
     private void StartSession()
     {
-        var dialogContent = ShunDialogHelper.Contents("ShunDialog1");
+        var dialogContent = Modal2.Contents("ShunDialog1");
 
         string playerName = dialogContent.Q<ShunInput>("PlayerName").value;
         Preferences.Current.PlayerName = playerName;

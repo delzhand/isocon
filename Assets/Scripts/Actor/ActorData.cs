@@ -370,7 +370,7 @@ public class ActorData : NetworkBehaviour
     public void Delete()
     {
         UI.System.Q("UnitBar").Remove(UnitBarElement);
-        UI.World.Q("Worldspace").Remove(OverheadElement);
+        UI.World.Q("Worldspace")?.Remove(OverheadElement);
         Destroy(WorldObject);
         Actor.Deselect();
     }

@@ -29,7 +29,7 @@ namespace ShunUI
     [UxmlElement]
     public partial class ShunSonner : VisualElement
     {
-        private static Dictionary<ToastPosition, ShunSonner> s_Instances;
+        private static Dictionary<ToastPosition, ShunSonner> s_Instances = new Dictionary<ToastPosition, ShunSonner>();
         private List<ToastItem> m_ActiveToasts = new List<ToastItem>();
         private const int MAX_VISIBLE_TOASTS = 3;
         private const float DEFAULT_DURATION = 5000f; // milliseconds
@@ -122,14 +122,14 @@ namespace ShunUI
 
         public ShunSonner()
         {
-            if (s_Instances == null)
-            {
-                s_Instances = new Dictionary<ToastPosition, ShunSonner>();
-            }
-
             AddToClassList("sonner");
 
+            // Full-viewport overlay so absolutely positioned toasts render correctly
             style.position = Position.Absolute;
+            style.left = 0;
+            style.top = 0;
+            style.right = 0;
+            style.bottom = 0;
             pickingMode = PickingMode.Ignore; // Container doesn't block clicks, but children (toasts) will
 
             // Make visible by default
@@ -154,14 +154,15 @@ namespace ShunUI
 
         private void OnAttachToPanel(AttachToPanelEvent evt)
         {
-            if (m_IsInitialized) return;
-
-            // Register this instance for static toast calls FIRST
+            // Always register this instance for static toast calls,
+            // even on re-attach after a detach cycle
             s_Instances[m_Position] = this;
 
-            // Setup immediately - no delays
-            UpdatePosition();
-            m_IsInitialized = true;
+            if (!m_IsInitialized)
+            {
+                UpdatePosition();
+                m_IsInitialized = true;
+            }
         }
 
         private void OnDetachFromPanel(DetachFromPanelEvent evt)
@@ -171,6 +172,9 @@ namespace ShunUI
             {
                 s_Instances.Remove(m_Position);
             }
+
+            // Reset so we re-register and re-initialize on next attach
+            m_IsInitialized = false;
         }
 
         private void UpdatePosition()
@@ -277,31 +281,20 @@ namespace ShunUI
             }
 
             int count = m_ActiveToasts.Count;
-
-            // Starting from a common Y coordinate (0), position each toast
-            // Newer toasts get higher positions (appear on top)
-            float visibleGap = 12f; // Gap between stacked toasts
+            float visibleGap = 12f;
+            float edgePadding = 16f;
 
             for (int i = 0; i < count; i++)
             {
                 var toast = m_ActiveToasts[i];
                 toast.element.style.display = DisplayStyle.Flex;
-
-                // Use absolute positioning from a common reference point
                 toast.element.style.position = Position.Absolute;
-                // Don't set left/right - let the container's alignment handle horizontal positioning
-                toast.element.style.left = StyleKeyword.Auto;
-                toast.element.style.right = StyleKeyword.Auto;
 
                 // Calculate visual index: newest toast (last in list) = 0, oldest (first in list) = count-1
                 int visualIndex = count - 1 - i;
+                float yOffset = edgePadding + (visualIndex * visibleGap);
 
-                // Position ALL toasts from base Y=0, offset by their visual index
-                // Toast 0 (newest): yOffset = 0 * 12 = 0
-                // Toast 1 (middle): yOffset = 1 * 12 = 12
-                // Toast 2 (oldest): yOffset = 2 * 12 = 24
-                float yOffset = visualIndex * visibleGap;
-
+                // Vertical positioning
                 if (isTopPosition)
                 {
                     toast.element.style.top = yOffset;
@@ -313,21 +306,43 @@ namespace ShunUI
                     toast.element.style.bottom = yOffset;
                 }
 
-                // REVERSED: Place older toasts BEHIND newer ones
-                // Newer toasts (higher index) should be on top
+                // Horizontal positioning based on sonner position
+                switch (m_Position)
+                {
+                    case ToastPosition.TopLeft:
+                    case ToastPosition.BottomLeft:
+                        toast.element.style.left = edgePadding;
+                        toast.element.style.right = StyleKeyword.Auto;
+                        toast.element.style.translate = StyleKeyword.Null;
+                        break;
+                    case ToastPosition.TopCenter:
+                    case ToastPosition.BottomCenter:
+                        toast.element.style.left = new Length(50, LengthUnit.Percent);
+                        toast.element.style.right = StyleKeyword.Auto;
+                        toast.element.style.translate = new StyleTranslate(new Translate(new Length(-50, LengthUnit.Percent), 0));
+                        break;
+                    case ToastPosition.TopRight:
+                    case ToastPosition.BottomRight:
+                    default:
+                        toast.element.style.left = StyleKeyword.Auto;
+                        toast.element.style.right = edgePadding;
+                        toast.element.style.translate = StyleKeyword.Null;
+                        break;
+                }
+
+                // Place older toasts behind newer ones
                 if (i < count - 1)
                 {
-                    // Place this older toast behind the next (newer) one
                     var newerToast = m_ActiveToasts[i + 1];
                     toast.element.PlaceBehind(newerToast.element);
                 }
 
                 // Scale down slightly for depth effect (older toasts are smaller)
-                float scale = 1f - (visualIndex * 0.03f); // 3% scale reduction per position
+                float scale = 1f - (visualIndex * 0.03f);
                 toast.element.style.scale = new StyleScale(new Scale(new Vector2(scale, scale)));
 
                 // Reduce opacity slightly for older toasts
-                float opacity = 1f - (visualIndex * 0.1f); // 10% opacity reduction per position
+                float opacity = 1f - (visualIndex * 0.1f);
                 toast.element.style.opacity = Mathf.Max(opacity, 0.8f);
             }
         }

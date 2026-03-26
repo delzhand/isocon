@@ -73,7 +73,7 @@ public class LancerPilotActorType : LancerBase
         };
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Token = TokenLibrary.GetToken();
         a.Color = ColorUtility.GetCommonColor(color);
         a.Shape = shape;
         a.Position = Vector3.zero;

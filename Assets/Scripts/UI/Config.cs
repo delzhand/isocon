@@ -10,24 +10,24 @@ public class Config
 {
     public static void OpenModal(ClickEvent evt)
     {
-        var dialog = ShunDialogHelper.SetCurrentDialog("ShunDialog1");
-        var dialogContent = ShunDialogHelper.Contents("ShunDialog1");
+        var dialog = Modal2.SetCurrentDialog("ShunDialog1");
+        var dialogContent = Modal2.Contents("ShunDialog1");
         // ShunDialogHelper.SetCloseAction(BackToNeutral);
         dialogContent.Clear();
 
-        ShunDialogHelper.AddDialogHeader("Settings");
+        Modal2.AddDialogHeader("Settings");
 
         Dictionary<string, string> tabs = new();
         tabs.Add("Interface", "Interface");
         tabs.Add("Actors", "Actors");
         tabs.Add("Misc", "Other");
-        var configTabs = ShunDialogHelper.AddTabs("ConfigTabs", tabs);
+        var configTabs = Modal2.AddTabs("ConfigTabs", tabs);
 
-        var dataPathField = ShunDialogHelper.AddTextField("DataPath", "Data Path", Preferences.Current.DataPath, "The directory where tokens, maps, sessions, etc will be saved");
-        ShunDialogHelper.MoveToTab(dataPathField, configTabs, "Misc");
+        var dataPathField = Modal2.AddTextField("DataPath", "Data Path", Preferences.Current.DataPath, "The directory where tokens, maps, sessions, etc will be saved");
+        Modal2.MoveToTab(dataPathField, configTabs, "Misc");
 
-        var hudField = ShunDialogHelper.AddSwitchField("ShowHUD", "Display Info HUD", Preferences.Current.ShowHUD, "Show an overlay with connection and player information");
-        ShunDialogHelper.MoveToTab(hudField, configTabs, "Interface");
+        var hudField = Modal2.AddSwitchField("ShowHUD", "Display Info HUD", Preferences.Current.ShowHUD, "Show an overlay with connection and player information");
+        Modal2.MoveToTab(hudField, configTabs, "Interface");
 
         List<string> scaleOptions = new();
         for (int i = 75; i <= 250; i += 25)
@@ -35,30 +35,30 @@ public class Config
             scaleOptions.Add(i + "%");
         }
 
-        var uiScaleField = ShunDialogHelper.AddSelectField("UIScale", "UI Scale", Preferences.Current.UIScale, scaleOptions, "Control how large the user interface appears");
-        ShunDialogHelper.MoveToTab(uiScaleField, configTabs, "Interface");
+        var uiScaleField = Modal2.AddSelectField("UIScale", "UI Scale", Preferences.Current.UIScale, scaleOptions, "Control how large the user interface appears");
+        Modal2.MoveToTab(uiScaleField, configTabs, "Interface");
 
-        var wUIScaleField = ShunDialogHelper.AddSelectField("WUIScale", "Actor UI Scale", Preferences.Current.WorldUIScale, scaleOptions, "Control how large the floating elements above actors appear");
-        ShunDialogHelper.MoveToTab(wUIScaleField, configTabs, "Actors");
+        var wUIScaleField = Modal2.AddSelectField("WUIScale", "Actor UI Scale", Preferences.Current.WorldUIScale, scaleOptions, "Control how large the floating elements above actors appear");
+        Modal2.MoveToTab(wUIScaleField, configTabs, "Actors");
 
         List<string> fpsOptions = StringUtility.CreateArray("15", "30", "60", "90", "120").ToList<string>();
-        var fpsField = ShunDialogHelper.AddToggleField("FPSLimit", "FPS Limit", $"{Preferences.Current.TargetFramerate}", fpsOptions, false, "Set a cap on rendering speed");
-        ShunDialogHelper.MoveToTab(fpsField, configTabs, "Misc");
+        var fpsField = Modal2.AddToggleField("FPSLimit", "FPS Limit", $"{Preferences.Current.TargetFramerate}", fpsOptions, false, "Set a cap on rendering speed");
+        Modal2.MoveToTab(fpsField, configTabs, "Misc");
 
         int bbOpacity = Mathf.RoundToInt(Preferences.Current.BlockBorderOpacity);
-        var blockBorderField = ShunDialogHelper.AddSliderField("BlockBorder", "Block Border Minimum", bbOpacity, "Set a minimum opacity on block borders when not dragging an actor");
-        ShunDialogHelper.MoveToTab(blockBorderField, configTabs, "Misc");
+        var blockBorderField = Modal2.AddSliderField("BlockBorder", "Block Border Minimum", bbOpacity, "Set a minimum opacity on block borders when not dragging an actor");
+        Modal2.MoveToTab(blockBorderField, configTabs, "Misc");
 
-        var actorBorderField = ShunDialogHelper.AddSelectField("ActorBorder", "Token Outline Color", Preferences.Current.TokenOutline, ColorUtility.CommonColors().ToList<string>(), "Set an outline color for improved token contrast");
-        ShunDialogHelper.MoveToTab(actorBorderField, configTabs, "Actors");
+        var actorBorderField = Modal2.AddSelectField("ActorBorder", "Token Outline Color", Preferences.Current.TokenOutline, ColorUtility.CommonColors().ToList<string>(), "Set an outline color for improved token contrast");
+        Modal2.MoveToTab(actorBorderField, configTabs, "Actors");
 
         Dictionary<string, string> dragOptions = new();
         dragOptions.Add("Pan", "Rotate with Middle, Pan with Right");
         dragOptions.Add("Drag", "Rotate with Right, Pan with Middle");
-        var rightClickField = ShunDialogHelper.AddSelectField("CameraControls", "Camera Controls", dragOptions[Preferences.Current.DragPan ? "Drag" : "Pan"], dragOptions.Values.ToList<string>(), "Choose which mouse buttons rotate and pan the camera");
-        ShunDialogHelper.MoveToTab(rightClickField, configTabs, "Interface");
+        var rightClickField = Modal2.AddSelectField("CameraControls", "Camera Controls", dragOptions[Preferences.Current.DragPan ? "Drag" : "Pan"], dragOptions.Values.ToList<string>(), "Choose which mouse buttons rotate and pan the camera");
+        Modal2.MoveToTab(rightClickField, configTabs, "Interface");
 
-        var footer = ShunDialogHelper.AddDialogFooter(() =>
+        var footer = Modal2.AddDialogFooter(() =>
         {
             BackToNeutral();
             dialog.Close();
@@ -80,7 +80,7 @@ public class Config
 
     private static void SaveConfig()
     {
-        var dialogContent = ShunDialogHelper.Contents("ShunDialog1");
+        var dialogContent = Modal2.Contents("ShunDialog1");
         Preferences.Current.DataPath = dialogContent.Q<ShunInput>("DataPath").value;
         Preferences.Current.ShowHUD = dialogContent.Q<ShunSwitch>("ShowHUD").value;
         Preferences.Current.UIScale = dialogContent.Q<ShunSelect>("UIScale").selectedValue;
@@ -98,20 +98,13 @@ public class Config
         float wuiValue = float.Parse(Preferences.Current.WorldUIScale.Replace("%", "")) / 100f;
         GameObject.Find("UICanvas/WorldUI").GetComponent<UIDocument>().panelSettings.scale = wuiValue;
 
-        int fpsValue = int.Parse(ShunDialogHelper.GetToggleFieldValues(dialogContent.Q<ShunToggleGroup>("FPSLimit")).First());
+        int fpsValue = int.Parse(Modal2.GetToggleFieldValues(dialogContent.Q<ShunToggleGroup>("FPSLimit")).First());
         fpsValue = Math.Max(fpsValue, 3);
         Preferences.Current.TargetFramerate = fpsValue;
         Application.targetFrameRate = fpsValue;
 
         Preferences.Save();
-
-        ShunSonner.Toast(
-            message: "Your changes have been saved",
-            title: "Success",
-            variant: ToastVariant.Success,
-            position: ToastPosition.BottomCenter,
-            duration: 300000f
-        );
+        Toast.AddSuccess("Configuration saved.");
     }
 
     private static void BackToNeutral()
