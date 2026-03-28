@@ -84,7 +84,7 @@ public class GameSystem : MonoBehaviour
             switch (tag.Type)
             {
                 case "Simple":
-                    p = Pill.InitStatic(tag.Name, tag.Name, tag.Color);
+                    p = Pill.InitRemovable(tag.Name, tag.Name, tag.Color, false);
                     break;
                 case "Number":
                     p = Pill.InitNumber(tag.Name, tag.Name, tag.Value, 0, tag.Color, false);

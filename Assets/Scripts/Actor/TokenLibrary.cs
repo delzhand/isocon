@@ -36,7 +36,7 @@ public class TokenLibrary : MonoBehaviour
 
     void Update()
     {
-        foreach ((Token, VisualElement) item in ElementMap.Values)
+        foreach ((Token, VisualElement) item in ElementMap?.Values)
         {
             var meta = item.Item1;
             var element = item.Item2;

@@ -71,7 +71,23 @@ public class Modal2
 
     public static string GetTextFieldValue(string dialog, string name)
     {
-        return Contents(dialog).Q<ShunInput>(name).value;
+        return Contents(dialog).Q<ShunInput>(name)?.value ?? null;
+    }
+
+    public static VisualElement AddAlert(string title, string description)
+    {
+        var wrapper = new ShunContainer();
+        wrapper.AddToClassList("shun-dialog__field");
+        Contents(_targetDialogName).Add(wrapper);
+
+        var hostAlert = new ShunAlert();
+        hostAlert.SetVariant(AlertVariant.Default);
+        hostAlert.title = title;
+        hostAlert.description = description;
+
+        wrapper.Add(hostAlert);
+
+        return wrapper;
     }
 
     public static VisualElement AddTextField(string name, string label, string defaultValue, string helpText = null)
@@ -237,11 +253,12 @@ public class Modal2
         return wrapper;
     }
 
-    public static List<string> GetToggleFieldValues(ShunToggleGroup toggleField)
+    public static List<string> GetToggleFieldValues(string dialog, string name)
     {
+        var toggleField = Contents(dialog).Q<ShunToggleGroup>(name);
         if (toggleField == null)
         {
-            Debug.Log("null element");
+            return new List<string>();
         }
         List<string> active = new();
         foreach (ShunToggle s in toggleField?.Query<ShunToggle>().ToList())
@@ -256,7 +273,7 @@ public class Modal2
 
     public static int GetIntFieldValue(string dialog, string name)
     {
-        return Contents(dialog).Q<ShunIntInput>(name).value;
+        return Contents(dialog).Q<ShunIntInput>(name)?.value ?? 0;
     }
 
     public static VisualElement AddIntField(string name, string label, int defaultValue, string helpText = null)
@@ -323,7 +340,7 @@ public class Modal2
 
     public static string GetSelectFieldValue(string dialog, string name)
     {
-        return Contents(dialog).Q<ShunSelect>(name).selectedValue;
+        return Contents(dialog).Q<ShunSelect>(name)?.selectedValue ?? null;
     }
 
     public static VisualElement AddSelectField(string name, string label, string defaultValue, List<string> options, string helpText = null)
@@ -390,6 +407,10 @@ public class Modal2
         return wrapper;
     }
 
+    public static bool GetSwitchFieldValue(string dialog, string name)
+    {
+        return Contents(dialog).Q<ShunSwitch>(name)?.value ?? false;
+    }
 
     public static VisualElement AddSwitchField(string name, string label, bool defaultValue, string helpText = null)
     {
@@ -425,7 +446,7 @@ public class Modal2
 
     public static string GetComboboxFieldValue(string dialog, string name)
     {
-        return Contents(dialog).Q<ShunCombobox>(name).selectedValue;
+        return Contents(dialog).Q<ShunCombobox>(name)?.selectedValue ?? null;
     }
 
     public static VisualElement AddComboboxField(string name, string label, string defaultValue, List<string> options, string helpText = null)
@@ -494,6 +515,11 @@ public class Modal2
         }
 
         return wrapper;
+    }
+
+    public static int GetSliderFieldValue(string dialog, string name)
+    {
+        return Mathf.RoundToInt(Contents(dialog).Q<ShunSlider>(name).value);
     }
 
     public static VisualElement AddSliderField(string name, string label, int defaultValue, string helpText = null)

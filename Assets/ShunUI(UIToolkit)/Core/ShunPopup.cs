@@ -129,6 +129,13 @@ namespace ShunUI.Primitives
                             return true;
                     }
                 }
+                else
+                {
+                    // Recurse through wrapper containers (e.g. _submenuItems)
+                    // so we can reach ShunMenuItemBase children at any depth
+                    if (IsClickInSubmenu(child, clickedElement))
+                        return true;
+                }
             }
             return false;
         }

@@ -48,12 +48,8 @@ public class AddActor
     public static void FinalizeToken(string json)
     {
         Player.Self().CmdCreateActor(json);
-        if (!UI.System.Q("BottomBar").ClassListContains("active"))
-        {
-            UI.ToggleDisplay(UI.System.Q("DeployToggle").Q("Attn"), true);
-        }
-
         Modal2.Dialog("ShunDialog1").Close();
+        UI.ToggleActiveClass("BottomBar", true);
     }
 
     public static void CloseAddToken()

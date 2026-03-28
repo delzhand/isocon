@@ -8,11 +8,14 @@ using UnityEngine.UIElements;
 
 public class Config
 {
-    public static void OpenModal(ClickEvent evt)
+    public static void OpenModal(bool isTabletopMode)
     {
         var dialog = Modal2.SetCurrentDialog("ShunDialog1");
         var dialogContent = Modal2.Contents("ShunDialog1");
-        // ShunDialogHelper.SetCloseAction(BackToNeutral);
+        if (isTabletopMode)
+        {
+            Modal2.SetCloseAction(StateManager.ToNeutral);
+        }
         dialogContent.Clear();
 
         Modal2.AddDialogHeader("Settings");
@@ -28,6 +31,9 @@ public class Config
 
         var hudField = Modal2.AddSwitchField("ShowHUD", "Display Info HUD", Preferences.Current.ShowHUD, "Show an overlay with connection and player information");
         Modal2.MoveToTab(hudField, configTabs, "Interface");
+
+        var indicatorsField = Modal2.AddSwitchField("ShowIndicators", "Display Tile Indicators", Preferences.Current.ShowIndicators, "Show tile coordinates");
+        Modal2.MoveToTab(indicatorsField, configTabs, "Interface");
 
         List<string> scaleOptions = new();
         for (int i = 75; i <= 250; i += 25)
@@ -60,7 +66,6 @@ public class Config
 
         var footer = Modal2.AddDialogFooter(() =>
         {
-            BackToNeutral();
             dialog.Close();
         });
 
@@ -70,7 +75,6 @@ public class Config
         confirm.clicked += () =>
         {
             SaveConfig();
-            // BackToNeutral();
             dialog.Close();
         };
         footer.Add(confirm);
@@ -80,16 +84,20 @@ public class Config
 
     private static void SaveConfig()
     {
-        var dialogContent = Modal2.Contents("ShunDialog1");
-        Preferences.Current.DataPath = dialogContent.Q<ShunInput>("DataPath").value;
-        Preferences.Current.ShowHUD = dialogContent.Q<ShunSwitch>("ShowHUD").value;
-        Preferences.Current.UIScale = dialogContent.Q<ShunSelect>("UIScale").selectedValue;
-        Preferences.Current.WorldUIScale = dialogContent.Q<ShunSelect>("WUIScale").selectedValue;
-        Preferences.Current.DragPan = dialogContent.Q<ShunSelect>("CameraControls").selectedValue == "Rotate with Right, Pan with Middle";
+        // var dialogContent = Modal2.Contents("ShunDialog1");
+        Preferences.Current.DataPath = Modal2.GetTextFieldValue("ShunDialog1", "DataPath");
+        Preferences.Current.ShowHUD = Modal2.GetSwitchFieldValue("ShunDialog1", "ShowHUD");
+        Preferences.Current.UIScale = Modal2.GetSelectFieldValue("ShunDialog1", "UIScale");
+        Preferences.Current.WorldUIScale = Modal2.GetSelectFieldValue("ShunDialog1", "WUIScale");
+        Preferences.Current.DragPan = Modal2.GetSelectFieldValue("ShunDialog1", "CameraControls") == "Rotate with Right, Pan with Middle";
 
-        Preferences.Current.BlockBorderOpacity = dialogContent.Q<ShunSlider>("BlockBorder").value;
+        Preferences.Current.ShowIndicators = Modal2.GetSwitchFieldValue("ShunDialog1", "ShowIndicators");
+        Block.ToggleIndicators(Preferences.Current.ShowIndicators);
 
-        Preferences.Current.TokenOutline = dialogContent.Q<ShunSelect>("ActorBorder").selectedValue;
+        Preferences.Current.BlockBorderOpacity = Modal2.GetSliderFieldValue("ShunDialog1", "BlockBorder");
+        BlockRendering.ToggleAllBorders(false);
+
+        Preferences.Current.TokenOutline = Modal2.GetSelectFieldValue("ShunDialog1", "ActorBorder");
         Actor.SetAllTokenOutlines();
 
         float uiValue = float.Parse(Preferences.Current.UIScale.Replace("%", "")) / 100f;
@@ -98,18 +106,12 @@ public class Config
         float wuiValue = float.Parse(Preferences.Current.WorldUIScale.Replace("%", "")) / 100f;
         GameObject.Find("UICanvas/WorldUI").GetComponent<UIDocument>().panelSettings.scale = wuiValue;
 
-        int fpsValue = int.Parse(Modal2.GetToggleFieldValues(dialogContent.Q<ShunToggleGroup>("FPSLimit")).First());
+        int fpsValue = int.Parse(Modal2.GetToggleFieldValues("ShunDialog1", "FPSLimit").First());
         fpsValue = Math.Max(fpsValue, 3);
         Preferences.Current.TargetFramerate = fpsValue;
         Application.targetFrameRate = fpsValue;
 
         Preferences.Save();
         Toast.AddSuccess("Configuration saved.");
-    }
-
-    private static void BackToNeutral()
-    {
-        // Debug.Log("BTN");
-        // StateManager.Find().ChangeSubState(new NeutralState());
     }
 }

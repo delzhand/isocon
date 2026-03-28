@@ -88,7 +88,7 @@ public abstract class TabletopSubstate : BaseState
 
     protected virtual void GoToConfig(ClickEvent evt)
     {
-        Config.OpenModal(evt);
+        Config.OpenModal(true);
         SM.ChangeSubState(new ModalState());
     }
 

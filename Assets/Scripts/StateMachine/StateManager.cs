@@ -38,6 +38,11 @@ public class StateManager : MonoBehaviour
     {
         return GameObject.Find("AppState").GetComponent<StateManager>();
     }
+
+    public static void ToNeutral()
+    {
+        Find().ChangeSubState(new NeutralState());
+    }
 }
 
 public interface IState

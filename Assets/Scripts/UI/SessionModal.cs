@@ -12,7 +12,7 @@ public class SessionModal
     public static void OpenModal(ClickEvent evt)
     {
         var dialog = Modal2.SetCurrentDialog("ShunDialog1");
-        Modal2.SetCloseAction(BackToNeutral);
+        Modal2.SetCloseAction(StateManager.ToNeutral);
         var content = Modal2.Contents("ShunDialog1");
         content.Clear();
 
@@ -101,11 +101,6 @@ public class SessionModal
     //         Modal.MoveToColumn("Fields_0", "SaveSession");
     //     }
     // }
-
-    private static void BackToNeutral()
-    {
-        StateManager.Find().ChangeSubState(new NeutralState());
-    }
 
     private static void LoadSession(ClickEvent evt)
     {

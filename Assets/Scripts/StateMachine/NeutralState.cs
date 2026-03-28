@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Mirror;
+using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -218,26 +220,78 @@ public class NeutralState : TabletopSubstate
 
     private void ShowSystemTagModal(ClickEvent evt)
     {
-        Modal.Reset("Add Tag");
-        Modal.AddTextField("TagName", "Tag Name", "");
-        Modal.AddDropdownField("ColorField", "Color", "Gray", ColorUtility.CommonColors());
-        Modal.AddDropdownField("TagType", "Type", "Simple", StringUtility.CreateArray("Simple", "Number", "Clock"), (evt) => AddSystemTagModalConditions());
-        Modal.AddIntField("TagValue", "Initial Value", 0);
-        Modal.AddIntField("TagMaxValue", "Segments", 4);
-        Modal.AddPreferredButton("Add", AddSystemTagSubmit);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
-        AddSystemTagModalConditions();
-
         SelectionMenu.Hide();
+
+        SM.ChangeSubState(new ModalState());
+
+        var dialog = Modal2.SetCurrentDialog("ShunDialog1");
+        Modal2.SetCloseAction(StateManager.ToNeutral);
+        var contents = Modal2.Contents("ShunDialog1");
+        contents.Clear();
+
+        Modal2.AddDialogHeader("Add System Tag");
+
+        var tagType = Modal2.AddInlineSelectField("Type", "Type", "Simple", StringUtility.CreateArray("Simple", "Number", "Clock").ToList<string>());
+        tagType.Q<ShunSelect>().OnSelect += () =>
+        {
+            var container = contents.Q<ShunContainer>("TagTypeContainer");
+            container.Clear();
+            string type = Modal2.GetSelectFieldValue("ShunDialog1", "Type");
+            if (type == "Number" || type == "Clock")
+            {
+                var initVal = Modal2.AddInlineIntField("InitialValue", "Initial Value", 0);
+                Modal2.MoveToContainer(initVal, container);
+            }
+            if (type == "Clock")
+            {
+                var maxVal = Modal2.AddInlineIntField("MaxValue", "Max Value", 4);
+                Modal2.MoveToContainer(maxVal, container);
+            }
+        };
+
+        Modal2.AddInlineTextField("TagName", "Tag Name", "", "The text that will appear on the tag");
+        Modal2.AddInlineComboboxField("Color", "Color", "Black", ColorUtility.CommonColors().ToList<string>());
+
+        var typeContainer = new ShunContainer();
+        typeContainer.name = "TagTypeContainer";
+        typeContainer.AddToClassList("shun-dialog__field");
+        contents.Add(typeContainer);
+
+        var footer = Modal2.AddDialogFooter(() =>
+        {
+            dialog.Close();
+        });
+
+        var confirm = new ShunButton();
+        confirm.SetVariant(ButtonVariant.Primary);
+        confirm.text = "Create";
+        confirm.clicked += () =>
+        {
+            AddSystemTagSubmit();
+        };
+        footer.Add(confirm);
+
+        dialog.Open();
+
+        // Modal.Reset("Add Tag");
+        // Modal.AddTextField("TagName", "Tag Name", "");
+        // Modal.AddDropdownField("ColorField", "Color", "Gray", ColorUtility.CommonColors());
+        // Modal.AddDropdownField("TagType", "Type", "Simple", StringUtility.CreateArray("Simple", "Number", "Clock"), (evt) => AddSystemTagModalConditions());
+        // Modal.AddIntField("TagValue", "Initial Value", 0);
+        // Modal.AddIntField("TagMaxValue", "Segments", 4);
+        // Modal.AddPreferredButton("Add", AddSystemTagSubmit);
+        // Modal.AddButton("Cancel", Modal.CloseEvent);
+        // AddSystemTagModalConditions();
+
     }
 
-    private void AddSystemTagSubmit(ClickEvent evt)
+    private void AddSystemTagSubmit()
     {
-        string tagName = UI.Modal.Q<TextField>("TagName").value;
-        int tagValue = UI.Modal.Q<IntegerField>("TagValue").value;
-        int tagMaxValue = UI.Modal.Q<IntegerField>("TagMaxValue").value;
-        string colorValue = UI.Modal.Q<DropdownField>("ColorField").value;
-        string tagType = UI.Modal.Q<DropdownField>("TagType").value;
+        string tagName = Modal2.GetTextFieldValue("ShunDialog1", "TagName");
+        int tagValue = Modal2.GetIntFieldValue("ShunDialog1", "InitialValue");
+        int tagMaxValue = Modal2.GetIntFieldValue("ShunDialog1", "MaxValue");
+        string colorValue = Modal2.GetComboboxFieldValue("ShunDialog1", "Color");
+        string tagType = Modal2.GetSelectFieldValue("ShunDialog1", "Type");
         GameSystemTag tag = new();
         tag.Name = tagName;
         tag.Value = tagValue;
@@ -245,14 +299,7 @@ public class NeutralState : TabletopSubstate
         tag.MaxValue = tagMaxValue;
         tag.Color = ColorUtility.GetCommonColor(colorValue);
         Player.Self().CmdRequestGameSystemCommand($"AddTag|{JsonUtility.ToJson(tag)}");
-        Modal.Close();
-    }
-
-    private void AddSystemTagModalConditions()
-    {
-        string tagType = UI.Modal.Q<DropdownField>("TagType").value;
-        UI.ToggleDisplay(UI.Modal.Q("TagValue"), tagType != "Simple");
-        UI.ToggleDisplay(UI.Modal.Q("TagMaxValue"), tagType == "Clock");
+        Modal2.Dialog("ShunDialog1").Close();
     }
 
     #endregion

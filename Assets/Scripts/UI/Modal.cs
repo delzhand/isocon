@@ -24,8 +24,8 @@ public class Modal
     public static void Setup()
     {
         UI.Modal.Q("Top").Q("Exit").RegisterCallback<ClickEvent>(Modal.CloseEvent);
-        FindDoubleConfirm().Q<Button>("Confirm").RegisterCallback<ClickEvent>(DoubleConfirmConfirmed);
-        FindDoubleConfirm().Q<Button>("Cancel").RegisterCallback<ClickEvent>(DoubleConfirmCancelled);
+        // FindDoubleConfirm().Q<Button>("Confirm").RegisterCallback<ClickEvent>(DoubleConfirmConfirmed);
+        // FindDoubleConfirm().Q<Button>("Cancel").RegisterCallback<ClickEvent>(DoubleConfirmCancelled);
     }
 
     public static void HandleKeypresses()

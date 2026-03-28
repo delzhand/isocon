@@ -52,29 +52,39 @@ public abstract class ActorType : IActorType
     public virtual MenuItem[] GetMenuItems(bool placed)
     {
         List<MenuItem> items = new();
+        var actorCommands = new MenuItem("BaseCommands", "Actor", null);
+        items.Add(actorCommands);
         if (placed)
         {
-            items.Add(new MenuItem("Remove", "Remove", ClickRemove));
-            items.Add(new MenuItem("Flip", "Flip", ClickFlip));
+            actorCommands.Children.Add(new MenuItem("Remove", "Remove", ClickRemove));
+            actorCommands.Children.Add(new MenuItem("Flip", "Flip", () =>
+            {
+                Actor.GetSelected().transform.Find("Offset/Avatar/Cutout/Cutout Quad").Rotate(new Vector3(0, 180, 0));
+                Actor.Deselect();
+
+            }));
         }
-        items.Add(new MenuItem("Reshape", "Reshape", ReshapeModal));
-        items.Add(new MenuItem("EditName", "Rename", RenameModal));
-        items.Add(new MenuItem("Clone", "Clone", ClickClone));
-        items.Add(new MenuItem("Delete", "Delete", ClickDelete));
-        items.Add(new MenuItem("AddTag", "Add Tag", AddTagModal));
-        items.Add(new MenuItem("AddBar", "Add Bar", AddBarModal));
-        items.Add(new MenuItem("AddStat", "Add Stat", AddStatModal));
+        actorCommands.Children.Add(new MenuItem("Reshape", "Reshape", ReshapeModal));
+        actorCommands.Children.Add(new MenuItem("EditName", "Rename", RenameModal));
+        actorCommands.Children.Add(new MenuItem("Clone", "Clone", ClickClone));
+        actorCommands.Children.Add(new MenuItem("Delete", "Delete", ClickDelete));
+
+        var actorData = new MenuItem("ActorData", "Status", null);
+        actorData.Children.Add(new MenuItem("AddTag", "Add Tag", AddTagModal));
+        actorData.Children.Add(new MenuItem("AddBar", "Add Bar", AddBarModal));
+        actorData.Children.Add(new MenuItem("AddStat", "Add Stat", AddStatModal));
         if (Stats.Count > 0 || Bars.Count > 0)
         {
-            items.Add(new MenuItem("EditStats", "Edit Stats/Bars", EditStatBarModal));
+            actorData.Children.Add(new MenuItem("EditStats", "Edit Stats/Bars", EditStatBarModal));
         }
         foreach (ActorBar bar in Bars)
         {
-            items.Add(new MenuItem($"Modify{bar.Name}", $"Modify {bar.Name}", () =>
+            actorData.Children.Add(new MenuItem($"Modify{bar.Name}", $"Modify {bar.Name}", () =>
             {
                 NumberPicker.ActorCommand($"ModBar|{bar.Name}");
             }));
         }
+        items.Add(actorData);
         return items.ToArray();
     }
 

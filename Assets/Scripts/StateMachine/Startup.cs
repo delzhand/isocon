@@ -28,7 +28,6 @@ public class Startup
         TokenLibrary.Setup();
         Autosaver.Setup();
         Tutorial.Setup();
-        SelectionMenu.Setup();
 
         UI.SetBlocking(UI.System, StringUtility.CreateArray(@"SelectionMenu", "TopBar", "BottomBar", "ToolsPanel", "ToolOptions", "LeftTokenPanel", "RightTokenPanel", "Backdrop", "NumberPickerModal", "TopRight"));
         Application.targetFrameRate = Preferences.Current.TargetFramerate;

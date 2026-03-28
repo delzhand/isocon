@@ -248,15 +248,36 @@ namespace ShunUI.Primitives
 
             if (_submenu != null && _submenuVisible)
             {
-                // Check if mouse is over submenu after a short delay
+                // Check if mouse is over submenu (or any descendant submenu) after a short delay
                 schedule.Execute(() =>
                 {
-                    if (!_mouseOverParent && !_mouseOverSubmenu)
+                    if (!_mouseOverParent && !IsMouseOverAnySubmenu())
                     {
                         HideSubmenu();
                     }
                 }).ExecuteLater(100);
             }
+        }
+
+        /// <summary>
+        /// Recursively checks whether the mouse is over this item's submenu overlay
+        /// or any descendant submenu overlay. Prevents premature hiding when the cursor
+        /// travels from a parent submenu toward a deeper nested submenu.
+        /// </summary>
+        protected bool IsMouseOverAnySubmenu()
+        {
+            if (_mouseOverSubmenu) return true;
+            if (_submenuItems == null) return false;
+
+            foreach (var child in _submenuItems.Children())
+            {
+                if (child is ShunMenuItemBase childItem)
+                {
+                    if (childItem._mouseOverParent || childItem.IsMouseOverAnySubmenu())
+                        return true;
+                }
+            }
+            return false;
         }
 
         protected virtual void ShowSubmenu()
@@ -386,7 +407,7 @@ namespace ShunUI.Primitives
                 _mouseOverSubmenu = false;
                 schedule.Execute(() =>
                 {
-                    if (!_mouseOverParent && !_mouseOverSubmenu)
+                    if (!_mouseOverParent && !IsMouseOverAnySubmenu())
                     {
                         HideSubmenu();
                     }

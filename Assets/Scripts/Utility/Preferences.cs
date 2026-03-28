@@ -24,6 +24,7 @@ public class StoredPreferences
     public bool DragPan;
     public string MaleghastFile;
     public int AutosaveInterval = 300;
+    public bool ShowIndicators;
 }
 
 public class Preferences
@@ -56,6 +57,7 @@ public class Preferences
             MaleghastFile = PlayerPrefs.GetString("MaleghastFile", ""),
             AutosaveInterval = PlayerPrefs.GetInt("AutosaveInterval", 300),
             BlockBorderOpacity = PlayerPrefs.GetFloat("BlockBorderOpacity", 0),
+            ShowIndicators = false,
         };
 
         string fileName = GetConfigFileName();
@@ -82,40 +84,41 @@ public class Preferences
             _current.TutorialsSeen = loaded.TutorialsSeen.Length > 0 ? loaded.TutorialsSeen : _current.TutorialsSeen;
             _current.ShowHUD = loaded.ShowHUD;
             _current.BlockBorderOpacity = loaded.BlockBorderOpacity > 0 ? loaded.BlockBorderOpacity : _current.BlockBorderOpacity;
+            _current.ShowIndicators = loaded.ShowIndicators;
         }
     }
 
-    public static void SetDataPath(string value)
-    {
-        PlayerPrefs.SetString("DataFolder", value);
-        _current.DataPath = value;
-        Save();
-    }
+    // public static void SetDataPath(string value)
+    // {
+    //     PlayerPrefs.SetString("DataFolder", value);
+    //     _current.DataPath = value;
+    //     Save();
+    // }
 
-    public static void SetShowHUD(bool value)
-    {
-        _current.ShowHUD = value;
-        Save();
-    }
+    // public static void SetShowHUD(bool value)
+    // {
+    //     _current.ShowHUD = value;
+    //     Save();
+    // }
 
-    public static void SetDragPan(bool value)
-    {
-        _current.DragPan = value;
-        Save();
-    }
+    // public static void SetDragPan(bool value)
+    // {
+    //     _current.DragPan = value;
+    //     Save();
+    // }
 
 
-    public static void SetUIScale(string value)
-    {
-        _current.UIScale = value;
-        Save();
-    }
+    // public static void SetUIScale(string value)
+    // {
+    //     _current.UIScale = value;
+    //     Save();
+    // }
 
-    public static void SetWorldUIScale(string value)
-    {
-        _current.WorldUIScale = value;
-        Save();
-    }
+    // public static void SetWorldUIScale(string value)
+    // {
+    //     _current.WorldUIScale = value;
+    //     Save();
+    // }
 
     public static float GetUIScale()
     {
@@ -129,17 +132,17 @@ public class Preferences
         return float.Parse(uiScale.Replace("%", "")) / 100f;
     }
 
-    public static void SetTokenScale(float value)
-    {
-        _current.TokenScale = value;
-        Save();
-    }
+    // public static void SetTokenScale(float value)
+    // {
+    //     _current.TokenScale = value;
+    //     Save();
+    // }
 
-    public static void SetTokenOutline(string value)
-    {
-        _current.TokenOutline = value;
-        Save();
-    }
+    // public static void SetTokenOutline(string value)
+    // {
+    //     _current.TokenOutline = value;
+    //     Save();
+    // }
 
     public static void SetTutorialsSeen(string value)
     {
@@ -164,47 +167,47 @@ public class Preferences
         Save();
     }
 
-    public static void SetPlayerName(string value)
-    {
-        _current.PlayerName = value;
-        Save();
-    }
+    // public static void SetPlayerName(string value)
+    // {
+    //     _current.PlayerName = value;
+    //     Save();
+    // }
 
-    public static void SetHostIP(string value)
-    {
-        _current.HostIP = value;
-        Save();
-    }
+    // public static void SetHostIP(string value)
+    // {
+    //     _current.HostIP = value;
+    //     Save();
+    // }
 
-    public static void SetPlayerCount(int value)
-    {
-        _current.PlayerCount = value;
-        Save();
-    }
+    // public static void SetPlayerCount(int value)
+    // {
+    //     _current.PlayerCount = value;
+    //     Save();
+    // }
 
-    public static void SetGrid(string value)
-    {
-        _current.Grid = value;
-        Save();
-    }
+    // public static void SetGrid(string value)
+    // {
+    //     _current.Grid = value;
+    //     Save();
+    // }
 
-    public static void SetBlockBorderOpacity(float value)
-    {
-        _current.BlockBorderOpacity = value;
-        Save();
-    }
+    // public static void SetBlockBorderOpacity(float value)
+    // {
+    //     _current.BlockBorderOpacity = value;
+    //     Save();
+    // }
 
-    public static void SetTargetFramerate(int value)
-    {
-        _current.TargetFramerate = value;
-        Save();
-    }
+    // public static void SetTargetFramerate(int value)
+    // {
+    //     _current.TargetFramerate = value;
+    //     Save();
+    // }
 
-    public static void SetMaleghastFile(string value)
-    {
-        _current.MaleghastFile = value;
-        Save();
-    }
+    // public static void SetMaleghastFile(string value)
+    // {
+    //     _current.MaleghastFile = value;
+    //     Save();
+    // }
 
     public static void Save()
     {

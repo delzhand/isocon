@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class Block : MonoBehaviour
@@ -622,6 +623,18 @@ public class Block : MonoBehaviour
         Block closest = GetClosest(v);
         Block top = GetTopBlock(new Vector2Int(closest.Coordinate.x, closest.Coordinate.y));
         return top;
+    }
+
+    public static void ToggleIndicators(bool show)
+    {
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        foreach (GameObject g in blocks)
+        {
+            Block block = g.GetComponent<Block>();
+            string coords = StringUtility.ConvertIntToAlpha(block.Coordinate.y + 1) + "" + (block.Coordinate.x + 1);
+            g.transform.Find("Indicator").GetComponent<TextMeshPro>().text = coords;
+            g.transform.Find("Indicator").gameObject.SetActive(show);
+        }
     }
 
     /// <summary>

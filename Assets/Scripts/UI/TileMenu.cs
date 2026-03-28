@@ -11,14 +11,8 @@ public class TileMenu
         MenuItem[] defaultItems = GetTileMenuItems(b);
         foreach (MenuItem m in defaultItems)
         {
-            SelectionMenu.AddItem(m.Name, m.Label, m.Action);
+            SelectionMenu.AddItem(m.Name, m.Label, m.Action, null);
         }
-        // MenuItem[] systemItems = GameSystem.Current().GetTileMenuItems();
-        // foreach (MenuItem m in systemItems)
-        // {
-        //     SelectionMenu.AddItem(m.Name, m.Label, m.OnClick);
-        // }
-
     }
 
     public static MenuItem[] GetTileMenuItems(Block b)
@@ -50,6 +44,7 @@ public class TileMenu
         }
         else
         {
+            b.Select();
             items.Add(new MenuItem("AddEffect", "Add Effect", () => ClickAddEffect(b)));
         }
         items.Add(new MenuItem("ClearMap", "Clear Map Effects", ClickClearMap));
@@ -59,6 +54,7 @@ public class TileMenu
     public static void ClickAddEffect(Block b)
     {
         AddTerrainEffect.OpenModal(b);
+        StateManager.Find().ChangeSubState(new ModalState());
         SelectionMenu.Hide();
     }
 

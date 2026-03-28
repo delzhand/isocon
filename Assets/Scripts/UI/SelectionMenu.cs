@@ -11,12 +11,14 @@ public struct MenuItem
     public string Name;
     public string Label;
     public Action Action;
+    public List<MenuItem> Children;
 
     public MenuItem(string name, string label, Action onClick)
     {
         Name = name;
         Label = label;
         Action = onClick;
+        Children = new();
     }
 }
 
@@ -28,20 +30,20 @@ public class SelectionMenu
 
     public static Vector2 Offset;
 
-    private static ShunContextMenu CMenu;
+    // private static ShunContextMenu CMenu;
 
-    public static void Setup()
-    {
-        UI.SetBlocking(UI.System, "SelectionMenu");
+    // public static void Setup()
+    // {
+    //     UI.SetBlocking(UI.System, "SelectionMenu");
 
-        VisualElement parent = UI.System.Q("Tabletop").Q("Frame");
-        CMenu = new ShunContextMenu();
-        CMenu.name = "ContextMenu";
-        VisualElement menuMount = new();
-        menuMount.style.display = DisplayStyle.None;
-        menuMount.Add(CMenu);
-        parent.Add(menuMount);
-    }
+    //     // VisualElement parent = UI.System.Q("Tabletop").Q("Frame");
+    //     // CMenu = new ShunContextMenu();
+    //     // CMenu.name = "ContextMenu";
+    //     // VisualElement menuMount = new();
+    //     // menuMount.style.display = DisplayStyle.None;
+    //     // menuMount.Add(CMenu);
+    //     // parent.Add(menuMount);
+    // }
 
     public static VisualElement Find()
     {
@@ -70,8 +72,9 @@ public class SelectionMenu
     public static void Reset(string title, Vector2 offset, Transform follow = null)
     {
         FollowTransform = follow;
-        CMenu.ClearItems();
-        // var test = CMenu.AddItem("Test");
+        var contextMenu = UI.System.Q<ShunContextMenu>();
+        contextMenu.ClearItems();
+        // var test = contextMenu.AddItem("Test");
 
         // var test2 = new ShunMenuItem();
         // test2.label = "Child";
@@ -79,21 +82,35 @@ public class SelectionMenu
         // test.AddSubmenuItem(test2);
 
         Vector2 pos = UI.GetTransformScreenPosition(FollowTransform, UI.System, Camera.main);
-        CMenu.OpenAtPosition(pos + offset);
+        contextMenu.OpenAtPosition(pos + offset);
     }
 
     public static void Hide()
     {
         Visible = false;
         FollowTransform = null;
-        if (CMenu != null)
-        {
-            CMenu.ClearItems();
-        }
+        var contextMenu = UI.System.Q<ShunContextMenu>();
+        contextMenu.ClearItems();
     }
 
-    public static void AddItem(string name, string label, Action action)
+    public static void AddItem(string name, string label, Action action, List<MenuItem> children)
     {
-        CMenu.AddItem(label, null, action);
+        var contextMenu = UI.System.Q<ShunContextMenu>();
+        var parent = contextMenu.AddItem(label, null, action);
+        if (children != null)
+        {
+            var test2 = new ShunMenuItem();
+            test2.label = "Child";
+            test2.clicked += () => { Debug.Log("child"); };
+            parent.AddSubmenuItem(test2);
+
+            foreach (MenuItem child in children)
+            {
+                var childItem = new ShunMenuItem();
+                childItem.label = child.Label;
+                childItem.clicked += child.Action;
+                parent.AddSubmenuItem(childItem);
+            }
+        }
     }
 }

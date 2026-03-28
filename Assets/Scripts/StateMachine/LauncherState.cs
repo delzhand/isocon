@@ -48,7 +48,7 @@ public class LauncherState : BaseState
         UI.ToggleDisplay("StartupPanel", true);
         UI.ToggleDisplay("StartupOptions", true);
         UI.ToggleDisplay("Launcher", true);
-        UI.ToggleDisplay("TokenLibraryModal", false);
+        // UI.ToggleDisplay("TokenLibraryModal", false);
 
 #if UNITY_WEBGL
         UI.ToggleDisplay("SoloModeButton", false);
@@ -102,7 +102,7 @@ public class LauncherState : BaseState
 
     private void ConfigClicked(ClickEvent evt)
     {
-        Config.OpenModal(evt);
+        Config.OpenModal(false);
     }
 
     private void LibraryClicked(ClickEvent evt)
@@ -140,7 +140,14 @@ public class LauncherState : BaseState
         dialogContent.Clear();
 
         Modal2.AddDialogHeader($"Configure {_mode.ToString()} Mode");
+
+        if (_mode == ConnectMode.Host)
+        {
+            Modal2.AddAlert("VPN Information", "VPNs interfere with host connections and must be disabled for clients to connect successfully.");
+        }
+
         Modal2.AddInlineTextField("PlayerName", "Player Name", Preferences.Current.PlayerName, "How you appear to other players");
+
         if (_mode == ConnectMode.Solo || _mode == ConnectMode.Host)
         {
             Modal2.AddInlineSelectField("GridType", "Grid Type", Preferences.Current.Grid, new List<string> { "Square", "Hex" }, "Choose 4 or 6 sided map tiles");
@@ -148,6 +155,10 @@ public class LauncherState : BaseState
         if (_mode == ConnectMode.Host)
         {
             Modal2.AddInlineIntField("PlayerCount", "Max Players", 4);
+        }
+        if (_mode == ConnectMode.Client)
+        {
+            Modal2.AddTextField("HostIP", "Host IP", Preferences.Current.HostIP, "The IP address of the hosting player");
         }
 
         var footer = Modal2.AddDialogFooter(() => dialog.Close());
@@ -181,6 +192,11 @@ public class LauncherState : BaseState
             string gridType = dialogContent.Q<ShunSelect>("GridType").selectedValue;
             Preferences.Current.Grid = gridType;
             TerrainController.GridType = gridType;
+        }
+
+        if (_mode == ConnectMode.Client)
+        {
+            Preferences.Current.HostIP = Modal2.GetTextFieldValue("ShunDialog1", "HostIP");
         }
 
         NetworkManager netManager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
