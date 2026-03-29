@@ -23,13 +23,13 @@ public class TileMenu
         {
             b.Select();
         }
-        else
+        else if (!b.Selected)
         {
             items.Add(new MenuItem("SelectThis", "Select Tile", () => { b.Select(); }));
         }
         if (TerrainController.GridType == "Square")
         {
-            items.Add(new MenuItem("AddAdjacent", "Select Adjacent", () => { Debug.LogError("not yet implemented"); }));
+            items.Add(new MenuItem("AddAdjacent", "Select Adjacent", () => { AddAdjacent(b); }));
             items.Add(new MenuItem("AddNeighbors", "Select Neighbors", () => { AddNeighbors(b); }));
         }
         if (StateManager.Find().SubState.TypeName() == "TileMarkingState")
@@ -44,9 +44,13 @@ public class TileMenu
         {
             items.Add(new MenuItem("QuickSelect", "Quick Select Mode", () => { StateManager.Find().ChangeSubState(new TileMarkingState()); }));
         }
-        items.Add(new MenuItem("AddEffect", "Add Effect", () => ClickAddEffect(null)));
+        if (b.Selected)
+        {
+            items.Add(new MenuItem("SelectThis", "Deselect Tile", () => { b.Select(); }));
+        }
         items.Add(new MenuItem("DeselectAll", "Deselect All", ClickDeselectAll));
-        items.Add(new MenuItem("ClearEffects", "Clear Effects", ClickClearEffects));
+        items.Add(new MenuItem("AddEffect", "Add Effect", () => ClickAddEffect(null)));
+        items.Add(new MenuItem("ClearEffects", "Clear Effects from Selection", ClickClearEffects));
 
         List<string> effects = new();
         foreach (var block in Block.GetSelected())
@@ -65,8 +69,20 @@ public class TileMenu
                 }
             });
         }
-        items.Add(new MenuItem("ClearMap", "Clear Map Effects", ClickClearMap));
+        items.Add(new MenuItem("ClearMap", "Clear Effects from All", ClickClearMap));
         return items.ToArray();
+    }
+
+    private static void AddAdjacent(Block block)
+    {
+        Block[] neighbors = TerrainController.FindAdjacent(block);
+        for (int i = 0; i < neighbors.Length; i++)
+        {
+            if (!neighbors[i].Selected)
+            {
+                neighbors[i]?.Select();
+            }
+        }
     }
 
     private static void AddNeighbors(Block block)
@@ -74,7 +90,10 @@ public class TileMenu
         Block[] neighbors = TerrainController.FindNeighbors(block, 3);
         for (int i = 0; i < neighbors.Length; i++)
         {
-            neighbors[i]?.Select();
+            if (!neighbors[i].Selected)
+            {
+                neighbors[i]?.Select();
+            }
         }
     }
 

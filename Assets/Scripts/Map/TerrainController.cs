@@ -531,6 +531,30 @@ public class TerrainController
         }
     }
 
+    public static Block[] FindAdjacent(Block origin)
+    {
+        var offsets = new List<(int, int)>
+        {
+            (-1, 0),
+            (1, 0),
+            (0, -1),
+            (0, 1)
+        };
+        List<Block> neighbors = new();
+        for (int i = 0; i < offsets.Count; i++)
+        {
+            int x = origin.Coordinate.x + offsets[i].Item1;
+            int y = origin.Coordinate.y + offsets[i].Item2;
+            GameObject col = GameObject.Find($"{x},{y}");
+            GameObject topBlockObj = TopBlock(col);
+            if (topBlockObj)
+            {
+                neighbors.Add(topBlockObj.GetComponent<Block>());
+            }
+        }
+        return neighbors.ToArray();
+    }
+
     public static Block[] FindNeighbors(Block origin, int radius)
     {
         int[,] offsets = {
@@ -646,39 +670,6 @@ public class TerrainController
         Light l = GameObject.Find("Light").GetComponent<Light>();
         l.intensity = LightIntensity;
         l.transform.eulerAngles = new Vector3(LightHeight, LightAngle, 0);
-    }
-
-    public static void ToggleTerrainEffectMode(ClickEvent evt)
-    {
-        // // Disable map edit mode if necessary
-        // if (Cursor.Mode == CursorMode.Editing)
-        // {
-        //     MapEdit.ToggleEditMode(evt);
-        // }
-
-        // if (Cursor.Mode != CursorMode.Marking)
-        // {
-        //     Tutorial.Init("terrain effect mode");
-        //     Cursor.Mode = CursorMode.Marking;
-        //     Token.DeselectAll();
-        //     Token.UnfocusAll();
-        //     BlockMesh.ToggleAllBorders(true);
-        //     UI.ToggleActiveClass("MarkerMode", true);
-        //     UI.ToggleDisplay("BottomBar", false);
-        //     UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
-        //     Player.Self().SetOp("Editing Terrain Effects");
-        // }
-        // else
-        // {
-        //     Cursor.Mode = CursorMode.Default;
-        //     BlockMesh.ToggleAllBorders(false);
-        //     UI.ToggleActiveClass("MarkerMode", false);
-        //     Block.DeselectAll();
-        //     UI.ToggleDisplay("BottomBar", true);
-        //     UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
-        //     SelectionMenu.Hide();
-        //     Player.Self().ClearOp();
-        // }
     }
 
     private static int MaxElevation()

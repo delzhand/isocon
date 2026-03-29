@@ -111,14 +111,14 @@ public class Modal2
         return Contents(dialog).Q<ShunInput>(name)?.value ?? null;
     }
 
-    public static VisualElement AddAlert(string title, string description)
+    public static VisualElement AddAlert(string title, string description, AlertVariant variant)
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
         Contents(_targetDialogName).Add(wrapper);
 
         var hostAlert = new ShunAlert();
-        hostAlert.SetVariant(AlertVariant.Default);
+        hostAlert.SetVariant(variant);
         hostAlert.title = title;
         hostAlert.description = description;
 

@@ -6,7 +6,8 @@ namespace ShunUI
     public enum AlertVariant
     {
         Default,
-        Destructive
+        Destructive,
+        Attention
     }
 
     [System.Serializable]
@@ -126,12 +127,14 @@ namespace ShunUI
             // Remove all variant classes
             RemoveFromClassList("alert-default");
             RemoveFromClassList("alert-destructive");
+            RemoveFromClassList("alert-attention");
 
             // Add the current variant class
             string variantClass = _variant switch
             {
                 AlertVariant.Default => "alert-default",
                 AlertVariant.Destructive => "alert-destructive",
+                AlertVariant.Attention => "alert-attention",
                 _ => "alert-default"
             };
 

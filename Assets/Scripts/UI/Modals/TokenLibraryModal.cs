@@ -134,7 +134,7 @@ public class TokenLibraryModal : MonoBehaviour
         }
 
 
-        var footer = Modal2.AddDialogFooter();
+        var footer = Modal2.AddDialogFooter("Close");
         Modal2.MoveToContainer(footer, PickWrapper);
 
         var add = new ShunButton();

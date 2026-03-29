@@ -13,7 +13,7 @@ public class StartSessionModal
 
         if (mode == ConnectMode.Host)
         {
-            Modal2.AddAlert("VPN Information", "VPNs interfere with host connections and must be disabled for clients to connect successfully.");
+            Modal2.AddAlert("VPN Information", "VPNs interfere with host connections and must be disabled for clients to connect successfully.", ShunUI.AlertVariant.Attention);
         }
 
         Modal2.AddInlineTextField("PlayerName", "Player Name", Preferences.Current.PlayerName, "How you appear to other players");
@@ -28,7 +28,7 @@ public class StartSessionModal
         }
         if (mode == ConnectMode.Client)
         {
-            Modal2.AddTextField("HostIP", "Host IP", Preferences.Current.HostIP, "The IP address of the hosting player");
+            Modal2.AddInlineTextField("HostIP", "Host IP", Preferences.Current.HostIP, "The IP address of the hosting player");
         }
 
         Modal2.AddDialogFooter();
