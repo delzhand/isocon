@@ -314,6 +314,7 @@ public class Player : NetworkBehaviour
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
         BlockRendering.ToggleSpacers(false);
+        Block.ToggleIndicators(Preferences.Current.ShowIndicators);
         Toast.AddSimple("Map synced.");
     }
 

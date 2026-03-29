@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TerrainUtils;
 using UnityEngine.UIElements;
 
 public class TileMenu
@@ -18,37 +19,63 @@ public class TileMenu
     public static MenuItem[] GetTileMenuItems(Block b)
     {
         List<MenuItem> items = new();
-        if (Block.GetSelected().Length > 0)
+        if (Block.GetSelected().Length == 0)
         {
-            items.Add(new MenuItem("AddEffect", "Add Effect", () => ClickAddEffect(null)));
-            items.Add(new MenuItem("DeselectAll", "Deselect All", ClickDeselectAll));
-            items.Add(new MenuItem("ClearEffects", "Clear Effects", ClickClearEffects));
-
-            List<string> effects = new();
-            foreach (var block in Block.GetSelected())
-            {
-                block.Marks.ForEach(effect =>
-                {
-                    string effectName = effect.Split("::")[0];
-                    if (!effects.Contains(effectName))
-                    {
-                        items.Add(new MenuItem($"Remove_{effectName}", $"Remove {effectName}", () =>
-                        {
-                            Player.Self().CmdRequestMapSetValue(SelectedBlockNames(), "RemoveEffect", effect);
-                            SelectionMenu.Hide();
-                        }));
-                        effects.Add(effectName);
-                    }
-                });
-            }
+            b.Select();
         }
         else
         {
-            b.Select();
-            items.Add(new MenuItem("AddEffect", "Add Effect", () => ClickAddEffect(b)));
+            items.Add(new MenuItem("SelectThis", "Select Tile", () => { b.Select(); }));
+        }
+        if (TerrainController.GridType == "Square")
+        {
+            items.Add(new MenuItem("AddAdjacent", "Select Adjacent", () => { Debug.LogError("not yet implemented"); }));
+            items.Add(new MenuItem("AddNeighbors", "Select Neighbors", () => { AddNeighbors(b); }));
+        }
+        if (StateManager.Find().SubState.TypeName() == "TileMarkingState")
+        {
+            items.Add(new MenuItem("QuickSelect", "Exit Quick Select Mode", () =>
+            {
+                StateManager.Find().ChangeSubState(new NeutralState());
+                Player.Self().ClearOp();
+            }));
+        }
+        else
+        {
+            items.Add(new MenuItem("QuickSelect", "Quick Select Mode", () => { StateManager.Find().ChangeSubState(new TileMarkingState()); }));
+        }
+        items.Add(new MenuItem("AddEffect", "Add Effect", () => ClickAddEffect(null)));
+        items.Add(new MenuItem("DeselectAll", "Deselect All", ClickDeselectAll));
+        items.Add(new MenuItem("ClearEffects", "Clear Effects", ClickClearEffects));
+
+        List<string> effects = new();
+        foreach (var block in Block.GetSelected())
+        {
+            block.Marks.ForEach(effect =>
+            {
+                string effectName = effect.Split("::")[0];
+                if (!effects.Contains(effectName))
+                {
+                    items.Add(new MenuItem($"Remove_{effectName}", $"Remove {effectName}", () =>
+                    {
+                        Player.Self().CmdRequestMapSetValue(SelectedBlockNames(), "RemoveEffect", effect);
+                        SelectionMenu.Hide();
+                    }));
+                    effects.Add(effectName);
+                }
+            });
         }
         items.Add(new MenuItem("ClearMap", "Clear Map Effects", ClickClearMap));
         return items.ToArray();
+    }
+
+    private static void AddNeighbors(Block block)
+    {
+        Block[] neighbors = TerrainController.FindNeighbors(block, 3);
+        for (int i = 0; i < neighbors.Length; i++)
+        {
+            neighbors[i]?.Select();
+        }
     }
 
     public static void ClickAddEffect(Block b)

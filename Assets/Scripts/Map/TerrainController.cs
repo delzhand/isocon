@@ -96,6 +96,7 @@ public class TerrainController
         ReorgNeeded = true;
         Environment.SetBackgroundColors(Environment.BgBottomColor, Environment.BgTopColor);
         BlockRendering.ToggleHex(GridType == "Hex");
+        Block.ToggleIndicators(Preferences.Current.ShowIndicators);
     }
 
     public static void ResetTerrain(int width, int length, int height)
@@ -131,6 +132,9 @@ public class TerrainController
         newblock.transform.localPosition = new Vector3(0, currentTop.transform.localPosition.y + 1, 0);
         newblock.transform.localScale = block.transform.localScale;
         newblock.GetComponent<Block>().CopyStyle(currentTop.GetComponent<Block>(), true);
+        newblock.transform.Find("Indicator").gameObject.SetActive(Preferences.Current.ShowIndicators);
+        string coords = StringUtility.ConvertIntToAlpha(block.Coordinate.y + 1) + "" + (block.Coordinate.x + 1);
+        newblock.transform.Find("Indicator").GetComponent<TextMeshPro>().text = coords;
         ReorgNeeded = true;
     }
 

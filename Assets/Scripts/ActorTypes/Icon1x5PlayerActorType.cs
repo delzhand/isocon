@@ -300,12 +300,12 @@ public class Icon1x5PlayerActorType : Icon1x5Base
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddActor.OrderFields(StringUtility.CreateArray("NameField", "PlayerJob"));
+        global::AddActorModal.OrderFields(StringUtility.CreateArray("NameField", "PlayerJob"));
     }
 
     private static void CreateClicked(ClickEvent evt)
     {
-        if (!TokenLibrary.TokenSelected())
+        if (!TokenLibraryModal.TokenSelected())
         {
             Toast.AddError("A token has not been selected");
             return;
@@ -378,7 +378,7 @@ public class Icon1x5PlayerActorType : Icon1x5Base
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetToken();
+        a.Token = TokenLibraryModal.GetToken();
         a.Color = ColorUtility.GetCommonColor(color);
         a.Shape = "Square 1x1";
         a.Position = Vector3.zero;
@@ -386,7 +386,7 @@ public class Icon1x5PlayerActorType : Icon1x5Base
         a.ActorType = JsonUtility.ToJson(t);
         a.ActorTypeId = TypeName;
         string json = JsonUtility.ToJson(a);
-        AddActor.FinalizeToken(json);
+        global::AddActorModal.FinalizeToken(json);
     }
 
     #region Private functions

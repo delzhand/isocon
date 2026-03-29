@@ -15,10 +15,20 @@ public class Modal2
 
     private static string _targetDialogName;
 
+    // public static void SetCurrentDialog(string name, out ShunDialog dialog, out ShunDialogContent contents)
+    // {
+    //     _targetDialogName = name;
+    //     _sdc[name] = UI.System.Q(name).Q<ShunDialogContent>();
+    //     contents = Contents(name);
+    //     contents.Clear();
+    //     dialog = CurrentDialog;
+    // }
+
     public static ShunDialog SetCurrentDialog(string name)
     {
         _targetDialogName = name;
         _sdc[name] = UI.System.Q(name).Q<ShunDialogContent>();
+        Contents(name).Clear();
         return CurrentDialog;
     }
 
@@ -35,6 +45,16 @@ public class Modal2
     public static ShunDialogContent Contents(string dialogName)
     {
         return _sdc[dialogName];
+    }
+
+    public static void Open()
+    {
+        CurrentDialog.Open();
+    }
+
+    public static void Close()
+    {
+        CurrentDialog.Close();
     }
 
     public static void SetCloseAction(Action closeAction)
@@ -54,19 +74,36 @@ public class Modal2
         wrapper.Add(title);
     }
 
-    public static VisualElement AddDialogFooter(Action cancelAction)
+    public static VisualElement AddDialogFooter(string cancelText = "Cancel", Action cancelAction = null)
     {
         var footer = new ShunContainer();
         footer.AddToClassList("shun-dialog__footer");
         Contents(_targetDialogName).Add(footer);
 
-        var close = new ShunDialogClose();
-        close.text = "Cancel";
-        close.clicked += cancelAction;
-        close.SetVariant(ButtonVariant.Outline);
-        footer.Add(close);
+        var cancel = new ShunButton();
+        cancel.text = cancelText;
+        if (cancelAction != null)
+        {
+            cancel.clicked += cancelAction;
+        }
+        else
+        {
+            cancel.clicked += Modal2.Close;
+        }
+        cancel.SetVariant(ButtonVariant.Outline);
+        footer.Add(cancel);
 
         return footer;
+    }
+
+    public static VisualElement AddFooterConfirm(string text, Action confirmAction)
+    {
+        var confirm = new ShunButton();
+        confirm.text = text;
+        confirm.clicked += confirmAction;
+        confirm.SetVariant(ButtonVariant.Primary);
+        Contents(_targetDialogName).Q(className: "shun-dialog__footer").Add(confirm);
+        return confirm;
     }
 
     public static string GetTextFieldValue(string dialog, string name)
@@ -88,6 +125,16 @@ public class Modal2
         wrapper.Add(hostAlert);
 
         return wrapper;
+    }
+
+    public static VisualElement AddLongMarkup(string content)
+    {
+        var label = new ShunLabel();
+        label.AddToClassList("shun-dialog__label");
+        label.text = content;
+        label.style.whiteSpace = WhiteSpace.Normal;
+        Contents(_targetDialogName).Add(label);
+        return label;
     }
 
     public static VisualElement AddTextField(string name, string label, string defaultValue, string helpText = null)
@@ -140,6 +187,46 @@ public class Modal2
         var input = new ShunInput();
         input.name = name;
         input.value = defaultValue;
+        input.AddToClassList("shun-inline-input");
+        layout2.Add(input);
+
+        if (helpText != null)
+        {
+            var help = new Label(helpText);
+            help.AddToClassList("shun-dialog__description");
+            layout2.Add(help);
+        }
+
+        return wrapper;
+    }
+
+    public static VisualElement AddInlineTextAreaField(string name, string label, string defaultValue, string helpText = null)
+    {
+        var wrapper = new ShunContainer();
+        wrapper.AddToClassList("shun-dialog__field");
+        Contents(_targetDialogName).Add(wrapper);
+
+        var layout = new VisualElement();
+        layout.style.flexDirection = FlexDirection.Row;
+        layout.style.justifyContent = Justify.SpaceBetween;
+        layout.style.alignItems = Align.FlexStart;
+        wrapper.Add(layout);
+
+        var fieldlabel = new Label(label);
+        fieldlabel.AddToClassList("shun-dialog__label");
+        layout.Add(fieldlabel);
+
+        var layout2 = new VisualElement();
+        layout2.style.flexDirection = FlexDirection.Column;
+        layout2.style.alignItems = Align.Stretch;
+        layout2.style.minWidth = 250;
+        layout.Add(layout2);
+
+        var input = new ShunTextArea();
+        // input.multiline = true;
+        input.name = name;
+        input.value = defaultValue;
+        // input.AddToClassList("shun-inline-input");
         layout2.Add(input);
 
         if (helpText != null)
@@ -204,7 +291,7 @@ public class Modal2
         return wrapper;
     }
 
-    private static void ConfirmFileFieldSelect(ClickEvent evt)
+    private static void ConfirmFileFieldSelect()
     {
         string result = FileBrowser.Result[0];
         Debug.Log(result);
@@ -326,6 +413,7 @@ public class Modal2
         var input = new ShunIntInput();
         input.name = name;
         input.value = defaultValue;
+        input.AddToClassList("shun-inline-input");
         layout2.Add(input);
 
         if (helpText != null)
@@ -659,7 +747,7 @@ public class Modal2
 
         var select = new ShunCombobox();
         select.name = name;
-        select.SetOptions(TokenLibrary.Options());
+        select.SetOptions(TokenLibraryModal.Options());
         select.placeholder = "Select an option";
         select.searchPlaceholder = "Type to search...";
         layout2.Add(select);
@@ -673,9 +761,9 @@ public class Modal2
         libLabel.style.backgroundSize = new BackgroundSize(20, 20);
         libLabel.RegisterCallback<ClickEvent>((evt) =>
         {
-            TokenLibrary.ShowSelectMode(() =>
+            TokenLibraryModal.OpenSelect(() =>
             {
-                select.selectedValue = TokenLibrary.GetToken().Name;
+                select.selectedValue = TokenLibraryModal.GetToken().Name;
             });
         });
         layout2.Add(libLabel);

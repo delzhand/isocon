@@ -1,6 +1,7 @@
-#TokenLibraryItem:active,
-#TokenLibraryItem:hover {
-    background-color: #2C5D87;
+#TokenLibraryItem.selectable:active,
+#TokenLibraryItem.selectable:hover {
+    /* background-color: #2C5D87; */
+    background-color: var(--color-muted-foreground);
 }
 
 #Frame {

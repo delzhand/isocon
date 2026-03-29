@@ -52,7 +52,7 @@ public class Icon2x0EnemyActorType : Icon2x0Base
             "EliteField",
             "LegendHPField"
         );
-        AddActor.OrderFields(fieldOrder);
+        global::AddActorModal.OrderFields(fieldOrder);
         AddModalEvaluateConditions();
     }
 
@@ -69,7 +69,7 @@ public class Icon2x0EnemyActorType : Icon2x0Base
 
     private static void CreateClicked(ClickEvent evt)
     {
-        if (!TokenLibrary.TokenSelected())
+        if (!TokenLibraryModal.TokenSelected())
         {
             Toast.AddError("A token has not been selected");
             return;
@@ -145,7 +145,7 @@ public class Icon2x0EnemyActorType : Icon2x0Base
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetToken();
+        a.Token = TokenLibraryModal.GetToken();
         a.Color = t.Color;
         a.Shape = shape;
         a.Position = Vector3.zero;
@@ -153,7 +153,7 @@ public class Icon2x0EnemyActorType : Icon2x0Base
         a.ActorType = JsonUtility.ToJson(t);
         a.ActorTypeId = TypeName;
         string json = JsonUtility.ToJson(a);
-        AddActor.FinalizeToken(json);
+        global::AddActorModal.FinalizeToken(json);
     }
     public override string Label()
     {

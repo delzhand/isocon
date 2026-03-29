@@ -14,7 +14,7 @@ using ShunUI;
 public class LauncherState : BaseState
 {
     private ConnectMode _mode;
-    private bool _attemptingToConnect = false;
+    private static bool _attemptingToConnect = false;
 
     public override void OnEnter(StateManager sm)
     {
@@ -102,27 +102,32 @@ public class LauncherState : BaseState
 
     private void ConfigClicked(ClickEvent evt)
     {
-        Config.OpenModal(false);
+        ConfigModal.OpenModal(false);
     }
 
     private void LibraryClicked(ClickEvent evt)
     {
-        TokenLibrary.ShowDefaultMode(evt);
+        TokenLibraryModal.OpenDefault();
     }
 
     private void SoloModeClicked(ClickEvent evt)
     {
-        OpenStartSessionModal(evt, ConnectMode.Solo);
+        StartSessionModal.Open(ConnectMode.Solo);
     }
 
     private void HostModeClicked(ClickEvent evt)
     {
-        OpenStartSessionModal(evt, ConnectMode.Host);
+        StartSessionModal.Open(ConnectMode.Host);
     }
 
     private void ClientModeClicked(ClickEvent evt)
     {
-        OpenStartSessionModal(evt, ConnectMode.Client);
+        StartSessionModal.Open(ConnectMode.Client);
+    }
+
+    public static void ListenForConnection()
+    {
+        _attemptingToConnect = true;
     }
 
     private void CancelConnectionAttemptClicked(ClickEvent evt)
@@ -131,97 +136,6 @@ public class LauncherState : BaseState
         Toast.AddSimple("Connection attempt cancelled.");
     }
 
-    private void OpenStartSessionModal(ClickEvent evt, ConnectMode mode)
-    {
-        _mode = mode;
-
-        var dialog = Modal2.SetCurrentDialog("ShunDialog1");
-        var dialogContent = Modal2.Contents("ShunDialog1");
-        dialogContent.Clear();
-
-        Modal2.AddDialogHeader($"Configure {_mode.ToString()} Mode");
-
-        if (_mode == ConnectMode.Host)
-        {
-            Modal2.AddAlert("VPN Information", "VPNs interfere with host connections and must be disabled for clients to connect successfully.");
-        }
-
-        Modal2.AddInlineTextField("PlayerName", "Player Name", Preferences.Current.PlayerName, "How you appear to other players");
-
-        if (_mode == ConnectMode.Solo || _mode == ConnectMode.Host)
-        {
-            Modal2.AddInlineSelectField("GridType", "Grid Type", Preferences.Current.Grid, new List<string> { "Square", "Hex" }, "Choose 4 or 6 sided map tiles");
-        }
-        if (_mode == ConnectMode.Host)
-        {
-            Modal2.AddInlineIntField("PlayerCount", "Max Players", 4);
-        }
-        if (_mode == ConnectMode.Client)
-        {
-            Modal2.AddTextField("HostIP", "Host IP", Preferences.Current.HostIP, "The IP address of the hosting player");
-        }
-
-        var footer = Modal2.AddDialogFooter(() => dialog.Close());
-
-        var confirm = new ShunDialogClose();
-        confirm.SetVariant(ButtonVariant.Primary);
-        confirm.text = "Start Session";
-        if (_mode == ConnectMode.Client)
-        {
-            confirm.text = "Join Session";
-        }
-        confirm.clicked += () =>
-        {
-            StartSession();
-            dialog.Close();
-        };
-        footer.Add(confirm);
-
-        dialog.Open();
-    }
-
-    private void StartSession()
-    {
-        var dialogContent = Modal2.Contents("ShunDialog1");
-
-        string playerName = dialogContent.Q<ShunInput>("PlayerName").value;
-        Preferences.Current.PlayerName = playerName;
-
-        if (_mode == ConnectMode.Solo || _mode == ConnectMode.Host)
-        {
-            string gridType = dialogContent.Q<ShunSelect>("GridType").selectedValue;
-            Preferences.Current.Grid = gridType;
-            TerrainController.GridType = gridType;
-        }
-
-        if (_mode == ConnectMode.Client)
-        {
-            Preferences.Current.HostIP = Modal2.GetTextFieldValue("ShunDialog1", "HostIP");
-        }
-
-        NetworkManager netManager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
-        switch (_mode)
-        {
-            case ConnectMode.Solo:
-                netManager.maxConnections = 1;
-                netManager.StartHost();
-                break;
-            case ConnectMode.Host:
-                int playerCount = dialogContent.Q<ShunIntInput>("PlayerCount").value;
-                Preferences.Current.PlayerCount = playerCount;
-                netManager.maxConnections = playerCount;
-                netManager.StartHost();
-                break;
-            case ConnectMode.Client:
-                netManager.networkAddress = Preferences.Current.HostIP;
-                netManager.StartClient();
-                break;
-        }
-        _attemptingToConnect = true;
-        UI.ToggleDisplay("StartupOptions", false);
-        UI.ToggleDisplay("ConnectingMessage", true);
-        Preferences.Save();
-    }
     #endregion
 
     private void DestroyLeftoverNetworkData()

@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 using UnityEngine;
 using ShunUI;
 
-public class AddActor
+public class AddActorModal
 {
     public static void OpenModal(ClickEvent evt)
     {
@@ -33,7 +33,7 @@ public class AddActor
         typeContainer.AddToClassList("shun-dialog__field");
         dialogContent.Add(typeContainer);
 
-        var footer = Modal2.AddDialogFooter(() => dialog.Close());
+        var footer = Modal2.AddDialogFooter("Cancel", () => dialog.Close());
         dialog.Open();
     }
 

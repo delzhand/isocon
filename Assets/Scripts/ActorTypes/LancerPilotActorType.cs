@@ -47,12 +47,12 @@ public class LancerPilotActorType : LancerBase
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddActor.OrderFields(StringUtility.CreateArray("Name", "ColorField", "ShapeField"));
+        global::AddActorModal.OrderFields(StringUtility.CreateArray("Name", "ColorField", "ShapeField"));
     }
 
     private static void CreateClicked(ClickEvent evt)
     {
-        if (!TokenLibrary.TokenSelected())
+        if (!TokenLibraryModal.TokenSelected())
         {
             Toast.AddError("A token has not been selected");
             return;
@@ -73,7 +73,7 @@ public class LancerPilotActorType : LancerBase
         };
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetToken();
+        a.Token = TokenLibraryModal.GetToken();
         a.Color = ColorUtility.GetCommonColor(color);
         a.Shape = shape;
         a.Position = Vector3.zero;
@@ -81,7 +81,7 @@ public class LancerPilotActorType : LancerBase
         a.ActorType = JsonUtility.ToJson(t);
         a.ActorTypeId = TypeName;
         string json = JsonUtility.ToJson(a);
-        AddActor.FinalizeToken(json);
+        global::AddActorModal.FinalizeToken(json);
     }
 
     public override string Label()

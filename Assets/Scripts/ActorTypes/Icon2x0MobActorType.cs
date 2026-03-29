@@ -45,12 +45,12 @@ public class Icon2x0MobActorType : Icon2x0Base
         Modal.AddPreferredButton("Create Actor", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
-        AddActor.OrderFields(StringUtility.CreateArray("NameField", "ShapeField"));
+        global::AddActorModal.OrderFields(StringUtility.CreateArray("NameField", "ShapeField"));
     }
 
     private static void CreateClicked(ClickEvent evt)
     {
-        if (!TokenLibrary.TokenSelected())
+        if (!TokenLibraryModal.TokenSelected())
         {
             Toast.AddError("A token has not been selected");
             return;
@@ -71,7 +71,7 @@ public class Icon2x0MobActorType : Icon2x0Base
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetToken();
+        a.Token = TokenLibraryModal.GetToken();
         a.Color = ColorUtility.GetCommonColor("gray");
         a.Shape = shape;
         a.Position = Vector3.zero;
@@ -79,7 +79,7 @@ public class Icon2x0MobActorType : Icon2x0Base
         a.ActorType = JsonUtility.ToJson(t);
         a.ActorTypeId = TypeName;
         string json = JsonUtility.ToJson(a);
-        AddActor.FinalizeToken(json);
+        global::AddActorModal.FinalizeToken(json);
     }
     #endregion
 

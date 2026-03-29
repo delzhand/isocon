@@ -347,7 +347,7 @@ public class MapEdit
         }
     }
 
-    private static void OpenFile()
+    public static void OpenFile()
     {
         string filename = FileBrowser.Result[0];
         MapSaver.LegacyLoad(filename);
@@ -422,7 +422,7 @@ public class MapEdit
         // }
     }
 
-    private static void WriteFile()
+    public static void WriteFile()
     {
         MapSaver.RegSave(FileBrowser.Result[0]);
         // string saveType = UI.Modal.Q<DropdownField>("SaveType").value;

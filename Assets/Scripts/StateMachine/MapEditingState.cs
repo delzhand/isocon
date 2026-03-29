@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using SimpleFileBrowser;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -53,8 +54,8 @@ public class MapEditingState : TabletopSubstate
         UI.ToggleDisplay("BottomRight", false);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), false);
         UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), true);
-        UI.TopBar.Q("EditMap").Q<Label>("Label").text = "Save <u>M</u>ap";
-        UI.ToggleDisplay(UI.TopBar.Q("CancelEditMap"), true);
+        UI.TopBar.Q("EditMap").Q<Label>("Label").text = "Sync <u>M</u>ap";
+        UI.ToggleDisplay(UI.TopBar.Q("EditingActions"), true);
     }
 
     protected override void DisableInterface()
@@ -80,6 +81,8 @@ public class MapEditingState : TabletopSubstate
     {
         UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>(GoToNeutral);
         UI.TopBar.Q("CancelEditMap").RegisterCallback<ClickEvent>(Cancel);
+        UI.TopBar.Q("LoadMap").RegisterCallback<ClickEvent>(LoadMap);
+        UI.TopBar.Q("SaveMap").RegisterCallback<ClickEvent>(SaveMap);
         Dragger.LeftClickStart += LeftClickStart;
         Dragger.LeftDragUpdate += LeftDragUpdate;
     }
@@ -88,6 +91,8 @@ public class MapEditingState : TabletopSubstate
     {
         UI.TopBar.Q("EditMap").UnregisterCallback<ClickEvent>(GoToNeutral);
         UI.TopBar.Q("CancelEditMap").UnregisterCallback<ClickEvent>(Cancel);
+        UI.TopBar.Q("LoadMap").UnregisterCallback<ClickEvent>(LoadMap);
+        UI.TopBar.Q("SaveMap").UnregisterCallback<ClickEvent>(SaveMap);
         Dragger.LeftClickStart -= LeftClickStart;
         Dragger.LeftDragUpdate -= LeftDragUpdate;
     }
@@ -150,6 +155,54 @@ public class MapEditingState : TabletopSubstate
     {
         State.SetSceneFromState(revertState);
         GoToNeutral(evt);
+    }
+
+    private void SaveMap(ClickEvent evt)
+    {
+        SM.ChangeSubState(new ModalState());
+        Modal2.SetCurrentDialog("ShunDialog1");
+        Modal2.SetCloseAction(BackToEditing);
+        Modal2.AddDialogHeader("Save Map");
+        Modal2.AddInlineTextField("MapName", "Map Name", MapMeta.Title);
+        Modal2.AddInlineTextField("CreatorName", "Creator Name", MapMeta.CreatorName ?? Player.Self().Name);
+        Modal2.AddInlineTextAreaField("Description", "Description", MapMeta.Description);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Save", () =>
+        {
+            FileBrowserHelper.Open(MapEdit.WriteFile, "", FileBrowserType.Maps, true);
+            Modal2.Close();
+        });
+
+        Modal2.Open();
+    }
+
+    private void LoadMap(ClickEvent evt)
+    {
+        if (TerrainController.MapDirty)
+        {
+            SM.ChangeSubState(new ModalState());
+
+            Modal2.SetCurrentDialog("ShunDialog1");
+            Modal2.SetCloseAction(BackToEditing);
+            Modal2.AddDialogHeader("Discard Changes?");
+            Modal2.AddLongMarkup("You have unsaved changes. These change will be lost if a map is loaded.");
+            Modal2.AddDialogFooter();
+            Modal2.AddFooterConfirm("Discard and Continue", () =>
+            {
+                FileBrowserHelper.Open(MapEdit.OpenFile, "", FileBrowserType.Maps);
+                Modal2.Close();
+            });
+            Modal2.Open();
+        }
+        else
+        {
+            FileBrowserHelper.Open(MapEdit.OpenFile, "", FileBrowserType.Maps);
+        }
+    }
+
+    private void BackToEditing()
+    {
+        SM.ChangeSubState(new MapEditingState());
     }
 }
 

@@ -6,7 +6,7 @@ using SimpleFileBrowser;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class TokenLibrary : MonoBehaviour
+public class TokenLibraryModal : MonoBehaviour
 {
     private class TokenLibraryFile
     {
@@ -71,6 +71,19 @@ public class TokenLibrary : MonoBehaviour
         return null;
     }
 
+    public static void OpenDefault()
+    {
+        AllowSelect = false;
+        Open("ShunDialog1");
+    }
+
+    public static void OpenSelect(LibraryCallback onSelect)
+    {
+        AllowSelect = true;
+        OnSelect = onSelect;
+        Open("ShunDialog2");
+    }
+
     private static void Open(string dialogName)
     {
         SelectedHash = null;
@@ -120,12 +133,15 @@ public class TokenLibrary : MonoBehaviour
             CreateTokenElement(token);
         }
 
+
+        var footer = Modal2.AddDialogFooter();
+        Modal2.MoveToContainer(footer, PickWrapper);
+
         var add = new ShunButton();
-        add.style.marginTop = 16;
         add.SetVariant(ButtonVariant.Secondary);
         add.text = "Add New Token";
         add.clicked += () => FileBrowserHelper.Open(ConfirmSelect, "", FileBrowserType.Tokens);
-        PickWrapper.Add(add);
+        footer.Add(add);
 
         dialog.Open();
     }
@@ -135,19 +151,6 @@ public class TokenLibrary : MonoBehaviour
         var fav = item.Q("Favorite").Q<Label>();
         fav.text = token.Favorite ? "❤" : "♡";
         fav.style.color = token.Favorite ? Color.orange : Color.white;
-    }
-
-    public static void ShowDefaultMode(ClickEvent evt)
-    {
-        AllowSelect = false;
-        Open("ShunDialog1");
-    }
-
-    public static void ShowSelectMode(LibraryCallback onSelect)
-    {
-        AllowSelect = true;
-        OnSelect = onSelect;
-        Open("ShunDialog2");
     }
 
     public static Token GetToken()
@@ -174,6 +177,7 @@ public class TokenLibrary : MonoBehaviour
         item.Q<Label>("Name").AddToClassList("shun-dialog__label");
         if (AllowSelect)
         {
+            item.Q("TokenLibraryItem").AddToClassList("selectable");
             item.RegisterCallback<ClickEvent>((evt) =>
             {
                 if (OnSelect != null)
@@ -318,7 +322,7 @@ public class TokenLibrary : MonoBehaviour
     //     }
     // }
 
-    public static void ConfirmSelect(ClickEvent evt)
+    public static void ConfirmSelect()
     {
         int count = 0;
         string directory = GetHashedImageDirectory();

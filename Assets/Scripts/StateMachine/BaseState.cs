@@ -1,4 +1,6 @@
 
+using Unity.VisualScripting;
+
 public abstract class BaseState : IState
 {
     public StateManager SM;
@@ -14,5 +16,10 @@ public abstract class BaseState : IState
 
     public virtual void UpdateState()
     {
+    }
+
+    public string TypeName()
+    {
+        return this.GetType().Name;
     }
 }

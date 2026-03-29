@@ -42,7 +42,7 @@ public class NeutralState : TabletopSubstate
 
         if (Input.GetKeyUp(KeyCode.A))
         {
-            AddActor.OpenModal(new ClickEvent());
+            AddActorModal.OpenModal(new ClickEvent());
             return;
         }
 
@@ -170,13 +170,11 @@ public class NeutralState : TabletopSubstate
 
     private void LeftClickRelease()
     {
-        // Debug.Log("left click release");
         Pointer.PickActor()?.ToggleSelect();
     }
 
     private void RightClickRelease()
     {
-        // Debug.Log("right click release");
         Actor pickedActor = Pointer.PickActor(true);
         if (pickedActor)
         {
@@ -215,7 +213,7 @@ public class NeutralState : TabletopSubstate
 
     private void ShowConsole(ClickEvent evt)
     {
-        IsoConsole.OpenModal(evt);
+        ConsoleModal.OpenModal(evt);
     }
 
     private void ShowSystemTagModal(ClickEvent evt)
@@ -257,7 +255,7 @@ public class NeutralState : TabletopSubstate
         typeContainer.AddToClassList("shun-dialog__field");
         contents.Add(typeContainer);
 
-        var footer = Modal2.AddDialogFooter(() =>
+        var footer = Modal2.AddDialogFooter("Cancel", () =>
         {
             dialog.Close();
         });
@@ -272,17 +270,6 @@ public class NeutralState : TabletopSubstate
         footer.Add(confirm);
 
         dialog.Open();
-
-        // Modal.Reset("Add Tag");
-        // Modal.AddTextField("TagName", "Tag Name", "");
-        // Modal.AddDropdownField("ColorField", "Color", "Gray", ColorUtility.CommonColors());
-        // Modal.AddDropdownField("TagType", "Type", "Simple", StringUtility.CreateArray("Simple", "Number", "Clock"), (evt) => AddSystemTagModalConditions());
-        // Modal.AddIntField("TagValue", "Initial Value", 0);
-        // Modal.AddIntField("TagMaxValue", "Segments", 4);
-        // Modal.AddPreferredButton("Add", AddSystemTagSubmit);
-        // Modal.AddButton("Cancel", Modal.CloseEvent);
-        // AddSystemTagModalConditions();
-
     }
 
     private void AddSystemTagSubmit()

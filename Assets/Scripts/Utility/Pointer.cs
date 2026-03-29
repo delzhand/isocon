@@ -206,15 +206,4 @@ public class Pointer
             }
         }
     }
-
-    private static void HighlightSizeArea(Block block)
-    {
-        block.Highlight();
-        int size = Actor.GetDragging().Size;
-        Block[] neighbors = TerrainController.FindNeighbors(block, size);
-        for (int i = 0; i < neighbors.Length; i++)
-        {
-            neighbors[i]?.Highlight();
-        }
-    }
 }

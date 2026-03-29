@@ -52,6 +52,7 @@ public class Block : MonoBehaviour
             _materialReset = false;
             SetMaterials();
         }
+        transform.Find("Indicator").eulerAngles = new Vector3(90, -90, 0);
     }
 
     /// <summary>

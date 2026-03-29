@@ -21,7 +21,7 @@ public class StoredPreferences
     public bool OverrideRules;
     public bool ShowHUD;
     public int TargetFramerate;
-    public bool DragPan;
+    public bool PanWithRight;
     public string MaleghastFile;
     public int AutosaveInterval = 300;
     public bool ShowIndicators;
@@ -53,7 +53,7 @@ public class Preferences
             SkipTutorials = PlayerPrefs.GetInt("SkipTutorials", 0),
             TargetFramerate = PlayerPrefs.GetInt("TargetFramerate", 30),
             ShowHUD = true,
-            DragPan = true,
+            PanWithRight = false,
             MaleghastFile = PlayerPrefs.GetString("MaleghastFile", ""),
             AutosaveInterval = PlayerPrefs.GetInt("AutosaveInterval", 300),
             BlockBorderOpacity = PlayerPrefs.GetFloat("BlockBorderOpacity", 0),
@@ -85,6 +85,7 @@ public class Preferences
             _current.ShowHUD = loaded.ShowHUD;
             _current.BlockBorderOpacity = loaded.BlockBorderOpacity > 0 ? loaded.BlockBorderOpacity : _current.BlockBorderOpacity;
             _current.ShowIndicators = loaded.ShowIndicators;
+            _current.PanWithRight = loaded.PanWithRight;
         }
     }
 

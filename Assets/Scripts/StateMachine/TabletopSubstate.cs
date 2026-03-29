@@ -36,7 +36,7 @@ public abstract class TabletopSubstate : BaseState
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), true);
         UI.ToggleDisplay(UI.TopBar.Q("AddActor"), true);
         UI.ToggleDisplay(UI.TopBar.Q("EditMap"), true);
-        UI.ToggleDisplay(UI.TopBar.Q("CancelEditMap"), false);
+        UI.ToggleDisplay(UI.TopBar.Q("EditingActions"), false);
         UI.ToggleDisplay(UI.TopBar.Q("MarkerMode"), true);
         UI.ToggleDisplay(UI.TopBar.Q("Dice"), true);
         UI.ToggleDisplay(UI.TopBar.Q("Config"), true);
@@ -88,7 +88,7 @@ public abstract class TabletopSubstate : BaseState
 
     protected virtual void GoToConfig(ClickEvent evt)
     {
-        Config.OpenModal(true);
+        ConfigModal.OpenModal(true);
         SM.ChangeSubState(new ModalState());
     }
 
@@ -101,7 +101,7 @@ public abstract class TabletopSubstate : BaseState
     protected virtual void GoToAddToken(ClickEvent evt)
     {
         SM.ChangeSubState(new ModalState());
-        AddActor.OpenModal(evt);
+        AddActorModal.OpenModal(evt);
     }
 
     protected void FixView(ClickEvent evt)

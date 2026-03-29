@@ -50,4 +50,5 @@ public interface IState
     public void OnEnter(StateManager sm);
     public void OnExit();
     public void UpdateState();
+    public string TypeName();
 }

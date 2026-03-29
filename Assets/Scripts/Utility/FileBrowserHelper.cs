@@ -39,7 +39,7 @@ public class FileBrowserHelper : MonoBehaviour
         return GameObject.Find("AppState").GetComponent<FileBrowserHelper>();
     }
 
-    public static void Open(EventCallback<ClickEvent> onSelect, string fieldName, FileBrowserType type, bool saveOp = false)
+    public static void Open(Action onSelect, string fieldName, FileBrowserType type, bool saveOp = false)
     {
         string filterName = "Sessions";
         string filterExt = ".json";
@@ -141,7 +141,7 @@ public class FileBrowserHelper : MonoBehaviour
     //     StartCoroutine(ShowDialogCoroutine(false, FileBrowser.PickMode.Files, false, $"{Preferences.Current.DataPath}/maps", null, "Load Map", "Load", MapEdit.ConfirmMapOpen, null));
     // }
 
-    IEnumerator ShowDialogCoroutine(bool saveOp, FileBrowser.PickMode pickMode, bool multiple, string dir, string file, string title, string confirmLabel, EventCallback<ClickEvent> success, EventCallback<ClickEvent> cancel)
+    IEnumerator ShowDialogCoroutine(bool saveOp, FileBrowser.PickMode pickMode, bool multiple, string dir, string file, string title, string confirmLabel, Action success, Action cancel)
     {
         if (saveOp)
         {
@@ -156,11 +156,11 @@ public class FileBrowserHelper : MonoBehaviour
         // Print whether the user has selected some files/folders or cancelled the operation (FileBrowser.Success)
         if (FileBrowser.Success)
         {
-            success?.Invoke(new ClickEvent());
+            success?.Invoke();
         }
         else
         {
-            cancel?.Invoke(new ClickEvent());
+            cancel?.Invoke();
         }
     }
 }

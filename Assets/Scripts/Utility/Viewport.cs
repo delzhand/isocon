@@ -5,8 +5,8 @@ using UnityEngine.UIElements;
 
 public enum DragMode
 {
-    Rotate,
-    Pan
+    RotateWithRight,
+    PanWithRight
 }
 
 public class Viewport
@@ -35,10 +35,10 @@ public class Viewport
         _isRightDragging = true;
         switch (_mode)
         {
-            case DragMode.Pan:
+            case DragMode.PanWithRight:
                 InitializePanDrag();
                 break;
-            case DragMode.Rotate:
+            case DragMode.RotateWithRight:
                 InitializeRotateDrag();
                 break;
         }
@@ -53,10 +53,10 @@ public class Viewport
         _isMiddleDragging = true;
         switch (_mode)
         {
-            case DragMode.Pan:
+            case DragMode.PanWithRight:
                 InitializeRotateDrag();
                 break;
-            case DragMode.Rotate:
+            case DragMode.RotateWithRight:
                 InitializePanDrag();
                 break;
         }
@@ -83,10 +83,10 @@ public class Viewport
         }
         switch (_mode)
         {
-            case DragMode.Pan:
+            case DragMode.PanWithRight:
                 UpdatePanDrag();
                 break;
-            case DragMode.Rotate:
+            case DragMode.RotateWithRight:
                 UpdateRotateDrag();
                 break;
         }
@@ -100,10 +100,10 @@ public class Viewport
         }
         switch (_mode)
         {
-            case DragMode.Pan:
+            case DragMode.PanWithRight:
                 UpdateRotateDrag();
                 break;
-            case DragMode.Rotate:
+            case DragMode.RotateWithRight:
                 UpdatePanDrag();
                 break;
         }
@@ -171,36 +171,36 @@ public class Viewport
     {
         switch (_mode)
         {
-            case DragMode.Pan:
-                EnableRotateMode();
+            case DragMode.PanWithRight:
+                EnableRightClickRotateMode();
                 break;
-            case DragMode.Rotate:
-                EnablePanMode();
+            case DragMode.RotateWithRight:
+                EnableRightClickPanMode();
                 break;
         }
     }
 
-    public static void SetPanMode(bool pan)
+    public static void SetPanMode(bool panWithRight)
     {
-        if (pan)
+        if (panWithRight)
         {
-            EnablePanMode();
+            EnableRightClickPanMode();
         }
         else
         {
-            EnableRotateMode();
+            EnableRightClickRotateMode();
         }
     }
 
-    private static void EnableRotateMode()
+    private static void EnableRightClickRotateMode()
     {
-        _mode = DragMode.Rotate;
+        _mode = DragMode.RotateWithRight;
         // UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Rotate <u>C</u>amera";
     }
 
-    private static void EnablePanMode()
+    private static void EnableRightClickPanMode()
     {
-        _mode = DragMode.Pan;
+        _mode = DragMode.PanWithRight;
         // UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Pan <u>C</u>amera";
     }
 }

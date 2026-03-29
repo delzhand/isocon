@@ -37,7 +37,7 @@ public class SessionModal
             Modal2.MoveToTab(saveFile, sessionTabs, "Save");
         }
 
-        var saveFooter = Modal2.AddDialogFooter(() =>
+        var saveFooter = Modal2.AddDialogFooter("Cancel", () =>
         {
             dialog.Close();
         });

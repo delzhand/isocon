@@ -251,7 +251,7 @@
 }
 
 /* Submenu items container should allow overflow for nested submenus */
-.menu-submenu > .menu-items {
+.menu-submenu>.menu-items {
     overflow: visible;
 }
 
@@ -269,9 +269,11 @@
 .button-align-left {
     justify-content: flex-start;
 }
+
 .button-align-center {
     justify-content: center;
 }
+
 .button-align-right {
     justify-content: flex-end;
 }
@@ -429,7 +431,7 @@
 }
 
 /* Hide label in icon-only buttons */
-.button-icon > Label {
+.button-icon>Label {
     display: none;
 }
 
@@ -454,11 +456,15 @@
    INPUT COMPONENTS
    =================== */
 
-.input > #unity-text-input {
-    padding-left: 12px;
-    padding-right: 12px;
-    padding-top: 4px;
-    padding-bottom: 4px;
+.shun-inline-input {
+    margin: 0;
+}
+
+.input>#unity-text-input {
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
     min-height: 36px;
     width: 100%;
     border-width: var(--border-width);
@@ -474,25 +480,25 @@
 }
 
 /* Placeholder text color - Target the text element directly */
-.input > #unity-text-input > .unity-text-element--placeholder {
+.input>#unity-text-input>.unity-text-element--placeholder {
     color: var(--color-muted-foreground);
     opacity: 1;
     -unity-font-style: normal;
 }
 
 /* Focus state with ring effect */
-.input:focus > #unity-text-input {
+.input:focus>#unity-text-input {
     border-color: var(--color-primary);
     border-width: var(--border-width);
 }
 
 /* Disabled state */
-.input > #unity-text-input:disabled {
+.input>#unity-text-input:disabled {
     opacity: 0.5;
 }
 
 /* Input Sizes */
-.input-sm > #unity-text-input {
+.input-sm>#unity-text-input {
     padding-left: 8px;
     padding-right: 8px;
     padding-top: 2px;
@@ -502,7 +508,7 @@
     border-radius: var(--border-radius-sm);
 }
 
-.input-lg > #unity-text-input {
+.input-lg>#unity-text-input {
     padding-left: 16px;
     padding-right: 16px;
     padding-top: 8px;
@@ -513,30 +519,30 @@
 }
 
 /* Error/Invalid state with ring effect */
-.input-error > #unity-text-input {
+.input-error>#unity-text-input {
     border-color: var(--color-destructive);
 }
 
-.input-error:focus > #unity-text-input {
+.input-error:focus>#unity-text-input {
     border-color: var(--color-destructive);
 }
 
 /* Success state */
-.input-success > #unity-text-input {
+.input-success>#unity-text-input {
     border-color: rgb(34, 197, 94);
 }
 
-.input-success:focus > #unity-text-input {
+.input-success:focus>#unity-text-input {
     border-color: rgb(34, 197, 94);
 }
 
 /* Vertical Scroller - shadcn style */
-.input > #unity-text-input #unity-content-container #unity-dragger-border {
+.input>#unity-text-input #unity-content-container #unity-dragger-border {
     background-color: transparent;
     border-width: 0;
 }
 
-.input > #unity-text-input #unity-content-container #unity-dragger {
+.input>#unity-text-input #unity-content-container #unity-dragger {
     background-color: var(--color-border);
     border-radius: var(--border-radius-sm);
     width: 4px;
@@ -546,25 +552,25 @@
     transition-duration: 0.2s;
 }
 
-.input > #unity-text-input #unity-content-container #unity-dragger:hover {
+.input>#unity-text-input #unity-content-container #unity-dragger:hover {
     background-color: var(--color-muted-foreground);
 }
 
-.input > #unity-text-input #unity-content-container #unity-dragger:active {
+.input>#unity-text-input #unity-content-container #unity-dragger:active {
     background-color: var(--color-foreground);
 }
 
-.input > #unity-text-input #unity-content-container #unity-low-button,
-.input > #unity-text-input #unity-content-container #unity-high-button {
+.input>#unity-text-input #unity-content-container #unity-low-button,
+.input>#unity-text-input #unity-content-container #unity-high-button {
     display: none;
 }
 
-.input > #unity-text-input #unity-content-container .unity-scroller {
+.input>#unity-text-input #unity-content-container .unity-scroller {
     width: 8px;
     background-color: transparent;
 }
 
-.input > #unity-text-input #unity-content-container .unity-scroller--vertical {
+.input>#unity-text-input #unity-content-container .unity-scroller--vertical {
     width: 8px;
     background-color: transparent;
     translate: -8px 0;
@@ -815,7 +821,7 @@
     justify-content: flex-end;
 }
 
-.dialog__footer > * {
+.dialog__footer>* {
     margin-left: var(--spacing-md);
 }
 
@@ -898,9 +904,12 @@
 }
 
 @keyframes skeleton-pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 1;
     }
+
     50% {
         opacity: 0.5;
     }
@@ -918,7 +927,7 @@
     align-self: flex-start;
 }
 
-.checkbox > .unity-toggle__input {
+.checkbox>.unity-toggle__input {
     width: 16px;
     height: 16px;
     min-width: 16px;
@@ -934,7 +943,7 @@
     flex-grow: 0;
 }
 
-.checkbox > .unity-toggle__input > .unity-toggle__checkmark {
+.checkbox>.unity-toggle__input>.unity-toggle__checkmark {
     width: 12px;
     height: 12px;
     border-width: 0;
@@ -944,17 +953,17 @@
     display: none;
 }
 
-.checkbox:checked > .unity-toggle__input {
+.checkbox:checked>.unity-toggle__input {
     background-color: var(--color-primary);
     border-color: var(--color-primary);
 }
 
-.checkbox:checked > .unity-toggle__input > .unity-toggle__checkmark {
+.checkbox:checked>.unity-toggle__input>.unity-toggle__checkmark {
     display: flex;
     -unity-background-image-tint-color: var(--color-primary-foreground);
 }
 
-.checkbox:focus > .unity-toggle__input {
+.checkbox:focus>.unity-toggle__input {
     border-color: var(--color-primary);
     border-width: var(--border-width);
 }
@@ -988,7 +997,7 @@
     flex-shrink: 0;
 }
 
-.radio-group > .unity-radio-button-group__container {
+.radio-group>.unity-radio-button-group__container {
     flex-direction: column;
 }
 
@@ -1004,7 +1013,7 @@
     width: 100%;
 }
 
-.radio > .unity-radio-button__text {
+.radio>.unity-radio-button__text {
     -unity-font-definition: resource('Fonts/geist-font-1.5.0/fonts/Geist/ttf/Geist-Regular');
     font-size: 14px;
     color: var(--color-foreground);
@@ -1014,7 +1023,7 @@
     background-color: transparent;
 }
 
-.radio > .unity-radio-button__input {
+.radio>.unity-radio-button__input {
     width: 16px;
     height: 16px;
     margin: 0;
@@ -1022,7 +1031,7 @@
     position: relative;
 }
 
-.radio > .unity-radio-button__input > .unity-radio-button__checkmark-background {
+.radio>.unity-radio-button__input>.unity-radio-button__checkmark-background {
     width: 16px;
     height: 16px;
     border-radius: var(--border-radius-md);
@@ -1032,7 +1041,7 @@
     position: relative;
 }
 
-.radio > .unity-radio-button__input > .unity-radio-button__checkmark-background > .unity-radio-button__checkmark {
+.radio>.unity-radio-button__input>.unity-radio-button__checkmark-background>.unity-radio-button__checkmark {
     width: 10px;
     height: 10px;
     border-radius: var(--border-radius-sm);
@@ -1043,11 +1052,11 @@
     translate: 0 -50%;
 }
 
-.radio:checked > .unity-radio-button__input > .unity-radio-button__checkmark-background {
+.radio:checked>.unity-radio-button__input>.unity-radio-button__checkmark-background {
     border-color: var(--color-foreground);
 }
 
-.radio:hover > .unity-radio-button__input > .unity-radio-button__checkmark-background {
+.radio:hover>.unity-radio-button__input>.unity-radio-button__checkmark-background {
     border-color: var(--color-foreground);
 }
 
@@ -1064,23 +1073,23 @@
     background-color: transparent;
 }
 
-.radio:focus > .unity-radio-button__text,
-.radio:checked > .unity-radio-button__text,
-.radio:hover > .unity-radio-button__text,
-.radio:active > .unity-radio-button__text,
-.radio > .unity-radio-button__text:focus,
-.radio > .unity-radio-button__text:hover {
+.radio:focus>.unity-radio-button__text,
+.radio:checked>.unity-radio-button__text,
+.radio:hover>.unity-radio-button__text,
+.radio:active>.unity-radio-button__text,
+.radio>.unity-radio-button__text:focus,
+.radio>.unity-radio-button__text:hover {
     background-color: transparent;
     color: var(--color-foreground);
 }
 
 /* Fix Unity's default label element color change on focus */
-.radio:focus > .unity-radio-button__text > .unity-label,
-.radio:checked > .unity-radio-button__text > .unity-label,
-.radio:hover > .unity-radio-button__text > .unity-label,
-.radio:active > .unity-radio-button__text > .unity-label,
-.radio > .unity-radio-button__text > .unity-label:focus,
-.radio > .unity-radio-button__text > .unity-label:hover {
+.radio:focus>.unity-radio-button__text>.unity-label,
+.radio:checked>.unity-radio-button__text>.unity-label,
+.radio:hover>.unity-radio-button__text>.unity-label,
+.radio:active>.unity-radio-button__text>.unity-label,
+.radio>.unity-radio-button__text>.unity-label:focus,
+.radio>.unity-radio-button__text>.unity-label:hover {
     background-color: transparent;
     color: var(--color-foreground);
 }
@@ -1187,7 +1196,7 @@
 }
 
 /* Remove Unity's default button styling */
-.toggle > .unity-text-element {
+.toggle>.unity-text-element {
     margin: 0;
     padding: 0;
 }
@@ -1297,7 +1306,7 @@
     align-self: stretch;
 }
 
-.textarea > .unity-text-field__input {
+.textarea>.unity-text-field__input {
     min-height: 80px;
     padding: 8px 12px;
     background-color: transparent;
@@ -1313,7 +1322,7 @@
 }
 
 /* Placeholder text color - Target the text element directly */
-.textarea > .unity-text-field__input > .unity-text-element--placeholder {
+.textarea>.unity-text-field__input>.unity-text-element--placeholder {
     color: var(--color-muted-foreground);
     opacity: 1;
     -unity-font-style: normal;
@@ -1327,23 +1336,23 @@
 }
 
 /* Also target the text element without placeholder class */
-.textarea > .unity-text-field__input > TextElement {
+.textarea>.unity-text-field__input>TextElement {
     -unity-font-style: normal;
 }
 
-.textarea > .unity-text-field__input > TextElement.unity-text-element--placeholder {
+.textarea>.unity-text-field__input>TextElement.unity-text-element--placeholder {
     color: var(--color-muted-foreground);
     opacity: 1;
 }
 
 /* Focus state with ring effect */
-.textarea:focus > .unity-text-field__input {
+.textarea:focus>.unity-text-field__input {
     border-color: var(--color-primary);
     border-width: var(--border-width);
 }
 
 /* Disabled state */
-.textarea > .unity-text-field__input:disabled {
+.textarea>.unity-text-field__input:disabled {
     opacity: 0.5;
 }
 
@@ -1468,7 +1477,7 @@
     opacity: 0.7;
 }
 
-.label-parent > Label {
+.label-parent>Label {
     -unity-font-definition: resource('Fonts/geist-font-1.5.0/fonts/Geist/ttf/Geist-Bold');
     font-size: 14px;
     -unity-font-style: bold;
@@ -1557,57 +1566,173 @@
    =================== */
 
 /* Spacing */
-.p-0 { padding: 0; }
-.p-1 { padding: var(--spacing-xs); }
-.p-2 { padding: var(--spacing-sm); }
-.p-3 { padding: var(--spacing-md); }
-.p-4 { padding: var(--spacing-lg); }
-.p-5 { padding: var(--spacing-xl); }
-.p-6 { padding: var(--spacing-2xl); }
+.p-0 {
+    padding: 0;
+}
 
-.m-0 { margin: 0; }
-.m-1 { margin: var(--spacing-xs); }
-.m-2 { margin: var(--spacing-sm); }
-.m-3 { margin: var(--spacing-md); }
-.m-4 { margin: var(--spacing-lg); }
-.m-5 { margin: var(--spacing-xl); }
-.m-6 { margin: var(--spacing-2xl); }
+.p-1 {
+    padding: var(--spacing-xs);
+}
+
+.p-2 {
+    padding: var(--spacing-sm);
+}
+
+.p-3 {
+    padding: var(--spacing-md);
+}
+
+.p-4 {
+    padding: var(--spacing-lg);
+}
+
+.p-5 {
+    padding: var(--spacing-xl);
+}
+
+.p-6 {
+    padding: var(--spacing-2xl);
+}
+
+.m-0 {
+    margin: 0;
+}
+
+.m-1 {
+    margin: var(--spacing-xs);
+}
+
+.m-2 {
+    margin: var(--spacing-sm);
+}
+
+.m-3 {
+    margin: var(--spacing-md);
+}
+
+.m-4 {
+    margin: var(--spacing-lg);
+}
+
+.m-5 {
+    margin: var(--spacing-xl);
+}
+
+.m-6 {
+    margin: var(--spacing-2xl);
+}
 
 /* Flexbox */
-.flex { display: flex; }
-.flex-col { flex-direction: column; }
-.flex-row { flex-direction: row; }
-.items-center { align-items: center; }
-.items-start { align-items: flex-start; }
-.items-end { align-items: flex-end; }
-.justify-center { justify-content: center; }
-.justify-between { justify-content: space-between; }
-.justify-start { justify-content: flex-start; }
-.justify-end { justify-content: flex-end; }
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.items-start {
+    align-items: flex-start;
+}
+
+.items-end {
+    align-items: flex-end;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-start {
+    justify-content: flex-start;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
 
 
 /* Text */
-.text-sm { font-size: 12px; }
-.text-base { font-size: 14px; }
-.text-lg { font-size: 16px; }
-.text-xl { font-size: 18px; }
-.text-2xl { font-size: 24px; }
+.text-sm {
+    font-size: 12px;
+}
 
-.font-normal { -unity-font-style: normal; }
-.font-italic { -unity-font-style: italic; }
-.font-bold { -unity-font-style: bold; }
-.font-bold-italic { -unity-font-style: bold-and-italic; }
+.text-base {
+    font-size: 14px;
+}
 
-.text-center { -unity-text-align: middle-center; }
-.text-left { -unity-text-align: middle-left; }
-.text-right { -unity-text-align: middle-right; }
+.text-lg {
+    font-size: 16px;
+}
+
+.text-xl {
+    font-size: 18px;
+}
+
+.text-2xl {
+    font-size: 24px;
+}
+
+.font-normal {
+    -unity-font-style: normal;
+}
+
+.font-italic {
+    -unity-font-style: italic;
+}
+
+.font-bold {
+    -unity-font-style: bold;
+}
+
+.font-bold-italic {
+    -unity-font-style: bold-and-italic;
+}
+
+.text-center {
+    -unity-text-align: middle-center;
+}
+
+.text-left {
+    -unity-text-align: middle-left;
+}
+
+.text-right {
+    -unity-text-align: middle-right;
+}
 
 /* Colors */
-.text-primary { color: var(--color-primary); }
-.text-secondary { color: var(--color-secondary-foreground); }
-.text-muted { color: var(--color-muted-foreground); }
-.text-muted-foreground { color: var(--color-muted-foreground); }
-.text-destructive { color: var(--color-destructive); }
+.text-primary {
+    color: var(--color-primary);
+}
+
+.text-secondary {
+    color: var(--color-secondary-foreground);
+}
+
+.text-muted {
+    color: var(--color-muted-foreground);
+}
+
+.text-muted-foreground {
+    color: var(--color-muted-foreground);
+}
+
+.text-destructive {
+    color: var(--color-destructive);
+}
 
 /* ===================
    TYPOGRAPHY SYSTEM (shadcn-style)
@@ -1720,39 +1845,101 @@
 }
 
 /* Borders */
-.border { border-width: var(--border-width); border-color: var(--color-border); }
-.border-t { border-top-width: 2px; border-top-color: var(--color-border); }
-.border-b { border-bottom-width: 2px; border-bottom-color: var(--color-border); }
-.border-l { border-left-width: 2px; border-left-color: var(--color-border); }
-.border-r { border-right-width: 2px; border-right-color: var(--color-border); }
+.border {
+    border-width: var(--border-width);
+    border-color: var(--color-border);
+}
 
-.rounded { border-radius: var(--border-radius-md); }
-.rounded-md { border-radius: var(--border-radius-md); }
-.rounded-lg { border-radius: var(--border-radius-lg); }
-.rounded-full { border-radius: 50%; }
+.border-t {
+    border-top-width: 2px;
+    border-top-color: var(--color-border);
+}
+
+.border-b {
+    border-bottom-width: 2px;
+    border-bottom-color: var(--color-border);
+}
+
+.border-l {
+    border-left-width: 2px;
+    border-left-color: var(--color-border);
+}
+
+.border-r {
+    border-right-width: 2px;
+    border-right-color: var(--color-border);
+}
+
+.rounded {
+    border-radius: var(--border-radius-md);
+}
+
+.rounded-md {
+    border-radius: var(--border-radius-md);
+}
+
+.rounded-lg {
+    border-radius: var(--border-radius-lg);
+}
+
+.rounded-full {
+    border-radius: 50%;
+}
 
 /* Width & Height */
-.w-full { width: 100%; }
-.h-full { height: 100%; }
-.w-auto { width: auto; }
-.h-auto { height: auto; }
+.w-full {
+    width: 100%;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.w-auto {
+    width: auto;
+}
+
+.h-auto {
+    height: auto;
+}
 
 /* Position */
-.relative { position: relative; }
-.absolute { position: absolute; }
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
 
 /* Opacity */
-.opacity-0 { opacity: 0; }
-.opacity-50 { opacity: 0.5; }
-.opacity-75 { opacity: 0.75; }
-.opacity-100 { opacity: 1; }
+.opacity-0 {
+    opacity: 0;
+}
+
+.opacity-50 {
+    opacity: 0.5;
+}
+
+.opacity-75 {
+    opacity: 0.75;
+}
+
+.opacity-100 {
+    opacity: 1;
+}
 
 /* Cursor */
-.cursor-not-allowed { }
+.cursor-not-allowed {}
 
 /* Overflow */
-.overflow-hidden { overflow: hidden; }
-.overflow-auto { overflow: scroll; }
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.overflow-auto {
+    overflow: scroll;
+}
 
 /* ===================
    PROGRESS COMPONENT
@@ -1979,7 +2166,7 @@
     font-size: 14px;
 }
 
-.combobox__search > .unity-text-field__input {
+.combobox__search>.unity-text-field__input {
     background-color: transparent;
     border-width: 0;
     padding: 0;
@@ -2296,7 +2483,7 @@
     align-items: center;
 }
 
-.alert-dialog__actions > * {
+.alert-dialog__actions>* {
     margin-left: 8px;
 }
 
@@ -2423,7 +2610,7 @@
 }
 
 /* Override button label alignment for left alignment */
-.breadcrumb__ellipsis-item > Label {
+.breadcrumb__ellipsis-item>Label {
     -unity-text-align: middle-left;
     flex-grow: 1;
 }
@@ -2455,9 +2642,7 @@
     -unity-font-style: normal;
 }
 
-.shun-label--clickable {
-    
-}
+.shun-label--clickable {}
 
 .shun-label--clickable:hover {
     opacity: 0.8;
@@ -2709,7 +2894,7 @@
     background-color: transparent;
 }
 
-.shun-navigation-menu__container > * {
+.shun-navigation-menu__container>* {
     margin-left: 4px;
 }
 
@@ -2897,43 +3082,43 @@
     border-radius: var(--border-radius);
 }
 
-.shun-scroll-area > .unity-scroll-view__content-viewport {
+.shun-scroll-area>.unity-scroll-view__content-viewport {
     background-color: transparent;
     overflow: visible;
 }
 
-.shun-scroll-area > .unity-scroll-view__content-container {
+.shun-scroll-area>.unity-scroll-view__content-container {
     background-color: transparent;
 }
 
-.shun-scroll-area > .unity-scroll-view__content-and-vertical-scroll-container {
+.shun-scroll-area>.unity-scroll-view__content-and-vertical-scroll-container {
     overflow: visible;
 }
 
 /* Direct selectors for ShunScrollArea scrollbars (always applied) */
-.shun-scroll-area > .unity-scroller {
+.shun-scroll-area>.unity-scroller {
     background-color: transparent;
     border-width: 0;
     padding: 0;
     flex-shrink: 0;
 }
 
-.shun-scroll-area > .unity-scroller:hover {
+.shun-scroll-area>.unity-scroller:hover {
     background-color: transparent;
 }
 
-.shun-scroll-area > .unity-scroller--vertical {
+.shun-scroll-area>.unity-scroller--vertical {
     width: 8px;
     translate: -8px 0;
 }
 
-.shun-scroll-area > .unity-scroller--horizontal {
+.shun-scroll-area>.unity-scroller--horizontal {
     height: 8px;
     translate: 0 -8px;
 }
 
 .shun-scroll-area .unity-base-slider__tracker:hover {
-   background-color: transparent;
+    background-color: transparent;
     border-width: 0;
     border-radius: var(--border-radius-sm);
     margin: 0;
@@ -2949,12 +3134,12 @@
 }
 
 /* Vertical scroller - thin width */
-.shun-scroll-area > .unity-scroller--vertical .unity-base-slider__dragger {
+.shun-scroll-area>.unity-scroller--vertical .unity-base-slider__dragger {
     width: 8px;
 }
 
 /* Horizontal scroller - thin height */
-.shun-scroll-area > .unity-scroller--horizontal .unity-base-slider__dragger {
+.shun-scroll-area>.unity-scroller--horizontal .unity-base-slider__dragger {
     height: 8px;
 }
 
@@ -3047,7 +3232,8 @@
     width: 100%;
     max-width: 100%;
     height: 100%;
-    overflow: hidden; /* Clip content to border */
+    overflow: hidden;
+    /* Clip content to border */
 }
 
 .shun-resizable.bordered {
@@ -3265,9 +3451,10 @@
     flex-direction: row;
     justify-content: flex-end;
     flex-shrink: 0;
+    margin-top: 16px;
 }
 
-.shun-dialog__footer > * {
+.shun-dialog__footer>* {
     margin-left: 8px;
 }
 
@@ -3485,7 +3672,7 @@
     flex-shrink: 0;
 }
 
-.shun-sheet__footer > * {
+.shun-sheet__footer>* {
     margin-left: 8px;
 }
 
@@ -3618,7 +3805,7 @@
     flex-shrink: 0;
 }
 
-.shun-drawer__footer > * {
+.shun-drawer__footer>* {
     margin-left: 8px;
 }
 
@@ -3771,7 +3958,7 @@
     padding: 0;
 }
 
-.input-otp__field > .unity-text-field__input {
+.input-otp__field>.unity-text-field__input {
     background-color: var(--color-background);
     border-width: var(--border-width);
     border-color: var(--color-border);
@@ -3789,25 +3976,25 @@
 }
 
 /* First field in a group or container gets left rounded corners */
-.input-otp__field--first > .unity-text-field__input {
+.input-otp__field--first>.unity-text-field__input {
     border-top-left-radius: var(--border-radius);
     border-bottom-left-radius: var(--border-radius);
     margin-left: 0;
 }
 
 /* Last field in a group or container gets right rounded corners */
-.input-otp__field--last > .unity-text-field__input {
+.input-otp__field--last>.unity-text-field__input {
     border-top-right-radius: var(--border-radius);
     border-bottom-right-radius: var(--border-radius);
 }
 
-.input-otp__field:focus > .unity-text-field__input {
+.input-otp__field:focus>.unity-text-field__input {
     border-color: var(--color-primary);
     border-width: var(--border-width);
 }
 
 /* Placeholder text color for OTP fields */
-.input-otp__field > .unity-text-field__input > .unity-text-element--placeholder {
+.input-otp__field>.unity-text-field__input>.unity-text-element--placeholder {
     color: var(--color-muted-foreground);
 }
 
@@ -3897,7 +4084,7 @@
     flex-grow: 1;
 }
 
-.toast__content > * {
+.toast__content>* {
     margin-left: 12px;
 }
 
@@ -3936,7 +4123,7 @@
     flex-grow: 1;
 }
 
-.toast__text > * {
+.toast__text>* {
     margin-top: 4px;
 }
 
@@ -3997,7 +4184,7 @@
     align-items: center;
 }
 
-.grid-cell > Label {
+.grid-cell>Label {
     position: absolute;
     top: 10px;
     left: 10px;
@@ -4012,7 +4199,7 @@
     flex-wrap: wrap;
 }
 
-.theme-switcher-container > * {
+.theme-switcher-container>* {
     margin: 4px;
 }
 
@@ -4105,12 +4292,14 @@
     background-color: var(--color-border);
     border-radius: var(--border-radius-sm);
     border-width: 0;
-    width: 8px; /* Default width for vertical */
+    width: 8px;
+    /* Default width for vertical */
     min-width: 8px;
 }
 
 .unity-scroller--horizontal .unity-base-slider__dragger {
-    height: 8px; /* Default height for horizontal */
+    height: 8px;
+    /* Default height for horizontal */
     min-height: 8px;
     width: auto;
 }
@@ -4214,7 +4403,7 @@
     flex-shrink: 1;
 }
 
-.data-table__scroll > .unity-scroll-view__content-container {
+.data-table__scroll>.unity-scroll-view__content-container {
     flex-grow: 0;
 }
 

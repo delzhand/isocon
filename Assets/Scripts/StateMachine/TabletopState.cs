@@ -131,12 +131,12 @@ public class TabletopState : BaseState
     private void ConfirmReturnToLauncher(ClickEvent evt)
     {
         SessionModal.SerializeSession("autosave.json");
-        string message = "Exit the tabletop and return to the Isocon Launcher?";
-        if (NetworkClient.activeHost && _mode == ConnectMode.Host)
-        {
-            message = "You are hosting. <b>Disconnecting from the table will end the session!</b> Your session has been autosaved. Exit the tabletop and return to the Isocon Launcher?";
-        }
-        Modal.DoubleConfirm("Exit Tabletop", message, Quit);
+        // string message = "Exit the tabletop and return to the Isocon Launcher?";
+        // if (NetworkClient.activeHost && _mode == ConnectMode.Host)
+        // {
+        //     message = "You are hosting. <b>Disconnecting from the table will end the session!</b> Your session has been autosaved. Exit the tabletop and return to the Isocon Launcher?";
+        // }
+        // Modal.DoubleConfirm("Exit Tabletop", message, Quit);
     }
 
     private void Quit()

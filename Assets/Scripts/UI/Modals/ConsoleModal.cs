@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class IsoConsole
+public class ConsoleModal
 {
     public static void OpenModal(ClickEvent evt)
     {

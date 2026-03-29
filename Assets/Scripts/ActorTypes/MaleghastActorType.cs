@@ -76,12 +76,12 @@ public class MaleghastActorType : ActorType
         Modal.AddButton("Cancel", Modal.CloseEvent);
 
         // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddActor.OrderFields(StringUtility.CreateArray("RulesFile", "RulesHelp", "UnitType", "PlayerColor", "UnitTypeField"));
+        global::AddActorModal.OrderFields(StringUtility.CreateArray("RulesFile", "RulesHelp", "UnitType", "PlayerColor", "UnitTypeField"));
     }
 
     private static void CreateClicked(ClickEvent evt)
     {
-        if (!TokenLibrary.TokenSelected())
+        if (!TokenLibraryModal.TokenSelected())
         {
             Toast.AddError("A token has not been selected");
             return;
@@ -179,7 +179,7 @@ public class MaleghastActorType : ActorType
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetToken();
+        a.Token = TokenLibraryModal.GetToken();
         a.Color = color;
         a.Shape = shape;
         a.Position = Vector3.zero;
@@ -187,7 +187,7 @@ public class MaleghastActorType : ActorType
         a.ActorType = JsonUtility.ToJson(t);
         a.ActorTypeId = TypeName;
         string json = JsonUtility.ToJson(a);
-        AddActor.FinalizeToken(json);
+        global::AddActorModal.FinalizeToken(json);
     }
     #endregion
 

@@ -6,7 +6,7 @@ using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Config
+public class ConfigModal
 {
     public static void OpenModal(bool isTabletopMode)
     {
@@ -60,11 +60,11 @@ public class Config
 
         Dictionary<string, string> dragOptions = new();
         dragOptions.Add("Pan", "Rotate with Middle, Pan with Right");
-        dragOptions.Add("Drag", "Rotate with Right, Pan with Middle");
-        var rightClickField = Modal2.AddSelectField("CameraControls", "Camera Controls", dragOptions[Preferences.Current.DragPan ? "Drag" : "Pan"], dragOptions.Values.ToList<string>(), "Choose which mouse buttons rotate and pan the camera");
+        dragOptions.Add("Rotate", "Pan with Middle, Rotate with Right");
+        var rightClickField = Modal2.AddSelectField("CameraControls", "Camera Controls", dragOptions[Preferences.Current.PanWithRight ? "Pan" : "Rotate"], dragOptions.Values.ToList<string>(), "Choose which mouse buttons rotate and pan the camera");
         Modal2.MoveToTab(rightClickField, configTabs, "Interface");
 
-        var footer = Modal2.AddDialogFooter(() =>
+        var footer = Modal2.AddDialogFooter("Cancel", () =>
         {
             dialog.Close();
         });
@@ -84,12 +84,13 @@ public class Config
 
     private static void SaveConfig()
     {
-        // var dialogContent = Modal2.Contents("ShunDialog1");
         Preferences.Current.DataPath = Modal2.GetTextFieldValue("ShunDialog1", "DataPath");
+
+        Preferences.Current.PanWithRight = Modal2.GetSelectFieldValue("ShunDialog1", "CameraControls") == "Rotate with Middle, Pan with Right";
+        Viewport.SetPanMode(Preferences.Current.PanWithRight);
+
         Preferences.Current.ShowHUD = Modal2.GetSwitchFieldValue("ShunDialog1", "ShowHUD");
-        Preferences.Current.UIScale = Modal2.GetSelectFieldValue("ShunDialog1", "UIScale");
-        Preferences.Current.WorldUIScale = Modal2.GetSelectFieldValue("ShunDialog1", "WUIScale");
-        Preferences.Current.DragPan = Modal2.GetSelectFieldValue("ShunDialog1", "CameraControls") == "Rotate with Right, Pan with Middle";
+        UI.ToggleDisplay("DetailsHud", Preferences.Current.ShowHUD);
 
         Preferences.Current.ShowIndicators = Modal2.GetSwitchFieldValue("ShunDialog1", "ShowIndicators");
         Block.ToggleIndicators(Preferences.Current.ShowIndicators);
@@ -100,9 +101,11 @@ public class Config
         Preferences.Current.TokenOutline = Modal2.GetSelectFieldValue("ShunDialog1", "ActorBorder");
         Actor.SetAllTokenOutlines();
 
+        Preferences.Current.UIScale = Modal2.GetSelectFieldValue("ShunDialog1", "UIScale");
         float uiValue = float.Parse(Preferences.Current.UIScale.Replace("%", "")) / 100f;
         GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = uiValue;
 
+        Preferences.Current.WorldUIScale = Modal2.GetSelectFieldValue("ShunDialog1", "WUIScale");
         float wuiValue = float.Parse(Preferences.Current.WorldUIScale.Replace("%", "")) / 100f;
         GameObject.Find("UICanvas/WorldUI").GetComponent<UIDocument>().panelSettings.scale = wuiValue;
 

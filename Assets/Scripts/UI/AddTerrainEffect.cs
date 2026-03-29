@@ -24,7 +24,7 @@ public class AddTerrainEffect
         Modal2.AddSelectField("VisualMarker", "Visual Marker", "None", StringUtility.CreateArray("None", "Spiky", "Wavy", "Hole", "Hand", "Skull", "Blocked", "Corners", "Border").ToList<string>());
         Modal2.AddComboboxField("Color", "Color", "None", StringUtility.CreateArray("Black", "White", "Yellow", "Red", "Blue", "Green").ToList<string>());
 
-        var footer = Modal2.AddDialogFooter(() =>
+        var footer = Modal2.AddDialogFooter("Cancel", () =>
         {
             dialog.Close();
         });

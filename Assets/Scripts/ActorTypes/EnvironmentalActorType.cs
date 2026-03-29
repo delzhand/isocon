@@ -73,7 +73,7 @@ public class EnvironmentalActorType : ActorType
         };
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetToken(token);
+        a.Token = TokenLibraryModal.GetToken(token);
         a.Color = ColorUtility.GetCommonColor(color);
         a.Shape = shape;
         a.Position = Vector3.zero;
@@ -81,7 +81,7 @@ public class EnvironmentalActorType : ActorType
         a.ActorType = JsonUtility.ToJson(t);
         a.ActorTypeId = TypeName;
         string json = JsonUtility.ToJson(a);
-        AddActor.FinalizeToken(json);
+        global::AddActorModal.FinalizeToken(json);
     }
     #endregion
 
