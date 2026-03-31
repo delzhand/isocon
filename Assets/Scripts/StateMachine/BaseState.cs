@@ -3,11 +3,8 @@ using Unity.VisualScripting;
 
 public abstract class BaseState : IState
 {
-    public StateManager SM;
-
-    public virtual void OnEnter(StateManager sm)
+    public virtual void OnEnter()
     {
-        SM = sm;
     }
 
     public virtual void OnExit()
@@ -15,6 +12,10 @@ public abstract class BaseState : IState
     }
 
     public virtual void UpdateState()
+    {
+    }
+
+    public virtual void HandleInput()
     {
     }
 

@@ -8,16 +8,9 @@ using UnityEngine.UIElements;
 
 public class ConfigModal
 {
-    public static void OpenModal(bool isTabletopMode)
+    public static void Open()
     {
-        var dialog = Modal2.SetCurrentDialog("ShunDialog1");
-        var dialogContent = Modal2.Contents("ShunDialog1");
-        if (isTabletopMode)
-        {
-            Modal2.SetCloseAction(StateManager.ToNeutral);
-        }
-        dialogContent.Clear();
-
+        Modal2.SetCurrentDialog("ShunDialog1");
         Modal2.AddDialogHeader("Settings");
 
         Dictionary<string, string> tabs = new();
@@ -55,6 +48,9 @@ public class ConfigModal
         var blockBorderField = Modal2.AddSliderField("BlockBorder", "Block Border Minimum", bbOpacity, "Set a minimum opacity on block borders when not dragging an actor");
         Modal2.MoveToTab(blockBorderField, configTabs, "Misc");
 
+        var skipTutorials = Modal2.AddSwitchField("SkipTutorials", "Skip Tutorials", Preferences.Current.SkipTutorials, "Never show tutorials");
+        Modal2.MoveToTab(skipTutorials, configTabs, "Misc");
+
         var actorBorderField = Modal2.AddSelectField("ActorBorder", "Token Outline Color", Preferences.Current.TokenOutline, ColorUtility.CommonColors().ToList<string>(), "Set an outline color for improved token contrast");
         Modal2.MoveToTab(actorBorderField, configTabs, "Actors");
 
@@ -64,10 +60,7 @@ public class ConfigModal
         var rightClickField = Modal2.AddSelectField("CameraControls", "Camera Controls", dragOptions[Preferences.Current.PanWithRight ? "Pan" : "Rotate"], dragOptions.Values.ToList<string>(), "Choose which mouse buttons rotate and pan the camera");
         Modal2.MoveToTab(rightClickField, configTabs, "Interface");
 
-        var footer = Modal2.AddDialogFooter("Cancel", () =>
-        {
-            dialog.Close();
-        });
+        var footer = Modal2.AddDialogFooter();
 
         var confirm = new ShunDialogClose();
         confirm.SetVariant(ButtonVariant.Primary);
@@ -75,16 +68,18 @@ public class ConfigModal
         confirm.clicked += () =>
         {
             SaveConfig();
-            dialog.Close();
+            Modal2.Close();
         };
         footer.Add(confirm);
 
-        dialog.Open();
+        Modal2.Open();
     }
 
     private static void SaveConfig()
     {
         Preferences.Current.DataPath = Modal2.GetTextFieldValue("ShunDialog1", "DataPath");
+
+        Preferences.Current.SkipTutorials = Modal2.GetSwitchFieldValue("ShunDialog1", "SkipTutorials");
 
         Preferences.Current.PanWithRight = Modal2.GetSelectFieldValue("ShunDialog1", "CameraControls") == "Rotate with Middle, Pan with Right";
         Viewport.SetPanMode(Preferences.Current.PanWithRight);

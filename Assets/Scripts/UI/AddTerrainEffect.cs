@@ -14,9 +14,8 @@ public class AddTerrainEffect
         singleBlock = b;
 
         var dialog = Modal2.SetCurrentDialog("ShunDialog1");
-        Modal2.SetCloseAction(StateManager.ToNeutral);
-        var dialogContent = Modal2.Contents("ShunDialog1");
-        dialogContent.Clear();
+        var contents = Modal2.Contents("ShunDialog1");
+        contents.Clear();
 
         Modal2.AddDialogHeader("Add Terrain Effect");
 
@@ -24,11 +23,7 @@ public class AddTerrainEffect
         Modal2.AddSelectField("VisualMarker", "Visual Marker", "None", StringUtility.CreateArray("None", "Spiky", "Wavy", "Hole", "Hand", "Skull", "Blocked", "Corners", "Border").ToList<string>());
         Modal2.AddComboboxField("Color", "Color", "None", StringUtility.CreateArray("Black", "White", "Yellow", "Red", "Blue", "Green").ToList<string>());
 
-        var footer = Modal2.AddDialogFooter("Cancel", () =>
-        {
-            dialog.Close();
-        });
-
+        var footer = Modal2.AddDialogFooter();
         var confirm = new ShunDialogClose();
         confirm.SetVariant(ButtonVariant.Primary);
         confirm.text = "Save Config";
@@ -39,7 +34,7 @@ public class AddTerrainEffect
         };
         footer.Add(confirm);
 
-        dialog.Open();
+        Modal2.Open();
     }
 
     private static void ConfirmAddEffect()

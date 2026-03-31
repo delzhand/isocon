@@ -16,6 +16,7 @@ public class Startup
     private static string _version = "0.8.2";
     private static string _latestVersion = "0.8.2";
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     public static void RunTasks()
     {
         Preferences.Init();
@@ -28,16 +29,13 @@ public class Startup
         TokenLibraryModal.Setup();
         Autosaver.Setup();
         Tutorial.Setup();
-
-        Viewport.SetPanMode(Preferences.Current.PanWithRight);
+        Viewport.Setup();
 
         UI.SetBlocking(UI.System, StringUtility.CreateArray(@"SelectionMenu", "TopBar", "BottomBar", "ToolsPanel", "ToolOptions", "LeftTokenPanel", "RightTokenPanel", "Backdrop", "NumberPickerModal", "TopRight"));
         Application.targetFrameRate = Preferences.Current.TargetFramerate;
 
-        // Useful during development when editing UI
-        UI.ToggleDisplay("Tabletop", false);
-
         ReleaseNotes();
+        BindUICallbacks();
     }
 
     private static void ReleaseNotes()
@@ -49,6 +47,27 @@ public class Startup
             return;
         }
         ReleaseNotesModal.Open(_version);
+    }
+
+    private static void BindUICallbacks()
+    {
+        UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>((evt) =>
+        {
+            // StateManager.Find().ChangeSubState(new MapEditingState());
+        });
+        UI.TopBar.Q("AddActor").RegisterCallback<ClickEvent>((evt) => AddActorModal.Open());
+        UI.TopBar.Q("Config").RegisterCallback<ClickEvent>((evt) => ConfigModal.Open());
+        UI.TopBar.Q("FixedView").RegisterCallback<ClickEvent>((evt) => Viewport.FixView());
+        UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>((evt) => DiceRoller.ToggleVisible());
+        UI.System.Q("TopBarToggle").RegisterCallback<ClickEvent>((evt) =>
+        {
+            UI.ToggleActiveClass(UI.System.Q("TopBar"));
+        });
+        UI.System.Q("DeployToggle").RegisterCallback<ClickEvent>((evt) =>
+        {
+            UI.ToggleActiveClass(UI.System.Q("BottomBar"));
+        });
+        UI.System.Q("AddSystemTag").RegisterCallback<ClickEvent>((evt) => SystemTagModal.Open());
     }
 
     private static async void SetVersionText()

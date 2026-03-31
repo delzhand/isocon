@@ -16,14 +16,14 @@ public class LauncherState : BaseState
     private ConnectMode _mode;
     private static bool _attemptingToConnect = false;
 
-    public override void OnEnter(StateManager sm)
+    public override void OnEnter()
     {
-        base.OnEnter(sm);
+        base.OnEnter();
         EnableInterface();
         SetLauncherBackground();
         DestroyLeftoverNetworkData();
         BindCallbacks();
-        sm.ChangeSubState(null);
+        // sm.ChangeSubState(null);
         // Session.LauncherMap();
     }
 
@@ -48,13 +48,6 @@ public class LauncherState : BaseState
         UI.ToggleDisplay("StartupPanel", true);
         UI.ToggleDisplay("StartupOptions", true);
         UI.ToggleDisplay("Launcher", true);
-        // UI.ToggleDisplay("TokenLibraryModal", false);
-
-#if UNITY_WEBGL
-        UI.ToggleDisplay("SoloModeButton", false);
-        UI.ToggleDisplay("HostModeButton", false);
-        UI.ToggleDisplay("ExitButton", false);
-#endif
     }
 
     private void SetLauncherBackground()
@@ -102,7 +95,7 @@ public class LauncherState : BaseState
 
     private void ConfigClicked(ClickEvent evt)
     {
-        ConfigModal.OpenModal(false);
+        ConfigModal.Open();
     }
 
     private void LibraryClicked(ClickEvent evt)
@@ -157,7 +150,10 @@ public class LauncherState : BaseState
             _attemptingToConnect = false;
             UI.ToggleDisplay("StartupOptions", false);
             UI.ToggleDisplay("ConnectingMessage", false);
-            Fader.StartFade(Color.black, .5f, GoToNeutralState);
+            Fader.StartFade(Color.black, .5f, () =>
+            {
+                TabletopState.Activate(_mode);
+            });
             return;
         }
 
@@ -170,10 +166,5 @@ public class LauncherState : BaseState
             Toast.AddError("Could not establish a connection.");
         }
         _attemptingToConnect = isConnecting;
-    }
-
-    private void GoToNeutralState()
-    {
-        SM.ChangeState(new TabletopState(_mode));
     }
 }

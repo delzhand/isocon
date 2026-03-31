@@ -3,50 +3,31 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class ModalState : TabletopSubstate
+public class ModalState : BaseState
 {
-    private IState _previous;
-
     public static void Activate()
     {
-        StateManager sm = GameObject.Find("AppState").GetComponent<StateManager>();
-        var modalState = new ModalState();
-        modalState._previous = sm.SubState;
-        sm.ChangeSubState(modalState);
-        Modal.AddCloseCallback(Terminate);
+        StateManager.PushState(new ModalState());
     }
 
-    public static void Terminate(ClickEvent evt)
+    public override void OnEnter()
     {
-        StateManager sm = GameObject.Find("AppState").GetComponent<StateManager>();
-        var modalState = (ModalState)sm.SubState;
-        sm.ChangeSubState(modalState._previous);
+        EnableInterface();
     }
 
-    public override void UpdateState()
+    private void EnableInterface()
     {
-    }
-
-    protected override void EnableInterface()
-    {
-        base.EnableInterface();
         UI.ToggleDisplay(UI.TopBar, false);
         UI.ToggleDisplay("BottomBar", false);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), false);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("TerrainInfo"), false);
     }
 
-    protected override void HandleKeypresses()
+    public override void HandleInput()
     {
-        base.HandleKeypresses();
         if (Input.GetKeyUp(KeyCode.Escape))
         {
-            Modal.Close();
-        }
-
-        if (Input.GetKeyUp(KeyCode.Return))
-        {
-            Modal.Activate();
+            Modal2.Close();
         }
     }
 }

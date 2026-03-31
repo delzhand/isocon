@@ -121,11 +121,11 @@ public class TerrainController
     public static void AddHeight(Block block)
     {
         Column column = block.transform.parent.GetComponent<Column>();
-        if (MapEditingState.MarkedColumns.Contains(column))
-        {
-            return;
-        }
-        MapEditingState.MarkedColumns.Add(column);
+        // if (MapEditingState.MarkedColumns.Contains(column))
+        // {
+        //     return;
+        // }
+        // MapEditingState.MarkedColumns.Add(column); // @todo
         GameObject currentTop = TopBlock(column.gameObject);
         GameObject newblock = GameObject.Instantiate(Resources.Load("Prefabs/Block") as GameObject);
         newblock.transform.parent = block.transform.parent;
@@ -141,11 +141,11 @@ public class TerrainController
     public static void RemoveBlock(Block block)
     {
         Column column = block.transform.parent.GetComponent<Column>();
-        if (MapEditingState.MarkedColumns.Contains(column))
-        {
-            return;
-        }
-        MapEditingState.MarkedColumns.Add(column);
+        // if (MapEditingState.MarkedColumns.Contains(column))
+        // {
+        //     return;
+        // }
+        // MapEditingState.MarkedColumns.Add(column); // @todo
         if (block.Destroyable)
         {
             GravityDrop(block.transform.parent.gameObject, block.transform.localPosition.y);
@@ -394,26 +394,26 @@ public class TerrainController
     public static void ApplyStyle(Block block)
     {
         string op = MapEdit.StyleOp;
-        if (MapEditingState.AltMode)
-        {
-            op = "StyleSample";
-        }
-        switch (op)
-        {
-            case "StylePaint":
-                string textureTop = UI.System.Q<DropdownField>("TopTexture").value;
-                string textureSide = UI.System.Q<DropdownField>("SideTexture").value;
-                Color colorTop = Environment.CurrentPaintTop;
-                Color colorSide = Environment.CurrentPaintSide;
-                StyleBlock(block, textureTop, textureSide, colorTop, colorSide);
-                break;
-            case "StyleEraser":
-                DestyleBlock(block);
-                break;
-            case "StyleSample":
-                SampleStyle(block);
-                break;
-        }
+        // if (MapEditingState.AltMode)
+        // {
+        //     op = "StyleSample";
+        // }
+        // switch (op)
+        // {
+        //     case "StylePaint":
+        //         string textureTop = UI.System.Q<DropdownField>("TopTexture").value;
+        //         string textureSide = UI.System.Q<DropdownField>("SideTexture").value;
+        //         Color colorTop = Environment.CurrentPaintTop;
+        //         Color colorSide = Environment.CurrentPaintSide;
+        //         StyleBlock(block, textureTop, textureSide, colorTop, colorSide);
+        //         break;
+        //     case "StyleEraser":
+        //         DestyleBlock(block);
+        //         break;
+        //     case "StyleSample":
+        //         SampleStyle(block);
+        //         break;
+        // } // @todo
     }
 
     private static GameObject TopBlock(GameObject column)

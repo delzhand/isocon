@@ -180,6 +180,11 @@ public class Viewport
         }
     }
 
+    public static void Setup()
+    {
+        SetPanMode(Preferences.Current.PanWithRight);
+    }
+
     public static void SetPanMode(bool panWithRight)
     {
         if (panWithRight)
@@ -202,5 +207,10 @@ public class Viewport
     {
         _mode = DragMode.PanWithRight;
         // UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Pan <u>C</u>amera";
+    }
+
+    public static void FixView()
+    {
+        GameObject.Find("CameraOrigin").transform.rotation = Quaternion.Euler(new Vector3(0, 0, 20));
     }
 }

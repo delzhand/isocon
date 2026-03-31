@@ -50,6 +50,8 @@ public class Modal2
     public static void Open()
     {
         CurrentDialog.Open();
+        ModalState.Activate();
+        Modal2.SetCloseAction(StateManager.PopState);
     }
 
     public static void Close()
@@ -61,6 +63,12 @@ public class Modal2
     {
         var dialog = UI.System.Q<ShunDialog>();
         dialog.CloseAction = closeAction;
+    }
+
+    public static void AddCloseAction(Action closeAction)
+    {
+        var dialog = UI.System.Q<ShunDialog>();
+        dialog.CloseAction += closeAction;
     }
 
     public static void AddDialogHeader(string value)

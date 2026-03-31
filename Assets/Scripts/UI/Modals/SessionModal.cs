@@ -12,7 +12,6 @@ public class SessionModal
     public static void OpenModal(ClickEvent evt)
     {
         var dialog = Modal2.SetCurrentDialog("ShunDialog1");
-        Modal2.SetCloseAction(StateManager.ToNeutral);
         var content = Modal2.Contents("ShunDialog1");
         content.Clear();
 

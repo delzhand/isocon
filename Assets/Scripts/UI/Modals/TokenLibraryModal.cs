@@ -90,7 +90,7 @@ public class TokenLibraryModal : MonoBehaviour
 
         ReadLibraryFile();
 
-        var dialog = Modal2.SetCurrentDialog(dialogName);
+        Modal2.SetCurrentDialog(dialogName);
         var dialogContents = Modal2.Contents(dialogName);
         dialogContents.Clear();
 
@@ -143,7 +143,7 @@ public class TokenLibraryModal : MonoBehaviour
         add.clicked += () => FileBrowserHelper.Open(ConfirmSelect, "", FileBrowserType.Tokens);
         footer.Add(add);
 
-        dialog.Open();
+        Modal2.Open();
     }
 
     private static void UpdateFavorite(VisualElement item, Token token)

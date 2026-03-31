@@ -32,18 +32,18 @@ public class TileMenu
             items.Add(new MenuItem("AddAdjacent", "Select Adjacent", () => { AddAdjacent(b); }));
             items.Add(new MenuItem("AddNeighbors", "Select Neighbors", () => { AddNeighbors(b); }));
         }
-        if (StateManager.Find().SubState.TypeName() == "TileMarkingState")
-        {
-            items.Add(new MenuItem("QuickSelect", "Exit Quick Select Mode", () =>
-            {
-                StateManager.Find().ChangeSubState(new NeutralState());
-                Player.Self().ClearOp();
-            }));
-        }
-        else
-        {
-            items.Add(new MenuItem("QuickSelect", "Quick Select Mode", () => { StateManager.Find().ChangeSubState(new TileMarkingState()); }));
-        }
+        // if (StateManager.Find().SubState.TypeName() == "TileMarkingState")
+        // {
+        //     items.Add(new MenuItem("QuickSelect", "Exit Quick Select Mode", () =>
+        //     {
+        //         StateManager.Find().ChangeSubState(new NeutralState());
+        //         Player.Self().ClearOp();
+        //     }));
+        // }
+        // else
+        // {
+        //     items.Add(new MenuItem("QuickSelect", "Quick Select Mode", () => { StateManager.Find().ChangeSubState(new TileMarkingState()); }));
+        // } // @todo
         if (b.Selected)
         {
             items.Add(new MenuItem("SelectThis", "Deselect Tile", () => { b.Select(); }));
@@ -100,7 +100,6 @@ public class TileMenu
     public static void ClickAddEffect(Block b)
     {
         AddTerrainEffect.OpenModal(b);
-        StateManager.Find().ChangeSubState(new ModalState());
         SelectionMenu.Hide();
     }
 

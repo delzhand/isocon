@@ -154,7 +154,7 @@ public class DiceRoller
         return rollString;
     }
 
-    public static void ToggleVisible(ClickEvent evt)
+    public static void ToggleVisible()
     {
         visible = !visible;
         UI.ToggleDisplay("DiceRoller", visible);

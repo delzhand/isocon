@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -24,8 +25,7 @@ public class Tutorial
 
     public static void Init(string id)
     {
-        int skip = Preferences.Current.SkipTutorials;
-        if (skip == 1)
+        if (Preferences.Current.SkipTutorials)
         {
             return;
         }
@@ -41,14 +41,22 @@ public class Tutorial
         Preferences.SetTutorialsSeen(string.Join("|", seenParts.ToArray()));
 
         (string, string) tutorial = GetTutorial(id);
-        Modal.Reset(tutorial.Item1);
-        Modal.AddMarkup("TutorialText", tutorial.Item2);
-        Modal.AddPreferredButton("Close", Modal.CloseEvent);
-        Modal.AddButton("Skip All Tutorials", (evt) =>
+
+        Modal2.SetCurrentDialog("ShunDialog1");
+        Modal2.AddDialogHeader(tutorial.Item1);
+        Modal2.AddLongMarkup(tutorial.Item2);
+        var footer = Modal2.AddDialogFooter("Close");
+        var skipAll = new ShunButton();
+        skipAll.text = "Skip All Tutorials";
+        skipAll.SetVariant(ButtonVariant.Outline);
+        skipAll.clicked += () =>
         {
-            Preferences.SetSkipTutorials(1);
-            Modal.Close();
-        });
+            Preferences.Current.SkipTutorials = true;
+            Preferences.Save();
+            Modal2.Close();
+        };
+        footer.Add(skipAll);
+        Modal2.Open();
     }
 
     public static (string, string) GetTutorial(string id)

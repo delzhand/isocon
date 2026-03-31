@@ -17,7 +17,7 @@ public class StoredPreferences
     public string HostIP;
     public string TutorialsSeen;
     public string ReleaseNotesSeen;
-    public int SkipTutorials;
+    public bool SkipTutorials;
     public bool OverrideRules;
     public bool ShowHUD;
     public int TargetFramerate;
@@ -50,7 +50,7 @@ public class Preferences
             HostIP = PlayerPrefs.GetString("HostIP", ""),
             TutorialsSeen = PlayerPrefs.GetString("TutorialsSeen", ""),
             ReleaseNotesSeen = PlayerPrefs.GetString("ReleaseNotesSeen", ""),
-            SkipTutorials = PlayerPrefs.GetInt("SkipTutorials", 0),
+            SkipTutorials = false,
             TargetFramerate = PlayerPrefs.GetInt("TargetFramerate", 30),
             ShowHUD = true,
             PanWithRight = false,
@@ -89,38 +89,6 @@ public class Preferences
         }
     }
 
-    // public static void SetDataPath(string value)
-    // {
-    //     PlayerPrefs.SetString("DataFolder", value);
-    //     _current.DataPath = value;
-    //     Save();
-    // }
-
-    // public static void SetShowHUD(bool value)
-    // {
-    //     _current.ShowHUD = value;
-    //     Save();
-    // }
-
-    // public static void SetDragPan(bool value)
-    // {
-    //     _current.DragPan = value;
-    //     Save();
-    // }
-
-
-    // public static void SetUIScale(string value)
-    // {
-    //     _current.UIScale = value;
-    //     Save();
-    // }
-
-    // public static void SetWorldUIScale(string value)
-    // {
-    //     _current.WorldUIScale = value;
-    //     Save();
-    // }
-
     public static float GetUIScale()
     {
         string uiScale = Preferences.Current.UIScale;
@@ -132,18 +100,6 @@ public class Preferences
         string uiScale = Preferences.Current.WorldUIScale;
         return float.Parse(uiScale.Replace("%", "")) / 100f;
     }
-
-    // public static void SetTokenScale(float value)
-    // {
-    //     _current.TokenScale = value;
-    //     Save();
-    // }
-
-    // public static void SetTokenOutline(string value)
-    // {
-    //     _current.TokenOutline = value;
-    //     Save();
-    // }
 
     public static void SetTutorialsSeen(string value)
     {
@@ -162,60 +118,11 @@ public class Preferences
         return (_current.ReleaseNotesSeen != null) ? _current.ReleaseNotesSeen : "";
     }
 
-    public static void SetSkipTutorials(int value)
-    {
-        _current.SkipTutorials = value;
-        Save();
-    }
-
-    // public static void SetPlayerName(string value)
-    // {
-    //     _current.PlayerName = value;
-    //     Save();
-    // }
-
-    // public static void SetHostIP(string value)
-    // {
-    //     _current.HostIP = value;
-    //     Save();
-    // }
-
-    // public static void SetPlayerCount(int value)
-    // {
-    //     _current.PlayerCount = value;
-    //     Save();
-    // }
-
-    // public static void SetGrid(string value)
-    // {
-    //     _current.Grid = value;
-    //     Save();
-    // }
-
-    // public static void SetBlockBorderOpacity(float value)
-    // {
-    //     _current.BlockBorderOpacity = value;
-    //     Save();
-    // }
-
-    // public static void SetTargetFramerate(int value)
-    // {
-    //     _current.TargetFramerate = value;
-    //     Save();
-    // }
-
-    // public static void SetMaleghastFile(string value)
-    // {
-    //     _current.MaleghastFile = value;
-    //     Save();
-    // }
-
     public static void Save()
     {
         string fileName = GetConfigFileName();
         string json = JsonUtility.ToJson(_current);
         File.WriteAllText(fileName, json);
-        // Toast.AddSuccess("Configuration saved");
     }
 
     private static string GetConfigFileName()

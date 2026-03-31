@@ -5,6 +5,13 @@ using SimpleFileBrowser;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+public enum BlockFocusMode
+{
+    Single,
+    Row,
+    Column
+}
+
 public class MapEdit
 {
     private static string CurrentFile = "";

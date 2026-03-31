@@ -6,16 +6,15 @@ using ShunUI;
 
 public class AddActorModal
 {
-    public static void OpenModal(ClickEvent evt)
+    public static void Open()
     {
         Actor.Deselect();
 
-        var dialog = Modal2.SetCurrentDialog("ShunDialog1");
-        Modal2.SetCloseAction(() => CloseAddToken());
-        var dialogContent = Modal2.Contents("ShunDialog1");
-        dialogContent.Clear();
+        Player.Self().SetOp("Adding Actor");
 
-        Modal2.SetCloseAction(CloseAddToken);
+        Modal2.SetCurrentDialog("ShunDialog1");
+        var contents = Modal2.Contents("ShunDialog1");
+        contents.Clear();
 
         Modal2.AddDialogHeader("Add Actor");
 
@@ -24,17 +23,21 @@ public class AddActorModal
         var actorType = Modal2.AddInlineComboboxField("ActorType", "Actor Type", null, ActorTypeRegistry.GetAllSystems());
         actorType.Q<ShunCombobox>().OnSelect += () =>
         {
-            string type = dialogContent.Q<ShunCombobox>("ActorType").selectedValue;
+            string type = contents.Q<ShunCombobox>("ActorType").selectedValue;
             ActorTypeRegistry.DoCallback($"{type}|AddActorModal");
         };
 
         var typeContainer = new ShunContainer();
         typeContainer.name = "ActorTypeContainer";
         typeContainer.AddToClassList("shun-dialog__field");
-        dialogContent.Add(typeContainer);
+        contents.Add(typeContainer);
 
-        var footer = Modal2.AddDialogFooter("Cancel", () => dialog.Close());
-        dialog.Open();
+        var footer = Modal2.AddDialogFooter();
+        Modal2.Open();
+        Modal2.AddCloseAction(() =>
+        {
+            Player.Self().ClearOp();
+        });
     }
 
     public static void OrderFields(string[] fieldNames)
@@ -55,7 +58,7 @@ public class AddActorModal
     public static void CloseAddToken()
     {
         Player.Self().ClearOp();
-        StateManager.Find().ChangeSubState(new NeutralState());
+        StateManager.PopState();
     }
 
     private static void GetFilesRecursively(string basePath, string relativePath, List<string> fileList)
