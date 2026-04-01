@@ -16,9 +16,10 @@ public class SystemTagModal
         var tagType = Modal2.AddInlineSelectField("Type", "Type", "Simple", StringUtility.CreateArray("Simple", "Number", "Clock").ToList<string>());
         tagType.Q<ShunSelect>().OnSelect += () =>
         {
+            Modal2.SetValueOrigin("ShunDialog1");
             var container = contents.Q<ShunContainer>("TagTypeContainer");
             container.Clear();
-            string type = Modal2.GetSelectFieldValue("ShunDialog1", "Type");
+            string type = Modal2.GetSelectFieldValue("Type");
             if (type == "Number" || type == "Clock")
             {
                 var initVal = Modal2.AddInlineIntField("InitialValue", "Initial Value", 0);
@@ -55,11 +56,12 @@ public class SystemTagModal
 
     private static void AddSystemTagSubmit()
     {
-        string tagName = Modal2.GetTextFieldValue("ShunDialog1", "TagName");
-        int tagValue = Modal2.GetIntFieldValue("ShunDialog1", "InitialValue");
-        int tagMaxValue = Modal2.GetIntFieldValue("ShunDialog1", "MaxValue");
-        string colorValue = Modal2.GetComboboxFieldValue("ShunDialog1", "Color");
-        string tagType = Modal2.GetSelectFieldValue("ShunDialog1", "Type");
+        Modal2.SetValueOrigin("ShunDialog1");
+        string tagName = Modal2.GetTextFieldValue("TagName");
+        int tagValue = Modal2.GetIntFieldValue("InitialValue");
+        int tagMaxValue = Modal2.GetIntFieldValue("MaxValue");
+        string colorValue = Modal2.GetComboboxFieldValue("Color");
+        string tagType = Modal2.GetSelectFieldValue("Type");
         GameSystemTag tag = new();
         tag.Name = tagName;
         tag.Value = tagValue;

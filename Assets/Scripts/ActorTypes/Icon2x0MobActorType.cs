@@ -93,23 +93,23 @@ public class Icon2x0MobActorType : Icon2x0Base
         return "UI/TableTop/Overheads/PipCounter";
     }
 
-    public override MenuItem[] GetMenuItems(bool placed)
-    {
-        MenuItem[] baseItems = base.GetMenuItems(placed);
+    // public override MenuItem[] GetMenuItems(bool placed)
+    // {
+    //     MenuItem[] baseItems = base.GetMenuItems(placed);
 
-        List<MenuItem> items = new();
-        items.Add(new MenuItem("ModVig", "Modify VIG", () => { NumberPicker.ActorCommand("ModVIG"); }));
-        if (Hits < 2)
-        {
-            items.Add(new MenuItem("RestoreHit", "Restore Hit", () =>
-            {
-                Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, "RestoreHit");
-                SelectionMenu.Hide();
-            }));
-        }
+    //     List<MenuItem> items = new();
+    //     items.Add(new MenuItem("ModVig", "Modify VIG", () => { NumberPicker.ActorCommand("ModVIG"); }));
+    //     if (Hits < 2)
+    //     {
+    //         items.Add(new MenuItem("RestoreHit", "Restore Hit", () =>
+    //         {
+    //             Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, "RestoreHit");
+    //             SelectionMenu.Hide();
+    //         }));
+    //     }
 
-        return baseItems.Concat(items.ToArray()).ToArray();
-    }
+    //     return baseItems.Concat(items.ToArray()).ToArray();
+    // }
 
     public override void Command(string command, ActorData tokenData)
     {

@@ -1,7 +1,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using ShunUI;
 using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,7 +14,7 @@ public interface IActorType
     string Serialize();
     string Label();
     string GetOverheadAsset();
-    MenuItem[] GetMenuItems(bool placed);
+    List<MenuItem> GetMenuItems(bool placed);
     void Command(string command, ActorData actorData);
     void UpdateOverhead(ActorData actorData);
     void UpdatePanel(ActorData actorData, string elementName);
@@ -49,43 +51,64 @@ public abstract class ActorType : IActorType
         return null;
     }
 
-    public virtual MenuItem[] GetMenuItems(bool placed)
+    public virtual List<MenuItem> GetMenuItems(bool placed)
     {
         List<MenuItem> items = new();
-        var actorCommands = new MenuItem("BaseCommands", "Actor", null);
-        items.Add(actorCommands);
+
+        var configToken = new MenuItem("Configure Token", null);
+        items.Add(configToken);
         if (placed)
         {
-            actorCommands.Children.Add(new MenuItem("Remove", "Remove", ClickRemove));
-            actorCommands.Children.Add(new MenuItem("Flip", "Flip", () =>
+            configToken.Children.Add(new MenuItem("Remove", () =>
             {
-                Actor.GetSelected().transform.Find("Offset/Avatar/Cutout/Cutout Quad").Rotate(new Vector3(0, 180, 0));
-                Actor.Deselect();
-
+                Actor.GetSelected().Remove();
+            }));
+            configToken.Children.Add(new MenuItem("Flip Left/Right", () =>
+            {
+                Actor.GetSelected().Flip();
             }));
         }
-        actorCommands.Children.Add(new MenuItem("Reshape", "Reshape", ReshapeModal));
-        actorCommands.Children.Add(new MenuItem("EditName", "Rename", RenameModal));
-        actorCommands.Children.Add(new MenuItem("Clone", "Clone", ClickClone));
-        actorCommands.Children.Add(new MenuItem("Delete", "Delete", ClickDelete));
+        configToken.Children.Add(new MenuItem("Change Size/Shape", ReshapeModal));
+        configToken.Children.Add(new MenuItem("Change Color", RecolorModal));
 
-        var actorData = new MenuItem("ActorData", "Status", null);
-        actorData.Children.Add(new MenuItem("AddTag", "Add Tag", AddTagModal));
-        actorData.Children.Add(new MenuItem("AddBar", "Add Bar", AddBarModal));
-        actorData.Children.Add(new MenuItem("AddStat", "Add Stat", AddStatModal));
+        var configActor = new MenuItem("Configure Actor", null);
+        items.Add(configActor);
+        configActor.Children.Add(new MenuItem("Change Name", RenameModal));
+        configActor.Children.Add(new MenuItem("Add Stat/Bar", AddStatModal));
         if (Stats.Count > 0 || Bars.Count > 0)
         {
-            actorData.Children.Add(new MenuItem("EditStats", "Edit Stats/Bars", EditStatBarModal));
+            configActor.Children.Add(new MenuItem("Edit Stats/Bars", EditStatBarModal));
         }
+
+        var changeValue = new MenuItem("Change Values", null);
+        items.Add(changeValue);
+        changeValue.Children.Add(new MenuItem("Add Status/Resource", AddTagModal));
         foreach (ActorBar bar in Bars)
         {
-            actorData.Children.Add(new MenuItem($"Modify{bar.Name}", $"Modify {bar.Name}", () =>
+            changeValue.Children.Add(new MenuItem($"Modify {bar.Name}", () =>
             {
                 NumberPicker.ActorCommand($"ModBar|{bar.Name}");
             }));
         }
-        items.Add(actorData);
-        return items.ToArray();
+
+        var other = new MenuItem("Other", null);
+        items.Add(other);
+        other.Children.Add(new MenuItem("Clone", CloneConfirm));
+        other.Children.Add(new MenuItem("Delete", DeleteConfirm));
+
+        return items;
+    }
+
+    protected MenuItem FindParent(string label, List<MenuItem> list)
+    {
+        foreach (MenuItem m in list)
+        {
+            if (m.Label == label)
+            {
+                return m;
+            }
+        }
+        throw new Exception("No such item");
     }
 
     protected static void ClickFlip()
@@ -100,11 +123,11 @@ public abstract class ActorType : IActorType
         Actor.Deselect();
     }
 
-    protected static void ClickDelete()
+    protected static void DeleteConfirm()
     {
         ActorData data = Actor.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
-        Modal.DoubleConfirm("Delete Actor", $"Are you sure you want to delete {name}? This action cannot be undone.", () =>
+        Modal2.Confirm("ShunDialog1", $"Are you sure you want to delete {name}? This action cannot be undone.", () =>
         {
             Actor.Deselect();
             Player.Self().CmdRequestDeleteActor(data.Id);
@@ -114,16 +137,15 @@ public abstract class ActorType : IActorType
 
     private static void AddTagModal()
     {
-        Modal.Reset("Add Tag");
-        Modal.AddTextField("TagName", "Tag Name", "");
-        Modal.AddDropdownField("ColorField", "Color", "Gray", ColorUtility.CommonColors());
-        Modal.AddToggleField("HasNumberField", "Has Number Value?", false, (evt) => { AddTagModalEvaluateConditions(); });
-        Modal.AddIntField("TagValue", "Tag Initial Value", 0);
-        Modal.AddPreferredButton("Add", AddTagSubmit);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
-        AddTagModalEvaluateConditions();
-
         SelectionMenu.Hide();
+        Modal2.SetCurrentDialog("ShunDialog1");
+        Modal2.AddInlineTextField("TagName", "Name", "");
+        Modal2.AddInlineComboboxField("ColorField", "Color", "Gray", ColorUtility.CommonColors().ToList<string>());
+        Modal2.AddSwitchField("HasNumberField", "Use Counter?", false);
+        Modal2.AddInlineIntField("TagValue", "Initial Value", 0);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Add", AddTagSubmit);
+        Modal2.Open();
     }
 
     private static void AddTagModalEvaluateConditions()
@@ -133,19 +155,19 @@ public abstract class ActorType : IActorType
     }
 
 
-    private static void AddTagSubmit(ClickEvent evt)
+    private static void AddTagSubmit()
     {
-        string tagName = UI.Modal.Q<TextField>("TagName").value;
-        int tagValue = UI.Modal.Q<IntegerField>("TagValue").value;
-        string colorValue = UI.Modal.Q<DropdownField>("ColorField").value;
-        bool hasNumber = UI.Modal.Q<Toggle>("HasNumberField").value;
+        Modal2.SetValueOrigin("ShunDialog1");
+        string tagName = Modal2.GetTextFieldValue("TagName");
+        int tagValue = Modal2.GetIntFieldValue("TagValue");
+        string colorValue = Modal2.GetComboboxFieldValue("ColorField");
+        bool hasNumber = Modal2.GetSwitchFieldValue("HasNumberField");
         ActorTag tag = new();
         tag.Name = tagName;
         tag.Value = tagValue;
         tag.HasNumber = hasNumber;
         tag.Color = ColorUtility.GetCommonColor(colorValue);
         Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
-        Modal.Close();
     }
 
     private static void AddBarModal()
@@ -232,15 +254,16 @@ public abstract class ActorType : IActorType
         Modal.Close();
     }
 
-    protected static void ClickClone()
+    protected static void CloneConfirm()
     {
         ActorData data = Actor.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
-        Modal.DoubleConfirm("Clone Token", $"Are you sure you want to clone {name}?", () =>
+        Modal2.Confirm("ShunDialog1", $"Are you sure you want to clone {name}?", () =>
         {
+            data.Placed = false; // set this to false only long enough to create the clone, easier than cloning the object
             string json = JsonUtility.ToJson(data.Persist());
+            data.Placed = true;
             Player.Self().CmdCreateActor(json);
-            Actor.Deselect();
         });
         SelectionMenu.Hide();
     }
@@ -262,33 +285,54 @@ public abstract class ActorType : IActorType
 
     private static void ReshapeModal()
     {
-        ActorData data = Actor.GetSelected().Data;
-        Modal.Reset("Reshape");
-        Modal.AddDropdownField("Reshape", "New Shape", data.Shape, ShapeOptions());
-        Modal.AddPreferredButton("Update", (evt) =>
-        {
-            string newShape = UI.Modal.Q<DropdownField>("Reshape").value;
-            Player.Self().CmdRequestActorCommand(data.Id, $"Reshape|{newShape}");
-            Modal.Close();
-            Actor.Deselect();
-        });
-        Modal.AddButton("Cancel", Modal.CloseEvent);
         SelectionMenu.Hide();
+        ActorData data = Actor.GetSelected().Data;
+        Modal2.SetCurrentDialog("ShunDialog1");
+        Modal2.AddDialogHeader("Change Size/Shape");
+        Modal2.AddSelectField("Reshape", "New Shape", data.Shape, ShapeOptions().ToList<string>());
+        Modal2.AddAlert("Resizing", "Changing between a size that occupies a tile center and a tile intersection requires manual position adjustment", AlertVariant.Attention);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Update", () =>
+        {
+            Modal2.SetValueOrigin("ShunDialog1");
+            string newShape = Modal2.GetSelectFieldValue("Reshape");
+            Player.Self().CmdRequestActorCommand(data.Id, $"Reshape|{newShape}");
+        });
+        Modal2.Open();
+    }
+
+    private static void RecolorModal()
+    {
+        SelectionMenu.Hide();
+        ActorData data = Actor.GetSelected().Data;
+        Modal2.SetCurrentDialog("ShunDialog1");
+        Modal2.AddDialogHeader("Change Color");
+        Modal2.AddSelectField("Recolor", "Change Color", "Black", ColorUtility.CommonColors().ToList<string>());
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Update", () =>
+        {
+            Modal2.SetValueOrigin("ShunDialog1");
+            string newColor = Modal2.GetSelectFieldValue("Recolor");
+            Player.Self().CmdRequestActorCommand(data.Id, $"Recolor|{newColor}");
+        });
+        Modal2.Open();
     }
 
     protected virtual void RenameModal()
     {
-        ActorData data = Actor.GetSelected().Data;
-        Modal.Reset("Edit Name");
-        Modal.AddTextField("Name", "Name", data.Name);
-        Modal.AddPreferredButton("Confirm", (evt) =>
-        {
-            string newName = UI.Modal.Q<TextField>("Name").value.Trim();
-            Player.Self().CmdRequestActorCommand(data.Id, $"Rename|{newName}");
-            Modal.Close();
-        });
-        Modal.AddButton("Cancel", Modal.CloseEvent);
         SelectionMenu.Hide();
+        ActorData data = Actor.GetSelected().Data;
+        Modal2.SetCurrentDialog("ShunDialog1");
+        Modal2.AddDialogHeader("Edit Name");
+        Modal2.AddTextField("Name", "Name", data.Name);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Confirm", () =>
+        {
+            Modal2.SetValueOrigin("ShunDialog1");
+            string newName = Modal2.GetTextFieldValue("Name");
+            Player.Self().CmdRequestActorCommand(data.Id, $"Rename|{newName}");
+        });
+        Modal2.Open();
     }
 
     public virtual void Command(string value, ActorData tokenData)
@@ -370,6 +414,12 @@ public abstract class ActorType : IActorType
             string[] parts = value.Split("|");
             tokenData.Shape = parts[1];
             tokenData.SetShape();
+        }
+        if (value.StartsWith("Recolor"))
+        {
+            string[] parts = value.Split("|");
+            tokenData.Color = ColorUtility.GetCommonColor(parts[1]);
+            tokenData.SetColor();
         }
     }
 

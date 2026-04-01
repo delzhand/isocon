@@ -12,13 +12,13 @@ public class ActorMenu
         Block.DeselectAll();
         Block.DehighlightAll();
         ActorData data = Actor.GetSelected().Data;
-        SelectionMenu.Reset("ACTOR MENU", new Vector2(30, 0), Actor.GetSelected().transform);
+        SelectionMenu.Reset(new Vector2(30, 0), Actor.GetSelected().transform);
 
         IActorType st = ActorTypeRegistry.DoInterfaceCallback(data.Type, data.TypeData);
-        MenuItem[] systemItems = st.GetMenuItems(data.Placed);
+        var systemItems = st.GetMenuItems(data.Placed);
         foreach (MenuItem m in systemItems)
         {
-            SelectionMenu.AddItem(m.Name, m.Label, m.Action, m.Children);
+            SelectionMenu.AddItem(m.Label, m.Action, m.Children);
         }
     }
 

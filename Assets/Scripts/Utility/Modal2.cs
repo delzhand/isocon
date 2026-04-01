@@ -14,6 +14,7 @@ public class Modal2
     private static Dictionary<string, ShunDialogContent> _sdc = new();
 
     private static string _targetDialogName;
+    private static string _valueOrigin;
 
     // public static void SetCurrentDialog(string name, out ShunDialog dialog, out ShunDialogContent contents)
     // {
@@ -30,6 +31,11 @@ public class Modal2
         _sdc[name] = UI.System.Q(name).Q<ShunDialogContent>();
         Contents(name).Clear();
         return CurrentDialog;
+    }
+
+    public static void SetValueOrigin(string name)
+    {
+        _valueOrigin = name;
     }
 
     public static ShunDialog CurrentDialog
@@ -109,14 +115,15 @@ public class Modal2
         var confirm = new ShunButton();
         confirm.text = text;
         confirm.clicked += confirmAction;
+        confirm.clicked += Close;
         confirm.SetVariant(ButtonVariant.Primary);
         Contents(_targetDialogName).Q(className: "shun-dialog__footer").Add(confirm);
         return confirm;
     }
 
-    public static string GetTextFieldValue(string dialog, string name)
+    public static string GetTextFieldValue(string name)
     {
-        return Contents(dialog).Q<ShunInput>(name)?.value ?? null;
+        return Contents(_valueOrigin).Q<ShunInput>(name)?.value ?? null;
     }
 
     public static VisualElement AddAlert(string title, string description, AlertVariant variant)
@@ -348,9 +355,9 @@ public class Modal2
         return wrapper;
     }
 
-    public static List<string> GetToggleFieldValues(string dialog, string name)
+    public static List<string> GetToggleFieldValues(string name)
     {
-        var toggleField = Contents(dialog).Q<ShunToggleGroup>(name);
+        var toggleField = Contents(_valueOrigin).Q<ShunToggleGroup>(name);
         if (toggleField == null)
         {
             return new List<string>();
@@ -366,9 +373,9 @@ public class Modal2
         return active;
     }
 
-    public static int GetIntFieldValue(string dialog, string name)
+    public static int GetIntFieldValue(string name)
     {
-        return Contents(dialog).Q<ShunIntInput>(name)?.value ?? 0;
+        return Contents(_valueOrigin).Q<ShunIntInput>(name)?.value ?? 0;
     }
 
     public static VisualElement AddIntField(string name, string label, int defaultValue, string helpText = null)
@@ -434,9 +441,9 @@ public class Modal2
         return wrapper;
     }
 
-    public static string GetSelectFieldValue(string dialog, string name)
+    public static string GetSelectFieldValue(string name)
     {
-        return Contents(dialog).Q<ShunSelect>(name)?.selectedValue ?? null;
+        return Contents(_valueOrigin).Q<ShunSelect>(name)?.selectedValue ?? null;
     }
 
     public static VisualElement AddSelectField(string name, string label, string defaultValue, List<string> options, string helpText = null)
@@ -503,9 +510,9 @@ public class Modal2
         return wrapper;
     }
 
-    public static bool GetSwitchFieldValue(string dialog, string name)
+    public static bool GetSwitchFieldValue(string name)
     {
-        return Contents(dialog).Q<ShunSwitch>(name)?.value ?? false;
+        return Contents(_valueOrigin).Q<ShunSwitch>(name)?.value ?? false;
     }
 
     public static VisualElement AddSwitchField(string name, string label, bool defaultValue, string helpText = null)
@@ -540,9 +547,9 @@ public class Modal2
         return wrapper;
     }
 
-    public static string GetComboboxFieldValue(string dialog, string name)
+    public static string GetComboboxFieldValue(string name)
     {
-        return Contents(dialog).Q<ShunCombobox>(name)?.selectedValue ?? null;
+        return Contents(_valueOrigin).Q<ShunCombobox>(name)?.selectedValue ?? null;
     }
 
     public static VisualElement AddComboboxField(string name, string label, string defaultValue, List<string> options, string helpText = null)
@@ -613,9 +620,9 @@ public class Modal2
         return wrapper;
     }
 
-    public static int GetSliderFieldValue(string dialog, string name)
+    public static int GetSliderFieldValue(string name)
     {
-        return Mathf.RoundToInt(Contents(dialog).Q<ShunSlider>(name).value);
+        return Mathf.RoundToInt(Contents(_valueOrigin).Q<ShunSlider>(name).value);
     }
 
     public static VisualElement AddSliderField(string name, string label, int defaultValue, string helpText = null)
@@ -784,5 +791,23 @@ public class Modal2
         }
 
         return wrapper;
+    }
+
+    public static void Confirm(string dialog, string message, Action confirmAction)
+    {
+        Modal2.SetCurrentDialog(dialog);
+        Modal2.AddLongMarkup(message);
+        var footer = Modal2.AddDialogFooter();
+
+        var confirm = new ShunDialogClose();
+        confirm.SetVariant(ButtonVariant.Primary);
+        confirm.text = "Confirm";
+        confirm.clicked += confirmAction;
+        confirm.clicked += () =>
+        {
+            Modal2.Close();
+        };
+        footer.Add(confirm);
+        Modal2.Open();
     }
 }

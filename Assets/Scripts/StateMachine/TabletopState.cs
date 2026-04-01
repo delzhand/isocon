@@ -155,13 +155,10 @@ public class TabletopState : BaseState
         Modal2.AddDialogFooter();
         Modal2.AddFooterConfirm("Confirm", () =>
         {
-            Modal2.Close();
             Quit();
         });
 
         Modal2.Open();
-        // StateManager.SetModalSubState();
-        // Modal2.SetCloseAction(StateManager.RevertSubState);
     }
 
     private void Quit()

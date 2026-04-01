@@ -261,6 +261,11 @@ public class Actor : MonoBehaviour
         Player.Self().CmdRequestRemoveActor(Data.Id);
     }
 
+    public void Flip()
+    {
+        transform.Find("Offset/Avatar/Cutout/Cutout Quad").Rotate(new Vector3(0, 180, 0));
+    }
+
     public static void Deselect()
     {
         _selected = null;

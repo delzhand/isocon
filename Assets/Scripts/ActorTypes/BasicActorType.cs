@@ -61,16 +61,17 @@ public class BasicActorType : ActorType
 
     private static void CreateClicked()
     {
-        string token = Modal2.GetComboboxFieldValue("ShunDialog1", "Token");
+        Modal2.SetValueOrigin("ShunDialog1");
+        string token = Modal2.GetComboboxFieldValue("Token");
         if (token == null)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
-        string name = Modal2.GetTextFieldValue("ShunDialog1", "Name");
-        string shape = Modal2.GetSelectFieldValue("ShunDialog1", "Shape");
-        string color = Modal2.GetComboboxFieldValue("ShunDialog1", "Color");
-        int maxHP = Modal2.GetIntFieldValue("ShunDialog1", "MaxHP");
+        string name = Modal2.GetTextFieldValue("Name");
+        string shape = Modal2.GetSelectFieldValue("Shape");
+        string color = Modal2.GetComboboxFieldValue("Color");
+        int maxHP = Modal2.GetIntFieldValue("MaxHP");
 
         BasicActorType t = new()
         {
@@ -103,15 +104,13 @@ public class BasicActorType : ActorType
         return "UI/TableTop/Overheads/SingleBar";
     }
 
-    public override MenuItem[] GetMenuItems(bool placed)
+    public override List<MenuItem> GetMenuItems(bool placed)
     {
-        MenuItem[] baseItems = base.GetMenuItems(placed);
+        var baseItems = base.GetMenuItems(placed);
 
-        List<MenuItem> items = new();
-        var group = new MenuItem("Basic Actor", "Basic Actor", null);
-        group.Children.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
-        items.Add(group);
-        return baseItems.Concat(items.ToArray()).ToArray();
+        var changeValues = FindParent("Change Values", baseItems);
+        changeValues.Children.Add(new MenuItem("Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+        return baseItems;
     }
 
     public override void Command(string command, ActorData tokenData)

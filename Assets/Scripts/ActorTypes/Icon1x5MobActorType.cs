@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -43,24 +44,32 @@ public class Icon1x5MobActorType : Icon1x5Base
     #region Creation
     public static void AddActorModal()
     {
-        Modal.AddTextField("NameField", "Actor Name", "Actor");
+        var contents = Modal2.Contents("ShunDialog1");
+        var typeContainer = contents.Q("ActorTypeContainer");
+        typeContainer.Clear();
+        contents.Q("CreateActor")?.RemoveFromHierarchy();
 
-        Modal.AddPreferredButton("Create Actor", CreateClicked);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        var name = Modal2.AddInlineTextField("Name", "Actor Name", "Actor");
+        Modal2.MoveToContainer(name, typeContainer);
 
-        // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        global::AddActorModal.OrderFields(StringUtility.CreateArray("NameField"));
+        var create = new ShunDialogClose();
+        create.name = "CreateActor";
+        create.text = "Create Actor";
+        create.SetVariant(ButtonVariant.Primary);
+        create.clicked += () => CreateClicked();
+        contents.Q(className: "shun-dialog__footer").Add(create);
     }
 
-    private static void CreateClicked(ClickEvent evt)
+    private static void CreateClicked()
     {
-        if (!TokenLibraryModal.TokenSelected())
+        Modal2.SetValueOrigin("ShunDialog1");
+        string token = Modal2.GetComboboxFieldValue("Token");
+        if (token == null)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
-
-        string name = UI.Modal.Q<TextField>("NameField").value;
+        string name = Modal2.GetTextFieldValue("Name");
 
         Icon1x5MobActorType t = new()
         {
@@ -77,7 +86,7 @@ public class Icon1x5MobActorType : Icon1x5Base
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibraryModal.GetToken();
+        a.Token = TokenLibraryModal.GetToken(token);
         a.Color = ColorUtility.GetCommonColor("gray");
         a.Shape = "Square 1x1";
         a.Position = Vector3.zero;
@@ -99,23 +108,30 @@ public class Icon1x5MobActorType : Icon1x5Base
         return "UI/TableTop/Overheads/PipCounter";
     }
 
-    public override MenuItem[] GetMenuItems(bool placed)
+    public override List<MenuItem> GetMenuItems(bool placed)
     {
-        MenuItem[] baseItems = base.GetMenuItems(placed);
+        var baseItems = base.GetMenuItems(placed);
 
-        List<MenuItem> items = new();
-        items.Add(new MenuItem("ModVig", "Modify VIG", () => { NumberPicker.ActorCommand("ModVIG"); }));
+        var changeValues = FindParent("Change Values", baseItems);
+        changeValues.Children.Add(new MenuItem("Modify Vigor", () => { NumberPicker.ActorCommand("ModVIG"); }));
         if (Hits < 2)
         {
-            items.Add(new MenuItem("RestoreHit", "Restore Hit", () =>
+            changeValues.Children.Add(new MenuItem("Restore Hit", () =>
             {
                 Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, "RestoreHit");
-                SelectionMenu.Hide();
+            }));
+        }
+        if (Hits > 0)
+        {
+            changeValues.Children.Add(new MenuItem("Take Hit", () =>
+            {
+                Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, "TakeHit");
             }));
         }
 
-        return baseItems.Concat(items.ToArray()).ToArray();
+        return baseItems;
     }
+
 
     public override void Command(string command, ActorData tokenData)
     {
@@ -145,6 +161,14 @@ public class Icon1x5MobActorType : Icon1x5Base
                 PopoverText.Create(token, $"/+1|_HIT", Color.white);
             }
             UpdateGraphic(tokenData);
+        }
+        if (command == "TakeHit")
+        {
+            if (Hits > 0)
+            {
+                Hits -= 1;
+                PopoverText.Create(token, $"/-1|_HIT", Color.white);
+            }
         }
         if (command.StartsWith("ModVIG"))
         {

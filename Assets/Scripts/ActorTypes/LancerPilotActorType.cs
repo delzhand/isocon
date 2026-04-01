@@ -94,15 +94,15 @@ public class LancerPilotActorType : LancerBase
         return "UI/TableTop/Overheads/SingleBar";
     }
 
-    public override MenuItem[] GetMenuItems(bool placed)
-    {
-        MenuItem[] baseItems = base.GetMenuItems(placed);
+    // public override MenuItem[] GetMenuItems(bool placed)
+    // {
+    //     MenuItem[] baseItems = base.GetMenuItems(placed);
 
-        List<MenuItem> items = new();
-        items.Add(new MenuItem("CoreStats", "Alter Stats", () => { AlterStatModal(); }));
-        items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
-        return baseItems.Concat(items.ToArray()).ToArray();
-    }
+    //     List<MenuItem> items = new();
+    //     items.Add(new MenuItem("CoreStats", "Alter Stats", () => { AlterStatModal(); }));
+    //     items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+    //     return baseItems.Concat(items.ToArray()).ToArray();
+    // }
 
     public override void Command(string command, ActorData tokenData)
     {

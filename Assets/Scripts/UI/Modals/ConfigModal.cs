@@ -34,10 +34,10 @@ public class ConfigModal
             scaleOptions.Add(i + "%");
         }
 
-        var uiScaleField = Modal2.AddSelectField("UIScale", "UI Scale", Preferences.Current.UIScale, scaleOptions, "Control how large the user interface appears");
+        var uiScaleField = Modal2.AddComboboxField("UIScale", "UI Scale", Preferences.Current.UIScale, scaleOptions, "Control how large the user interface appears");
         Modal2.MoveToTab(uiScaleField, configTabs, "Interface");
 
-        var wUIScaleField = Modal2.AddSelectField("WUIScale", "Actor UI Scale", Preferences.Current.WorldUIScale, scaleOptions, "Control how large the floating elements above actors appear");
+        var wUIScaleField = Modal2.AddComboboxField("WUIScale", "Actor UI Scale", Preferences.Current.WorldUIScale, scaleOptions, "Control how large the floating elements above actors appear");
         Modal2.MoveToTab(wUIScaleField, configTabs, "Actors");
 
         List<string> fpsOptions = StringUtility.CreateArray("15", "30", "60", "90", "120").ToList<string>();
@@ -77,34 +77,35 @@ public class ConfigModal
 
     private static void SaveConfig()
     {
-        Preferences.Current.DataPath = Modal2.GetTextFieldValue("ShunDialog1", "DataPath");
+        Modal2.SetValueOrigin("ShunDialog1");
+        Preferences.Current.DataPath = Modal2.GetTextFieldValue("DataPath");
 
-        Preferences.Current.SkipTutorials = Modal2.GetSwitchFieldValue("ShunDialog1", "SkipTutorials");
+        Preferences.Current.SkipTutorials = Modal2.GetSwitchFieldValue("SkipTutorials");
 
-        Preferences.Current.PanWithRight = Modal2.GetSelectFieldValue("ShunDialog1", "CameraControls") == "Rotate with Middle, Pan with Right";
+        Preferences.Current.PanWithRight = Modal2.GetSelectFieldValue("CameraControls") == "Rotate with Middle, Pan with Right";
         Viewport.SetPanMode(Preferences.Current.PanWithRight);
 
-        Preferences.Current.ShowHUD = Modal2.GetSwitchFieldValue("ShunDialog1", "ShowHUD");
+        Preferences.Current.ShowHUD = Modal2.GetSwitchFieldValue("ShowHUD");
         UI.ToggleDisplay("DetailsHud", Preferences.Current.ShowHUD);
 
-        Preferences.Current.ShowIndicators = Modal2.GetSwitchFieldValue("ShunDialog1", "ShowIndicators");
+        Preferences.Current.ShowIndicators = Modal2.GetSwitchFieldValue("ShowIndicators");
         Block.ToggleIndicators(Preferences.Current.ShowIndicators);
 
-        Preferences.Current.BlockBorderOpacity = Modal2.GetSliderFieldValue("ShunDialog1", "BlockBorder");
+        Preferences.Current.BlockBorderOpacity = Modal2.GetSliderFieldValue("BlockBorder");
         BlockRendering.ToggleAllBorders(false);
 
-        Preferences.Current.TokenOutline = Modal2.GetSelectFieldValue("ShunDialog1", "ActorBorder");
+        Preferences.Current.TokenOutline = Modal2.GetSelectFieldValue("ActorBorder");
         Actor.SetAllTokenOutlines();
 
-        Preferences.Current.UIScale = Modal2.GetSelectFieldValue("ShunDialog1", "UIScale");
+        Preferences.Current.UIScale = Modal2.GetComboboxFieldValue("UIScale");
         float uiValue = float.Parse(Preferences.Current.UIScale.Replace("%", "")) / 100f;
         GameObject.Find("UICanvas/SystemUI").GetComponent<UIDocument>().panelSettings.scale = uiValue;
 
-        Preferences.Current.WorldUIScale = Modal2.GetSelectFieldValue("ShunDialog1", "WUIScale");
+        Preferences.Current.WorldUIScale = Modal2.GetComboboxFieldValue("WUIScale");
         float wuiValue = float.Parse(Preferences.Current.WorldUIScale.Replace("%", "")) / 100f;
         GameObject.Find("UICanvas/WorldUI").GetComponent<UIDocument>().panelSettings.scale = wuiValue;
 
-        int fpsValue = int.Parse(Modal2.GetToggleFieldValues("ShunDialog1", "FPSLimit").First());
+        int fpsValue = int.Parse(Modal2.GetToggleFieldValues("FPSLimit").First());
         fpsValue = Math.Max(fpsValue, 3);
         Preferences.Current.TargetFramerate = fpsValue;
         Application.targetFrameRate = fpsValue;

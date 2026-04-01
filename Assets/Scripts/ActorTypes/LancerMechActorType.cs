@@ -119,17 +119,17 @@ public class LancerMechActorType : LancerBase
         return "UI/TableTop/Overheads/LancerMech";
     }
 
-    public override MenuItem[] GetMenuItems(bool placed)
-    {
-        MenuItem[] baseItems = base.GetMenuItems(placed);
+    // public override MenuItem[] GetMenuItems(bool placed)
+    // {
+    //     MenuItem[] baseItems = base.GetMenuItems(placed);
 
-        List<MenuItem> items = new();
-        items.Add(new MenuItem("CoreStats", "Alter Stats", () => { AlterStatModal(); }));
-        items.Add(new MenuItem("Damage", "Damage HP/Shield", () => { NumberPicker.ActorCommand("Damage", false); }));
-        items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
-        items.Add(new MenuItem("ModShield", "Modify Shield", () => { NumberPicker.ActorCommand("ModShield"); }));
-        return baseItems.Concat(items.ToArray()).ToArray();
-    }
+    //     List<MenuItem> items = new();
+    //     items.Add(new MenuItem("CoreStats", "Alter Stats", () => { AlterStatModal(); }));
+    //     items.Add(new MenuItem("Damage", "Damage HP/Shield", () => { NumberPicker.ActorCommand("Damage", false); }));
+    //     items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+    //     items.Add(new MenuItem("ModShield", "Modify Shield", () => { NumberPicker.ActorCommand("ModShield"); }));
+    //     return baseItems.Concat(items.ToArray()).ToArray();
+    // }
 
     public override void Command(string command, ActorData tokenData)
     {

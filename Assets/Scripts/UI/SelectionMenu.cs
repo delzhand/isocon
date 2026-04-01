@@ -8,14 +8,12 @@ using UnityEngine.UIElements;
 
 public struct MenuItem
 {
-    public string Name;
     public string Label;
     public Action Action;
     public List<MenuItem> Children;
 
-    public MenuItem(string name, string label, Action onClick)
+    public MenuItem(string label, Action onClick)
     {
-        Name = name;
         Label = label;
         Action = onClick;
         Children = new();
@@ -69,17 +67,11 @@ public class SelectionMenu
         }
     }
 
-    public static void Reset(string title, Vector2 offset, Transform follow = null)
+    public static void Reset(Vector2 offset, Transform follow = null)
     {
         FollowTransform = follow;
         var contextMenu = UI.System.Q<ShunContextMenu>();
         contextMenu.ClearItems();
-        // var test = contextMenu.AddItem("Test");
-
-        // var test2 = new ShunMenuItem();
-        // test2.label = "Child";
-        // test2.clicked += () => { Debug.Log("child"); };
-        // test.AddSubmenuItem(test2);
 
         Vector2 pos = UI.GetTransformScreenPosition(FollowTransform, UI.System, Camera.main);
         contextMenu.OpenAtPosition(pos + offset);
@@ -90,25 +82,21 @@ public class SelectionMenu
         Visible = false;
         FollowTransform = null;
         var contextMenu = UI.System.Q<ShunContextMenu>();
-        contextMenu.ClearItems();
+        contextMenu.ForceClose();
     }
 
-    public static void AddItem(string name, string label, Action action, List<MenuItem> children)
+    public static void AddItem(string label, Action action, List<MenuItem> children)
     {
         var contextMenu = UI.System.Q<ShunContextMenu>();
         var parent = contextMenu.AddItem(label, null, action);
         if (children != null)
         {
-            var test2 = new ShunMenuItem();
-            test2.label = "Child";
-            test2.clicked += () => { Debug.Log("child"); };
-            parent.AddSubmenuItem(test2);
-
             foreach (MenuItem child in children)
             {
                 var childItem = new ShunMenuItem();
                 childItem.label = child.Label;
                 childItem.clicked += child.Action;
+                childItem.clicked += Hide;
                 parent.AddSubmenuItem(childItem);
             }
         }

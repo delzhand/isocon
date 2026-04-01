@@ -35,7 +35,6 @@ public class StartSessionModal
         Modal2.AddFooterConfirm(mode == ConnectMode.Client ? "Join Session" : "Start Session", () =>
         {
             StartSession(mode);
-            Modal2.Close();
         });
 
         Modal2.Open();
@@ -43,21 +42,20 @@ public class StartSessionModal
 
     private static void StartSession(ConnectMode mode)
     {
-        var dialogContent = Modal2.Contents("ShunDialog1");
-
-        string playerName = Modal2.GetTextFieldValue("ShunDialog1", "PlayerName");
+        Modal2.SetValueOrigin("ShunDialog1");
+        string playerName = Modal2.GetTextFieldValue("PlayerName");
         Preferences.Current.PlayerName = playerName;
 
         if (mode == ConnectMode.Solo || mode == ConnectMode.Host)
         {
-            string gridType = Modal2.GetSelectFieldValue("ShunDialog1", "GridType");
+            string gridType = Modal2.GetSelectFieldValue("GridType");
             Preferences.Current.Grid = gridType;
             TerrainController.GridType = gridType;
         }
 
         if (mode == ConnectMode.Client)
         {
-            Preferences.Current.HostIP = Modal2.GetTextFieldValue("ShunDialog1", "HostIP");
+            Preferences.Current.HostIP = Modal2.GetTextFieldValue("HostIP");
         }
 
         NetworkManager netManager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
@@ -68,7 +66,7 @@ public class StartSessionModal
                 netManager.StartHost();
                 break;
             case ConnectMode.Host:
-                int playerCount = Modal2.GetIntFieldValue("ShunDialog1", "PlayerCount");
+                int playerCount = Modal2.GetIntFieldValue("PlayerCount");
                 Preferences.Current.PlayerCount = playerCount;
                 netManager.maxConnections = playerCount;
                 netManager.StartHost();

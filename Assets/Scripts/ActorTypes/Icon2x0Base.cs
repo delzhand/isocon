@@ -7,16 +7,16 @@ using Random = UnityEngine.Random;
 
 public abstract class Icon2x0Base : ActorType
 {
-    public override MenuItem[] GetMenuItems(bool placed)
-    {
-        MenuItem[] baseItems = base.GetMenuItems(placed);
+    // public override List<MenuItem> GetMenuItems(bool placed)
+    // {
+    //     List<MenuItem> items = base.GetMenuItems(placed);
 
-        List<MenuItem> items = new();
-        items.Add(new MenuItem("Damage", "Damage HP/VIG", () => { NumberPicker.ActorCommand("Damage", false); }));
-        items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRollClicked));
-        items.Add(new MenuItem("SaveRoll", "Save Roll", SaveRollClicked));
-        return baseItems.Concat(items.ToArray()).ToArray();
-    }
+    //     List<MenuItem> items = new();
+    //     items.Add(new MenuItem("Damage", "Damage HP/VIG", () => { NumberPicker.ActorCommand("Damage", false); }));
+    //     items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRollClicked));
+    //     items.Add(new MenuItem("SaveRoll", "Save Roll", SaveRollClicked));
+    //     return baseItems.Concat(items.ToArray()).ToArray();
+    // }
 
     private void AttackRollClicked()
     {

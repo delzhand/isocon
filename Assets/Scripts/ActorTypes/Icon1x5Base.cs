@@ -7,15 +7,17 @@ using Random = UnityEngine.Random;
 
 public abstract class Icon1x5Base : ActorType
 {
-    public override MenuItem[] GetMenuItems(bool placed)
+    public override List<MenuItem> GetMenuItems(bool placed)
     {
-        MenuItem[] baseItems = base.GetMenuItems(placed);
+        var baseItems = base.GetMenuItems(placed);
 
-        List<MenuItem> items = new();
-        items.Add(new MenuItem("Damage", "Damage HP/VIG", () => { NumberPicker.ActorCommand("Damage", false); }));
-        items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRollClicked));
-        items.Add(new MenuItem("SaveRoll", "Save Roll", SaveRollClicked));
-        return baseItems.Concat(items.ToArray()).ToArray();
+        var icon = new MenuItem("ICON 1.5", null);
+        baseItems.Add(icon);
+        icon.Children.Add(new MenuItem("Damage HP/VIG", () => { NumberPicker.ActorCommand("Damage", false); }));
+        icon.Children.Add(new MenuItem("Attack Roll", AttackRollClicked));
+        icon.Children.Add(new MenuItem("Save Roll", SaveRollClicked));
+
+        return baseItems;
     }
 
     private void AttackRollClicked()

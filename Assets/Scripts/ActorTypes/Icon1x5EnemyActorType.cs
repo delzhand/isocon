@@ -42,22 +42,28 @@ public class Icon1x5EnemyActorType : Icon1x5Base
 
     public static void AddActorModal()
     {
-        Modal.AddTextField("NameField", "Actor Name", "Actor");
-        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", ActorType.SquareShapeOptions());
-        Modal.AddDropdownField("FoeClassField", "Class", "Heavy", StringUtility.CreateArray("Heavy", "Artillery", "Skirmisher", "Leader", "Legend"), (evt) => { AddModalEvaluateConditions(); });
-        Modal.AddToggleField("EliteField", "Elite", false);
-        Modal.AddIntField("LegendHPField", "Legend HP Multiplier", 1);
-        Modal.AddPreferredButton("Create Actor", CreateClicked);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
-        string[] fieldOrder = StringUtility.CreateArray(
-            "NameField",
-            "ShapeField",
-            "FoeClassField",
-            "EliteField",
-            "LegendHPField"
-        );
-        global::AddActorModal.OrderFields(fieldOrder);
-        AddModalEvaluateConditions();
+        var contents = Modal2.Contents("ShunDialog1");
+        var typeContainer = contents.Q("ActorTypeContainer");
+        typeContainer.Clear();
+        contents.Q("CreateActor")?.RemoveFromHierarchy();
+
+        var name = Modal2.AddInlineTextField("Name", "Actor Name", "Actor");
+        Modal2.MoveToContainer(name, typeContainer);
+
+        var shape = Modal2.AddInlineComboboxField("Shape", "Shape", "Square 1x1", ActorType.SquareShapeOptions().ToList<string>());
+        Modal2.MoveToContainer(shape, typeContainer);
+
+        var foe = Modal2.AddInlineSelectField("FoeClass", "Class", "Heavy", StringUtility.CreateArray("Heavy", "Artillery", "Skirmisher", "Leader", "Legend").ToList<string>());
+        Modal2.MoveToContainer(foe, typeContainer);
+
+        var elite = Modal2.AddSwitchField("Elite", "Elite", false);
+        Modal2.MoveToContainer(elite, typeContainer);
+
+        var legend = Modal2.AddInlineIntField("LegendHP", "Legend HP Multiplier", 1);
+        Modal2.MoveToContainer(legend, typeContainer);
+
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Create Actor", CreateClicked);
     }
 
     private static void AddModalEvaluateConditions()
@@ -71,19 +77,20 @@ public class Icon1x5EnemyActorType : Icon1x5Base
         UI.ToggleDisplay(hpMultiField, foeClass == "Legend");
     }
 
-    private static void CreateClicked(ClickEvent evt)
+    private static void CreateClicked()
     {
-        if (!TokenLibraryModal.TokenSelected())
+        Modal2.SetValueOrigin("ShunDialog1");
+        string token = Modal2.GetComboboxFieldValue("Token");
+        if (token == null)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
-
-        string name = UI.Modal.Q<TextField>("NameField").value;
-        string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
-        string foeClass = UI.Modal.Q<DropdownField>("FoeClassField").value;
-        int hpMulti = UI.Modal.Q<IntegerField>("LegendHPField").value;
-        bool elite = UI.Modal.Q<Toggle>("EliteField").value;
+        string name = Modal2.GetTextFieldValue("Name");
+        string shape = Modal2.GetComboboxFieldValue("Shape");
+        string foeClass = Modal2.GetSelectFieldValue("FoeClass");
+        int hpMulti = Modal2.GetIntFieldValue("LegendHP");
+        bool elite = Modal2.GetSwitchFieldValue("Elite");
         string color = "black";
         if (elite)
         {
@@ -158,7 +165,7 @@ public class Icon1x5EnemyActorType : Icon1x5Base
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibraryModal.GetToken();
+        a.Token = TokenLibraryModal.GetToken(token);
         a.Color = ColorUtility.GetCommonColor(color);
         a.Shape = shape;
         a.Position = Vector3.zero;
@@ -249,14 +256,13 @@ public class Icon1x5EnemyActorType : Icon1x5Base
         panel.Q("Pills").Add(Pill.InitStatic("BloodiedPill", "Bloodied", Color.red));
     }
 
-    public override MenuItem[] GetMenuItems(bool placed)
+    public override List<MenuItem> GetMenuItems(bool placed)
     {
-        MenuItem[] baseItems = base.GetMenuItems(placed);
-
-        List<MenuItem> items = new();
-        items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
-        items.Add(new MenuItem("ModVIG", "Modify VIG", () => { NumberPicker.ActorCommand("ModVIG"); }));
-        return baseItems.Concat(items.ToArray()).ToArray();
+        var baseItems = base.GetMenuItems(placed);
+        var changeValues = FindParent("Change Values", baseItems);
+        changeValues.Children.Add(new MenuItem("Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+        changeValues.Children.Add(new MenuItem("Modify Vigor", () => { NumberPicker.ActorCommand("ModVIG"); }));
+        return baseItems;
     }
 
     public override void Command(string command, ActorData tokenData)

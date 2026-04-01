@@ -57,15 +57,16 @@ public class EnvironmentalActorType : ActorType
 
     private static void CreateClicked()
     {
-        string token = Modal2.GetComboboxFieldValue("ShunDialog1", "Token");
+        Modal2.SetValueOrigin("ShunDialog1");
+        string token = Modal2.GetComboboxFieldValue("Token");
         if (token == null)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
-        string name = Modal2.GetTextFieldValue("ShunDialog1", "Name");
-        string shape = Modal2.GetSelectFieldValue("ShunDialog1", "Shape");
-        string color = Modal2.GetComboboxFieldValue("ShunDialog1", "Color");
+        string name = Modal2.GetTextFieldValue("Name");
+        string shape = Modal2.GetSelectFieldValue("Shape");
+        string color = Modal2.GetComboboxFieldValue("Color");
         EnvironmentalActorType t = new()
         {
             Type = TypeName,

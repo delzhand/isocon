@@ -263,39 +263,39 @@ public class MaleghastActorType : ActorType
         panel.Q("Pills").Q("HousePill").SendToBack();
     }
 
-    public override MenuItem[] GetMenuItems(bool placed)
-    {
-        List<MenuItem> items = new();
-        if (placed)
-        {
-            items.Add(new MenuItem("Remove", "Remove", ClickRemove));
-            items.Add(new MenuItem("Flip", "Flip", ClickFlip));
-        }
-        items.Add(new MenuItem("CoreStats", "Alter Stats", () => { AlterStatModal(); }));
-        items.Add(new MenuItem("Clone", "Clone", ClickClone));
-        items.Add(new MenuItem("Delete", "Delete", ClickDelete));
-        items.Add(new MenuItem("EndTurn", "End Turn", () =>
-        {
-            ActorTag tag = new();
-            tag.Name = "Turn Ended";
-            tag.Color = ColorUtility.GetCommonColor("gray");
-            Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
-            SelectionMenu.Hide();
-        }));
-        items.Add(new MenuItem("ResetTurns", "Reset All Turns", () =>
-        {
-            Player.Self().CmdRequestAllActorsCommand("RemoveTag|Turn Ended");
-            SelectionMenu.Hide();
-        }));
-        items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+    // public override MenuItem[] GetMenuItems(bool placed)
+    // {
+    //     List<MenuItem> items = new();
+    //     if (placed)
+    //     {
+    //         items.Add(new MenuItem("Remove", "Remove", ClickRemove));
+    //         items.Add(new MenuItem("Flip", "Flip", ClickFlip));
+    //     }
+    //     items.Add(new MenuItem("CoreStats", "Alter Stats", () => { AlterStatModal(); }));
+    //     items.Add(new MenuItem("Clone", "Clone", ClickClone));
+    //     items.Add(new MenuItem("Delete", "Delete", ClickDelete));
+    //     items.Add(new MenuItem("EndTurn", "End Turn", () =>
+    //     {
+    //         ActorTag tag = new();
+    //         tag.Name = "Turn Ended";
+    //         tag.Color = ColorUtility.GetCommonColor("gray");
+    //         Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
+    //         SelectionMenu.Hide();
+    //     }));
+    //     items.Add(new MenuItem("ResetTurns", "Reset All Turns", () =>
+    //     {
+    //         Player.Self().CmdRequestAllActorsCommand("RemoveTag|Turn Ended");
+    //         SelectionMenu.Hide();
+    //     }));
+    //     items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
 
-        if (House == "CARCASS" && !HasTag("Loaded"))
-        {
-            items.Add(new MenuItem("Reload", "Reload", () => DirectCommand("Reload")));
-        }
+    //     if (House == "CARCASS" && !HasTag("Loaded"))
+    //     {
+    //         items.Add(new MenuItem("Reload", "Reload", () => DirectCommand("Reload")));
+    //     }
 
-        return items.ToArray();
-    }
+    //     return items.ToArray();
+    // }
 
     public override void Command(string command, ActorData tokenData)
     {

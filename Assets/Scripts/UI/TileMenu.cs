@@ -8,11 +8,11 @@ public class TileMenu
 {
     public static void ShowMenu(Block b)
     {
-        SelectionMenu.Reset("TILE MENU", new Vector2(0, 0), b.transform);
+        SelectionMenu.Reset(new Vector2(0, 0), b.transform);
         MenuItem[] defaultItems = GetTileMenuItems(b);
         foreach (MenuItem m in defaultItems)
         {
-            SelectionMenu.AddItem(m.Name, m.Label, m.Action, null);
+            SelectionMenu.AddItem(m.Label, m.Action, null);
         }
     }
 
@@ -25,12 +25,12 @@ public class TileMenu
         }
         else if (!b.Selected)
         {
-            items.Add(new MenuItem("SelectThis", "Select Tile", () => { b.Select(); }));
+            items.Add(new MenuItem("Select Tile", () => { b.Select(); }));
         }
         if (TerrainController.GridType == "Square")
         {
-            items.Add(new MenuItem("AddAdjacent", "Select Adjacent", () => { AddAdjacent(b); }));
-            items.Add(new MenuItem("AddNeighbors", "Select Neighbors", () => { AddNeighbors(b); }));
+            items.Add(new MenuItem("Select Adjacent", () => { AddAdjacent(b); }));
+            items.Add(new MenuItem("Select Neighbors", () => { AddNeighbors(b); }));
         }
         // if (StateManager.Find().SubState.TypeName() == "TileMarkingState")
         // {
@@ -46,11 +46,11 @@ public class TileMenu
         // } // @todo
         if (b.Selected)
         {
-            items.Add(new MenuItem("SelectThis", "Deselect Tile", () => { b.Select(); }));
+            items.Add(new MenuItem("Deselect Tile", () => { b.Select(); }));
         }
-        items.Add(new MenuItem("DeselectAll", "Deselect All", ClickDeselectAll));
-        items.Add(new MenuItem("AddEffect", "Add Effect", () => ClickAddEffect(null)));
-        items.Add(new MenuItem("ClearEffects", "Clear Effects from Selection", ClickClearEffects));
+        items.Add(new MenuItem("Deselect All", ClickDeselectAll));
+        items.Add(new MenuItem("Add Effect", () => ClickAddEffect(null)));
+        items.Add(new MenuItem("Clear Effects from Selection", ClickClearEffects));
 
         List<string> effects = new();
         foreach (var block in Block.GetSelected())
@@ -60,7 +60,7 @@ public class TileMenu
                 string effectName = effect.Split("::")[0];
                 if (!effects.Contains(effectName))
                 {
-                    items.Add(new MenuItem($"Remove_{effectName}", $"Remove {effectName}", () =>
+                    items.Add(new MenuItem($"Remove {effectName}", () =>
                     {
                         Player.Self().CmdRequestMapSetValue(SelectedBlockNames(), "RemoveEffect", effect);
                         SelectionMenu.Hide();
@@ -69,7 +69,7 @@ public class TileMenu
                 }
             });
         }
-        items.Add(new MenuItem("ClearMap", "Clear Effects from All", ClickClearMap));
+        items.Add(new MenuItem("Clear Effects from All", ClickClearMap));
         return items.ToArray();
     }
 

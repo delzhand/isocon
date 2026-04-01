@@ -169,6 +169,15 @@ public class ActorData : NetworkBehaviour
         return cornerShapes.Contains(Shape);
     }
 
+    public void SetColor()
+    {
+        UnitBarElement.Q("ClassBackground").style.borderTopColor = Color;
+        UnitBarElement.Q("ClassBackground").style.borderRightColor = Color;
+        UnitBarElement.Q("ClassBackground").style.borderBottomColor = Color;
+        UnitBarElement.Q("ClassBackground").style.borderLeftColor = Color;
+        SetShape();
+    }
+
     public void SetShape()
     {
         switch (Shape)

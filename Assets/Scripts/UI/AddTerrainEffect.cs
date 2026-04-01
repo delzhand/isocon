@@ -39,9 +39,10 @@ public class AddTerrainEffect
 
     private static void ConfirmAddEffect()
     {
-        string effect = Modal2.GetTextFieldValue("ShunDialog1", "EffectName");
-        string marker = Modal2.GetSelectFieldValue("ShunDialog1", "VisualMarker");
-        string color = Modal2.GetComboboxFieldValue("ShunDialog1", "Color");
+        Modal2.SetValueOrigin("ShunDialog1");
+        string effect = Modal2.GetTextFieldValue("EffectName");
+        string marker = Modal2.GetSelectFieldValue("VisualMarker");
+        string color = Modal2.GetComboboxFieldValue("Color");
 
         List<string> blockNames = new();
         if (singleBlock != null)

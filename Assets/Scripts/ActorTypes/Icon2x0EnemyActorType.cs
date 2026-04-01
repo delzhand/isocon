@@ -230,15 +230,15 @@ public class Icon2x0EnemyActorType : Icon2x0Base
         panel.Q("Pills").Add(Pill.InitStatic("CrisisPill", "Crisis", Color.red));
     }
 
-    public override MenuItem[] GetMenuItems(bool placed)
-    {
-        MenuItem[] baseItems = base.GetMenuItems(placed);
+    // public override MenuItem[] GetMenuItems(bool placed)
+    // {
+    //     MenuItem[] baseItems = base.GetMenuItems(placed);
 
-        List<MenuItem> items = new();
-        items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
-        items.Add(new MenuItem("ModVIG", "Modify VIG", () => { NumberPicker.ActorCommand("ModVIG"); }));
-        return baseItems.Concat(items.ToArray()).ToArray();
-    }
+    //     List<MenuItem> items = new();
+    //     items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+    //     items.Add(new MenuItem("ModVIG", "Modify VIG", () => { NumberPicker.ActorCommand("ModVIG"); }));
+    //     return baseItems.Concat(items.ToArray()).ToArray();
+    // }
 
     public override void Command(string command, ActorData tokenData)
     {

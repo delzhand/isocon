@@ -326,6 +326,12 @@ namespace ShunUI
             base.Close();
         }
 
+        public void ForceClose()
+        {
+            ShunOverlayManager.GetOverlayContainer(panel).Query(className: "menu-content").ForEach((item) => { item.RemoveFromHierarchy(); });
+            ShunOverlayManager.GetOverlayContainer(panel).Query(className: "menu-submenu").ForEach((item) => { item.RemoveFromHierarchy(); });
+        }
+
         private void OnMouseDown(PointerDownEvent evt)
         {
             evt.StopPropagation();
