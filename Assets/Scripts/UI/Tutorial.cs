@@ -17,7 +17,7 @@ public class Tutorial
         {
             Tutorial.Init("sessions");
         });
-        UI.System.Q("AddSystemTag").RegisterCallback<MouseEnterEvent>((evt) =>
+        UI.TopBar.Q("AddTableTag").RegisterCallback<MouseEnterEvent>((evt) =>
         {
             Tutorial.Init("system tag");
         });
@@ -42,7 +42,7 @@ public class Tutorial
 
         (string, string) tutorial = GetTutorial(id);
 
-        Modal2.SetCurrentDialog("ShunDialog1");
+        Modal2.CreateContext("ShunDialog1");
         Modal2.AddDialogHeader(tutorial.Item1);
         Modal2.AddLongMarkup(tutorial.Item2);
         var footer = Modal2.AddDialogFooter("Close");
@@ -86,7 +86,7 @@ public class Tutorial
             case "style shortcut":
                 return ("Style Shortcut", "With any of the style subtools selected, holding down the alt key will let you quickly sample block styles.");
             case "system tag":
-                return ("System Tags", "System tags can be used to track numeric values like round number or group resources, and clocks display progress towards an event or objective.");
+                return ("Table Tags", "Table tags can be used to track numeric values like round number or group resources, and clocks display progress towards an event or objective.");
         }
         throw new System.Exception($"No such tutorial - {id}");
     }

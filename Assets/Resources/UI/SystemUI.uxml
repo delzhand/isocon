@@ -16,7 +16,7 @@
                 <ui:VisualElement style="flex-direction: row; justify-content: space-between; margin-left: -4px; margin-right: -4px; align-self: center; align-items: stretch; flex-wrap: wrap;">
                     <ui:Button display-tooltip-when-elided="true" name="SoloModeButton" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; width: 135px;">
                         <ui:VisualElement style="background-image: resource(&quot;Textures/solo_mode&quot;); -unity-background-scale-mode: scale-to-fit; height: 50px; width: 50px; margin-right: 0; margin-top: 4px;"/>
-                        <ui:Label tabindex="-1" text="SOLO MODE" display-tooltip-when-elided="true" style="font-size: 16px;"/>
+                        <ui:Label tabindex="-1" text="SOLO MODE" display-tooltip-when-elided="true" style="font-size: 16px; -unity-font-definition: resource(&quot;Fonts/MusticaPro-SemiBold SDF&quot;);"/>
                         <ui:Label tabindex="-1" text="Edit maps offline or screen share" display-tooltip-when-elided="true" style="white-space: normal; -unity-font-style: normal;"/>
                     </ui:Button>
                     <ui:Button display-tooltip-when-elided="true" name="HostModeButton" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; flex-grow: 1; width: 135px;">
@@ -59,6 +59,10 @@
                     <ui:VisualElement name="AddActor" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px;">
                         <ui:VisualElement style="flex-grow: 1; width: 24px; height: 24px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&quot;Textures/solo_mode&quot;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;"/>
                         <ui:Label text="Add &lt;u&gt;A&lt;/u&gt;ctor" name="Label" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="AddTableTag" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px;">
+                        <ui:VisualElement style="flex-grow: 1; width: 24px; height: 24px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&quot;Textures/tag_icon&quot;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;"/>
+                        <ui:Label text="Add Tag" name="Label" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;"/>
                     </ui:VisualElement>
                     <ui:VisualElement name="EditMap" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px;">
                         <ui:VisualElement style="flex-grow: 1; width: 24px; height: 24px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&quot;Textures/pencil&quot;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;"/>
@@ -154,13 +158,7 @@
             </ui:VisualElement>
             <ui:VisualElement name="ClickCatcher" style="flex-grow: 1; position: absolute; left: -20%; top: -20%; right: -20%; bottom: -20%; display: none;"/>
             <ui:VisualElement name="TopRight" style="flex-grow: 1; position: absolute; top: 0; right: 0; align-items: flex-end; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;">
-                <ui:VisualElement name="Pills" style="flex-grow: 1; align-items: flex-start; justify-content: flex-start; flex-direction: row-reverse; align-self: auto;">
-                    <ui:VisualElement name="AddSystemTag" class="panel2" style="flex-direction: row; justify-content: flex-end; padding-right: 10px; right: -10px; padding-left: 10px; margin-bottom: 4px; overflow: hidden; border-top-right-radius: 0; border-bottom-right-radius: 0; border-top-left-radius: 20px; border-bottom-left-radius: 20px; height: 36px; align-items: center; display: flex;">
-                        <ui:Label tabindex="-1" display-tooltip-when-elided="true" text="+ Add Tag" style="font-size: 14px; -unity-font-style: bold; color: rgb(255, 255, 255); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 8px; margin-top: 0; margin-bottom: 1px; -unity-text-align: lower-right;"/>
-                        <ui:VisualElement name="SelectedMarker" style="flex-grow: 1; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background-color: rgb(44, 93, 135); display: none;"/>
-                    </ui:VisualElement>
-                    <ui:VisualElement name="Wrapper" style="flex-grow: 1; flex-direction: row-reverse;"/>
-                </ui:VisualElement>
+                <ui:VisualElement name="Pills" style="flex-grow: 1; align-items: flex-start; justify-content: flex-start; flex-direction: row-reverse; align-self: auto; margin-top: -2px; margin-bottom: 4px;"/>
                 <ui:VisualElement name="TerrainInfo" style="background-color: rgba(0, 0, 0, 0); display: flex; position: relative; right: 0; top: 0; padding-right: 0; align-items: auto;">
                     <ui:VisualElement name="Elev" class="panel2" style="flex-direction: row; justify-content: flex-end; padding-right: 10px; right: -10px; padding-left: 10px; margin-bottom: 4px; overflow: hidden; border-top-right-radius: 0; border-bottom-right-radius: 0; border-top-left-radius: 20px; border-bottom-left-radius: 20px;">
                         <ui:Label tabindex="-1" display-tooltip-when-elided="true" text="ELEV" style="font-size: 14px; -unity-font-style: bold; color: rgb(255, 255, 255); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 8px; margin-top: 0; margin-bottom: 1px; -unity-text-align: lower-right;"/>
@@ -510,6 +508,6 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="Fader" picking-mode="Ignore" style="flex-grow: 1; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); background-color: rgb(0, 0, 0); opacity: 0; display: none;"/>
-    <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="DebugText" class="self-centered" style="left: 50%; top: 20%; color: rgb(255, 255, 255); font-size: 24px; -unity-font-style: bold; display: none;"/>
+    <ui:VisualElement name="ShunOverlayContainer" picking-mode="Ignore" class="shun-overlay-container" style="flex-grow: 1;"/>
     <ShunUI.ShunSonnerManager error-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/circle-x.png?fileID=2800000&amp;guid=877da2cd473c642ca8188a56bf6713ea&amp;type=3#circle-x" warning-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/circle-alert.png?fileID=2800000&amp;guid=b4137d982689648bba137be4c1ebb150&amp;type=3#circle-alert" info-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/circle-question-mark.png?fileID=2800000&amp;guid=2485fea10d562461388bc9687619ebf6&amp;type=3#circle-question-mark" success-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/circle-check.png?fileID=2800000&amp;guid=1cefb94f1d40b4b41bc7df5d2e985011&amp;type=3#circle-check" close-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/x.png?fileID=2800000&amp;guid=2f82f4cc998474f1297bf2d63b86194d&amp;type=3#x"/>
 </ui:UXML>

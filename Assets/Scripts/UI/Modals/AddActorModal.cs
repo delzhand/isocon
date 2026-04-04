@@ -12,7 +12,7 @@ public class AddActorModal
 
         Player.Self().SetOp("Adding Actor");
 
-        Modal2.SetCurrentDialog("ShunDialog1");
+        Modal2.CreateContext("ShunDialog1");
         var contents = Modal2.Contents("ShunDialog1");
         contents.Clear();
 

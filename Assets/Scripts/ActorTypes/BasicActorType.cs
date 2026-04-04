@@ -61,7 +61,7 @@ public class BasicActorType : ActorType
 
     private static void CreateClicked()
     {
-        Modal2.SetValueOrigin("ShunDialog1");
+        Modal2.ReadContext("ShunDialog1");
         string token = Modal2.GetComboboxFieldValue("Token");
         if (token == null)
         {

@@ -281,7 +281,7 @@ namespace ShunUI
             }
 
             int count = m_ActiveToasts.Count;
-            float visibleGap = 12f;
+            float visibleGap = 60f;
             float edgePadding = 16f;
 
             for (int i = 0; i < count; i++)

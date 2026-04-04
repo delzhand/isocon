@@ -7,7 +7,7 @@ public class StartSessionModal
 {
     public static void Open(ConnectMode mode)
     {
-        Modal2.SetCurrentDialog("ShunDialog1");
+        Modal2.CreateContext("ShunDialog1");
 
         Modal2.AddDialogHeader($"Configure {mode.ToString()} Mode");
 
@@ -42,7 +42,7 @@ public class StartSessionModal
 
     private static void StartSession(ConnectMode mode)
     {
-        Modal2.SetValueOrigin("ShunDialog1");
+        Modal2.ReadContext("ShunDialog1");
         string playerName = Modal2.GetTextFieldValue("PlayerName");
         Preferences.Current.PlayerName = playerName;
 

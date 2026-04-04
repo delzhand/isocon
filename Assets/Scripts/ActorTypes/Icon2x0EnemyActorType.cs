@@ -42,7 +42,7 @@ public class Icon2x0EnemyActorType : Icon2x0Base
         Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", ActorType.SquareShapeOptions());
         Modal.AddDropdownField("FoeClassField", "Class", "Heavy", StringUtility.CreateArray("Heavy", "Artillery", "Skirmisher", "Leader", "Legend"), (evt) => { AddModalEvaluateConditions(); });
         Modal.AddToggleField("EliteField", "Elite", false);
-        Modal.AddIntField("LegendHPField", "Legend HP Multiplier", 1);
+        Modal.AddIntField("LegendHPField", "HP Multiplier", 1);
         Modal.AddPreferredButton("Create Actor", CreateClicked);
         Modal.AddButton("Cancel", Modal.CloseEvent);
         string[] fieldOrder = StringUtility.CreateArray(

@@ -198,8 +198,8 @@ public class Actor : MonoBehaviour
             }
         }
         _dragging = null;
-        Player.Self().ClearOp();
-        Player.Self().GetComponent<DirectionalLine>().Deinit();
+        Player.Self()?.ClearOp();
+        Player.Self()?.GetComponent<DirectionalLine>().Deinit();
         BlockRendering.ToggleAllBorders(false);
     }
 

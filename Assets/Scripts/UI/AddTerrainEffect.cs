@@ -13,7 +13,7 @@ public class AddTerrainEffect
     {
         singleBlock = b;
 
-        var dialog = Modal2.SetCurrentDialog("ShunDialog1");
+        var dialog = Modal2.CreateContext("ShunDialog1");
         var contents = Modal2.Contents("ShunDialog1");
         contents.Clear();
 
@@ -39,7 +39,7 @@ public class AddTerrainEffect
 
     private static void ConfirmAddEffect()
     {
-        Modal2.SetValueOrigin("ShunDialog1");
+        Modal2.ReadContext("ShunDialog1");
         string effect = Modal2.GetTextFieldValue("EffectName");
         string marker = Modal2.GetSelectFieldValue("VisualMarker");
         string color = Modal2.GetComboboxFieldValue("Color");

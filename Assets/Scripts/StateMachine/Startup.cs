@@ -51,11 +51,12 @@ public class Startup
 
     private static void BindUICallbacks()
     {
-        UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>((evt) =>
-        {
-            // StateManager.Find().ChangeSubState(new MapEditingState());
-        });
+        // UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>((evt) =>
+        // {
+        //     // StateManager.Find().ChangeSubState(new MapEditingState());
+        // });
         UI.TopBar.Q("AddActor").RegisterCallback<ClickEvent>((evt) => AddActorModal.Open());
+        UI.System.Q("AddTableTag").RegisterCallback<ClickEvent>((evt) => SystemTagModal.Open());
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>((evt) => ConfigModal.Open());
         UI.TopBar.Q("FixedView").RegisterCallback<ClickEvent>((evt) => Viewport.FixView());
         UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>((evt) => DiceRoller.ToggleVisible());
@@ -67,7 +68,6 @@ public class Startup
         {
             UI.ToggleActiveClass(UI.System.Q("BottomBar"));
         });
-        UI.System.Q("AddSystemTag").RegisterCallback<ClickEvent>((evt) => SystemTagModal.Open());
     }
 
     private static async void SetVersionText()

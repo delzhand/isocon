@@ -77,7 +77,7 @@ public class GameSystem : MonoBehaviour
 
     private void UpdateTags()
     {
-        UI.System.Q("TopRight").Q("Pills").Q("Wrapper").Clear();
+        UI.System.Q("TopRight").Q("Pills").Clear();
         foreach (GameSystemTag tag in Tags)
         {
             VisualElement p = null;
@@ -93,13 +93,13 @@ public class GameSystem : MonoBehaviour
                     p = Pill.InitNumber(tag.Name, tag.Name, tag.Value, tag.MaxValue, tag.Color, false);
                     break;
             }
-            UI.System.Q("TopRight").Q("Pills").Q("Wrapper").Add(p);
+            UI.System.Q("TopRight").Q("Pills").Add(p);
         }
     }
 
     public void ClearTags()
     {
         Tags.Clear();
-        UI.System.Q("TopRight").Q("Pills").Q("Wrapper").Clear();
+        UI.System.Q("TopRight").Q("Pills").Clear();
     }
 }

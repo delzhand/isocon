@@ -7,16 +7,17 @@ public class SystemTagModal
 {
     public static void Open()
     {
+        Player.Self().SetOp("Adding Table Tag");
         SelectionMenu.Hide();
 
-        Modal2.SetCurrentDialog("ShunDialog1");
+        Modal2.CreateContext("ShunDialog1");
         var contents = Modal2.Contents("ShunDialog1");
         Modal2.AddDialogHeader("Add System Tag");
 
         var tagType = Modal2.AddInlineSelectField("Type", "Type", "Simple", StringUtility.CreateArray("Simple", "Number", "Clock").ToList<string>());
         tagType.Q<ShunSelect>().OnSelect += () =>
         {
-            Modal2.SetValueOrigin("ShunDialog1");
+            Modal2.ReadContext("ShunDialog1");
             var container = contents.Q<ShunContainer>("TagTypeContainer");
             container.Clear();
             string type = Modal2.GetSelectFieldValue("Type");
@@ -52,11 +53,15 @@ public class SystemTagModal
         footer.Add(confirm);
 
         Modal2.Open();
+        Modal2.AddCloseAction(() =>
+        {
+            Player.Self().ClearOp();
+        });
     }
 
     private static void AddSystemTagSubmit()
     {
-        Modal2.SetValueOrigin("ShunDialog1");
+        Modal2.ReadContext("ShunDialog1");
         string tagName = Modal2.GetTextFieldValue("TagName");
         int tagValue = Modal2.GetIntFieldValue("InitialValue");
         int tagMaxValue = Modal2.GetIntFieldValue("MaxValue");

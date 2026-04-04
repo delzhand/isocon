@@ -57,7 +57,7 @@ public class TabletopState : BaseState
         UI.ToggleDisplay(UI.TopBar.Q("AddActor"), true);
         UI.ToggleDisplay(UI.TopBar.Q("EditMap"), true);
         UI.ToggleDisplay(UI.TopBar.Q("EditingActions"), false);
-        UI.ToggleDisplay(UI.TopBar.Q("MarkerMode"), true);
+        // UI.ToggleDisplay(UI.TopBar.Q("MarkerMode"), true);
         UI.ToggleDisplay(UI.TopBar.Q("Dice"), true);
         UI.ToggleDisplay(UI.TopBar.Q("Config"), true);
         UI.ToggleDisplay(UI.TopBar.Q("Session"), true);
@@ -145,7 +145,7 @@ public class TabletopState : BaseState
     private void ConfirmReturnToLauncher(ClickEvent evt)
     {
         SessionModal.SerializeSession("autosave.json");
-        Modal2.SetCurrentDialog("ShunDialog1");
+        Modal2.CreateContext("ShunDialog1");
         string message = "Exit the session and return to the IsoCON launcher?";
         if (NetworkClient.activeHost && _mode == ConnectMode.Host)
         {
@@ -155,6 +155,7 @@ public class TabletopState : BaseState
         Modal2.AddDialogFooter();
         Modal2.AddFooterConfirm("Confirm", () =>
         {
+            Modal2.Close();
             Quit();
         });
 

@@ -13,34 +13,25 @@ public class Modal2
     // Q functions.
     private static Dictionary<string, ShunDialogContent> _sdc = new();
 
-    private static string _targetDialogName;
-    private static string _valueOrigin;
+    private static string _createContext;
+    private static string _readContext;
 
-    // public static void SetCurrentDialog(string name, out ShunDialog dialog, out ShunDialogContent contents)
-    // {
-    //     _targetDialogName = name;
-    //     _sdc[name] = UI.System.Q(name).Q<ShunDialogContent>();
-    //     contents = Contents(name);
-    //     contents.Clear();
-    //     dialog = CurrentDialog;
-    // }
-
-    public static ShunDialog SetCurrentDialog(string name)
+    public static ShunDialog CreateContext(string name)
     {
-        _targetDialogName = name;
+        _createContext = name;
         _sdc[name] = UI.System.Q(name).Q<ShunDialogContent>();
         Contents(name).Clear();
         return CurrentDialog;
     }
 
-    public static void SetValueOrigin(string name)
+    public static void ReadContext(string name)
     {
-        _valueOrigin = name;
+        _readContext = name;
     }
 
     public static ShunDialog CurrentDialog
     {
-        get => UI.System.Q(_targetDialogName).Q<ShunDialog>();
+        get => UI.System.Q(_createContext).Q<ShunDialog>();
     }
 
     public static ShunDialog Dialog(string dialogName)
@@ -81,7 +72,7 @@ public class Modal2
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__header");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var title = new ShunDialogTitle();
         title.text = value;
@@ -92,7 +83,7 @@ public class Modal2
     {
         var footer = new ShunContainer();
         footer.AddToClassList("shun-dialog__footer");
-        Contents(_targetDialogName).Add(footer);
+        Contents(_createContext).Add(footer);
 
         var cancel = new ShunButton();
         cancel.text = cancelText;
@@ -117,20 +108,20 @@ public class Modal2
         confirm.clicked += confirmAction;
         confirm.clicked += Close;
         confirm.SetVariant(ButtonVariant.Primary);
-        Contents(_targetDialogName).Q(className: "shun-dialog__footer").Add(confirm);
+        Contents(_createContext).Q(className: "shun-dialog__footer").Add(confirm);
         return confirm;
     }
 
     public static string GetTextFieldValue(string name)
     {
-        return Contents(_valueOrigin).Q<ShunInput>(name)?.value ?? null;
+        return Contents(_readContext).Q<ShunInput>(name)?.value ?? null;
     }
 
     public static VisualElement AddAlert(string title, string description, AlertVariant variant)
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var hostAlert = new ShunAlert();
         hostAlert.SetVariant(variant);
@@ -148,7 +139,7 @@ public class Modal2
         label.AddToClassList("shun-dialog__label");
         label.text = content;
         label.style.whiteSpace = WhiteSpace.Normal;
-        Contents(_targetDialogName).Add(label);
+        Contents(_createContext).Add(label);
         return label;
     }
 
@@ -156,7 +147,7 @@ public class Modal2
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var fieldlabel = new Label(label);
         fieldlabel.AddToClassList("shun-dialog__label");
@@ -181,7 +172,7 @@ public class Modal2
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var layout = new VisualElement();
         layout.style.flexDirection = FlexDirection.Row;
@@ -219,7 +210,7 @@ public class Modal2
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var layout = new VisualElement();
         layout.style.flexDirection = FlexDirection.Row;
@@ -258,7 +249,7 @@ public class Modal2
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var layout = new VisualElement();
         layout.style.flexDirection = FlexDirection.Row;
@@ -325,7 +316,7 @@ public class Modal2
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var fieldlabel = new Label(label);
         fieldlabel.AddToClassList("shun-dialog__label");
@@ -357,7 +348,7 @@ public class Modal2
 
     public static List<string> GetToggleFieldValues(string name)
     {
-        var toggleField = Contents(_valueOrigin).Q<ShunToggleGroup>(name);
+        var toggleField = Contents(_readContext).Q<ShunToggleGroup>(name);
         if (toggleField == null)
         {
             return new List<string>();
@@ -375,14 +366,14 @@ public class Modal2
 
     public static int GetIntFieldValue(string name)
     {
-        return Contents(_valueOrigin).Q<ShunIntInput>(name)?.value ?? 0;
+        return Contents(_readContext).Q<ShunIntInput>(name)?.value ?? 0;
     }
 
     public static VisualElement AddIntField(string name, string label, int defaultValue, string helpText = null)
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var fieldlabel = new Label(label);
         fieldlabel.AddToClassList("shun-dialog__label");
@@ -407,7 +398,7 @@ public class Modal2
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var layout = new VisualElement();
         layout.style.flexDirection = FlexDirection.Row;
@@ -443,14 +434,14 @@ public class Modal2
 
     public static string GetSelectFieldValue(string name)
     {
-        return Contents(_valueOrigin).Q<ShunSelect>(name)?.selectedValue ?? null;
+        return Contents(_readContext).Q<ShunSelect>(name)?.selectedValue ?? null;
     }
 
     public static VisualElement AddSelectField(string name, string label, string defaultValue, List<string> options, string helpText = null)
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var fieldlabel = new Label(label);
         fieldlabel.AddToClassList("shun-dialog__label");
@@ -476,7 +467,7 @@ public class Modal2
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var layout = new VisualElement();
         layout.style.flexDirection = FlexDirection.Row;
@@ -512,14 +503,14 @@ public class Modal2
 
     public static bool GetSwitchFieldValue(string name)
     {
-        return Contents(_valueOrigin).Q<ShunSwitch>(name)?.value ?? false;
+        return Contents(_readContext).Q<ShunSwitch>(name)?.value ?? false;
     }
 
     public static VisualElement AddSwitchField(string name, string label, bool defaultValue, string helpText = null)
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var layout = new VisualElement();
         layout.style.flexDirection = FlexDirection.Row;
@@ -549,14 +540,14 @@ public class Modal2
 
     public static string GetComboboxFieldValue(string name)
     {
-        return Contents(_valueOrigin).Q<ShunCombobox>(name)?.selectedValue ?? null;
+        return Contents(_readContext).Q<ShunCombobox>(name)?.selectedValue ?? null;
     }
 
     public static VisualElement AddComboboxField(string name, string label, string defaultValue, List<string> options, string helpText = null)
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var fieldlabel = new Label(label);
         fieldlabel.AddToClassList("shun-dialog__label");
@@ -584,7 +575,7 @@ public class Modal2
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var layout = new VisualElement();
         layout.style.flexDirection = FlexDirection.Row;
@@ -622,14 +613,14 @@ public class Modal2
 
     public static int GetSliderFieldValue(string name)
     {
-        return Mathf.RoundToInt(Contents(_valueOrigin).Q<ShunSlider>(name).value);
+        return Mathf.RoundToInt(Contents(_readContext).Q<ShunSlider>(name).value);
     }
 
     public static VisualElement AddSliderField(string name, string label, int defaultValue, string helpText = null)
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var fieldlabel = new Label(label);
         fieldlabel.AddToClassList("shun-dialog__label");
@@ -681,7 +672,7 @@ public class Modal2
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var tabs = new ShunTabs();
         tabs.name = name;
@@ -718,7 +709,7 @@ public class Modal2
         var area = new ShunScrollArea();
         area.name = name;
         area.style.height = 400;
-        Contents(_targetDialogName).Add(area);
+        Contents(_createContext).Add(area);
 
         var areaContent = new ShunScrollAreaContent();
         area.Add(areaContent);
@@ -742,7 +733,7 @@ public class Modal2
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
-        Contents(_targetDialogName).Add(wrapper);
+        Contents(_createContext).Add(wrapper);
 
         var layout = new VisualElement();
         layout.style.flexDirection = FlexDirection.Row;
@@ -795,7 +786,7 @@ public class Modal2
 
     public static void Confirm(string dialog, string message, Action confirmAction)
     {
-        Modal2.SetCurrentDialog(dialog);
+        Modal2.CreateContext(dialog);
         Modal2.AddLongMarkup(message);
         var footer = Modal2.AddDialogFooter();
 

@@ -274,9 +274,3 @@
     white-space: normal;
     width: 150px;
 }
-
-.digit-button {
-    flex-basis: 50px;
-    padding: 10px;
-    margin-bottom: 8px;
-}

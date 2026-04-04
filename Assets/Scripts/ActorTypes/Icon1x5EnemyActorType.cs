@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using IsoconUILibrary;
+using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -53,17 +54,43 @@ public class Icon1x5EnemyActorType : Icon1x5Base
         var shape = Modal2.AddInlineComboboxField("Shape", "Shape", "Square 1x1", ActorType.SquareShapeOptions().ToList<string>());
         Modal2.MoveToContainer(shape, typeContainer);
 
-        var foe = Modal2.AddInlineSelectField("FoeClass", "Class", "Heavy", StringUtility.CreateArray("Heavy", "Artillery", "Skirmisher", "Leader", "Legend").ToList<string>());
+        var foe = Modal2.AddInlineComboboxField("FoeClass", "Class", "Heavy", StringUtility.CreateArray("Heavy", "Artillery", "Skirmisher", "Leader", "Legend").ToList<string>());
         Modal2.MoveToContainer(foe, typeContainer);
 
         var elite = Modal2.AddSwitchField("Elite", "Elite", false);
         Modal2.MoveToContainer(elite, typeContainer);
 
-        var legend = Modal2.AddInlineIntField("LegendHP", "Legend HP Multiplier", 1);
+        var legend = Modal2.AddInlineIntField("LegendHP", "HP Multiplier", 1);
         Modal2.MoveToContainer(legend, typeContainer);
 
-        Modal2.AddDialogFooter();
-        Modal2.AddFooterConfirm("Create Actor", CreateClicked);
+        modalConditionLegend(legend);
+        modalConditionElite(elite);
+        foe.Q<ShunCombobox>().OnSelect += () =>
+        {
+            modalConditionLegend(legend);
+            modalConditionElite(elite);
+        };
+
+        var create = new ShunDialogClose();
+        create.name = "CreateActor";
+        create.text = "Create Actor";
+        create.SetVariant(ButtonVariant.Primary);
+        create.clicked += () => CreateClicked();
+        contents.Q(className: "shun-dialog__footer").Add(create);
+    }
+
+    private static void modalConditionElite(VisualElement e)
+    {
+        Modal2.ReadContext("ShunDialog1");
+        var foeValue = Modal2.GetComboboxFieldValue("FoeClass");
+        UI.ToggleDisplay(e, foeValue != "Legend");
+    }
+
+    private static void modalConditionLegend(VisualElement e)
+    {
+        Modal2.ReadContext("ShunDialog1");
+        var foeValue = Modal2.GetComboboxFieldValue("FoeClass");
+        UI.ToggleDisplay(e, foeValue == "Legend");
     }
 
     private static void AddModalEvaluateConditions()
@@ -79,7 +106,7 @@ public class Icon1x5EnemyActorType : Icon1x5Base
 
     private static void CreateClicked()
     {
-        Modal2.SetValueOrigin("ShunDialog1");
+        Modal2.ReadContext("ShunDialog1");
         string token = Modal2.GetComboboxFieldValue("Token");
         if (token == null)
         {
@@ -88,7 +115,7 @@ public class Icon1x5EnemyActorType : Icon1x5Base
         }
         string name = Modal2.GetTextFieldValue("Name");
         string shape = Modal2.GetComboboxFieldValue("Shape");
-        string foeClass = Modal2.GetSelectFieldValue("FoeClass");
+        string foeClass = Modal2.GetComboboxFieldValue("FoeClass");
         int hpMulti = Modal2.GetIntFieldValue("LegendHP");
         bool elite = Modal2.GetSwitchFieldValue("Elite");
         string color = "black";

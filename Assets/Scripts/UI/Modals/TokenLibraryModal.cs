@@ -90,7 +90,7 @@ public class TokenLibraryModal : MonoBehaviour
 
         ReadLibraryFile();
 
-        Modal2.SetCurrentDialog(dialogName);
+        Modal2.CreateContext(dialogName);
         var dialogContents = Modal2.Contents(dialogName);
         dialogContents.Clear();
 
