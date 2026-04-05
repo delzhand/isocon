@@ -10,7 +10,7 @@ public class ConfigModal
 {
     public static void Open()
     {
-        Modal2.CreateContext("ShunDialog1");
+        Modal2.CreateContext("PrimaryDialog");
         Modal2.AddDialogHeader("Settings");
 
         Dictionary<string, string> tabs = new();
@@ -79,7 +79,7 @@ public class ConfigModal
 
     private static void SaveConfig()
     {
-        Modal2.ReadContext("ShunDialog1");
+        Modal2.ReadContext("PrimaryDialog");
         Preferences.Current.DataPath = Modal2.GetTextFieldValue("DataPath");
 
         Preferences.Current.SkipTutorials = Modal2.GetSwitchFieldValue("SkipTutorials");

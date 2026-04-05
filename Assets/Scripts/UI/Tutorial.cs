@@ -42,7 +42,7 @@ public class Tutorial
 
         (string, string) tutorial = GetTutorial(id);
 
-        Modal2.CreateContext("ShunDialog1");
+        Modal2.CreateContext("PrimaryDialog");
         Modal2.AddDialogHeader(tutorial.Item1);
         Modal2.AddLongMarkup(tutorial.Item2);
         var footer = Modal2.AddDialogFooter("Close");

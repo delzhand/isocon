@@ -13,8 +13,8 @@ public class AddTerrainEffect
     {
         singleBlock = b;
 
-        var dialog = Modal2.CreateContext("ShunDialog1");
-        var contents = Modal2.Contents("ShunDialog1");
+        var dialog = Modal2.CreateContext("PrimaryDialog");
+        var contents = Modal2.Contents("PrimaryDialog");
         contents.Clear();
 
         Modal2.AddDialogHeader("Add Terrain Effect");
@@ -39,7 +39,7 @@ public class AddTerrainEffect
 
     private static void ConfirmAddEffect()
     {
-        Modal2.ReadContext("ShunDialog1");
+        Modal2.ReadContext("PrimaryDialog");
         string effect = Modal2.GetTextFieldValue("EffectName");
         string marker = Modal2.GetSelectFieldValue("VisualMarker");
         string color = Modal2.GetComboboxFieldValue("Color");

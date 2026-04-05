@@ -23,7 +23,7 @@ public class NumberPicker
         {
             NumberString += s;
         }
-        var context = Modal2.Contents("ShunDialog1");
+        var context = Modal2.Contents("PrimaryDialog");
         context.Q<ShunInput>("Value").value = NumberString;
     }
 
@@ -42,14 +42,14 @@ public class NumberPicker
 
     private static void UpdateValue()
     {
-        var context = Modal2.Contents("ShunDialog1");
+        var context = Modal2.Contents("PrimaryDialog");
         context.Q<ShunInput>("Value").value = NumberString;
     }
 
     public static void Open(bool allowNeg, Action numberCommand)
     {
-        Modal2.CreateContext("ShunDialog1");
-        var contents = Modal2.Contents("ShunDialog1");
+        Modal2.CreateContext("PrimaryDialog");
+        var contents = Modal2.Contents("PrimaryDialog");
 
         var digitWrapper = new VisualElement();
         digitWrapper.style.flexDirection = FlexDirection.Row;
@@ -155,7 +155,7 @@ public class NumberPicker
 
     public static int GetNumber()
     {
-        Modal2.ReadContext("ShunDialog1");
+        Modal2.ReadContext("PrimaryDialog");
         string value = Modal2.GetTextFieldValue("Value");
         int ivalue = int.Parse(value);
         return negative ? -ivalue : ivalue;

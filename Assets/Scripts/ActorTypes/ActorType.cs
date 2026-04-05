@@ -127,7 +127,7 @@ public abstract class ActorType : IActorType
     {
         ActorData data = Actor.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
-        Modal2.Confirm("ShunDialog1", $"Are you sure you want to delete {name}? This action cannot be undone.", () =>
+        Modal2.Confirm("PrimaryDialog", $"Are you sure you want to delete {name}? This action cannot be undone.", () =>
         {
             Actor.Deselect();
             Player.Self().CmdRequestDeleteActor(data.Id);
@@ -138,7 +138,7 @@ public abstract class ActorType : IActorType
     private static void AddTagModal()
     {
         SelectionMenu.Hide();
-        Modal2.CreateContext("ShunDialog1");
+        Modal2.CreateContext("PrimaryDialog");
         Modal2.AddInlineTextField("TagName", "Name", "");
         Modal2.AddInlineComboboxField("ColorField", "Color", "Gray", ColorUtility.CommonColors().ToList<string>());
         Modal2.AddSwitchField("HasNumberField", "Use Counter?", false);
@@ -157,7 +157,7 @@ public abstract class ActorType : IActorType
 
     private static void AddTagSubmit()
     {
-        Modal2.ReadContext("ShunDialog1");
+        Modal2.ReadContext("PrimaryDialog");
         string tagName = Modal2.GetTextFieldValue("TagName");
         int tagValue = Modal2.GetIntFieldValue("TagValue");
         string colorValue = Modal2.GetComboboxFieldValue("ColorField");
@@ -173,7 +173,7 @@ public abstract class ActorType : IActorType
     private void EditStatBarModal()
     {
         SelectionMenu.Hide();
-        Modal2.CreateContext("ShunDialog1");
+        Modal2.CreateContext("PrimaryDialog");
         Modal2.AddDialogHeader("Edit Stats");
 
         foreach (ActorBar bar in Bars)
@@ -191,7 +191,7 @@ public abstract class ActorType : IActorType
 
     private void EditStatBarSubmit()
     {
-        Modal2.ReadContext("ShunDialog1");
+        Modal2.ReadContext("PrimaryDialog");
         foreach (ActorBar bar in Bars)
         {
             bool keep = Modal2.GetSwitchFieldValue(bar.Name);
@@ -215,7 +215,7 @@ public abstract class ActorType : IActorType
     {
         SelectionMenu.Hide();
         ActorData data = Actor.GetSelected().Data;
-        Modal2.CreateContext("ShunDialog1");
+        Modal2.CreateContext("PrimaryDialog");
         Modal2.AddDialogHeader("Add Stat or Bar");
 
         Modal2.AddInlineTextField("StatName", "Stat Name", "");
@@ -248,7 +248,7 @@ public abstract class ActorType : IActorType
 
     private static void AddStatSubmit()
     {
-        Modal2.ReadContext("ShunDialog1");
+        Modal2.ReadContext("PrimaryDialog");
         string name = Modal2.GetTextFieldValue("StatName");
         int value = Modal2.GetIntFieldValue("StatValue");
         string color = Modal2.GetComboboxFieldValue("Color");
@@ -276,7 +276,7 @@ public abstract class ActorType : IActorType
     {
         ActorData data = Actor.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
-        Modal2.Confirm("ShunDialog1", $"Are you sure you want to clone {name}?", () =>
+        Modal2.Confirm("PrimaryDialog", $"Are you sure you want to clone {name}?", () =>
         {
             data.Placed = false; // set this to false only long enough to create the clone, easier than cloning the object
             string json = JsonUtility.ToJson(data.Persist());
@@ -305,14 +305,14 @@ public abstract class ActorType : IActorType
     {
         SelectionMenu.Hide();
         ActorData data = Actor.GetSelected().Data;
-        Modal2.CreateContext("ShunDialog1");
+        Modal2.CreateContext("PrimaryDialog");
         Modal2.AddDialogHeader("Change Size/Shape");
         Modal2.AddInlineComboboxField("Reshape", "New Shape", data.Shape, ShapeOptions().ToList<string>());
         Modal2.AddAlert("Resizing", "Changing between a size that occupies a tile center and a tile intersection requires manual position adjustment", AlertVariant.Attention);
         Modal2.AddDialogFooter();
         Modal2.AddFooterConfirm("Update", () =>
         {
-            Modal2.ReadContext("ShunDialog1");
+            Modal2.ReadContext("PrimaryDialog");
             string newShape = Modal2.GetComboboxFieldValue("Reshape");
             Player.Self().CmdRequestActorCommand(data.Id, $"Reshape|{newShape}");
         });
@@ -323,13 +323,13 @@ public abstract class ActorType : IActorType
     {
         SelectionMenu.Hide();
         ActorData data = Actor.GetSelected().Data;
-        Modal2.CreateContext("ShunDialog1");
+        Modal2.CreateContext("PrimaryDialog");
         Modal2.AddDialogHeader("Change Color");
         Modal2.AddInlineComboboxField("Recolor", "New Color", "Black", ColorUtility.CommonColors().ToList<string>());
         Modal2.AddDialogFooter();
         Modal2.AddFooterConfirm("Update", () =>
         {
-            Modal2.ReadContext("ShunDialog1");
+            Modal2.ReadContext("PrimaryDialog");
             string newColor = Modal2.GetComboboxFieldValue("Recolor");
             Player.Self().CmdRequestActorCommand(data.Id, $"Recolor|{newColor}");
         });
@@ -340,13 +340,13 @@ public abstract class ActorType : IActorType
     {
         SelectionMenu.Hide();
         ActorData data = Actor.GetSelected().Data;
-        Modal2.CreateContext("ShunDialog1");
+        Modal2.CreateContext("PrimaryDialog");
         Modal2.AddDialogHeader("Edit Name");
         Modal2.AddInlineTextField("Name", "New Name", data.Name);
         Modal2.AddDialogFooter();
         Modal2.AddFooterConfirm("Confirm", () =>
         {
-            Modal2.ReadContext("ShunDialog1");
+            Modal2.ReadContext("PrimaryDialog");
             string newName = Modal2.GetTextFieldValue("Name");
             Player.Self().CmdRequestActorCommand(data.Id, $"Rename|{newName}");
         });

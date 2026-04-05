@@ -73,11 +73,11 @@
                             <ui:VisualElement style="flex-grow: 1; width: 24px; height: 24px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: url(&quot;project://database/Assets/Mirror/Examples/CharacterSelection/Textures/IconResetColour.png?fileID=2800000&amp;guid=69c30291565a1407abc7ca25da395ea9&amp;type=3#IconResetColour&quot;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;"/>
                             <ui:Label text="Cancel" name="Label" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;"/>
                         </ui:VisualElement>
-                        <ui:VisualElement name="SaveMap" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px;">
+                        <ui:VisualElement name="SaveMap" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px; display: flex;">
                             <ui:VisualElement style="flex-grow: 1; width: 24px; height: 24px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: url(&quot;project://database/Assets/Plugins/SimpleFileBrowser/Sprites/ForwardArrow.psd?fileID=2800000&amp;guid=130f660889a70c947bff4c8ba8a2c73e&amp;type=3#ForwardArrow&quot;); -unity-background-scale-mode: scale-to-fit; margin-left: 0; rotate: 90deg;"/>
                             <ui:Label text="Save Map" name="Label" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;"/>
                         </ui:VisualElement>
-                        <ui:VisualElement name="LoadMap" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px;">
+                        <ui:VisualElement name="LoadMap" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px; display: flex;">
                             <ui:VisualElement style="flex-grow: 1; width: 24px; height: 24px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: url(&quot;project://database/Assets/Plugins/SimpleFileBrowser/Sprites/ForwardArrow.psd?fileID=2800000&amp;guid=130f660889a70c947bff4c8ba8a2c73e&amp;type=3#ForwardArrow&quot;); -unity-background-scale-mode: scale-to-fit; margin-left: 0; rotate: -90deg;"/>
                             <ui:Label text="Load Map" name="Label" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;"/>
                         </ui:VisualElement>
@@ -94,9 +94,19 @@
                         <ui:VisualElement style="flex-grow: 1; width: 20px; height: 20px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&quot;Textures/die_icon&quot;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;"/>
                         <ui:Label text="&lt;u&gt;D&lt;/u&gt;ice Roller" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;"/>
                     </ui:VisualElement>
-                    <ui:VisualElement name="Session" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px;">
-                        <ui:VisualElement style="flex-grow: 1; width: 20px; height: 20px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&quot;Textures/folder&quot;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;"/>
-                        <ui:Label text="&lt;u&gt;S&lt;/u&gt;ession" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;"/>
+                    <ui:VisualElement name="SessionWrapper" style="flex-direction: row;">
+                        <ui:VisualElement name="Session" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px;">
+                            <ui:VisualElement style="flex-grow: 1; width: 20px; height: 20px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&quot;Textures/folder&quot;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;"/>
+                            <ui:Label text="&lt;u&gt;S&lt;/u&gt;ession" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="SaveSession" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px; display: none;">
+                            <ui:VisualElement style="flex-grow: 1; width: 24px; height: 24px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: url(&quot;project://database/Assets/Plugins/SimpleFileBrowser/Sprites/ForwardArrow.psd?fileID=2800000&amp;guid=130f660889a70c947bff4c8ba8a2c73e&amp;type=3#ForwardArrow&quot;); -unity-background-scale-mode: scale-to-fit; margin-left: 0; rotate: 90deg;"/>
+                            <ui:Label text="Save Session" name="Label" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="LoadSession" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px; display: none;">
+                            <ui:VisualElement style="flex-grow: 1; width: 24px; height: 24px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: url(&quot;project://database/Assets/Plugins/SimpleFileBrowser/Sprites/ForwardArrow.psd?fileID=2800000&amp;guid=130f660889a70c947bff4c8ba8a2c73e&amp;type=3#ForwardArrow&quot;); -unity-background-scale-mode: scale-to-fit; margin-left: 0; rotate: -90deg;"/>
+                            <ui:Label text="Load Session" name="Label" class="panel-text" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; translate: 0 -1px;"/>
+                        </ui:VisualElement>
                     </ui:VisualElement>
                     <ui:VisualElement name="Config" class="item" style="flex-grow: 0; flex-direction: row; margin-left: 10px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-right: 8px; padding-left: 4px; align-items: center; height: 30px;">
                         <ui:VisualElement style="flex-grow: 1; width: 20px; height: 20px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; background-image: resource(&quot;Textures/config&quot;); -unity-background-scale-mode: scale-to-fit; margin-left: 0;"/>
@@ -441,8 +451,8 @@
     </ui:VisualElement>
     <ui:VisualElement name="Backdrop" style="flex-grow: 1; position: absolute; left: auto; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.86); display: none;"/>
     <ui:Instance template="ShunContextMenu" name="ContextMenu" style="display: none;"/>
-    <ui:Instance template="ShunDialog" name="ShunDialog1" style="display: none;"/>
-    <ui:Instance template="ShunDialog" name="ShunDialog2" style="display: none;"/>
+    <ui:Instance template="ShunDialog" name="PrimaryDialog" style="display: none;"/>
+    <ui:Instance template="ShunDialog" name="SecondaryDialog" style="display: none;"/>
     <ui:VisualElement name="GeneralModal" class="modal panel-text" style="position: absolute; left: 50%; top: 50%; -unity-slice-left: 28; -unity-slice-top: 46; -unity-slice-right: 34; -unity-slice-bottom: 30; translate: -50% -50%; display: none; max-width: 600px; -unity-slice-scale: 0.5px; background-color: rgb(71, 65, 63); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px;">
         <ui:VisualElement name="Top" style="flex-grow: 1; background-color: rgb(74, 113, 178); border-top-left-radius: 4px; border-top-right-radius: 4px; padding-top: 4px; padding-right: 24px; padding-bottom: 4px; padding-left: 8px;">
             <ui:Label tabindex="-1" text="Load Map" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="-unity-text-align: upper-center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;"/>
@@ -453,61 +463,8 @@
             <ui:VisualElement name="Contents" style="flex-grow: 1; flex-direction: column-reverse;"/>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="NumberPickerModal" class="modal panel-text" style="position: absolute; left: 50%; top: 50%; -unity-slice-left: 28; -unity-slice-top: 46; -unity-slice-right: 34; -unity-slice-bottom: 30; translate: -50% -50%; display: none; max-width: 600px; -unity-slice-scale: 0.5px; background-color: rgb(71, 65, 63); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px;">
-        <ui:VisualElement name="Top" style="flex-grow: 1; background-color: rgb(74, 113, 178); border-top-left-radius: 4px; border-top-right-radius: 4px; padding-top: 4px; padding-right: 24px; padding-bottom: 4px; padding-left: 8px;">
-            <ui:Label tabindex="-1" text="Number" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="-unity-text-align: upper-center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;"/>
-            <ui:Button text="×" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Exit" class="roundbutton" style="margin-left: 0; align-self: center; position: absolute; right: 4px; top: 4px; margin-top: 0; margin-right: 0; margin-bottom: 0; color: rgb(255, 255, 255); font-size: 20px; -unity-text-align: middle-center; background-color: rgba(255, 255, 255, 0);"/>
-        </ui:VisualElement>
-        <ui:VisualElement name="Wrapper" style="flex-grow: 1; min-width: 0; min-height: 0; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; flex-direction: column-reverse;">
-            <ui:VisualElement name="Contents" style="width: 200px;">
-                <ui:VisualElement style="flex-grow: 1; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; margin-bottom: 0;">
-                    <ui:Button display-tooltip-when-elided="true" name="Digit7" class="digit-button" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; width: 135px; flex-grow: 0;">
-                        <ui:Label tabindex="-1" text="7" display-tooltip-when-elided="true" style="font-size: 24px;"/>
-                    </ui:Button>
-                    <ui:Button display-tooltip-when-elided="true" name="Digit8" class="digit-button" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; width: 135px; flex-grow: 0;">
-                        <ui:Label tabindex="-1" text="8" display-tooltip-when-elided="true" style="font-size: 24px;"/>
-                    </ui:Button>
-                    <ui:Button display-tooltip-when-elided="true" name="Digit9" class="digit-button" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; width: 135px; flex-grow: 0;">
-                        <ui:Label tabindex="-1" text="9" display-tooltip-when-elided="true" style="font-size: 24px;"/>
-                    </ui:Button>
-                    <ui:Button display-tooltip-when-elided="true" name="Digit4" class="digit-button" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; width: 135px; flex-grow: 0;">
-                        <ui:Label tabindex="-1" text="4" display-tooltip-when-elided="true" style="font-size: 24px;"/>
-                    </ui:Button>
-                    <ui:Button display-tooltip-when-elided="true" name="Digit5" class="digit-button" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; width: 135px; flex-grow: 0;">
-                        <ui:Label tabindex="-1" text="5" display-tooltip-when-elided="true" style="font-size: 24px;"/>
-                    </ui:Button>
-                    <ui:Button display-tooltip-when-elided="true" name="Digit6" class="digit-button" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; width: 135px; flex-grow: 0;">
-                        <ui:Label tabindex="-1" text="6" display-tooltip-when-elided="true" style="font-size: 24px;"/>
-                    </ui:Button>
-                    <ui:Button display-tooltip-when-elided="true" name="Digit1" class="digit-button" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; width: 135px; flex-grow: 0;">
-                        <ui:Label tabindex="-1" text="1" display-tooltip-when-elided="true" style="font-size: 24px;"/>
-                    </ui:Button>
-                    <ui:Button display-tooltip-when-elided="true" name="Digit2" class="digit-button" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; width: 135px;">
-                        <ui:Label tabindex="-1" text="2" display-tooltip-when-elided="true" style="font-size: 24px;"/>
-                    </ui:Button>
-                    <ui:Button display-tooltip-when-elided="true" name="Digit3" class="digit-button" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; width: 135px; flex-grow: 0;">
-                        <ui:Label tabindex="-1" text="3" display-tooltip-when-elided="true" style="font-size: 24px;"/>
-                    </ui:Button>
-                    <ui:Button display-tooltip-when-elided="true" name="Digit0" class="digit-button" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; width: 135px; flex-grow: 0;">
-                        <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" style="font-size: 24px;"/>
-                    </ui:Button>
-                    <ui:Button display-tooltip-when-elided="true" name="DigitAdd" class="digit-button" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; width: 135px; flex-grow: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; background-color: rgb(74, 113, 178); border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255);">
-                        <ui:Label tabindex="-1" text="ADD" display-tooltip-when-elided="true" style="font-size: 12px; padding-top: 23px; padding-right: 0; padding-left: 0; margin-right: 2px;"/>
-                    </ui:Button>
-                    <ui:Button display-tooltip-when-elided="true" name="DigitSub" class="digit-button" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; width: 135px; flex-grow: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; background-color: rgb(74, 113, 178); border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255);">
-                        <ui:Label tabindex="-1" text="SUB" display-tooltip-when-elided="true" style="font-size: 12px; padding-top: 23px; padding-right: 0; padding-left: 0; margin-right: 2px;"/>
-                    </ui:Button>
-                </ui:VisualElement>
-                <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
-                    <ui:Button display-tooltip-when-elided="true" name="DigitBack" class="digit-button" style="flex-direction: column; align-items: center; display: flex; margin-right: 8px; margin-left: 8px; width: 135px; flex-grow: 0;">
-                        <ui:Label tabindex="-1" text="◀" display-tooltip-when-elided="true" style="font-size: 24px;"/>
-                    </ui:Button>
-                    <ui:TextField label="" placeholder-text="0" name="ValueField" style="-unity-text-align: upper-left; font-size: 24px; width: 116px; height: 64px; margin-left: 8px; margin-right: 8px;"/>
-                </ui:VisualElement>
-            </ui:VisualElement>
-        </ui:VisualElement>
-    </ui:VisualElement>
     <ui:VisualElement name="Fader" picking-mode="Ignore" style="flex-grow: 1; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); background-color: rgb(0, 0, 0); opacity: 0; display: none;"/>
-    <ui:VisualElement name="Toasts" style="flex-grow: 1; position: absolute; left: 0; top: auto; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); color: rgb(255, 255, 255); -unity-text-align: middle-right; padding-left: 0; padding-right: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; display: flex; right: auto; bottom: 0; align-items: flex-start; padding-top: 0; padding-bottom: 0; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;"/>    <ui:VisualElement name="ShunOverlayContainer" picking-mode="Ignore" class="shun-overlay-container" style="flex-grow: 1;"/>
+    <ui:VisualElement name="Toasts" style="flex-grow: 1; position: absolute; left: 0; top: auto; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); color: rgb(255, 255, 255); -unity-text-align: middle-right; padding-left: 0; padding-right: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; display: flex; right: auto; bottom: 0; align-items: flex-start; padding-top: 0; padding-bottom: 0; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;"/>
+    <ui:VisualElement name="ShunOverlayContainer" picking-mode="Ignore" class="shun-overlay-container" style="flex-grow: 1;"/>
     <ShunUI.ShunSonnerManager error-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/circle-x.png?fileID=2800000&amp;guid=877da2cd473c642ca8188a56bf6713ea&amp;type=3#circle-x" warning-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/circle-alert.png?fileID=2800000&amp;guid=b4137d982689648bba137be4c1ebb150&amp;type=3#circle-alert" info-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/circle-question-mark.png?fileID=2800000&amp;guid=2485fea10d562461388bc9687619ebf6&amp;type=3#circle-question-mark" success-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/circle-check.png?fileID=2800000&amp;guid=1cefb94f1d40b4b41bc7df5d2e985011&amp;type=3#circle-check" close-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/x.png?fileID=2800000&amp;guid=2f82f4cc998474f1297bf2d63b86194d&amp;type=3#x"/>
 </ui:UXML>

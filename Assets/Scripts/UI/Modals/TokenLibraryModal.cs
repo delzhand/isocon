@@ -74,14 +74,14 @@ public class TokenLibraryModal : MonoBehaviour
     public static void OpenDefault()
     {
         AllowSelect = false;
-        Open("ShunDialog1");
+        Open("PrimaryDialog");
     }
 
     public static void OpenSelect(LibraryCallback onSelect)
     {
         AllowSelect = true;
         OnSelect = onSelect;
-        Open("ShunDialog2");
+        Open("SecondaryDialog");
     }
 
     private static void Open(string dialogName)
@@ -184,7 +184,7 @@ public class TokenLibraryModal : MonoBehaviour
                 {
                     SelectedHash = token.Hash;
                     OnSelect.Invoke();
-                    Modal2.Dialog("ShunDialog2").Close();
+                    Modal2.Dialog("SecondaryDialog").Close();
                 }
             });
         }
@@ -348,10 +348,6 @@ public class TokenLibraryModal : MonoBehaviour
     public static string GetHashedImageDirectory()
     {
         string directory = $"{Preferences.Current.DataPath}/hashed-tokens";
-        if (!Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
         return directory;
     }
 

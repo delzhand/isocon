@@ -41,7 +41,7 @@ public class ReleaseNotesModal
 
     public static void Open(string version)
     {
-        Modal2.CreateContext("ShunDialog1");
+        Modal2.CreateContext("PrimaryDialog");
         Modal2.AddDialogHeader($"Release Notes for IsoCON v{version}");
         var scroll = Modal2.AddScrollArea("Scroll");
         var notesField = Modal2.AddLongMarkup(notes);

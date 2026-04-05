@@ -458,10 +458,7 @@ public class MapEdit
         string path = Preferences.Current.DataPath;
         List<string> mapFiles = new List<string>();
 
-        if (!Directory.Exists(path + "/maps"))
-        {
-            Directory.CreateDirectory(path + "/maps");
-        }
+
 
         FileUtility.GetFilesRecursively(path, "/maps", mapFiles);
 

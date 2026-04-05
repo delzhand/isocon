@@ -53,10 +53,6 @@ public class MaleghastActorType : ActorType
         TextAsset baseline = Resources.Load<TextAsset>("Text/maleghast");
         string path = Preferences.Current.DataPath;
         string filename = $"{path}/maleghast_data/base.json";
-        if (!Directory.Exists(path + "/maleghast_data"))
-        {
-            Directory.CreateDirectory(path + "/maleghast_data");
-        }
         System.IO.File.WriteAllText(filename, baseline.text);
 
         string maleghastData = Preferences.Current.MaleghastFile;

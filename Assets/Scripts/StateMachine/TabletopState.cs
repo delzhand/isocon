@@ -149,7 +149,7 @@ public class TabletopState : BaseState
     private void ConfirmReturnToLauncher(ClickEvent evt)
     {
         SessionModal.SerializeSession("autosave.json");
-        Modal2.CreateContext("ShunDialog1");
+        Modal2.CreateContext("PrimaryDialog");
         string message = "Exit the session and return to the IsoCON launcher?";
         if (NetworkClient.activeHost && _mode == ConnectMode.Host)
         {

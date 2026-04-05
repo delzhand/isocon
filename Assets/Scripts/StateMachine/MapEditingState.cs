@@ -165,7 +165,7 @@
 //     private void SaveMap(ClickEvent evt)
 //     {
 //         SM.ChangeSubState(new ModalState());
-//         Modal2.SetCurrentDialog("ShunDialog1");
+//         Modal2.SetCurrentDialog("PrimaryDialog");
 //         Modal2.SetCloseAction(BackToEditing);
 //         Modal2.AddDialogHeader("Save Map");
 //         Modal2.AddInlineTextField("MapName", "Map Name", MapMeta.Title);
@@ -187,7 +187,7 @@
 //         {
 //             SM.ChangeSubState(new ModalState());
 
-//             Modal2.SetCurrentDialog("ShunDialog1");
+//             Modal2.SetCurrentDialog("PrimaryDialog");
 //             Modal2.SetCloseAction(BackToEditing);
 //             Modal2.AddDialogHeader("Discard Changes?");
 //             Modal2.AddLongMarkup("You have unsaved changes. These change will be lost if a map is loaded.");

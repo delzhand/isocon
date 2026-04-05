@@ -4,120 +4,32 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Mirror;
+using SimpleFileBrowser;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class SessionModal
 {
-    public static void OpenModal(ClickEvent evt)
+    public static void Save()
     {
-        var dialog = Modal2.CreateContext("ShunDialog1");
-        var content = Modal2.Contents("ShunDialog1");
-        content.Clear();
-
-        Modal2.AddDialogHeader("Sessions");
-
-        VisualElement sessionTabs = null;
-        if (NetworkClient.activeHost)
-        {
-            Dictionary<string, string> tabs = new();
-            tabs.Add("Load", "Load");
-            tabs.Add("Save", "Save");
-            sessionTabs = Modal2.AddTabs("SessionTabs", tabs);
-
-            var loadFile = Modal2.AddInlineFileField("LoadFile", "Session File", "", FileBrowserType.Sessions, false);
-            Modal2.MoveToTab(loadFile, sessionTabs, "Load");
-            // Modal2.MoveToTab(loadFooter, sessionTabs, "Load");
-        }
-
-        var saveFile = Modal2.AddInlineFileField("LoadFile", "Session File", "", FileBrowserType.Sessions, true);
-        if (NetworkClient.activeHost)
-        {
-            Modal2.MoveToTab(saveFile, sessionTabs, "Save");
-        }
-
-        var saveFooter = Modal2.AddDialogFooter("Cancel", () =>
-        {
-            dialog.Close();
-        });
-
-        dialog.Open();
-
-        // Modal.Reset("Session");
-        // Modal.AddCloseCallback(BackToNeutral);
-
-        // if (NetworkClient.activeHost)
-        // {
-        //     Modal.AddColumns("Tabs", 2);
-        //     Modal.AddContentButton("LoadSettings", "Load", (evt) =>
-        //     {
-        //         AddLoadFields();
-        //     });
-        //     Modal.MoveToColumn("Tabs_0", "LoadSettings");
-        //     Modal.AddContentButton("SaveSettings", "Save", (evt) =>
-        //     {
-        //         AddSaveFields();
-        //     });
-        //     Modal.MoveToColumn("Tabs_1", "SaveSettings");
-        //     Modal.AddColumns("Fields", 1);
-        //     UI.Modal.Q("Tabs").style.justifyContent = Justify.Center;
-        //     AddLoadFields();
-        // }
-        // else
-        // {
-        //     AddSaveFields();
-        // }
+        FileBrowserHelper.Open(SaveSession, "", FileBrowserType.Sessions, true);
     }
 
-    // private static void ClearFields()
-    // {
-    //     VisualElement v = UI.Modal.Q("Contents").Q("Fields_0");
-    //     if (v != null)
-    //     {
-    //         v.Clear();
-    //         Modal.ResetPreferredButtons();
-    //     }
-    //     Modal.AddButton("Cancel", CloseModal);
-    // }
-
-    // private static void AddLoadFields()
-    // {
-    //     ClearFields();
-    //     Modal.AddFileField("SessionFile", "Session File", "", "sessions", null);
-    //     Modal.AddContentButton("LoadSession", "Load Session", LoadSession);
-    //     Modal.MoveToColumn("Fields_0", "SessionFile");
-    //     Modal.MoveToColumn("Fields_0", "LoadSession");
-    // }
-
-    // private static void AddSaveFields()
-    // {
-    //     ClearFields();
-    //     Modal.AddTextField("SaveFileName", "Filename", "latest.json");
-    //     Modal.AddContentButton("SaveSession", "Save Session", SaveSession);
-    //     if (NetworkClient.activeHost)
-    //     {
-    //         Modal.MoveToColumn("Fields_0", "SaveFileName");
-    //         Modal.MoveToColumn("Fields_0", "SaveSession");
-    //     }
-    // }
-
-    private static void LoadSession(ClickEvent evt)
+    public static void Load()
     {
-        string filename = UI.Modal.Q("SessionFile").Q<TextField>("File").value;
-        DeserializeSession(filename);
-        Modal.Close();
+        FileBrowserHelper.Open(LoadSession, "", FileBrowserType.Sessions, false);
     }
 
-    private static void SaveSession(ClickEvent evt)
+    public static void SaveSession()
     {
-        string filename = UI.Modal.Q<TextField>("SaveFileName").value;
+        string filename = FileBrowser.Result.First<string>();
         SerializeSession(filename);
-        Modal.Close();
     }
 
-    private static void CloseModal(ClickEvent evt)
+    private static void LoadSession()
     {
-        Modal.Close();
+        string filename = FileBrowser.Result.First<string>();
+        DeserializeSession(filename);
     }
 
     public static void SerializeSession(string filename)
@@ -140,13 +52,7 @@ public class SessionModal
 
     public static void WriteSessionToFile(string session, string filename)
     {
-        string path = Preferences.Current.DataPath;
-        if (!Directory.Exists(path + "/sessions"))
-        {
-            Directory.CreateDirectory(path + "/sessions");
-        }
-
-        File.WriteAllText($"{path}/sessions/{filename}", session);
+        File.WriteAllText(filename, session);
         Toast.AddSuccess($"Session saved to {filename}.");
     }
 

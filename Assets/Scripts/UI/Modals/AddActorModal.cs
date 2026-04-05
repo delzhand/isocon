@@ -12,8 +12,8 @@ public class AddActorModal
 
         Player.Self().SetOp("Adding Actor");
 
-        Modal2.CreateContext("ShunDialog1");
-        var contents = Modal2.Contents("ShunDialog1");
+        Modal2.CreateContext("PrimaryDialog");
+        var contents = Modal2.Contents("PrimaryDialog");
         contents.Clear();
 
         Modal2.AddDialogHeader("Add Actor");
@@ -51,7 +51,7 @@ public class AddActorModal
     public static void FinalizeToken(string json)
     {
         Player.Self().CmdCreateActor(json);
-        Modal2.Dialog("ShunDialog1").Close();
+        Modal2.Dialog("PrimaryDialog").Close();
         UI.ToggleActiveClass("BottomBar", true);
     }
 

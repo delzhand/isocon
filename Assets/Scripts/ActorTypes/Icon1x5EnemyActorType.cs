@@ -43,7 +43,7 @@ public class Icon1x5EnemyActorType : Icon1x5Base
 
     public static void AddActorModal()
     {
-        var contents = Modal2.Contents("ShunDialog1");
+        var contents = Modal2.Contents("PrimaryDialog");
         var typeContainer = contents.Q("ActorTypeContainer");
         typeContainer.Clear();
         contents.Q("CreateActor")?.RemoveFromHierarchy();
@@ -81,14 +81,14 @@ public class Icon1x5EnemyActorType : Icon1x5Base
 
     private static void modalConditionElite(VisualElement e)
     {
-        Modal2.ReadContext("ShunDialog1");
+        Modal2.ReadContext("PrimaryDialog");
         var foeValue = Modal2.GetComboboxFieldValue("FoeClass");
         UI.ToggleDisplay(e, foeValue != "Legend");
     }
 
     private static void modalConditionLegend(VisualElement e)
     {
-        Modal2.ReadContext("ShunDialog1");
+        Modal2.ReadContext("PrimaryDialog");
         var foeValue = Modal2.GetComboboxFieldValue("FoeClass");
         UI.ToggleDisplay(e, foeValue == "Legend");
     }
@@ -106,7 +106,7 @@ public class Icon1x5EnemyActorType : Icon1x5Base
 
     private static void CreateClicked()
     {
-        Modal2.ReadContext("ShunDialog1");
+        Modal2.ReadContext("PrimaryDialog");
         string token = Modal2.GetComboboxFieldValue("Token");
         if (token == null)
         {

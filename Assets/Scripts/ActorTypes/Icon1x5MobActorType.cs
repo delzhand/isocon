@@ -44,7 +44,7 @@ public class Icon1x5MobActorType : Icon1x5Base
     #region Creation
     public static void AddActorModal()
     {
-        var contents = Modal2.Contents("ShunDialog1");
+        var contents = Modal2.Contents("PrimaryDialog");
         var typeContainer = contents.Q("ActorTypeContainer");
         typeContainer.Clear();
         contents.Q("CreateActor")?.RemoveFromHierarchy();
@@ -62,7 +62,7 @@ public class Icon1x5MobActorType : Icon1x5Base
 
     private static void CreateClicked()
     {
-        Modal2.ReadContext("ShunDialog1");
+        Modal2.ReadContext("PrimaryDialog");
         string token = Modal2.GetComboboxFieldValue("Token");
         if (token == null)
         {

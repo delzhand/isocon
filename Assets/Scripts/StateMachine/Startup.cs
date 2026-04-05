@@ -19,10 +19,9 @@ public class Startup
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     public static void RunTasks()
     {
-        Preferences.Init();
         SetVersionText();
         UI.SetScale();
-        Modal.Setup();
+        // Modal.Setup();
         BlockRendering.Setup();
         DiceRoller.Setup();
         MapEdit.Setup();
@@ -31,7 +30,7 @@ public class Startup
         Tutorial.Setup();
         Viewport.Setup();
 
-        UI.SetBlocking(UI.System, StringUtility.CreateArray(@"SelectionMenu", "TopBar", "BottomBar", "ToolsPanel", "ToolOptions", "LeftTokenPanel", "RightTokenPanel", "Backdrop", "NumberPickerModal", "TopRight"));
+        UI.SetBlocking(UI.System, StringUtility.CreateArray(@"SelectionMenu", "TopBar", "BottomBar", "ToolsPanel", "ToolOptions", "LeftTokenPanel", "RightTokenPanel", "Backdrop", "TopRight"));
         Application.targetFrameRate = Preferences.Current.TargetFramerate;
 
         ReleaseNotes();
@@ -68,6 +67,18 @@ public class Startup
         {
             UI.ToggleActiveClass(UI.System.Q("BottomBar"));
         });
+        UI.System.Q("SessionWrapper").RegisterCallback<MouseEnterEvent>((evt) =>
+        {
+            UI.ToggleDisplay(UI.TopBar.Q("SaveSession"), true);
+            UI.ToggleDisplay(UI.TopBar.Q("LoadSession"), true);
+        });
+        UI.System.Q("SessionWrapper").RegisterCallback<MouseLeaveEvent>((evt) =>
+        {
+            UI.ToggleDisplay(UI.TopBar.Q("SaveSession"), false);
+            UI.ToggleDisplay(UI.TopBar.Q("LoadSession"), false);
+        });
+        UI.TopBar.Q("SaveSession").RegisterCallback<ClickEvent>((evt) => SessionModal.Save());
+        UI.TopBar.Q("LoadSession").RegisterCallback<ClickEvent>((evt) => SessionModal.Load());
     }
 
     private static async void SetVersionText()

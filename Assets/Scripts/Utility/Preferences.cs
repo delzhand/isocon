@@ -35,6 +35,7 @@ public class Preferences
         get => _current;
     }
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public static void Init()
     {
         _current = new()
@@ -86,6 +87,21 @@ public class Preferences
             _current.BlockBorderOpacity = loaded.BlockBorderOpacity > 0 ? loaded.BlockBorderOpacity : _current.BlockBorderOpacity;
             _current.ShowIndicators = loaded.ShowIndicators;
             _current.PanWithRight = loaded.PanWithRight;
+        }
+
+        DirectorySetup();
+    }
+
+    private static void DirectorySetup()
+    {
+        string[] directories = { "maleghast_data", "hashed_tokens", "maps", "tokens", "logs", "sessions" };
+        for (int i = 0; i < directories.Length; i++)
+        {
+            string path = $"{_current.DataPath}/{directories[i]}";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
         }
     }
 

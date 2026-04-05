@@ -10,14 +10,14 @@ public class SystemTagModal
         Player.Self().SetOp("Adding Table Tag");
         SelectionMenu.Hide();
 
-        Modal2.CreateContext("ShunDialog1");
-        var contents = Modal2.Contents("ShunDialog1");
+        Modal2.CreateContext("PrimaryDialog");
+        var contents = Modal2.Contents("PrimaryDialog");
         Modal2.AddDialogHeader("Add System Tag");
 
         var tagType = Modal2.AddInlineSelectField("Type", "Type", "Simple", StringUtility.CreateArray("Simple", "Number", "Clock").ToList<string>());
         tagType.Q<ShunSelect>().OnSelect += () =>
         {
-            Modal2.ReadContext("ShunDialog1");
+            Modal2.ReadContext("PrimaryDialog");
             var container = contents.Q<ShunContainer>("TagTypeContainer");
             container.Clear();
             string type = Modal2.GetSelectFieldValue("Type");
@@ -61,7 +61,7 @@ public class SystemTagModal
 
     private static void AddSystemTagSubmit()
     {
-        Modal2.ReadContext("ShunDialog1");
+        Modal2.ReadContext("PrimaryDialog");
         string tagName = Modal2.GetTextFieldValue("TagName");
         int tagValue = Modal2.GetIntFieldValue("InitialValue");
         int tagMaxValue = Modal2.GetIntFieldValue("MaxValue");
@@ -74,6 +74,6 @@ public class SystemTagModal
         tag.MaxValue = tagMaxValue;
         tag.Color = ColorUtility.GetCommonColor(colorValue);
         Player.Self().CmdRequestGameSystemCommand($"AddTag|{JsonUtility.ToJson(tag)}");
-        Modal2.Dialog("ShunDialog1").Close();
+        Modal2.Dialog("PrimaryDialog").Close();
     }
 }
