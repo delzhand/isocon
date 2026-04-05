@@ -19,6 +19,7 @@ public class Modal2
     public static ShunDialog CreateContext(string name)
     {
         _createContext = name;
+        // HudText.SetItem("modal", $"Create-{_createContext} | Read-{_readContext}", 11, HudTextColor.Green);
         _sdc[name] = UI.System.Q(name).Q<ShunDialogContent>();
         Contents(name).Clear();
         return CurrentDialog;
@@ -27,6 +28,7 @@ public class Modal2
     public static void ReadContext(string name)
     {
         _readContext = name;
+        // HudText.SetItem("modal", $"Create-{_createContext} | Read-{_readContext}", 11, HudTextColor.Green);
     }
 
     public static ShunDialog CurrentDialog
@@ -56,10 +58,14 @@ public class Modal2
         CurrentDialog.Close();
     }
 
+    public static void Close(string dialog)
+    {
+        UI.System.Q(dialog).Q<ShunDialog>()?.Close();
+    }
+
     public static void SetCloseAction(Action closeAction)
     {
-        var dialog = UI.System.Q<ShunDialog>();
-        dialog.CloseAction = closeAction;
+        CurrentDialog.CloseAction = closeAction;
     }
 
     public static void AddCloseAction(Action closeAction)

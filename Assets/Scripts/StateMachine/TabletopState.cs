@@ -30,11 +30,16 @@ public class TabletopState : BaseState
         Tutorial.Init("tabletop");
     }
 
+    public override void OnLoseFocus()
+    {
+        base.OnLoseFocus();
+        UnbindCallbacks();
+    }
+
     public override void OnExit()
     {
         base.OnExit();
         DisableInterface();
-        UnbindCallbacks();
     }
 
     public override void UpdateState()
@@ -228,11 +233,11 @@ public class TabletopState : BaseState
             return;
         }
 
-        // if (Input.GetKeyUp(KeyCode.M))
-        // {
-        //     MapEditingState.Start();
-        //     return;
-        // }
+        if (Input.GetKeyUp(KeyCode.M))
+        {
+            StateManager.PushState(new MapEditingState());
+            return;
+        }
 
         // if (Input.GetKeyUp(KeyCode.T))
         // {

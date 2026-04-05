@@ -27,10 +27,16 @@ public class LauncherState : BaseState
         // Session.LauncherMap();
     }
 
-    public override void OnExit()
+    public override void OnLoseFocus()
     {
+        base.OnLoseFocus();
         DisableInterface();
         UnbindCallbacks();
+    }
+
+
+    public override void OnExit()
+    {
     }
 
     public override void UpdateState()

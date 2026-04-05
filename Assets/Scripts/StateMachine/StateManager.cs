@@ -33,10 +33,11 @@ public class StateManager : MonoBehaviour
         if (StateStack.Count > 0)
         {
             var currentState = StateStack.Peek();
-            currentState.OnExit();
+            currentState.OnLoseFocus();
         }
         StateStack.Push(newState);
         newState.OnEnter();
+        HudText.SetItem("stack", StackString(), 10, HudTextColor.Red);
         // Debug.Log(StackString());
     }
 
@@ -47,6 +48,7 @@ public class StateManager : MonoBehaviour
         StateStack.Pop();
         var newState = StateStack.Peek();
         newState.OnEnter();
+        HudText.SetItem("stack", StackString(), 10, HudTextColor.Red);
         // Debug.Log(StackString());
     }
 
@@ -96,6 +98,7 @@ public class StateManager : MonoBehaviour
 public interface IState
 {
     public void OnEnter();
+    public void OnLoseFocus();
     public void OnExit();
     public void UpdateState();
     public string TypeName();

@@ -50,10 +50,7 @@ public class Startup
 
     private static void BindUICallbacks()
     {
-        // UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>((evt) =>
-        // {
-        //     // StateManager.Find().ChangeSubState(new MapEditingState());
-        // });
+        UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>((evt) => StateManager.PushState(new MapEditingState()));
         UI.TopBar.Q("AddActor").RegisterCallback<ClickEvent>((evt) => AddActorModal.Open());
         UI.System.Q("AddTableTag").RegisterCallback<ClickEvent>((evt) => SystemTagModal.Open());
         UI.TopBar.Q("Config").RegisterCallback<ClickEvent>((evt) => ConfigModal.Open());

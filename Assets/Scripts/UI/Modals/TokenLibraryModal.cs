@@ -28,6 +28,8 @@ public class TokenLibraryModal : MonoBehaviour
     private static VisualElement PickWrapper;
     private static VisualElement ScrollWrapper;
 
+    private static string _dialogName;
+
     public static void Setup()
     {
         Tokens = new();
@@ -74,24 +76,26 @@ public class TokenLibraryModal : MonoBehaviour
     public static void OpenDefault()
     {
         AllowSelect = false;
-        Open("PrimaryDialog");
+        _dialogName = "PrimaryDialog";
+        Open();
     }
 
     public static void OpenSelect(LibraryCallback onSelect)
     {
         AllowSelect = true;
         OnSelect = onSelect;
-        Open("SecondaryDialog");
+        _dialogName = "SecondaryDialog";
+        Open();
     }
 
-    private static void Open(string dialogName)
+    private static void Open()
     {
         SelectedHash = null;
 
         ReadLibraryFile();
 
-        Modal2.CreateContext(dialogName);
-        var dialogContents = Modal2.Contents(dialogName);
+        Modal2.CreateContext(_dialogName);
+        var dialogContents = Modal2.Contents(_dialogName);
         dialogContents.Clear();
 
         Modal2.AddDialogHeader("Token Library");
@@ -140,7 +144,11 @@ public class TokenLibraryModal : MonoBehaviour
         var add = new ShunButton();
         add.SetVariant(ButtonVariant.Secondary);
         add.text = "Add New Token";
-        add.clicked += () => FileBrowserHelper.Open(ConfirmSelect, "", FileBrowserType.Tokens);
+        add.clicked += () =>
+        {
+            FileBrowserHelper.Open(ConfirmSelect, "", FileBrowserType.Tokens);
+            Modal2.Close(_dialogName);
+        };
         footer.Add(add);
 
         Modal2.Open();

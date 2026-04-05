@@ -7,6 +7,10 @@ public abstract class BaseState : IState
     {
     }
 
+    public virtual void OnLoseFocus()
+    {
+    }
+
     public virtual void OnExit()
     {
     }

@@ -10,18 +10,18 @@ public class ModalState : BaseState
         StateManager.PushState(new ModalState());
     }
 
-    public override void OnEnter()
-    {
-        EnableInterface();
-    }
+    // public override void OnEnter()
+    // {
+    //     EnableInterface();
+    // }
 
-    private void EnableInterface()
-    {
-        UI.ToggleDisplay(UI.TopBar, false);
-        UI.ToggleDisplay("BottomBar", false);
-        UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), false);
-        UI.ToggleDisplay(UI.System.Q("TopRight").Q("TerrainInfo"), false);
-    }
+    // private void EnableInterface()
+    // {
+    //     UI.ToggleDisplay(UI.TopBar, false);
+    //     UI.ToggleDisplay("BottomBar", false);
+    //     UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), false);
+    //     UI.ToggleDisplay(UI.System.Q("TopRight").Q("TerrainInfo"), false);
+    // }
 
     public override void HandleInput()
     {

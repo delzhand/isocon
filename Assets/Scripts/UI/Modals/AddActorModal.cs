@@ -32,7 +32,10 @@ public class AddActorModal
         typeContainer.AddToClassList("shun-dialog__field");
         contents.Add(typeContainer);
 
-        var footer = Modal2.AddDialogFooter();
+        var footer = Modal2.AddDialogFooter(cancelAction: () =>
+        {
+            Modal2.Close("PrimaryDialog");
+        });
         Modal2.Open();
         Modal2.AddCloseAction(() =>
         {
