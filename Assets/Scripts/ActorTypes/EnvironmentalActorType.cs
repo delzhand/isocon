@@ -42,7 +42,7 @@ public class EnvironmentalActorType : ActorType
 
         var name = Modal2.AddInlineTextField("Name", "Actor Name", "Actor");
         Modal2.MoveToContainer(name, typeContainer);
-        var shape = Modal2.AddInlineSelectField("Shape", "Shape", "Square 1x1", ActorType.ShapeOptions().ToList<string>());
+        var shape = Modal2.AddInlineComboboxField("Shape", "Shape", "Square 1x1", ActorType.ShapeOptions().ToList<string>());
         Modal2.MoveToContainer(shape, typeContainer);
         var color = Modal2.AddInlineComboboxField("Color", "Color", "Black", ColorUtility.CommonColors().ToList<string>());
         Modal2.MoveToContainer(color, typeContainer);
@@ -65,7 +65,7 @@ public class EnvironmentalActorType : ActorType
             return;
         }
         string name = Modal2.GetTextFieldValue("Name");
-        string shape = Modal2.GetSelectFieldValue("Shape");
+        string shape = Modal2.GetComboboxFieldValue("Shape");
         string color = Modal2.GetComboboxFieldValue("Color");
         EnvironmentalActorType t = new()
         {
