@@ -73,13 +73,13 @@ public class Toast : MonoBehaviour
         }
     }
 
-    private static void Add(string message, ToastType type)
-    {
-        FileLogger.Write(message);
-        Toast t = GetAttachmentObject().AddComponent<Toast>();
-        t.Message = message;
-        t.type = type;
-    }
+    // private static void Add(string message, ToastType type)
+    // {
+    //     FileLogger.Write(message);
+    //     Toast t = GetAttachmentObject().AddComponent<Toast>();
+    //     t.Message = message;
+    //     t.type = type;
+    // }
 
     public static void AddSimple(string message)
     {
@@ -90,6 +90,16 @@ public class Toast : MonoBehaviour
         );
 
         // Add(message, ToastType.Standard);
+    }
+
+    public static void Add(string message, string title, ToastVariant variant)
+    {
+        ShunSonner.Toast(
+            message: message,
+            title: title,
+            variant: ToastVariant.Success,
+            position: ToastPosition.BottomRight
+        );
     }
 
     public static void AddSuccess(string message)
@@ -120,6 +130,19 @@ public class Toast : MonoBehaviour
         t.type = ToastType.Custom;
         t.element = v;
         t.duration = duration;
+    }
+
+    public static void AddDiceRoll(string message, string result, Texture2D icon)
+    {
+        Debug.Log(message);
+        ShunSonner.Toast(
+            message: message,
+            title: result,
+            variant: ToastVariant.Info,
+            position: ToastPosition.BottomRight,
+            customIcon: icon,
+            duration: 15000
+        );
     }
 
     private static GameObject GetAttachmentObject()

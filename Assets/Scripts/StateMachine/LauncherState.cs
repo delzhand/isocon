@@ -105,16 +105,19 @@ public class LauncherState : BaseState
 
     private void SoloModeClicked(ClickEvent evt)
     {
+        _mode = ConnectMode.Solo;
         StartSessionModal.Open(ConnectMode.Solo);
     }
 
     private void HostModeClicked(ClickEvent evt)
     {
+        _mode = ConnectMode.Host;
         StartSessionModal.Open(ConnectMode.Host);
     }
 
     private void ClientModeClicked(ClickEvent evt)
     {
+        _mode = ConnectMode.Client;
         StartSessionModal.Open(ConnectMode.Client);
     }
 

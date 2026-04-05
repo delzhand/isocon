@@ -281,7 +281,7 @@ namespace ShunUI
             }
 
             int count = m_ActiveToasts.Count;
-            float visibleGap = 60f;
+            float visibleGap = 54f;
             float edgePadding = 16f;
 
             for (int i = 0; i < count; i++)
@@ -338,8 +338,8 @@ namespace ShunUI
                 }
 
                 // Scale down slightly for depth effect (older toasts are smaller)
-                float scale = 1f - (visualIndex * 0.03f);
-                toast.element.style.scale = new StyleScale(new Scale(new Vector2(scale, scale)));
+                // float scale = 1f - (visualIndex * 0.03f);
+                // toast.element.style.scale = new StyleScale(new Scale(new Vector2(scale, scale)));
 
                 // Reduce opacity slightly for older toasts
                 float opacity = 1f - (visualIndex * 0.1f);

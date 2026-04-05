@@ -19,6 +19,10 @@ public class TabletopState : BaseState
         {
             TerrainController.InitializeTerrain(8, 8, 1);
         }
+        else
+        {
+            Player.Self().CmdRequestToast(null, $"{Player.Self().Name} connected");
+        }
         SetConnectionMessage();
         EnableInterface();
         BindCallbacks();

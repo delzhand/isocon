@@ -1,5 +1,6 @@
 using System;
 using Mirror;
+using ShunUI;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -89,6 +90,18 @@ public class Player : NetworkBehaviour
     }
     #endregion
 
+    [Command]
+    public void CmdRequestToast(string message, string title)
+    {
+        RpcToast(message, title);
+    }
+
+    [ClientRpc]
+    public void RpcToast(string message, string title)
+    {
+        Toast.Add(message, title, ToastVariant.Default);
+    }
+
     #region Create Actor
     [Command]
     public void CmdCreateActor(string json)
@@ -109,6 +122,7 @@ public class Player : NetworkBehaviour
         g.transform.localScale = ap.Placed ? Vector3.one : Vector3.zero;
 
         NetworkServer.Spawn(g);
+        RpcToast(null, $"Actor {data.Name} created by {Name}");
     }
     #endregion
 

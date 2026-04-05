@@ -51,7 +51,9 @@ public class ConfigModal
         var skipTutorials = Modal2.AddSwitchField("SkipTutorials", "Skip Tutorials", Preferences.Current.SkipTutorials, "Never show tutorials");
         Modal2.MoveToTab(skipTutorials, configTabs, "Misc");
 
-        var actorBorderField = Modal2.AddSelectField("ActorBorder", "Token Outline Color", Preferences.Current.TokenOutline, ColorUtility.CommonColors().ToList<string>(), "Set an outline color for improved token contrast");
+        var colorOptions = ColorUtility.CommonColors().ToList<string>();
+        colorOptions.Insert(0, "None");
+        var actorBorderField = Modal2.AddComboboxField("ActorBorder", "Token Outline Color", Preferences.Current.TokenOutline, colorOptions, "Set an outline color for improved token contrast");
         Modal2.MoveToTab(actorBorderField, configTabs, "Actors");
 
         Dictionary<string, string> dragOptions = new();
@@ -94,7 +96,7 @@ public class ConfigModal
         Preferences.Current.BlockBorderOpacity = Modal2.GetSliderFieldValue("BlockBorder");
         BlockRendering.ToggleAllBorders(false);
 
-        Preferences.Current.TokenOutline = Modal2.GetSelectFieldValue("ActorBorder");
+        Preferences.Current.TokenOutline = Modal2.GetComboboxFieldValue("ActorBorder");
         Actor.SetAllTokenOutlines();
 
         Preferences.Current.UIScale = Modal2.GetComboboxFieldValue("UIScale");
