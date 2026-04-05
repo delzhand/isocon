@@ -8,7 +8,7 @@ using SimpleFileBrowser;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class SessionModal
+public class SessionManager
 {
     public static void Save()
     {

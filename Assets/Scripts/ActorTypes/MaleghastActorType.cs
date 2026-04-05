@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 using System.IO;
 using System.Text;
 using IsoconUILibrary;
+using ShunUI;
 
 [Serializable]
 public class MaleghastActorType : ActorType
@@ -55,38 +56,47 @@ public class MaleghastActorType : ActorType
         string filename = $"{path}/maleghast_data/base.json";
         System.IO.File.WriteAllText(filename, baseline.text);
 
-        string maleghastData = Preferences.Current.MaleghastFile;
-        Modal.AddFileField("RulesFile", "Data Override", maleghastData, "rules", (evt) =>
-        {
-            Preferences.Current.MaleghastFile = evt.newValue;
-            UI.Modal.Q<DropdownField>("PlayerColor").choices = GetHouses();
-            SearchField.ChangeOptions(UI.Modal.Q("UnitTypeField"), GetUnits().ToArray());
-        });
-        Modal.AddHelpText("RulesHelp", "If blank, stats will be derived from the core rules + updates. You can change these values or add homebrew units by copying and editing the maleghast_data/base.json file in the data directory.");
+        // string maleghastData = Preferences.Current.MaleghastFile;
+        // Modal.AddFileField("RulesFile", "Data Override", maleghastData, "rules", (evt) =>
+        // {
+        //     Preferences.Current.MaleghastFile = evt.newValue;
+        //     UI.Modal.Q<DropdownField>("PlayerColor").choices = GetHouses();
+        //     SearchField.ChangeOptions(UI.Modal.Q("UnitTypeField"), GetUnits().ToArray());
+        // });
+        // Modal.AddHelpText("RulesHelp", "If blank, stats will be derived from the core rules + updates. You can change these values or add homebrew units by copying and editing the maleghast_data/base.json file in the data directory.");
 
+        var contents = Modal2.Contents("PrimaryDialog");
+        var typeContainer = contents.Q("ActorTypeContainer");
+        typeContainer.Clear();
+        contents.Q("CreateActor")?.RemoveFromHierarchy();
 
-        Modal.AddSearchField("UnitTypeField", "Unit Type", "", GetUnits().ToArray());
-        Modal.AddDropdownField("PlayerColor", "Player Color", "House Default", GetHouses().ToArray());
+        var unit = Modal2.AddInlineComboboxField("UnitTypeField", "Unit Type", "", GetUnits());
+        Modal2.MoveToContainer(unit, typeContainer);
 
-        Modal.AddPreferredButton("Create Actor", CreateClicked);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        var color = Modal2.AddInlineComboboxField("PlayerColor", "Player Color", "House Default", GetHouses());
+        Modal2.MoveToContainer(color, typeContainer);
 
-        // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        global::AddActorModal.OrderFields(StringUtility.CreateArray("RulesFile", "RulesHelp", "UnitType", "PlayerColor", "UnitTypeField"));
+        var create = new ShunDialogClose();
+        create.name = "CreateActor";
+        create.text = "Create Actor";
+        create.SetVariant(ButtonVariant.Primary);
+        create.clicked += () => CreateClicked();
+        contents.Q(className: "shun-dialog__footer").Add(create);
     }
 
-    private static void CreateClicked(ClickEvent evt)
+    private static void CreateClicked()
     {
-        if (!TokenLibraryModal.TokenSelected())
+        Modal2.ReadContext("PrimaryDialog");
+        string token = Modal2.GetComboboxFieldValue("Token");
+        if (token == null)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
-
-        string houseJob = SearchField.GetValue(UI.Modal.Q("UnitTypeField"));
+        string houseJob = Modal2.GetComboboxFieldValue("UnitTypeField");
         string house = houseJob.Split("/")[0];
         string job = houseJob.Split("/")[1];
-        string colorValue = UI.Modal.Q<DropdownField>("PlayerColor").value;
+        string colorValue = Modal2.GetComboboxFieldValue("PlayerColor");
         JSONNode jobdata = GetJob(job);
         Color color = ColorUtility.GetColor(jobdata["color"]);
         if (colorValue != "House Default")
@@ -175,7 +185,7 @@ public class MaleghastActorType : ActorType
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibraryModal.GetToken();
+        a.Token = TokenLibraryModal.GetToken(token);
         a.Color = color;
         a.Shape = shape;
         a.Position = Vector3.zero;

@@ -77,8 +77,8 @@ public class Startup
             UI.ToggleDisplay(UI.TopBar.Q("SaveSession"), false);
             UI.ToggleDisplay(UI.TopBar.Q("LoadSession"), false);
         });
-        UI.TopBar.Q("SaveSession").RegisterCallback<ClickEvent>((evt) => SessionModal.Save());
-        UI.TopBar.Q("LoadSession").RegisterCallback<ClickEvent>((evt) => SessionModal.Load());
+        UI.TopBar.Q("SaveSession").RegisterCallback<ClickEvent>((evt) => SessionManager.Save());
+        UI.TopBar.Q("LoadSession").RegisterCallback<ClickEvent>((evt) => SessionManager.Load());
     }
 
     private static async void SetVersionText()
