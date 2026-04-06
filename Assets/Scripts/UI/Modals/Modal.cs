@@ -30,7 +30,7 @@ public class Modal
 
     public static void HandleKeypresses()
     {
-        if (!Modal.IsOpen())
+        if (!StateManager.IsModalState())
         {
             return;
         }

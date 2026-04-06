@@ -76,15 +76,11 @@ public class Startup
         });
         UI.TopBar.Q("SaveSession").RegisterCallback<ClickEvent>((evt) => SessionManager.Save());
         UI.TopBar.Q("LoadSession").RegisterCallback<ClickEvent>((evt) => SessionManager.Load());
+        UI.TopBar.Q("Isocon").RegisterCallback<ClickEvent>(TabletopState.ConfirmReturnToLauncher);
     }
 
     private static async void SetVersionText()
     {
-#if UNITY_WEBGL
-        UI.System.Q<Label>("Version").text = $"v{_version}";
-        return;
-#endif
-
         await AsyncAwake();
         if (_version != _latestVersion)
         {

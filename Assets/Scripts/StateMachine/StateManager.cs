@@ -37,7 +37,7 @@ public class StateManager : MonoBehaviour
         }
         StateStack.Push(newState);
         newState.OnEnter();
-        HudText.SetItem("stack", StackString(), 10, HudTextColor.Red);
+        // HudText.SetItem("stack", StackString(), 10, HudTextColor.Red);
         // Debug.Log(StackString());
     }
 
@@ -48,7 +48,7 @@ public class StateManager : MonoBehaviour
         StateStack.Pop();
         var newState = StateStack.Peek();
         newState.OnEnter();
-        HudText.SetItem("stack", StackString(), 10, HudTextColor.Red);
+        // HudText.SetItem("stack", StackString(), 10, HudTextColor.Red);
         // Debug.Log(StackString());
     }
 
@@ -93,6 +93,10 @@ public class StateManager : MonoBehaviour
         return string.Join(" | ", states);
     }
 
+    public static bool IsModalState()
+    {
+        return StateStack.Peek().TypeName() == "ModalState";
+    }
 }
 
 public interface IState

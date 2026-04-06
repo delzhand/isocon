@@ -14,7 +14,7 @@ public class Pointer
 
     public static void PickAny()
     {
-        if (UI.ClicksSuspended || Modal.IsOpen())
+        if (UI.ClicksSuspended || StateManager.IsModalState())
         {
             return;
         }
@@ -28,7 +28,7 @@ public class Pointer
 
     public static Block PickBlock()
     {
-        if (UI.ClicksSuspended || Modal.IsOpen())
+        if (UI.ClicksSuspended || StateManager.IsModalState())
         {
             return null;
         }
@@ -43,7 +43,7 @@ public class Pointer
 
     public static Vector3 PickPoint()
     {
-        if (UI.ClicksSuspended || Modal.IsOpen())
+        if (UI.ClicksSuspended || StateManager.IsModalState())
         {
             return Vector3.zero;
         }
@@ -63,7 +63,7 @@ public class Pointer
             return _unitBarMouseoverToken;
         }
 
-        if (UI.ClicksSuspended || Modal.IsOpen())
+        if (UI.ClicksSuspended || StateManager.IsModalState())
         {
             return null;
         }
@@ -109,7 +109,7 @@ public class Pointer
     {
         Block.DehighlightAll();
 
-        if (Viewport.IsDragging || UI.ClicksSuspended || Modal.IsOpen())
+        if (Viewport.IsDragging || UI.ClicksSuspended || StateManager.IsModalState())
         {
             return;
         }

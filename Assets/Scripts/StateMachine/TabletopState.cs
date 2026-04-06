@@ -64,9 +64,9 @@ public class TabletopState : BaseState
         UI.ToggleDisplay(UI.System.Q("TopRight"), true);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), true);
         UI.ToggleDisplay(UI.TopBar.Q("AddActor"), true);
+        UI.ToggleDisplay(UI.TopBar.Q("SessionWrapper"), true);
+        UI.ToggleDisplay(UI.TopBar.Q("AddTableTag"), true);
         UI.ToggleDisplay(UI.TopBar.Q("EditMap"), true);
-        UI.ToggleDisplay(UI.TopBar.Q("EditingActions"), false);
-        // UI.ToggleDisplay(UI.TopBar.Q("MarkerMode"), true);
         UI.ToggleDisplay(UI.TopBar.Q("Dice"), true);
         UI.ToggleDisplay(UI.TopBar.Q("Config"), true);
         UI.ToggleDisplay(UI.TopBar.Q("Session"), true);
@@ -119,7 +119,6 @@ public class TabletopState : BaseState
     #region Callbacks
     private void BindCallbacks()
     {
-        UI.TopBar.Q("Isocon").RegisterCallback<ClickEvent>(ConfirmReturnToLauncher);
         Dragger.RightDragStart += Viewport.InitializeRightDrag;
         Dragger.RightDragUpdate += Viewport.UpdateRightDrag;
         Dragger.RightDragRelease += Viewport.EndRightDrag;
@@ -136,7 +135,6 @@ public class TabletopState : BaseState
 
     private void UnbindCallbacks()
     {
-        UI.TopBar.Q("Isocon").UnregisterCallback<ClickEvent>(ConfirmReturnToLauncher);
         Dragger.RightDragStart -= Viewport.InitializeRightDrag;
         Dragger.RightDragUpdate -= Viewport.UpdateRightDrag;
         Dragger.RightDragRelease -= Viewport.EndRightDrag;
@@ -151,7 +149,7 @@ public class TabletopState : BaseState
         Dragger.LeftDragRelease -= LeftDragRelease;
     }
 
-    private void ConfirmReturnToLauncher(ClickEvent evt)
+    public static void ConfirmReturnToLauncher(ClickEvent evt)
     {
         SessionManager.SerializeSession($"{Preferences.Current.DataPath}/sessions/autosave.json");
         Modal2.CreateContext("PrimaryDialog");
@@ -171,7 +169,7 @@ public class TabletopState : BaseState
         Modal2.Open();
     }
 
-    private void Quit()
+    private static void Quit()
     {
         NetworkManager manager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
         if (NetworkServer.active && NetworkClient.isConnected)

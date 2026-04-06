@@ -151,7 +151,7 @@ public class Viewport
 
     private static void HandleScrolling()
     {
-        if (UI.ClicksSuspended || Modal.IsOpen())
+        if (UI.ClicksSuspended || StateManager.IsModalState())
         {
             return;
         }
