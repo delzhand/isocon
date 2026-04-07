@@ -93,17 +93,6 @@ public class Icon1x5EnemyActorType : Icon1x5Base
         UI.ToggleDisplay(e, foeValue == "Legend");
     }
 
-    private static void AddModalEvaluateConditions()
-    {
-        string foeClass = UI.Modal.Q<DropdownField>("FoeClassField").value;
-
-        VisualElement eliteField = UI.Modal.Q("EliteField");
-        VisualElement hpMultiField = UI.Modal.Q("LegendHPField");
-
-        UI.ToggleDisplay(eliteField, foeClass != "Legend");
-        UI.ToggleDisplay(hpMultiField, foeClass == "Legend");
-    }
-
     private static void CreateClicked()
     {
         Modal2.ReadContext("PrimaryDialog");

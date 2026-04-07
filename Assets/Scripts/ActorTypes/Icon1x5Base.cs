@@ -22,41 +22,44 @@ public abstract class Icon1x5Base : ActorType
 
     private void AttackRollClicked()
     {
-        Modal.Reset("Attack Roll");
-        Modal.AddNumberNudgerField("PowerField", "Curse/Boon", 0, -20);
-        Modal.AddPreferredButton("Roll", AttackRoll);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
         SelectionMenu.Hide();
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Attack Roll");
+        Modal2.AddInlineNumberNudgerField("Power", "Curse/Boon", 0, -10, 10);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Roll", AttackRoll);
+        Modal2.Open();
     }
 
     private void SaveRollClicked()
     {
-        Modal.Reset("Save Roll");
-        Modal.AddNumberNudgerField("PowerField", "Curse/Boon", 0, -20);
-        Modal.AddPreferredButton("Roll", SaveRoll);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
         SelectionMenu.Hide();
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Attack Roll");
+        Modal2.AddInlineNumberNudgerField("Power", "Curse/Boon", 0, -10, 10);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Roll", SaveRoll);
+        Modal2.Open();
     }
 
-    private void AttackRoll(ClickEvent evt)
+    private void AttackRoll()
     {
         string name = Actor.GetSelected().Data.Name;
         string desc = $"{name}'s attack roll";
-        BoonCurseRoll(desc);
-        Modal.Close();
+        int power = Modal2.GetNumberNudgerFieldValue("Power");
+        BoonCurseRoll(power, desc);
     }
 
-    private void SaveRoll(ClickEvent evt)
+    private void SaveRoll()
     {
         string name = Actor.GetSelected().Data.Name;
         string desc = $"{name}'s save";
-        BoonCurseRoll(desc);
-        Modal.Close();
+        int power = Modal2.GetNumberNudgerFieldValue("Power");
+        BoonCurseRoll(power, desc);
     }
 
-    private void BoonCurseRoll(string desc)
+    private void BoonCurseRoll(int power, string desc)
     {
-        int power = UI.Modal.Q<NumberNudger>("PowerField").value;
         int powerDice = Math.Abs(power);
         int x = 1 + Random.Range(0, 20);
         int y = 0;

@@ -8,6 +8,7 @@ using System.IO;
 using System.Text;
 using IsoconUILibrary;
 using ShunUI;
+using SimpleFileBrowser;
 
 [Serializable]
 public class MaleghastActorType : ActorType
@@ -56,19 +57,21 @@ public class MaleghastActorType : ActorType
         string filename = $"{path}/maleghast_data/base.json";
         System.IO.File.WriteAllText(filename, baseline.text);
 
-        // string maleghastData = Preferences.Current.MaleghastFile;
-        // Modal.AddFileField("RulesFile", "Data Override", maleghastData, "rules", (evt) =>
-        // {
-        //     Preferences.Current.MaleghastFile = evt.newValue;
-        //     UI.Modal.Q<DropdownField>("PlayerColor").choices = GetHouses();
-        //     SearchField.ChangeOptions(UI.Modal.Q("UnitTypeField"), GetUnits().ToArray());
-        // });
-        // Modal.AddHelpText("RulesHelp", "If blank, stats will be derived from the core rules + updates. You can change these values or add homebrew units by copying and editing the maleghast_data/base.json file in the data directory.");
 
         var contents = Modal2.Contents("PrimaryDialog");
         var typeContainer = contents.Q("ActorTypeContainer");
         typeContainer.Clear();
         contents.Q("CreateActor")?.RemoveFromHierarchy();
+
+        string maleghastData = Preferences.Current.MaleghastFile;
+        var file = Modal2.AddInlineFileField("Homebrew", "Data Override", maleghastData, FileBrowserType.Maleghast, false, "You can make a copy of maleghast_data/base.json in the data folder to add homebrew unit types", () =>
+        {
+            string result = FileBrowser.Result[0];
+            Preferences.Current.MaleghastFile = result;
+            Modal2.ChangeComboboxOptions("PlayerColor", GetHouses());
+            Modal2.ChangeComboboxOptions("UnitTypeField", GetUnits());
+        });
+        Modal2.MoveToContainer(file, typeContainer);
 
         var unit = Modal2.AddInlineComboboxField("UnitTypeField", "Unit Type", "", GetUnits());
         Modal2.MoveToContainer(unit, typeContainer);
@@ -269,39 +272,86 @@ public class MaleghastActorType : ActorType
         panel.Q("Pills").Q("HousePill").SendToBack();
     }
 
-    // public override MenuItem[] GetMenuItems(bool placed)
-    // {
-    //     List<MenuItem> items = new();
-    //     if (placed)
-    //     {
-    //         items.Add(new MenuItem("Remove", "Remove", ClickRemove));
-    //         items.Add(new MenuItem("Flip", "Flip", ClickFlip));
-    //     }
-    //     items.Add(new MenuItem("CoreStats", "Alter Stats", () => { AlterStatModal(); }));
-    //     items.Add(new MenuItem("Clone", "Clone", ClickClone));
-    //     items.Add(new MenuItem("Delete", "Delete", ClickDelete));
-    //     items.Add(new MenuItem("EndTurn", "End Turn", () =>
-    //     {
-    //         ActorTag tag = new();
-    //         tag.Name = "Turn Ended";
-    //         tag.Color = ColorUtility.GetCommonColor("gray");
-    //         Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
-    //         SelectionMenu.Hide();
-    //     }));
-    //     items.Add(new MenuItem("ResetTurns", "Reset All Turns", () =>
-    //     {
-    //         Player.Self().CmdRequestAllActorsCommand("RemoveTag|Turn Ended");
-    //         SelectionMenu.Hide();
-    //     }));
-    //     items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+    public override List<MenuItem> GetMenuItems(bool placed)
+    {
+        var items = base.GetMenuItems(placed);
+        var mg = new MenuItem("Maleghast", null);
+        items.Add(mg);
 
-    //     if (House == "CARCASS" && !HasTag("Loaded"))
-    //     {
-    //         items.Add(new MenuItem("Reload", "Reload", () => DirectCommand("Reload")));
-    //     }
+        mg.Children.Add(new MenuItem("Add Token", AddTokenModal));
 
-    //     return items.ToArray();
-    // }
+        if (!HasTag("Turn Ended"))
+        {
+            mg.Children.Add(new MenuItem("End Turn", () =>
+            {
+                ActorTag tag = new();
+                tag.Name = "Turn Ended";
+                tag.Color = ColorUtility.GetCommonColor("gray");
+                Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
+                SelectionMenu.Hide();
+            }));
+        }
+        else
+        {
+            mg.Children.Add(new MenuItem("End Turn", false));
+        }
+
+        mg.Children.Add(new MenuItem("Reset All Turns", () =>
+        {
+            Player.Self().CmdRequestAllActorsCommand("RemoveTag|Turn Ended");
+            SelectionMenu.Hide();
+        }));
+
+        if (House == "CARCASS")
+        {
+            var carcass = new MenuItem("CARCASS", null);
+            items.Add(carcass);
+            if (!HasTag("Reload"))
+            {
+                carcass.Children.Add(new MenuItem("Set Reload", () =>
+                {
+                    Actor actor = Actor.GetSelected();
+                    ActorTag tag = new();
+                    tag.Name = "Reload";
+                    tag.Color = GetHouseColor("CARCASS");
+                    Player.Self().CmdRequestActorCommand(actor.Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
+
+                }));
+            }
+            else
+            {
+                carcass.Children.Add(new MenuItem("Set Reload", false));
+            }
+        }
+
+        return items;
+    }
+
+    private void AddTokenModal()
+    {
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Add Token");
+        Modal2.AddComboboxField("Token", "Token", "", GetTokens());
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Add", () =>
+        {
+            Modal2.ReadContext("PrimaryDialog");
+            string token = Modal2.GetComboboxFieldValue("Token");
+            Actor actor = Actor.GetSelected();
+            if (!HasTag(token))
+            {
+                ActorTag tag = new();
+                tag.Name = token;
+                tag.Color = actor.Data.Color;
+                Player.Self().CmdRequestActorCommand(actor.Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
+            }
+            else
+            {
+                Toast.AddError($"{actor.Data.Name} already has {token}");
+            }
+        });
+        Modal2.Open();
+    }
 
     public override void Command(string command, ActorData tokenData)
     {
@@ -318,20 +368,6 @@ public class MaleghastActorType : ActorType
                 string plus = diff > 0 ? "+" : "";
                 PopoverText.Create(token, $"/{plus}{diff}|_HP", Color.white);
                 UpdateGraphic(tokenData);
-            }
-        }
-        else if (command == "Reload")
-        {
-            if (!HasTag("Loaded"))
-            {
-                ActorTag tag = new()
-                {
-                    Name = "Loaded",
-                    Color = GetHouseColor("CARCASS")
-                };
-                Tags.Add(tag);
-                PopoverText.Create(token, $"_RELOADED", Color.white);
-                Actor.RebuildPanels = true;
             }
         }
         else if (command.StartsWith("UpdateStats"))
@@ -371,6 +407,17 @@ public class MaleghastActorType : ActorType
             }
         }
         return JSON.Parse(maleghastText);
+    }
+
+    private static List<string> GetTokens()
+    {
+        List<string> tokens = new();
+        JSONNode gamedata = GetData();
+        foreach (JSONNode token in gamedata["Tokens"].AsArray)
+        {
+            tokens.Add(token);
+        }
+        return tokens;
     }
 
     private static List<string> GetHouses()

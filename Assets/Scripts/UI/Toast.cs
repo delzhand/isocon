@@ -134,7 +134,6 @@ public class Toast : MonoBehaviour
 
     public static void AddDiceRoll(string message, string result, Texture2D icon)
     {
-        Debug.Log(message);
         ShunSonner.Toast(
             message: message,
             title: result,

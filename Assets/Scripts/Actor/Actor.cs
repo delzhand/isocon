@@ -74,24 +74,6 @@ public class Actor : MonoBehaviour
         t.rotation = Camera.main.transform.rotation;
     }
 
-    // private void OffsetForSizeAndSharing()
-    // {
-    //     float x = ShareOffsetX;
-    //     float y = ShareOffsetY;
-    //     if (Size == 2)
-    //     {
-    //         x = 0;
-    //         y = -.73f;
-    //     }
-    //     else if (Size == 3)
-    //     {
-    //         x = 0;
-    //         y = 0;
-    //     }
-    //     transform.Find("Offset").transform.localPosition = new Vector3(x, 0, y);
-    //     transform.Find("Base").transform.localPosition = new Vector3(x, 0, y);
-    // }
-
     private void GlobalTokenScale()
     {
         transform.Find("Offset/Avatar/Cutout").localScale = Vector3.one * Preferences.Current.TokenScale;

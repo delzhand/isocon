@@ -285,7 +285,7 @@ public class DiceRoller
         // diceOutcome.Tray = tray;
 
         // Toast.AddCustom(resultElement, 15);
-        Toast.AddDiceRoll(description, @$"<size=+4>{result}</size> {rolls}", icon);
+        Toast.AddDiceRoll(rolls, @$"<size=+4>{result}</size> | {description}", icon);
     }
 
     public static void AddOutcome(string description, string result, string rolls, int die)
@@ -299,7 +299,7 @@ public class DiceRoller
         // Toast.AddCustom(resultElement, 15);
 
         Texture2D icon = Resources.Load<Texture2D>($"Textures/die_{die}");
-        Toast.AddDiceRoll(description, @$"<size=+4>{result}</size> {rolls}", icon);
+        Toast.AddDiceRoll(rolls, @$"<size=+4>{result}</size> | {description}", icon);
     }
 
 

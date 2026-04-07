@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -38,22 +39,55 @@ public class Icon2x0EnemyActorType : Icon2x0Base
 
     public static void AddActorModal()
     {
-        Modal.AddTextField("NameField", "Actor Name", "Actor");
-        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", ActorType.SquareShapeOptions());
-        Modal.AddDropdownField("FoeClassField", "Class", "Heavy", StringUtility.CreateArray("Heavy", "Artillery", "Skirmisher", "Leader", "Legend"), (evt) => { AddModalEvaluateConditions(); });
-        Modal.AddToggleField("EliteField", "Elite", false);
-        Modal.AddIntField("LegendHPField", "HP Multiplier", 1);
-        Modal.AddPreferredButton("Create Actor", CreateClicked);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
-        string[] fieldOrder = StringUtility.CreateArray(
-            "NameField",
-            "ShapeField",
-            "FoeClassField",
-            "EliteField",
-            "LegendHPField"
-        );
-        global::AddActorModal.OrderFields(fieldOrder);
-        AddModalEvaluateConditions();
+        var contents = Modal2.Contents("PrimaryDialog");
+        var typeContainer = contents.Q("ActorTypeContainer");
+        typeContainer.Clear();
+        contents.Q("CreateActor")?.RemoveFromHierarchy();
+
+        var name = Modal2.AddInlineTextField("Name", "Actor Name", "Actor");
+        Modal2.MoveToContainer(name, typeContainer);
+
+        var shape = Modal2.AddInlineComboboxField("Shape", "Shape", "Square 1x1", ActorType.SquareShapeOptions().ToList<string>());
+        Modal2.MoveToContainer(shape, typeContainer);
+
+        var foe = Modal2.AddInlineComboboxField("FoeClass", "Class", "Heavy", StringUtility.CreateArray("Heavy", "Artillery", "Skirmisher", "Leader", "Legend").ToList<string>());
+        Modal2.MoveToContainer(foe, typeContainer);
+
+        var elite = Modal2.AddSwitchField("Elite", "Elite", false);
+        Modal2.MoveToContainer(elite, typeContainer);
+
+        var legend = Modal2.AddInlineIntField("LegendHP", "HP Multiplier", 1);
+        Modal2.MoveToContainer(legend, typeContainer);
+
+        modalConditionLegend(legend);
+        modalConditionElite(elite);
+        foe.Q<ShunCombobox>().OnSelect += () =>
+        {
+            modalConditionLegend(legend);
+            modalConditionElite(elite);
+        };
+
+        var create = new ShunDialogClose();
+        create.name = "CreateActor";
+        create.text = "Create Actor";
+        create.SetVariant(ButtonVariant.Primary);
+        create.clicked += () => CreateClicked();
+        contents.Q(className: "shun-dialog__footer").Add(create);
+
+    }
+
+    private static void modalConditionElite(VisualElement e)
+    {
+        Modal2.ReadContext("PrimaryDialog");
+        var foeValue = Modal2.GetComboboxFieldValue("FoeClass");
+        UI.ToggleDisplay(e, foeValue != "Legend");
+    }
+
+    private static void modalConditionLegend(VisualElement e)
+    {
+        Modal2.ReadContext("PrimaryDialog");
+        var foeValue = Modal2.GetComboboxFieldValue("FoeClass");
+        UI.ToggleDisplay(e, foeValue == "Legend");
     }
 
     private static void AddModalEvaluateConditions()
@@ -67,19 +101,21 @@ public class Icon2x0EnemyActorType : Icon2x0Base
         UI.ToggleDisplay(hpMultiField, foeClass == "Legend");
     }
 
-    private static void CreateClicked(ClickEvent evt)
+    private static void CreateClicked()
     {
-        if (!TokenLibraryModal.TokenSelected())
+        Modal2.ReadContext("PrimaryDialog");
+        string token = Modal2.GetComboboxFieldValue("Token");
+        if (token == null)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
+        string name = Modal2.GetTextFieldValue("Name");
+        string shape = Modal2.GetComboboxFieldValue("Shape");
+        string foeClass = Modal2.GetComboboxFieldValue("FoeClass");
+        int hpMulti = Modal2.GetIntFieldValue("LegendHP");
+        bool elite = Modal2.GetSwitchFieldValue("Elite");
 
-        string name = UI.Modal.Q<TextField>("NameField").value;
-        string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
-        string foeClass = UI.Modal.Q<DropdownField>("FoeClassField").value;
-        int hpMulti = UI.Modal.Q<IntegerField>("LegendHPField").value;
-        bool elite = UI.Modal.Q<Toggle>("EliteField").value;
         if (elite)
         {
             hpMulti = 2;
@@ -145,7 +181,7 @@ public class Icon2x0EnemyActorType : Icon2x0Base
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibraryModal.GetToken();
+        a.Token = TokenLibraryModal.GetToken(token);
         a.Color = t.Color;
         a.Shape = shape;
         a.Position = Vector3.zero;

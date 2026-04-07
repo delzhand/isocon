@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -101,27 +102,38 @@ public class Icon2x0PlayerActorType : Icon2x0Base
             "Wright/Wayfarer"
         );
 
-        Modal.AddTextField("NameField", "Actor Name", "Actor");
-        Modal.AddSearchField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs);
+        var contents = Modal2.Contents("PrimaryDialog");
+        var typeContainer = contents.Q("ActorTypeContainer");
+        typeContainer.Clear();
+        contents.Q("CreateActor")?.RemoveFromHierarchy();
 
-        Modal.AddPreferredButton("Create Actor", CreateClicked);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        var name = Modal2.AddInlineTextField("Name", "Actor Name", "Actor");
+        Modal2.MoveToContainer(name, typeContainer);
 
-        // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        global::AddActorModal.OrderFields(StringUtility.CreateArray("NameField", "PlayerJob"));
+        var job = Modal2.AddInlineComboboxField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs.ToList<string>());
+        Modal2.MoveToContainer(job, typeContainer);
+
+
+        var create = new ShunDialogClose();
+        create.name = "CreateActor";
+        create.text = "Create Actor";
+        create.SetVariant(ButtonVariant.Primary);
+        create.clicked += () => CreateClicked();
+        contents.Q(className: "shun-dialog__footer").Add(create);
 
     }
 
-    private static void CreateClicked(ClickEvent evt)
+    private static void CreateClicked()
     {
-        if (!TokenLibraryModal.TokenSelected())
+        Modal2.ReadContext("PrimaryDialog");
+        string token = Modal2.GetComboboxFieldValue("Token");
+        if (token == null)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
-
-        string name = UI.Modal.Q<TextField>("NameField").value;
-        string playerJob = SearchField.GetValue(UI.Modal.Q("PlayerJob"));
+        string name = Modal2.GetTextFieldValue("Name");
+        string playerJob = Modal2.GetComboboxFieldValue("PlayerJob");
         if (playerJob.Length == 0)
         {
             Toast.AddError("You must select a job");
@@ -174,7 +186,7 @@ public class Icon2x0PlayerActorType : Icon2x0Base
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibraryModal.GetToken();
+        a.Token = TokenLibraryModal.GetToken(token);
         a.Color = ColorUtility.GetCommonColor(color);
         a.Shape = "Square 1x1";
         a.Position = Vector3.zero;

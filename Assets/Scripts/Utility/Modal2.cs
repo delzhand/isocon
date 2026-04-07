@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using IsoconUILibrary;
 using ShunUI;
 using SimpleFileBrowser;
 using UnityEngine;
@@ -251,7 +252,7 @@ public class Modal2
         return wrapper;
     }
 
-    public static VisualElement AddInlineFileField(string name, string label, string defaultValue, FileBrowserType type, bool saveOp, string helpText = null)
+    public static VisualElement AddInlineFileField(string name, string label, string defaultValue, FileBrowserType type, bool saveOp, string helpText = null, Action onChange = null)
     {
         var wrapper = new ShunContainer();
         wrapper.AddToClassList("shun-dialog__field");
@@ -271,6 +272,8 @@ public class Modal2
         layout2.style.flexDirection = FlexDirection.Row;
         layout2.style.alignItems = Align.Stretch;
         layout2.style.minWidth = 250;
+        layout2.style.width = 250;
+        layout2.style.flexWrap = Wrap.Wrap;
         layout.Add(layout2);
 
         var input = new ShunInput();
@@ -278,6 +281,12 @@ public class Modal2
         input.value = defaultValue;
         input.isReadOnly = true;
         input.style.flexGrow = 1;
+        input.style.marginLeft = 0;
+        input.style.marginRight = 0;
+        input.style.marginTop = 0;
+        input.style.marginBottom = 0;
+        input.style.width = 194;
+
         layout2.Add(input);
 
         var searchButton = new ShunButton();
@@ -289,7 +298,11 @@ public class Modal2
         searchButton.style.backgroundSize = new BackgroundSize(20, 20);
         searchButton.RegisterCallback<ClickEvent>((evt) =>
         {
-            FileBrowserHelper.Open(ConfirmFileFieldSelect, name, type, saveOp);
+            FileBrowserHelper.Open(() =>
+            {
+                ConfirmFileFieldSelect(name);
+                onChange.Invoke();
+            }, name, type, saveOp);
         });
         layout2.Add(searchButton);
 
@@ -297,18 +310,18 @@ public class Modal2
         {
             var help = new Label(helpText);
             help.AddToClassList("shun-dialog__description");
+            help.style.flexBasis = Length.Percent(100);
             layout2.Add(help);
         }
 
         return wrapper;
     }
 
-    private static void ConfirmFileFieldSelect()
+    private static void ConfirmFileFieldSelect(string name)
     {
         string result = FileBrowser.Result[0];
-        Debug.Log(result);
-        // Contents(_targetDialogName).Q
-        // UI.Modal.Q(FileBrowserHelper.FieldOrigin).Q<TextField>("File").value = result;
+        var toggleField = Contents(_readContext).Q(name).Q<ShunInput>();
+        toggleField.value = result;
     }
 
     public static VisualElement AddToggleField(string name, string label, string defaultValue, List<string> options, bool allowMultiple, string helpText = null)
@@ -426,6 +439,55 @@ public class Modal2
         input.name = name;
         input.value = defaultValue;
         input.AddToClassList("shun-inline-input");
+        layout2.Add(input);
+
+        if (helpText != null)
+        {
+            var help = new Label(helpText);
+            help.AddToClassList("shun-dialog__description");
+            layout2.Add(help);
+        }
+
+        return wrapper;
+    }
+
+    public static int GetNumberNudgerFieldValue(string name)
+    {
+        return Contents(_readContext).Q<NumberNudger>(name)?.value ?? 0;
+    }
+
+    public static VisualElement AddInlineNumberNudgerField(string name, string label, int defaultValue, int min, int max, Action<int> onChange = null, string helpText = null)
+    {
+        var wrapper = new ShunContainer();
+        wrapper.AddToClassList("shun-dialog__field");
+        Contents(_createContext).Add(wrapper);
+
+        var layout = new VisualElement();
+        layout.style.flexDirection = FlexDirection.Row;
+        layout.style.justifyContent = Justify.SpaceBetween;
+        layout.style.alignItems = Align.FlexStart;
+        wrapper.Add(layout);
+
+        var fieldlabel = new Label(label);
+        fieldlabel.AddToClassList("shun-dialog__label");
+        layout.Add(fieldlabel);
+
+        var layout2 = new VisualElement();
+        layout2.style.flexDirection = FlexDirection.Column;
+        layout2.style.alignItems = Align.Stretch;
+        layout2.style.minWidth = 250;
+        layout.Add(layout2);
+
+        var input = new NumberNudger();
+        input.AddToClassList("shun-inline-input");
+        input.AddToClassList("shun-dialog__label");
+        input.name = name;
+        input.value = defaultValue;
+        input.minValue = min;
+        if (onChange != null)
+        {
+            input.AddValueChangedCallback(onChange);
+        }
         layout2.Add(input);
 
         if (helpText != null)
@@ -615,6 +677,11 @@ public class Modal2
         }
 
         return wrapper;
+    }
+
+    public static void ChangeComboboxOptions(string name, List<string> options)
+    {
+        Contents(_readContext).Q<ShunCombobox>(name)?.SetOptions(options);
     }
 
     public static int GetSliderFieldValue(string name)

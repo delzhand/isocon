@@ -7,40 +7,49 @@ using Random = UnityEngine.Random;
 
 public abstract class Icon2x0Base : ActorType
 {
-    // public override List<MenuItem> GetMenuItems(bool placed)
-    // {
-    //     List<MenuItem> items = base.GetMenuItems(placed);
+    public override List<MenuItem> GetMenuItems(bool placed)
+    {
+        var baseItems = base.GetMenuItems(placed);
 
-    //     List<MenuItem> items = new();
-    //     items.Add(new MenuItem("Damage", "Damage HP/VIG", () => { NumberPicker.ActorCommand("Damage", false); }));
-    //     items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRollClicked));
-    //     items.Add(new MenuItem("SaveRoll", "Save Roll", SaveRollClicked));
-    //     return baseItems.Concat(items.ToArray()).ToArray();
-    // }
+        var icon = new MenuItem("ICON 2.0", null);
+        baseItems.Add(icon);
+        icon.Children.Add(new MenuItem("Damage HP/VIG", () => { NumberPicker.ActorCommand("Damage", false); }));
+        icon.Children.Add(new MenuItem("Attack Roll", AttackRollClicked));
+        icon.Children.Add(new MenuItem("Save Roll", SaveRollClicked));
+
+        return baseItems;
+    }
 
     private void AttackRollClicked()
     {
-        Modal.Reset("Attack Roll");
-        Modal.AddNumberNudgerField("PowerField", "Weakness/Power", 0, -20);
-        Modal.AddPreferredButton("Roll", AttackRoll);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        SelectionMenu.Hide();
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Attack Roll");
+        Modal2.AddInlineNumberNudgerField("Power", "Weakness/Power", 0, -10, 10);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Roll", AttackRoll);
+        Modal2.Open();
     }
 
     private void SaveRollClicked()
     {
-        string name = Actor.GetSelected().Data.Name;
-        DiceRoller.DirectDieRoll("sum", "1d6", $"{name}'s save roll");
-        Actor.Deselect();
-        Modal.Close();
+        SaveRoll();
     }
 
-    private void AttackRoll(ClickEvent evt)
+    private void AttackRoll()
     {
         string name = Actor.GetSelected().Data.Name;
-        int power = UI.Modal.Q<NumberNudger>("PowerField").value;
+        int power = Modal2.GetNumberNudgerFieldValue("Power");
         string op = power > 0 ? "max" : "min";
         DiceRoller.DirectDieRoll(op, $"{Math.Abs(power) + 1}d10", $"{name}'s attack roll");
         Actor.Deselect();
-        Modal.Close();
+    }
+
+    private void SaveRoll()
+    {
+        SelectionMenu.Hide();
+        string name = Actor.GetSelected().Data.Name;
+        DiceRoller.DirectDieRoll("sum", "1d6", $"{name}'s save roll");
+        Actor.Deselect();
     }
 }

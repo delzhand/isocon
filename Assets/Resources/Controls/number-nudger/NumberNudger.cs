@@ -4,31 +4,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace IsoconUILibrary {
+namespace IsoconUILibrary
+{
     public class NumberNudger : VisualElement, INotifyValueChanged<int>
     {
         public new class UxmlFactory : UxmlFactory<NumberNudger, UxmlTraits> { }
-        public new class UxmlTraits : VisualElement.UxmlTraits {
+        public new class UxmlTraits : VisualElement.UxmlTraits
+        {
             UxmlStringAttributeDescription m_String = new UxmlStringAttributeDescription { name = "label", defaultValue = "Label" };
             UxmlIntAttributeDescription m_Int = new UxmlIntAttributeDescription { name = "value", defaultValue = 0 };
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
                 var ate = ve as NumberNudger;
-                ate.label = m_String.GetValueFromBag(bag, cc);
                 ate.value = m_Int.GetValueFromBag(bag, cc);
-            }
-        }
-
-        private Label stringLabel;
-        private string m_LabelText; // Custom property for label text
-        public string label
-        {
-            get => m_LabelText;
-            set
-            {
-                m_LabelText = value;
-                stringLabel.text = m_LabelText; // Update the text of m_Label manually
             }
         }
 
@@ -50,10 +39,10 @@ namespace IsoconUILibrary {
         }
 
         private int m_MinValueInt;
-        public int minValue 
+        public int minValue
         {
             get => m_MinValueInt;
-            set 
+            set
             {
                 m_MinValueInt = value;
             }
@@ -104,11 +93,6 @@ namespace IsoconUILibrary {
             this.AddToClassList("unity-base-field");
             this.AddToClassList("number-nudger");
 
-            stringLabel = new Label();
-            stringLabel.text = "Label";
-            stringLabel.AddToClassList("unity-base-field__label");
-            Add(stringLabel);
-
             downButton = new Button();
             downButton.text = "-";
             downButton.AddToClassList("down");
@@ -130,7 +114,8 @@ namespace IsoconUILibrary {
         public void downClick(ClickEvent evt)
         {
             value = value - 1;
-            if (value < minValue) {
+            if (value < minValue)
+            {
                 value = minValue;
             }
         }

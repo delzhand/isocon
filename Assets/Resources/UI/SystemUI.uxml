@@ -172,7 +172,6 @@
             </ui:VisualElement>
             <ui:VisualElement name="ClickCatcher" style="flex-grow: 1; position: absolute; left: -20%; top: -20%; right: -20%; bottom: -20%; display: none;"/>
             <ui:VisualElement name="TopRight" style="flex-grow: 1; position: absolute; top: 0; right: 0; align-items: flex-end; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;">
-                <ui:VisualElement name="Pills" style="flex-grow: 1; align-items: flex-start; justify-content: flex-start; flex-direction: row-reverse; align-self: auto; margin-top: -2px; margin-bottom: 4px;"/>
                 <ui:VisualElement name="TerrainInfo" style="background-color: rgba(0, 0, 0, 0); display: flex; position: relative; right: 0; top: 0; padding-right: 0; align-items: auto;">
                     <ui:VisualElement name="Elev" class="panel2" style="flex-direction: row; justify-content: flex-end; padding-right: 10px; right: -10px; padding-left: 10px; margin-bottom: 4px; overflow: hidden; border-top-right-radius: 0; border-bottom-right-radius: 0; border-top-left-radius: 20px; border-bottom-left-radius: 20px;">
                         <ui:Label tabindex="-1" display-tooltip-when-elided="true" text="ELEV" style="font-size: 14px; -unity-font-style: bold; color: rgb(255, 255, 255); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 0; margin-right: 8px; margin-top: 0; margin-bottom: 1px; -unity-text-align: lower-right;"/>
@@ -188,6 +187,7 @@
                         <ui:VisualElement name="CurrentEffects" style="flex-grow: 1; align-items: flex-end;"/>
                     </ui:VisualElement>
                 </ui:VisualElement>
+                <ui:VisualElement name="Pills" style="flex-grow: 1; flex-direction: column; align-self: flex-end; margin-top: -2px; margin-bottom: 4px; align-items: auto;"/>
             </ui:VisualElement>
             <ui:VisualElement name="TopLeft" style="flex-grow: 1; position: absolute; left: 0; top: 0; flex-direction: column; align-items: flex-start; margin-top: 10px; margin-left: 10px; margin-right: 10px; margin-bottom: 10px;">
                 <ui:VisualElement name="Tools" style="flex-grow: 1; flex-direction: row; align-items: flex-start; margin-top: 0; display: flex;">

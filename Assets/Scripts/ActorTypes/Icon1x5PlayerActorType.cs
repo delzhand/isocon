@@ -304,7 +304,7 @@ public class Icon1x5PlayerActorType : Icon1x5Base
         typeContainer.Clear();
         contents.Q("CreateActor")?.RemoveFromHierarchy();
 
-        var name = Modal2.AddInlineTextField("NameField", "Actor Name", "Actor");
+        var name = Modal2.AddInlineTextField("Name", "Actor Name", "Actor");
         Modal2.MoveToContainer(name, typeContainer);
 
         var job = Modal2.AddInlineComboboxField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs.ToList<string>());

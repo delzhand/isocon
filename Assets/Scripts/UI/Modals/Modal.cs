@@ -336,7 +336,7 @@ public class Modal
     public static void AddNumberNudgerField(string name, string label, int defaultValue, int min, Action<int> onChange = null)
     {
         NumberNudger field = new();
-        field.label = label;
+        // field.label = label;
         field.name = name;
         field.value = defaultValue;
         field.minValue = min;

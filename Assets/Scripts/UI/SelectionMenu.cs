@@ -18,6 +18,17 @@ public struct MenuItem
         Action = onClick;
         Children = new();
     }
+
+    public MenuItem(string label, bool enabled = true)
+    {
+        Label = label;
+        if (!enabled)
+        {
+            Label = $"<color=grey>{label}</color>";
+        }
+        Action = null;
+        Children = new();
+    }
 }
 
 public class SelectionMenu
