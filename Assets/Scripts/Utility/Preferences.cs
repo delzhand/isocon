@@ -25,6 +25,7 @@ public class StoredPreferences
     public string MaleghastFile;
     public int AutosaveInterval = 300;
     public bool ShowIndicators;
+    public string LastActorType;
 }
 
 public class Preferences
@@ -59,6 +60,7 @@ public class Preferences
             AutosaveInterval = PlayerPrefs.GetInt("AutosaveInterval", 300),
             BlockBorderOpacity = PlayerPrefs.GetFloat("BlockBorderOpacity", 0),
             ShowIndicators = false,
+            LastActorType = PlayerPrefs.GetString("LastActorType", ""),
         };
 
         string fileName = GetConfigFileName();
@@ -87,6 +89,7 @@ public class Preferences
             _current.BlockBorderOpacity = loaded.BlockBorderOpacity > 0 ? loaded.BlockBorderOpacity : _current.BlockBorderOpacity;
             _current.ShowIndicators = loaded.ShowIndicators;
             _current.PanWithRight = loaded.PanWithRight;
+            _current.LastActorType = loaded.LastActorType?.Length > 0 ? loaded.LastActorType : _current.LastActorType;
         }
 
         DirectorySetup();

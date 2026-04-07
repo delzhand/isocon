@@ -20,10 +20,13 @@ public class AddActorModal
 
         var token = Modal2.AddTokenField("Token", "Token");
 
-        var actorType = Modal2.AddInlineComboboxField("ActorType", "Actor Type", null, ActorTypeRegistry.GetAllSystems());
+        string lastActorType = Preferences.Current.LastActorType;
+        var actorType = Modal2.AddInlineComboboxField("ActorType", "Actor Type", lastActorType, ActorTypeRegistry.GetAllSystems());
         actorType.Q<ShunCombobox>().OnSelect += () =>
         {
             string type = contents.Q<ShunCombobox>("ActorType").selectedValue;
+            Preferences.Current.LastActorType = type;
+            Preferences.Save();
             ActorTypeRegistry.DoCallback($"{type}|AddActorModal");
         };
 
@@ -41,6 +44,11 @@ public class AddActorModal
         {
             Player.Self().ClearOp();
         });
+
+        if (lastActorType.Length > 0)
+        {
+            ActorTypeRegistry.DoCallback($"{lastActorType}|AddActorModal");
+        }
     }
 
     public static void OrderFields(string[] fieldNames)
