@@ -64,7 +64,14 @@ public class MaleghastActorType : ActorType
         contents.Q("CreateActor")?.RemoveFromHierarchy();
 
         string maleghastData = Preferences.Current.MaleghastFile;
-        var file = Modal2.AddInlineFileField("Homebrew", "Data Override", maleghastData, FileBrowserType.Maleghast, false, "You can make a copy of maleghast_data/base.json in the data folder to add homebrew unit types", () =>
+
+        var useHomebrew = Modal2.AddSwitchField("UseHomebrew", "Use Homebrew", maleghastData.Length > 0);
+        Modal2.MoveToContainer(useHomebrew, typeContainer);
+
+        var homebrewDesc = Modal2.AddLongMarkup("To create homebrew data, locate maleghast_data/base.json in your data directory and make a copy, then select that field below.");
+        Modal2.MoveToContainer(homebrewDesc, typeContainer);
+
+        var file = Modal2.AddInlineFileField("Homebrew", "Data Override", maleghastData, FileBrowserType.Maleghast, false, onChange: () =>
         {
             string result = FileBrowser.Result[0];
             Preferences.Current.MaleghastFile = result;
@@ -72,6 +79,14 @@ public class MaleghastActorType : ActorType
             Modal2.ChangeComboboxOptions("UnitTypeField", GetUnits());
         });
         Modal2.MoveToContainer(file, typeContainer);
+
+        modalConditionBool(homebrewDesc, maleghastData.Length > 0);
+        modalConditionBool(file, maleghastData.Length > 0);
+        useHomebrew.Q<ShunSwitch>().onValueChanged += (val) =>
+        {
+            modalConditionBool(homebrewDesc, val);
+            modalConditionBool(file, val);
+        };
 
         var unit = Modal2.AddInlineComboboxField("UnitTypeField", "Unit Type", "", GetUnits());
         Modal2.MoveToContainer(unit, typeContainer);
@@ -85,6 +100,11 @@ public class MaleghastActorType : ActorType
         create.SetVariant(ButtonVariant.Primary);
         create.clicked += () => CreateClicked();
         contents.Q(className: "shun-dialog__footer").Add(create);
+    }
+
+    private static void modalConditionBool(VisualElement e, bool show)
+    {
+        UI.ToggleDisplay(e, show);
     }
 
     private static void CreateClicked()
