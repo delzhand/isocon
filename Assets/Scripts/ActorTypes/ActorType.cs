@@ -532,6 +532,50 @@ public abstract class ActorType : IActorType
         return sb.ToString();
     }
 
+    protected VisualElement PipsBar(string name, string symbol, int current, int max, Color color, EventCallback<ClickEvent> minusAction, EventCallback<ClickEvent> plusAction)
+    {
+        VisualElement container = new VisualElement();
+        container.style.flexDirection = FlexDirection.Row;
+        container.style.marginBottom = 0;
+        container.style.paddingBottom = 0;
+
+        Label minus = new();
+        minus.name = "Minus";
+        minus.text = "-";
+        minus.style.color = Color.white;
+        minus.style.fontSize = 26;
+        minus.style.marginTop = 0; // line height oddities with the minus symbol
+        minus.style.marginBottom = 0;
+        minus.style.paddingBottom = 0;
+        minus.RegisterCallback<ClickEvent>(minusAction);
+
+        Label pips = new();
+        pips.name = name;
+        pips.text = SymbolString(symbol, current, max);
+        pips.style.color = color;
+        pips.style.unityTextOutlineColor = Color.white;
+        pips.style.unityTextOutlineWidth = 1;
+        pips.style.fontSize = 26;
+        pips.style.marginBottom = 0;
+        pips.style.paddingBottom = 0;
+
+
+        Label plus = new();
+        plus.name = "Plus";
+        plus.text = "+";
+        plus.style.color = Color.white;
+        plus.style.fontSize = 26;
+        plus.style.marginBottom = 0;
+        plus.style.paddingBottom = 0;
+        plus.RegisterCallback<ClickEvent>(plusAction);
+
+        container.Add(minus);
+        container.Add(pips);
+        container.Add(plus);
+
+        return container;
+    }
+
     public void DirectCommand(string command)
     {
         Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, command);

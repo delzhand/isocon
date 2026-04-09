@@ -27,6 +27,12 @@ public class MapEditingState : BaseState
         _revertState = State.GetStateFromScene();
     }
 
+    public override void OnLoseFocus()
+    {
+        base.OnLoseFocus();
+        UnbindCallbacks();
+    }
+
     public override void OnExit()
     {
         base.OnExit();
@@ -34,7 +40,6 @@ public class MapEditingState : BaseState
         BlockRendering.ToggleAllBorders(false);
         BlockRendering.ToggleSpacers(false);
         DisableInterface();
-        UnbindCallbacks();
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -44,6 +49,7 @@ public class MapEditingState : BaseState
         UI.TopBar.Q("CancelEditMap").RegisterCallback<ClickEvent>(Cancel);
         UI.TopBar.Q("LoadMap").RegisterCallback<ClickEvent>(LoadMap);
         UI.TopBar.Q("SaveMap").RegisterCallback<ClickEvent>(SaveMap);
+        UI.TopBar.Q("NewMap").RegisterCallback<ClickEvent>(MapEdit.NewMap);
     }
 
     public override void UpdateState()

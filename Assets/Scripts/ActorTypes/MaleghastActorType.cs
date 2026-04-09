@@ -231,14 +231,25 @@ public class MaleghastActorType : ActorType
         base.InitPanel(actorData, elementName, selected);
         VisualElement panel = UI.System.Q(elementName);
 
-        Label l = new();
-        l.name = "MainHPLabel";
-        l.text = SymbolString("■", CurrentHP, MaxHP);
-        l.style.color = Color.red;
-        l.style.unityTextOutlineColor = Color.white;
-        l.style.unityTextOutlineWidth = 1;
-        l.style.fontSize = 26;
-        panel.Q("Bars").Add(l);
+        if (selected)
+        {
+            VisualElement hppips = PipsBar("MainHPLabel", "■", CurrentHP, MaxHP, Color.red,
+                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "ModHP|-1"); },
+                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "ModHP|1"); }
+            );
+            panel.Q("Bars").Add(hppips);
+        }
+        else
+        {
+            Label l = new();
+            l.name = "MainHPLabel";
+            l.text = SymbolString("■", CurrentHP, MaxHP);
+            l.style.color = Color.red;
+            l.style.unityTextOutlineColor = Color.white;
+            l.style.unityTextOutlineWidth = 1;
+            l.style.fontSize = 26;
+            panel.Q("Bars").Add(l);
+        }
 
         VisualElement s1 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
         s1.Q<Label>("Label").text = "MOVE/DEF";
@@ -278,7 +289,10 @@ public class MaleghastActorType : ActorType
         var mg = new MenuItem("Maleghast", null);
         items.Add(mg);
 
+
         mg.Children.Add(new MenuItem("Add Token", AddTokenModal));
+
+        mg.Children.Add(new MenuItem("Alter Stats", AlterStatModal));
 
         if (!HasTag("Turn Ended"))
         {
@@ -302,27 +316,27 @@ public class MaleghastActorType : ActorType
             SelectionMenu.Hide();
         }));
 
-        if (House == "CARCASS")
-        {
-            var carcass = new MenuItem("CARCASS", null);
-            items.Add(carcass);
-            if (!HasTag("Reload"))
-            {
-                carcass.Children.Add(new MenuItem("Set Reload", () =>
-                {
-                    Actor actor = Actor.GetSelected();
-                    ActorTag tag = new();
-                    tag.Name = "Reload";
-                    tag.Color = GetHouseColor("CARCASS");
-                    Player.Self().CmdRequestActorCommand(actor.Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
+        // if (House == "CARCASS")
+        // {
+        //     var carcass = new MenuItem("CARCASS", null);
+        //     items.Add(carcass);
+        //     if (!HasTag("Reload"))
+        //     {
+        //         carcass.Children.Add(new MenuItem("Set Reload", () =>
+        //         {
+        //             Actor actor = Actor.GetSelected();
+        //             ActorTag tag = new();
+        //             tag.Name = "Reload";
+        //             tag.Color = GetHouseColor("CARCASS");
+        //             Player.Self().CmdRequestActorCommand(actor.Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
 
-                }));
-            }
-            else
-            {
-                carcass.Children.Add(new MenuItem("Set Reload", false));
-            }
-        }
+        //         }));
+        //     }
+        //     else
+        //     {
+        //         carcass.Children.Add(new MenuItem("Set Reload", false));
+        //     }
+        // }
 
         return items;
     }
@@ -330,7 +344,6 @@ public class MaleghastActorType : ActorType
     private void AddTokenModal()
     {
         Modal2.CreateContext("PrimaryDialog");
-        Modal2.AddDialogHeader("Add Token");
         Modal2.AddComboboxField("Token", "Token", "", GetTokens());
         Modal2.AddDialogFooter();
         Modal2.AddFooterConfirm("Add", () =>
@@ -474,23 +487,25 @@ public class MaleghastActorType : ActorType
     private void AlterStatModal()
     {
         SelectionMenu.Hide();
-        Modal.Reset("Alter Core Stats");
-        Modal.AddNumberNudgerField("MaxHP", "Max HP", MaxHP, 0);
-        Modal.AddNumberNudgerField("Move", "Move", Move, 0);
-        Modal.AddNumberNudgerField("Defense", "Defense", Defense, 0);
-
-        Modal.AddPreferredButton("Save", (evt) =>
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Alter Core Stats");
+        Modal2.AddInlineNumberNudgerField("MaxHP", "Max HP", MaxHP, 0, 20);
+        Modal2.AddInlineNumberNudgerField("Move", "Move", Move, 0, 10);
+        Modal2.AddInlineNumberNudgerField("Defense", "Defense", Defense, 0, 6);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Save", () =>
         {
-            MaxHP = UI.Modal.Q<NumberNudger>("MaxHP").value;
-            Defense = UI.Modal.Q<NumberNudger>("Defense").value;
-            Move = UI.Modal.Q<NumberNudger>("Move").value;
+            Modal2.ReadContext("PrimaryDialog");
+            MaxHP = Modal2.GetNumberNudgerFieldValue("MaxHP");
+            Defense = Modal2.GetNumberNudgerFieldValue("Defense");
+            Move = Modal2.GetNumberNudgerFieldValue("Move");
             string serialized = Serialize();
 
             Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"UpdateStats|{serialized}");
-            Modal.Close();
+            Modal2.Close();
             this.InitPanel(Actor.GetSelected().Data, "LeftTokenPanel", true);
         });
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        Modal2.Open();
     }
 
     #endregion

@@ -3406,7 +3406,7 @@
     background-color: var(--color-background);
     border-width: var(--border-width);
     border-color: var(--color-border);
-    border-radius: 12px;
+    border-radius: var(--border-radius-lg);
     padding: 24px;
     width: 425px;
     max-width: 90%;

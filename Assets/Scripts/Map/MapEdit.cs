@@ -151,10 +151,10 @@ public class MapEdit
         {
             OpenOpenModal(evt);
         });
-        optionsRoot.Q("DataOptions").Q("Reset").RegisterCallback<ClickEvent>((evt) =>
-        {
-            ResetConfirm(evt);
-        });
+        // optionsRoot.Q("DataOptions").Q("Reset").RegisterCallback<ClickEvent>((evt) =>
+        // {
+        //     ResetConfirm(evt);
+        // });
         optionsRoot.Q("DataOptions").Q("MaleghastImport").RegisterCallback<ClickEvent>((evt) =>
         {
             OpenMMMImportModal(evt);
@@ -272,7 +272,7 @@ public class MapEdit
         });
     }
 
-    private static void ResetConfirm(ClickEvent evt)
+    public static void NewMap(ClickEvent evt)
     {
         if (!TerrainController.MapDirty)
         {
@@ -280,39 +280,48 @@ public class MapEdit
         }
         else
         {
-            Modal.DoubleConfirm("Confirm Reset", "You have unsaved changes. Discard?", ResetMap);
+            Modal2.Confirm("SecondaryDialog", "You have unsaved changes. Discard?", () =>
+            {
+                ResetMap();
+            });
         }
     }
 
     private static void ResetMap()
     {
         CurrentFile = "";
-        Modal.Reset("Map Size");
-        Modal.AddIntField("NewMapSizeX", "Map Width", 8);
-        Modal.AddIntField("NewMapSizeY", "Map Length", 8);
-        Modal.AddIntField("NewMapSizeZ", "Map Height", 1);
-        Modal.AddPreferredButton("Reset Map", (evt) =>
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Map Size");
+        Modal2.AddInlineNumberNudgerField("NewMapSizeX", "Map Width", 8, 1, 50);
+        Modal2.AddInlineNumberNudgerField("NewMapSizeY", "Map Length", 8, 1, 50);
+        Modal2.AddInlineNumberNudgerField("NewMapSizeZ", "Map Height", 1, 1, 10);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Create", () =>
         {
-            int x = UI.Modal.Q<IntegerField>("NewMapSizeX").value;
-            int y = UI.Modal.Q<IntegerField>("NewMapSizeY").value;
-            int z = UI.Modal.Q<IntegerField>("NewMapSizeZ").value;
+            Modal2.ReadContext("PrimaryDialog");
+            int x = Modal2.GetNumberNudgerFieldValue("NewMapSizeX");
+            int y = Modal2.GetNumberNudgerFieldValue("NewMapSizeY");
+            int z = Modal2.GetNumberNudgerFieldValue("NewMapSizeZ");
             TerrainController.ResetTerrain(x, y, z);
             MapMeta.Reset();
             Toast.AddSimple("Map reset.");
-            Modal.Close();
+            Modal2.Close("PrimaryDialog");
         });
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        Modal2.Open();
     }
 
     private static void OpenMMMImportModal(ClickEvent evt)
     {
-        Modal.Reset("Import Map by URL");
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Import Map by URL");
 
-        Modal.AddMarkup("Description", "Maps from https://alessandrominali.github.io/maleghast/map.html can be imported by entering the Permalink. Maps that use custom brushes are not supported.");
-        Modal.AddTextField("UrlField", "URL", "");
-        Modal.AddPreferredButton("Confirm", (evt) =>
+        Modal2.AddLongMarkup("Maps from https://alessandrominali.github.io/maleghast/map.html can be imported by entering the Permalink. Maps that use custom brushes are not supported.");
+        Modal2.AddInlineTextField("UrlField", "URL", "");
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Confirm", () =>
         {
-            string url = UI.Modal.Q<TextField>("UrlField").value;
+            Modal2.ReadContext("PrimaryDialog");
+            string url = Modal2.GetTextFieldValue("UrlField");
             if (!url.Contains("https://alessandrominali.github.io/maleghast/map"))
             {
                 Toast.AddError("Does not appear to be a valid URL.");
@@ -320,10 +329,10 @@ public class MapEdit
             else
             {
                 MMMImporter.CreateFromURL(url);
-                Modal.Close();
+                Modal2.Close();
             }
         });
-        Modal.AddButton("Close", Modal.CloseEvent);
+        Modal2.Open();
     }
 
     private static void OpenSaveModal(ClickEvent evt)

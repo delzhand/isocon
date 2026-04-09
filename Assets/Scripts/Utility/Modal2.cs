@@ -474,7 +474,7 @@ public class Modal2
 
         var layout2 = new VisualElement();
         layout2.style.flexDirection = FlexDirection.Column;
-        layout2.style.alignItems = Align.Stretch;
+        layout2.style.alignItems = Align.FlexEnd;
         layout2.style.minWidth = 250;
         layout.Add(layout2);
 
@@ -869,7 +869,7 @@ public class Modal2
         confirm.clicked += confirmAction;
         confirm.clicked += () =>
         {
-            Modal2.Close();
+            Modal2.Close(dialog);
         };
         footer.Add(confirm);
         Modal2.Open();

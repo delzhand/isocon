@@ -209,14 +209,25 @@ public class Icon1x5MobActorType : Icon1x5Base
         base.InitPanel(actorData, elementName, selected);
         VisualElement panel = UI.System.Q(elementName);
 
-        Label l = new();
-        l.name = "MainHPLabel";
-        l.text = MobHPString();
-        l.style.color = Color.red;
-        l.style.unityTextOutlineColor = Color.white;
-        l.style.unityTextOutlineWidth = 1;
-        l.style.fontSize = 26;
-        panel.Q("Bars").Add(l);
+        if (selected)
+        {
+            VisualElement hppips = PipsBar("MainHPLabel", "■", Hits, 2, Color.red,
+                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "ModHP|-1"); },
+                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "ModHP|1"); }
+            );
+            panel.Q("Bars").Add(hppips);
+        }
+        else
+        {
+            Label l = new();
+            l.name = "MainHPLabel";
+            l.text = SymbolString("■", Hits, 2);
+            l.style.color = Color.red;
+            l.style.unityTextOutlineColor = Color.white;
+            l.style.unityTextOutlineWidth = 1;
+            l.style.fontSize = 26;
+            panel.Q("Bars").Add(l);
+        }
 
         VisualElement s1 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
         s1.Q<Label>("Label").text = "DMG/FRAY";

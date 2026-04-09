@@ -11,8 +11,7 @@
             "def": 4,
             "hp": 2,
             "type": "Thrall",
-            "traits": "=Formation",
-            "tokens": "Loaded"
+            "traits": "=Formation"
         },
         {
             "conditions": "",
@@ -38,8 +37,7 @@
             "def": 3,
             "hp": 4,
             "type": "Scion",
-            "traits": "=Formation",
-            "tokens": "Loaded"
+            "traits": "=Formation"
         },
         {
             "conditions": "",
@@ -52,8 +50,7 @@
             "def": 4,
             "hp": 4,
             "type": "Hunter",
-            "traits": "=Formation",
-            "tokens": "Loaded"
+            "traits": "=Formation"
         },
         {
             "conditions": "Physical Armor",
@@ -67,7 +64,6 @@
             "hp": 6,
             "type": "Tyrant",
             "traits": "=Formation|=Siege Shield",
-            "tokens": "Loaded",
             "size": 2
         },
         {
@@ -82,7 +78,7 @@
             "hp": 8,
             "type": "Necromancer",
             "traits": "=Formation|=Hot Clip|=Loaded|-Bone Wall|-Gun Kata|-Clutch Reload",
-            "tokens": "Loaded"
+            "tokens": "Soul#0"
         },
         {
             "conditions": "",
@@ -161,7 +157,8 @@
             "def": 3,
             "hp": 10,
             "type": "Necromancer",
-            "traits": "=Blood Rage|=Fueled by Rage|-Nerve Twitch|-Blood Drinker|-Blood Rush"
+            "traits": "=Blood Rage|=Fueled by Rage|-Nerve Twitch|-Blood Drinker|-Blood Rush",
+            "tokens": "Soul#0"
         },
         {
             "conditions": "Super Armor",
@@ -239,7 +236,8 @@
             "def": 4,
             "hp": 10,
             "type": "Necromancer",
-            "traits": "=Blessed with Filth|-Pollution Shroud|-Corruptor|-Spreader"
+            "traits": "=Blessed with Filth|-Pollution Shroud|-Corruptor|-Spreader",
+            "tokens": "Soul#0"
         },
         {
             "conditions": "",
@@ -318,7 +316,8 @@
             "def": 4,
             "hp": 8,
             "type": "Necromancer",
-            "traits": "=Dread Presence|-Teleport|-Puppet Master|-Maggot Destroyer"
+            "traits": "=Dread Presence|-Teleport|-Puppet Master|-Maggot Destroyer",
+            "tokens": "Soul#0"
         },
         {
             "conditions": "Super Armor|Miracle",
@@ -398,7 +397,8 @@
             "def": 4,
             "hp": 10,
             "type": "Necromancer",
-            "traits": "=Holy Vessel|-Winter Rose Stance|-Corpse Violet Stance|-Royal Chrysanthemum Stance"
+            "traits": "=Holy Vessel|-Winter Rose Stance|-Corpse Violet Stance|-Royal Chrysanthemum Stance",
+            "tokens": "Soul#0"
         },
         {
             "conditions": "",
@@ -477,7 +477,8 @@
             "def": 3,
             "hp": 10,
             "type": "Necromancer",
-            "traits": "=Polyglot|-Accelerate Evolution|-Rapid Move|-Ancillary Limbs"
+            "traits": "=Polyglot|-Accelerate Evolution|-Rapid Move|-Ancillary Limbs",
+            "tokens": "Soul#0"
         },
         {
             "conditions": "",
@@ -556,7 +557,8 @@
             "def": 5,
             "hp": 8,
             "type": "Necromancer",
-            "traits": "=Flesh Sacrifice|-Red Communion|-Slaughter Frenzy|-Priest of the Hue"
+            "traits": "=Flesh Sacrifice|-Red Communion|-Slaughter Frenzy|-Priest of the Hue",
+            "tokens": "Soul#0"
         },
         {
             "conditions": "",
@@ -640,7 +642,8 @@
             "hp": 10,
             "type": "Necromancer",
             "traits": "=Necrophage|=Large|=Demolisher|-Revelation|-Tyrant Ruler|-Talons of Hell",
-            "size": 2
+            "size": 2,
+            "tokens": "Soul#0"
         },
         {
             "conditions": "",
@@ -725,20 +728,17 @@
             "hp": 8,
             "type": "Necromancer",
             "traits": "=Clad in Law|-Steel Purpose|-Fueled by Hate|-Paragon",
-            "tokens": "Super Armor v Criminals"
-        },
+            "tokens": "Soul#0|Super Armor v Criminals"
+        }
     ],
     "Tokens": [
-        "Magic Armor",
-        "Phys Armor",
-        "Super Armor",
         "Berserk",
+        "Buff",
         "Burst",
         "Corpse",
         "Curseproof",
         "Deathburst",
         "Debt",
-        "Buff",
         "Debuff",
         "Doom",
         "Evolve 1",
@@ -750,15 +750,18 @@
         "Lunacy",
         "Lurk",
         "Madness",
+        "Magic Armor",
         "Miracle",
         "Mutation",
         "Petrify",
+        "Phys Armor",
         "Plague",
         "Provoke",
         "Reload",
         "Retaliation",
         "Slow",
         "Speed",
-        "Strength"
+        "Strength",
+        "Super Armor"
     ]
 }

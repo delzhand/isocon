@@ -21,15 +21,15 @@ public class UI : MonoBehaviour
 
     void Update()
     {
-        List<VisualElement> dropdowns = UI.System.parent.Query(null, "unity-base-dropdown__container-outer").ToList();
-        if (dropdowns.Count > 0)
-        {
-            hardSuspend = true;
-        }
-        else
-        {
-            hardSuspend = false;
-        }
+        // List<VisualElement> dropdowns = UI.System.parent.Query(null, "unity-base-dropdown__container-outer").ToList();
+        // if (dropdowns.Count > 0)
+        // {
+        //     hardSuspend = true;
+        // }
+        // else
+        // {
+        //     hardSuspend = false;
+        // }
     }
 
     void LateUpdate()
