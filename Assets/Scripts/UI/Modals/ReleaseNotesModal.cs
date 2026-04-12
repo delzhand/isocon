@@ -23,7 +23,7 @@ public class ReleaseNotesModal
 
         Modal2.MoveToScrollArea(accordion, scroll);
 
-        Modal2.AddDialogFooter();
+        Modal2.AddDialogFooter("Close");
         Modal2.Open("Release Notes");
     }
 

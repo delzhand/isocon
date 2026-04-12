@@ -66,7 +66,6 @@ public class LauncherState : BaseState
 
     private void DisableInterface()
     {
-        UI.ToggleDisplay("StartupPanel", false);
         UI.ToggleDisplay("Launcher", false);
     }
     #endregion
