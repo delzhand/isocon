@@ -1,5 +1,5 @@
 ﻿:root {
-    --color-background: rgba(36, 36, 36, 0.9490196);
+    --color-background: rgba(36, 36, 36, 1);
     --color-foreground: rgba(251, 251, 251, 1);
     --color-border: rgba(255, 255, 255, 0.1);
     --color-ring: rgba(141, 141, 141, 1);
