@@ -105,7 +105,7 @@ public class Icon2x0EnemyActorType : Icon2x0Base
     {
         Modal2.ReadContext("PrimaryDialog");
         string token = Modal2.GetComboboxFieldValue("Token");
-        if (token == null)
+        if (token.Length == 0)
         {
             Toast.AddError("A token has not been selected");
             return;

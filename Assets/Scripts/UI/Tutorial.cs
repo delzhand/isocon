@@ -56,7 +56,7 @@ public class Tutorial
             Modal2.Close();
         };
         footer.Add(skipAll);
-        Modal2.Open();
+        Modal2.Open("Tutorial");
     }
 
     public static (string, string) GetTutorial(string id)

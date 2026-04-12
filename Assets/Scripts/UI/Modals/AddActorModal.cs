@@ -3,6 +3,7 @@ using System.IO;
 using UnityEngine.UIElements;
 using UnityEngine;
 using ShunUI;
+using Unity.VisualScripting;
 
 public class AddActorModal
 {
@@ -39,7 +40,7 @@ public class AddActorModal
         {
             Modal2.Close("PrimaryDialog");
         });
-        Modal2.Open();
+        Modal2.Open("Add Actor");
         Modal2.AddCloseAction(() =>
         {
             Player.Self().ClearOp();

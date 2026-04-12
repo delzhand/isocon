@@ -37,7 +37,7 @@ public class StartSessionModal
             StartSession(mode);
         });
 
-        Modal2.Open();
+        Modal2.Open("Start Session");
     }
 
     private static void StartSession(ConnectMode mode)

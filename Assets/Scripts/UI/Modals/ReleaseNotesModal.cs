@@ -4,7 +4,68 @@ using UnityEngine;
 
 public class ReleaseNotesModal
 {
-    private static readonly string notes = @$"<size=+2><b>Features</b></size>
+    public static void Open(string version = null)
+    {
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader($"Release Notes");
+        var scroll = Modal2.AddScrollArea("Scroll");
+
+        var accordion = Modal2.AddAccordion("ReleaseNotes");
+
+        var notes = getNotes();
+        var orderedReleases = notes.Keys;
+        var targetVersion = (version != null) ? version : orderedReleases.ElementAt(0);
+        foreach (string v in orderedReleases)
+        {
+            bool isOpen = (v == targetVersion);
+            Modal2.AddAccordionItem(accordion, $"v{v}", notes[v], isOpen);
+        }
+
+        Modal2.MoveToScrollArea(accordion, scroll);
+
+        Modal2.AddDialogFooter();
+        Modal2.Open("Release Notes");
+    }
+
+    public static void OpenAtStartup(string version)
+    {
+        string seen = Preferences.GetReleaseNotesSeen();
+        List<string> seenParts = seen.Split("|").ToList();
+        if (seenParts.Contains(version))
+        {
+            return;
+        }
+        seenParts.Add(version);
+        Preferences.SetReleaseNotesSeen(string.Join("|", seenParts.ToArray()));
+        Open(version);
+    }
+
+    private static Dictionary<string, string> getNotes()
+    {
+        var notes = new Dictionary<string, string>();
+
+        notes.Add("0.9.0", @"<size=+2><b>Features</b></size>
+* Major UI Redesign
+  > New token library
+  > New main navigation
+  > New right-click menus for actors and tiles
+  > New Release Notes dialog, can be viewed by clicking version number on start screen
+<size=+2><b>Improvements</b></size>
+* Improved keyboard navigation between form elements
+* Dialogs can now be closed by clicking anywhere outside of them
+* Last-used actor type is remembered in Add Actor dialog
+* File browser now uses dark theme
+");
+
+        notes.Add("0.8.2", @"<size=+2><b>Fixes</b></size>
+* Adds an important missing context menu to Maleghast actors
+* Maleghast actors can edit HP directly on the actor panel when selected");
+
+        notes.Add("0.8.1", @"<size=+2><b>Fixes</b></size>
+* Resolved an issue with config files from older versions breaking the main menu
+* Resolved an issue wherein tile effects couldn't be applied");
+
+        notes.Add("0.8.0", @"<size=+2><b>Features</b></size>
 * Sessions can now be saved and loaded
 * Session will autosave every 5 minutes or when exiting to launcher
 * GameSystems replaced by Actor Types
@@ -36,24 +97,22 @@ public class ReleaseNotesModal
 
 <size=+2><b>Known Issues</b></size>
 * Custom cursor prevents window resize handles from being shown, though resizing still works
-* Under certain circumstances, selecting a tile or dragging an actor to a tile will select a tile of lower elevation than intended
-";
+* Under certain circumstances, selecting a tile or dragging an actor to a tile will select a tile of lower elevation than intended");
 
-    public static void Open(string version)
-    {
-        Modal2.CreateContext("PrimaryDialog");
-        Modal2.AddDialogHeader($"Release Notes for IsoCON v{version}");
-        var scroll = Modal2.AddScrollArea("Scroll");
-        var notesField = Modal2.AddLongMarkup(notes);
-        Modal2.MoveToScrollArea(notesField, scroll);
-        Modal2.AddDialogFooter("Close", () =>
-        {
-            string seen = Preferences.GetReleaseNotesSeen();
-            List<string> seenParts = seen.Split("|").ToList();
-            seenParts.Add(version);
-            Preferences.SetReleaseNotesSeen(string.Join("|", seenParts.ToArray()));
-            Modal2.Close();
-        });
-        Modal2.Open();
+        notes.Add("0.7.6", @"<size=+2><b>Features</b></size>
+* Added support for Icon 2.0 Playtest game system
+* Added a Lowest (disadvantage) option to the dice roller
+* Updated documentation
+* Custom GameSystems can now more easily make direct dice rolls");
+        notes.Add("0.7.5", @"* Fixes a bug that caused status effects to appear on incorrect tokens. (ICON 1.5)
+* Adds a framerate limiter to config. (thanks to McPalm)");
+        notes.Add("0.7.4", @"* Tokens can now be deleted from the library.
+* Missing image files in the hashed-tokens directory now throw an error instead of breaking.
+* Unity version updated to 6.
+* Unity splash screen removed.
+* Minor UI tweaks.");
+        notes.Add("0.7.3", "* A critical bug with client connections has been resolved");
+
+        return notes;
     }
 }

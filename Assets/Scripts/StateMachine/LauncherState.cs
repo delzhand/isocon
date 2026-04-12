@@ -25,18 +25,20 @@ public class LauncherState : BaseState
         BindCallbacks();
         // sm.ChangeSubState(null);
         // Session.LauncherMap();
+        Startup.ReleaseNotes();
     }
 
     public override void OnLoseFocus()
     {
         base.OnLoseFocus();
-        DisableInterface();
         UnbindCallbacks();
+        DisableInterface();
     }
 
 
     public override void OnExit()
     {
+        base.OnExit();
     }
 
     public override void UpdateState()
@@ -51,9 +53,8 @@ public class LauncherState : BaseState
     #region Interface
     private void EnableInterface()
     {
-        UI.ToggleDisplay("StartupPanel", true);
-        UI.ToggleDisplay("StartupOptions", true);
         UI.ToggleDisplay("Launcher", true);
+        UI.ToggleDisplay("Tabletop", false);
     }
 
     private void SetLauncherBackground()

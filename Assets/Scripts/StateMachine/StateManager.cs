@@ -36,6 +36,7 @@ public class StateManager : MonoBehaviour
             currentState.OnLoseFocus();
         }
         StateStack.Push(newState);
+        // Debug.Log($"push {newState.GetName()}");
         newState.OnEnter();
         // HudText.SetItem("stack", StackString(), 10, HudTextColor.Red);
         // Debug.Log(StackString());
@@ -45,7 +46,8 @@ public class StateManager : MonoBehaviour
     {
         var currentState = StateStack.Peek();
         currentState.OnExit();
-        StateStack.Pop();
+        var oldState = StateStack.Pop();
+        // Debug.Log($"pop {oldState.GetName()}");
         var newState = StateStack.Peek();
         newState.OnEnter();
         // HudText.SetItem("stack", StackString(), 10, HudTextColor.Red);
@@ -87,7 +89,7 @@ public class StateManager : MonoBehaviour
         List<string> states = new();
         foreach (IState _state in StateStack)
         {
-            states.Add(_state.TypeName());
+            states.Add(_state.GetName());
         }
         states.Reverse();
         return string.Join(" | ", states);
@@ -95,7 +97,7 @@ public class StateManager : MonoBehaviour
 
     public static bool IsModalState()
     {
-        return StateStack.Peek().TypeName() == "ModalState";
+        return StateStack.Peek().GetName() == "ModalState";
     }
 }
 
@@ -105,7 +107,7 @@ public interface IState
     public void OnLoseFocus();
     public void OnExit();
     public void UpdateState();
-    public string TypeName();
+    public string GetName();
 
     public void HandleInput();
 }

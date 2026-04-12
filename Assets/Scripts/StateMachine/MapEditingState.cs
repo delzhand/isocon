@@ -208,7 +208,7 @@ public class MapEditingState : BaseState
             Modal2.Close();
         });
 
-        Modal2.Open();
+        Modal2.Open("Save Map");
     }
 
     private static void LoadMap(ClickEvent evt)
@@ -224,7 +224,7 @@ public class MapEditingState : BaseState
                 FileBrowserHelper.Open(MapEdit.OpenFile, "", FileBrowserType.Maps);
                 Modal2.Close();
             });
-            Modal2.Open();
+            Modal2.Open("Load Map");
         }
         else
         {

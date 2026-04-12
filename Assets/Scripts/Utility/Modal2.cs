@@ -47,10 +47,10 @@ public class Modal2
         return _sdc[dialogName];
     }
 
-    public static void Open()
+    public static void Open(string name)
     {
         CurrentDialog.Open();
-        ModalState.Activate();
+        ModalState.Activate(name);
         Modal2.SetCloseAction(StateManager.PopState);
     }
 
@@ -64,7 +64,7 @@ public class Modal2
         UI.System.Q(dialog).Q<ShunDialog>()?.Close();
     }
 
-    public static void SetCloseAction(Action closeAction)
+    private static void SetCloseAction(Action closeAction)
     {
         CurrentDialog.CloseAction = closeAction;
     }
@@ -117,6 +117,31 @@ public class Modal2
         confirm.SetVariant(ButtonVariant.Primary);
         Contents(_createContext).Q(className: "shun-dialog__footer").Add(confirm);
         return confirm;
+    }
+
+    public static ShunAccordion AddAccordion(string name)
+    {
+        var accordion = new ShunAccordion();
+        accordion.name = name;
+        Contents(_createContext).Add(accordion);
+        return accordion;
+    }
+
+    public static VisualElement AddAccordionItem(ShunAccordion accordion, string label, string content, bool open)
+    {
+        var item = new ShunAccordionItem();
+        item.title = label;
+
+        var markup = new ShunLabel();
+        markup.AddToClassList("shun-dialog__label");
+        markup.text = content;
+        markup.style.whiteSpace = WhiteSpace.Normal;
+
+        item.SetContent(markup);
+        item.isExpanded = open;
+        accordion.AddItem(item);
+
+        return item;
     }
 
     public static string GetTextFieldValue(string name)
@@ -872,6 +897,6 @@ public class Modal2
             Modal2.Close(dialog);
         };
         footer.Add(confirm);
-        Modal2.Open();
+        Modal2.Open("Confirm");
     }
 }

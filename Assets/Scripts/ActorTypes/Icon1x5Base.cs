@@ -28,7 +28,7 @@ public abstract class Icon1x5Base : ActorType
         Modal2.AddInlineNumberNudgerField("Power", "Curse/Boon", 0, -10, 10);
         Modal2.AddDialogFooter();
         Modal2.AddFooterConfirm("Roll", AttackRoll);
-        Modal2.Open();
+        Modal2.Open("Attack Roll");
     }
 
     private void SaveRollClicked()
@@ -39,7 +39,7 @@ public abstract class Icon1x5Base : ActorType
         Modal2.AddInlineNumberNudgerField("Power", "Curse/Boon", 0, -10, 10);
         Modal2.AddDialogFooter();
         Modal2.AddFooterConfirm("Roll", SaveRoll);
-        Modal2.Open();
+        Modal2.Open("Save Roll");
     }
 
     private void AttackRoll()

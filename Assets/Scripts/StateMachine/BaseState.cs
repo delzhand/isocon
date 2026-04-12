@@ -23,7 +23,7 @@ public abstract class BaseState : IState
     {
     }
 
-    public string TypeName()
+    public virtual string GetName()
     {
         return this.GetType().Name;
     }

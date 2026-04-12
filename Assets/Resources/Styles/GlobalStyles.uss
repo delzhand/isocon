@@ -275,11 +275,12 @@
     width: 150px;
 }
 
-.shun-dialog__header {
+.shun-dialog__content .shun-dialog__header {
     margin-left: -22px;
     margin-right: -22px;
     margin-top: -22px;
-    padding: 4px 22px;
+    margin-bottom: 24px;
+    padding: 4px 12px;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     border-bottom-left-radius: 3px;
@@ -287,10 +288,22 @@
     background-color: var(--color-primary);
 }
 
-.shun-container .switch-track {
+.shun-dialog__content .switch-track {
     background-color: #6e6e6e;
 }
 
-.shun-container .switch-track.switch-track--checked {
+.shun-dialog__content .switch-track.switch-track--checked {
     background-color: var(--color-primary);
+}
+
+.menubar__container {
+    padding: 2px;
+}
+
+.menubar__menu .menubar__menu-trigger {
+    border-radius: 3px;
+}
+
+.shun-scroll-area .unity-scroll-view__content-viewport {
+    padding: 8px;
 }

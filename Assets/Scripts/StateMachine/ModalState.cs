@@ -5,9 +5,16 @@ using UnityEngine.UIElements;
 
 public class ModalState : BaseState
 {
-    public static void Activate()
+    string name;
+
+    public ModalState(string modalName)
     {
-        StateManager.PushState(new ModalState());
+        name = modalName;
+    }
+
+    public static void Activate(string modalName)
+    {
+        StateManager.PushState(new ModalState(modalName));
     }
 
     // public override void OnEnter()
@@ -22,6 +29,12 @@ public class ModalState : BaseState
     //     UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), false);
     //     UI.ToggleDisplay(UI.System.Q("TopRight").Q("TerrainInfo"), false);
     // }
+
+    public override string GetName()
+    {
+        return $"{this.GetType().Name} ({name})";
+    }
+
 
     public override void HandleInput()
     {

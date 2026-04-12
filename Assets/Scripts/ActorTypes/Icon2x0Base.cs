@@ -28,7 +28,7 @@ public abstract class Icon2x0Base : ActorType
         Modal2.AddInlineNumberNudgerField("Power", "Weakness/Power", 0, -10, 10);
         Modal2.AddDialogFooter();
         Modal2.AddFooterConfirm("Roll", AttackRoll);
-        Modal2.Open();
+        Modal2.Open("Attack Roll");
     }
 
     private void SaveRollClicked()

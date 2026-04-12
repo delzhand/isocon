@@ -111,12 +111,17 @@ public class MaleghastActorType : ActorType
     {
         Modal2.ReadContext("PrimaryDialog");
         string token = Modal2.GetComboboxFieldValue("Token");
-        if (token == null)
+        if (token.Length == 0)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
         string houseJob = Modal2.GetComboboxFieldValue("UnitTypeField");
+        if (houseJob.Length == 0)
+        {
+            Toast.AddError("A unit type was not selected");
+            return;
+        }
         string house = houseJob.Split("/")[0];
         string job = houseJob.Split("/")[1];
         string colorValue = Modal2.GetComboboxFieldValue("PlayerColor");
@@ -383,7 +388,7 @@ public class MaleghastActorType : ActorType
                 Toast.AddError($"{actor.Data.Name} already has {token}");
             }
         });
-        Modal2.Open();
+        Modal2.Open("Add Token");
     }
 
     public override void Command(string command, ActorData tokenData)
@@ -525,7 +530,7 @@ public class MaleghastActorType : ActorType
             Modal2.Close();
             this.InitPanel(Actor.GetSelected().Data, "LeftTokenPanel", true);
         });
-        Modal2.Open();
+        Modal2.Open("Alter Stat");
     }
 
     #endregion

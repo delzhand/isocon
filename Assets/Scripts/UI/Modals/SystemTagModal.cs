@@ -52,7 +52,7 @@ public class SystemTagModal
         };
         footer.Add(confirm);
 
-        Modal2.Open();
+        Modal2.Open("System Tag");
         Modal2.AddCloseAction(() =>
         {
             Player.Self().ClearOp();

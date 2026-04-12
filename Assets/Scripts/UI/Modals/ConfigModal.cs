@@ -74,7 +74,7 @@ public class ConfigModal
         };
         footer.Add(confirm);
 
-        Modal2.Open();
+        Modal2.Open("Config");
     }
 
     private static void SaveConfig()

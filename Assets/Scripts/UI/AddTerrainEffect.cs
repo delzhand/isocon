@@ -34,7 +34,7 @@ public class AddTerrainEffect
         };
         footer.Add(confirm);
 
-        Modal2.Open();
+        Modal2.Open("Add Terrain Effect");
     }
 
     private static void ConfirmAddEffect()

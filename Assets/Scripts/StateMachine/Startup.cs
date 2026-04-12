@@ -13,8 +13,8 @@ using UnityEngine.UIElements;
 
 public class Startup
 {
-    private static string _version = "0.8.2";
-    private static string _latestVersion = "0.8.2";
+    private static string _version = "0.9.0";
+    private static string _latestVersion = "0.9.0";
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     public static void RunTasks()
@@ -33,19 +33,54 @@ public class Startup
         UI.SetBlocking(UI.System, StringUtility.CreateArray(@"SelectionMenu", "TopBar", "BottomBar", "ToolsPanel", "ToolOptions", "LeftTokenPanel", "RightTokenPanel", "Backdrop", "TopRight"));
         Application.targetFrameRate = Preferences.Current.TargetFramerate;
 
-        ReleaseNotes();
-        BindUICallbacks();
+        // ReleaseNotes();
+        MainMenuSetup();
+        // BindUICallbacks();
     }
 
-    private static void ReleaseNotes()
+    public static void ReleaseNotes()
     {
-        string seen = Preferences.GetReleaseNotesSeen();
-        List<string> seenParts = seen.Split("|").ToList();
-        if (seenParts.Contains(_version))
+        ReleaseNotesModal.OpenAtStartup(_version);
+    }
+
+    public static void MainMenuSetup()
+    {
+        var menu = UI.System.Q("TableMenu").Q<ShunMenuBar>();
+        menu.variant = MenuBarVariant.Outline;
+        menu.RegisterCallback<MouseEnterEvent>((evt) =>
         {
-            return;
-        }
-        ReleaseNotesModal.Open(_version);
+            menu.style.opacity = 1;
+        });
+        menu.RegisterCallback<MouseLeaveEvent>((evt) =>
+        {
+            menu.style.opacity = .25f;
+        });
+
+        menu.Query<ShunMenuBarMenu>().ForEach((item) =>
+        {
+            item.RemoveFromHierarchy();
+        });
+
+        var addMenu = menu.AddMenu("Add");
+        addMenu.AddItem("Actor", AddActorModal.Open);
+        addMenu.AddItem("Tag", SystemTagModal.Open);
+
+        var sessionMenu = menu.AddMenu("Session");
+        sessionMenu.AddItem("Save", SessionManager.Save);
+        sessionMenu.AddItem("Load", SessionManager.Load);
+        sessionMenu.AddItem("Exit", TabletopState.ConfirmReturnToLauncher);
+
+        var mapMenu = menu.AddMenu("Map");
+        mapMenu.AddItem("Edit");
+        mapMenu.AddItem("Save");
+        mapMenu.AddItem("Load");
+
+        var viewMenu = menu.AddMenu("Config");
+        viewMenu.AddItem("Dice Roller");
+        viewMenu.AddItem("Tile Coords");
+        viewMenu.AddItem("Top Down Camera");
+        viewMenu.AddItem("True Iso Camera");
+        viewMenu.AddItem("Preferences", ConfigModal.Open);
     }
 
     private static void BindUICallbacks()
@@ -64,32 +99,33 @@ public class Startup
         {
             UI.ToggleActiveClass(UI.System.Q("BottomBar"));
         });
-        UI.System.Q("SessionWrapper").RegisterCallback<MouseEnterEvent>((evt) =>
-        {
-            UI.ToggleDisplay(UI.TopBar.Q("SaveSession"), true);
-            UI.ToggleDisplay(UI.TopBar.Q("LoadSession"), true);
-        });
-        UI.System.Q("SessionWrapper").RegisterCallback<MouseLeaveEvent>((evt) =>
-        {
-            UI.ToggleDisplay(UI.TopBar.Q("SaveSession"), false);
-            UI.ToggleDisplay(UI.TopBar.Q("LoadSession"), false);
-        });
-        UI.TopBar.Q("SaveSession").RegisterCallback<ClickEvent>((evt) => SessionManager.Save());
-        UI.TopBar.Q("LoadSession").RegisterCallback<ClickEvent>((evt) => SessionManager.Load());
-        UI.TopBar.Q("Isocon").RegisterCallback<ClickEvent>(TabletopState.ConfirmReturnToLauncher);
+        // UI.System.Q("SessionWrapper").RegisterCallback<MouseEnterEvent>((evt) =>
+        // {
+        //     UI.ToggleDisplay(UI.TopBar.Q("SaveSession"), true);
+        //     UI.ToggleDisplay(UI.TopBar.Q("LoadSession"), true);
+        // });
+        // UI.System.Q("SessionWrapper").RegisterCallback<MouseLeaveEvent>((evt) =>
+        // {
+        //     UI.ToggleDisplay(UI.TopBar.Q("SaveSession"), false);
+        //     UI.ToggleDisplay(UI.TopBar.Q("LoadSession"), false);
+        // });
+        // UI.TopBar.Q("SaveSession").RegisterCallback<ClickEvent>((evt) => SessionManager.Save());
+        // UI.TopBar.Q("LoadSession").RegisterCallback<ClickEvent>((evt) => SessionManager.Load());
+        // UI.TopBar.Q("Isocon").RegisterCallback<ClickEvent>(TabletopState.ConfirmReturnToLauncher);
     }
 
     private static async void SetVersionText()
     {
+        UI.System.Q<Button>("Version").RegisterCallback<ClickEvent>((evt) => ReleaseNotesModal.Open());
         await AsyncAwake();
         if (_version != _latestVersion)
         {
-            UI.System.Q<Label>("Version").text = $"v{_version} (version {_latestVersion} available)";
-            UI.System.Q<Label>("Version").style.backgroundColor = ColorUtility.UIBlue;
+            UI.System.Q<Button>("Version").text = $"v{_version} (version {_latestVersion} available)";
+            UI.System.Q<Button>("Version").style.backgroundColor = ColorUtility.UIBlue;
         }
         else
         {
-            UI.System.Q<Label>("Version").text = $"v{_version}";
+            UI.System.Q<Button>("Version").text = $"v{_version}";
         }
     }
 

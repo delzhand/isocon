@@ -145,7 +145,7 @@ public abstract class ActorType : IActorType
         Modal2.AddInlineIntField("TagValue", "Initial Value", 0);
         Modal2.AddDialogFooter();
         Modal2.AddFooterConfirm("Add", AddTagSubmit);
-        Modal2.Open();
+        Modal2.Open("Add Tag");
     }
 
     private static void AddTagModalEvaluateConditions()
@@ -186,7 +186,7 @@ public abstract class ActorType : IActorType
         }
         Modal2.AddDialogFooter();
         Modal2.AddFooterConfirm("Save", EditStatBarSubmit);
-        Modal2.Open();
+        Modal2.Open("Edit Stat Bar");
     }
 
     private void EditStatBarSubmit()
@@ -238,7 +238,7 @@ public abstract class ActorType : IActorType
             modalConditionBool(color, val);
         };
 
-        Modal2.Open();
+        Modal2.Open("Add Stat");
     }
 
     private static void modalConditionBool(VisualElement e, bool show)
@@ -316,7 +316,7 @@ public abstract class ActorType : IActorType
             string newShape = Modal2.GetComboboxFieldValue("Reshape");
             Player.Self().CmdRequestActorCommand(data.Id, $"Reshape|{newShape}");
         });
-        Modal2.Open();
+        Modal2.Open("Reshape");
     }
 
     private static void RecolorModal()
@@ -333,7 +333,7 @@ public abstract class ActorType : IActorType
             string newColor = Modal2.GetComboboxFieldValue("Recolor");
             Player.Self().CmdRequestActorCommand(data.Id, $"Recolor|{newColor}");
         });
-        Modal2.Open();
+        Modal2.Open("Recolor");
     }
 
     protected virtual void RenameModal()
@@ -350,7 +350,7 @@ public abstract class ActorType : IActorType
             string newName = Modal2.GetTextFieldValue("Name");
             Player.Self().CmdRequestActorCommand(data.Id, $"Rename|{newName}");
         });
-        Modal2.Open();
+        Modal2.Open("Rename");
     }
 
     public virtual void Command(string value, ActorData tokenData)

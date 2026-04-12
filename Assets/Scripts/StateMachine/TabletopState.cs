@@ -60,7 +60,8 @@ public class TabletopState : BaseState
         UI.ToggleDisplay("Tabletop", true);
         UI.ToggleDisplay("DetailsHud", Preferences.Current.ShowHUD);
         UI.ToggleDisplay("BottomBar", true);
-        UI.ToggleDisplay("TopBar", true);
+        // UI.ToggleDisplay("TopBar", true);
+        UI.ToggleDisplay("TableMenu", true);
         UI.ToggleDisplay(UI.System.Q("TopRight"), true);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), true);
         UI.ToggleDisplay(UI.TopBar.Q("AddActor"), true);
@@ -149,7 +150,7 @@ public class TabletopState : BaseState
         Dragger.LeftDragRelease -= LeftDragRelease;
     }
 
-    public static void ConfirmReturnToLauncher(ClickEvent evt)
+    public static void ConfirmReturnToLauncher()
     {
         SessionManager.SerializeSession($"{Preferences.Current.DataPath}/sessions/autosave.json");
         Modal2.CreateContext("PrimaryDialog");
@@ -166,7 +167,7 @@ public class TabletopState : BaseState
             Quit();
         });
 
-        Modal2.Open();
+        Modal2.Open("Exit Session");
     }
 
     private static void Quit()

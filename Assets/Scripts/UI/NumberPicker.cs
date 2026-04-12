@@ -141,7 +141,7 @@ public class NumberPicker
         NumberString = "0";
         UpdateValue();
 
-        Modal2.Open();
+        Modal2.Open("Number Picker");
     }
 
     private static void SetButtonStyle(VisualElement v)

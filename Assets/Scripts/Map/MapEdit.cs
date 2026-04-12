@@ -307,7 +307,7 @@ public class MapEdit
             Toast.AddSimple("Map reset.");
             Modal2.Close("PrimaryDialog");
         });
-        Modal2.Open();
+        Modal2.Open("Reset Map");
     }
 
     private static void OpenMMMImportModal(ClickEvent evt)
@@ -332,7 +332,7 @@ public class MapEdit
                 Modal2.Close();
             }
         });
-        Modal2.Open();
+        Modal2.Open("MMM Import");
     }
 
     private static void OpenSaveModal(ClickEvent evt)

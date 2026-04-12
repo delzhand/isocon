@@ -151,7 +151,7 @@ public class TokenLibraryModal : MonoBehaviour
         };
         footer.Add(add);
 
-        Modal2.Open();
+        Modal2.Open("Token Library");
     }
 
     private static void UpdateFavorite(VisualElement item, Token token)
