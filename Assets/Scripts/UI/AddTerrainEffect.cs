@@ -26,7 +26,7 @@ public class AddTerrainEffect
         var footer = Modal2.AddDialogFooter();
         var confirm = new ShunDialogClose();
         confirm.SetVariant(ButtonVariant.Primary);
-        confirm.text = "Save Config";
+        confirm.text = "Apply Effect";
         confirm.clicked += () =>
         {
             ConfirmAddEffect();

@@ -8,7 +8,7 @@ public class TileMenu
 {
     public static void ShowMenu(Block b)
     {
-        SelectionMenu.Reset(new Vector2(0, 0), b.transform);
+        SelectionMenu.Open(new Vector2(0, 0), b.transform);
         MenuItem[] defaultItems = GetTileMenuItems(b);
         foreach (MenuItem m in defaultItems)
         {
@@ -19,13 +19,14 @@ public class TileMenu
     public static MenuItem[] GetTileMenuItems(Block b)
     {
         List<MenuItem> items = new();
-        if (Block.GetSelected().Length == 0)
-        {
-            b.Select();
-        }
-        else if (!b.Selected)
+
+        if (!b.Selected)
         {
             items.Add(new MenuItem("Select Tile", () => { b.Select(); }));
+        }
+        else
+        {
+            items.Add(new MenuItem("Deselect Tile", () => { b.Select(); }));
         }
         if (TerrainController.GridType == "Square")
         {

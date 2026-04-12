@@ -36,10 +36,9 @@ public class StateManager : MonoBehaviour
             currentState.OnLoseFocus();
         }
         StateStack.Push(newState);
-        // Debug.Log($"push {newState.GetName()}");
+        // Debug.Log($"Added {newState.GetName()}");
         newState.OnEnter();
-        // HudText.SetItem("stack", StackString(), 10, HudTextColor.Red);
-        // Debug.Log(StackString());
+        HudText.SetItem("stack", StackString(), -100, HudTextColor.Red);
     }
 
     public static void PopState()
@@ -47,11 +46,10 @@ public class StateManager : MonoBehaviour
         var currentState = StateStack.Peek();
         currentState.OnExit();
         var oldState = StateStack.Pop();
-        // Debug.Log($"pop {oldState.GetName()}");
+        // Debug.Log($"Removed {oldState.GetName()}");
         var newState = StateStack.Peek();
         newState.OnEnter();
-        // HudText.SetItem("stack", StackString(), 10, HudTextColor.Red);
-        // Debug.Log(StackString());
+        HudText.SetItem("stack", StackString(), -100, HudTextColor.Red);
     }
 
     // public static bool ShowBorders()
@@ -97,7 +95,7 @@ public class StateManager : MonoBehaviour
 
     public static bool IsModalState()
     {
-        return StateStack.Peek().GetName() == "ModalState";
+        return StateStack.Peek().GetName().StartsWith("ModalState");
     }
 }
 

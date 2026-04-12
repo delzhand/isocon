@@ -12,7 +12,7 @@ public class ActorMenu
         Block.DeselectAll();
         Block.DehighlightAll();
         ActorData data = Actor.GetSelected().Data;
-        SelectionMenu.Reset(new Vector2(30, 0), Actor.GetSelected().transform);
+        SelectionMenu.Open(new Vector2(30, 0), Actor.GetSelected().transform);
 
         IActorType st = ActorTypeRegistry.DoInterfaceCallback(data.Type, data.TypeData);
         var systemItems = st.GetMenuItems(data.Placed);

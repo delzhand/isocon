@@ -78,7 +78,7 @@ public class SelectionMenu
         }
     }
 
-    public static void Reset(Vector2 offset, Transform follow = null)
+    public static void Open(Vector2 offset, Transform follow = null)
     {
         FollowTransform = follow;
         var contextMenu = UI.System.Q<ShunContextMenu>();
@@ -86,6 +86,8 @@ public class SelectionMenu
 
         Vector2 pos = UI.GetTransformScreenPosition(FollowTransform, UI.System, Camera.main);
         contextMenu.OpenAtPosition(pos + offset);
+        // contextMenu.SetCloseAction(StateManager.PopState);
+        // StateManager.PushState(new ModalState("Menu"));
     }
 
     public static void Hide()
@@ -94,6 +96,27 @@ public class SelectionMenu
         FollowTransform = null;
         var contextMenu = UI.System.Q<ShunContextMenu>();
         contextMenu.ForceClose();
+    }
+
+    public static bool IsOpen
+    {
+        get
+        {
+            var menuBarOpen = false;
+            UI.System.Query<ShunMenuBarMenu>().ForEach((item) =>
+            {
+                if (item.isOpen)
+                {
+                    menuBarOpen = true;
+                }
+            });
+            if (menuBarOpen)
+            {
+                return true;
+            }
+            var contextMenu = UI.System.Q<ShunContextMenu>();
+            return contextMenu.isOpen;
+        }
     }
 
     public static void AddItem(string label, Action action, List<MenuItem> children)

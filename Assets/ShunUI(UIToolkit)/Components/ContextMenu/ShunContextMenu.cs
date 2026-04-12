@@ -3,6 +3,7 @@ using UnityEngine.UIElements;
 using System.Collections.Generic;
 using ShunUI.Primitives;
 using Mirror.BouncyCastle.Asn1.X509;
+using System;
 
 namespace ShunUI
 {
@@ -12,6 +13,7 @@ namespace ShunUI
         private VisualElement _targetElement;
         private Vector2 _mousePosition;
         private List<ShunMenuItemBase> _items;
+        private Action _closeAction;
 
         public ShunContextMenu()
         {
@@ -133,6 +135,11 @@ namespace ShunUI
         {
             _mousePosition = pos;
             Open();
+        }
+
+        public void SetCloseAction(Action closeAction)
+        {
+            _closeAction = closeAction;
         }
 
         public ShunMenuItemBase AddItem(string label, string shortcut = "", System.Action onClick = null)
@@ -324,6 +331,7 @@ namespace ShunUI
             }
 
             base.Close();
+            _closeAction?.Invoke();
         }
 
         public void ForceClose()
