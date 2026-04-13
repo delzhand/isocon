@@ -37,47 +37,6 @@ public class SelectionMenu
     public static Transform FollowTransform;
     public static bool Visible;
 
-    public static Vector2 Offset;
-
-    // private static ShunContextMenu CMenu;
-
-    // public static void Setup()
-    // {
-    //     UI.SetBlocking(UI.System, "SelectionMenu");
-
-    //     // VisualElement parent = UI.System.Q("Tabletop").Q("Frame");
-    //     // CMenu = new ShunContextMenu();
-    //     // CMenu.name = "ContextMenu";
-    //     // VisualElement menuMount = new();
-    //     // menuMount.style.display = DisplayStyle.None;
-    //     // menuMount.Add(CMenu);
-    //     // parent.Add(menuMount);
-    // }
-
-    public static VisualElement Find()
-    {
-        return UI.System.Q("SelectionMenu");
-    }
-
-    public static void Update()
-    {
-        UI.ToggleDisplay(UI.System.Q("SelectionMenu"), SelectionMenu.Visible);
-        if (Visible)
-        {
-            if (FollowTransform != null)
-            {
-                UI.FollowTransform(FollowTransform, UI.System.Q("SelectionMenu"), UI.System, Camera.main, Offset);
-                UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, Length.Percent(-100)));
-            }
-            else
-            {
-                UI.System.Q("SelectionMenu").style.top = 10;
-                UI.System.Q("SelectionMenu").style.left = 10;
-                UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, 0));
-            }
-        }
-    }
-
     public static void Open(Vector2 offset, Transform follow = null)
     {
         FollowTransform = follow;
@@ -86,8 +45,6 @@ public class SelectionMenu
 
         Vector2 pos = UI.GetTransformScreenPosition(FollowTransform, UI.System, Camera.main);
         contextMenu.OpenAtPosition(pos + offset);
-        // contextMenu.SetCloseAction(StateManager.PopState);
-        // StateManager.PushState(new ModalState("Menu"));
     }
 
     public static void Hide()
@@ -102,18 +59,6 @@ public class SelectionMenu
     {
         get
         {
-            var menuBarOpen = false;
-            UI.System.Query<ShunMenuBarMenu>().ForEach((item) =>
-            {
-                if (item.isOpen)
-                {
-                    menuBarOpen = true;
-                }
-            });
-            if (menuBarOpen)
-            {
-                return true;
-            }
             var contextMenu = UI.System.Q<ShunContextMenu>();
             return contextMenu.isOpen;
         }

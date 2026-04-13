@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 public class MapEditingState : BaseState
 {
     public static List<Column> MarkedColumns;
+    public static bool ClickAvailable = true;
     public static bool AltMode;
 
     private static State _revertState;
@@ -42,15 +43,15 @@ public class MapEditingState : BaseState
         DisableInterface();
     }
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    public static void PermanentCallbacks()
-    {
-        UI.TopBar.Q("SyncMap").RegisterCallback<ClickEvent>(Sync);
-        UI.TopBar.Q("CancelEditMap").RegisterCallback<ClickEvent>(Cancel);
-        UI.TopBar.Q("LoadMap").RegisterCallback<ClickEvent>(LoadMap);
-        UI.TopBar.Q("SaveMap").RegisterCallback<ClickEvent>(SaveMap);
-        UI.TopBar.Q("NewMap").RegisterCallback<ClickEvent>(MapEdit.NewMap);
-    }
+    // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    // public static void PermanentCallbacks()
+    // {
+    //     UI.TopBar.Q("SyncMap").RegisterCallback<ClickEvent>(Sync);
+    //     UI.TopBar.Q("CancelEditMap").RegisterCallback<ClickEvent>(Cancel);
+    //     UI.TopBar.Q("LoadMap").RegisterCallback<ClickEvent>(LoadMap);
+    //     UI.TopBar.Q("SaveMap").RegisterCallback<ClickEvent>(SaveMap);
+    //     UI.TopBar.Q("NewMap").RegisterCallback<ClickEvent>(MapEdit.NewMap);
+    // }
 
     public override void UpdateState()
     {
@@ -61,35 +62,43 @@ public class MapEditingState : BaseState
 
     protected void EnableInterface()
     {
-        UI.ToggleDisplay(UI.TopBar.Q("Dice"), false);
-        UI.ToggleDisplay(UI.TopBar.Q("EditMap"), false);
-        UI.ToggleDisplay(UI.TopBar.Q("AddTableTag"), false);
-        UI.ToggleDisplay(UI.System.Q("DetailsHud"), false);
-        UI.ToggleDisplay(UI.TopBar.Q("Config"), false);
-        UI.ToggleDisplay(UI.TopBar.Q("Isocon"), false);
-        UI.ToggleDisplay(UI.TopBar.Q("SessionWrapper"), false);
-        UI.ToggleDisplay(UI.TopBar.Q("AddActor"), false);
+
+
+        // UI.ToggleDisplay(UI.TopBar.Q("Dice"), false);
+        // UI.ToggleDisplay(UI.TopBar.Q("EditMap"), false);
+        // UI.ToggleDisplay(UI.TopBar.Q("AddTableTag"), false);
+        // UI.ToggleDisplay(UI.TopBar.Q("Config"), false);
+        // UI.ToggleDisplay(UI.TopBar.Q("Isocon"), false);
+        // UI.ToggleDisplay(UI.TopBar.Q("SessionWrapper"), false);
+        // UI.ToggleDisplay(UI.TopBar.Q("AddActor"), false);
+        // UI.ToggleDisplay("BottomRight", false);
         UI.ToggleDisplay("DiceRoller", false);
+        UI.ToggleDisplay(UI.System.Q("DetailsHud"), false);
+
         UI.ToggleDisplay("BottomBar", false);
-        UI.ToggleDisplay("BottomRight", false);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), false);
 
-        UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), true);
-        UI.ToggleDisplay(UI.TopBar, true);
         UI.ToggleDisplay("ToolsPanel", true);
-        UI.ToggleDisplay(UI.TopBar.Q("EditingActions"), true);
-        UI.TopBar.Q("EditMap").Q<Label>("Label").text = "Sync <u>M</u>ap";
+
+        // UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), true);
+        // UI.ToggleDisplay(UI.TopBar, true);
+        // UI.ToggleDisplay(UI.TopBar.Q("EditingActions"), true);
+        // UI.TopBar.Q("EditMap").Q<Label>("Label").text = "Sync <u>M</u>ap";
     }
 
     protected void DisableInterface()
     {
-        UI.ToggleDisplay(UI.TopBar.Q("EditingActions"), false);
         UI.ToggleDisplay("ToolsPanel", false);
         UI.ToggleDisplay("ToolOptions", false);
-        UI.ToggleDisplay(UI.TopBar.Q("Isocon"), true);
+
+        UI.ToggleDisplay(UI.System.Q("DetailsHud"), Preferences.Current.ShowHUD);
+
+        UI.ToggleDisplay("BottomBar", true);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), true);
-        UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), false);
-        UI.TopBar.Q("EditMap").Q<Label>("Label").text = "Edit <u>M</u>ap";
+        // UI.ToggleDisplay(UI.TopBar.Q("EditingActions"), false);
+        // UI.ToggleDisplay(UI.TopBar.Q("Isocon"), true);
+        // UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), false);
+        // UI.TopBar.Q("EditMap").Q<Label>("Label").text = "Edit <u>M</u>ap";
     }
 
     protected void BindCallbacks()
@@ -124,6 +133,7 @@ public class MapEditingState : BaseState
     private void LeftClickStart()
     {
         MarkedColumns = new();
+        ClickAvailable = true;
         LeftDragUpdate();
     }
 

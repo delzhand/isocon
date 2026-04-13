@@ -163,6 +163,13 @@ public class TerrainController
 
     public static void RotateBlock(Block block)
     {
+        Column column = block.transform.parent.GetComponent<Column>();
+        if (MapEditingState.MarkedColumns.Contains(column))
+        {
+            return;
+        }
+        MapEditingState.MarkedColumns.Add(column);
+
         if (GridType == "Square")
         {
             block.transform.Rotate(0, 90f, 0);
@@ -229,6 +236,12 @@ public class TerrainController
 
     public static void CloneRow(Block block)
     {
+        if (!MapEditingState.ClickAvailable)
+        {
+            return;
+        }
+        MapEditingState.ClickAvailable = false;
+
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         for (int i = 0; i < columns.Length; i++)
         {
@@ -262,6 +275,12 @@ public class TerrainController
 
     public static void DeleteRow(Block block)
     {
+        if (!MapEditingState.ClickAvailable)
+        {
+            return;
+        }
+        MapEditingState.ClickAvailable = false;
+
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         int selectedX = block.transform.parent.GetComponent<Column>().X;
         for (int i = 0; i < columns.Length; i++)
@@ -285,6 +304,12 @@ public class TerrainController
 
     public static void CloneColumn(Block block)
     {
+        if (!MapEditingState.ClickAvailable)
+        {
+            return;
+        }
+        MapEditingState.ClickAvailable = false;
+
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         for (int i = 0; i < columns.Length; i++)
         {
@@ -318,6 +343,12 @@ public class TerrainController
 
     public static void DeleteColumn(Block block)
     {
+        if (!MapEditingState.ClickAvailable)
+        {
+            return;
+        }
+        MapEditingState.ClickAvailable = false;
+
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         int selectedY = block.transform.parent.GetComponent<Column>().Y;
         for (int i = 0; i < columns.Length; i++)
@@ -341,6 +372,12 @@ public class TerrainController
 
     public static void AddLayer()
     {
+        if (!MapEditingState.ClickAvailable)
+        {
+            return;
+        }
+        MapEditingState.ClickAvailable = false;
+
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         foreach (GameObject column in columns)
         {
@@ -358,6 +395,12 @@ public class TerrainController
 
     public static void ChangeShape(Block block)
     {
+        if (!MapEditingState.ClickAvailable)
+        {
+            return;
+        }
+        MapEditingState.ClickAvailable = false;
+
         BlockShape shape = BlockShape.Solid;
         switch (MapEdit.ShapeOp)
         {
@@ -386,8 +429,14 @@ public class TerrainController
                 shape = BlockShape.SlopeExt;
                 break;
         }
-        block.ShapeChange(shape);
-        RotateBlock(block);
+        if (block.Shape == shape)
+        {
+            RotateBlock(block);
+        }
+        else
+        {
+            block.ShapeChange(shape);
+        }
         ReorgNeeded = true;
     }
 
