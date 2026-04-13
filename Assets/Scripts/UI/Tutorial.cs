@@ -9,18 +9,18 @@ public class Tutorial
 {
     public static void Setup()
     {
-        UI.TopBar.Q("AddActor").RegisterCallback<MouseEnterEvent>((evt) =>
-        {
-            Tutorial.Init("add actor");
-        });
-        UI.TopBar.Q("Session").RegisterCallback<MouseEnterEvent>((evt) =>
-        {
-            Tutorial.Init("sessions");
-        });
-        UI.TopBar.Q("AddTableTag").RegisterCallback<MouseEnterEvent>((evt) =>
-        {
-            Tutorial.Init("system tag");
-        });
+        // UI.TopBar.Q("AddActor").RegisterCallback<MouseEnterEvent>((evt) =>
+        // {
+        //     Tutorial.Init("add actor");
+        // });
+        // UI.TopBar.Q("Session").RegisterCallback<MouseEnterEvent>((evt) =>
+        // {
+        //     Tutorial.Init("sessions");
+        // });
+        // UI.TopBar.Q("AddTableTag").RegisterCallback<MouseEnterEvent>((evt) =>
+        // {
+        //     Tutorial.Init("system tag");
+        // });
     }
 
     public static void Init(string id)

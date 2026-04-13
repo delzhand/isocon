@@ -21,7 +21,6 @@ public class Startup
     {
         SetVersionText();
         UI.SetScale();
-        // Modal.Setup();
         BlockRendering.Setup();
         DiceRoller.Setup();
         MapEdit.Setup();
@@ -29,13 +28,10 @@ public class Startup
         Autosaver.Setup();
         Tutorial.Setup();
         Viewport.Setup();
+        BindUICallbacks();
 
-        UI.SetBlocking(UI.System, StringUtility.CreateArray(@"SelectionMenu", "TopBar", "BottomBar", "ToolsPanel", "ToolOptions", "LeftTokenPanel", "RightTokenPanel", "Backdrop", "TopRight"));
+        UI.SetBlocking(UI.System, StringUtility.CreateArray(@"BottomBar", "ToolsPanel", "ToolOptions", "LeftTokenPanel", "RightTokenPanel", "Backdrop", "TopRight"));
         Application.targetFrameRate = Preferences.Current.TargetFramerate;
-
-        // ReleaseNotes();
-        MainMenuSetup();
-        // BindUICallbacks();
     }
 
     public static void ReleaseNotes()
@@ -43,75 +39,12 @@ public class Startup
         ReleaseNotesModal.OpenAtStartup(_version);
     }
 
-    public static void MainMenuSetup()
-    {
-        var menu = UI.System.Q("TableMenu").Q<ShunMenuBar>();
-        menu.variant = MenuBarVariant.Outline;
-        menu.RegisterCallback<MouseEnterEvent>((evt) =>
-        {
-            menu.style.opacity = 1;
-        });
-        menu.RegisterCallback<MouseLeaveEvent>((evt) =>
-        {
-            menu.style.opacity = .25f;
-        });
-
-        menu.Query<ShunMenuBarMenu>().ForEach((item) =>
-        {
-            item.RemoveFromHierarchy();
-        });
-
-        var addMenu = menu.AddMenu("Add");
-        addMenu.AddItem("Actor", AddActorModal.Open);
-        addMenu.AddItem("Tag", SystemTagModal.Open);
-
-        var sessionMenu = menu.AddMenu("Session");
-        sessionMenu.AddItem("Save", SessionManager.Save);
-        sessionMenu.AddItem("Load", SessionManager.Load);
-        sessionMenu.AddItem("Exit", TabletopState.ConfirmReturnToLauncher);
-
-        var mapMenu = menu.AddMenu("Map");
-        mapMenu.AddItem("Edit");
-        mapMenu.AddItem("Save");
-        mapMenu.AddItem("Load");
-
-        var viewMenu = menu.AddMenu("Config");
-        viewMenu.AddItem("Dice Roller");
-        viewMenu.AddItem("Tile Coords");
-        viewMenu.AddItem("Top Down Camera");
-        viewMenu.AddItem("True Iso Camera");
-        viewMenu.AddItem("Preferences", ConfigModal.Open);
-    }
-
     private static void BindUICallbacks()
     {
-        UI.TopBar.Q("EditMap").RegisterCallback<ClickEvent>((evt) => StateManager.PushState(new MapEditingState()));
-        UI.TopBar.Q("AddActor").RegisterCallback<ClickEvent>((evt) => AddActorModal.Open());
-        UI.System.Q("AddTableTag").RegisterCallback<ClickEvent>((evt) => SystemTagModal.Open());
-        UI.TopBar.Q("Config").RegisterCallback<ClickEvent>((evt) => ConfigModal.Open());
-        UI.TopBar.Q("FixedView").RegisterCallback<ClickEvent>((evt) => Viewport.FixView());
-        UI.TopBar.Q("Dice").RegisterCallback<ClickEvent>((evt) => DiceRoller.ToggleVisible());
-        UI.System.Q("TopBarToggle").RegisterCallback<ClickEvent>((evt) =>
-        {
-            UI.ToggleActiveClass(UI.System.Q("TopBar"));
-        });
         UI.System.Q("DeployToggle").RegisterCallback<ClickEvent>((evt) =>
         {
             UI.ToggleActiveClass(UI.System.Q("BottomBar"));
         });
-        // UI.System.Q("SessionWrapper").RegisterCallback<MouseEnterEvent>((evt) =>
-        // {
-        //     UI.ToggleDisplay(UI.TopBar.Q("SaveSession"), true);
-        //     UI.ToggleDisplay(UI.TopBar.Q("LoadSession"), true);
-        // });
-        // UI.System.Q("SessionWrapper").RegisterCallback<MouseLeaveEvent>((evt) =>
-        // {
-        //     UI.ToggleDisplay(UI.TopBar.Q("SaveSession"), false);
-        //     UI.ToggleDisplay(UI.TopBar.Q("LoadSession"), false);
-        // });
-        // UI.TopBar.Q("SaveSession").RegisterCallback<ClickEvent>((evt) => SessionManager.Save());
-        // UI.TopBar.Q("LoadSession").RegisterCallback<ClickEvent>((evt) => SessionManager.Load());
-        // UI.TopBar.Q("Isocon").RegisterCallback<ClickEvent>(TabletopState.ConfirmReturnToLauncher);
     }
 
     private static async void SetVersionText()

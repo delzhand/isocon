@@ -158,7 +158,6 @@ public class DiceRoller
     {
         visible = !visible;
         UI.ToggleDisplay("DiceRoller", visible);
-        UI.ToggleActiveClass("Dice", visible);
     }
 
     private static void reset()

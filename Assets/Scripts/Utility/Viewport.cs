@@ -209,8 +209,13 @@ public class Viewport
         // UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Pan <u>C</u>amera";
     }
 
-    public static void FixView()
+    public static void FixViewOverhead()
     {
         GameObject.Find("CameraOrigin").transform.rotation = Quaternion.Euler(new Vector3(0, 0, 20));
+    }
+
+    public static void FixViewIso()
+    {
+        GameObject.Find("CameraOrigin").transform.rotation = Quaternion.Euler(new Vector3(0, 315, 0));
     }
 }
