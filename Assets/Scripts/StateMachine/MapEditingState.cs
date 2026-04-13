@@ -25,6 +25,8 @@ public class MapEditingState : BaseState
         Tutorial.Init("edit mode");
         EnableInterface();
         BindCallbacks();
+        MainMenu.SetupForMapEdit();
+
         _revertState = State.GetStateFromScene();
     }
 
@@ -189,7 +191,7 @@ public class MapEditingState : BaseState
     //     }
     // }
 
-    private static void Sync(ClickEvent evt)
+    public static void Sync()
     {
         State state = State.GetStateFromScene();
         string json = JsonUtility.ToJson(state);
@@ -198,13 +200,13 @@ public class MapEditingState : BaseState
         StateManager.PopState();
     }
 
-    private static void Cancel(ClickEvent evt)
+    public static void Cancel()
     {
         State.SetSceneFromState(_revertState);
         StateManager.PopState();
     }
 
-    private static void SaveMap(ClickEvent evt)
+    public static void SaveMap()
     {
         Modal2.CreateContext("PrimaryDialog");
         Modal2.AddDialogHeader("Save Map");
@@ -221,7 +223,7 @@ public class MapEditingState : BaseState
         Modal2.Open("Save Map");
     }
 
-    private static void LoadMap(ClickEvent evt)
+    public static void LoadMap()
     {
         if (TerrainController.MapDirty)
         {
@@ -242,5 +244,29 @@ public class MapEditingState : BaseState
         }
     }
 
+    public static void OpenMMMImportModal()
+    {
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Import Map by URL");
+
+        Modal2.AddLongMarkup("Maps from https://alessandrominali.github.io/maleghast/map.html can be imported by entering the Permalink. Maps that use custom brushes are not supported.");
+        Modal2.AddInlineTextField("UrlField", "URL", "");
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Confirm", () =>
+        {
+            Modal2.ReadContext("PrimaryDialog");
+            string url = Modal2.GetTextFieldValue("UrlField");
+            if (!url.Contains("https://alessandrominali.github.io/maleghast/map"))
+            {
+                Toast.AddError("Does not appear to be a valid URL.");
+            }
+            else
+            {
+                MMMImporter.CreateFromURL(url);
+                Modal2.Close();
+            }
+        });
+        Modal2.Open("MMM Import");
+    }
 }
 

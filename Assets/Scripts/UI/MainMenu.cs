@@ -4,13 +4,12 @@ using UnityEngine.UIElements;
 
 public class MainMenu
 {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    public static void Setup()
+    public static void SetupForTabletop()
     {
         var menu = UI.System.Q("TableMenu").Q<ShunMenuBar>();
         menu.variant = MenuBarVariant.Outline;
 
-        // Clear defaults
+        // Clear existing items
         menu.Query<ShunMenuBarMenu>().ForEach((item) =>
         {
             item.RemoveFromHierarchy();
@@ -34,6 +33,28 @@ public class MainMenu
         viewMenu.AddItem("Set View: Overhead", Viewport.FixViewOverhead);
         viewMenu.AddItem("Set View: Initial", Viewport.FixViewIso);
         viewMenu.AddItem("Preferences", ConfigModal.Open);
+    }
+
+    public static void SetupForMapEdit()
+    {
+        var menu = UI.System.Q("TableMenu").Q<ShunMenuBar>();
+        menu.variant = MenuBarVariant.Outline;
+
+        // Clear existing items
+        menu.Query<ShunMenuBarMenu>().ForEach((item) =>
+        {
+            item.RemoveFromHierarchy();
+        });
+
+        // Add real items
+        var editMenu = menu.AddMenu("Editing");
+        editMenu.AddItem("Sync Changes", MapEditingState.Sync);
+        editMenu.AddItem("Discard Changes", MapEditingState.Cancel);
+
+        var dataMenu = menu.AddMenu("Data");
+        dataMenu.AddItem("Save Map", MapEditingState.SaveMap);
+        dataMenu.AddItem("Load Map", MapEditingState.LoadMap);
+        dataMenu.AddItem("Import Map", MapEditingState.OpenMMMImportModal);
     }
 
     public static bool IsOpen

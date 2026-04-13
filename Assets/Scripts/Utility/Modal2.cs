@@ -827,6 +827,19 @@ public class Modal2
         target.Add(e);
     }
 
+    public static VisualElement AddColorField(string name, Color initial)
+    {
+        var wrapper = new ShunContainer();
+        wrapper.AddToClassList("shun-dialog__field");
+        Contents(_createContext).Add(wrapper);
+
+        VisualElement field = ColorField.Create(name, initial);
+        field.name = name;
+        wrapper.Add(field);
+
+        return wrapper;
+    }
+
     public static VisualElement AddTokenField(string name, string label, string helpText = null)
     {
         var wrapper = new ShunContainer();

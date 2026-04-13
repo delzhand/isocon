@@ -143,47 +143,47 @@ public class MapEdit
         VisualElement optionsRoot = UI.System.Q("ToolOptions");
 
         // Data
-        optionsRoot.Q("DataOptions").Q("Save").RegisterCallback<ClickEvent>((evt) =>
-        {
-            OpenSaveModal(evt);
-        });
-        optionsRoot.Q("DataOptions").Q("Open").RegisterCallback<ClickEvent>((evt) =>
-        {
-            OpenOpenModal(evt);
-        });
+        // optionsRoot.Q("DataOptions").Q("Save").RegisterCallback<ClickEvent>((evt) =>
+        // {
+        //     OpenSaveModal(evt);
+        // });
+        // optionsRoot.Q("DataOptions").Q("Open").RegisterCallback<ClickEvent>((evt) =>
+        // {
+        //     OpenOpenModal(evt);
+        // });
         // optionsRoot.Q("DataOptions").Q("Reset").RegisterCallback<ClickEvent>((evt) =>
         // {
         //     ResetConfirm(evt);
         // });
-        optionsRoot.Q("DataOptions").Q("MaleghastImport").RegisterCallback<ClickEvent>((evt) =>
-        {
-            OpenMMMImportModal(evt);
-        });
-        optionsRoot.Q("DataOptions").Q<TextField>("MapTitle").value = MapMeta.Title;
-        optionsRoot.Q("DataOptions").Q<TextField>("MapTitle").RegisterValueChangedCallback((evt) =>
-        {
-            MapMeta.Title = evt.newValue;
-        });
-        optionsRoot.Q("DataOptions").Q<TextField>("Description").value = MapMeta.Description;
-        optionsRoot.Q("DataOptions").Q<TextField>("Description").RegisterValueChangedCallback((evt) =>
-        {
-            MapMeta.Description = evt.newValue;
-        });
-        optionsRoot.Q("DataOptions").Q<TextField>("Objective").value = MapMeta.Objective;
-        optionsRoot.Q("DataOptions").Q<TextField>("Objective").RegisterValueChangedCallback((evt) =>
-        {
-            MapMeta.Objective = evt.newValue;
-        });
-        optionsRoot.Q("DataOptions").Q<TextField>("Author").value = MapMeta.CreatorName;
-        optionsRoot.Q("DataOptions").Q<TextField>("Author").RegisterValueChangedCallback((evt) =>
-        {
-            MapMeta.CreatorName = evt.newValue;
-        });
-        optionsRoot.Q("DataOptions").Q<DropdownField>("System").value = MapMeta.System;
-        optionsRoot.Q("DataOptions").Q<DropdownField>("System").RegisterValueChangedCallback((evt) =>
-        {
-            MapMeta.System = evt.newValue;
-        });
+        // optionsRoot.Q("DataOptions").Q("MaleghastImport").RegisterCallback<ClickEvent>((evt) =>
+        // {
+        //     OpenMMMImportModal(evt);
+        // });
+        // optionsRoot.Q("DataOptions").Q<TextField>("MapTitle").value = MapMeta.Title;
+        // optionsRoot.Q("DataOptions").Q<TextField>("MapTitle").RegisterValueChangedCallback((evt) =>
+        // {
+        //     MapMeta.Title = evt.newValue;
+        // });
+        // optionsRoot.Q("DataOptions").Q<TextField>("Description").value = MapMeta.Description;
+        // optionsRoot.Q("DataOptions").Q<TextField>("Description").RegisterValueChangedCallback((evt) =>
+        // {
+        //     MapMeta.Description = evt.newValue;
+        // });
+        // optionsRoot.Q("DataOptions").Q<TextField>("Objective").value = MapMeta.Objective;
+        // optionsRoot.Q("DataOptions").Q<TextField>("Objective").RegisterValueChangedCallback((evt) =>
+        // {
+        //     MapMeta.Objective = evt.newValue;
+        // });
+        // optionsRoot.Q("DataOptions").Q<TextField>("Author").value = MapMeta.CreatorName;
+        // optionsRoot.Q("DataOptions").Q<TextField>("Author").RegisterValueChangedCallback((evt) =>
+        // {
+        //     MapMeta.CreatorName = evt.newValue;
+        // });
+        // optionsRoot.Q("DataOptions").Q<DropdownField>("System").value = MapMeta.System;
+        // optionsRoot.Q("DataOptions").Q<DropdownField>("System").RegisterValueChangedCallback((evt) =>
+        // {
+        //     MapMeta.System = evt.newValue;
+        // });
 
         // Environment
         optionsRoot.Q("EnvironmentOptions").Q("LightAngle").RegisterCallback<ChangeEvent<float>>((evt) =>
@@ -203,27 +203,35 @@ public class MapEdit
         });
         optionsRoot.Q("EnvironmentOptions").Q("TopBgColor").RegisterCallback<ClickEvent>((evt) =>
         {
-            Modal.Reset("Set Top Background Color");
-            Modal.AddColorField("TopBgColor", Environment.BgTopColor);
-            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+            Modal2.CreateContext("PrimaryDialog");
+            Modal2.AddDialogHeader("Set Top Background Color");
+            Modal2.AddColorField("TopBgColor", Environment.BgTopColor);
+            Modal2.AddDialogFooter("Close");
+            Modal2.Open("Color");
         });
         optionsRoot.Q("EnvironmentOptions").Q("BotBgColor").RegisterCallback<ClickEvent>((evt) =>
         {
-            Modal.Reset("Set Bottom Background Color");
-            Modal.AddColorField("BotBgColor", Environment.BgBottomColor);
-            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+            Modal2.CreateContext("PrimaryDialog");
+            Modal2.AddDialogHeader("Set Bottom Background Color");
+            Modal2.AddColorField("BotBgColor", Environment.BgBottomColor);
+            Modal2.AddDialogFooter("Close");
+            Modal2.Open("Color");
         });
         optionsRoot.Q("EnvironmentOptions").Q("TopBlockColor").RegisterCallback<ClickEvent>((evt) =>
         {
-            Modal.Reset("Set Default Block Top Color");
-            Modal.AddColorField("TopBlockColor", Environment.TileTopColor);
-            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+            Modal2.CreateContext("PrimaryDialog");
+            Modal2.AddDialogHeader("Set Default Block Top Color");
+            Modal2.AddColorField("TopBlockColor", Environment.TileTopColor);
+            Modal2.AddDialogFooter("Close");
+            Modal2.Open("Color");
         });
         optionsRoot.Q("EnvironmentOptions").Q("SideBlockColor").RegisterCallback<ClickEvent>((evt) =>
         {
-            Modal.Reset("Set Default Block Side Color");
-            Modal.AddColorField("SideBlockColor", Environment.TileSideColor);
-            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+            Modal2.CreateContext("PrimaryDialog");
+            Modal2.AddDialogHeader("Set Default Block Side Color");
+            Modal2.AddColorField("SideBlockColor", Environment.TileSideColor);
+            Modal2.AddDialogFooter("Close");
+            Modal2.Open("Color");
         });
 
         // Tile Paint
@@ -310,30 +318,7 @@ public class MapEdit
         Modal2.Open("Reset Map");
     }
 
-    private static void OpenMMMImportModal(ClickEvent evt)
-    {
-        Modal2.CreateContext("PrimaryDialog");
-        Modal2.AddDialogHeader("Import Map by URL");
 
-        Modal2.AddLongMarkup("Maps from https://alessandrominali.github.io/maleghast/map.html can be imported by entering the Permalink. Maps that use custom brushes are not supported.");
-        Modal2.AddInlineTextField("UrlField", "URL", "");
-        Modal2.AddDialogFooter();
-        Modal2.AddFooterConfirm("Confirm", () =>
-        {
-            Modal2.ReadContext("PrimaryDialog");
-            string url = Modal2.GetTextFieldValue("UrlField");
-            if (!url.Contains("https://alessandrominali.github.io/maleghast/map"))
-            {
-                Toast.AddError("Does not appear to be a valid URL.");
-            }
-            else
-            {
-                MMMImporter.CreateFromURL(url);
-                Modal2.Close();
-            }
-        });
-        Modal2.Open("MMM Import");
-    }
 
     private static void OpenSaveModal(ClickEvent evt)
     {

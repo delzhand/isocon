@@ -26,6 +26,7 @@ public class TabletopState : BaseState
         SetConnectionMessage();
         EnableInterface();
         BindCallbacks();
+        MainMenu.SetupForTabletop();
 
         Tutorial.Init("tabletop");
     }
@@ -48,7 +49,6 @@ public class TabletopState : BaseState
         CheckForDisconnect();
         Viewport.HandleInput();
         ShowTokenPanels();
-        SelectionMenu.Update();
         TileShare.Offsets();
         Pointer.Point();
         Autosaver.Tick();

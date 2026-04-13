@@ -55,6 +55,8 @@ public class ReleaseNotesModal
 * Dialogs can now be closed by clicking anywhere outside of them
 * Last-used actor type is remembered in Add Actor dialog
 * File browser now uses dark theme
+<size=+2><b>Fixes</b></size>
+* Multiple click events no longer trigger off a single click in edit mode
 ");
 
         notes.Add("0.8.2", @"<size=+2><b>Fixes</b></size>
