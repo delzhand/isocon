@@ -12,6 +12,22 @@ namespace ShunUI.Primitives
         protected bool _rootClickRegistered = false;
         private bool _stylesheetsInitialized = false;
 
+        protected ShunPopup()
+        {
+            RegisterCallback<DetachFromPanelEvent>(OnDetachedFromPanel);
+        }
+
+        private void OnDetachedFromPanel(DetachFromPanelEvent evt)
+        {
+            // If the popup's host is removed from the panel while the popup is open
+            // (e.g. dialog destroyed), _content is still sitting in the overlay container.
+            // Remove it now so it doesn't accumulate as an orphan.
+            if (_content != null)
+            {
+                ShunOverlayManager.RemoveOverlay(_content);
+            }
+        }
+
         public virtual bool isOpen
         {
             get => _isOpen;
@@ -54,6 +70,7 @@ namespace ShunUI.Primitives
             _isOpen = false;
             if (_content != null)
             {
+                ShunOverlayManager.RemoveOverlay(_content);
                 _content.style.display = DisplayStyle.None;
                 _stylesheetsInitialized = false; // Reset so we refresh styles on next open
             }

@@ -193,6 +193,7 @@ namespace ShunUI.Primitives
 
             // Register callback to handle submenu items
             RegisterCallback<AttachToPanelEvent>(OnAttachedToPanel);
+            RegisterCallback<DetachFromPanelEvent>(OnDetachedFromPanel);
 
             // Register mouse events for submenu behavior
             RegisterCallback<MouseEnterEvent>(OnMouseEnter);
@@ -215,6 +216,16 @@ namespace ShunUI.Primitives
                     _submenuCollected = true;
                 }
             });
+        }
+
+        protected virtual void OnDetachedFromPanel(DetachFromPanelEvent evt)
+        {
+            // When this item is removed from the hierarchy, clean up any submenu that
+            // was reparented to the overlay container — otherwise it becomes an orphan.
+            if (_submenu != null)
+            {
+                ShunOverlayManager.RemoveOverlay(_submenu);
+            }
         }
 
         protected virtual void OnMouseEnter(MouseEnterEvent evt)
