@@ -161,17 +161,19 @@ public class MapEditingState : BaseState
         //     return;
         // }
 
-        if (Input.GetKeyDown(KeyCode.LeftAlt) && MapEdit.EditOp == "StyleBlock")
+        if (Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetKeyDown(KeyCode.RightAlt))
         {
             AltMode = true;
-            CustomCursor.SetSample();
+            if (MapEdit.EditOp == "StyleBlock")
+            {
+                CustomCursor.SetSample();
+            }
+            else if (MapEdit.EditOp == "AddBlock")
+            {
+                CustomCursor.SetRemoveHeight();
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.RightAlt) && MapEdit.EditOp == "StyleBlock")
-        {
-            AltMode = true;
-            CustomCursor.SetSample();
-        }
-        else if ((Input.GetKeyUp(KeyCode.LeftAlt) || Input.GetKeyUp(KeyCode.RightAlt)) && MapEdit.EditOp == "StyleBlock")
+        else if (Input.GetKeyUp(KeyCode.LeftAlt) || Input.GetKeyUp(KeyCode.RightAlt))
         {
             AltMode = false;
             CustomCursor.SetDefault();

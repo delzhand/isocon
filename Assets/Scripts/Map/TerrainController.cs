@@ -120,12 +120,19 @@ public class TerrainController
 
     public static void AddHeight(Block block)
     {
+        if (MapEditingState.AltMode)
+        {
+            RemoveBlock(block);
+            return;
+        }
+
         Column column = block.transform.parent.GetComponent<Column>();
         if (MapEditingState.MarkedColumns.Contains(column))
         {
             return;
         }
         MapEditingState.MarkedColumns.Add(column);
+
         GameObject currentTop = TopBlock(column.gameObject);
         GameObject newblock = GameObject.Instantiate(Resources.Load("Prefabs/Block") as GameObject);
         newblock.transform.parent = block.transform.parent;

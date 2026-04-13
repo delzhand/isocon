@@ -50,6 +50,7 @@ public class ReleaseNotesModal
   > New main navigation
   > New right-click menus for actors and tiles
   > New Release Notes dialog, can be viewed by clicking version number on start screen
+* Added Volvadani units to Maleghast base data
 <size=+2><b>Improvements</b></size>
 * Improved keyboard navigation between form elements
 * Dialogs can now be closed by clicking anywhere outside of them
