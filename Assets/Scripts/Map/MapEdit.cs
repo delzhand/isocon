@@ -237,15 +237,19 @@ public class MapEdit
         // Tile Paint
         optionsRoot.Q("StylePaintOptions").Q("TopBlockPaint").RegisterCallback<ClickEvent>((evt) =>
         {
-            Modal.Reset("Set Block Top Paint");
-            Modal.AddColorField("TopBlockPaint", Environment.CurrentPaintTop);
-            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+            Modal2.CreateContext("PrimaryDialog");
+            Modal2.AddDialogHeader("Set Block Top Paint");
+            Modal2.AddColorField("TopBlockPaint", Environment.CurrentPaintTop);
+            Modal2.AddDialogFooter("Close");
+            Modal2.Open("Color");
         });
         optionsRoot.Q("StylePaintOptions").Q("SideBlockPaint").RegisterCallback<ClickEvent>((evt) =>
         {
-            Modal.Reset("Set Block Side Paint");
-            Modal.AddColorField("SideBlockPaint", Environment.CurrentPaintSide);
-            Modal.AddPreferredButton("Close", Modal.CloseEvent);
+            Modal2.CreateContext("PrimaryDialog");
+            Modal2.AddDialogHeader("Set Block Side Paint");
+            Modal2.AddColorField("SideBlockPaint", Environment.CurrentPaintSide);
+            Modal2.AddDialogFooter("Close");
+            Modal2.Open("Color");
         });
 
     }

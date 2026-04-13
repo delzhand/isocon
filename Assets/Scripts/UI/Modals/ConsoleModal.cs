@@ -10,21 +10,17 @@ public class ConsoleModal
 {
     public static void OpenModal(ClickEvent evt)
     {
-        Modal.Reset("IsoConsole");
-        Modal.AddTextField("Console", "Console", "");
-        Modal.AddPreferredButton("Execute", ConsoleExecute);
-        Modal.AddButton("Close", CloseModal);
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("IsoConsole");
+        Modal2.AddTextField("Console", "Console", "");
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Execute", ConsoleExecute);
     }
 
-    private static void CloseModal(ClickEvent evt)
+    private static void ConsoleExecute()
     {
-        Modal.Close();
-    }
-
-    private static void ConsoleExecute(ClickEvent evt)
-    {
-        string command = UI.Modal.Q<TextField>("Console").value;
-        UI.Modal.Q<TextField>("Console").Focus();
+        // string command = UI.Modal.Q<TextField>("Console").value;
+        // UI.Modal.Q<TextField>("Console").Focus();
         // if (command.StartsWith("SelectedToken|") || command.StartsWith("ST|")) {
         //     if (command.StartsWith("SelectedToken|")) {
         //         command = command.Substring("SelectedToken|".Length);
