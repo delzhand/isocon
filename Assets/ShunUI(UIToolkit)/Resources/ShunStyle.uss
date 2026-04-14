@@ -492,6 +492,11 @@
 .input:focus>#unity-text-input {
     border-color: var(--color-primary);
     border-width: var(--border-width);
+    --unity-cursor-color: #FFF;
+}
+
+.combobox__search:focus>#unity-text-input {
+    --unity-cursor-color: #FFF;
 }
 
 /* Disabled state */
