@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using SimpleFileBrowser;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -151,7 +152,7 @@ public class Viewport
 
     private static void HandleScrolling()
     {
-        if (UI.ClicksSuspended || StateManager.IsModalState())
+        if (UI.ClicksSuspended || StateManager.IsModalState() || MainMenu.IsOpen || SelectionMenu.IsOpen || FileBrowser.IsOpen)
         {
             return;
         }
