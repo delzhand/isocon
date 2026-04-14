@@ -44,6 +44,7 @@ public class StateManager : MonoBehaviour
     public static void PopState()
     {
         var currentState = StateStack.Peek();
+        currentState.OnLoseFocus();
         currentState.OnExit();
         var oldState = StateStack.Pop();
         // Debug.Log($"Removed {oldState.GetName()}");
