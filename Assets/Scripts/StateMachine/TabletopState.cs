@@ -146,7 +146,7 @@ public class TabletopState : BaseState
     {
         SessionManager.SerializeSession($"{Preferences.Current.DataPath}/sessions/autosave.json");
         Modal2.CreateContext("PrimaryDialog");
-        string message = "Exit the session and return to the IsoCON launcher?";
+        string message = "Quit the session and return to the IsoCON launcher?";
         if (NetworkClient.activeHost && _mode == ConnectMode.Host)
         {
             message = "You are hosting. <b>Disconnecting from the session will terminate all client connections.</b> Your session has been autosaved. Exit the session and return to the IsoCON launcher?";
@@ -158,8 +158,7 @@ public class TabletopState : BaseState
             Modal2.Close();
             Quit();
         });
-
-        Modal2.Open("Exit Session");
+        Modal2.Open("Quit Session");
     }
 
     private static void Quit()

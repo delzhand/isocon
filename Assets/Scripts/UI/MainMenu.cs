@@ -23,7 +23,7 @@ public class MainMenu
         var sessionMenu = menu.AddMenu("Session");
         sessionMenu.AddItem("Save", SessionManager.Save);
         sessionMenu.AddItem("Load", SessionManager.Load);
-        sessionMenu.AddItem("Exit", TabletopState.ConfirmReturnToLauncher);
+        sessionMenu.AddItem("Quit", TabletopState.ConfirmReturnToLauncher);
 
         var mapMenu = menu.AddMenu("Map");
         mapMenu.AddItem("Edit", () => StateManager.PushState(new MapEditingState()));

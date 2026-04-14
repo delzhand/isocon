@@ -54,6 +54,7 @@ public class LauncherState : BaseState
     private void EnableInterface()
     {
         UI.ToggleDisplay("Launcher", true);
+        UI.ToggleDisplay("StartupOptions", true);
         UI.ToggleDisplay("Tabletop", false);
     }
 
