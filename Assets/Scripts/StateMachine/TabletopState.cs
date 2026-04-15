@@ -190,7 +190,7 @@ public class TabletopState : BaseState
             return;
         }
         Block pickedBlock = Pointer.PickBlock();
-        if (pickedBlock)
+        if (pickedBlock && Actor.GetDragging() == null)
         {
             pickedBlock.ToggleMenu();
             return;

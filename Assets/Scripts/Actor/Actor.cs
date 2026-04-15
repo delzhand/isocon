@@ -172,12 +172,12 @@ public class Actor : MonoBehaviour
                 {
                     _dragging.Move(b);
                 }
-                _dragging.ClearDragIndicator();
             }
             else
             {
                 _dragging.StateChange(ActorState.Neutral);
             }
+            _dragging.ClearDragIndicator();
         }
         _dragging = null;
         Player.Self()?.ClearOp();
