@@ -208,7 +208,6 @@ public abstract class ActorType : IActorType
                 Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"RemoveStat|{stat.Name}");
             }
         }
-        Modal.Close();
     }
 
     private static void AddStatModal()

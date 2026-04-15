@@ -266,15 +266,17 @@ public class Icon2x0EnemyActorType : Icon2x0Base
         panel.Q("Pills").Add(Pill.InitStatic("CrisisPill", "Crisis", Color.red));
     }
 
-    // public override MenuItem[] GetMenuItems(bool placed)
-    // {
-    //     MenuItem[] baseItems = base.GetMenuItems(placed);
+    public override List<MenuItem> GetMenuItems(bool placed)
+    {
+        var baseItems = base.GetMenuItems(placed);
 
-    //     List<MenuItem> items = new();
-    //     items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
-    //     items.Add(new MenuItem("ModVIG", "Modify VIG", () => { NumberPicker.ActorCommand("ModVIG"); }));
-    //     return baseItems.Concat(items.ToArray()).ToArray();
-    // }
+        var changeValues = FindParent("Change Values", baseItems);
+
+        changeValues.Children.Add(new MenuItem("Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+        changeValues.Children.Add(new MenuItem("Modify Vigor", () => { NumberPicker.ActorCommand("ModVIG"); }));
+
+        return baseItems;
+    }
 
     public override void Command(string command, ActorData tokenData)
     {

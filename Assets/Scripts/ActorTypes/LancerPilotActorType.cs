@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using IsoconUILibrary;
+using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -40,27 +41,38 @@ public class LancerPilotActorType : LancerBase
     #endregion
     public static void AddActorModal()
     {
-        Modal.AddTextField("Name", "Name", "");
-        Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
-        Modal.AddDropdownField("ShapeField", "Shape", "Hex 1/2", StringUtility.CreateArray("Hex 1/2", "Square 1/2"));
-        Modal.AddPreferredButton("Create Actor", CreateClicked);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        var contents = Modal2.Contents("PrimaryDialog");
+        var typeContainer = contents.Q("ActorTypeContainer");
+        typeContainer.Clear();
+        contents.Q("CreateActor")?.RemoveFromHierarchy();
 
-        // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        global::AddActorModal.OrderFields(StringUtility.CreateArray("Name", "ColorField", "ShapeField"));
+        var name = Modal2.AddInlineTextField("Name", "Actor Name", "Actor");
+        Modal2.MoveToContainer(name, typeContainer);
+        var shape = Modal2.AddInlineComboboxField("Shape", "Shape", "Square 1x1", ActorType.ShapeOptions().ToList<string>());
+        Modal2.MoveToContainer(shape, typeContainer);
+        var color = Modal2.AddInlineComboboxField("Color", "Color", "Black", ColorUtility.CommonColors().ToList<string>());
+        Modal2.MoveToContainer(color, typeContainer);
+
+        var create = new ShunDialogClose();
+        create.name = "CreateActor";
+        create.text = "Create Actor";
+        create.SetVariant(ButtonVariant.Primary);
+        create.clicked += () => CreateClicked();
+        contents.Q(className: "shun-dialog__footer").Add(create);
     }
 
-    private static void CreateClicked(ClickEvent evt)
+    private static void CreateClicked()
     {
-        if (!TokenLibraryModal.TokenSelected())
+        Modal2.ReadContext("PrimaryDialog");
+        string token = Modal2.GetComboboxFieldValue("Token");
+        if (token.Length == 0)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
-
-        string name = UI.Modal.Q<TextField>("Name").value;
-        string color = UI.Modal.Q<DropdownField>("ColorField").value;
-        string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
+        string name = Modal2.GetTextFieldValue("Name");
+        string shape = Modal2.GetComboboxFieldValue("Shape");
+        string color = Modal2.GetComboboxFieldValue("Color");
         LancerPilotActorType t = new()
         {
             Type = TypeName,
@@ -94,15 +106,17 @@ public class LancerPilotActorType : LancerBase
         return "UI/TableTop/Overheads/SingleBar";
     }
 
-    // public override MenuItem[] GetMenuItems(bool placed)
-    // {
-    //     MenuItem[] baseItems = base.GetMenuItems(placed);
+    public override List<MenuItem> GetMenuItems(bool placed)
+    {
+        var baseItems = base.GetMenuItems(placed);
 
-    //     List<MenuItem> items = new();
-    //     items.Add(new MenuItem("CoreStats", "Alter Stats", () => { AlterStatModal(); }));
-    //     items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
-    //     return baseItems.Concat(items.ToArray()).ToArray();
-    // }
+        var changeValues = FindParent("Change Values", baseItems);
+
+        changeValues.Children.Add(new MenuItem("Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+        changeValues.Children.Add(new MenuItem("Alter Core Stats", AlterStatModal));
+
+        return baseItems;
+    }
 
     public override void Command(string command, ActorData tokenData)
     {
@@ -169,27 +183,27 @@ public class LancerPilotActorType : LancerBase
     private void AlterStatModal()
     {
         SelectionMenu.Hide();
-        Modal.Reset("Alter Core Stats");
-        Modal.AddNumberNudgerField("MaxHP", "Max HP", MaxHP, 0);
-        Modal.AddNumberNudgerField("Armor", "Armor", Armor, 0);
-        Modal.AddNumberNudgerField("EDef", "E-Defense", EDefense, 0);
-        Modal.AddNumberNudgerField("Evade", "Evade", Evade, 0);
-        Modal.AddNumberNudgerField("Speed", "Speed", Speed, 0);
-
-        Modal.AddPreferredButton("Save", (evt) =>
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Alter Core Stats");
+        Modal2.AddInlineNumberNudgerField("MaxHP", "Max HP", MaxHP, 0, 50);
+        Modal2.AddInlineNumberNudgerField("Armor", "Armor", Armor, 0, 50);
+        Modal2.AddInlineNumberNudgerField("EDef", "E-Defense", EDefense, 0, 50);
+        Modal2.AddInlineNumberNudgerField("Evade", "Evade", Evade, 0, 50);
+        Modal2.AddInlineNumberNudgerField("Speed", "Speed", Speed, 0, 50);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Save", () =>
         {
-            MaxHP = UI.Modal.Q<NumberNudger>("MaxHP").value;
-            Armor = UI.Modal.Q<NumberNudger>("Armor").value;
-            EDefense = UI.Modal.Q<NumberNudger>("EDef").value;
-            Evade = UI.Modal.Q<NumberNudger>("Evade").value;
-            Speed = UI.Modal.Q<NumberNudger>("Speed").value;
+            Modal2.ReadContext("PrimaryDialog");
+            MaxHP = Modal2.GetNumberNudgerFieldValue("MaxHP");
+            Armor = Modal2.GetNumberNudgerFieldValue("Armor");
+            EDefense = Modal2.GetNumberNudgerFieldValue("EDef");
+            Evade = Modal2.GetNumberNudgerFieldValue("Evade");
+            Speed = Modal2.GetNumberNudgerFieldValue("Speed");
             string serialized = Serialize();
 
             Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"UpdateStats|{serialized}");
-            Modal.Close();
             this.InitPanel(Actor.GetSelected().Data, "LeftTokenPanel", true);
         });
-        Modal.AddButton("Cancel", Modal.CloseEvent);
     }
 
 }
