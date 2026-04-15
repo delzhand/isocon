@@ -53,35 +53,10 @@ public class StateManager : MonoBehaviour
         HudText.SetItem("stack", StackString(), -100, HudTextColor.Red);
     }
 
-    // public static bool ShowBorders()
-    // {
-    //     var state = StateStack.Peek();
-    //     return state.GetType().Name == "MapEditingState";
-    // }
-
-    // public void ChangeState(IState newState)
-    // {
-    //     _current?.OnExit();
-    //     _current = newState;
-    //     _current.OnEnter(this);
-    // }
-
-    // public void ChangeSubState(IState newState)
-    // {
-    //     _substate?.OnExit();
-    //     _substate = newState;
-    //     _substate?.OnEnter(this);
-    // }
-
     public static StateManager Find()
     {
         return GameObject.Find("AppState").GetComponent<StateManager>();
     }
-
-    // public static void ToNeutral()
-    // {
-    //     Find().ChangeSubState(new NeutralState());
-    // }
 
     public static string StackString()
     {

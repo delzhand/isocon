@@ -14,7 +14,6 @@ public enum BlockFocusMode
 
 public class MapEdit
 {
-    private static string CurrentFile = "";
     public static string EditOp = "AddBlock";
     public static string ShapeOp = "ShapeSolid";
     public static string ResizeOp = "ResizeCloneCol";
@@ -142,49 +141,6 @@ public class MapEdit
 
         VisualElement optionsRoot = UI.System.Q("ToolOptions");
 
-        // Data
-        // optionsRoot.Q("DataOptions").Q("Save").RegisterCallback<ClickEvent>((evt) =>
-        // {
-        //     OpenSaveModal(evt);
-        // });
-        // optionsRoot.Q("DataOptions").Q("Open").RegisterCallback<ClickEvent>((evt) =>
-        // {
-        //     OpenOpenModal(evt);
-        // });
-        // optionsRoot.Q("DataOptions").Q("Reset").RegisterCallback<ClickEvent>((evt) =>
-        // {
-        //     ResetConfirm(evt);
-        // });
-        // optionsRoot.Q("DataOptions").Q("MaleghastImport").RegisterCallback<ClickEvent>((evt) =>
-        // {
-        //     OpenMMMImportModal(evt);
-        // });
-        // optionsRoot.Q("DataOptions").Q<TextField>("MapTitle").value = MapMeta.Title;
-        // optionsRoot.Q("DataOptions").Q<TextField>("MapTitle").RegisterValueChangedCallback((evt) =>
-        // {
-        //     MapMeta.Title = evt.newValue;
-        // });
-        // optionsRoot.Q("DataOptions").Q<TextField>("Description").value = MapMeta.Description;
-        // optionsRoot.Q("DataOptions").Q<TextField>("Description").RegisterValueChangedCallback((evt) =>
-        // {
-        //     MapMeta.Description = evt.newValue;
-        // });
-        // optionsRoot.Q("DataOptions").Q<TextField>("Objective").value = MapMeta.Objective;
-        // optionsRoot.Q("DataOptions").Q<TextField>("Objective").RegisterValueChangedCallback((evt) =>
-        // {
-        //     MapMeta.Objective = evt.newValue;
-        // });
-        // optionsRoot.Q("DataOptions").Q<TextField>("Author").value = MapMeta.CreatorName;
-        // optionsRoot.Q("DataOptions").Q<TextField>("Author").RegisterValueChangedCallback((evt) =>
-        // {
-        //     MapMeta.CreatorName = evt.newValue;
-        // });
-        // optionsRoot.Q("DataOptions").Q<DropdownField>("System").value = MapMeta.System;
-        // optionsRoot.Q("DataOptions").Q<DropdownField>("System").RegisterValueChangedCallback((evt) =>
-        // {
-        //     MapMeta.System = evt.newValue;
-        // });
-
         // Environment
         optionsRoot.Q("EnvironmentOptions").Q("LightAngle").RegisterCallback<ChangeEvent<float>>((evt) =>
         {
@@ -284,24 +240,8 @@ public class MapEdit
         });
     }
 
-    public static void NewMap(ClickEvent evt)
-    {
-        if (!TerrainController.MapDirty)
-        {
-            ResetMap();
-        }
-        else
-        {
-            Modal2.Confirm("SecondaryDialog", "You have unsaved changes. Discard?", () =>
-            {
-                ResetMap();
-            });
-        }
-    }
-
     private static void ResetMap()
     {
-        CurrentFile = "";
         Modal2.CreateContext("PrimaryDialog");
         Modal2.AddDialogHeader("Map Size");
         Modal2.AddInlineNumberNudgerField("NewMapSizeX", "Map Width", 8, 1, 50);
@@ -322,151 +262,16 @@ public class MapEdit
         Modal2.Open("Reset Map");
     }
 
-
-
-    private static void OpenSaveModal(ClickEvent evt)
-    {
-        Toast.AddError("Obsolete");
-        // FileBrowserHelper.OpenSaveMapBrowser(CurrentFile);
-    }
-
-    private static void OpenOpenModal(ClickEvent evt)
-    {
-        Toast.AddError("Obsolete");
-        // FileBrowserHelper.OpenLoadMapBrowser();
-    }
-
-    // private static void ConfirmMapOpen(ClickEvent evt)
-    public static void ConfirmMapOpen(ClickEvent evt)
-    {
-        // string value = UI.Modal.Q("SearchField").Q<TextField>("SearchInput").value;
-        string value = FileBrowser.Result[0];
-        if (!TerrainController.MapDirty)
-        {
-            OpenFile();
-            // Modal.Close();
-        }
-        else
-        {
-            Modal.DoubleConfirm("Confirm Open", "You have unsaved changes. Discard?", OpenFile);
-        }
-    }
-
     public static void OpenFile()
     {
         string filename = FileBrowser.Result[0];
         MapSaver.LegacyLoad(filename);
-
-        // string filename = UI.Modal.Q("SearchField").Q<TextField>("SearchInput").value;
-        // string path = Preferences.Current.DataPath;
-        // string fullPath = path + "/maps/" + filename;
-        // CurrentFile = filename.Replace(".png", "").Replace(".json", "");
-        // if (fullPath.EndsWith(".png"))
-        // {
-        //     MapSaver.StegLoad(fullPath);
-        // }
-        // else
-        // {
-        //     MapSaver.LegacyLoad(fullPath);
-        // }
     }
 
-    // private static void ConfirmMapSave(ClickEvent evt)
-    public static void ConfirmMapSave(ClickEvent evt)
-    {
-        string value = FileBrowser.Result[0];
-        if (FileExists(value))
-        {
-            Modal.DoubleConfirm("Confirm Overwrite", "A file with this name already exists. Overwrite?", WriteFile);
-        }
-        else
-        {
-            WriteFile();
-        }
-
-        // string value = UI.Modal.Q<TextField>("Filename").value;
-        // if (value.Length == 0)
-        // {
-        //     Toast.AddError("Not a valid filename.");
-        // }
-        // else
-        // {
-        //     string saveType = UI.Modal.Q<DropdownField>("SaveType").value;
-        //     if (saveType == "Encoded Screenshot")
-        //     {
-        //         if (value.EndsWith(".json"))
-        //         {
-        //             value = value.Replace(".json", "");
-        //         }
-        //         if (!value.EndsWith(".png"))
-        //         {
-        //             value += ".png";
-        //         }
-        //     }
-        //     else
-        //     {
-        //         if (value.EndsWith(".png"))
-        //         {
-        //             value = value.Replace(".png", "");
-        //         }
-        //         if (!value.EndsWith(".json"))
-        //         {
-        //             value += ".json";
-        //         }
-        //     }
-        //     UI.Modal.Q<TextField>("Filename").value = value;
-        //     if (FileExists(value))
-        //     {
-        //         Modal.DoubleConfirm("Confirm Overwrite", "A file with this name already exists. Overwrite?", WriteFile);
-        //     }
-        //     else
-        //     {
-        //         WriteFile();
-        //         Modal.Close();
-        //     }
-        // }
-    }
 
     public static void WriteFile()
     {
         MapSaver.RegSave(FileBrowser.Result[0]);
-        // string saveType = UI.Modal.Q<DropdownField>("SaveType").value;
-        // string filename = UI.Modal.Q<TextField>("Filename").value;
-        // string path = Preferences.Current.DataPath;
-        // string fullPath = path + "/maps/" + filename;
-        // if (saveType == "Encoded Screenshot")
-        // {
-        //     MapSaver.StegSave(fullPath);
-        // }
-        // else
-        // {
-        //     MapSaver.RegSave(fullPath);
-        // }
-    }
-
-    private static bool FileExists(string filename)
-    {
-        string path = Preferences.Current.DataPath;
-        string fullPath = path + "/maps/" + filename;
-        return File.Exists(fullPath);
-    }
-
-    public static string[] GetAllMapFiles()
-    {
-        string path = Preferences.Current.DataPath;
-        List<string> mapFiles = new List<string>();
-
-
-
-        FileUtility.GetFilesRecursively(path, "/maps", mapFiles);
-
-        // Remove "/maps" from each string in the list
-        for (int i = 0; i < mapFiles.Count; i++)
-        {
-            mapFiles[i] = mapFiles[i].Replace("/maps/", "");
-        }
-
-        return mapFiles.ToArray();
     }
 
     public static void ColorChanged()

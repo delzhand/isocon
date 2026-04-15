@@ -45,16 +45,6 @@ public class MapEditingState : BaseState
         DisableInterface();
     }
 
-    // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    // public static void PermanentCallbacks()
-    // {
-    //     UI.TopBar.Q("SyncMap").RegisterCallback<ClickEvent>(Sync);
-    //     UI.TopBar.Q("CancelEditMap").RegisterCallback<ClickEvent>(Cancel);
-    //     UI.TopBar.Q("LoadMap").RegisterCallback<ClickEvent>(LoadMap);
-    //     UI.TopBar.Q("SaveMap").RegisterCallback<ClickEvent>(SaveMap);
-    //     UI.TopBar.Q("NewMap").RegisterCallback<ClickEvent>(MapEdit.NewMap);
-    // }
-
     public override void UpdateState()
     {
         base.UpdateState();
@@ -64,16 +54,6 @@ public class MapEditingState : BaseState
 
     protected void EnableInterface()
     {
-
-
-        // UI.ToggleDisplay(UI.TopBar.Q("Dice"), false);
-        // UI.ToggleDisplay(UI.TopBar.Q("EditMap"), false);
-        // UI.ToggleDisplay(UI.TopBar.Q("AddTableTag"), false);
-        // UI.ToggleDisplay(UI.TopBar.Q("Config"), false);
-        // UI.ToggleDisplay(UI.TopBar.Q("Isocon"), false);
-        // UI.ToggleDisplay(UI.TopBar.Q("SessionWrapper"), false);
-        // UI.ToggleDisplay(UI.TopBar.Q("AddActor"), false);
-        // UI.ToggleDisplay("BottomRight", false);
         UI.ToggleDisplay("DiceRoller", false);
         UI.ToggleDisplay(UI.System.Q("DetailsHud"), false);
 
@@ -81,11 +61,6 @@ public class MapEditingState : BaseState
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), false);
 
         UI.ToggleDisplay("ToolsPanel", true);
-
-        // UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), true);
-        // UI.ToggleDisplay(UI.TopBar, true);
-        // UI.ToggleDisplay(UI.TopBar.Q("EditingActions"), true);
-        // UI.TopBar.Q("EditMap").Q<Label>("Label").text = "Sync <u>M</u>ap";
     }
 
     protected void DisableInterface()
@@ -97,10 +72,6 @@ public class MapEditingState : BaseState
 
         UI.ToggleDisplay("BottomBar", true);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), true);
-        // UI.ToggleDisplay(UI.TopBar.Q("EditingActions"), false);
-        // UI.ToggleDisplay(UI.TopBar.Q("Isocon"), true);
-        // UI.ToggleActiveClass(UI.TopBar.Q("EditMap"), false);
-        // UI.TopBar.Q("EditMap").Q<Label>("Label").text = "Edit <u>M</u>ap";
     }
 
     protected void BindCallbacks()
@@ -150,17 +121,6 @@ public class MapEditingState : BaseState
 
     public override void HandleInput()
     {
-        // if (DisallowShortcutKeys())
-        // {
-        //     return;
-        // }
-
-        // if (Input.GetKeyUp(KeyCode.M))
-        // {
-        //     ExitEditing();
-        //     return;
-        // }
-
         if (Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetKeyDown(KeyCode.RightAlt))
         {
             AltMode = true;
@@ -180,18 +140,6 @@ public class MapEditingState : BaseState
         }
 
     }
-
-    // private void ExitEditing()
-    // {
-    //     if (TerrainController.MapDirty)
-    //     {
-    //         Modal2.Confirm("PrimaryDialog", "You have unsaved changes. Discard?", () => StateManager.PopState());
-    //     }
-    //     else
-    //     {
-    //         StateManager.PopState();
-    //     }
-    // }
 
     public static void Sync()
     {

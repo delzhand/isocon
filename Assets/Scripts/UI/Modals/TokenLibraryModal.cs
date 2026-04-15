@@ -18,8 +18,6 @@ public class TokenLibraryModal : MonoBehaviour
     public static Dictionary<string, (Token, VisualElement)> ElementMap;
     private static int LibraryItemSize = 100;
     private static bool AllowSelect = false;
-    private static bool Editing = false;
-    private static Token BackupMeta;
     private static string SelectedHash;
     private static LibraryCallback OnSelect;
 
@@ -166,16 +164,6 @@ public class TokenLibraryModal : MonoBehaviour
         return Tokens[SelectedHash];
     }
 
-    public static bool TokenSelected()
-    {
-        return SelectedHash != null;
-    }
-
-    public static void Close(ClickEvent evt)
-    {
-        UI.ToggleDisplay("TokenLibraryModal", false);
-    }
-
     public static void CreateTokenElement(Token token)
     {
         VisualElement item = UI.CreateFromTemplate("UI/TokenLibraryItem");
@@ -219,117 +207,6 @@ public class TokenLibraryModal : MonoBehaviour
         SetupTokenDisplay(item, token);
     }
 
-    // public static void CancelButtonClicked(ClickEvent evt)
-    // {
-    //     if (Editing)
-    //     {
-    //         Editing = false;
-    //         Tokens[SelectedHash].Name = BackupMeta.Name;
-    //         Tokens[SelectedHash].Frames = BackupMeta.Frames;
-    //         Tokens[SelectedHash].FPS = BackupMeta.FPS;
-    //         Tokens[SelectedHash].Favorite = BackupMeta.Favorite;
-
-    //         ElementMap[SelectedHash].Item2.Q<Label>("TokenLabel").text = Tokens[SelectedHash].Name;
-    //         UI.System.Q("TokenLibraryModal").Q(SelectedHash).Add(ElementMap[SelectedHash].Item2);
-    //         UpdateVisibility();
-    //         UI.Redraw();
-    //     }
-    //     else
-    //     {
-    //         Close(evt);
-    //     }
-
-    //     if (SelectedHash != null)
-    //     {
-    //         ElementMap[SelectedHash].Item2.Q("Item").RemoveFromClassList("selected");
-    //         SelectedHash = null;
-    //     }
-    // }
-
-    // private static void EditButtonClicked(ClickEvent evt)
-    // {
-    //     Editing = true;
-    //     UpdateVisibility();
-    //     UI.Redraw();
-
-    //     Token meta = Tokens[SelectedHash];
-    //     BackupMeta = Token.Copy(meta);
-    //     VisualElement root = UI.System.Q("TokenLibraryModal");
-    //     root.Q<TextField>("NameField").value = meta.Name;
-    //     root.Q<IntegerField>("FramesField").value = meta.Frames;
-    //     root.Q<IntegerField>("FpsField").value = meta.FPS;
-    //     root.Q<Toggle>("FavoriteField").value = meta.Favorite;
-    //     root.Q("TokenPreview").style.width = LibraryItemSize;
-    //     root.Q("TokenPreview").style.height = LibraryItemSize;
-    //     root.Q("TokenPreview").Add(ElementMap[meta.Hash].Item2);
-    // }
-
-    // private static void DeleteButtonClicked(ClickEvent evt)
-    // {
-    //     Editing = false;
-    //     UpdateVisibility();
-    //     UI.Redraw();
-
-    //     ElementMap.Remove(SelectedHash);
-    //     Tokens.Remove(SelectedHash);
-    //     UI.System.Q("TokenLibraryModal").Q(SelectedHash).RemoveFromHierarchy();
-    //     Toast.AddSuccess($"Token deleted.");
-    //     SelectedHash = null;
-    //     WriteLibraryFile();
-    // }
-
-    // private static void SelectButtonClicked(ClickEvent evt)
-    // {
-    //     OnSelect?.Invoke();
-    //     Close(evt);
-    // }
-
-    // private static void SaveButtonClicked(ClickEvent evt)
-    // {
-    //     // write file
-    //     Editing = false;
-    //     UpdateVisibility();
-    //     UI.Redraw();
-    //     WriteLibraryFile();
-
-    //     UI.System.Q("TokenLibraryModal").Q(SelectedHash).Add(ElementMap[SelectedHash].Item2);
-    //     ElementMap[SelectedHash].Item2.Q("Item").RemoveFromClassList("selected");
-    //     SelectedHash = null;
-
-    // }
-
-    // private static void ChangeEditingValue()
-    // {
-    //     VisualElement root = UI.System.Q("TokenLibraryModal");
-    //     Tokens[SelectedHash].Name = root.Q<TextField>("NameField").value;
-    //     Tokens[SelectedHash].Frames = root.Q<IntegerField>("FramesField").value;
-    //     Tokens[SelectedHash].FPS = root.Q<IntegerField>("FpsField").value;
-    //     Tokens[SelectedHash].Favorite = root.Q<Toggle>("FavoriteField").value;
-    //     ElementMap[SelectedHash].Item2.Q<Label>("TokenLabel").text = Tokens[SelectedHash].Name;
-    //     UpdateAnimation(ElementMap[SelectedHash].Item2, Tokens[SelectedHash]);
-    // }
-
-    // private static void UpdateVisibility()
-    // {
-    //     VisualElement root = UI.System.Q("TokenLibraryModal");
-    //     UI.ToggleDisplay(root.Q("TokenLibrary"), !Editing);
-    //     UI.ToggleDisplay(root.Q("TokenMetaEdit"), Editing);
-
-    //     UI.ToggleDisplay(root.Q("SelectButton"), AllowSelect && !Editing && SelectedHash != null);
-    //     UI.ToggleDisplay(root.Q("DeleteButton"), Editing);
-    //     UI.ToggleDisplay(root.Q("SaveButton"), Editing);
-    //     UI.ToggleDisplay(root.Q("EditButton"), !Editing && SelectedHash != null);
-
-    //     if (AllowSelect)
-    //     {
-    //         root.Q("EditButton").RemoveFromClassList("preferred");
-    //     }
-    //     else
-    //     {
-    //         root.Q("EditButton").AddToClassList("preferred");
-    //     }
-    // }
-
     public static void ConfirmSelect()
     {
         int count = 0;
@@ -358,75 +235,6 @@ public class TokenLibraryModal : MonoBehaviour
         string directory = $"{Preferences.Current.DataPath}/hashed-tokens";
         return directory;
     }
-
-    // private static void AddToUI(Token meta, VisualElement scrollArea)
-    // {
-    //     VisualElement wrapper = new();
-    //     wrapper.name = meta.Hash;
-    //     wrapper.AddToClassList("wrapper");
-    //     wrapper.AddToClassList("token-library__item");
-    //     wrapper.style.height = LibraryItemSize;
-    //     wrapper.style.width = LibraryItemSize;
-
-    //     VisualElement tokenDisplay = new();
-    //     tokenDisplay.name = "Item";
-    //     tokenDisplay.AddToClassList("item");
-
-    //     VisualElement frame = new();
-    //     frame.name = "Frame";
-    //     frame.AddToClassList("frame");
-
-    //     Label label = new();
-    //     label.name = "TokenLabel";
-    //     label.AddToClassList("panel-text");
-    //     label.text = meta.Name;
-    //     label.style.backgroundColor = new Color(0, 0, 0, .5f);
-
-    //     VisualElement sprite = new();
-    //     sprite.name = "Sprite";
-    //     sprite.AddToClassList("sprite");
-    //     Texture2D backgroundImage = TokenSync.LoadHashedFileAsTexture(meta.Hash);
-    //     if (backgroundImage == null)
-    //     {
-    //         Toast.AddError($"Could not find library image {meta.Hash}.png in the hashed-tokens directory.");
-    //     }
-    //     sprite.style.backgroundImage = backgroundImage;
-
-    //     frame.Add(sprite);
-    //     tokenDisplay.Add(frame);
-    //     tokenDisplay.Add(label);
-    //     wrapper.Add(tokenDisplay);
-
-    //     tokenDisplay.RegisterCallback<ClickEvent>((evt) =>
-    //     {
-    //         if (SelectedHash != null && SelectedHash != meta.Hash)
-    //         {
-    //             // Deselect other and select this
-    //             ElementMap[SelectedHash].Item2.Q("Item").RemoveFromClassList("selected");
-    //             SelectedHash = meta.Hash;
-    //             ElementMap[SelectedHash].Item2.Q("Item").AddToClassList("selected");
-    //         }
-    //         else if (SelectedHash != null && SelectedHash == meta.Hash)
-    //         {
-    //             // Deselect this
-    //             ElementMap[SelectedHash].Item2.Q("Item").RemoveFromClassList("selected");
-    //             SelectedHash = null;
-    //         }
-    //         else
-    //         {
-    //             // Select this
-    //             SelectedHash = meta.Hash;
-    //             ElementMap[SelectedHash].Item2.Q("Item").AddToClassList("selected");
-    //         }
-    //         UpdateVisibility();
-    //     });
-
-    //     // UI.System.Q("TokenLibrary").Q("LibraryGrid").Add(wrapper);
-    //     ShunDialogHelper.MoveToScrollArea(wrapper, scrollArea);
-
-    //     ElementMap[meta.Hash] = (meta, tokenDisplay);
-    //     UpdateAnimation(tokenDisplay, meta);
-    // }
 
     private static void SetupTokenDisplay(VisualElement element, Token token)
     {

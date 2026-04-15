@@ -443,16 +443,6 @@ public class Block : MonoBehaviour
         TerrainController.SetInfo();
     }
 
-    /// <summary>
-    /// Indicate that this block is part of a targeted area
-    /// </summary>
-    public void Highlight()
-    {
-        _highlighted = true;
-        MarkForRedraw();
-        TerrainController.SetInfo();
-    }
-
     public Vector3 GetNearestCorner(Vector3 point)
     {
         // Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);

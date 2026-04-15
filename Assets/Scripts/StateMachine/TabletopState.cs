@@ -212,53 +212,6 @@ public class TabletopState : BaseState
 
     public override void HandleInput()
     {
-        // if (DisallowShortcutKeys())
-        // {
-        //     return;
-        // }
-
-        // if (Input.GetKeyUp(KeyCode.A))
-        // {
-        //     AddActorModal.Open();
-        //     return;
-        // }
-
-        // if (Input.GetKeyUp(KeyCode.M))
-        // {
-        //     StateManager.PushState(new MapEditingState());
-        //     return;
-        // }
-
-        // if (Input.GetKeyUp(KeyCode.T))
-        // {
-        //     GoToMarking(new ClickEvent());
-        // }
-
-        // if (Input.GetKeyUp(KeyCode.F))
-        // {
-        //     ConfigModal.Open();
-        // }
-
-        // if (Input.GetKeyUp(KeyCode.A))
-        // {
-        //     AddActorModal.Open();
-        // }
-
-        // if (Input.GetKeyUp(KeyCode.X))
-        // {
-        //     ShowConsole(new ClickEvent());
-        // }
-
-        // if (Input.GetKeyUp(KeyCode.S))
-        // {
-        //     GoToSession(new ClickEvent());
-        // }
-
-        // if (Input.GetKeyUp(KeyCode.V))
-        // {
-        //     Viewport.FixViewOverhead();
-        //     return;
-        // }
     }
 
     private void ShowTokenPanels()

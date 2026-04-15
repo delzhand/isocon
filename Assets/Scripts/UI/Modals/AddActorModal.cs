@@ -52,25 +52,11 @@ public class AddActorModal
         }
     }
 
-    public static void OrderFields(string[] fieldNames)
-    {
-        foreach (string f in fieldNames)
-        {
-            Modal.MoveToColumn("TypeData_0", f);
-        }
-    }
-
     public static void FinalizeToken(string json)
     {
         Player.Self().CmdCreateActor(json);
         Modal2.Dialog("PrimaryDialog").Close();
         UI.ToggleActiveClass("BottomBar", true);
-    }
-
-    public static void CloseAddToken()
-    {
-        Player.Self().ClearOp();
-        StateManager.PopState();
     }
 
     private static void GetFilesRecursively(string basePath, string relativePath, List<string> fileList)

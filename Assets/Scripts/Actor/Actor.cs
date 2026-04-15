@@ -14,12 +14,10 @@ public enum ActorState
 
 public class Actor : MonoBehaviour
 {
-    public int Size = 1;
     public Texture2D Image;
     public ActorData Data;
     public float ShareOffsetX;
     public float ShareOffsetY;
-    public Actor LastFocused;
     public ActorState State = ActorState.Neutral;
     private GameObject dragBaseIndicator;
 
