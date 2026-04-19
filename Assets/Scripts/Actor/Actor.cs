@@ -145,6 +145,12 @@ public class Actor : MonoBehaviour
     public void UpdateDragIndicator(Vector3 v)
     {
         dragBaseIndicator.transform.position = v;
+        if (Data.Placed)
+        {
+            string op = Data.Placed ? "Moving" : "Placing";
+            float distance = Player.Self().GetComponent<DirectionalLine>().GetDistance();
+            Player.Self().SetOp($"{op} {Data.Name} (Distance {distance})");
+        }
     }
 
     public void ClearDragIndicator()

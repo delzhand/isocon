@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Mirror;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class DirectionalLine : NetworkBehaviour
@@ -116,6 +117,15 @@ public class DirectionalLine : NetworkBehaviour
     public void UnsetTarget()
     {
         ValidTarget = false;
+    }
+
+    public float GetDistance()
+    {
+        ActorData data = ActorData.Find(TokenId);
+        Vector3 origin = data.WorldObject.transform.position;
+        float x = origin.x - Target.x;
+        float z = origin.z - Target.z;
+        return math.abs(x) + math.abs(z);
     }
 
     public List<Vector3> GenerateParabolaPoints(Vector3 origin, Vector3 target, float density, float parabolaHeight)
