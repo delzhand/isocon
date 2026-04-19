@@ -33,6 +33,10 @@ public class GameSystem : MonoBehaviour
 
     public void Command(string value)
     {
+        if (value.StartsWith("ClearTags"))
+        {
+            ClearTags();
+        }
         if (value.StartsWith("AddTag"))
         {
             string[] parts = value.Split("|");

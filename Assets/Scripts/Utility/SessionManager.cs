@@ -82,6 +82,7 @@ public class SessionManager
 
         // Player.Self().CmdRequestClientInit();
 
+        Player.Self().CmdRequestGameSystemCommand($"ClearTags");
         foreach (GameSystemTag gst in sp.Tags)
         {
             // Reserialize for network transmission
