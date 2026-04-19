@@ -38,7 +38,7 @@ public class StateManager : MonoBehaviour
         StateStack.Push(newState);
         // Debug.Log($"Added {newState.GetName()}");
         newState.OnEnter();
-        HudText.SetItem("stack", StackString(), -100, HudTextColor.Red);
+        // HudText.SetItem("stack", StackString(), -100, HudTextColor.Red);
     }
 
     public static void PopState()
@@ -50,7 +50,7 @@ public class StateManager : MonoBehaviour
         // Debug.Log($"Removed {oldState.GetName()}");
         var newState = StateStack.Peek();
         newState.OnEnter();
-        HudText.SetItem("stack", StackString(), -100, HudTextColor.Red);
+        // HudText.SetItem("stack", StackString(), -100, HudTextColor.Red);
     }
 
     public static StateManager Find()

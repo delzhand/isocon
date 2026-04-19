@@ -8,18 +8,18 @@ namespace IsoconUILibrary
 {
     public class NumberNudger : VisualElement, INotifyValueChanged<int>
     {
-        public new class UxmlFactory : UxmlFactory<NumberNudger, UxmlTraits> { }
-        public new class UxmlTraits : VisualElement.UxmlTraits
-        {
-            UxmlStringAttributeDescription m_String = new UxmlStringAttributeDescription { name = "label", defaultValue = "Label" };
-            UxmlIntAttributeDescription m_Int = new UxmlIntAttributeDescription { name = "value", defaultValue = 0 };
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-                var ate = ve as NumberNudger;
-                ate.value = m_Int.GetValueFromBag(bag, cc);
-            }
-        }
+        // public new class UxmlFactory : UxmlFactory<NumberNudger, UxmlTraits> { }
+        // public new class UxmlTraits : VisualElement.UxmlTraits
+        // {
+        //     UxmlStringAttributeDescription m_String = new UxmlStringAttributeDescription { name = "label", defaultValue = "Label" };
+        //     UxmlIntAttributeDescription m_Int = new UxmlIntAttributeDescription { name = "value", defaultValue = 0 };
+        //     public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
+        //     {
+        //         base.Init(ve, bag, cc);
+        //         var ate = ve as NumberNudger;
+        //         ate.value = m_Int.GetValueFromBag(bag, cc);
+        //     }
+        // }
 
         private Label valueLabel;
         private int m_ValueInt;
