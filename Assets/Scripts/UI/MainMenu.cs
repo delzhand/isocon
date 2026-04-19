@@ -6,7 +6,7 @@ public class MainMenu
 {
     public static void SetupForTabletop()
     {
-        var menu = UI.System.Q("TableMenu").Q<ShunMenuBar>();
+        var menu = UI.System.Q("MainMenu").Q<ShunMenuBar>();
         menu.variant = MenuBarVariant.Outline;
 
         // Clear existing items
@@ -37,7 +37,7 @@ public class MainMenu
 
     public static void SetupForMapEdit()
     {
-        var menu = UI.System.Q("TableMenu").Q<ShunMenuBar>();
+        var menu = UI.System.Q("MainMenu").Q<ShunMenuBar>();
         menu.variant = MenuBarVariant.Outline;
 
         // Clear existing items
