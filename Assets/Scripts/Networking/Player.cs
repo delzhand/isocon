@@ -270,6 +270,14 @@ public class Player : NetworkBehaviour
                 target.RemoveMark(value);
             }
         }
+        else if (label == "ClearEffects")
+        {
+            for (int i = 0; i < blocks.Length; i++)
+            {
+                Block target = GameObject.Find(blocks[i]).GetComponent<Block>();
+                target.ClearMarks();
+            }
+        }
 
         TerrainController.SetInfo();
     }

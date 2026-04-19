@@ -51,7 +51,9 @@ public class TileMenu
         }
         items.Add(new MenuItem("Deselect All", ClickDeselectAll));
         items.Add(new MenuItem("Add Effect", () => ClickAddEffect(null)));
-        items.Add(new MenuItem("Clear Effects from Selection", ClickClearEffects));
+        items.Add(new MenuItem("Clear Effects from Tile", () => ClickClearTile(b)));
+        items.Add(new MenuItem("Clear Effects from All", ClickClearMap));
+        items.Add(new MenuItem("Clear Effects from Selection", ClickClearSelection));
 
         List<string> effects = new();
         foreach (var block in Block.GetSelected())
@@ -61,6 +63,10 @@ public class TileMenu
                 string effectName = effect.Split("::")[0];
                 if (!effects.Contains(effectName))
                 {
+                    if (effectName.Length == 0)
+                    {
+                        effectName = "unnamed effect";
+                    }
                     items.Add(new MenuItem($"Remove {effectName}", () =>
                     {
                         Player.Self().CmdRequestMapSetValue(SelectedBlockNames(), "RemoveEffect", effect);
@@ -70,7 +76,6 @@ public class TileMenu
                 }
             });
         }
-        items.Add(new MenuItem("Clear Effects from All", ClickClearMap));
         return items.ToArray();
     }
 
@@ -110,15 +115,21 @@ public class TileMenu
         SelectionMenu.Hide();
     }
 
-    public static void ClickClearEffects()
+    public static void ClickClearTile(Block b)
     {
-        Player.Self().CmdRequestMapSetValue(SelectedBlockNames(), "Effect", "None");
+        Player.Self().CmdRequestMapSetValue(new string[] { b.name }, "ClearEffects", "None");
+        SelectionMenu.Hide();
+    }
+
+    public static void ClickClearSelection()
+    {
+        Player.Self().CmdRequestMapSetValue(SelectedBlockNames(), "ClearEffects", "None");
         SelectionMenu.Hide();
     }
 
     public static void ClickClearMap()
     {
-        Player.Self().CmdRequestMapSetValue(AllBlockNames(), "Effect", "None");
+        Player.Self().CmdRequestMapSetValue(AllBlockNames(), "ClearEffects", "None");
         SelectionMenu.Hide();
     }
 

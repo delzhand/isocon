@@ -169,6 +169,12 @@ public class Block : MonoBehaviour
         MarkForRedraw();
     }
 
+    public void ClearMarks()
+    {
+        _marks.Clear();
+        MarkForRedraw();
+    }
+
     /// <summary>
     /// Copies style from another block.
     /// </summary>
