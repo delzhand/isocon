@@ -149,7 +149,7 @@ public class Actor : MonoBehaviour
         {
             string op = Data.Placed ? "Moving" : "Placing";
             float distance = Player.Self().GetComponent<DirectionalLine>().GetDistance();
-            Player.Self().SetOp($"{op} {Data.Name} (Distance {distance})");
+            Player.Self().SetOp($"{op} {Data.Name} {distance} tiles");
         }
     }
 
