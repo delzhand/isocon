@@ -73,6 +73,11 @@ public class StateManager : MonoBehaviour
     {
         return StateStack.Peek().GetName().StartsWith("ModalState");
     }
+
+    public static bool IsTabletopState()
+    {
+        return StateStack.Peek().GetName().StartsWith("TabletopState");
+    }
 }
 
 public interface IState

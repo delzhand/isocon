@@ -32,7 +32,7 @@ public class SessionManager
         DeserializeSession(filename);
     }
 
-    public static void SerializeSession(string filename)
+    public static void SerializeSession(string filename, bool toast = true)
     {
         List<ActorPersistence> a = new();
         GameObject[] actors = GameObject.FindGameObjectsWithTag("ActorData");
@@ -48,12 +48,15 @@ public class SessionManager
         sp.Tags = GameSystem.Current().Tags.ToArray();
         string session = JsonUtility.ToJson(sp);
         WriteSessionToFile(session, filename);
+        if (toast)
+        {
+            Toast.AddSuccess($"Session saved to {filename}.");
+        }
     }
 
     public static void WriteSessionToFile(string session, string filename)
     {
         File.WriteAllText(filename, session);
-        Toast.AddSuccess($"Session saved to {filename}.");
     }
 
     public static void DeserializeSession(string filename)

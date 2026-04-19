@@ -51,7 +51,10 @@ public class TabletopState : BaseState
         ShowTokenPanels();
         TileShare.Offsets();
         Pointer.Point();
-        Autosaver.Tick();
+        if (StateManager.IsTabletopState())
+        {
+            Autosaver.Tick();
+        }
     }
 
     #region Interface
@@ -60,7 +63,7 @@ public class TabletopState : BaseState
         UI.ToggleDisplay("Tabletop", true);
         UI.ToggleDisplay("DetailsHud", Preferences.Current.ShowHUD);
         UI.ToggleDisplay("BottomBar", true);
-        UI.ToggleDisplay("TableMenu", true);
+        UI.ToggleDisplay("MainMenu", true);
         UI.ToggleDisplay(UI.System.Q("TopRight"), true);
         UI.ToggleDisplay(UI.System.Q("TopRight").Q("Pills"), true);
     }
@@ -144,7 +147,7 @@ public class TabletopState : BaseState
 
     public static void ConfirmReturnToLauncher()
     {
-        SessionManager.SerializeSession($"{Preferences.Current.DataPath}/sessions/autosave.json");
+        Autosaver.Immediate();
         Modal2.CreateContext("PrimaryDialog");
         string message = "Quit the session and return to the IsoCON launcher?";
         if (NetworkClient.activeHost && _mode == ConnectMode.Host)
