@@ -11,10 +11,6 @@ public class TabletopState : BaseState
     {
         _mode = mode;
         StateManager.PushState(new TabletopState());
-    }
-
-    public override void OnEnter()
-    {
         if (Player.Self().Host)
         {
             TerrainController.InitializeTerrain(8, 8, 1);
@@ -24,6 +20,10 @@ public class TabletopState : BaseState
             Player.Self().CmdRequestToast(null, $"{Player.Self().Name} connected");
         }
         SetConnectionMessage();
+    }
+
+    public override void OnEnter()
+    {
         EnableInterface();
         BindCallbacks();
         MainMenu.SetupForTabletop();
@@ -72,7 +72,7 @@ public class TabletopState : BaseState
     #endregion
 
     #region Setup
-    private void SetConnectionMessage()
+    private static void SetConnectionMessage()
     {
         string text = "";
         switch (_mode)
