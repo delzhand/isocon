@@ -52,6 +52,7 @@ public class MainMenu
         editMenu.AddItem("Discard Changes", MapEditingState.Cancel);
 
         var dataMenu = menu.AddMenu("Data");
+        dataMenu.AddItem("Reset Map", MapEditingState.ResetMap);
         dataMenu.AddItem("Save Map", MapEditingState.SaveMap);
         dataMenu.AddItem("Load Map", MapEditingState.LoadMap);
         dataMenu.AddItem("Import Map", MapEditingState.OpenMMMImportModal);

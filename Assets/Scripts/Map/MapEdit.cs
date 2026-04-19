@@ -240,28 +240,6 @@ public class MapEdit
         });
     }
 
-    private static void ResetMap()
-    {
-        Modal2.CreateContext("PrimaryDialog");
-        Modal2.AddDialogHeader("Map Size");
-        Modal2.AddInlineNumberNudgerField("NewMapSizeX", "Map Width", 8, 1, 50);
-        Modal2.AddInlineNumberNudgerField("NewMapSizeY", "Map Length", 8, 1, 50);
-        Modal2.AddInlineNumberNudgerField("NewMapSizeZ", "Map Height", 1, 1, 10);
-        Modal2.AddDialogFooter();
-        Modal2.AddFooterConfirm("Create", () =>
-        {
-            Modal2.ReadContext("PrimaryDialog");
-            int x = Modal2.GetNumberNudgerFieldValue("NewMapSizeX");
-            int y = Modal2.GetNumberNudgerFieldValue("NewMapSizeY");
-            int z = Modal2.GetNumberNudgerFieldValue("NewMapSizeZ");
-            TerrainController.ResetTerrain(x, y, z);
-            MapMeta.Reset();
-            Toast.AddSimple("Map reset.");
-            Modal2.Close("PrimaryDialog");
-        });
-        Modal2.Open("Reset Map");
-    }
-
     public static void OpenFile()
     {
         string filename = FileBrowser.Result[0];
