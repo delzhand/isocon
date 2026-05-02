@@ -45,6 +45,11 @@ public class Block : MonoBehaviour
         ShapeChange(Shape);
     }
 
+    void OnDestroy()
+    {
+        _markerMaterial = null;
+    }
+
     void Update()
     {
         if (_materialReset)
@@ -712,7 +717,8 @@ public class Block : MonoBehaviour
             column.AddComponent<Column>().Set(x, y);
         }
 
-        GameObject block = Instantiate(Resources.Load("Prefabs/Block") as GameObject);
+        GameObject blockPrefab = Resources.Load("Prefabs/Block") as GameObject;
+        GameObject block = Instantiate(blockPrefab);
         block.name = "block-" + x + "," + z + "," + y;
         block.transform.parent = column.transform;
         block.transform.localScale = Vector3.one;
@@ -724,7 +730,7 @@ public class Block : MonoBehaviour
         {
             block.GetComponent<Block>().AddMark(markers[i]);
         }
-
+        blockPrefab = null;
         return block;
     }
 

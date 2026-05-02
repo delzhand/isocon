@@ -26,6 +26,7 @@ public class Startup
         MapEdit.Setup();
         TokenLibraryModal.Setup();
         Autosaver.Setup();
+        MemoryHacker.Setup();
         Tutorial.Setup();
         Viewport.Setup();
         BindUICallbacks();
