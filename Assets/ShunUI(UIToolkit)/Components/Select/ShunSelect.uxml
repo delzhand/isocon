@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss?fileID=7433441132597879392&amp;guid=812bff3d2981add4fa9165957ba1034b&amp;type=3#ShunStyle" />
+    
+    <!-- Example 1: Using the choices attribute (List<string> - comma-separated) -->
+    <shun:ShunSelect 
+        placeholder="Select a fruit" 
+        choices="Apple, Banana, Blueberry, Grapes, Pineapple"
+        selected-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/check.png?fileID=2800000&amp;guid=8065da38cbd784dc2be8f7cfdb7dc829&amp;type=3#check" />
+    
+    <!-- Example 2: Using child elements (alternative method for more control) -->
+    <!--
+    <shun:ShunSelect placeholder="Select a fruit" selected-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/check.png?fileID=2800000&amp;guid=8065da38cbd784dc2be8f7cfdb7dc829&amp;type=3#check">
+        <shun:ShunButton text="Apple" class="select__option" />
+        <shun:ShunButton text="Banana" class="select__option" />
+        <shun:ShunButton text="Blueberry" class="select__option" />
+        <shun:ShunButton text="Grapes" class="select__option" />
+        <shun:ShunButton text="Pineapple" class="select__option" />
+    </shun:ShunSelect>
+    -->
+</ui:UXML>

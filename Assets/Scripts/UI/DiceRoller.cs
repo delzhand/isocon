@@ -154,11 +154,10 @@ public class DiceRoller
         return rollString;
     }
 
-    public static void ToggleVisible(ClickEvent evt)
+    public static void ToggleVisible()
     {
         visible = !visible;
         UI.ToggleDisplay("DiceRoller", visible);
-        UI.ToggleActiveClass("Dice", visible);
     }
 
     private static void reset()
@@ -213,15 +212,17 @@ public class DiceRoller
 
         TrayResult r = GetResult(tray);
 
+        string description = "";
         if (tray.Description != null)
         {
-            resultElement.Q<Label>("Label").text = $"{tray.Description} ({tray.PlayerName})";
+            description = $"{tray.Description} ({tray.PlayerName})";
         }
         else
         {
-            resultElement.Q<Label>("Label").text = tray.PlayerName;
+            description = tray.PlayerName;
         }
 
+        Texture2D icon = null;
         switch (r.largestDie)
         {
             case 4:
@@ -230,10 +231,7 @@ public class DiceRoller
             case 10:
             case 12:
             case 20:
-                resultElement.Q("Icon").style.backgroundImage = Resources.Load<Texture2D>($"Textures/die_{r.largestDie}");
-                break;
-            default:
-                UI.ToggleDisplay(resultElement.Q("Icon"), false);
+                icon = Resources.Load<Texture2D>($"Textures/die_{r.largestDie}");
                 break;
         }
 
@@ -247,46 +245,60 @@ public class DiceRoller
             modString += $"+{tray.Modifier}";
         }
 
+        string result = "";
+        string rolls = "";
         switch (tray.Op)
         {
             case "sum":
-                resultElement.Q<Label>("Result").text = $"{r.sum + tray.Modifier}";
-                resultElement.Q<Label>("Rolls").text = $"{string.Join("+", r.rolls.ToArray())}{modString}";
+                result = $"{r.sum + tray.Modifier}";
+                rolls = $"{string.Join("+", r.rolls.ToArray())}{modString}";
                 break;
             case "max":
-                resultElement.Q<Label>("Result").text = $"{r.max + tray.Modifier}";
-                resultElement.Q<Label>("Rolls").text = $"({string.Join(", ", r.rolls.ToArray())}){modString}";
+                result = $"{r.max + tray.Modifier}";
+                rolls = $"({string.Join(", ", r.rolls.ToArray())}){modString}";
                 break;
             case "min":
-                resultElement.Q<Label>("Result").text = $"{r.min + tray.Modifier}";
-                resultElement.Q<Label>("Rolls").text = $"({string.Join(", ", r.rolls.ToArray())}){modString}";
+                result = $"{r.min + tray.Modifier}";
+                rolls = $"({string.Join(", ", r.rolls.ToArray())}){modString}";
                 break;
             default:
-                resultElement.Q<Label>("Result").text = $"({string.Join(", ", r.rolls.ToArray())}){modString}";
-                UI.ToggleDisplay(resultElement.Q<Label>("Rolls"), false);
+                result = $"({string.Join(", ", r.rolls.ToArray())}){modString}";
                 break;
         }
+
+
+        resultElement.Q<Label>("Label").text = description;
+        resultElement.Q<Label>("Result").text = result;
+        resultElement.Q<Label>("Rolls").text = rolls;
+        UI.ToggleDisplay(resultElement.Q<Label>("Rolls"), rolls.Length > 0);
+        resultElement.Q("Icon").style.backgroundImage = icon;
+        UI.ToggleDisplay(resultElement.Q("Icon"), icon != null);
 
         // resultElement.Q<Label>("Sum").text = $"{sum}";
         // resultElement.Q<Label>("Fns").text = $" (▲{highest} ▼{lowest} μ{Math.Floor(sum/(float)tray.rolls.Length)})";
 
-        Toast.AddCustom(resultElement, 15);
 
         // UI.System.Q("DiceLog").Q("Rolls").Add(resultElement);
 
         // DiceOutcome diceOutcome = GameObject.Find("UI").AddComponent<DiceOutcome>();
         // diceOutcome.Tray = tray;
+
+        // Toast.AddCustom(resultElement, 15);
+        Toast.AddDiceRoll(rolls, @$"<size=+4>{result}</size> | {description}", icon);
     }
 
     public static void AddOutcome(string description, string result, string rolls, int die)
     {
-        VisualTreeAsset resultTemplate = Resources.Load<VisualTreeAsset>("UI/DiceResult");
-        VisualElement resultElement = resultTemplate.Instantiate();
-        resultElement.Q<Label>("Label").text = description;
-        resultElement.Q("Icon").style.backgroundImage = Resources.Load<Texture2D>($"Textures/die_{die}");
-        resultElement.Q<Label>("Result").text = $"{result}";
-        resultElement.Q<Label>("Rolls").text = $"{rolls}";
-        Toast.AddCustom(resultElement, 15);
+        // VisualTreeAsset resultTemplate = Resources.Load<VisualTreeAsset>("UI/DiceResult");
+        // VisualElement resultElement = resultTemplate.Instantiate();
+        // resultElement.Q<Label>("Label").text = description;
+        // resultElement.Q("Icon").style.backgroundImage = Resources.Load<Texture2D>($"Textures/die_{die}");
+        // resultElement.Q<Label>("Result").text = $"{result}";
+        // resultElement.Q<Label>("Rolls").text = $"{rolls}";
+        // Toast.AddCustom(resultElement, 15);
+
+        Texture2D icon = Resources.Load<Texture2D>($"Textures/die_{die}");
+        Toast.AddDiceRoll(rolls, @$"<size=+4>{result}</size> | {description}", icon);
     }
 
 

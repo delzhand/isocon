@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -101,27 +102,38 @@ public class Icon2x0PlayerActorType : Icon2x0Base
             "Wright/Wayfarer"
         );
 
-        Modal.AddTextField("NameField", "Actor Name", "Actor");
-        Modal.AddSearchField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs);
+        var contents = Modal2.Contents("PrimaryDialog");
+        var typeContainer = contents.Q("ActorTypeContainer");
+        typeContainer.Clear();
+        contents.Q("CreateActor")?.RemoveFromHierarchy();
 
-        Modal.AddPreferredButton("Create Actor", CreateClicked);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        var name = Modal2.AddInlineTextField("Name", "Actor Name", "Actor");
+        Modal2.MoveToContainer(name, typeContainer);
 
-        // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddActor.OrderFields(StringUtility.CreateArray("NameField", "PlayerJob"));
+        var job = Modal2.AddInlineComboboxField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs.ToList<string>());
+        Modal2.MoveToContainer(job, typeContainer);
+
+
+        var create = new ShunDialogClose();
+        create.name = "CreateActor";
+        create.text = "Create Actor";
+        create.SetVariant(ButtonVariant.Primary);
+        create.clicked += () => CreateClicked();
+        contents.Q(className: "shun-dialog__footer").Add(create);
 
     }
 
-    private static void CreateClicked(ClickEvent evt)
+    private static void CreateClicked()
     {
-        if (!TokenLibrary.TokenSelected())
+        Modal2.ReadContext("PrimaryDialog");
+        string token = Modal2.GetComboboxFieldValue("Token");
+        if (token.Length == 0)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
-
-        string name = UI.Modal.Q<TextField>("NameField").value;
-        string playerJob = SearchField.GetValue(UI.Modal.Q("PlayerJob"));
+        string name = Modal2.GetTextFieldValue("Name");
+        string playerJob = Modal2.GetComboboxFieldValue("PlayerJob");
         if (playerJob.Length == 0)
         {
             Toast.AddError("You must select a job");
@@ -174,7 +186,7 @@ public class Icon2x0PlayerActorType : Icon2x0Base
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Token = TokenLibraryModal.GetToken(token);
         a.Color = ColorUtility.GetCommonColor(color);
         a.Shape = "Square 1x1";
         a.Position = Vector3.zero;
@@ -182,20 +194,20 @@ public class Icon2x0PlayerActorType : Icon2x0Base
         a.ActorType = JsonUtility.ToJson(t);
         a.ActorTypeId = TypeName;
         string json = JsonUtility.ToJson(a);
-        AddActor.FinalizeToken(json);
+        global::AddActorModal.FinalizeToken(json);
     }
 
-    public override MenuItem[] GetMenuItems(bool placed)
-    {
-        MenuItem[] baseItems = base.GetMenuItems(placed);
+    // public override MenuItem[] GetMenuItems(bool placed)
+    // {
+    //     MenuItem[] baseItems = base.GetMenuItems(placed);
 
-        List<MenuItem> items = new();
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
-        items.Add(new MenuItem("ModVIG", "Modify Vigor", (evt) => { NumberPicker.ActorCommand("ModVIG"); }));
-        items.Add(new MenuItem("ModRES", "Modify Resolve", (evt) => { NumberPicker.ActorCommand("ModRES"); }));
-        items.Add(new MenuItem("ModPRES", "Modify Party Resolve", (evt) => { NumberPicker.AllTokensCommand("ModPRES"); }));
-        return baseItems.Concat(items.ToArray()).ToArray();
-    }
+    //     List<MenuItem> items = new();
+    //     items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+    //     items.Add(new MenuItem("ModVIG", "Modify Vigor", () => { NumberPicker.ActorCommand("ModVIG"); }));
+    //     items.Add(new MenuItem("ModRES", "Modify Resolve", () => { NumberPicker.ActorCommand("ModRES"); }));
+    //     items.Add(new MenuItem("ModPRES", "Modify Party Resolve", () => { NumberPicker.AllTokensCommand("ModPRES"); }));
+    //     return baseItems.Concat(items.ToArray()).ToArray();
+    // }
 
     public override void Command(string command, ActorData tokenData)
     {

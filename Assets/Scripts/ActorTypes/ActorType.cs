@@ -1,7 +1,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using ShunUI;
 using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,7 +14,7 @@ public interface IActorType
     string Serialize();
     string Label();
     string GetOverheadAsset();
-    MenuItem[] GetMenuItems(bool placed);
+    List<MenuItem> GetMenuItems(bool placed);
     void Command(string command, ActorData actorData);
     void UpdateOverhead(ActorData actorData);
     void UpdatePanel(ActorData actorData, string elementName);
@@ -49,52 +51,83 @@ public abstract class ActorType : IActorType
         return null;
     }
 
-    public virtual MenuItem[] GetMenuItems(bool placed)
+    public virtual List<MenuItem> GetMenuItems(bool placed)
     {
         List<MenuItem> items = new();
+
+        var configToken = new MenuItem("Configure Token", null);
+        items.Add(configToken);
         if (placed)
         {
-            items.Add(new MenuItem("Remove", "Remove", ClickRemove));
-            items.Add(new MenuItem("Flip", "Flip", ClickFlip));
+            configToken.Children.Add(new MenuItem("Remove", () =>
+            {
+                Actor.GetSelected().Remove();
+            }));
+            configToken.Children.Add(new MenuItem("Flip Left/Right", () =>
+            {
+                Actor.GetSelected().Flip();
+            }));
         }
-        items.Add(new MenuItem("Reshape", "Reshape", ReshapeModal));
-        items.Add(new MenuItem("EditName", "Rename", RenameModal));
-        items.Add(new MenuItem("Clone", "Clone", ClickClone));
-        items.Add(new MenuItem("Delete", "Delete", ClickDelete));
-        items.Add(new MenuItem("AddTag", "Add Tag", AddTagModal));
-        items.Add(new MenuItem("AddBar", "Add Bar", AddBarModal));
-        items.Add(new MenuItem("AddStat", "Add Stat", AddStatModal));
+        configToken.Children.Add(new MenuItem("Change Size/Shape", ReshapeModal));
+        configToken.Children.Add(new MenuItem("Change Color", RecolorModal));
+
+        var configActor = new MenuItem("Configure Actor", null);
+        items.Add(configActor);
+        configActor.Children.Add(new MenuItem("Change Name", RenameModal));
+        configActor.Children.Add(new MenuItem("Add Stat/Bar", AddStatModal));
         if (Stats.Count > 0 || Bars.Count > 0)
         {
-            items.Add(new MenuItem("EditStats", "Edit Stats/Bars", EditStatBarModal));
+            configActor.Children.Add(new MenuItem("Edit Stats/Bars", EditStatBarModal));
         }
+
+        var changeValue = new MenuItem("Change Values", null);
+        items.Add(changeValue);
+        changeValue.Children.Add(new MenuItem("Add Status/Resource", AddTagModal));
         foreach (ActorBar bar in Bars)
         {
-            items.Add(new MenuItem($"Modify{bar.Name}", $"Modify {bar.Name}", (evt) =>
+            changeValue.Children.Add(new MenuItem($"Modify {bar.Name}", () =>
             {
                 NumberPicker.ActorCommand($"ModBar|{bar.Name}");
             }));
         }
-        return items.ToArray();
+
+        var other = new MenuItem("Other", null);
+        items.Add(other);
+        other.Children.Add(new MenuItem("Clone", CloneConfirm));
+        other.Children.Add(new MenuItem("Delete", DeleteConfirm));
+
+        return items;
     }
 
-    protected static void ClickFlip(ClickEvent evt)
+    protected MenuItem FindParent(string label, List<MenuItem> list)
+    {
+        foreach (MenuItem m in list)
+        {
+            if (m.Label == label)
+            {
+                return m;
+            }
+        }
+        throw new Exception("No such item");
+    }
+
+    protected static void ClickFlip()
     {
         Actor.GetSelected().transform.Find("Offset/Avatar/Cutout/Cutout Quad").Rotate(new Vector3(0, 180, 0));
         Actor.Deselect();
     }
 
-    protected static void ClickRemove(ClickEvent evt)
+    protected static void ClickRemove()
     {
         Actor.GetSelected().Remove();
         Actor.Deselect();
     }
 
-    protected static void ClickDelete(ClickEvent evt)
+    protected static void DeleteConfirm()
     {
         ActorData data = Actor.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
-        Modal.DoubleConfirm("Delete Actor", $"Are you sure you want to delete {name}? This action cannot be undone.", () =>
+        Modal2.Confirm("PrimaryDialog", $"Are you sure you want to delete {name}? This action cannot be undone.", () =>
         {
             Actor.Deselect();
             Player.Self().CmdRequestDeleteActor(data.Id);
@@ -102,18 +135,17 @@ public abstract class ActorType : IActorType
         SelectionMenu.Hide();
     }
 
-    protected static void AddTagModal(ClickEvent evt)
+    private static void AddTagModal()
     {
-        Modal.Reset("Add Tag");
-        Modal.AddTextField("TagName", "Tag Name", "");
-        Modal.AddDropdownField("ColorField", "Color", "Gray", ColorUtility.CommonColors());
-        Modal.AddToggleField("HasNumberField", "Has Number Value?", false, (evt) => { AddTagModalEvaluateConditions(); });
-        Modal.AddIntField("TagValue", "Tag Initial Value", 0);
-        Modal.AddPreferredButton("Add", AddTagSubmit);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
-        AddTagModalEvaluateConditions();
-
         SelectionMenu.Hide();
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddInlineTextField("TagName", "Name", "");
+        Modal2.AddInlineComboboxField("ColorField", "Color", "Gray", ColorUtility.CommonColors().ToList<string>());
+        Modal2.AddSwitchField("HasNumberField", "Use Counter?", false);
+        Modal2.AddInlineIntField("TagValue", "Initial Value", 0);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Add", AddTagSubmit);
+        Modal2.Open("Add Tag");
     }
 
     private static void AddTagModalEvaluateConditions()
@@ -123,67 +155,46 @@ public abstract class ActorType : IActorType
     }
 
 
-    private static void AddTagSubmit(ClickEvent evt)
+    private static void AddTagSubmit()
     {
-        string tagName = UI.Modal.Q<TextField>("TagName").value;
-        int tagValue = UI.Modal.Q<IntegerField>("TagValue").value;
-        string colorValue = UI.Modal.Q<DropdownField>("ColorField").value;
-        bool hasNumber = UI.Modal.Q<Toggle>("HasNumberField").value;
+        Modal2.ReadContext("PrimaryDialog");
+        string tagName = Modal2.GetTextFieldValue("TagName");
+        int tagValue = Modal2.GetIntFieldValue("TagValue");
+        string colorValue = Modal2.GetComboboxFieldValue("ColorField");
+        bool hasNumber = Modal2.GetSwitchFieldValue("HasNumberField");
         ActorTag tag = new();
         tag.Name = tagName;
         tag.Value = tagValue;
         tag.HasNumber = hasNumber;
         tag.Color = ColorUtility.GetCommonColor(colorValue);
         Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
-        Modal.Close();
     }
 
-    private static void AddBarModal(ClickEvent evt)
+    private void EditStatBarModal()
     {
-        Modal.Reset("Add Bar");
-        Modal.AddTextField("BarName", "Bar Name", "");
-        Modal.AddDropdownField("ColorField", "Color", "Red", ColorUtility.CommonColors());
-        Modal.AddIntField("BarValue", "Bar Max Value", 0);
-        Modal.AddPreferredButton("Add", AddBarSubmit);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
-
         SelectionMenu.Hide();
-    }
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Edit Stats");
 
-    private static void AddBarSubmit(ClickEvent evt)
-    {
-        string barName = UI.Modal.Q<TextField>("BarName").value;
-        int barValue = UI.Modal.Q<IntegerField>("BarValue").value;
-        string colorValue = UI.Modal.Q<DropdownField>("ColorField").value;
-        ActorBar bar = new();
-        bar.Name = barName;
-        bar.Value = barValue;
-        bar.MaxValue = barValue;
-        bar.Color = ColorUtility.GetCommonColor(colorValue);
-        Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddBar|{JsonUtility.ToJson(bar)}");
-        Modal.Close();
-    }
-
-    private void EditStatBarModal(ClickEvent evt)
-    {
-        Modal.Reset("Edit Stats/Bars");
         foreach (ActorBar bar in Bars)
         {
-            Modal.AddToggleField(bar.Name, $"Bar: {bar.Name}", true);
+            Modal2.AddSwitchField(bar.Name, $"Bar: {bar.Name}", true);
         }
         foreach (ActorStat stat in Stats)
         {
-            Modal.AddToggleField(stat.Name, $"Stat: {stat.Name}", true);
+            Modal2.AddSwitchField(stat.Name, $"Stat: {stat.Name}", true);
         }
-        Modal.AddPreferredButton("Save", EditStatBarSubmit);
-        SelectionMenu.Hide();
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Save", EditStatBarSubmit);
+        Modal2.Open("Edit Stat Bar");
     }
 
-    private void EditStatBarSubmit(ClickEvent evt)
+    private void EditStatBarSubmit()
     {
+        Modal2.ReadContext("PrimaryDialog");
         foreach (ActorBar bar in Bars)
         {
-            bool keep = UI.Modal.Q<Toggle>(bar.Name).value;
+            bool keep = Modal2.GetSwitchFieldValue(bar.Name);
             if (!keep)
             {
                 Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"RemoveBar|{bar.Name}");
@@ -191,46 +202,85 @@ public abstract class ActorType : IActorType
         }
         foreach (ActorStat stat in Stats)
         {
-            bool keep = UI.Modal.Q<Toggle>(stat.Name).value;
+            bool keep = Modal2.GetSwitchFieldValue(stat.Name);
             if (!keep)
             {
                 Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"RemoveStat|{stat.Name}");
             }
         }
-        Modal.Close();
     }
 
-    private static void AddStatModal(ClickEvent evt)
+    private static void AddStatModal()
     {
-        Modal.Reset("Add Stat");
-        Modal.AddTextField("StatName", "Stat Name", "");
-        Modal.AddIntField("StatValue", "Stat Value", 0);
-        Modal.AddPreferredButton("Add", AddStatSubmit);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
-
         SelectionMenu.Hide();
+        ActorData data = Actor.GetSelected().Data;
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Add Stat or Bar");
+
+        Modal2.AddInlineTextField("StatName", "Stat Name", "");
+        Modal2.AddInlineIntField("StatValue", "Stat Value", 0);
+        var bar = Modal2.AddSwitchField("IsBar", "Display as Bar", false);
+        var max = Modal2.AddInlineIntField("MaxValue", "Max Value", 0);
+        var color = Modal2.AddInlineComboboxField("Color", "Bar Color", "Green", ColorUtility.CommonColors().ToList<string>());
+
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Add Stat", () =>
+        {
+            AddStatSubmit();
+        });
+
+        modalConditionBool(max, false);
+        modalConditionBool(color, false);
+        bar.Q<ShunSwitch>().onValueChanged += (val) =>
+        {
+            modalConditionBool(max, val);
+            modalConditionBool(color, val);
+        };
+
+        Modal2.Open("Add Stat");
     }
 
-    private static void AddStatSubmit(ClickEvent evt)
+    private static void modalConditionBool(VisualElement e, bool show)
     {
-        string statName = UI.Modal.Q<TextField>("StatName").value;
-        int statValue = UI.Modal.Q<IntegerField>("StatValue").value;
-        ActorStat stat = new();
-        stat.Name = statName;
-        stat.Value = statValue;
-        Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddStat|{JsonUtility.ToJson(stat)}");
-        Modal.Close();
+        UI.ToggleDisplay(e, show);
     }
 
-    protected static void ClickClone(ClickEvent evt)
+    private static void AddStatSubmit()
+    {
+        Modal2.ReadContext("PrimaryDialog");
+        string name = Modal2.GetTextFieldValue("StatName");
+        int value = Modal2.GetIntFieldValue("StatValue");
+        string color = Modal2.GetComboboxFieldValue("Color");
+        bool isBar = Modal2.GetSwitchFieldValue("IsBar");
+
+        if (isBar)
+        {
+            ActorBar bar = new();
+            bar.Name = name;
+            bar.Value = value;
+            bar.MaxValue = value;
+            bar.Color = ColorUtility.GetCommonColor(color);
+            Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddBar|{JsonUtility.ToJson(bar)}");
+        }
+        else
+        {
+            ActorStat stat = new();
+            stat.Name = name;
+            stat.Value = value;
+            Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddStat|{JsonUtility.ToJson(stat)}");
+        }
+    }
+
+    protected static void CloneConfirm()
     {
         ActorData data = Actor.GetSelected().Data;
         string name = data.Name.Length == 0 ? "this token" : data.Name;
-        Modal.DoubleConfirm("Clone Token", $"Are you sure you want to clone {name}?", () =>
+        Modal2.Confirm("PrimaryDialog", $"Are you sure you want to clone {name}?", () =>
         {
+            data.Placed = false; // set this to false only long enough to create the clone, easier than cloning the object
             string json = JsonUtility.ToJson(data.Persist());
+            data.Placed = true;
             Player.Self().CmdCreateActor(json);
-            Actor.Deselect();
         });
         SelectionMenu.Hide();
     }
@@ -250,35 +300,56 @@ public abstract class ActorType : IActorType
         return StringUtility.CreateArray("Hex 1/2", "Hex 1", "Hex 2", "Hex 3", "Hex 4");
     }
 
-    private static void ReshapeModal(ClickEvent evt)
+    private static void ReshapeModal()
     {
-        ActorData data = Actor.GetSelected().Data;
-        Modal.Reset("Reshape");
-        Modal.AddDropdownField("Reshape", "New Shape", data.Shape, ShapeOptions());
-        Modal.AddPreferredButton("Update", (evt) =>
-        {
-            string newShape = UI.Modal.Q<DropdownField>("Reshape").value;
-            Player.Self().CmdRequestActorCommand(data.Id, $"Reshape|{newShape}");
-            Modal.Close();
-            Actor.Deselect();
-        });
-        Modal.AddButton("Cancel", Modal.CloseEvent);
         SelectionMenu.Hide();
+        ActorData data = Actor.GetSelected().Data;
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Change Size/Shape");
+        Modal2.AddInlineComboboxField("Reshape", "New Shape", data.Shape, ShapeOptions().ToList<string>());
+        Modal2.AddAlert("Resizing", "Changing between a size that occupies a tile center and a tile intersection requires manual position adjustment", AlertVariant.Attention);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Update", () =>
+        {
+            Modal2.ReadContext("PrimaryDialog");
+            string newShape = Modal2.GetComboboxFieldValue("Reshape");
+            Player.Self().CmdRequestActorCommand(data.Id, $"Reshape|{newShape}");
+        });
+        Modal2.Open("Reshape");
     }
 
-    protected virtual void RenameModal(ClickEvent evt)
+    private static void RecolorModal()
     {
-        ActorData data = Actor.GetSelected().Data;
-        Modal.Reset("Edit Name");
-        Modal.AddTextField("Name", "Name", data.Name);
-        Modal.AddPreferredButton("Confirm", (evt) =>
-        {
-            string newName = UI.Modal.Q<TextField>("Name").value.Trim();
-            Player.Self().CmdRequestActorCommand(data.Id, $"Rename|{newName}");
-            Modal.Close();
-        });
-        Modal.AddButton("Cancel", Modal.CloseEvent);
         SelectionMenu.Hide();
+        ActorData data = Actor.GetSelected().Data;
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Change Color");
+        Modal2.AddInlineComboboxField("Recolor", "New Color", "Black", ColorUtility.CommonColors().ToList<string>());
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Update", () =>
+        {
+            Modal2.ReadContext("PrimaryDialog");
+            string newColor = Modal2.GetComboboxFieldValue("Recolor");
+            Player.Self().CmdRequestActorCommand(data.Id, $"Recolor|{newColor}");
+        });
+        Modal2.Open("Recolor");
+    }
+
+    protected virtual void RenameModal()
+    {
+        SelectionMenu.Hide();
+        ActorData data = Actor.GetSelected().Data;
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Edit Name");
+        Modal2.AddInlineTextField("Name", "New Name", data.Name);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Confirm", () =>
+        {
+            Modal2.ReadContext("PrimaryDialog");
+            string newName = Modal2.GetTextFieldValue("Name");
+            Player.Self().CmdRequestActorCommand(data.Id, $"Rename|{newName}");
+        });
+        Modal2.Open("Rename");
     }
 
     public virtual void Command(string value, ActorData tokenData)
@@ -360,6 +431,12 @@ public abstract class ActorType : IActorType
             string[] parts = value.Split("|");
             tokenData.Shape = parts[1];
             tokenData.SetShape();
+        }
+        if (value.StartsWith("Recolor"))
+        {
+            string[] parts = value.Split("|");
+            tokenData.Color = ColorUtility.GetCommonColor(parts[1]);
+            tokenData.SetColor();
         }
     }
 
@@ -454,6 +531,50 @@ public abstract class ActorType : IActorType
         return sb.ToString();
     }
 
+    protected VisualElement PipsBar(string name, string symbol, int current, int max, Color color, EventCallback<ClickEvent> minusAction, EventCallback<ClickEvent> plusAction)
+    {
+        VisualElement container = new VisualElement();
+        container.style.flexDirection = FlexDirection.Row;
+        container.style.marginBottom = 0;
+        container.style.paddingBottom = 0;
+
+        Label minus = new();
+        minus.name = "Minus";
+        minus.text = "-";
+        minus.style.color = Color.white;
+        minus.style.fontSize = 26;
+        minus.style.marginTop = 0; // line height oddities with the minus symbol
+        minus.style.marginBottom = 0;
+        minus.style.paddingBottom = 0;
+        minus.RegisterCallback<ClickEvent>(minusAction);
+
+        Label pips = new();
+        pips.name = name;
+        pips.text = SymbolString(symbol, current, max);
+        pips.style.color = color;
+        pips.style.unityTextOutlineColor = Color.white;
+        pips.style.unityTextOutlineWidth = 1;
+        pips.style.fontSize = 26;
+        pips.style.marginBottom = 0;
+        pips.style.paddingBottom = 0;
+
+
+        Label plus = new();
+        plus.name = "Plus";
+        plus.text = "+";
+        plus.style.color = Color.white;
+        plus.style.fontSize = 26;
+        plus.style.marginBottom = 0;
+        plus.style.paddingBottom = 0;
+        plus.RegisterCallback<ClickEvent>(plusAction);
+
+        container.Add(minus);
+        container.Add(pips);
+        container.Add(plus);
+
+        return container;
+    }
+
     public void DirectCommand(string command)
     {
         Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, command);
@@ -525,50 +646,6 @@ public abstract class ActorType : IActorType
     protected int Clamped(int min, int value, int max)
     {
         return Math.Max(min, Math.Min(value, max));
-    }
-
-    protected VisualElement PipsBar(string name, string symbol, int current, int max, Color color, EventCallback<ClickEvent> minusAction, EventCallback<ClickEvent> plusAction)
-    {
-        VisualElement container = new VisualElement();
-        container.style.flexDirection = FlexDirection.Row;
-        container.style.marginBottom = 0;
-        container.style.paddingBottom = 0;
-
-        Label minus = new();
-        minus.name = "Minus";
-        minus.text = "-";
-        minus.style.color = Color.white;
-        minus.style.fontSize = 26;
-        minus.style.marginTop = 0; // line height oddities with the minus symbol
-        minus.style.marginBottom = 0;
-        minus.style.paddingBottom = 0;
-        minus.RegisterCallback<ClickEvent>(minusAction);
-
-        Label pips = new();
-        pips.name = name;
-        pips.text = SymbolString(symbol, current, max);
-        pips.style.color = color;
-        pips.style.unityTextOutlineColor = Color.white;
-        pips.style.unityTextOutlineWidth = 1;
-        pips.style.fontSize = 26;
-        pips.style.marginBottom = 0;
-        pips.style.paddingBottom = 0;
-
-
-        Label plus = new();
-        plus.name = "Plus";
-        plus.text = "+";
-        plus.style.color = Color.white;
-        plus.style.fontSize = 26;
-        plus.style.marginBottom = 0;
-        plus.style.paddingBottom = 0;
-        plus.RegisterCallback<ClickEvent>(plusAction);
-
-        container.Add(minus);
-        container.Add(pips);
-        container.Add(plus);
-
-        return container;
     }
 }
 

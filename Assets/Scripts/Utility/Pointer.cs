@@ -12,9 +12,23 @@ public class Pointer
         set => _unitBarMouseoverToken = value;
     }
 
+    public static void PickAny()
+    {
+        if (UI.ClicksSuspended || SelectionMenu.IsOpen || MainMenu.IsOpen || StateManager.IsModalState())
+        {
+            return;
+        }
+        _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] hits = Physics.RaycastAll(_ray, 9999f, LayerMask.GetMask(new string[] { "Block", "Actor" }));
+        foreach (RaycastHit hit in hits)
+        {
+            Debug.Log(hit.collider.name);
+        }
+    }
+
     public static Block PickBlock()
     {
-        if (UI.ClicksSuspended || Modal.IsOpen())
+        if (UI.ClicksSuspended || SelectionMenu.IsOpen || MainMenu.IsOpen || StateManager.IsModalState())
         {
             return null;
         }
@@ -29,7 +43,7 @@ public class Pointer
 
     public static Vector3 PickPoint()
     {
-        if (UI.ClicksSuspended || Modal.IsOpen())
+        if (UI.ClicksSuspended || SelectionMenu.IsOpen || MainMenu.IsOpen || StateManager.IsModalState())
         {
             return Vector3.zero;
         }
@@ -42,14 +56,14 @@ public class Pointer
         return Vector3.zero;
     }
 
-    public static Actor PickToken(bool worldOnly = false)
+    public static Actor PickActor(bool worldOnly = false)
     {
         if (_unitBarMouseoverToken && !worldOnly)
         {
             return _unitBarMouseoverToken;
         }
 
-        if (UI.ClicksSuspended || Modal.IsOpen())
+        if (UI.ClicksSuspended || SelectionMenu.IsOpen || MainMenu.IsOpen || StateManager.IsModalState())
         {
             return null;
         }
@@ -95,7 +109,7 @@ public class Pointer
     {
         Block.DehighlightAll();
 
-        if (Viewport.IsDragging || UI.ClicksSuspended || Modal.IsOpen())
+        if (Viewport.IsDragging || UI.ClicksSuspended || StateManager.IsModalState() || SelectionMenu.IsOpen)
         {
             return;
         }
@@ -190,17 +204,6 @@ public class Pointer
                 Player.Self().GetComponent<DirectionalLine>().SetTarget(b.GetMidpoint());
                 Actor.GetDragging().UpdateDragIndicator(b.GetMidpoint());
             }
-        }
-    }
-
-    private static void HighlightSizeArea(Block block)
-    {
-        block.Highlight();
-        int size = Actor.GetDragging().Size;
-        Block[] neighbors = TerrainController.FindNeighbors(block, size);
-        for (int i = 0; i < neighbors.Length; i++)
-        {
-            neighbors[i]?.Highlight();
         }
     }
 }

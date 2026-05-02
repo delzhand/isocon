@@ -1,0 +1,23 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss?fileID=7433441132597879392&amp;guid=812bff3d2981add4fa9165957ba1034b&amp;type=3#ShunStyle" />
+    <shun:ShunAccordion>
+        <shun:ShunAccordionItem title="Product Information" chevron-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/chevron-down.png?fileID=2800000&amp;guid=0eb1578cae4cc4b32b4344039472ce65&amp;type=3#chevron-down">
+            <shun:ShunContainer>
+                <ui:Label text="Our flagship product combines cutting-edge technology with sleek design. Built with premium materials, it offers unparalleled performance and reliability." style="white-space: normal;" />
+                <ui:Label text="Key features include advanced processing capabilities, and an intuitive user interface designed for both beginners and experts." style="white-space: normal;" />
+            </shun:ShunContainer>
+        </shun:ShunAccordionItem>
+        <shun:ShunAccordionItem title="Shipping Details" chevron-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/chevron-down.png?fileID=2800000&amp;guid=0eb1578cae4cc4b32b4344039472ce65&amp;type=3#chevron-down">
+            <shun:ShunContainer>
+                <ui:Label text="We offer worldwide shipping through trusted courier partners. Standard delivery takes 3-5 business days, while express shipping ensures delivery within 1-2 business days." style="white-space: normal;" />
+                <ui:Label text="All orders are carefully packaged and fully insured. Track your shipment in real-time through our dedicated tracking portal." style="white-space: normal;" />
+            </shun:ShunContainer>
+        </shun:ShunAccordionItem>
+        <shun:ShunAccordionItem title="Return Policy" chevron-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/chevron-down.png?fileID=2800000&amp;guid=0eb1578cae4cc4b32b4344039472ce65&amp;type=3#chevron-down">
+            <shun:ShunContainer>
+                <ui:Label text="We stand behind our products with a comprehensive 30-day return policy. If you&apos;re not completely satisfied, simply return the item in its original condition." style="white-space: normal;" />
+                <ui:Label text="Our hassle-free return process includes free return shipping and full refunds processed within 48 hours of receiving the returned item." style="white-space: normal;" />
+            </shun:ShunContainer>
+        </shun:ShunAccordionItem>
+    </shun:ShunAccordion>
+</ui:UXML>

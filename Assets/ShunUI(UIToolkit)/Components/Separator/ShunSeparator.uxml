@@ -1,0 +1,3 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:shun="ShunUI">
+    <shun:ShunSeparator orientation="Horizontal" />
+</ui:UXML>

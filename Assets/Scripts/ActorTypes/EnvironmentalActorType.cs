@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -32,27 +34,39 @@ public class EnvironmentalActorType : ActorType
     #region Creation
     public static void AddActorModal()
     {
-        Modal.AddTextField("NameField", "Actor Name", "Actor");
-        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", ActorType.ShapeOptions());
-        Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
-        Modal.AddPreferredButton("Create Actor", CreateClicked);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        var contents = Modal2.Contents("PrimaryDialog");
+        var typeContainer = contents.Q("ActorTypeContainer");
+        typeContainer.Clear();
+        contents.Q("CreateActor")?.RemoveFromHierarchy();
 
-        // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddActor.OrderFields(StringUtility.CreateArray("NameField", "ShapeField", "ColorField"));
+
+        var name = Modal2.AddInlineTextField("Name", "Actor Name", "Actor");
+        Modal2.MoveToContainer(name, typeContainer);
+        var shape = Modal2.AddInlineComboboxField("Shape", "Shape", "Square 1x1", ActorType.ShapeOptions().ToList<string>());
+        Modal2.MoveToContainer(shape, typeContainer);
+        var color = Modal2.AddInlineComboboxField("Color", "Color", "Black", ColorUtility.CommonColors().ToList<string>());
+        Modal2.MoveToContainer(color, typeContainer);
+
+        var create = new ShunDialogClose();
+        create.name = "CreateActor";
+        create.text = "Create Actor";
+        create.SetVariant(ButtonVariant.Primary);
+        create.clicked += () => CreateClicked();
+        contents.Q(className: "shun-dialog__footer").Add(create);
     }
 
-    private static void CreateClicked(ClickEvent evt)
+    private static void CreateClicked()
     {
-        if (!TokenLibrary.TokenSelected())
+        Modal2.ReadContext("PrimaryDialog");
+        string token = Modal2.GetComboboxFieldValue("Token");
+        if (token.Length == 0)
         {
-            Toast.AddError("A token has not been selected.");
+            Toast.AddError("A token has not been selected");
             return;
         }
-
-        string name = UI.Modal.Q<TextField>("NameField").value;
-        string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
-        string color = UI.Modal.Q<DropdownField>("ColorField").value;
+        string name = Modal2.GetTextFieldValue("Name");
+        string shape = Modal2.GetComboboxFieldValue("Shape");
+        string color = Modal2.GetComboboxFieldValue("Color");
         EnvironmentalActorType t = new()
         {
             Type = TypeName,
@@ -60,7 +74,7 @@ public class EnvironmentalActorType : ActorType
         };
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Token = TokenLibraryModal.GetToken(token);
         a.Color = ColorUtility.GetCommonColor(color);
         a.Shape = shape;
         a.Position = Vector3.zero;
@@ -68,7 +82,7 @@ public class EnvironmentalActorType : ActorType
         a.ActorType = JsonUtility.ToJson(t);
         a.ActorTypeId = TypeName;
         string json = JsonUtility.ToJson(a);
-        AddActor.FinalizeToken(json);
+        global::AddActorModal.FinalizeToken(json);
     }
     #endregion
 

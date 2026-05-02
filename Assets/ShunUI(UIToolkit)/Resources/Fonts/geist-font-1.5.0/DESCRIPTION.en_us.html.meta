@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a89fc656abc5f9843966a2a9fb7ee995
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Resources/Fonts/geist-font-1.5.0/DESCRIPTION.en_us.html
+  uploadId: 870216

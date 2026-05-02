@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    
+    <ui:VisualElement style="flex-grow: 1;">
+        <shun:ShunHoverCard>
+            <!-- Trigger -->
+            <shun:ShunHoverCardTrigger>
+                <ui:Label text="Hover" />
+            </shun:ShunHoverCardTrigger>
+            
+            <!-- Card Content -->
+            <shun:ShunHoverCardContent>
+                <shun:ShunContainer>
+                    <ui:Label text="@experir" class="hover-card-title" />
+                    <ui:Label text="Digital experiences" class="hover-card-description" />
+                </shun:ShunContainer>
+            </shun:ShunHoverCardContent>
+        </shun:ShunHoverCard>
+    </ui:VisualElement>
+</ui:UXML>

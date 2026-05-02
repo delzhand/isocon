@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -72,27 +73,55 @@ public class Toast : MonoBehaviour
         }
     }
 
-    private static void Add(string message, ToastType type)
-    {
-        FileLogger.Write(message);
-        Toast t = GetAttachmentObject().AddComponent<Toast>();
-        t.Message = message;
-        t.type = type;
-    }
+    // private static void Add(string message, ToastType type)
+    // {
+    //     FileLogger.Write(message);
+    //     Toast t = GetAttachmentObject().AddComponent<Toast>();
+    //     t.Message = message;
+    //     t.type = type;
+    // }
 
     public static void AddSimple(string message)
     {
-        Add(message, ToastType.Standard);
+        ShunSonner.Toast(
+            message: message,
+            variant: ToastVariant.Info,
+            position: ToastPosition.BottomRight
+        );
+
+        // Add(message, ToastType.Standard);
+    }
+
+    public static void Add(string message, string title, ToastVariant variant)
+    {
+        ShunSonner.Toast(
+            message: message,
+            title: title,
+            variant: ToastVariant.Success,
+            position: ToastPosition.BottomRight
+        );
     }
 
     public static void AddSuccess(string message)
     {
-        Add(message, ToastType.Success);
+        ShunSonner.Toast(
+            message: message,
+            title: "Success",
+            variant: ToastVariant.Success,
+            position: ToastPosition.BottomRight
+        );
+        // Add(message, ToastType.Success);
     }
 
     public static void AddError(string message)
     {
-        Add(message, ToastType.Error);
+        ShunSonner.Toast(
+            message: message,
+            title: "Error",
+            variant: ToastVariant.Error,
+            position: ToastPosition.BottomRight
+        );
+        // Add(message, ToastType.Error);
     }
 
     public static void AddCustom(VisualElement v, float duration = 5)
@@ -101,6 +130,18 @@ public class Toast : MonoBehaviour
         t.type = ToastType.Custom;
         t.element = v;
         t.duration = duration;
+    }
+
+    public static void AddDiceRoll(string message, string result, Texture2D icon)
+    {
+        ShunSonner.Toast(
+            message: message,
+            title: result,
+            variant: ToastVariant.Info,
+            position: ToastPosition.BottomRight,
+            customIcon: icon,
+            duration: 15000
+        );
     }
 
     private static GameObject GetAttachmentObject()

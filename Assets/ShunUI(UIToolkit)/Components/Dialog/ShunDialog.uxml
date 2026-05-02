@@ -1,0 +1,28 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss?fileID=7433441132597879392&amp;guid=812bff3d2981add4fa9165957ba1034b&amp;type=3#ShunStyle" />
+    <shun:ShunDialog is-open="false">
+        <shun:ShunDialogTrigger text="Edit Profile" />
+        <shun:ShunDialogContent>
+            <shun:ShunContainer class="shun-dialog__inner">
+                <shun:ShunContainer class="shun-dialog__header">
+                    <shun:ShunDialogTitle text="Edit profile" />
+                    <shun:ShunDialogDescription text="Make changes to your profile here. Click save when you&apos;re done." />
+                </shun:ShunContainer>
+                <shun:ShunContainer class="shun-dialog__body">
+                    <ui:VisualElement class="shun-dialog__field">
+                        <ui:Label text="Name" class="shun-dialog__label" />
+                        <shun:ShunInput placeholder="Pedro Duarte" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="shun-dialog__field">
+                        <ui:Label text="Username" class="shun-dialog__label" />
+                        <shun:ShunInput placeholder="@peduarte" />
+                    </ui:VisualElement>
+                </shun:ShunContainer>
+                <shun:ShunContainer class="shun-dialog__footer">
+                    <shun:ShunDialogClose text="Cancel" variant="Outline" />
+                    <shun:ShunDialogClose text="Save changes" />
+                </shun:ShunContainer>
+            </shun:ShunContainer>
+        </shun:ShunDialogContent>
+    </shun:ShunDialog>
+</ui:UXML>

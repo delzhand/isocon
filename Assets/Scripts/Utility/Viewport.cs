@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using SimpleFileBrowser;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public enum DragMode
 {
-    Rotate,
-    Pan
+    RotateWithRight,
+    PanWithRight
 }
 
 public class Viewport
@@ -35,10 +36,10 @@ public class Viewport
         _isRightDragging = true;
         switch (_mode)
         {
-            case DragMode.Pan:
+            case DragMode.PanWithRight:
                 InitializePanDrag();
                 break;
-            case DragMode.Rotate:
+            case DragMode.RotateWithRight:
                 InitializeRotateDrag();
                 break;
         }
@@ -53,10 +54,10 @@ public class Viewport
         _isMiddleDragging = true;
         switch (_mode)
         {
-            case DragMode.Pan:
+            case DragMode.PanWithRight:
                 InitializeRotateDrag();
                 break;
-            case DragMode.Rotate:
+            case DragMode.RotateWithRight:
                 InitializePanDrag();
                 break;
         }
@@ -83,10 +84,10 @@ public class Viewport
         }
         switch (_mode)
         {
-            case DragMode.Pan:
+            case DragMode.PanWithRight:
                 UpdatePanDrag();
                 break;
-            case DragMode.Rotate:
+            case DragMode.RotateWithRight:
                 UpdateRotateDrag();
                 break;
         }
@@ -100,10 +101,10 @@ public class Viewport
         }
         switch (_mode)
         {
-            case DragMode.Pan:
+            case DragMode.PanWithRight:
                 UpdateRotateDrag();
                 break;
-            case DragMode.Rotate:
+            case DragMode.RotateWithRight:
                 UpdatePanDrag();
                 break;
         }
@@ -151,7 +152,7 @@ public class Viewport
 
     private static void HandleScrolling()
     {
-        if (UI.ClicksSuspended || Modal.IsOpen())
+        if (UI.ClicksSuspended || StateManager.IsModalState() || MainMenu.IsOpen || SelectionMenu.IsOpen || FileBrowser.IsOpen)
         {
             return;
         }
@@ -171,36 +172,51 @@ public class Viewport
     {
         switch (_mode)
         {
-            case DragMode.Pan:
-                EnableRotateMode();
+            case DragMode.PanWithRight:
+                EnableRightClickRotateMode();
                 break;
-            case DragMode.Rotate:
-                EnablePanMode();
+            case DragMode.RotateWithRight:
+                EnableRightClickPanMode();
                 break;
         }
     }
 
-    public static void SetPanMode(bool pan)
+    public static void Setup()
     {
-        if (pan)
+        SetPanMode(Preferences.Current.PanWithRight);
+    }
+
+    public static void SetPanMode(bool panWithRight)
+    {
+        if (panWithRight)
         {
-            EnablePanMode();
+            EnableRightClickPanMode();
         }
         else
         {
-            EnableRotateMode();
+            EnableRightClickRotateMode();
         }
     }
 
-    private static void EnableRotateMode()
+    private static void EnableRightClickRotateMode()
     {
-        _mode = DragMode.Rotate;
+        _mode = DragMode.RotateWithRight;
         // UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Rotate <u>C</u>amera";
     }
 
-    private static void EnablePanMode()
+    private static void EnableRightClickPanMode()
     {
-        _mode = DragMode.Pan;
+        _mode = DragMode.PanWithRight;
         // UI.TopBar.Q("DragMode").Q<Label>("Label").text = "Pan <u>C</u>amera";
+    }
+
+    public static void FixViewOverhead()
+    {
+        GameObject.Find("CameraOrigin").transform.rotation = Quaternion.Euler(new Vector3(0, 0, 20));
+    }
+
+    public static void FixViewIso()
+    {
+        GameObject.Find("CameraOrigin").transform.rotation = Quaternion.Euler(new Vector3(0, 315, 0));
     }
 }

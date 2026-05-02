@@ -139,7 +139,7 @@ public class TokenSync : MonoBehaviour
     public static Texture2D LoadHashedFileAsTexture(string hash)
     {
         SyncImages ??= new();
-        string directory = TokenLibrary.GetHashedImageDirectory();
+        string directory = TokenLibraryModal.GetHashedImageDirectory();
         string filename = $"{directory}/{hash}.png";
         if (File.Exists(filename))
         {
@@ -170,7 +170,7 @@ public class TokenSync : MonoBehaviour
 
     public static void StackRequest(int connectionId, string hash, int[] missingChunks)
     {
-        string directory = TokenLibrary.GetHashedImageDirectory();
+        string directory = TokenLibraryModal.GetHashedImageDirectory();
         string filename = $"{directory}/{hash}.png";
         if (File.Exists(filename))
         {
@@ -222,7 +222,7 @@ public class TokenSync : MonoBehaviour
         }
         else
         {
-            string directory = TokenLibrary.GetHashedImageDirectory();
+            string directory = TokenLibraryModal.GetHashedImageDirectory();
             string filename = $"{directory}/{hash}.png";
             if (!File.Exists(filename))
             {
@@ -285,7 +285,7 @@ public class TokenSync : MonoBehaviour
             }
         }
 
-        string directory = TokenLibrary.GetHashedImageDirectory();
+        string directory = TokenLibraryModal.GetHashedImageDirectory();
         string filename = $"{directory}/{hash}.png";
         File.WriteAllBytes(filename, allBytes);
     }

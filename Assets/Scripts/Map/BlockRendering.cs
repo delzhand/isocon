@@ -68,6 +68,7 @@ public class BlockRendering
         _customMaterials = new();
 
         ToggleAllBorders(false);
+        Block.ToggleIndicators(Preferences.Current.ShowIndicators);
     }
 
     public static Material GetSharedMaterial(string key)
@@ -127,17 +128,16 @@ public class BlockRendering
 
     public static void ToggleAllBorders(bool show)
     {
-        bool hex = TerrainController.GridType == "Hex";
         StateManager.ShowBorders = show;
         foreach (string s in _customMaterials.Keys)
         {
             _customMaterials[s].SetInt("_ShowOutline", show ? 1 : 1);
-            _customMaterials[s].SetFloat("_OutlineOpacity", show ? 1 : Preferences.Current.BlockBorderOpacity);
+            _customMaterials[s].SetFloat("_OutlineOpacity", show ? 1 : Preferences.Current.BlockBorderOpacity / 100f);
         }
         foreach (string s in StringUtility.CreateArray("side1", "side2", "top1", "top2"))
         {
             _sharedMaterials[s].SetInt("_ShowOutline", show ? 1 : 1);
-            _sharedMaterials[s].SetFloat("_OutlineOpacity", show ? 1 : Preferences.Current.BlockBorderOpacity);
+            _sharedMaterials[s].SetFloat("_OutlineOpacity", show ? 1 : Preferences.Current.BlockBorderOpacity / 100f);
         }
     }
 

@@ -45,7 +45,7 @@ public class Dragger : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButton(0) && !Modal.IsOpen())
+        if (Input.GetMouseButton(0) && !StateManager.IsModalState())
         {
             if (_left == ClickState.Up)
             {
@@ -79,7 +79,7 @@ public class Dragger : MonoBehaviour
             _left = ClickState.Up;
         }
 
-        if (Input.GetMouseButton(1) && !Modal.IsOpen())
+        if (Input.GetMouseButton(1) && !StateManager.IsModalState())
         {
             if (_right == ClickState.Up)
             {
@@ -113,7 +113,7 @@ public class Dragger : MonoBehaviour
             _right = ClickState.Up;
         }
 
-        if (Input.GetMouseButton(2) && !Modal.IsOpen())
+        if (Input.GetMouseButton(2) && !StateManager.IsModalState())
         {
             if (_middle == ClickState.Up)
             {

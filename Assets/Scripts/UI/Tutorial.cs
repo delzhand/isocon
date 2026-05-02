@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,24 +9,23 @@ public class Tutorial
 {
     public static void Setup()
     {
-        UI.TopBar.Q("AddActor").RegisterCallback<MouseEnterEvent>((evt) =>
-        {
-            Tutorial.Init("add actor");
-        });
-        UI.TopBar.Q("Session").RegisterCallback<MouseEnterEvent>((evt) =>
-        {
-            Tutorial.Init("sessions");
-        });
-        UI.System.Q("AddSystemTag").RegisterCallback<MouseEnterEvent>((evt) =>
-        {
-            Tutorial.Init("system tag");
-        });
+        // UI.TopBar.Q("AddActor").RegisterCallback<MouseEnterEvent>((evt) =>
+        // {
+        //     Tutorial.Init("add actor");
+        // });
+        // UI.TopBar.Q("Session").RegisterCallback<MouseEnterEvent>((evt) =>
+        // {
+        //     Tutorial.Init("sessions");
+        // });
+        // UI.TopBar.Q("AddTableTag").RegisterCallback<MouseEnterEvent>((evt) =>
+        // {
+        //     Tutorial.Init("system tag");
+        // });
     }
 
     public static void Init(string id)
     {
-        int skip = Preferences.Current.SkipTutorials;
-        if (skip == 1)
+        if (Preferences.Current.SkipTutorials)
         {
             return;
         }
@@ -41,14 +41,22 @@ public class Tutorial
         Preferences.SetTutorialsSeen(string.Join("|", seenParts.ToArray()));
 
         (string, string) tutorial = GetTutorial(id);
-        Modal.Reset(tutorial.Item1);
-        Modal.AddMarkup("TutorialText", tutorial.Item2);
-        Modal.AddPreferredButton("Close", Modal.CloseEvent);
-        Modal.AddButton("Skip All Tutorials", (evt) =>
+
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader(tutorial.Item1);
+        Modal2.AddLongMarkup(tutorial.Item2);
+        var footer = Modal2.AddDialogFooter("Close");
+        var skipAll = new ShunButton();
+        skipAll.text = "Skip All Tutorials";
+        skipAll.SetVariant(ButtonVariant.Outline);
+        skipAll.clicked += () =>
         {
-            Preferences.SetSkipTutorials(1);
-            Modal.Close();
-        });
+            Preferences.Current.SkipTutorials = true;
+            Preferences.Save();
+            Modal2.Close();
+        };
+        footer.Add(skipAll);
+        Modal2.Open("Tutorial");
     }
 
     public static (string, string) GetTutorial(string id)
@@ -78,7 +86,7 @@ public class Tutorial
             case "style shortcut":
                 return ("Style Shortcut", "With any of the style subtools selected, holding down the alt key will let you quickly sample block styles.");
             case "system tag":
-                return ("System Tags", "System tags can be used to track numeric values like round number or group resources, and clocks display progress towards an event or objective.");
+                return ("Table Tags", "Table tags can be used to track numeric values like round number or group resources, and clocks display progress towards an event or objective.");
         }
         throw new System.Exception($"No such tutorial - {id}");
     }

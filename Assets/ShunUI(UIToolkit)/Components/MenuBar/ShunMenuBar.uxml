@@ -1,0 +1,46 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" xmlns:primitives="ShunUI.Primitives" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    
+    <shun:ShunMenuBar style="flex-grow: 1;">
+            <!-- File Menu -->
+            <shun:ShunMenuBarMenu label="File">
+                <primitives:ShunMenuItemBase label="New Tab" />
+                <primitives:ShunMenuItemBase label="New Window" />
+                <primitives:ShunMenuItemBase label="New Incognito Window" />
+                <primitives:ShunMenuSeparator />
+                <primitives:ShunMenuItemBase label="Share" has-arrow="true">
+                    <primitives:ShunMenuItemBase label="Email" />
+                    <primitives:ShunMenuItemBase label="Messages" />
+                    <primitives:ShunMenuItemBase label="Notes" />
+                </primitives:ShunMenuItemBase>
+                <primitives:ShunMenuSeparator />
+                <primitives:ShunMenuItemBase label="Print..." />
+            </shun:ShunMenuBarMenu>
+            
+            <!-- Edit Menu -->
+            <shun:ShunMenuBarMenu label="Edit">
+                <primitives:ShunMenuItemBase label="Undo" />
+                <primitives:ShunMenuItemBase label="Redo" />
+                <primitives:ShunMenuSeparator />
+                <primitives:ShunMenuItemBase label="Cut" />
+                <primitives:ShunMenuItemBase label="Copy" />
+                <primitives:ShunMenuItemBase label="Paste" />
+            </shun:ShunMenuBarMenu>
+            
+            <!-- View Menu -->
+            <shun:ShunMenuBarMenu label="View">
+                <primitives:ShunMenuItemBase label="Zoom In" />
+                <primitives:ShunMenuItemBase label="Zoom Out" />
+                <primitives:ShunMenuItemBase label="Actual Size" />
+                <primitives:ShunMenuSeparator />
+                <primitives:ShunMenuItemBase label="Full Screen" />
+            </shun:ShunMenuBarMenu>
+            
+            <!-- Profiles Menu -->
+            <shun:ShunMenuBarMenu label="Profiles">
+                <primitives:ShunMenuItemBase label="Profile 1" />
+                <primitives:ShunMenuItemBase label="Profile 2" />
+                <primitives:ShunMenuItemBase label="Profile 3" />
+            </shun:ShunMenuBarMenu>
+        </shun:ShunMenuBar>
+</ui:UXML>

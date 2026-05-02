@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    <shun:ShunToggleGroup allow-multiple="true" style="flex-grow: 1;">
+        <shun:ShunToggle text="B" is-on="false" variant="Outline" />
+        <shun:ShunToggle text="I" is-on="false" variant="Outline" />
+        <shun:ShunToggle text="U" is-on="false" variant="Outline" />
+    </shun:ShunToggleGroup>
+</ui:UXML>

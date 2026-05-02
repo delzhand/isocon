@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ed4fe775c43de694e9c380f3f2f65525
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Blocks/SimpleMainMenu/SimpleMainMenu.unity
+  uploadId: 870216

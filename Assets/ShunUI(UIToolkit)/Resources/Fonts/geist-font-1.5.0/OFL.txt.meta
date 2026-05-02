@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1023a4fdb43bb514fb9a8ba05066f59b
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Resources/Fonts/geist-font-1.5.0/OFL.txt
+  uploadId: 870216

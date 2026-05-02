@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 53298623dc0e7a4479a0a9601a50d07a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Settings/ShunPanelSettings.asset
+  uploadId: 870216

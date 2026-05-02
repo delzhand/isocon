@@ -90,7 +90,7 @@ public class ColorUtility
 
     public static string[] CommonColors()
     {
-        return StringUtility.CreateArray("Gray", "Green", "Red", "Blue", "Purple", "Yellow", "Orange");
+        return StringUtility.CreateArray("Gray", "Green", "Red", "Blue", "Purple", "Yellow", "Orange", "Black", "White");
     }
 
     public static Color GetCommonColor(string dataColor)
@@ -110,6 +110,10 @@ public class ColorUtility
                 return ColorUtility.NormalizeRGB(202, 85, 239);
             case "gray":
                 return ColorUtility.NormalizeRGB(146, 146, 146);
+            case "black":
+                return Color.black;
+            case "white":
+                return Color.white;
         }
         return Color.black;
     }

@@ -1,21 +1,33 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ShunUI;
+using ShunUI.Primitives;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public struct MenuItem
 {
-    public string Name;
     public string Label;
-    public Action<ClickEvent> OnClick;
+    public Action Action;
+    public List<MenuItem> Children;
 
-
-    public MenuItem(string name, string label, Action<ClickEvent> onClick)
+    public MenuItem(string label, Action onClick)
     {
-        Name = name;
         Label = label;
-        OnClick = onClick;
+        Action = onClick;
+        Children = new();
+    }
+
+    public MenuItem(string label, bool enabled = true)
+    {
+        Label = label;
+        if (!enabled)
+        {
+            Label = $"<color=grey>{label}</color>";
+        }
+        Action = null;
+        Children = new();
     }
 }
 
@@ -25,64 +37,47 @@ public class SelectionMenu
     public static Transform FollowTransform;
     public static bool Visible;
 
-    public static Vector2 Offset;
-
-    public static void Setup()
+    public static void Open(Vector2 offset, Transform follow = null)
     {
-        UI.SetBlocking(UI.System, "SelectionMenu");
-    }
-
-    public static VisualElement Find()
-    {
-        return UI.System.Q("SelectionMenu");
-    }
-
-    public static void Update()
-    {
-        UI.ToggleDisplay(UI.System.Q("SelectionMenu"), SelectionMenu.Visible);
-        if (Visible)
-        {
-            if (FollowTransform != null)
-            {
-                UI.FollowTransform(FollowTransform, UI.System.Q("SelectionMenu"), UI.System, Camera.main, Offset);
-                UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, Length.Percent(-100)));
-            }
-            else
-            {
-                UI.System.Q("SelectionMenu").style.top = 10;
-                UI.System.Q("SelectionMenu").style.left = 10;
-                UI.System.Q("SelectionMenu").style.translate = new StyleTranslate(new Translate(0, 0));
-            }
-        }
-    }
-
-    public static void Reset(string title, Vector2 offset, Transform follow = null)
-    {
-        Offset = offset;
-        VisualElement menu = Find();
-        menu.Q<Label>("Label").text = title;
-        menu.Q("Contents").Clear();
         FollowTransform = follow;
-        Visible = true;
+        var contextMenu = UI.System.Q<ShunContextMenu>();
+        contextMenu.ClearItems();
+
+        Vector2 pos = UI.GetTransformScreenPosition(FollowTransform, UI.System, Camera.main);
+        contextMenu.OpenAtPosition(pos + offset);
     }
 
     public static void Hide()
     {
         Visible = false;
         FollowTransform = null;
+        var contextMenu = UI.System.Q<ShunContextMenu>();
+        contextMenu.ForceClose();
     }
 
-    public static void AddItem(string name, string label, Action<ClickEvent> clickHandler)
+    public static bool IsOpen
     {
-        VisualElement menu = Find();
-        VisualElement element = UI.CreateFromTemplate("UI/MenuItem");
-        element.Q<Label>("Label").text = label;
-        element.name = name;
-        element.RegisterCallback<ClickEvent>((evt) =>
+        get
         {
-            clickHandler.Invoke(evt);
-        });
-        UI.HoverSetup(element);
-        menu.Q("Contents").Add(element);
+            var contextMenu = UI.System.Q<ShunContextMenu>();
+            return contextMenu.isOpen;
+        }
+    }
+
+    public static void AddItem(string label, Action action, List<MenuItem> children)
+    {
+        var contextMenu = UI.System.Q<ShunContextMenu>();
+        var parent = contextMenu.AddItem(label, null, action);
+        if (children != null)
+        {
+            foreach (MenuItem child in children)
+            {
+                var childItem = new ShunMenuItem();
+                childItem.label = child.Label;
+                childItem.clicked += child.Action;
+                childItem.clicked += Hide;
+                parent.AddSubmenuItem(childItem);
+            }
+        }
     }
 }

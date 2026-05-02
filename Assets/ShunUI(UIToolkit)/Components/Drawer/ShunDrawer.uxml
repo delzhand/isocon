@@ -1,0 +1,36 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    
+    <shun:ShunDrawer>
+        <shun:ShunDrawerTrigger text="Open Drawer" />
+        
+        <shun:ShunDrawerContent>
+            <shun:ShunContainer class="shun-drawer__inner">
+                <shun:ShunContainer class="shun-drawer__header">
+                    <shun:ShunDrawerTitle text="Move Goal" />
+                    <shun:ShunDrawerDescription text="Set your daily activity goal." />
+                </shun:ShunContainer>
+                
+                <shun:ShunContainer class="shun-drawer__body">
+                    <ui:VisualElement class="flex-col" style="align-items: center;">
+                        <!-- Goal Number Display -->
+                        <ui:VisualElement class="flex-row items-center">
+                            <shun:ShunButton text="-" variant="Outline" style="width: 40px; height: 40px; padding: 0;" />
+                            <ui:VisualElement class="flex-col items-center">
+                                <ui:Label text="350" class="text-primary" style="font-size: 48px; -unity-font-style: bold; margin: 0;" />
+                                <ui:Label text="CALORIES/DAY" class="text-muted text-sm" style="margin: 0;" />
+                            </ui:VisualElement>
+                            <shun:ShunButton text="+" variant="Outline" style="width: 40px; height: 40px; padding: 0;" />
+                        </ui:VisualElement>
+
+                    </ui:VisualElement>
+                </shun:ShunContainer>
+                
+                <shun:ShunContainer class="shun-drawer__footer">
+                    <shun:ShunDrawerClose text="Cancel" variant="Outline" />
+                    <shun:ShunButton text="Submit" variant="Primary" />
+                </shun:ShunContainer>
+            </shun:ShunContainer>
+        </shun:ShunDrawerContent>
+    </shun:ShunDrawer>
+</ui:UXML>

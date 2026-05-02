@@ -622,6 +622,7 @@ GameObject:
   m_Component:
   - component: {fileID: 529489878}
   - component: {fileID: 529489879}
+  - component: {fileID: 529489881}
   m_Layer: 5
   m_Name: SystemUI
   m_TagString: Untagged
@@ -668,6 +669,20 @@ MonoBehaviour:
   m_PivotReferenceSize: 0
   m_Pivot: 0
   m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &529489881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529489877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b0101a2eb9c0842b72e143921ec4a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShunUI.ShunThemeManager
+  _uiDocument: {fileID: 529489879}
+  _currentTheme: {fileID: 11400000, guid: 738900d8b1d27ac46abf08f1df8ca47b, type: 2}
 --- !u!1 &747926459
 GameObject:
   m_ObjectHideFlags: 0
@@ -1022,6 +1037,7 @@ GameObject:
   - component: {fileID: 1395978832}
   - component: {fileID: 1395978833}
   - component: {fileID: 1395978834}
+  - component: {fileID: 1395978835}
   m_Layer: 0
   m_Name: AppState
   m_TagString: Untagged
@@ -1152,6 +1168,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bedbcca0c2f2d4b498aa0a5cdfa95d7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Autosaver
+  _Timer: 0
+--- !u!114 &1395978835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395978823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3664c24671fc85749af7814c7953f04a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MemoryHacker
+  _Timer: 0
 --- !u!1 &1480977434
 GameObject:
   m_ObjectHideFlags: 0

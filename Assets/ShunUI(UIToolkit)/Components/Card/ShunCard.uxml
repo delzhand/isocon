@@ -1,0 +1,38 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    
+    <ui:VisualElement>
+        <shun:ShunCard style="width: 400px;">
+            <shun:ShunContainer class="card__header">
+                <ui:VisualElement style="flex-direction: row; justify-content: space-between; align-items: flex-start;">
+                    <ui:VisualElement>
+                        <shun:ShunCardTitle text="Login to your account" />
+                        <shun:ShunCardDescription text="Enter your email below to login to your account" />
+                    </ui:VisualElement>
+                    <shun:ShunButton text="Sign Up" variant="link" />
+                </ui:VisualElement>
+            </shun:ShunContainer>
+            
+            <shun:ShunContainer class="card__content">
+                <!-- Card Content -->
+                <ui:VisualElement style="margin-bottom: 16px;">
+                    <shun:ShunLabel text="Email" style="margin-bottom: 8px;" />
+                    <shun:ShunInput placeholder="m@example.com" />
+                </ui:VisualElement>
+                
+                <ui:VisualElement style="margin-bottom: 24px;">
+                    <ui:VisualElement style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <shun:ShunLabel text="Password" />
+                        <shun:ShunButton text="Forgot your password?" variant="link" style="font-size: 12px;" />
+                    </ui:VisualElement>
+                    <shun:ShunInput password="true" />
+                </ui:VisualElement>
+            </shun:ShunContainer>
+            
+            <shun:ShunContainer class="card__footer">
+                <shun:ShunButton text="Login" variant="primary" style="width: 100%; margin-bottom: 8px;" />
+                <shun:ShunButton text="Login with Google" variant="outline" style="width: 100%;" />
+            </shun:ShunContainer>
+        </shun:ShunCard>
+    </ui:VisualElement>
+</ui:UXML>

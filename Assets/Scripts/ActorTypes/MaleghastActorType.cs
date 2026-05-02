@@ -7,6 +7,8 @@ using UnityEngine.UIElements;
 using System.IO;
 using System.Text;
 using IsoconUILibrary;
+using ShunUI;
+using SimpleFileBrowser;
 
 [Serializable]
 public class MaleghastActorType : ActorType
@@ -53,44 +55,76 @@ public class MaleghastActorType : ActorType
         TextAsset baseline = Resources.Load<TextAsset>("Text/maleghast");
         string path = Preferences.Current.DataPath;
         string filename = $"{path}/maleghast_data/base.json";
-        if (!Directory.Exists(path + "/maleghast_data"))
-        {
-            Directory.CreateDirectory(path + "/maleghast_data");
-        }
         System.IO.File.WriteAllText(filename, baseline.text);
 
+
+        var contents = Modal2.Contents("PrimaryDialog");
+        var typeContainer = contents.Q("ActorTypeContainer");
+        typeContainer.Clear();
+        contents.Q("CreateActor")?.RemoveFromHierarchy();
+
         string maleghastData = Preferences.Current.MaleghastFile;
-        Modal.AddFileField("RulesFile", "Data Override", maleghastData, "rules", (evt) =>
+
+        var useHomebrew = Modal2.AddSwitchField("UseHomebrew", "Use Homebrew", maleghastData.Length > 0);
+        Modal2.MoveToContainer(useHomebrew, typeContainer);
+
+        var homebrewDesc = Modal2.AddLongMarkup("To create homebrew data, locate maleghast_data/base.json in your data directory and make a copy, then select that field below.");
+        Modal2.MoveToContainer(homebrewDesc, typeContainer);
+
+        var file = Modal2.AddInlineFileField("Homebrew", "Data Override", maleghastData, FileBrowserType.Maleghast, false, onChange: () =>
         {
-            Preferences.Current.MaleghastFile = evt.newValue;
-            UI.Modal.Q<DropdownField>("PlayerColor").choices = GetHouses();
-            SearchField.ChangeOptions(UI.Modal.Q("UnitTypeField"), GetUnits().ToArray());
+            string result = FileBrowser.Result[0];
+            Preferences.Current.MaleghastFile = result;
+            Modal2.ChangeComboboxOptions("PlayerColor", GetHouses());
+            Modal2.ChangeComboboxOptions("UnitTypeField", GetUnits());
         });
-        Modal.AddHelpText("RulesHelp", "If blank, stats will be derived from the core rules + updates. You can change these values or add homebrew units by copying and editing the maleghast_data/base.json file in the data directory.");
+        Modal2.MoveToContainer(file, typeContainer);
 
+        modalConditionBool(homebrewDesc, maleghastData.Length > 0);
+        modalConditionBool(file, maleghastData.Length > 0);
+        useHomebrew.Q<ShunSwitch>().onValueChanged += (val) =>
+        {
+            modalConditionBool(homebrewDesc, val);
+            modalConditionBool(file, val);
+        };
 
-        Modal.AddSearchField("UnitTypeField", "Unit Type", "", GetUnits().ToArray());
-        Modal.AddDropdownField("PlayerColor", "Player Color", "House Default", GetHouses().ToArray());
+        var unit = Modal2.AddInlineComboboxField("UnitTypeField", "Unit Type", "", GetUnits());
+        Modal2.MoveToContainer(unit, typeContainer);
 
-        Modal.AddPreferredButton("Create Actor", CreateClicked);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        var color = Modal2.AddInlineComboboxField("PlayerColor", "Player Color", "House Default", GetHouses());
+        Modal2.MoveToContainer(color, typeContainer);
 
-        // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddActor.OrderFields(StringUtility.CreateArray("RulesFile", "RulesHelp", "UnitType", "PlayerColor", "UnitTypeField"));
+        var create = new ShunDialogClose();
+        create.name = "CreateActor";
+        create.text = "Create Actor";
+        create.SetVariant(ButtonVariant.Primary);
+        create.clicked += () => CreateClicked();
+        contents.Q(className: "shun-dialog__footer").Add(create);
     }
 
-    private static void CreateClicked(ClickEvent evt)
+    private static void modalConditionBool(VisualElement e, bool show)
     {
-        if (!TokenLibrary.TokenSelected())
+        UI.ToggleDisplay(e, show);
+    }
+
+    private static void CreateClicked()
+    {
+        Modal2.ReadContext("PrimaryDialog");
+        string token = Modal2.GetComboboxFieldValue("Token");
+        if (token.Length == 0)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
-
-        string houseJob = SearchField.GetValue(UI.Modal.Q("UnitTypeField"));
+        string houseJob = Modal2.GetComboboxFieldValue("UnitTypeField");
+        if (houseJob.Length == 0)
+        {
+            Toast.AddError("A unit type was not selected");
+            return;
+        }
         string house = houseJob.Split("/")[0];
         string job = houseJob.Split("/")[1];
-        string colorValue = UI.Modal.Q<DropdownField>("PlayerColor").value;
+        string colorValue = Modal2.GetComboboxFieldValue("PlayerColor");
         JSONNode jobdata = GetJob(job);
         Color color = ColorUtility.GetColor(jobdata["color"]);
         if (colorValue != "House Default")
@@ -179,7 +213,7 @@ public class MaleghastActorType : ActorType
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Token = TokenLibraryModal.GetToken(token);
         a.Color = color;
         a.Shape = shape;
         a.Position = Vector3.zero;
@@ -187,7 +221,7 @@ public class MaleghastActorType : ActorType
         a.ActorType = JsonUtility.ToJson(t);
         a.ActorTypeId = TypeName;
         string json = JsonUtility.ToJson(a);
-        AddActor.FinalizeToken(json);
+        global::AddActorModal.FinalizeToken(json);
     }
     #endregion
 
@@ -242,7 +276,6 @@ public class MaleghastActorType : ActorType
             panel.Q("Bars").Add(l);
         }
 
-
         VisualElement s1 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
         s1.Q<Label>("Label").text = "MOVE/DEF";
         s1.Q<Label>("Value").text = $"{Move}/{Defense}+";
@@ -275,39 +308,115 @@ public class MaleghastActorType : ActorType
         panel.Q("Pills").Q("HousePill").SendToBack();
     }
 
-    public override MenuItem[] GetMenuItems(bool placed)
+    public override List<MenuItem> GetMenuItems(bool placed)
     {
-        List<MenuItem> items = new();
-        if (placed)
+        var items = base.GetMenuItems(placed);
+        var mg = new MenuItem("Maleghast", null);
+        items.Add(mg);
+
+
+        mg.Children.Add(new MenuItem("Add Token", AddTokenModal));
+        mg.Children.Add(new MenuItem("Add Status", AddStatusModal));
+
+        mg.Children.Add(new MenuItem("Alter Stats", AlterStatModal));
+
+        if (!HasTag("Turn Ended"))
         {
-            items.Add(new MenuItem("Remove", "Remove", ClickRemove));
-            items.Add(new MenuItem("Flip", "Flip", ClickFlip));
+            mg.Children.Add(new MenuItem("End Turn", () =>
+            {
+                ActorTag tag = new();
+                tag.Name = "Turn Ended";
+                tag.Color = ColorUtility.GetCommonColor("gray");
+                Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
+                SelectionMenu.Hide();
+            }));
         }
-        items.Add(new MenuItem("CoreStats", "Alter Stats", (evt) => { AlterStatModal(); }));
-        items.Add(new MenuItem("Clone", "Clone", ClickClone));
-        items.Add(new MenuItem("Delete", "Delete", ClickDelete));
-        items.Add(new MenuItem("AddTag", "Add Status/Token", AddTagModal));
-        items.Add(new MenuItem("EndTurn", "End Turn", (evt) =>
+        else
         {
-            ActorTag tag = new();
-            tag.Name = "Turn Ended";
-            tag.Color = ColorUtility.GetCommonColor("gray");
-            Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
-            SelectionMenu.Hide();
-        }));
-        items.Add(new MenuItem("ResetTurns", "Reset All Turns", (evt) =>
+            mg.Children.Add(new MenuItem("End Turn", false));
+        }
+
+        mg.Children.Add(new MenuItem("Reset All Turns", () =>
         {
             Player.Self().CmdRequestAllActorsCommand("RemoveTag|Turn Ended");
             SelectionMenu.Hide();
         }));
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
 
-        if (House == "CARCASS" && !HasTag("Loaded"))
+        // if (House == "CARCASS")
+        // {
+        //     var carcass = new MenuItem("CARCASS", null);
+        //     items.Add(carcass);
+        //     if (!HasTag("Reload"))
+        //     {
+        //         carcass.Children.Add(new MenuItem("Set Reload", () =>
+        //         {
+        //             Actor actor = Actor.GetSelected();
+        //             ActorTag tag = new();
+        //             tag.Name = "Reload";
+        //             tag.Color = GetHouseColor("CARCASS");
+        //             Player.Self().CmdRequestActorCommand(actor.Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
+
+        //         }));
+        //     }
+        //     else
+        //     {
+        //         carcass.Children.Add(new MenuItem("Set Reload", false));
+        //     }
+        // }
+
+        return items;
+    }
+
+    private void AddTokenModal()
+    {
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddComboboxField("Token", "Token", "", GetTokens());
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Add", () =>
         {
-            items.Add(new MenuItem("Reload", "Reload", (evt) => DirectCommand("Reload")));
-        }
+            Modal2.ReadContext("PrimaryDialog");
+            string token = Modal2.GetComboboxFieldValue("Token");
+            Actor actor = Actor.GetSelected();
+            if (!HasTag(token))
+            {
+                ActorTag tag = new();
+                tag.Name = token;
+                tag.Color = actor.Data.Color;
+                tag.HasNumber = true;
+                tag.Value = 1;
+                Player.Self().CmdRequestActorCommand(actor.Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
+            }
+            else
+            {
+                Toast.AddError($"{actor.Data.Name} already has {token}");
+            }
+        });
+        Modal2.Open("Add Token");
+    }
 
-        return items.ToArray();
+    private void AddStatusModal()
+    {
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddComboboxField("Status", "Status", "", GetStatuses());
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Add", () =>
+        {
+            Modal2.ReadContext("PrimaryDialog");
+            string status = Modal2.GetComboboxFieldValue("Status");
+            Actor actor = Actor.GetSelected();
+            if (!HasTag(status))
+            {
+                ActorTag tag = new();
+                tag.Name = status;
+                tag.Color = actor.Data.Color;
+                Player.Self().CmdRequestActorCommand(actor.Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
+            }
+            else
+            {
+                Toast.AddError($"{actor.Data.Name} already has {status}");
+            }
+        });
+        Modal2.Open("Add Token");
     }
 
     public override void Command(string command, ActorData tokenData)
@@ -325,20 +434,6 @@ public class MaleghastActorType : ActorType
                 string plus = diff > 0 ? "+" : "";
                 PopoverText.Create(token, $"/{plus}{diff}|_HP", Color.white);
                 UpdateGraphic(tokenData);
-            }
-        }
-        else if (command == "Reload")
-        {
-            if (!HasTag("Loaded"))
-            {
-                ActorTag tag = new()
-                {
-                    Name = "Loaded",
-                    Color = GetHouseColor("CARCASS")
-                };
-                Tags.Add(tag);
-                PopoverText.Create(token, $"_RELOADED", Color.white);
-                Actor.RebuildPanels = true;
             }
         }
         else if (command.StartsWith("UpdateStats"))
@@ -378,6 +473,28 @@ public class MaleghastActorType : ActorType
             }
         }
         return JSON.Parse(maleghastText);
+    }
+
+    private static List<string> GetTokens()
+    {
+        List<string> tokens = new();
+        JSONNode gamedata = GetData();
+        foreach (JSONNode token in gamedata["Tokens"].AsArray)
+        {
+            tokens.Add(token);
+        }
+        return tokens;
+    }
+
+    private static List<string> GetStatuses()
+    {
+        List<string> tokens = new();
+        JSONNode gamedata = GetData();
+        foreach (JSONNode token in gamedata["Statuses"].AsArray)
+        {
+            tokens.Add(token);
+        }
+        return tokens;
     }
 
     private static List<string> GetHouses()
@@ -434,23 +551,25 @@ public class MaleghastActorType : ActorType
     private void AlterStatModal()
     {
         SelectionMenu.Hide();
-        Modal.Reset("Alter Core Stats");
-        Modal.AddNumberNudgerField("MaxHP", "Max HP", MaxHP, 0);
-        Modal.AddNumberNudgerField("Move", "Move", Move, 0);
-        Modal.AddNumberNudgerField("Defense", "Defense", Defense, 0);
-
-        Modal.AddPreferredButton("Save", (evt) =>
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Alter Core Stats");
+        Modal2.AddInlineNumberNudgerField("MaxHP", "Max HP", MaxHP, 0, 20);
+        Modal2.AddInlineNumberNudgerField("Move", "Move", Move, 0, 10);
+        Modal2.AddInlineNumberNudgerField("Defense", "Defense", Defense, 0, 6);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Save", () =>
         {
-            MaxHP = UI.Modal.Q<NumberNudger>("MaxHP").value;
-            Defense = UI.Modal.Q<NumberNudger>("Defense").value;
-            Move = UI.Modal.Q<NumberNudger>("Move").value;
+            Modal2.ReadContext("PrimaryDialog");
+            MaxHP = Modal2.GetNumberNudgerFieldValue("MaxHP");
+            Defense = Modal2.GetNumberNudgerFieldValue("Defense");
+            Move = Modal2.GetNumberNudgerFieldValue("Move");
             string serialized = Serialize();
 
             Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"UpdateStats|{serialized}");
-            Modal.Close();
+            Modal2.Close();
             this.InitPanel(Actor.GetSelected().Data, "LeftTokenPanel", true);
         });
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        Modal2.Open("Alter Stat");
     }
 
     #endregion

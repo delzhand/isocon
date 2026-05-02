@@ -1,0 +1,38 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss?fileID=7433441132597879392&amp;guid=812bff3d2981add4fa9165957ba1034b&amp;type=3#ShunStyle" />
+    <shun:ShunCarousel orientation="Horizontal" show-dots="true" previous-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/chevron-left.png?fileID=2800000&amp;guid=276feefc3cc424e8387df823e8dd47a2&amp;type=3#chevron-left" next-icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/chevron-right.png?fileID=2800000&amp;guid=f4eee6c7c0a004303b41c9f960bd9a39&amp;type=3#chevron-right">
+        <shun:ShunCarouselItem>
+            <shun:ShunCard>
+                <shun:ShunContainer class="card__header">
+                    <shun:ShunCardTitle text="Card 1" />
+                    <shun:ShunCardDescription text="You can use the carousel to showcase multiple cards or images." />
+                </shun:ShunContainer>
+                <shun:ShunContainer class="card__content">
+                    <ui:Label text="Slide through different cards using the arrow buttons." style="white-space: normal;" />
+                </shun:ShunContainer>
+            </shun:ShunCard>
+        </shun:ShunCarouselItem>
+        <shun:ShunCarouselItem>
+            <shun:ShunCard>
+                <shun:ShunContainer class="card__header">
+                    <shun:ShunCardTitle text="Card 2" />
+                    <shun:ShunCardDescription text="Each card can contain any content you want." />
+                </shun:ShunContainer>
+                <shun:ShunContainer class="card__content">
+                    <ui:Label text="This is the second card in the carousel." style="white-space: normal;" />
+                </shun:ShunContainer>
+            </shun:ShunCard>
+        </shun:ShunCarouselItem>
+        <shun:ShunCarouselItem>
+            <shun:ShunCard>
+                <shun:ShunContainer class="card__header">
+                    <shun:ShunCardTitle text="Card 3" />
+                    <shun:ShunCardDescription text="The last card in this example carousel." />
+                </shun:ShunContainer>
+                <shun:ShunContainer class="card__content">
+                    <ui:Label text="Carousels are great for showcasing content in a compact space." style="white-space: normal;" />
+                </shun:ShunContainer>
+            </shun:ShunCard>
+        </shun:ShunCarouselItem>
+    </shun:ShunCarousel>
+</ui:UXML>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using IsoconUILibrary;
+using ShunUI;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -58,18 +59,23 @@ public class Icon1x5PlayerActorType : Icon1x5Base
         return "UI/TableTop/Overheads/Icon1x5";
     }
 
-    public override MenuItem[] GetMenuItems(bool placed)
+    public override List<MenuItem> GetMenuItems(bool placed)
     {
-        MenuItem[] baseItems = base.GetMenuItems(placed);
+        var baseItems = base.GetMenuItems(placed);
 
-        List<MenuItem> items = new();
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
-        items.Add(new MenuItem("ModVIG", "Modify Vigor", (evt) => { NumberPicker.ActorCommand("ModVIG"); }));
-        items.Add(new MenuItem("ModRES", "Modify Resolve", (evt) => { NumberPicker.ActorCommand("ModRES"); }));
-        items.Add(new MenuItem("ModPRES", "Modify Party Resolve", (evt) => { NumberPicker.AllTokensCommand("ModPRES"); }));
-        items.Add(new MenuItem("GainWound", "Take Wound", (evt) => DirectCommand("GainWound")));
-        items.Add(new MenuItem("HealWound", "Heal Wound", (evt) => DirectCommand("LoseWound")));
-        return baseItems.Concat(items.ToArray()).ToArray();
+        var changeValues = FindParent("Change Values", baseItems);
+
+        changeValues.Children.Add(new MenuItem("Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+        changeValues.Children.Add(new MenuItem("Modify Vigor", () => { NumberPicker.ActorCommand("ModVIG"); }));
+        changeValues.Children.Add(new MenuItem("Modify Resolve", () => { NumberPicker.ActorCommand("ModRES"); }));
+        changeValues.Children.Add(new MenuItem("Take Wound", () => DirectCommand("GainWound")));
+        changeValues.Children.Add(new MenuItem("Heal Wound", () => DirectCommand("LoseWound")));
+
+        var icon = FindParent("ICON 1.5", baseItems);
+        icon.Children.Add(new MenuItem("Modify Party Resolve", () => { NumberPicker.AllTokensCommand("ModPRES"); }));
+
+
+        return baseItems;
     }
 
     public override void Command(string command, ActorData tokenData)
@@ -293,26 +299,36 @@ public class Icon1x5PlayerActorType : Icon1x5Base
             "Wright/Stormbender"
         );
 
-        Modal.AddTextField("NameField", "Actor Name", "Actor");
-        Modal.AddSearchField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs);
+        var contents = Modal2.Contents("PrimaryDialog");
+        var typeContainer = contents.Q("ActorTypeContainer");
+        typeContainer.Clear();
+        contents.Q("CreateActor")?.RemoveFromHierarchy();
 
-        Modal.AddPreferredButton("Create Actor", CreateClicked);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        var name = Modal2.AddInlineTextField("Name", "Actor Name", "Actor");
+        Modal2.MoveToContainer(name, typeContainer);
 
-        // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddActor.OrderFields(StringUtility.CreateArray("NameField", "PlayerJob"));
+        var job = Modal2.AddInlineComboboxField("PlayerJob", "Job", "Stalwart/Bastion", playerJobs.ToList<string>());
+        Modal2.MoveToContainer(job, typeContainer);
+
+        var create = new ShunDialogClose();
+        create.name = "CreateActor";
+        create.text = "Create Actor";
+        create.SetVariant(ButtonVariant.Primary);
+        create.clicked += () => CreateClicked();
+        contents.Q(className: "shun-dialog__footer").Add(create);
     }
 
-    private static void CreateClicked(ClickEvent evt)
+    private static void CreateClicked()
     {
-        if (!TokenLibrary.TokenSelected())
+        Modal2.ReadContext("PrimaryDialog");
+        string token = Modal2.GetComboboxFieldValue("Token");
+        if (token.Length == 0)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
-
-        string name = UI.Modal.Q<TextField>("NameField").value;
-        string playerJob = SearchField.GetValue(UI.Modal.Q("PlayerJob"));
+        string name = Modal2.GetTextFieldValue("Name");
+        string playerJob = Modal2.GetComboboxFieldValue("PlayerJob");
         if (playerJob.Length == 0)
         {
             Toast.AddError("You must select a job");
@@ -378,7 +394,7 @@ public class Icon1x5PlayerActorType : Icon1x5Base
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Token = TokenLibraryModal.GetToken(token);
         a.Color = ColorUtility.GetCommonColor(color);
         a.Shape = "Square 1x1";
         a.Position = Vector3.zero;
@@ -386,7 +402,7 @@ public class Icon1x5PlayerActorType : Icon1x5Base
         a.ActorType = JsonUtility.ToJson(t);
         a.ActorTypeId = TypeName;
         string json = JsonUtility.ToJson(a);
-        AddActor.FinalizeToken(json);
+        global::AddActorModal.FinalizeToken(json);
     }
 
     #region Private functions

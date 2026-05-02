@@ -7,54 +7,59 @@ using Random = UnityEngine.Random;
 
 public abstract class Icon1x5Base : ActorType
 {
-    public override MenuItem[] GetMenuItems(bool placed)
+    public override List<MenuItem> GetMenuItems(bool placed)
     {
-        MenuItem[] baseItems = base.GetMenuItems(placed);
+        var baseItems = base.GetMenuItems(placed);
 
-        List<MenuItem> items = new();
-        items.Add(new MenuItem("Damage", "Damage HP/VIG", (evt) => { NumberPicker.ActorCommand("Damage", false); }));
-        items.Add(new MenuItem("AttackRoll", "Attack Roll", AttackRollClicked));
-        items.Add(new MenuItem("SaveRoll", "Save Roll", SaveRollClicked));
-        return baseItems.Concat(items.ToArray()).ToArray();
+        var icon = new MenuItem("ICON 1.5", null);
+        baseItems.Add(icon);
+        icon.Children.Add(new MenuItem("Damage HP/VIG", () => { NumberPicker.ActorCommand("Damage", false); }));
+        icon.Children.Add(new MenuItem("Attack Roll", AttackRollClicked));
+        icon.Children.Add(new MenuItem("Save Roll", SaveRollClicked));
+
+        return baseItems;
     }
 
-    private void AttackRollClicked(ClickEvent evt)
+    private void AttackRollClicked()
     {
-        Modal.Reset("Attack Roll");
-        Modal.AddNumberNudgerField("PowerField", "Curse/Boon", 0, -20);
-        Modal.AddPreferredButton("Roll", AttackRoll);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
         SelectionMenu.Hide();
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Attack Roll");
+        Modal2.AddInlineNumberNudgerField("Power", "Curse/Boon", 0, -10, 10);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Roll", AttackRoll);
+        Modal2.Open("Attack Roll");
     }
 
-    private void SaveRollClicked(ClickEvent evt)
+    private void SaveRollClicked()
     {
-        Modal.Reset("Save Roll");
-        Modal.AddNumberNudgerField("PowerField", "Curse/Boon", 0, -20);
-        Modal.AddPreferredButton("Roll", SaveRoll);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
         SelectionMenu.Hide();
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Attack Roll");
+        Modal2.AddInlineNumberNudgerField("Power", "Curse/Boon", 0, -10, 10);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Roll", SaveRoll);
+        Modal2.Open("Save Roll");
     }
 
-    private void AttackRoll(ClickEvent evt)
+    private void AttackRoll()
     {
         string name = Actor.GetSelected().Data.Name;
         string desc = $"{name}'s attack roll";
-        BoonCurseRoll(desc);
-        Modal.Close();
+        int power = Modal2.GetNumberNudgerFieldValue("Power");
+        BoonCurseRoll(power, desc);
     }
 
-    private void SaveRoll(ClickEvent evt)
+    private void SaveRoll()
     {
         string name = Actor.GetSelected().Data.Name;
         string desc = $"{name}'s save";
-        BoonCurseRoll(desc);
-        Modal.Close();
+        int power = Modal2.GetNumberNudgerFieldValue("Power");
+        BoonCurseRoll(power, desc);
     }
 
-    private void BoonCurseRoll(string desc)
+    private void BoonCurseRoll(int power, string desc)
     {
-        int power = UI.Modal.Q<NumberNudger>("PowerField").value;
         int powerDice = Math.Abs(power);
         int x = 1 + Random.Range(0, 20);
         int y = 0;

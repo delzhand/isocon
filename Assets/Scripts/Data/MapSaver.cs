@@ -21,6 +21,7 @@ public class MapSaver
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
         BlockRendering.ToggleAllBorders(StateManager.ShowBorders);
+        Block.ToggleIndicators(Preferences.Current.ShowIndicators);
         Toast.AddSuccess("Map loaded.");
     }
 

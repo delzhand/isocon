@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using IsoconUILibrary;
+using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -53,29 +54,46 @@ public class LancerMechActorType : LancerBase
     #region Creation
     public static void AddActorModal()
     {
-        Modal.AddTextField("Callsign", "Callsign", "");
-        Modal.AddTextField("PilotName", "Pilot", "");
-        Modal.AddDropdownField("ShapeField", "Shape", "Hex 1", ActorType.ShapeOptions());
-        Modal.AddDropdownField("ColorField", "Color", "Black", ColorUtility.CommonColors());
-        Modal.AddPreferredButton("Create Actor", CreateClicked);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        var contents = Modal2.Contents("PrimaryDialog");
+        var typeContainer = contents.Q("ActorTypeContainer");
+        typeContainer.Clear();
+        contents.Q("CreateActor")?.RemoveFromHierarchy();
 
-        // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddActor.OrderFields(StringUtility.CreateArray("Callsign", "PilotName", "ShapeField", "ColorField"));
+
+        var callsign = Modal2.AddInlineTextField("Callsign", "Callsign", "");
+        Modal2.MoveToContainer(callsign, typeContainer);
+
+        var pilotname = Modal2.AddInlineTextField("PilotName", "Pilot", "");
+        Modal2.MoveToContainer(pilotname, typeContainer);
+
+        var shape = Modal2.AddInlineComboboxField("ShapeField", "Shape", "Hex 1", ActorType.ShapeOptions().ToList<string>());
+        Modal2.MoveToContainer(shape, typeContainer);
+
+        var color = Modal2.AddInlineComboboxField("ColorField", "Color", "Black", ColorUtility.CommonColors().ToList<string>());
+        Modal2.MoveToContainer(color, typeContainer);
+
+        var create = new ShunDialogClose();
+        create.name = "CreateActor";
+        create.text = "Create Actor";
+        create.SetVariant(ButtonVariant.Primary);
+        create.clicked += () => CreateClicked();
+        contents.Q(className: "shun-dialog__footer").Add(create);
     }
 
-    private static void CreateClicked(ClickEvent evt)
+    private static void CreateClicked()
     {
-        if (!TokenLibrary.TokenSelected())
+        Modal2.ReadContext("PrimaryDialog");
+        string token = Modal2.GetComboboxFieldValue("Token");
+        if (token.Length == 0)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
 
-        string callsign = UI.Modal.Q<TextField>("Callsign").value;
-        string pilot = UI.Modal.Q<TextField>("PilotName").value;
-        string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
-        string color = UI.Modal.Q<DropdownField>("ColorField").value;
+        string callsign = Modal2.GetTextFieldValue("Callsign");
+        string pilot = Modal2.GetTextFieldValue("PilotName");
+        string shape = Modal2.GetComboboxFieldValue("ShapeField");
+        string color = Modal2.GetComboboxFieldValue("ColorField");
         LancerMechActorType t = new()
         {
             Type = "Lancer Mech",
@@ -97,7 +115,7 @@ public class LancerMechActorType : LancerBase
         };
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Token = TokenLibraryModal.GetToken(token);
         a.Color = ColorUtility.GetCommonColor(color);
         a.Shape = shape;
         a.Position = Vector3.zero;
@@ -105,7 +123,7 @@ public class LancerMechActorType : LancerBase
         a.ActorType = JsonUtility.ToJson(t);
         a.ActorTypeId = TypeName;
         string json = JsonUtility.ToJson(a);
-        AddActor.FinalizeToken(json);
+        global::AddActorModal.FinalizeToken(json);
     }
     #endregion
 
@@ -119,16 +137,17 @@ public class LancerMechActorType : LancerBase
         return "UI/TableTop/Overheads/LancerMech";
     }
 
-    public override MenuItem[] GetMenuItems(bool placed)
+    public override List<MenuItem> GetMenuItems(bool placed)
     {
-        MenuItem[] baseItems = base.GetMenuItems(placed);
+        var baseItems = base.GetMenuItems(placed);
 
-        List<MenuItem> items = new();
-        items.Add(new MenuItem("CoreStats", "Alter Stats", (evt) => { AlterStatModal(); }));
-        items.Add(new MenuItem("Damage", "Damage HP/Shield", (evt) => { NumberPicker.ActorCommand("Damage", false); }));
-        items.Add(new MenuItem("ModHP", "Modify HP", (evt) => { NumberPicker.ActorCommand("ModHP"); }));
-        items.Add(new MenuItem("ModShield", "Modify Shield", (evt) => { NumberPicker.ActorCommand("ModShield"); }));
-        return baseItems.Concat(items.ToArray()).ToArray();
+        var changeValues = FindParent("Change Values", baseItems);
+        changeValues.Children.Add(new MenuItem("Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+        changeValues.Children.Add(new MenuItem("Alter Core Stats", AlterStatModal));
+        changeValues.Children.Add(new MenuItem("Damage HP/Shield", () => { NumberPicker.ActorCommand("Damage", false); }));
+        changeValues.Children.Add(new MenuItem("Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+        changeValues.Children.Add(new MenuItem("Modify Shield", () => { NumberPicker.ActorCommand("ModShield"); }));
+        return baseItems;
     }
 
     public override void Command(string command, ActorData tokenData)
@@ -413,71 +432,76 @@ public class LancerMechActorType : LancerBase
     private void AlterStatModal()
     {
         SelectionMenu.Hide();
-        Modal.Reset("Alter Core Stats");
-        Modal.AddNumberNudgerField("MaxHP", "Max HP", MaxHP, 0);
-        Modal.AddNumberNudgerField("MaxHeat", "Max Heat", MaxHeat, 1);
-        Modal.AddNumberNudgerField("Stress", "Max Stress", MaxStress, 1);
-        Modal.AddNumberNudgerField("Struct", "Max Structure", MaxStructure, 1);
-        Modal.AddNumberNudgerField("Attack", "Attack Bonus", Attack, 0);
-        Modal.AddNumberNudgerField("Tech", "Tech Attack", TechAttack, 0);
-        Modal.AddNumberNudgerField("Armor", "Armor", Armor, 0);
-        Modal.AddNumberNudgerField("EDef", "E-Defense", EDefense, 0);
-        Modal.AddNumberNudgerField("Evade", "Evade", Evade, 0);
-        Modal.AddNumberNudgerField("Speed", "Speed", Speed, 0);
-        Modal.AddNumberNudgerField("Save", "Save Target", SaveTarget, 0);
-        Modal.AddNumberNudgerField("Sensor", "Sensor Range", SensorRange, 0);
-        Modal.AddColumns("Stats", 2);
-        Modal.MoveToColumn("Stats_0", "MaxHP");
-        Modal.MoveToColumn("Stats_0", "MaxHeat");
-        Modal.MoveToColumn("Stats_0", "Struct");
-        Modal.MoveToColumn("Stats_0", "Stress");
-        Modal.MoveToColumn("Stats_0", "Attack");
-        Modal.MoveToColumn("Stats_0", "Tech");
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Alter Core Stats");
 
-        Modal.MoveToColumn("Stats_1", "Armor");
-        Modal.MoveToColumn("Stats_1", "EDef");
-        Modal.MoveToColumn("Stats_1", "Evade");
-        Modal.MoveToColumn("Stats_1", "Speed");
-        Modal.MoveToColumn("Stats_1", "Save");
-        Modal.MoveToColumn("Stats_1", "Sensor");
+        Modal2.AddInlineNumberNudgerField("MaxHP", "Max HP", MaxHP, 0, 50);
+        Modal2.AddInlineNumberNudgerField("MaxHeat", "Max Heat", MaxHeat, 1, 50);
+        Modal2.AddInlineNumberNudgerField("Stress", "Max Stress", MaxStress, 1, 50);
+        Modal2.AddInlineNumberNudgerField("Struct", "Max Structure", MaxStructure, 1, 50);
+        Modal2.AddInlineNumberNudgerField("Attack", "Attack Bonus", Attack, 0, 50);
+        Modal2.AddInlineNumberNudgerField("Tech", "Tech Attack", TechAttack, 0, 50);
+        Modal2.AddInlineNumberNudgerField("Armor", "Armor", Armor, 0, 50);
+        Modal2.AddInlineNumberNudgerField("EDef", "E-Defense", EDefense, 0, 50);
+        Modal2.AddInlineNumberNudgerField("Evade", "Evade", Evade, 0, 50);
+        Modal2.AddInlineNumberNudgerField("Speed", "Speed", Speed, 0, 50);
+        Modal2.AddInlineNumberNudgerField("Save", "Save Target", SaveTarget, 0, 50);
+        Modal2.AddInlineNumberNudgerField("Sensor", "Sensor Range", SensorRange, 0, 50);
 
-        Modal.AddPreferredButton("Save", (evt) =>
+        // Modal.AddColumns("Stats", 2);
+        // Modal.MoveToColumn("Stats_0", "MaxHP");
+        // Modal.MoveToColumn("Stats_0", "MaxHeat");
+        // Modal.MoveToColumn("Stats_0", "Struct");
+        // Modal.MoveToColumn("Stats_0", "Stress");
+        // Modal.MoveToColumn("Stats_0", "Attack");
+        // Modal.MoveToColumn("Stats_0", "Tech");
+
+        // Modal.MoveToColumn("Stats_1", "Armor");
+        // Modal.MoveToColumn("Stats_1", "EDef");
+        // Modal.MoveToColumn("Stats_1", "Evade");
+        // Modal.MoveToColumn("Stats_1", "Speed");
+        // Modal.MoveToColumn("Stats_1", "Save");
+        // Modal.MoveToColumn("Stats_1", "Sensor");
+
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Save", () =>
         {
-            MaxHP = UI.Modal.Q<NumberNudger>("MaxHP").value;
-            MaxHeat = UI.Modal.Q<NumberNudger>("MaxHeat").value;
-            MaxStress = UI.Modal.Q<NumberNudger>("Stress").value;
-            MaxStructure = UI.Modal.Q<NumberNudger>("Struct").value;
-            Attack = UI.Modal.Q<NumberNudger>("Attack").value;
-            TechAttack = UI.Modal.Q<NumberNudger>("Tech").value;
-            Armor = UI.Modal.Q<NumberNudger>("Armor").value;
-            EDefense = UI.Modal.Q<NumberNudger>("EDef").value;
-            Evade = UI.Modal.Q<NumberNudger>("Evade").value;
-            Speed = UI.Modal.Q<NumberNudger>("Speed").value;
-            SaveTarget = UI.Modal.Q<NumberNudger>("Save").value;
-            SensorRange = UI.Modal.Q<NumberNudger>("Sensor").value;
+            Modal2.ReadContext("PrimaryDialog");
+            MaxHP = Modal2.GetNumberNudgerFieldValue("MaxHP");
+            MaxHeat = Modal2.GetNumberNudgerFieldValue("MaxHeat");
+            MaxStress = Modal2.GetNumberNudgerFieldValue("Stress");
+            MaxStructure = Modal2.GetNumberNudgerFieldValue("Struct");
+            Attack = Modal2.GetNumberNudgerFieldValue("Attack");
+            TechAttack = Modal2.GetNumberNudgerFieldValue("Tech");
+            Armor = Modal2.GetNumberNudgerFieldValue("Armor");
+            EDefense = Modal2.GetNumberNudgerFieldValue("EDef");
+            Evade = Modal2.GetNumberNudgerFieldValue("Evade");
+            Speed = Modal2.GetNumberNudgerFieldValue("Speed");
+            SaveTarget = Modal2.GetNumberNudgerFieldValue("Save");
+            SensorRange = Modal2.GetNumberNudgerFieldValue("Sensor");
             string serialized = Serialize();
 
             Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"UpdateStats|{serialized}");
-            Modal.Close();
             this.InitPanel(Actor.GetSelected().Data, "LeftTokenPanel", true);
         });
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        Modal2.Open("Alter Stats");
     }
 
-    protected override void RenameModal(ClickEvent evt)
+    protected override void RenameModal()
     {
-        ActorData data = Actor.GetSelected().Data;
-        Modal.Reset("Edit Name");
-        Modal.AddTextField("Name", "Callsign", Callsign);
-        Modal.AddTextField("Pilot", "Pilot Name", Pilot);
-        Modal.AddPreferredButton("Confirm", (evt) =>
-        {
-            string newName = UI.Modal.Q<TextField>("Name").value.Trim();
-            string newPilotName = UI.Modal.Q<TextField>("Pilot").value.Trim();
-            Player.Self().CmdRequestActorCommand(data.Id, $"Rename|{newName}|{newPilotName}");
-            Modal.Close();
-        });
-        Modal.AddButton("Cancel", Modal.CloseEvent);
         SelectionMenu.Hide();
+        ActorData data = Actor.GetSelected().Data;
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Edit Name");
+        Modal2.AddInlineTextField("Name", "Callsign", Callsign);
+        Modal2.AddInlineTextField("Pilot", "Pilot Name", Pilot);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Confirm", () =>
+        {
+            Modal2.ReadContext("PrimaryDialog");
+            string newName = Modal2.GetTextFieldValue("Name").Trim();
+            string newPilotName = Modal2.GetTextFieldValue("Pilot").Trim();
+            Player.Self().CmdRequestActorCommand(data.Id, $"Rename|{newName}|{newPilotName}");
+        });
     }
 }

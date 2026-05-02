@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -43,24 +44,32 @@ public class Icon1x5MobActorType : Icon1x5Base
     #region Creation
     public static void AddActorModal()
     {
-        Modal.AddTextField("NameField", "Actor Name", "Actor");
+        var contents = Modal2.Contents("PrimaryDialog");
+        var typeContainer = contents.Q("ActorTypeContainer");
+        typeContainer.Clear();
+        contents.Q("CreateActor")?.RemoveFromHierarchy();
 
-        Modal.AddPreferredButton("Create Actor", CreateClicked);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        var name = Modal2.AddInlineTextField("Name", "Actor Name", "Actor");
+        Modal2.MoveToContainer(name, typeContainer);
 
-        // Necessary to ensure fields are in order and can be cleared when changing type dropdown
-        AddActor.OrderFields(StringUtility.CreateArray("NameField"));
+        var create = new ShunDialogClose();
+        create.name = "CreateActor";
+        create.text = "Create Actor";
+        create.SetVariant(ButtonVariant.Primary);
+        create.clicked += () => CreateClicked();
+        contents.Q(className: "shun-dialog__footer").Add(create);
     }
 
-    private static void CreateClicked(ClickEvent evt)
+    private static void CreateClicked()
     {
-        if (!TokenLibrary.TokenSelected())
+        Modal2.ReadContext("PrimaryDialog");
+        string token = Modal2.GetComboboxFieldValue("Token");
+        if (token.Length == 0)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
-
-        string name = UI.Modal.Q<TextField>("NameField").value;
+        string name = Modal2.GetTextFieldValue("Name");
 
         Icon1x5MobActorType t = new()
         {
@@ -77,7 +86,7 @@ public class Icon1x5MobActorType : Icon1x5Base
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Token = TokenLibraryModal.GetToken(token);
         a.Color = ColorUtility.GetCommonColor("gray");
         a.Shape = "Square 1x1";
         a.Position = Vector3.zero;
@@ -85,7 +94,7 @@ public class Icon1x5MobActorType : Icon1x5Base
         a.ActorType = JsonUtility.ToJson(t);
         a.ActorTypeId = TypeName;
         string json = JsonUtility.ToJson(a);
-        AddActor.FinalizeToken(json);
+        global::AddActorModal.FinalizeToken(json);
     }
     #endregion
 
@@ -99,23 +108,30 @@ public class Icon1x5MobActorType : Icon1x5Base
         return "UI/TableTop/Overheads/PipCounter";
     }
 
-    public override MenuItem[] GetMenuItems(bool placed)
+    public override List<MenuItem> GetMenuItems(bool placed)
     {
-        MenuItem[] baseItems = base.GetMenuItems(placed);
+        var baseItems = base.GetMenuItems(placed);
 
-        List<MenuItem> items = new();
-        items.Add(new MenuItem("ModVig", "Modify VIG", (evt) => { NumberPicker.ActorCommand("ModVIG"); }));
+        var changeValues = FindParent("Change Values", baseItems);
+        changeValues.Children.Add(new MenuItem("Modify Vigor", () => { NumberPicker.ActorCommand("ModVIG"); }));
         if (Hits < 2)
         {
-            items.Add(new MenuItem("RestoreHit", "Restore Hit", (evt) =>
+            changeValues.Children.Add(new MenuItem("Restore Hit", () =>
             {
                 Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, "RestoreHit");
-                SelectionMenu.Hide();
+            }));
+        }
+        if (Hits > 0)
+        {
+            changeValues.Children.Add(new MenuItem("Take Hit", () =>
+            {
+                Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, "TakeHit");
             }));
         }
 
-        return baseItems.Concat(items.ToArray()).ToArray();
+        return baseItems;
     }
+
 
     public override void Command(string command, ActorData tokenData)
     {
@@ -143,6 +159,20 @@ public class Icon1x5MobActorType : Icon1x5Base
             {
                 Hits += 1;
                 PopoverText.Create(token, $"/+1|_HIT", Color.white);
+            }
+            UpdateGraphic(tokenData);
+        }
+        if (command == "TakeHit")
+        {
+            if (Vigor > 0)
+            {
+                Vigor -= 1;
+                PopoverText.Create(token, $"/-1|_VIG", Color.white);
+            }
+            else if (Hits > 0)
+            {
+                Hits -= 1;
+                PopoverText.Create(token, $"/-1|_HIT", Color.white);
             }
             UpdateGraphic(tokenData);
         }
@@ -185,14 +215,25 @@ public class Icon1x5MobActorType : Icon1x5Base
         base.InitPanel(actorData, elementName, selected);
         VisualElement panel = UI.System.Q(elementName);
 
-        Label l = new();
-        l.name = "MainHPLabel";
-        l.text = MobHPString();
-        l.style.color = Color.red;
-        l.style.unityTextOutlineColor = Color.white;
-        l.style.unityTextOutlineWidth = 1;
-        l.style.fontSize = 26;
-        panel.Q("Bars").Add(l);
+        if (selected)
+        {
+            VisualElement hppips = PipsBar("MainHPLabel", "■", Hits, 2, Color.red,
+                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "TakeHit"); },
+                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "RestoreHit"); }
+            );
+            panel.Q("Bars").Add(hppips);
+        }
+        else
+        {
+            Label l = new();
+            l.name = "MainHPLabel";
+            l.text = SymbolString("■", Hits, 2);
+            l.style.color = Color.red;
+            l.style.unityTextOutlineColor = Color.white;
+            l.style.unityTextOutlineWidth = 1;
+            l.style.fontSize = 26;
+            panel.Q("Bars").Add(l);
+        }
 
         VisualElement s1 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
         s1.Q<Label>("Label").text = "DMG/FRAY";
@@ -225,7 +266,18 @@ public class Icon1x5MobActorType : Icon1x5Base
         {
             sb.Append(x);
         }
-        sb.Append("</color>");
+        if (Vigor + Hits < 2)
+        {
+            sb.Append("<color=white>");
+            for (int i = 0; i < 2 - Hits - Vigor; i++)
+            {
+                sb.Append(x);
+            }
+        }
+        else
+        {
+            sb.Append("</color>");
+        }
         return sb.ToString();
     }
 

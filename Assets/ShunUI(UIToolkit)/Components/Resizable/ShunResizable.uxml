@@ -1,0 +1,25 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:shun="ShunUI">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    
+    <shun:ShunResizable direction="horizontal" style="height: 200px; width: 600px;">
+        <shun:ShunResizablePanel default-size="200" min-size="100" max-size="400" style="flex-grow: 0;">
+            <ui:Label text="One" style="padding: 20px; -unity-text-align: middle-center; font-size: 14px;" />
+        </shun:ShunResizablePanel>
+        
+        <shun:ShunResizableHandle />
+        
+        <shun:ShunResizablePanel min-size="100" style="flex-grow: 1;">
+            <shun:ShunResizable direction="vertical" style="height: 100%;">
+                <shun:ShunResizablePanel default-size="100" min-size="50" style="flex-grow: 0;">
+                    <ui:Label text="Two" style="padding: 20px; -unity-text-align: middle-center; font-size: 14px;" />
+                </shun:ShunResizablePanel>
+                
+                <shun:ShunResizableHandle />
+                
+                <shun:ShunResizablePanel min-size="50" style="flex-grow: 1;">
+                    <ui:Label text="Three" style="padding: 20px; -unity-text-align: middle-center; font-size: 14px;" />
+                </shun:ShunResizablePanel>
+            </shun:ShunResizable>
+        </shun:ShunResizablePanel>
+    </shun:ShunResizable>
+</ui:UXML>

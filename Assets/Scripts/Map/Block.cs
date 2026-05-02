@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class Block : MonoBehaviour
@@ -44,6 +45,11 @@ public class Block : MonoBehaviour
         ShapeChange(Shape);
     }
 
+    void OnDestroy()
+    {
+        _markerMaterial = null;
+    }
+
     void Update()
     {
         if (_materialReset)
@@ -51,6 +57,7 @@ public class Block : MonoBehaviour
             _materialReset = false;
             SetMaterials();
         }
+        transform.Find("Indicator").eulerAngles = new Vector3(90, -90, 0);
     }
 
     /// <summary>
@@ -164,6 +171,12 @@ public class Block : MonoBehaviour
         {
             _marks.Remove(mark);
         }
+        MarkForRedraw();
+    }
+
+    public void ClearMarks()
+    {
+        _marks.Clear();
         MarkForRedraw();
     }
 
@@ -441,16 +454,6 @@ public class Block : MonoBehaviour
         TerrainController.SetInfo();
     }
 
-    /// <summary>
-    /// Indicate that this block is part of a targeted area
-    /// </summary>
-    public void Highlight()
-    {
-        _highlighted = true;
-        MarkForRedraw();
-        TerrainController.SetInfo();
-    }
-
     public Vector3 GetNearestCorner(Vector3 point)
     {
         // Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -624,6 +627,18 @@ public class Block : MonoBehaviour
         return top;
     }
 
+    public static void ToggleIndicators(bool show)
+    {
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        foreach (GameObject g in blocks)
+        {
+            Block block = g.GetComponent<Block>();
+            string coords = StringUtility.ConvertIntToAlpha(block.Coordinate.y + 1) + "" + (block.Coordinate.x + 1);
+            g.transform.Find("Indicator").GetComponent<TextMeshPro>().text = coords;
+            g.transform.Find("Indicator").gameObject.SetActive(show);
+        }
+    }
+
     /// <summary>
     /// Sets block to rebuild materials on the next update call
     /// </summary>
@@ -702,7 +717,8 @@ public class Block : MonoBehaviour
             column.AddComponent<Column>().Set(x, y);
         }
 
-        GameObject block = Instantiate(Resources.Load("Prefabs/Block") as GameObject);
+        GameObject blockPrefab = Resources.Load("Prefabs/Block") as GameObject;
+        GameObject block = Instantiate(blockPrefab);
         block.name = "block-" + x + "," + z + "," + y;
         block.transform.parent = column.transform;
         block.transform.localScale = Vector3.one;
@@ -714,7 +730,7 @@ public class Block : MonoBehaviour
         {
             block.GetComponent<Block>().AddMark(markers[i]);
         }
-
+        blockPrefab = null;
         return block;
     }
 

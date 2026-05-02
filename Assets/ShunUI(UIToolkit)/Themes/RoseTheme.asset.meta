@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 46b04bb2007ab9044994ee9868896ac1
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Themes/RoseTheme.asset
+  uploadId: 870216

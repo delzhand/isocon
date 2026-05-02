@@ -1,5 +1,6 @@
 using System;
 using Mirror;
+using ShunUI;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -89,6 +90,18 @@ public class Player : NetworkBehaviour
     }
     #endregion
 
+    [Command]
+    public void CmdRequestToast(string message, string title)
+    {
+        RpcToast(message, title);
+    }
+
+    [ClientRpc]
+    public void RpcToast(string message, string title)
+    {
+        Toast.Add(message, title, ToastVariant.Default);
+    }
+
     #region Create Actor
     [Command]
     public void CmdCreateActor(string json)
@@ -109,6 +122,7 @@ public class Player : NetworkBehaviour
         g.transform.localScale = ap.Placed ? Vector3.one : Vector3.zero;
 
         NetworkServer.Spawn(g);
+        RpcToast(null, $"Actor {data.Name} created by {Name}");
     }
     #endregion
 
@@ -256,6 +270,14 @@ public class Player : NetworkBehaviour
                 target.RemoveMark(value);
             }
         }
+        else if (label == "ClearEffects")
+        {
+            for (int i = 0; i < blocks.Length; i++)
+            {
+                Block target = GameObject.Find(blocks[i]).GetComponent<Block>();
+                target.ClearMarks();
+            }
+        }
 
         TerrainController.SetInfo();
     }
@@ -314,6 +336,7 @@ public class Player : NetworkBehaviour
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
         BlockRendering.ToggleSpacers(false);
+        Block.ToggleIndicators(Preferences.Current.ShowIndicators);
         Toast.AddSimple("Map synced.");
     }
 
@@ -325,6 +348,7 @@ public class Player : NetworkBehaviour
         State state = JsonUtility.FromJson<State>(json);
         State.SetSceneFromState(state);
         BlockRendering.ToggleSpacers(false);
+        Block.ToggleIndicators(Preferences.Current.ShowIndicators);
         Toast.AddSimple("Map synced.");
     }
     #endregion

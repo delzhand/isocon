@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    
+    <shun:ShunCollapsible is-open="false" style="width: 350px;">
+        <shun:ShunCollapsibleTrigger text="@experir starred 3 repositories" />
+        
+        <shun:ShunContainer>
+            <ui:Label text="@experir/shunui" class="shun-collapsible__item" />
+            <ui:Label text="@experir/shunui-blocks" class="shun-collapsible__item" />
+            <ui:Label text="@experir/shunui-xr" class="shun-collapsible__item" />
+        </shun:ShunContainer>
+    </shun:ShunCollapsible>
+</ui:UXML>

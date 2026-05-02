@@ -14,12 +14,10 @@ public enum ActorState
 
 public class Actor : MonoBehaviour
 {
-    public int Size = 1;
     public Texture2D Image;
     public ActorData Data;
     public float ShareOffsetX;
     public float ShareOffsetY;
-    public Actor LastFocused;
     public ActorState State = ActorState.Neutral;
     private GameObject dragBaseIndicator;
 
@@ -73,24 +71,6 @@ public class Actor : MonoBehaviour
         Transform t = transform.Find("Offset/Avatar/Cutout").transform;
         t.rotation = Camera.main.transform.rotation;
     }
-
-    // private void OffsetForSizeAndSharing()
-    // {
-    //     float x = ShareOffsetX;
-    //     float y = ShareOffsetY;
-    //     if (Size == 2)
-    //     {
-    //         x = 0;
-    //         y = -.73f;
-    //     }
-    //     else if (Size == 3)
-    //     {
-    //         x = 0;
-    //         y = 0;
-    //     }
-    //     transform.Find("Offset").transform.localPosition = new Vector3(x, 0, y);
-    //     transform.Find("Base").transform.localPosition = new Vector3(x, 0, y);
-    // }
 
     private void GlobalTokenScale()
     {
@@ -165,6 +145,12 @@ public class Actor : MonoBehaviour
     public void UpdateDragIndicator(Vector3 v)
     {
         dragBaseIndicator.transform.position = v;
+        if (Data.Placed)
+        {
+            string op = Data.Placed ? "Moving" : "Placing";
+            float distance = Player.Self().GetComponent<DirectionalLine>().GetDistance();
+            Player.Self().SetOp($"{op} {Data.Name} {distance} tiles");
+        }
     }
 
     public void ClearDragIndicator()
@@ -190,16 +176,16 @@ public class Actor : MonoBehaviour
                 {
                     _dragging.Move(b);
                 }
-                _dragging.ClearDragIndicator();
             }
             else
             {
                 _dragging.StateChange(ActorState.Neutral);
             }
+            _dragging.ClearDragIndicator();
         }
         _dragging = null;
-        Player.Self().ClearOp();
-        Player.Self().GetComponent<DirectionalLine>().Deinit();
+        Player.Self()?.ClearOp();
+        Player.Self()?.GetComponent<DirectionalLine>().Deinit();
         BlockRendering.ToggleAllBorders(false);
     }
 
@@ -259,6 +245,11 @@ public class Actor : MonoBehaviour
     public void Remove()
     {
         Player.Self().CmdRequestRemoveActor(Data.Id);
+    }
+
+    public void Flip()
+    {
+        transform.Find("Offset/Avatar/Cutout/Cutout Quad").Rotate(new Vector3(0, 180, 0));
     }
 
     public static void Deselect()
@@ -368,21 +359,14 @@ public class Actor : MonoBehaviour
         string tokenOutline = Preferences.Current.TokenOutline;
         switch (tokenOutline)
         {
-            case "Black":
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.black);
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 1);
-                break;
-            case "White":
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.white);
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 1);
-                break;
             case "None":
                 transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.black);
                 transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 0);
                 break;
             default:
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.white);
-                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 1);
+                Color c = ColorUtility.GetCommonColor(tokenOutline);
+                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetColor("_BorderColor", c);
+                transform.Find("Offset/Avatar/Cutout/Cutout Quad").GetComponent<MeshRenderer>().material.SetFloat("_BorderSize", 2);
                 break;
         }
     }

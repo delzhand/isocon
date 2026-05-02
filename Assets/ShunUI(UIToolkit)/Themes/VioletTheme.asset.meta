@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1cd8bac044bf71144b17ff4b3f4e2b7e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Themes/VioletTheme.asset
+  uploadId: 870216

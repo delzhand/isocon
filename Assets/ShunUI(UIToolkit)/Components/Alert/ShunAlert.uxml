@@ -1,0 +1,4 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss?fileID=7433441132597879392&amp;guid=812bff3d2981add4fa9165957ba1034b&amp;type=3#ShunStyle"/>
+    <shun:ShunAlert variant="Default" title="Success! Your changes have been saved" description="This is an alert with icon, title and description." icon="project://database/Assets/ShunUI(UIToolkit)/Resources/Icons/info.png?fileID=2800000&amp;guid=dda4a72bd5d73466ebfb7f788249826d&amp;type=3#info"/>
+</ui:UXML>

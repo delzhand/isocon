@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Mirror;
+using ShunUI;
+using ShunUI.Primitives;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.RemoteConfig;
@@ -11,104 +13,53 @@ using UnityEngine.UIElements;
 
 public class Startup
 {
-    private static string _version = "0.8.1";
-    private static string _latestVersion = "0.8.1";
+    private static string _version = "0.9.0";
+    private static string _latestVersion = "0.9.0";
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     public static void RunTasks()
     {
-        Preferences.Init();
         SetVersionText();
         UI.SetScale();
-        Modal.Setup();
         BlockRendering.Setup();
         DiceRoller.Setup();
         MapEdit.Setup();
-        TokenLibrary.Setup();
+        TokenLibraryModal.Setup();
         Autosaver.Setup();
+        MemoryHacker.Setup();
         Tutorial.Setup();
+        Viewport.Setup();
+        BindUICallbacks();
 
-        UI.SetBlocking(UI.System, StringUtility.CreateArray(@"SelectionMenu", "TopBar", "BottomBar", "ToolsPanel", "ToolOptions", "LeftTokenPanel", "RightTokenPanel", "Backdrop", "NumberPickerModal", "TopRight"));
+        UI.SetBlocking(UI.System, StringUtility.CreateArray(@"BottomBar", "ToolsPanel", "ToolOptions", "LeftTokenPanel", "RightTokenPanel", "Backdrop", "TopRight"));
         Application.targetFrameRate = Preferences.Current.TargetFramerate;
-
-        // Useful during development when editing UI
-        UI.ToggleDisplay("Tabletop", false);
-
-        ReleaseNotes();
     }
 
-    private static void ReleaseNotes()
+    public static void ReleaseNotes()
     {
-        string notes = @$"<size=+3><b>IsoCON Version {_version}</b></size>
+        ReleaseNotesModal.OpenAtStartup(_version);
+    }
 
-<size=+2><b>Features</b></size>
-* Sessions can now be saved and loaded
-* Session will autosave every 5 minutes or when exiting to launcher
-* GameSystems replaced by Actor Types
-* Multiple Actor Types can be active in the same session
-* Actors can be customized with resources and stats
-* Fixed view button added to top bar
-* Tags and clocks can be added to sessions
-
-<size=+2><b>Changes</b></size>
-* Tokens renamed Actors
-* Actor focus/selection behavior changed
-* Actor size changed to shape, more hex options added
-* Top bar and actor list can be hidden
-* Hellminth units added to Maleghast data
-* Maleghast actors can now alter their core stats
-* Actor colors now show as a border on their base shadow
-
-<size=+2><b>New Actor Types</b></size>
-* Environmental - a type with no stats
-* Lancer Mech - a player type for LANCER
-* Lancer Pilot - a player type for LANCER
-* ICON 1.5 split into Player, Enemy, and Mob
-* ICON 2.0 split into Player, Enemy, and Mob
-* Generic renamed to Basic
-
-<size=+2><b>Fixes</b></size>
-* Shortcut keystrokes no longer trigger when modals are open
-* Certain large actor shapes can be dragged to intersections to remain centered
-
-<size=+2><b>Known Issues</b></size>
-* Custom cursor prevents window resize handles from being shown, though resizing still works
-* Under certain circumstances, selecting a tile or dragging an actor to a tile will select a tile of lower elevation than intended
-";
-
-        string seen = Preferences.GetReleaseNotesSeen();
-        List<string> seenParts = seen.Split("|").ToList();
-        if (seenParts.Contains(_version))
+    private static void BindUICallbacks()
+    {
+        UI.System.Q("DeployToggle").RegisterCallback<ClickEvent>((evt) =>
         {
-            return;
-        }
-
-        Modal.Reset("Release Notes");
-        Modal.AddLongMarkup("ReleaseNotes", notes);
-        Modal.AddPreferredButton("Close", (evt) =>
-        {
-            seenParts.Add(_version);
-            Preferences.SetReleaseNotesSeen(string.Join("|", seenParts.ToArray()));
-            Modal.Close();
+            UI.ToggleActiveClass(UI.System.Q("BottomBar"));
         });
-
     }
 
     private static async void SetVersionText()
     {
-#if UNITY_WEBGL
-        UI.System.Q<Label>("Version").text = $"v{_version}";
-        return;
-#endif
-
+        UI.System.Q<Button>("Version").RegisterCallback<ClickEvent>((evt) => ReleaseNotesModal.Open());
         await AsyncAwake();
         if (_version != _latestVersion)
         {
-            UI.System.Q<Label>("Version").text = $"v{_version} (version {_latestVersion} available)";
-            UI.System.Q<Label>("Version").style.backgroundColor = ColorUtility.UIBlue;
+            UI.System.Q<Button>("Version").text = $"v{_version} (version {_latestVersion} available)";
+            UI.System.Q<Button>("Version").style.backgroundColor = ColorUtility.UIBlue;
         }
         else
         {
-            UI.System.Q<Label>("Version").text = $"v{_version}";
+            UI.System.Q<Button>("Version").text = $"v{_version}";
         }
     }
 
@@ -160,18 +111,6 @@ public class Startup
     public struct AppAttributes
     {
         public string LatestVersion;
-    }
-
-    public static string[] GetArguments()
-    {
-#if (UNITY_WEBGL) && !UNITY_EDITOR
-            if (Application.absoluteURL.Contains("isocon.app"))
-            {
-                string parameters = Application.absoluteURL.Substring(Application.absoluteURL.IndexOf("?")+1);
-                return parameters.Split(new char[] { '&', '=' });
-            }
-#endif
-        return new string[] { };
     }
 
 }

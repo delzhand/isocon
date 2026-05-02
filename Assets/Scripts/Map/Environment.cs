@@ -6,8 +6,8 @@ public class Environment : MonoBehaviour
 {
     public static Color TileTopColor = ColorUtility.GetColor("#3E713E");
     public static Color TileSideColor = ColorUtility.GetColor("#6F5A3C");
-    public static Color BgBottomColor = ColorUtility.GetColor("#6d6d6d");
-    public static Color BgTopColor = ColorUtility.GetColor("#989898");
+    public static Color BgBottomColor = ColorUtility.GetColor("#414141");
+    public static Color BgTopColor = ColorUtility.GetColor("#5a5a5a");
     public static Color CurrentPaintTop = ColorUtility.GetColor("#CCBCA7");
     public static Color CurrentPaintSide = ColorUtility.GetColor("#CCBCA7");
 

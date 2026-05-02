@@ -9,27 +9,36 @@ using SimpleFileBrowser;
 using System.Linq;
 using System.Collections.Generic;
 using SimpleJSON;
+using ShunUI;
 
 public class LauncherState : BaseState
 {
     private ConnectMode _mode;
-    private bool _attemptingToConnect = false;
+    private static bool _attemptingToConnect = false;
 
-    public override void OnEnter(StateManager sm)
+    public override void OnEnter()
     {
-        base.OnEnter(sm);
+        base.OnEnter();
         EnableInterface();
         SetLauncherBackground();
         DestroyLeftoverNetworkData();
         BindCallbacks();
-        sm.ChangeSubState(null);
+        // sm.ChangeSubState(null);
         // Session.LauncherMap();
+        Startup.ReleaseNotes();
     }
+
+    public override void OnLoseFocus()
+    {
+        base.OnLoseFocus();
+        UnbindCallbacks();
+        DisableInterface();
+    }
+
 
     public override void OnExit()
     {
-        DisableInterface();
-        UnbindCallbacks();
+        base.OnExit();
     }
 
     public override void UpdateState()
@@ -44,16 +53,9 @@ public class LauncherState : BaseState
     #region Interface
     private void EnableInterface()
     {
-        UI.ToggleDisplay("StartupPanel", true);
-        UI.ToggleDisplay("StartupOptions", true);
         UI.ToggleDisplay("Launcher", true);
-        UI.ToggleDisplay("TokenLibraryModal", false);
-
-#if UNITY_WEBGL
-        UI.ToggleDisplay("SoloModeButton", false);
-        UI.ToggleDisplay("HostModeButton", false);
-        UI.ToggleDisplay("ExitButton", false);
-#endif
+        UI.ToggleDisplay("StartupOptions", true);
+        UI.ToggleDisplay("Tabletop", false);
     }
 
     private void SetLauncherBackground()
@@ -65,7 +67,6 @@ public class LauncherState : BaseState
 
     private void DisableInterface()
     {
-        UI.ToggleDisplay("StartupPanel", false);
         UI.ToggleDisplay("Launcher", false);
     }
     #endregion
@@ -101,27 +102,35 @@ public class LauncherState : BaseState
 
     private void ConfigClicked(ClickEvent evt)
     {
-        Config.OpenModal(evt);
+        ConfigModal.Open();
     }
 
     private void LibraryClicked(ClickEvent evt)
     {
-        TokenLibrary.ShowDefaultMode(evt);
+        TokenLibraryModal.OpenDefault();
     }
 
     private void SoloModeClicked(ClickEvent evt)
     {
-        OpenConfigModal(evt, ConnectMode.Solo);
+        _mode = ConnectMode.Solo;
+        StartSessionModal.Open(ConnectMode.Solo);
     }
 
     private void HostModeClicked(ClickEvent evt)
     {
-        OpenConfigModal(evt, ConnectMode.Host);
+        _mode = ConnectMode.Host;
+        StartSessionModal.Open(ConnectMode.Host);
     }
 
     private void ClientModeClicked(ClickEvent evt)
     {
-        OpenConfigModal(evt, ConnectMode.Client);
+        _mode = ConnectMode.Client;
+        StartSessionModal.Open(ConnectMode.Client);
+    }
+
+    public static void ListenForConnection()
+    {
+        _attemptingToConnect = true;
     }
 
     private void CancelConnectionAttemptClicked(ClickEvent evt)
@@ -129,140 +138,6 @@ public class LauncherState : BaseState
         GameObject.Find("NetworkController").GetComponent<NetworkManager>().StopClient();
         Toast.AddSimple("Connection attempt cancelled.");
     }
-
-    private void OpenConfigModal(ClickEvent evt, ConnectMode mode)
-    {
-        _mode = mode;
-
-        Modal.Reset($"Configure {_mode.ToString()} Mode");
-
-        string name = Preferences.Current.PlayerName;
-        Modal.AddTextField("PlayerName", "Player Name", name, (evt) =>
-        {
-            Preferences.SetPlayerName(evt.newValue);
-        });
-
-        if (_mode == ConnectMode.Solo || _mode == ConnectMode.Host)
-        {
-            // string system = Preferences.Current.System;
-
-            // string[] systemOptions = GameSystem.SystemOptions();
-            // Modal.AddDropdownField("GameSystem", "Game System", system, systemOptions, (evt) =>
-            // {
-            //     Preferences.SetSystem(evt.newValue);
-            //     ConfigModalEvaluateConditions();
-            // });
-
-            string gridType = Preferences.Current.Grid;
-            Modal.AddDropdownField("GridType", "Grid Type", gridType, new string[] { "Square", "Hex" }, (evt) =>
-            {
-                Preferences.SetGrid(evt.newValue);
-                // ConfigModalEvaluateConditions();
-            });
-            // Modal.AddDescription("HexMessage", "Warning! Hex support is experimental. Some visual effects may not display correctly.");
-
-            // bool overrideRules = Preferences.Current.OverrideRules;
-            // Modal.AddToggleField("HomebrewToggle", "Use Homebrew Data", overrideRules, (evt) =>
-            // {
-            //     Preferences.SetOverrideRules(evt.newValue);
-            //     ConfigModalEvaluateConditions();
-            // });
-
-            // string rulesFile = Preferences.Current.RulesFile;
-            // Modal.AddFileField("RulesFile", "Homebrew File", rulesFile, "rules");
-        }
-
-        if (_mode == ConnectMode.Host)
-        {
-            int maxPlayers = Preferences.Current.PlayerCount;
-            Modal.AddIntField("PlayerCount", "Max Player Count", maxPlayers, (evt) =>
-            {
-                Preferences.SetPlayerCount(evt.newValue);
-            });
-        }
-
-        if (_mode == ConnectMode.Client)
-        {
-            string hostIP = Preferences.Current.HostIP;
-            Modal.AddTextField("HostIP", "Host IP", hostIP, (evt) =>
-            {
-                Preferences.SetHostIP(evt.newValue);
-            });
-        }
-
-        Modal.AddPreferredButton("Confirm", ConfirmConfig);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
-
-        // ConfigModalEvaluateConditions();
-
-    }
-
-    // private void ConfigModalEvaluateConditions()
-    // {
-    //     if (UI.Modal.Q("GameSystem") != null)
-    //     {
-    //         /**
-    //          * Game System Grid Type
-    //          */
-    //         string[] hexSystems = GameSystem.HexOptionalSystems();
-    //         bool grid = StringUtility.CheckInList(UI.Modal.Q<DropdownField>("GameSystem").value, hexSystems);
-    //         bool hex = Preferences.Current.Grid == "Hex";
-    //         UI.ToggleDisplay(UI.Modal.Q("GridType"), grid);
-    //         UI.ToggleDisplay("HexMessage", grid && hex);
-    //     }
-    //     if (UI.Modal.Q("RulesFile") != null)
-    //     {
-    //         UI.ToggleDisplay(UI.Modal.Q("RulesFile"), UI.Modal.Q<Toggle>("HomebrewToggle").value);
-    //     }
-    //     UI.Redraw();
-
-    // }
-
-    private void ConfirmConfig(ClickEvent evt)
-    {
-        // if (UI.Modal.Q("RulesFile") != null)
-        // {
-        //     Preferences.Current.RulesFile = UI.Modal.Q("RulesFile").Q<TextField>("File").value;
-        // }
-
-        TerrainController.GridType = Preferences.Current.Grid;
-        NetworkManager netManager = GameObject.Find("NetworkController").GetComponent<NetworkManager>();
-        switch (_mode)
-        {
-            case ConnectMode.Solo:
-                // GameSystem.Set(Preferences.Current.System);
-                netManager.maxConnections = 1;
-                netManager.StartHost();
-                break;
-            case ConnectMode.Host:
-                // GameSystem.Set(Preferences.Current.System);
-                netManager.maxConnections = Preferences.Current.PlayerCount;
-                netManager.StartHost();
-                break;
-            case ConnectMode.Client:
-                netManager.networkAddress = Preferences.Current.HostIP;
-                netManager.StartClient();
-                break;
-        }
-        _attemptingToConnect = true;
-        Modal.Close();
-        UI.ToggleDisplay("StartupOptions", false);
-        UI.ToggleDisplay("ConnectingMessage", true);
-    }
-
-    // private string DefaultGridType()
-    // {
-    //     switch (Preferences.Current.System)
-    //     {
-    //         case "ICON 1.5":
-    //         case "Maleghast":
-    //             return "Square";
-    //         case "Lancer":
-    //             return "Hex";
-    //         default:
-    //             return Preferences.Current.Grid;
-    //     }
-    // }
 
     #endregion
 
@@ -285,7 +160,10 @@ public class LauncherState : BaseState
             _attemptingToConnect = false;
             UI.ToggleDisplay("StartupOptions", false);
             UI.ToggleDisplay("ConnectingMessage", false);
-            Fader.StartFade(Color.black, .5f, GoToNeutralState);
+            Fader.StartFade(Color.black, .5f, () =>
+            {
+                TabletopState.Activate(_mode);
+            });
             return;
         }
 
@@ -298,10 +176,5 @@ public class LauncherState : BaseState
             Toast.AddError("Could not establish a connection.");
         }
         _attemptingToConnect = isConnecting;
-    }
-
-    private void GoToNeutralState()
-    {
-        SM.ChangeState(new TabletopState(_mode));
     }
 }

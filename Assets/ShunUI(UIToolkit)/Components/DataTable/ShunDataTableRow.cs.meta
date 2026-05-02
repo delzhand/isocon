@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: bc44c926d58318d4a8c76457fb51d61c
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Components/DataTable/ShunDataTableRow.cs
+  uploadId: 870216

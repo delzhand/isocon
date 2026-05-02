@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DarkSkin
   m_EditorClassIdentifier: 
   m_font: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSize: 14
+  m_fontSize: 16
   m_rowHeight: 30
   m_rowSpacing: 8
   m_windowColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
@@ -63,7 +63,8 @@ MonoBehaviour:
   m_fileHeight: 30
   m_fileIconsPadding: 6
   m_fileNormalBackgroundColor: {r: 1, g: 1, b: 1, a: 0}
-  m_fileAlternatingBackgroundColor: {r: 1, g: 1, b: 1, a: 0.043137256}
+  m_fileAlternatingBackgroundColor: {r: 0.40251565, g: 0.40251565, b: 0.40251565,
+    a: 0.043137256}
   m_fileHoveredBackgroundColor: {r: 0.88235295, g: 0.88235295, b: 1, a: 0.2}
   m_fileSelectedBackgroundColor: {r: 0, g: 0.34117648, b: 0.5803922, a: 1}
   m_fileNormalTextColor: {r: 1, g: 1, b: 1, a: 0.87058824}

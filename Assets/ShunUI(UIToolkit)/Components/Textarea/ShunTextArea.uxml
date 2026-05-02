@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    <shun:ShunTextArea placeholder-text="Placeholder" style="flex-grow: 1; -unity-font-definition: resource(&apos;Fonts/geist-font-1.5.0/fonts/Geist/ttf/Geist-Regular&apos;);" />
+</ui:UXML>

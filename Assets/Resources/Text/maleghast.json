@@ -11,8 +11,7 @@
             "def": 4,
             "hp": 2,
             "type": "Thrall",
-            "traits": "=Formation",
-            "tokens": "Loaded"
+            "traits": "=Formation"
         },
         {
             "conditions": "",
@@ -38,8 +37,7 @@
             "def": 3,
             "hp": 4,
             "type": "Scion",
-            "traits": "=Formation",
-            "tokens": "Loaded"
+            "traits": "=Formation"
         },
         {
             "conditions": "",
@@ -52,8 +50,7 @@
             "def": 4,
             "hp": 4,
             "type": "Hunter",
-            "traits": "=Formation",
-            "tokens": "Loaded"
+            "traits": "=Formation"
         },
         {
             "conditions": "Physical Armor",
@@ -67,7 +64,6 @@
             "hp": 6,
             "type": "Tyrant",
             "traits": "=Formation|=Siege Shield",
-            "tokens": "Loaded",
             "size": 2
         },
         {
@@ -82,7 +78,7 @@
             "hp": 8,
             "type": "Necromancer",
             "traits": "=Formation|=Hot Clip|=Loaded|-Bone Wall|-Gun Kata|-Clutch Reload",
-            "tokens": "Loaded"
+            "tokens": "Soul#0"
         },
         {
             "conditions": "",
@@ -161,7 +157,8 @@
             "def": 3,
             "hp": 10,
             "type": "Necromancer",
-            "traits": "=Blood Rage|=Fueled by Rage|-Nerve Twitch|-Blood Drinker|-Blood Rush"
+            "traits": "=Blood Rage|=Fueled by Rage|-Nerve Twitch|-Blood Drinker|-Blood Rush",
+            "tokens": "Soul#0"
         },
         {
             "conditions": "Super Armor",
@@ -239,7 +236,8 @@
             "def": 4,
             "hp": 10,
             "type": "Necromancer",
-            "traits": "=Blessed with Filth|-Pollution Shroud|-Corruptor|-Spreader"
+            "traits": "=Blessed with Filth|-Pollution Shroud|-Corruptor|-Spreader",
+            "tokens": "Soul#0"
         },
         {
             "conditions": "",
@@ -318,7 +316,8 @@
             "def": 4,
             "hp": 8,
             "type": "Necromancer",
-            "traits": "=Dread Presence|-Teleport|-Puppet Master|-Maggot Destroyer"
+            "traits": "=Dread Presence|-Teleport|-Puppet Master|-Maggot Destroyer",
+            "tokens": "Soul#0"
         },
         {
             "conditions": "Super Armor|Miracle",
@@ -398,7 +397,8 @@
             "def": 4,
             "hp": 10,
             "type": "Necromancer",
-            "traits": "=Holy Vessel|-Winter Rose Stance|-Corpse Violet Stance|-Royal Chrysanthemum Stance"
+            "traits": "=Holy Vessel|-Winter Rose Stance|-Corpse Violet Stance|-Royal Chrysanthemum Stance",
+            "tokens": "Soul#0"
         },
         {
             "conditions": "",
@@ -477,7 +477,8 @@
             "def": 3,
             "hp": 10,
             "type": "Necromancer",
-            "traits": "=Polyglot|-Accelerate Evolution|-Rapid Move|-Ancillary Limbs"
+            "traits": "=Polyglot|-Accelerate Evolution|-Rapid Move|-Ancillary Limbs",
+            "tokens": "Soul#0"
         },
         {
             "conditions": "",
@@ -556,7 +557,8 @@
             "def": 5,
             "hp": 8,
             "type": "Necromancer",
-            "traits": "=Flesh Sacrifice|-Red Communion|-Slaughter Frenzy|-Priest of the Hue"
+            "traits": "=Flesh Sacrifice|-Red Communion|-Slaughter Frenzy|-Priest of the Hue",
+            "tokens": "Soul#0"
         },
         {
             "conditions": "",
@@ -640,7 +642,128 @@
             "hp": 10,
             "type": "Necromancer",
             "traits": "=Necrophage|=Large|=Demolisher|-Revelation|-Tyrant Ruler|-Talons of Hell",
+            "size": 2,
+            "tokens": "Soul#0"
+        },
+        {
+            "conditions": "",
+            "name": "Screwhead",
+            "house": "Volvadani",
+            "color": "004BDB",
+            "move": 4,
+            "actAbilities": "=Drum Shotgun|=Piston Fist|=Roaring Reload",
+            "upgrades": "-Superheated Furnace|-Blast Slag|-Shimmering Heat",
+            "def": 3,
+            "hp": 4,
+            "type": "Scion",
+            "traits": "=Clad in Law",
+            "tokens": "Drum Shotgun Burst#1|Piston Fist Burst#2|Super Armor v Criminals"
+        },
+        {
+            "conditions": "",
+            "name": "Bobby",
+            "house": "Volvadani",
+            "color": "004BDB",
+            "move": 4,
+            "actAbilities": "=Ferocious Walloping|=The Clamps|=Bloodhound",
+            "upgrades": "-Hunter|-Frenzied Bobby|-Mage Hunter",
+            "def": 4,
+            "hp": 4,
+            "type": "Horror",
+            "traits": "=Screw Drive",
+            "tokens": "Screw Drive Burst#3|Ferocious Walloping#1"
+        },
+        {
+            "conditions": "",
+            "name": "Mancatcher",
+            "house": "Volvadani",
+            "color": "004BDB",
+            "move": 3,
+            "actAbilities": "=Mancatcher Chain|=Spinecracker",
+            "upgrades": "-Wicked Chain|-Caltrops|-Prison Coffin",
+            "def": 4,
+            "hp": 4,
+            "type": "Hunter",
+            "traits": "=Make Quota",
+            "tokens": "Mancatcher Chain Burst#2"
+        },
+        {
+            "conditions": "",
+            "name": "Clerk",
+            "house": "Volvadani",
+            "color": "004BDB",
+            "move": 3,
+            "actAbilities": "=Court Summons|=Discard Contraband|=Deputize",
+            "upgrades": "-Shuffle Papers|-Contractual Loophole|-Unionized Healthcare",
+            "def": 3,
+            "hp": 4,
+            "type": "Hunter",
+            "traits": "=Technicality",
+            "tokens": "Magic Armor|Discard Contraband Burst#2"
+        },
+        {
+            "conditions": "",
+            "name": "Punishment Engine",
+            "house": "Volvadani",
+            "color": "004BDB",
+            "move": 3,
+            "actAbilities": "=Pendulum Swing|=Penitent Gaze|=Sentence to Suffering",
+            "upgrades": "-Wages of Sin|-Hellpins|-Pendulum Storm",
+            "def": 2,
+            "hp": 5,
+            "type": "Tyrant",
+            "traits": "=Sin Furnace",
+            "tokens": "Super Armor|Pendulum Swing Burst#1",
             "size": 2
+        },
+        {
+            "conditions": "",
+            "name": "Praetor",
+            "house": "Volvadani",
+            "color": "004BDB",
+            "move": 3,
+            "actAbilities": "=Hammer Shotgun|=Stoke Furnace|-Judicator Cannon|-Pressure Hammer|-Steel Eagle Heavy Demolisher Rifle|-Penitent's Mortification|-Serve Penance|-Imprison|-Fiery Ordinance",
+            "soulAbilities": "=Indict|=Call Witness|-De Jure Proxy|-Supreme Prohibition|-Purified Corpse Oil|-Weight of Sin|-Throw the Book|-Supreme Judgment",
+            "def": 4,
+            "hp": 8,
+            "type": "Necromancer",
+            "traits": "=Clad in Law|-Steel Purpose|-Fueled by Hate|-Paragon",
+            "tokens": "Soul#0|Super Armor v Criminals"
         }
+    ],
+    "Tokens": [
+        "Berserk",
+        "Buff",
+        "Burst",
+        "Deathburst",
+        "Debt",
+        "Debuff",
+        "Doom",
+        "Evolve 1",
+        "Evolve 2",
+        "Guilt",
+        "Luck",
+        "Lunacy",
+        "Madness",
+        "Mutation",
+        "Petrify",
+        "Plague",
+        "Provoke",
+        "Slow",
+        "Speed",
+        "Strength"
+    ],
+    "Statuses": [
+        "Corpse",
+        "Curseproof",
+        "Flight",
+        "Grapple",
+        "Lurk",
+        "Magic Armor",
+        "Miracle",
+        "Phys Armor",
+        "Retaliation",
+        "Reload",
+        "Super Armor"
     ]
 }

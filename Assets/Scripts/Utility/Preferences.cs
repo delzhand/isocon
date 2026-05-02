@@ -17,13 +17,15 @@ public class StoredPreferences
     public string HostIP;
     public string TutorialsSeen;
     public string ReleaseNotesSeen;
-    public int SkipTutorials;
+    public bool SkipTutorials;
     public bool OverrideRules;
     public bool ShowHUD;
     public int TargetFramerate;
-    public bool DragPan;
+    public bool PanWithRight;
     public string MaleghastFile;
     public int AutosaveInterval = 300;
+    public bool ShowIndicators;
+    public string LastActorType;
 }
 
 public class Preferences
@@ -34,6 +36,7 @@ public class Preferences
         get => _current;
     }
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public static void Init()
     {
         _current = new()
@@ -49,12 +52,15 @@ public class Preferences
             HostIP = PlayerPrefs.GetString("HostIP", ""),
             TutorialsSeen = PlayerPrefs.GetString("TutorialsSeen", ""),
             ReleaseNotesSeen = PlayerPrefs.GetString("ReleaseNotesSeen", ""),
-            SkipTutorials = PlayerPrefs.GetInt("SkipTutorials", 0),
+            SkipTutorials = false,
             TargetFramerate = PlayerPrefs.GetInt("TargetFramerate", 30),
             ShowHUD = true,
-            DragPan = true,
+            PanWithRight = false,
             MaleghastFile = PlayerPrefs.GetString("MaleghastFile", ""),
             AutosaveInterval = PlayerPrefs.GetInt("AutosaveInterval", 300),
+            BlockBorderOpacity = PlayerPrefs.GetFloat("BlockBorderOpacity", 0),
+            ShowIndicators = false,
+            LastActorType = PlayerPrefs.GetString("LastActorType", ""),
         };
 
         string fileName = GetConfigFileName();
@@ -79,39 +85,27 @@ public class Preferences
             _current.MaleghastFile = loaded.MaleghastFile?.Length > 0 ? loaded.MaleghastFile : _current.MaleghastFile;
             _current.AutosaveInterval = loaded.AutosaveInterval > 0 ? loaded.AutosaveInterval : _current.AutosaveInterval;
             _current.TutorialsSeen = loaded.TutorialsSeen?.Length > 0 ? loaded.TutorialsSeen : _current.TutorialsSeen;
+            _current.ShowHUD = loaded.ShowHUD;
+            _current.BlockBorderOpacity = loaded.BlockBorderOpacity > 0 ? loaded.BlockBorderOpacity : _current.BlockBorderOpacity;
+            _current.ShowIndicators = loaded.ShowIndicators;
+            _current.PanWithRight = loaded.PanWithRight;
+            _current.LastActorType = loaded.LastActorType?.Length > 0 ? loaded.LastActorType : _current.LastActorType;
         }
+
+        DirectorySetup();
     }
 
-    public static void SetDataPath(string value)
+    private static void DirectorySetup()
     {
-        PlayerPrefs.SetString("DataFolder", value);
-        _current.DataPath = value;
-        Save();
-    }
-
-    public static void SetShowHUD(bool value)
-    {
-        _current.ShowHUD = value;
-        Save();
-    }
-
-    public static void SetDragPan(bool value)
-    {
-        _current.DragPan = value;
-        Save();
-    }
-
-
-    public static void SetUIScale(string value)
-    {
-        _current.UIScale = value;
-        Save();
-    }
-
-    public static void SetWorldUIScale(string value)
-    {
-        _current.WorldUIScale = value;
-        Save();
+        string[] directories = { "maleghast_data", "hashed_tokens", "maps", "tokens", "logs", "sessions" };
+        for (int i = 0; i < directories.Length; i++)
+        {
+            string path = $"{_current.DataPath}/{directories[i]}";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+        }
     }
 
     public static float GetUIScale()
@@ -124,18 +118,6 @@ public class Preferences
     {
         string uiScale = Preferences.Current.WorldUIScale;
         return float.Parse(uiScale.Replace("%", "")) / 100f;
-    }
-
-    public static void SetTokenScale(float value)
-    {
-        _current.TokenScale = value;
-        Save();
-    }
-
-    public static void SetTokenOutline(string value)
-    {
-        _current.TokenOutline = value;
-        Save();
     }
 
     public static void SetTutorialsSeen(string value)
@@ -155,55 +137,7 @@ public class Preferences
         return (_current.ReleaseNotesSeen != null) ? _current.ReleaseNotesSeen : "";
     }
 
-    public static void SetSkipTutorials(int value)
-    {
-        _current.SkipTutorials = value;
-        Save();
-    }
-
-    public static void SetPlayerName(string value)
-    {
-        _current.PlayerName = value;
-        Save();
-    }
-
-    public static void SetHostIP(string value)
-    {
-        _current.HostIP = value;
-        Save();
-    }
-
-    public static void SetPlayerCount(int value)
-    {
-        _current.PlayerCount = value;
-        Save();
-    }
-
-    public static void SetGrid(string value)
-    {
-        _current.Grid = value;
-        Save();
-    }
-
-    public static void SetBlockBorderOpacity(float value)
-    {
-        _current.BlockBorderOpacity = value;
-        Save();
-    }
-
-    public static void SetTargetFramerate(int value)
-    {
-        _current.TargetFramerate = value;
-        Save();
-    }
-
-    public static void SetMaleghastFile(string value)
-    {
-        _current.MaleghastFile = value;
-        Save();
-    }
-
-    private static void Save()
+    public static void Save()
     {
         string fileName = GetConfigFileName();
         string json = JsonUtility.ToJson(_current);

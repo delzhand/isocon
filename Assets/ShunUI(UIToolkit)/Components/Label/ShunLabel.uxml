@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    
+    <ui:VisualElement style="flex-grow: 1;">
+        <shun:ShunLabel text="Label" />
+    </ui:VisualElement>
+</ui:UXML>

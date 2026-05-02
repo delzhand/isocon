@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ShunUI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -39,25 +40,32 @@ public class Icon2x0MobActorType : Icon2x0Base
     #region Creation
     public static void AddActorModal()
     {
-        Modal.AddTextField("NameField", "Actor Name", "Actor");
-        Modal.AddDropdownField("ShapeField", "Shape", "Square 1x1", ActorType.ShapeOptions());
+        var contents = Modal2.Contents("PrimaryDialog");
+        var typeContainer = contents.Q("ActorTypeContainer");
+        typeContainer.Clear();
+        contents.Q("CreateActor")?.RemoveFromHierarchy();
 
-        Modal.AddPreferredButton("Create Actor", CreateClicked);
-        Modal.AddButton("Cancel", Modal.CloseEvent);
+        var name = Modal2.AddInlineTextField("Name", "Actor Name", "Actor");
+        Modal2.MoveToContainer(name, typeContainer);
 
-        AddActor.OrderFields(StringUtility.CreateArray("NameField", "ShapeField"));
+        var create = new ShunDialogClose();
+        create.name = "CreateActor";
+        create.text = "Create Actor";
+        create.SetVariant(ButtonVariant.Primary);
+        create.clicked += () => CreateClicked();
+        contents.Q(className: "shun-dialog__footer").Add(create);
     }
 
-    private static void CreateClicked(ClickEvent evt)
+    private static void CreateClicked()
     {
-        if (!TokenLibrary.TokenSelected())
+        Modal2.ReadContext("PrimaryDialog");
+        string token = Modal2.GetComboboxFieldValue("Token");
+        if (token.Length == 0)
         {
             Toast.AddError("A token has not been selected");
             return;
         }
-
-        string name = UI.Modal.Q<TextField>("NameField").value;
-        string shape = UI.Modal.Q<DropdownField>("ShapeField").value;
+        string name = Modal2.GetTextFieldValue("Name");
 
         Icon2x0MobActorType t = new()
         {
@@ -71,15 +79,15 @@ public class Icon2x0MobActorType : Icon2x0Base
 
         ActorPersistence a = new();
         a.Name = t.Label();
-        a.Token = TokenLibrary.GetSelectedMeta();
+        a.Token = TokenLibraryModal.GetToken(token);
         a.Color = ColorUtility.GetCommonColor("gray");
-        a.Shape = shape;
+        a.Shape = "Square 1x1";
         a.Position = Vector3.zero;
         a.Placed = false;
         a.ActorType = JsonUtility.ToJson(t);
         a.ActorTypeId = TypeName;
         string json = JsonUtility.ToJson(a);
-        AddActor.FinalizeToken(json);
+        global::AddActorModal.FinalizeToken(json);
     }
     #endregion
 
@@ -93,22 +101,12 @@ public class Icon2x0MobActorType : Icon2x0Base
         return "UI/TableTop/Overheads/PipCounter";
     }
 
-    public override MenuItem[] GetMenuItems(bool placed)
+    public override List<MenuItem> GetMenuItems(bool placed)
     {
-        MenuItem[] baseItems = base.GetMenuItems(placed);
-
-        List<MenuItem> items = new();
-        items.Add(new MenuItem("ModVig", "Modify VIG", (evt) => { NumberPicker.ActorCommand("ModVIG"); }));
-        if (Hits < 2)
-        {
-            items.Add(new MenuItem("RestoreHit", "Restore Hit", (evt) =>
-            {
-                Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, "RestoreHit");
-                SelectionMenu.Hide();
-            }));
-        }
-
-        return baseItems.Concat(items.ToArray()).ToArray();
+        var baseItems = base.GetMenuItems(placed);
+        var changeValues = FindParent("Change Values", baseItems);
+        changeValues.Children.Add(new MenuItem("Modify Vigor", () => { NumberPicker.ActorCommand("ModVIG"); }));
+        return baseItems;
     }
 
     public override void Command(string command, ActorData tokenData)
@@ -180,14 +178,25 @@ public class Icon2x0MobActorType : Icon2x0Base
         base.InitPanel(actorData, elementName, selected);
         VisualElement panel = UI.System.Q(elementName);
 
-        Label l = new();
-        l.name = "MainHPLabel";
-        l.text = MobHPString();
-        l.style.color = Color.red;
-        l.style.unityTextOutlineColor = Color.white;
-        l.style.unityTextOutlineWidth = 1;
-        l.style.fontSize = 26;
-        panel.Q("Bars").Add(l);
+        if (selected)
+        {
+            VisualElement hppips = PipsBar("MainHPLabel", "■", Hits, 2, Color.red,
+                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "Damage|1"); },
+                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "RestoreHit"); }
+            );
+            panel.Q("Bars").Add(hppips);
+        }
+        else
+        {
+            Label l = new();
+            l.name = "MainHPLabel";
+            l.text = SymbolString("■", Hits, 2);
+            l.style.color = Color.red;
+            l.style.unityTextOutlineColor = Color.white;
+            l.style.unityTextOutlineWidth = 1;
+            l.style.fontSize = 26;
+            panel.Q("Bars").Add(l);
+        }
 
         VisualElement s3 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
         s3.Q<Label>("Label").text = "MOVE";
@@ -215,7 +224,18 @@ public class Icon2x0MobActorType : Icon2x0Base
         {
             sb.Append(x);
         }
-        sb.Append("</color>");
+        if (Vigor + Hits < 2)
+        {
+            sb.Append("<color=white>");
+            for (int i = 0; i < 2 - Hits - Vigor; i++)
+            {
+                sb.Append(x);
+            }
+        }
+        else
+        {
+            sb.Append("</color>");
+        }
         return sb.ToString();
     }
 

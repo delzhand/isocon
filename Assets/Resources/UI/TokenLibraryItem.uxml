@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/Styles/TokenLibrary.uss?fileID=7433441132597879392&amp;guid=9a90f223b1cb6ca4bb1bee02dc009ec8&amp;type=3#TokenLibrary"/>
+    <ui:VisualElement name="TokenLibraryItem" style="flex-grow: 1; padding-right: 20px; padding-top: 2px; padding-bottom: 2px; padding-left: 2px; margin-right: -4px;">
+        <ui:Button text="" name="Item" style="flex-shrink: 1; flex-direction: row; align-items: flex-start; align-self: flex-start; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; background-color: rgba(188, 188, 188, 0); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; flex-grow: 1;">
+            <ui:VisualElement name="FrameContainer" style="border-top-left-radius: 6px; border-top-right-radius: 6px; border-bottom-right-radius: 6px; border-bottom-left-radius: 6px; align-self: center; align-items: center; background-color: rgba(255, 255, 255, 0.36); justify-content: flex-end;">
+                <ui:VisualElement name="Frame" style="flex-grow: 0;">
+                    <ui:VisualElement name="Sprite" style="flex-grow: 1;"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; align-items: stretch; align-self: flex-start;">
+                <ui:VisualElement name="Info" style="flex-grow: 1; align-items: center; flex-direction: row; justify-content: flex-start; align-self: flex-start;">
+                    <ui:Label text="Label" name="Name" style="flex-grow: 1; -unity-text-align: middle-left; margin-left: 16px;"/>
+                    <ui:Button text="" name="Favorite" style="background-color: rgba(188, 188, 188, 0); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+                        <ui:Label text="❤" name="Label" tooltip="Favorite" style="font-size: 24px; color: rgb(255, 255, 255);"/>
+                    </ui:Button>
+                    <ui:Button text="" name="Configure" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 8px; background-color: rgba(188, 188, 188, 0); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0;">
+                        <ui:VisualElement name="" tooltip="Configure" style="flex-grow: 0; background-image: resource(&quot;Icons/settings&quot;); width: 20px; height: 20px; margin-left: 0;"/>
+                    </ui:Button>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:Button>
+    </ui:VisualElement>
+</ui:UXML>

@@ -96,6 +96,7 @@ public class TerrainController
         ReorgNeeded = true;
         Environment.SetBackgroundColors(Environment.BgBottomColor, Environment.BgTopColor);
         BlockRendering.ToggleHex(GridType == "Hex");
+        Block.ToggleIndicators(Preferences.Current.ShowIndicators);
     }
 
     public static void ResetTerrain(int width, int length, int height)
@@ -119,18 +120,28 @@ public class TerrainController
 
     public static void AddHeight(Block block)
     {
+        if (MapEditingState.AltMode)
+        {
+            RemoveBlock(block);
+            return;
+        }
+
         Column column = block.transform.parent.GetComponent<Column>();
         if (MapEditingState.MarkedColumns.Contains(column))
         {
             return;
         }
         MapEditingState.MarkedColumns.Add(column);
+
         GameObject currentTop = TopBlock(column.gameObject);
         GameObject newblock = GameObject.Instantiate(Resources.Load("Prefabs/Block") as GameObject);
         newblock.transform.parent = block.transform.parent;
         newblock.transform.localPosition = new Vector3(0, currentTop.transform.localPosition.y + 1, 0);
         newblock.transform.localScale = block.transform.localScale;
         newblock.GetComponent<Block>().CopyStyle(currentTop.GetComponent<Block>(), true);
+        newblock.transform.Find("Indicator").gameObject.SetActive(Preferences.Current.ShowIndicators);
+        string coords = StringUtility.ConvertIntToAlpha(block.Coordinate.y + 1) + "" + (block.Coordinate.x + 1);
+        newblock.transform.Find("Indicator").GetComponent<TextMeshPro>().text = coords;
         ReorgNeeded = true;
     }
 
@@ -159,6 +170,13 @@ public class TerrainController
 
     public static void RotateBlock(Block block)
     {
+        Column column = block.transform.parent.GetComponent<Column>();
+        if (MapEditingState.MarkedColumns.Contains(column))
+        {
+            return;
+        }
+        MapEditingState.MarkedColumns.Add(column);
+
         if (GridType == "Square")
         {
             block.transform.Rotate(0, 90f, 0);
@@ -225,6 +243,12 @@ public class TerrainController
 
     public static void CloneRow(Block block)
     {
+        if (!MapEditingState.ClickAvailable)
+        {
+            return;
+        }
+        MapEditingState.ClickAvailable = false;
+
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         for (int i = 0; i < columns.Length; i++)
         {
@@ -258,6 +282,12 @@ public class TerrainController
 
     public static void DeleteRow(Block block)
     {
+        if (!MapEditingState.ClickAvailable)
+        {
+            return;
+        }
+        MapEditingState.ClickAvailable = false;
+
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         int selectedX = block.transform.parent.GetComponent<Column>().X;
         for (int i = 0; i < columns.Length; i++)
@@ -281,6 +311,12 @@ public class TerrainController
 
     public static void CloneColumn(Block block)
     {
+        if (!MapEditingState.ClickAvailable)
+        {
+            return;
+        }
+        MapEditingState.ClickAvailable = false;
+
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         for (int i = 0; i < columns.Length; i++)
         {
@@ -314,6 +350,12 @@ public class TerrainController
 
     public static void DeleteColumn(Block block)
     {
+        if (!MapEditingState.ClickAvailable)
+        {
+            return;
+        }
+        MapEditingState.ClickAvailable = false;
+
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         int selectedY = block.transform.parent.GetComponent<Column>().Y;
         for (int i = 0; i < columns.Length; i++)
@@ -337,6 +379,12 @@ public class TerrainController
 
     public static void AddLayer()
     {
+        if (!MapEditingState.ClickAvailable)
+        {
+            return;
+        }
+        MapEditingState.ClickAvailable = false;
+
         GameObject[] columns = GameObject.FindGameObjectsWithTag("Column");
         foreach (GameObject column in columns)
         {
@@ -354,6 +402,12 @@ public class TerrainController
 
     public static void ChangeShape(Block block)
     {
+        if (!MapEditingState.ClickAvailable)
+        {
+            return;
+        }
+        MapEditingState.ClickAvailable = false;
+
         BlockShape shape = BlockShape.Solid;
         switch (MapEdit.ShapeOp)
         {
@@ -382,8 +436,14 @@ public class TerrainController
                 shape = BlockShape.SlopeExt;
                 break;
         }
-        block.ShapeChange(shape);
-        RotateBlock(block);
+        if (block.Shape == shape)
+        {
+            RotateBlock(block);
+        }
+        else
+        {
+            block.ShapeChange(shape);
+        }
         ReorgNeeded = true;
     }
 
@@ -527,6 +587,30 @@ public class TerrainController
         }
     }
 
+    public static Block[] FindAdjacent(Block origin)
+    {
+        var offsets = new List<(int, int)>
+        {
+            (-1, 0),
+            (1, 0),
+            (0, -1),
+            (0, 1)
+        };
+        List<Block> neighbors = new();
+        for (int i = 0; i < offsets.Count; i++)
+        {
+            int x = origin.Coordinate.x + offsets[i].Item1;
+            int y = origin.Coordinate.y + offsets[i].Item2;
+            GameObject col = GameObject.Find($"{x},{y}");
+            GameObject topBlockObj = TopBlock(col);
+            if (topBlockObj)
+            {
+                neighbors.Add(topBlockObj.GetComponent<Block>());
+            }
+        }
+        return neighbors.ToArray();
+    }
+
     public static Block[] FindNeighbors(Block origin, int radius)
     {
         int[,] offsets = {
@@ -642,39 +726,6 @@ public class TerrainController
         Light l = GameObject.Find("Light").GetComponent<Light>();
         l.intensity = LightIntensity;
         l.transform.eulerAngles = new Vector3(LightHeight, LightAngle, 0);
-    }
-
-    public static void ToggleTerrainEffectMode(ClickEvent evt)
-    {
-        // // Disable map edit mode if necessary
-        // if (Cursor.Mode == CursorMode.Editing)
-        // {
-        //     MapEdit.ToggleEditMode(evt);
-        // }
-
-        // if (Cursor.Mode != CursorMode.Marking)
-        // {
-        //     Tutorial.Init("terrain effect mode");
-        //     Cursor.Mode = CursorMode.Marking;
-        //     Token.DeselectAll();
-        //     Token.UnfocusAll();
-        //     BlockMesh.ToggleAllBorders(true);
-        //     UI.ToggleActiveClass("MarkerMode", true);
-        //     UI.ToggleDisplay("BottomBar", false);
-        //     UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), false);
-        //     Player.Self().SetOp("Editing Terrain Effects");
-        // }
-        // else
-        // {
-        //     Cursor.Mode = CursorMode.Default;
-        //     BlockMesh.ToggleAllBorders(false);
-        //     UI.ToggleActiveClass("MarkerMode", false);
-        //     Block.DeselectAll();
-        //     UI.ToggleDisplay("BottomBar", true);
-        //     UI.ToggleDisplay(UI.System.Q("TopRight").Q("Turn"), true);
-        //     SelectionMenu.Hide();
-        //     Player.Self().ClearOp();
-        // }
     }
 
     private static int MaxElevation()

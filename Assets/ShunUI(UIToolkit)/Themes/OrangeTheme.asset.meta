@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0b04875022c9517449446a0f5c64748c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Themes/OrangeTheme.asset
+  uploadId: 870216

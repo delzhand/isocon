@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss?fileID=7433441132597879392&amp;guid=812bff3d2981add4fa9165957ba1034b&amp;type=3#ShunStyle" />
+    <ui:VisualElement>
+        <shun:ShunAlertDialog is-open="false" title="Are you absolutely sure?" description="This action cannot be undone. This will permanently delete your account and remove your data from our servers." cancelText="Cancel" actionText="Continue">
+            <shun:ShunAlertDialogTrigger text="Show Dialog" />
+        </shun:ShunAlertDialog>
+    </ui:VisualElement>
+</ui:UXML>

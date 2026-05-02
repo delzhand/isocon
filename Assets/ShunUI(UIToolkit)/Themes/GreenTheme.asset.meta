@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c1959a9e2c6813248ba31e6d7c89827a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Themes/GreenTheme.asset
+  uploadId: 870216

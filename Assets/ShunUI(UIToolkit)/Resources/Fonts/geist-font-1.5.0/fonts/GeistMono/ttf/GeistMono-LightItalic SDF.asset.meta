@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 133556e0a3d03134fa7091be84e1be9d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 340556
+  packageName: Shun UI (UI Toolkit version) - Shadcn-Inspired Components
+  packageVersion: 1.0.3
+  assetPath: Assets/ShunUI(UIToolkit)/Resources/Fonts/geist-font-1.5.0/fonts/GeistMono/ttf/GeistMono-LightItalic
+    SDF.asset
+  uploadId: 870216

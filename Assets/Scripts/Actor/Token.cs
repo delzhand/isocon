@@ -39,23 +39,6 @@ public class Token
         Height = image.height;
     }
 
-    private Token(Token original)
-    {
-        Name = original.Name;
-        FPS = original.FPS;
-        Frames = original.Frames;
-        Hash = original.Hash;
-        Favorite = original.Favorite;
-        Width = original.Width;
-        Height = original.Height;
-        ChunkCount = original.ChunkCount;
-    }
-
-    public static Token Copy(Token meta)
-    {
-        return new Token(meta);
-    }
-
     public static string GetHash(Texture2D texture)
     {
         // Convert the texture data to a byte array

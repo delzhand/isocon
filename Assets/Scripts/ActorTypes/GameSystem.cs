@@ -33,6 +33,10 @@ public class GameSystem : MonoBehaviour
 
     public void Command(string value)
     {
+        if (value.StartsWith("ClearTags"))
+        {
+            ClearTags();
+        }
         if (value.StartsWith("AddTag"))
         {
             string[] parts = value.Split("|");
@@ -77,14 +81,14 @@ public class GameSystem : MonoBehaviour
 
     private void UpdateTags()
     {
-        UI.System.Q("TopRight").Q("Pills").Q("Wrapper").Clear();
+        UI.System.Q("TopRight").Q("Pills").Clear();
         foreach (GameSystemTag tag in Tags)
         {
             VisualElement p = null;
             switch (tag.Type)
             {
                 case "Simple":
-                    p = Pill.InitStatic(tag.Name, tag.Name, tag.Color);
+                    p = Pill.InitRemovable(tag.Name, tag.Name, tag.Color, false);
                     break;
                 case "Number":
                     p = Pill.InitNumber(tag.Name, tag.Name, tag.Value, 0, tag.Color, false);
@@ -93,13 +97,13 @@ public class GameSystem : MonoBehaviour
                     p = Pill.InitNumber(tag.Name, tag.Name, tag.Value, tag.MaxValue, tag.Color, false);
                     break;
             }
-            UI.System.Q("TopRight").Q("Pills").Q("Wrapper").Add(p);
+            UI.System.Q("TopRight").Q("Pills").Add(p);
         }
     }
 
     public void ClearTags()
     {
         Tags.Clear();
-        UI.System.Q("TopRight").Q("Pills").Q("Wrapper").Clear();
+        UI.System.Q("TopRight").Q("Pills").Clear();
     }
 }

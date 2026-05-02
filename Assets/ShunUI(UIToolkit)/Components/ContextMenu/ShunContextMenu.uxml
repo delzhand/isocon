@@ -1,0 +1,29 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:shun="ShunUI" xmlns:primitives="ShunUI.Primitives" editor-extension-mode="False">
+    <Style src="project://database/Assets/ShunUI(UIToolkit)/Resources/ShunStyle.uss" />
+    
+    <ui:VisualElement style="flex-grow: 1;">
+        <!-- Trigger area - right click here to open context menu -->
+        <ui:VisualElement name="trigger-area" class="context-menu-trigger-area">
+            <ui:Label text="Right click here" class="context-menu-trigger-label" />
+        </ui:VisualElement>
+        
+        <!-- Context Menu with default items from shadcn example -->
+        <shun:ShunContextMenu>
+            <primitives:ShunMenuItemBase label="Back" />
+            <primitives:ShunMenuItemBase label="Forward" />
+            <primitives:ShunMenuItemBase label="Reload" />
+            <primitives:ShunMenuSeparator />
+            <primitives:ShunMenuItemBase label="More Tools" has-arrow="true">
+                <primitives:ShunMenuItemBase label="Save Page As..." />
+                <primitives:ShunMenuItemBase label="Create Shortcut..." />
+                <primitives:ShunMenuItemBase label="Name Window..." />
+                <primitives:ShunMenuSeparator />
+                <primitives:ShunMenuItemBase label="Developer Tools" />
+            </primitives:ShunMenuItemBase>
+            <primitives:ShunMenuItemBase label="Keyboard Shortcuts" />
+            <primitives:ShunMenuSeparator />
+            <primitives:ShunMenuItemBase label="Show Bookmarks" />
+            <primitives:ShunMenuItemBase label="Show Full URLs" />
+        </shun:ShunContextMenu>
+    </ui:VisualElement>
+</ui:UXML>

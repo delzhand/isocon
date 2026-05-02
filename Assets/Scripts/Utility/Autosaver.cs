@@ -21,9 +21,17 @@ public class Autosaver : MonoBehaviour
 
         if (Timer <= 0)
         {
-            Session.SerializeSession("autosave.json");
+            SessionManager.SerializeSession($"{Preferences.Current.DataPath}/sessions/autosave.json", false);
+            Toast.Add($"Autosaving...", "", ShunUI.ToastVariant.Success);
             Timer += Preferences.Current.AutosaveInterval;
         }
 
+    }
+
+    public static void Immediate()
+    {
+        SessionManager.SerializeSession($"{Preferences.Current.DataPath}/sessions/autosave.json", false);
+        Toast.Add($"Autosaving...", "", ShunUI.ToastVariant.Success);
+        Timer = Preferences.Current.AutosaveInterval;
     }
 }

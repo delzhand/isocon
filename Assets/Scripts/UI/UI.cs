@@ -21,15 +21,15 @@ public class UI : MonoBehaviour
 
     void Update()
     {
-        List<VisualElement> dropdowns = UI.System.parent.Query(null, "unity-base-dropdown__container-outer").ToList();
-        if (dropdowns.Count > 0)
-        {
-            hardSuspend = true;
-        }
-        else
-        {
-            hardSuspend = false;
-        }
+        // List<VisualElement> dropdowns = UI.System.parent.Query(null, "unity-base-dropdown__container-outer").ToList();
+        // if (dropdowns.Count > 0)
+        // {
+        //     hardSuspend = true;
+        // }
+        // else
+        // {
+        //     hardSuspend = false;
+        // }
     }
 
     void LateUpdate()
@@ -87,13 +87,13 @@ public class UI : MonoBehaviour
         }
     }
 
-    public static VisualElement TopBar
-    {
-        get
-        {
-            return UI.System.Q("TopBar");
-        }
-    }
+    // public static VisualElement TopBar
+    // {
+    //     get
+    //     {
+    //         return UI.System.Q("TopBar");
+    //     }
+    // }
 
     public static VisualElement NumberPicker
     {
@@ -154,6 +154,16 @@ public class UI : MonoBehaviour
             element.style.left = pos.x;
             element.style.top = pos.y;
         }
+    }
+
+    public static Vector2 GetTransformScreenPosition(Transform transform, VisualElement space, Camera camera)
+    {
+        Vector3 viewportPos = camera.WorldToViewportPoint(transform.position);
+        Vector2 screenPos = new Vector2(
+            Mathf.RoundToInt((viewportPos.x * space.resolvedStyle.width)),
+            Mathf.RoundToInt((1f - viewportPos.y) * space.resolvedStyle.height)
+        );
+        return screenPos;
     }
 
     public static bool InElement(string elementName)
