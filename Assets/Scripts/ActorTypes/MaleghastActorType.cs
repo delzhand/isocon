@@ -316,6 +316,7 @@ public class MaleghastActorType : ActorType
 
 
         mg.Children.Add(new MenuItem("Add Token", AddTokenModal));
+        mg.Children.Add(new MenuItem("Add Status", AddStatusModal));
 
         mg.Children.Add(new MenuItem("Alter Stats", AlterStatModal));
 
@@ -381,11 +382,38 @@ public class MaleghastActorType : ActorType
                 ActorTag tag = new();
                 tag.Name = token;
                 tag.Color = actor.Data.Color;
+                tag.HasNumber = true;
+                tag.Value = 1;
                 Player.Self().CmdRequestActorCommand(actor.Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
             }
             else
             {
                 Toast.AddError($"{actor.Data.Name} already has {token}");
+            }
+        });
+        Modal2.Open("Add Token");
+    }
+
+    private void AddStatusModal()
+    {
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddComboboxField("Status", "Status", "", GetStatuses());
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Add", () =>
+        {
+            Modal2.ReadContext("PrimaryDialog");
+            string status = Modal2.GetComboboxFieldValue("Status");
+            Actor actor = Actor.GetSelected();
+            if (!HasTag(status))
+            {
+                ActorTag tag = new();
+                tag.Name = status;
+                tag.Color = actor.Data.Color;
+                Player.Self().CmdRequestActorCommand(actor.Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
+            }
+            else
+            {
+                Toast.AddError($"{actor.Data.Name} already has {status}");
             }
         });
         Modal2.Open("Add Token");
@@ -452,6 +480,17 @@ public class MaleghastActorType : ActorType
         List<string> tokens = new();
         JSONNode gamedata = GetData();
         foreach (JSONNode token in gamedata["Tokens"].AsArray)
+        {
+            tokens.Add(token);
+        }
+        return tokens;
+    }
+
+    private static List<string> GetStatuses()
+    {
+        List<string> tokens = new();
+        JSONNode gamedata = GetData();
+        foreach (JSONNode token in gamedata["Statuses"].AsArray)
         {
             tokens.Add(token);
         }
