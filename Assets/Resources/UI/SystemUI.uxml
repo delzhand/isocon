@@ -54,10 +54,10 @@
         </ui:VisualElement>
         <ui:Button text="v0.0.0" name="Version" style="position: absolute; left: 0; bottom: 0; width: 100%; background-color: rgba(255, 255, 255, 0); border-left-color: rgba(100, 100, 100, 0); border-right-color: rgba(100, 100, 100, 0); border-top-color: rgba(100, 100, 100, 0); border-bottom-color: rgba(100, 100, 100, 0); color: rgb(255, 255, 255);"/>
     </ui:VisualElement>
-    <ui:VisualElement name="Tabletop" style="flex-grow: 1; position: absolute; left: 0; top: -1px; right: 0; bottom: 0; display: none;">
+    <ui:VisualElement name="Tabletop" style="flex-grow: 1; position: absolute; left: 0; top: -1px; right: 0; bottom: 0; display: flex;">
         <ui:VisualElement name="Frame" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: auto; justify-content: flex-start; flex-grow: 1; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px; display: flex; min-height: 0; min-width: 0;">
-            <ui:Instance template="ShunMenuBar" name="MainMenu" style="align-items: auto; align-self: flex-start;"/>
             <ui:VisualElement name="CurrentOps" class="panel-text" style="flex-grow: 1; top: 10px; position: absolute; left: 0; translate: 0 0; flex-direction: row; margin-left: -4px; margin-right: -4px; width: 100%; justify-content: center; align-items: center; align-self: center;"/>
+            <ui:Instance template="ShunMenuBar" name="MainMenu" style="align-items: auto; align-self: flex-start;"/>
             <ui:VisualElement name="RightTokenPanel" class="panel edit-panel" style="position: absolute; display: flex; -unity-background-image-tint-color: rgba(255, 255, 255, 0); transition-property: right, opacity; transition-duration: 0.3s, 0.3s; transition-timing-function: ease-in-out, ease-in-out; bottom: 10px; align-items: flex-end;">
                 <ui:VisualElement style="flex-grow: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: resource(&quot;Textures/gradient 4&quot;); -unity-background-image-tint-color: rgb(0, 0, 0);"/>
                 <ui:VisualElement name="StatsBars" style="flex-direction: row-reverse; position: relative; align-items: flex-end; right: 94px; bottom: 4px;">
