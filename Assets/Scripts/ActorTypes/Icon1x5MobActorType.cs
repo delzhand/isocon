@@ -164,11 +164,17 @@ public class Icon1x5MobActorType : Icon1x5Base
         }
         if (command == "TakeHit")
         {
-            if (Hits > 0)
+            if (Vigor > 0)
+            {
+                Vigor -= 1;
+                PopoverText.Create(token, $"/-1|_VIG", Color.white);
+            }
+            else if (Hits > 0)
             {
                 Hits -= 1;
                 PopoverText.Create(token, $"/-1|_HIT", Color.white);
             }
+            UpdateGraphic(tokenData);
         }
         if (command.StartsWith("ModVIG"))
         {
@@ -212,8 +218,8 @@ public class Icon1x5MobActorType : Icon1x5Base
         if (selected)
         {
             VisualElement hppips = PipsBar("MainHPLabel", "■", Hits, 2, Color.red,
-                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "ModHP|-1"); },
-                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "ModHP|1"); }
+                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "TakeHit"); },
+                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "RestoreHit"); }
             );
             panel.Q("Bars").Add(hppips);
         }
@@ -260,7 +266,18 @@ public class Icon1x5MobActorType : Icon1x5Base
         {
             sb.Append(x);
         }
-        sb.Append("</color>");
+        if (Vigor + Hits < 2)
+        {
+            sb.Append("<color=white>");
+            for (int i = 0; i < 2 - Hits - Vigor; i++)
+            {
+                sb.Append(x);
+            }
+        }
+        else
+        {
+            sb.Append("</color>");
+        }
         return sb.ToString();
     }
 

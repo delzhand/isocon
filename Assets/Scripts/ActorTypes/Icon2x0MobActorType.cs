@@ -181,8 +181,8 @@ public class Icon2x0MobActorType : Icon2x0Base
         if (selected)
         {
             VisualElement hppips = PipsBar("MainHPLabel", "■", Hits, 2, Color.red,
-                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "ModHP|-1"); },
-                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "ModHP|1"); }
+                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "Damage|1"); },
+                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "RestoreHit"); }
             );
             panel.Q("Bars").Add(hppips);
         }
@@ -224,7 +224,18 @@ public class Icon2x0MobActorType : Icon2x0Base
         {
             sb.Append(x);
         }
-        sb.Append("</color>");
+        if (Vigor + Hits < 2)
+        {
+            sb.Append("<color=white>");
+            for (int i = 0; i < 2 - Hits - Vigor; i++)
+            {
+                sb.Append(x);
+            }
+        }
+        else
+        {
+            sb.Append("</color>");
+        }
         return sb.ToString();
     }
 
