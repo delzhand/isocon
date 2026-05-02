@@ -56,8 +56,12 @@ public class ReleaseNotesModal
 * Dialogs can now be closed by clicking anywhere outside of them
 * Last-used actor type is remembered in Add Actor dialog
 * File browser now uses dark theme
+* Moving player operation text now shows lateral tiles moved (square grid only)
+* Unit types with HP pips can modify health directly from the unit panel while selected
 <size=+2><b>Fixes</b></size>
 * Multiple click events no longer trigger off a single click in edit mode
+<size=+2><b>Known Issues</b></size>
+* Memory leak - as temporary mitigation a silent, automated task will run every five minutes to clear unused assets from memory
 ");
 
         notes.Add("0.8.2", @"<size=+2><b>Fixes</b></size>
