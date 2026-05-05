@@ -1,6 +1,13 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/Resources/Styles/Overhead.uss?fileID=7433441132597879392&amp;guid=db9f5488cbd5b104699c060ac772337b&amp;type=3#Overhead"/>
     <ui:VisualElement name="Overhead" class="token" style="translate: -50% -50%; width: 60px;">
+        <ui:VisualElement name="Markers" style="flex-direction: row; justify-content: center; align-items: center; align-self: center; height: 40px; padding-bottom: 2px; -unity-font-definition: resource(&quot;Fonts/geist-font-1.5.0/fonts/Geist/ttf/Geist-ExtraBoldItalic&quot;); font-size: 16px;">
+            <ui:VisualElement name="MarkerTemplate" class="mg-marker" style="display: none;">
+                <ui:VisualElement name="Icon" class="mg-marker__icon" style="background-image: resource(&quot;Textures/GameSystem/Maleghast/MarkerStrength&quot;);">
+                    <ui:Label text="2" name="Count" class="mg-marker__count"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
         <ui:Label text="▰▰" name="Pips" style="margin-top: -8px; margin-right: 0; margin-bottom: -8px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: middle-center; -unity-text-outline-width: 1px; -unity-text-outline-color: rgb(255, 255, 255); color: rgb(228, 0, 22); font-size: 28px; -unity-paragraph-spacing: 0; top: auto; display: flex;"/>
     </ui:VisualElement>
 </ui:UXML>

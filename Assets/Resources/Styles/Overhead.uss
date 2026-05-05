@@ -115,23 +115,23 @@
 #Overhead #Color.blue {
     background-color: #00a2ff;
 }
-  
+
 #Overhead #Color.red {
     background-color: #ee220c;
 }
-  
+
 #Overhead #Color.yellow {
     background-color: #feae00;
 }
-  
+
 #Overhead #Color.green {
     background-color: #61d836;
 }
-  
+
 #Overhead #Color.gray {
     background-color: #929292;
 }
-  
+
 #Overhead #Color.purple {
     background-color: #ca55ef;
 }
@@ -141,8 +141,29 @@
     border-color: white;
     height: 7px;
 }
+
 #Overhead #HpBar {
     border-width: 1px;
     border-color: white;
     height: 7px;
+}
+
+.mg-marker {}
+
+.mg-marker__icon {
+    width: 40px;
+    height: 40px;
+}
+
+.mg-marker__count {
+    position: absolute;
+    right: -4px;
+    bottom: -4px;
+    background-color: #000000ff;
+    border-radius: 50%;
+    margin: 0;
+    padding: 0;
+    height: 20px;
+    width: 20px;
+    -unity-text-align: middle-center;
 }

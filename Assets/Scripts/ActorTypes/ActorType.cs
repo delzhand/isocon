@@ -19,7 +19,7 @@ public interface IActorType
     void UpdateOverhead(ActorData actorData);
     void UpdatePanel(ActorData actorData, string elementName);
     void InitPanel(ActorData actorData, string elementName, bool selected = false);
-
+    void InitOverhead(ActorData actorData);
 }
 
 [Serializable]
@@ -360,7 +360,10 @@ public abstract class ActorType : IActorType
             string[] parts = value.Split("|");
             ActorTag tag = JsonUtility.FromJson<ActorTag>(parts[1]);
             Tags.Add(tag);
-            PopoverText.Create(token, $"/+|_{tag.Name.ToUpper()}", Color.white);
+            if (tokenData.Placed)
+            {
+                PopoverText.Create(token, $"/+|_{tag.Name.ToUpper()}", Color.white);
+            }
             Actor.RebuildPanels = true;
         }
         if (value.StartsWith("IncrementTag"))
@@ -446,6 +449,11 @@ public abstract class ActorType : IActorType
 
     public virtual void UpdatePanel(ActorData tokenData, string elementName)
     {
+    }
+
+    public virtual void InitOverhead(ActorData actorData)
+    {
+
     }
 
     public virtual void InitPanel(ActorData actorData, string elementName, bool selected = false)

@@ -9,11 +9,13 @@ using System.Text;
 using IsoconUILibrary;
 using ShunUI;
 using SimpleFileBrowser;
+using Unity.VisualScripting;
 
 [Serializable]
 public class MaleghastActorType : ActorType
 {
     private readonly static string TypeName = "Maleghast Unit";
+    private static Dictionary<string, Texture2D> MarkerTextures;
 
     #region Registration
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -22,6 +24,41 @@ public class MaleghastActorType : ActorType
         ActorTypeRegistry.RegisterSystem($"{TypeName}");
         ActorTypeRegistry.RegisterInterfaceCallback($"{TypeName}", DeserializeAsInterface);
         ActorTypeRegistry.RegisterSimpleCallback($"{TypeName}|AddActorModal", AddActorModal);
+
+        MarkerTextures = new();
+        string dir = "Textures/GameSystem/Maleghast";
+        MarkerTextures.Add("Activated", Resources.Load<Texture2D>($"{dir}/MarkerActivated"));
+        MarkerTextures.Add("Berserk", Resources.Load<Texture2D>($"{dir}/MarkerBerserk"));
+        MarkerTextures.Add("Buff", Resources.Load<Texture2D>($"{dir}/MarkerBuff"));
+        MarkerTextures.Add("Burst", Resources.Load<Texture2D>($"{dir}/MarkerBurst"));
+        MarkerTextures.Add("Deathburst", Resources.Load<Texture2D>($"{dir}/MarkerDeathburst"));
+        MarkerTextures.Add("Debt", Resources.Load<Texture2D>($"{dir}/MarkerDebt"));
+        MarkerTextures.Add("Debuff", Resources.Load<Texture2D>($"{dir}/MarkerDebuff"));
+        MarkerTextures.Add("Doom", Resources.Load<Texture2D>($"{dir}/MarkerDoom"));
+        MarkerTextures.Add("Evolve 1", Resources.Load<Texture2D>($"{dir}/MarkerEvolve1"));
+        MarkerTextures.Add("Evolve 2", Resources.Load<Texture2D>($"{dir}/MarkerEvolve2"));
+        MarkerTextures.Add("Guilt", Resources.Load<Texture2D>($"{dir}/MarkerGuilt"));
+        MarkerTextures.Add("Luck", Resources.Load<Texture2D>($"{dir}/MarkerLuck"));
+        MarkerTextures.Add("Lunacy", Resources.Load<Texture2D>($"{dir}/MarkerLunacy"));
+        MarkerTextures.Add("Madness", Resources.Load<Texture2D>($"{dir}/MarkerMadness"));
+        MarkerTextures.Add("Mutation", Resources.Load<Texture2D>($"{dir}/MarkerMutation"));
+        MarkerTextures.Add("Petrify", Resources.Load<Texture2D>($"{dir}/MarkerPetrify"));
+        MarkerTextures.Add("Plague", Resources.Load<Texture2D>($"{dir}/MarkerPlague"));
+        MarkerTextures.Add("Provoke", Resources.Load<Texture2D>($"{dir}/MarkerProvoke"));
+        MarkerTextures.Add("Slow", Resources.Load<Texture2D>($"{dir}/MarkerSlow"));
+        MarkerTextures.Add("Speed", Resources.Load<Texture2D>($"{dir}/MarkerSpeed"));
+        MarkerTextures.Add("Strength", Resources.Load<Texture2D>($"{dir}/MarkerStrength"));
+        MarkerTextures.Add("Corpse", Resources.Load<Texture2D>($"{dir}/MarkerCorpse"));
+        MarkerTextures.Add("Curseproof", Resources.Load<Texture2D>($"{dir}/MarkerCurseproof"));
+        MarkerTextures.Add("Flight", Resources.Load<Texture2D>($"{dir}/MarkerFlight"));
+        MarkerTextures.Add("Grapple", Resources.Load<Texture2D>($"{dir}/MarkerGrapple"));
+        MarkerTextures.Add("Lurk", Resources.Load<Texture2D>($"{dir}/MarkerLurk"));
+        MarkerTextures.Add("Magic Armor", Resources.Load<Texture2D>($"{dir}/MarkerArmorMAG"));
+        MarkerTextures.Add("Miracle", Resources.Load<Texture2D>($"{dir}/MarkerMiracle"));
+        MarkerTextures.Add("Phys Armor", Resources.Load<Texture2D>($"{dir}/MarkerArmorPHYS"));
+        MarkerTextures.Add("Retaliation", Resources.Load<Texture2D>($"{dir}/MarkerRetaliation"));
+        MarkerTextures.Add("Reload", Resources.Load<Texture2D>($"{dir}/MarkerReload"));
+        MarkerTextures.Add("Super Armor", Resources.Load<Texture2D>($"{dir}/MarkerArmorSUPER2"));
     }
     public override string Serialize()
     {
@@ -232,7 +269,7 @@ public class MaleghastActorType : ActorType
 
     public override string GetOverheadAsset()
     {
-        return "UI/TableTop/Overheads/PipCounter";
+        return "UI/TableTop/Overheads/Maleghast";
     }
 
     public override void UpdateOverhead(ActorData tokenData)
@@ -242,13 +279,55 @@ public class MaleghastActorType : ActorType
         UI.ToggleDisplay(o, CurrentHP > 0 && tokenData.Placed);
     }
 
-    public override void UpdatePanel(ActorData tokenData, string elementName)
+    public override void UpdatePanel(ActorData actorData, string elementName)
     {
-        base.UpdatePanel(tokenData, elementName);
+        base.UpdatePanel(actorData, elementName);
         VisualElement panel = UI.System.Q(elementName);
 
         Label mainHPLabel = panel.Q<Label>("MainHPLabel");
         mainHPLabel.text = SymbolString("■", CurrentHP, MaxHP);
+    }
+
+    public override void InitOverhead(ActorData actorData)
+    {
+        VisualElement o = actorData.OverheadElement.Q("Markers");
+        o.Clear();
+        foreach (ActorTag tag in Tags)
+        {
+            if (MarkerTextures.ContainsKey(tag.Name))
+            {
+                if (tag.HasNumber)
+                {
+                    o.Add(buildMarker(tag.Name, tag.Value));
+                }
+                else
+                {
+                    o.Add(buildMarker(tag.Name, -1));
+                }
+            }
+        }
+    }
+
+    private VisualElement buildMarker(string name, int count)
+    {
+        var marker = new VisualElement();
+        marker.AddToClassList("mg-marker");
+        marker.name = name;
+
+        var icon = new VisualElement();
+        icon.AddToClassList("mg-marker__icon");
+        Texture2D t = MarkerTextures[name];
+        icon.style.backgroundImage = t;
+
+        if (count >= 0)
+        {
+            var counter = new Label($"{count}");
+            counter.AddToClassList("mg-marker__count");
+            icon.Add(counter);
+        }
+
+        marker.Add(icon);
+        return marker;
     }
 
     public override void InitPanel(ActorData actorData, string elementName, bool selected)
@@ -325,7 +404,7 @@ public class MaleghastActorType : ActorType
             mg.Children.Add(new MenuItem("End Turn", () =>
             {
                 ActorTag tag = new();
-                tag.Name = "Turn Ended";
+                tag.Name = "Activated";
                 tag.Color = ColorUtility.GetCommonColor("gray");
                 Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
                 SelectionMenu.Hide();
@@ -419,21 +498,21 @@ public class MaleghastActorType : ActorType
         Modal2.Open("Add Token");
     }
 
-    public override void Command(string command, ActorData tokenData)
+    public override void Command(string command, ActorData actorData)
     {
-        Actor token = tokenData.GetActor();
-        base.Command(command, tokenData);
+        Actor actor = actorData.GetActor();
+        base.Command(command, actorData, popover: false);
         if (command.StartsWith("ModHP"))
         {
             int original = CurrentHP;
             int changeValue = int.Parse(command.Split("|")[1]);
             CurrentHP = Clamped(0, CurrentHP + changeValue, MaxHP);
             int diff = CurrentHP - original;
-            if (diff != 0 && tokenData.Placed)
+            if (diff != 0 && actorData.Placed)
             {
                 string plus = diff > 0 ? "+" : "";
-                PopoverText.Create(token, $"/{plus}{diff}|_HP", Color.white);
-                UpdateGraphic(tokenData);
+                PopoverText.Create(actor, $"/{plus}{diff}|_HP", Color.white);
+                UpdateGraphic(actorData);
             }
         }
         else if (command.StartsWith("UpdateStats"))
@@ -443,9 +522,12 @@ public class MaleghastActorType : ActorType
             MaxHP = lmu.MaxHP;
             Defense = lmu.Defense;
             Move = lmu.Move;
-            PopoverText.Create(token, $"_STAT|_CHANGE", Color.white);
+            PopoverText.Create(actor, $"_STAT|_CHANGE", Color.white);
         }
-
+        if (command.StartsWith("AddTag") || command.StartsWith("IncrementTag") || command.StartsWith("DecrementTag") || command.StartsWith("RemoveTag"))
+        {
+            InitOverhead(actorData);
+        }
     }
 
     private void UpdateGraphic(ActorData tokenData)
