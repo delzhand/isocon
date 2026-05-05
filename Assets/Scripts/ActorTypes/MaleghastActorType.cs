@@ -501,7 +501,7 @@ public class MaleghastActorType : ActorType
     public override void Command(string command, ActorData actorData)
     {
         Actor actor = actorData.GetActor();
-        base.Command(command, actorData, popover: false);
+        base.Command(command, actorData);
         if (command.StartsWith("ModHP"))
         {
             int original = CurrentHP;
