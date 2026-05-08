@@ -25,6 +25,10 @@ public class MainMenu
         sessionMenu.AddItem("Load", SessionManager.Load);
         sessionMenu.AddItem("Quit", TabletopState.ConfirmReturnToLauncher);
 
+        var gameMenu = menu.AddMenu("Game Tools");
+        gameMenu.AddItem("Maleghast Black Mass", MaleghastActorType.BlackMassGeneratorDialog);
+        gameMenu.AddItem("Maleghast Setup", MaleghastActorType.SetupDialog);
+
         var mapMenu = menu.AddMenu("Map");
         mapMenu.AddItem("Edit", () => StateManager.PushState(new MapEditingState()));
 
@@ -48,8 +52,8 @@ public class MainMenu
 
         // Add real items
         var editMenu = menu.AddMenu("Editing");
-        editMenu.AddItem("Sync Changes", MapEditingState.Sync);
-        editMenu.AddItem("Discard Changes", MapEditingState.Cancel);
+        editMenu.AddItem("End Edit and Sync Changes", MapEditingState.Sync);
+        editMenu.AddItem("End Edit and Discard", MapEditingState.Cancel);
 
         var dataMenu = menu.AddMenu("Data");
         dataMenu.AddItem("Reset Map", MapEditingState.ResetMap);

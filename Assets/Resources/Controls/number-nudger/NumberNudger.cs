@@ -48,6 +48,16 @@ namespace IsoconUILibrary
             }
         }
 
+        private int m_MaxValueInt;
+        public int maxValue
+        {
+            get => m_MaxValueInt;
+            set
+            {
+                m_MaxValueInt = value;
+            }
+        }
+
         // Implementation of INotifyValueChanged<int>
         private List<Action<int>> valueChangedCallbacks;
 
@@ -123,6 +133,10 @@ namespace IsoconUILibrary
         public void upClick(ClickEvent evt)
         {
             value = value + 1;
+            if (value > maxValue)
+            {
+                value = maxValue;
+            }
         }
     }
 }

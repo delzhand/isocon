@@ -55,7 +55,7 @@ public class MaleghastActorType : ActorType
         MarkerTextures.Add("Lurk", Resources.Load<Texture2D>($"{dir}/MarkerLurk"));
         MarkerTextures.Add("Magic Armor", Resources.Load<Texture2D>($"{dir}/MarkerArmorMAG"));
         MarkerTextures.Add("Miracle", Resources.Load<Texture2D>($"{dir}/MarkerMiracle"));
-        MarkerTextures.Add("Phys Armor", Resources.Load<Texture2D>($"{dir}/MarkerArmorPHYS"));
+        MarkerTextures.Add("Physical Armor", Resources.Load<Texture2D>($"{dir}/MarkerArmorPHYS"));
         MarkerTextures.Add("Retaliation", Resources.Load<Texture2D>($"{dir}/MarkerRetaliation"));
         MarkerTextures.Add("Reload", Resources.Load<Texture2D>($"{dir}/MarkerReload"));
         MarkerTextures.Add("Super Armor", Resources.Load<Texture2D>($"{dir}/MarkerArmorSUPER2"));
@@ -86,14 +86,18 @@ public class MaleghastActorType : ActorType
     #endregion
 
     #region Creation
-    public static void AddActorModal()
+    private static void WriteBaseData()
     {
         // Copy the static asset to the user folder        
         TextAsset baseline = Resources.Load<TextAsset>("Text/maleghast");
         string path = Preferences.Current.DataPath;
         string filename = $"{path}/maleghast_data/base.json";
         System.IO.File.WriteAllText(filename, baseline.text);
+    }
 
+    public static void AddActorModal()
+    {
+        WriteBaseData();
 
         var contents = Modal2.Contents("PrimaryDialog");
         var typeContainer = contents.Q("ActorTypeContainer");
@@ -162,6 +166,11 @@ public class MaleghastActorType : ActorType
         string house = houseJob.Split("/")[0];
         string job = houseJob.Split("/")[1];
         string colorValue = Modal2.GetComboboxFieldValue("PlayerColor");
+        CreateMaleghastUnit(house, job, token, colorValue);
+    }
+
+    private static void CreateMaleghastUnit(string house, string job, string token, string colorValue)
+    {
         JSONNode jobdata = GetJob(job);
         Color color = ColorUtility.GetColor(jobdata["color"]);
         if (colorValue != "House Default")
@@ -276,7 +285,7 @@ public class MaleghastActorType : ActorType
     {
         VisualElement o = tokenData.OverheadElement;
         o.Q<Label>("Pips").text = SymbolString("■", CurrentHP, MaxHP);
-        UI.ToggleDisplay(o, CurrentHP > 0 && tokenData.Placed);
+        // UI.ToggleDisplay(o, CurrentHP > 0 && tokenData.Placed);
     }
 
     public override void UpdatePanel(ActorData actorData, string elementName)
@@ -514,6 +523,18 @@ public class MaleghastActorType : ActorType
                 PopoverText.Create(actor, $"/{plus}{diff}|_HP", Color.white);
                 UpdateGraphic(actorData);
             }
+            if (original > 0 && CurrentHP == 0)
+            {
+                ActorTag tag = new ActorTag();
+                tag.Name = "Corpse";
+                Tags.Add(tag);
+                InitOverhead(actorData);
+            }
+            if (original == 0 && CurrentHP > 0)
+            {
+                RemoveTag("Corpse");
+                InitOverhead(actorData);
+            }
         }
         else if (command.StartsWith("UpdateStats"))
         {
@@ -534,6 +555,154 @@ public class MaleghastActorType : ActorType
     {
         Actor token = tokenData.GetActor();
         token.SetDefeated(CurrentHP <= 0);
+    }
+
+    public static void SetupDialog()
+    {
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Maleghast Setup");
+
+        var maliceLevels = StringUtility.CreateArray("Spite (0)", "Loathing (4)", "Hatred (7)", "Hell (10)", "Ultrahell (12)").ToList<String>();
+        Modal2.AddInlineSelectField("Malice", "Malice", "Spite (0)", maliceLevels);
+        Modal2.AddSwitchField("Heresy", "Heresy Allowed", false);
+        Modal2.AddDialogFooter();
+        Modal2.AddFooterConfirm("Confirm", () =>
+        {
+            Modal2.ReadContext("PrimaryDialog");
+            var malice = Modal2.GetSelectFieldValue("Malice");
+            var heresy = Modal2.GetSwitchFieldValue("Heresy");
+
+            GameSystemTag tag = new();
+            tag.Name = heresy ? "HERESY ALLOWED" : "HERESY FORBIDDEN";
+            tag.Type = "Simple";
+            tag.Color = Color.black;
+            Player.Self().CmdRequestGameSystemCommand($"AddTag|{JsonUtility.ToJson(tag)}");
+
+            GameSystemTag tag2 = new();
+            tag2.Name = malice;
+            tag2.Type = "Simple";
+            tag2.Color = Color.black;
+            Player.Self().CmdRequestGameSystemCommand($"AddTag|{JsonUtility.ToJson(tag2)}");
+
+            GameSystemTag tag3 = new();
+            tag3.Name = "Round";
+            tag3.Type = "Number";
+            tag3.Color = Color.black;
+            tag3.Value = 0;
+            tag3.MaxValue = 6;
+            Player.Self().CmdRequestGameSystemCommand($"AddTag|{JsonUtility.ToJson(tag3)}");
+
+
+        });
+
+        Modal2.Open("MG Setup");
+    }
+
+    public static void BlackMassGeneratorDialog()
+    {
+        Player.Self().SetOp("Raising a Black Mass");
+
+        WriteBaseData();
+
+        Modal2.CreateContext("PrimaryDialog", true);
+        var contents = Modal2.Contents("PrimaryDialog");
+        contents.Clear();
+
+        Modal2.AddCloseAction(() =>
+        {
+            Player.Self().ClearOp();
+        });
+
+        Modal2.AddDialogHeader("Black Mass Generator");
+
+        var massContainer = new ShunContainer();
+        massContainer.name = "MassContainer";
+        massContainer.AddToClassList("shun-dialog__field");
+
+        var house = Modal2.AddInlineComboboxField("House", "House", null, GetHouses());
+        house.Q<ShunCombobox>().OnSelect += () =>
+        {
+            massContainer.Clear();
+            string houseValue = contents.Q<ShunCombobox>("House").selectedValue;
+            var houseUnits = GetHouseUnits(houseValue);
+            foreach (string unit in houseUnits)
+            {
+                var unitData = GetJob(unit);
+                string type = unitData["type"];
+                string label = $"{unit}\n<color=grey><size=-1>{type}</size></color>";
+                int min = 0;
+                int max = 20;
+                if (type == "Necromancer")
+                {
+                    min = 1;
+                    max = 1;
+                }
+
+                var wrapper = new ShunContainer();
+                wrapper.style.flexDirection = FlexDirection.Row;
+                wrapper.style.justifyContent = Justify.SpaceBetween;
+                Modal2.MoveToContainer(wrapper, massContainer);
+
+
+                var unitField = Modal2.AddInlineNumberNudgerField(unit, label, min, min, max);
+                Modal2.MoveToContainer(unitField, wrapper);
+
+                var unitTokenField = Modal2.AddTokenField($"{unit}Token", "");
+                Modal2.MoveToContainer(unitTokenField, wrapper);
+            }
+        };
+
+        var color = Modal2.AddInlineComboboxField("PlayerColor", "Player Color", "House Default", GetHouses());
+
+        contents.Add(massContainer);
+
+
+        var footer = Modal2.AddDialogFooter("Cancel", () =>
+        {
+            Player.Self().ClearOp();
+            Modal2.Close();
+        });
+
+        var create = new ShunDialogClose();
+        create.name = "CreateMass";
+        create.text = "Create Black Mass";
+        create.SetVariant(ButtonVariant.Primary);
+        create.clicked += () => BlackMassConfirm();
+        footer.Add(create);
+
+        Modal2.Open("Black Mass");
+    }
+
+    private static void BlackMassConfirm()
+    {
+        Modal2.ReadContext("PrimaryDialog");
+        string house = Modal2.GetComboboxFieldValue("House");
+        if (house == null)
+        {
+            Toast.AddError("No house selected");
+            return;
+        }
+        var houseUnits = GetHouseUnits(house);
+        foreach (string unit in houseUnits)
+        {
+            var unitData = GetJob(unit);
+            int count = Modal2.GetNumberNudgerFieldValue($"{unit}");
+            string token = Modal2.GetComboboxFieldValue($"{unit}Token");
+            if (token.Length == 0 && count > 0)
+            {
+                Toast.AddError($"A token has not been selected for {unit}");
+                return;
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                string colorValue = Modal2.GetComboboxFieldValue("PlayerColor");
+                CreateMaleghastUnit(house, unit, token, colorValue);
+            }
+        }
+        Modal2.Dialog("PrimaryDialog").Close();
+        UI.ToggleActiveClass("BottomBar", true);
+        Player.Self().ClearOp();
     }
 
 
@@ -586,7 +755,10 @@ public class MaleghastActorType : ActorType
         JSONNode gamedata = GetData();
         foreach (JSONNode unit in gamedata["Units"].AsArray)
         {
-            houses.Add(unit["house"]);
+            if (!houses.Contains(unit["house"]))
+            {
+                houses.Add(unit["house"]);
+            }
         }
         return houses;
     }
@@ -600,6 +772,21 @@ public class MaleghastActorType : ActorType
         {
             string houseJob = $"{unit["house"]}/{unit["name"]}";
             units.Add(houseJob.Replace("\"", ""));
+        }
+        return units;
+    }
+
+    private static List<string> GetHouseUnits(string house)
+    {
+        List<string> units = new();
+
+        JSONNode gamedata = GetData();
+        foreach (JSONNode unit in gamedata["Units"].AsArray)
+        {
+            if (unit["house"] == house)
+            {
+                units.Add(unit["name"]);
+            }
         }
         return units;
     }

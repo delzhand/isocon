@@ -24,7 +24,7 @@ public class ColorField
             }
             catch (Exception e)
             {
-                Debug.LogWarning(e);
+                // Debug.LogWarning(e);
             }
         });
 

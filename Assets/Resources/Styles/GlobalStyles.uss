@@ -307,3 +307,7 @@
 .shun-scroll-area .unity-scroll-view__content-viewport {
     padding: 8px;
 }
+
+.shun-dialog__container.wide {
+    width: 580px;
+}

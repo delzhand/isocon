@@ -17,12 +17,20 @@ public class Modal2
     private static string _createContext;
     private static string _readContext;
 
-    public static ShunDialog CreateContext(string name)
+    public static ShunDialog CreateContext(string name, bool wide = false)
     {
         _createContext = name;
         // HudText.SetItem("modal", $"Create-{_createContext} | Read-{_readContext}", 11, HudTextColor.Green);
         _sdc[name] = UI.System.Q(name).Q<ShunDialogContent>();
         Contents(name).Clear();
+        if (!wide)
+        {
+            UI.System.Q(className: "shun-dialog__container").RemoveFromClassList("wide");
+        }
+        else
+        {
+            UI.System.Q(className: "shun-dialog__container").AddToClassList("wide");
+        }
         return CurrentDialog;
     }
 
@@ -491,6 +499,7 @@ public class Modal2
         layout.style.flexDirection = FlexDirection.Row;
         layout.style.justifyContent = Justify.SpaceBetween;
         layout.style.alignItems = Align.FlexStart;
+        layout.style.minWidth = 250;
         wrapper.Add(layout);
 
         var fieldlabel = new Label(label);
@@ -500,7 +509,7 @@ public class Modal2
         var layout2 = new VisualElement();
         layout2.style.flexDirection = FlexDirection.Column;
         layout2.style.alignItems = Align.FlexEnd;
-        layout2.style.minWidth = 250;
+        layout2.style.justifyContent = Justify.SpaceBetween;
         layout.Add(layout2);
 
         var input = new NumberNudger();
@@ -509,6 +518,7 @@ public class Modal2
         input.name = name;
         input.value = defaultValue;
         input.minValue = min;
+        input.maxValue = max;
         if (onChange != null)
         {
             input.AddValueChangedCallback(onChange);

@@ -145,6 +145,7 @@ public class ActorData : NetworkBehaviour
             VisualElement instance = template.Instantiate();
             OverheadElement = instance.Q("Overhead");
             UI.World.Q("Worldspace").Add(OverheadElement);
+            st.InitOverhead(this);
         }
     }
 
