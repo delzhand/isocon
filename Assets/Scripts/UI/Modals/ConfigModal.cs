@@ -40,6 +40,10 @@ public class ConfigModal
         var wUIScaleField = Modal2.AddComboboxField("WUIScale", "Actor UI Scale", Preferences.Current.WorldUIScale, scaleOptions, "Control how large the floating elements above actors appear");
         Modal2.MoveToTab(wUIScaleField, configTabs, "Actors");
 
+
+        var tokenScaleField = Modal2.AddComboboxField("TokenScale", "Actor Scale", $"{Preferences.Current.TokenScale * 100}%", scaleOptions, "Control how large the actors appear");
+        Modal2.MoveToTab(tokenScaleField, configTabs, "Actors");
+
         List<string> fpsOptions = StringUtility.CreateArray("15", "30", "60", "90", "120").ToList<string>();
         var fpsField = Modal2.AddToggleField("FPSLimit", "FPS Limit", $"{Preferences.Current.TargetFramerate}", fpsOptions, false, "Set a cap on rendering speed");
         Modal2.MoveToTab(fpsField, configTabs, "Misc");
@@ -98,6 +102,9 @@ public class ConfigModal
 
         Preferences.Current.TokenOutline = Modal2.GetComboboxFieldValue("ActorBorder");
         Actor.SetAllTokenOutlines();
+
+        float tokenScaleValue = float.Parse(Modal2.GetComboboxFieldValue("TokenScale").Replace("%", "")) / 100f;
+        Preferences.Current.TokenScale = tokenScaleValue;
 
         Preferences.Current.UIScale = Modal2.GetComboboxFieldValue("UIScale");
         float uiValue = float.Parse(Preferences.Current.UIScale.Replace("%", "")) / 100f;
