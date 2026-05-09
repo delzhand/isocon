@@ -121,7 +121,7 @@ public class MapEditingState : BaseState
 
     public override void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetKeyDown(KeyCode.RightAlt))
+        if (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
         {
             AltMode = true;
             if (MapEdit.EditOp == "StyleBlock")
@@ -133,7 +133,7 @@ public class MapEditingState : BaseState
                 CustomCursor.SetRemoveHeight();
             }
         }
-        else if (Input.GetKeyUp(KeyCode.LeftAlt) || Input.GetKeyUp(KeyCode.RightAlt))
+        else
         {
             AltMode = false;
             CustomCursor.SetDefault();
