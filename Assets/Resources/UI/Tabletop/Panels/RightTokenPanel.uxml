@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="DefaultActorPanel" class="panel edit-panel" style="position: relative; display: flex; -unity-background-image-tint-color: rgba(255, 255, 255, 0); transition-property: right, opacity; transition-duration: 0.3s, 0.3s; transition-timing-function: ease-in-out, ease-in-out; align-items: flex-end;">
+        <ui:VisualElement style="flex-grow: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: resource(&quot;Textures/gradient 4&quot;); -unity-background-image-tint-color: rgb(0, 0, 0);"/>
+        <ui:VisualElement name="StatsBars" style="flex-direction: row-reverse; position: relative; align-items: flex-end; right: 94px; bottom: 4px;">
+            <ui:VisualElement name="Bars" style="flex-grow: 1; flex-direction: column-reverse; position: relative; width: 160px; align-items: stretch; margin-left: 20px;"/>
+            <ui:VisualElement name="Stats" style="width: 100px; flex-direction: column; flex-wrap: wrap-reverse; height: 50px; justify-content: flex-end; align-self: auto; bottom: -38px;"/>
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.49); padding-top: 2px; padding-right: 34px; padding-bottom: 4px; padding-left: 10px; margin-left: 0; margin-bottom: 4px; margin-right: 45px; border-top-left-radius: 20px; border-bottom-left-radius: 20px;">
+            <ui:VisualElement name="PortraitFrame" style="background-color: rgba(0, 0, 0, 0); width: 90px; height: 90px; position: absolute; bottom: -8px; left: auto; right: -45px;">
+                <ui:VisualElement name="ClassBackground" class="centered" style="flex-grow: 1; background-color: rgb(29, 27, 26); width: 70%; height: 70%; rotate: 45deg; translate: -50% -50%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-left-color: rgb(0, 131, 255); border-right-color: rgb(0, 131, 255); border-top-color: rgb(0, 131, 255); border-bottom-color: rgb(0, 131, 255); border-left-width: 4px; border-right-width: 4px; border-top-width: 4px; border-bottom-width: 4px;"/>
+                <ui:VisualElement name="Portrait" class="self-centered" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: none; position: absolute; height: 90%; left: 50%; width: 90%; top: 50%; -unity-background-scale-mode: scale-to-fit;"/>
+            </ui:VisualElement>
+            <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="Name" text="Token Name" style="padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; white-space: nowrap; -unity-text-align: upper-right; font-size: 20px; margin-top: 0; margin-right: 12px; margin-bottom: 0; margin-left: 12px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; min-width: 160px; overflow: hidden; max-width: 160px; text-overflow: ellipsis;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="Pills" style="flex-direction: row-reverse; min-width: auto; min-height: auto; right: 50px; display: flex;"/>
+    </ui:VisualElement>
+</ui:UXML>

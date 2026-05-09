@@ -20,6 +20,7 @@ public interface IActorType
     void UpdatePanel(ActorData actorData, string elementName);
     void InitPanel(ActorData actorData, string elementName, bool selected = false);
     void InitOverhead(ActorData actorData);
+    void Disconnect();
 }
 
 [Serializable]
@@ -44,6 +45,11 @@ public abstract class ActorType : IActorType
     {
 
         throw new NotImplementedException();
+    }
+
+    public virtual void Disconnect()
+    {
+
     }
 
     public virtual string GetOverheadAsset()
@@ -491,36 +497,6 @@ public abstract class ActorType : IActorType
             {
                 panel.Q("Pills").Add(Pill.InitRemovable(tag.Name, tag.Name, tag.Color, true));
             }
-
-            // VisualElement pill = UI.CreateFromTemplate("UI/TableTop/Pill");
-            // string text = $"{tag.Name}";
-            // if (tag.HasNumber)
-            // {
-            //     text += $"   {tag.Value}";
-            //     pill.Q("Decrement").style.color = tag.Color;
-            //     pill.Q("Increment").style.color = tag.Color;
-            //     pill.Q<Button>("Increment").RegisterCallback<ClickEvent>((evt) =>
-            //     {
-            //         Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"IncrementTag|{tag.Name}");
-            //     });
-            //     pill.Q<Button>("Decrement").RegisterCallback<ClickEvent>((evt) =>
-            //     {
-            //         Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"DecrementTag|{tag.Name}");
-            //     });
-            // }
-            // else
-            // {
-            //     UI.ToggleDisplay(pill.Q("Increment"), false);
-            //     UI.ToggleDisplay(pill.Q("Decrement"), false);
-            // }
-            // pill.Q<Button>("Remove").RegisterCallback<ClickEvent>((evt) =>
-            // {
-            //     Player.Self().CmdRequestTokenDataCommand(Token.GetSelected().Data.Id, $"RemoveTag|{tag.Name}");
-            // });
-            // pill.Q("Pill").style.backgroundColor = tag.Color;
-            // pill.Q("Remove").style.color = tag.Color;
-            // pill.Q<Label>("Name").text = text;
-            // panel.Q("Pills").Add(pill);
         }
     }
 

@@ -16,6 +16,8 @@ public class MaleghastActorType : ActorType
 {
     private readonly static string TypeName = "Maleghast Unit";
     private static Dictionary<string, Texture2D> MarkerTextures;
+    private static VisualElement MaleghastLeftPanel;
+    private static VisualElement MaleghastRightPanel;
 
     #region Registration
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -59,6 +61,8 @@ public class MaleghastActorType : ActorType
         MarkerTextures.Add("Retaliation", Resources.Load<Texture2D>($"{dir}/MarkerRetaliation"));
         MarkerTextures.Add("Reload", Resources.Load<Texture2D>($"{dir}/MarkerReload"));
         MarkerTextures.Add("Super Armor", Resources.Load<Texture2D>($"{dir}/MarkerArmorSUPER2"));
+
+
     }
     public override string Serialize()
     {
@@ -292,9 +296,73 @@ public class MaleghastActorType : ActorType
     {
         base.UpdatePanel(actorData, elementName);
         VisualElement panel = UI.System.Q(elementName);
+        UI.ToggleDisplay(panel.Q("DefaultActorPanel"), false);
 
-        Label mainHPLabel = panel.Q<Label>("MainHPLabel");
-        mainHPLabel.text = SymbolString("■", CurrentHP, MaxHP);
+        VisualElement mgPanel = panel.Q("MaleghastActorPanel");
+        mgPanel.Q<Label>("UnitName").text = Job;
+        mgPanel.Q<Label>("UnitName").style.backgroundColor = actorData.Color;
+        mgPanel.Q<Label>("UnitName").style.color = Color.white;
+        mgPanel.Q<Label>("UnitType").text = $"{House} {PType}";
+        mgPanel.Q<Label>("UnitType").style.backgroundColor = actorData.Color;
+        mgPanel.Q<Label>("UnitType").style.color = Color.white;
+        mgPanel.Q("HpBar").Q<Label>("bar").text = SymbolString("█", CurrentHP, MaxHP);
+        mgPanel.Q<Label>("MvValue").text = $"{Move}";
+        mgPanel.Q<Label>("DfValue").text = $"{Defense}+";
+
+        string armorValue = "—";
+        if (HasTag("Physical Armor"))
+        {
+            armorValue = "PHYS";
+        }
+        if (HasTag("Magic Armor"))
+        {
+            armorValue = "MAG";
+        }
+        if (HasTag("SuperArmor"))
+        {
+            armorValue = "SUPER";
+        }
+        mgPanel.Q<Label>("ArmValue").text = armorValue;
+
+        StringBuilder actionsValue = new();
+        foreach (string s in ActAbilities)
+        {
+            if (s.Substring(0, 1) == "=")
+            {
+                actionsValue.AppendLine($"<b>· {s.Substring(1)}</b>");
+            }
+        }
+        mgPanel.Q<Label>("ActValue").text = actionsValue.ToString();
+
+        StringBuilder traitsValue = new();
+        foreach (string s in Traits)
+        {
+            if (s.Substring(0, 1) == "=")
+            {
+                traitsValue.AppendLine($"· {s.Substring(1)}");
+            }
+        }
+        foreach (string s in Upgrades)
+        {
+            if (s.Substring(0, 1) == "=")
+            {
+                traitsValue.AppendLine($"· {s.Substring(1)}");
+            }
+        }
+        mgPanel.Q<Label>("TraitValue").text = traitsValue.ToString();
+
+        StringBuilder soulValue = new();
+        int soulAbilityCount = 0;
+        foreach (string s in SoulAbilities)
+        {
+            if (s.Substring(0, 1) == "=")
+            {
+                soulAbilityCount++;
+                soulValue.AppendLine($"<b>· {s.Substring(1)}</b>");
+            }
+        }
+        mgPanel.Q<Label>("SoulValue").text = soulValue.ToString();
+        UI.ToggleDisplay(mgPanel.Q("SOUL"), soulAbilityCount > 0);
     }
 
     public override void InitOverhead(ActorData actorData)
@@ -341,59 +409,89 @@ public class MaleghastActorType : ActorType
 
     public override void InitPanel(ActorData actorData, string elementName, bool selected)
     {
-        base.InitPanel(actorData, elementName, selected);
-        VisualElement panel = UI.System.Q(elementName);
-
-        if (selected)
+        if (MaleghastLeftPanel == null && MaleghastRightPanel == null)
         {
-            VisualElement hppips = PipsBar("MainHPLabel", "■", CurrentHP, MaxHP, Color.red,
-                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "ModHP|-1"); },
-                (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "ModHP|1"); }
-            );
-            panel.Q("Bars").Add(hppips);
-        }
-        else
-        {
-            Label l = new();
-            l.name = "MainHPLabel";
-            l.text = SymbolString("■", CurrentHP, MaxHP);
-            l.style.color = Color.red;
-            l.style.unityTextOutlineColor = Color.white;
-            l.style.unityTextOutlineWidth = 1;
-            l.style.fontSize = 26;
-            panel.Q("Bars").Add(l);
-        }
-
-        VisualElement s1 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
-        s1.Q<Label>("Label").text = "MOVE/DEF";
-        s1.Q<Label>("Value").text = $"{Move}/{Defense}+";
-        panel.Q("Stats").Add(s1);
-
-        List<string> actions = new();
-        foreach (string s in ActAbilities)
-        {
-            if (s.Substring(0, 1) == "=")
+            VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UI/Tabletop/Panels/Maleghast");
+            MaleghastLeftPanel = template.Instantiate().Q("MaleghastActorPanel");
+            MaleghastLeftPanel.Q<Button>("HpDown").clicked += () =>
             {
-                actions.Add(s.Substring(1));
-            }
-        }
-        VisualElement acts = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
-        acts.Q<Label>("Label").text = $"ACT: {String.Join(" | ", actions)}";
-        acts.Q<Label>("Value").text = "";
-        panel.Q("Bars").Add(acts);
-        acts.SendToBack();
+                Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, "ModHP|-1");
+            };
+            MaleghastLeftPanel.Q<Button>("HpUp").clicked += () =>
+            {
+                Player.Self().CmdRequestActorCommand(Actor.GetSelected().Data.Id, "ModHP|+1");
+            };
+            UI.System.Q("LeftTokenPanel").Add(MaleghastLeftPanel);
 
-
-        foreach (string s in Traits)
-        {
-            VisualElement template = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
-            template.Q<Label>("Label").text = $"TRAIT: {s.Substring(1)}";
-            template.Q<Label>("Value").text = "";
-            panel.Q("Stats").Add(template);
+            MaleghastRightPanel = template.Instantiate().Q("MaleghastActorPanel");
+            MaleghastRightPanel.AddToClassList("right");
+            UI.System.Q("RightTokenPanel").Add(MaleghastRightPanel);
         }
 
-        panel.Q("Pills").Add(Pill.InitStatic("HousePill", $"{House} {PType}", actorData.Color));
-        panel.Q("Pills").Q("HousePill").SendToBack();
+        VisualElement panel = UI.System.Q(elementName);
+        VisualElement mgPanel = panel.Q("MaleghastActorPanel");
+
+        UI.ToggleDisplay(mgPanel.Q("HpUp"), selected);
+        UI.ToggleDisplay(mgPanel.Q("HpDown"), selected);
+
+        // VisualElement panel = (elementName == "LeftTokenPanel") ? MaleghastLeftPanel : MaleghastRightPanel;
+
+        // panel.Q<Label>("UnitName").text = Job;
+        // panel.Q<Label>("UnitType").text = $"{House} {PType}";
+
+        // base.InitPanel(actorData, elementName, selected);
+        // VisualElement panel = UI.System.Q(elementName);
+
+        // if (selected)
+        // {
+        //     VisualElement hppips = PipsBar("MainHPLabel", "■", CurrentHP, MaxHP, Color.red,
+        //         (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "ModHP|-1"); },
+        //         (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "ModHP|1"); }
+        //     );
+        //     panel.Q("Bars").Add(hppips);
+        // }
+        // else
+        // {
+        //     Label l = new();
+        //     l.name = "MainHPLabel";
+        //     l.text = SymbolString("■", CurrentHP, MaxHP);
+        //     l.style.color = Color.red;
+        //     l.style.unityTextOutlineColor = Color.white;
+        //     l.style.unityTextOutlineWidth = 1;
+        //     l.style.fontSize = 26;
+        //     panel.Q("Bars").Add(l);
+        // }
+
+        // VisualElement s1 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
+        // s1.Q<Label>("Label").text = "MOVE/DEF";
+        // s1.Q<Label>("Value").text = $"{Move}/{Defense}+";
+        // panel.Q("Stats").Add(s1);
+
+        // List<string> actions = new();
+        // foreach (string s in ActAbilities)
+        // {
+        //     if (s.Substring(0, 1) == "=")
+        //     {
+        //         actions.Add(s.Substring(1));
+        //     }
+        // }
+        // VisualElement acts = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
+        // acts.Q<Label>("Label").text = $"ACT: {String.Join(" | ", actions)}";
+        // acts.Q<Label>("Value").text = "";
+        // panel.Q("Bars").Add(acts);
+        // acts.SendToBack();
+
+
+        // foreach (string s in Traits)
+        // {
+        //     VisualElement template = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
+        //     template.Q<Label>("Label").text = $"TRAIT: {s.Substring(1)}";
+        //     template.Q<Label>("Value").text = "";
+        //     panel.Q("Stats").Add(template);
+        // }
+
+        // panel.Q("Pills").Add(Pill.InitStatic("HousePill", $"{House} {PType}", actorData.Color));
+        // panel.Q("Pills").Q("HousePill").SendToBack();
     }
 
     public override List<MenuItem> GetMenuItems(bool placed)
@@ -632,10 +730,23 @@ public class MaleghastActorType : ActorType
                 string label = $"{unit}\n<color=grey><size=-1>{type}</size></color>";
                 int min = 0;
                 int max = 20;
-                if (type == "Necromancer")
+                switch (type)
                 {
-                    min = 1;
-                    max = 1;
+                    case "Necromancer":
+                        min = 1;
+                        max = 1;
+                        break;
+                    case "Scion":
+                        max = 3;
+                        break;
+                    case "Freak":
+                    case "Horror":
+                    case "Hunter":
+                        max = 2;
+                        break;
+                    case "Tyrant":
+                        max = 1;
+                        break;
                 }
 
                 var wrapper = new ShunContainer();

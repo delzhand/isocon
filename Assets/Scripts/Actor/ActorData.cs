@@ -350,6 +350,9 @@ public class ActorData : NetworkBehaviour
         {
             OverheadElement.RemoveFromHierarchy();
         }
+        IActorType st = ActorTypeRegistry.DoInterfaceCallback(Type, TypeData);
+        st.Disconnect();
+
         Destroy(WorldObject);
     }
 

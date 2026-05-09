@@ -311,3 +311,11 @@
 .shun-dialog__container.wide {
     width: 580px;
 }
+
+#MaleghastActorPanel #Row {
+    flex-direction: row;
+}
+
+#MaleghastActorPanel.right #Row {
+    flex-direction: row-reverse;
+}
