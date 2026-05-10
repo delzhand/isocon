@@ -455,6 +455,12 @@ public abstract class ActorType : IActorType
 
     public virtual void UpdatePanel(ActorData tokenData, string elementName)
     {
+        VisualElement panel = UI.System.Q(elementName);
+        foreach (var child in panel.Children())
+        {
+            UI.ToggleDisplay(child, false);
+        }
+        UI.ToggleDisplay(panel.Q("DefaultActorPanel"), true);
     }
 
     public virtual void InitOverhead(ActorData actorData)
@@ -465,6 +471,11 @@ public abstract class ActorType : IActorType
     public virtual void InitPanel(ActorData actorData, string elementName, bool selected = false)
     {
         VisualElement panel = UI.System.Q(elementName);
+        foreach (var child in panel.Children())
+        {
+            UI.ToggleDisplay(child, false);
+        }
+        UI.ToggleDisplay(panel.Q("DefaultActorPanel"), true);
         panel.Q("Pills").Clear();
         panel.Q("Stats").Clear();
         panel.Q("Bars").Clear();

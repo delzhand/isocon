@@ -289,7 +289,6 @@ public class MaleghastActorType : ActorType
     {
         VisualElement o = tokenData.OverheadElement;
         o.Q<Label>("Pips").text = SymbolString("■", CurrentHP, MaxHP);
-        // UI.ToggleDisplay(o, CurrentHP > 0 && tokenData.Placed);
     }
 
     public override void UpdatePanel(ActorData actorData, string elementName)
@@ -299,6 +298,8 @@ public class MaleghastActorType : ActorType
         UI.ToggleDisplay(panel.Q("DefaultActorPanel"), false);
 
         VisualElement mgPanel = panel.Q("MaleghastActorPanel");
+        UI.ToggleDisplay(mgPanel, true);
+
         mgPanel.Q<Label>("UnitName").text = Job;
         mgPanel.Q<Label>("UnitName").style.backgroundColor = actorData.Color;
         mgPanel.Q<Label>("UnitName").style.color = Color.white;
@@ -409,6 +410,13 @@ public class MaleghastActorType : ActorType
 
     public override void InitPanel(ActorData actorData, string elementName, bool selected)
     {
+        VisualElement panel = UI.System.Q(elementName);
+        foreach (var child in panel.Children())
+        {
+            UI.ToggleDisplay(child, false);
+        }
+        UI.ToggleDisplay(panel.Q("DefaultActorPanel"), false);
+
         if (MaleghastLeftPanel == null && MaleghastRightPanel == null)
         {
             VisualTreeAsset template = Resources.Load<VisualTreeAsset>("UI/Tabletop/Panels/Maleghast");
@@ -428,8 +436,8 @@ public class MaleghastActorType : ActorType
             UI.System.Q("RightTokenPanel").Add(MaleghastRightPanel);
         }
 
-        VisualElement panel = UI.System.Q(elementName);
         VisualElement mgPanel = panel.Q("MaleghastActorPanel");
+        UI.ToggleDisplay(mgPanel, true);
 
         UI.ToggleDisplay(mgPanel.Q("HpUp"), selected);
         UI.ToggleDisplay(mgPanel.Q("HpDown"), selected);
@@ -446,66 +454,6 @@ public class MaleghastActorType : ActorType
                 mgPanel.Q("Pills").Add(Pill.InitRemovable(tag.Name, tag.Name, tag.Color, true));
             }
         }
-
-
-        // VisualElement panel = (elementName == "LeftTokenPanel") ? MaleghastLeftPanel : MaleghastRightPanel;
-
-        // panel.Q<Label>("UnitName").text = Job;
-        // panel.Q<Label>("UnitType").text = $"{House} {PType}";
-
-        // base.InitPanel(actorData, elementName, selected);
-        // VisualElement panel = UI.System.Q(elementName);
-
-        // if (selected)
-        // {
-        //     VisualElement hppips = PipsBar("MainHPLabel", "■", CurrentHP, MaxHP, Color.red,
-        //         (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "ModHP|-1"); },
-        //         (evt) => { Player.Self().CmdRequestActorCommand(actorData.Id, "ModHP|1"); }
-        //     );
-        //     panel.Q("Bars").Add(hppips);
-        // }
-        // else
-        // {
-        //     Label l = new();
-        //     l.name = "MainHPLabel";
-        //     l.text = SymbolString("■", CurrentHP, MaxHP);
-        //     l.style.color = Color.red;
-        //     l.style.unityTextOutlineColor = Color.white;
-        //     l.style.unityTextOutlineWidth = 1;
-        //     l.style.fontSize = 26;
-        //     panel.Q("Bars").Add(l);
-        // }
-
-        // VisualElement s1 = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
-        // s1.Q<Label>("Label").text = "MOVE/DEF";
-        // s1.Q<Label>("Value").text = $"{Move}/{Defense}+";
-        // panel.Q("Stats").Add(s1);
-
-        // List<string> actions = new();
-        // foreach (string s in ActAbilities)
-        // {
-        //     if (s.Substring(0, 1) == "=")
-        //     {
-        //         actions.Add(s.Substring(1));
-        //     }
-        // }
-        // VisualElement acts = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
-        // acts.Q<Label>("Label").text = $"ACT: {String.Join(" | ", actions)}";
-        // acts.Q<Label>("Value").text = "";
-        // panel.Q("Bars").Add(acts);
-        // acts.SendToBack();
-
-
-        // foreach (string s in Traits)
-        // {
-        //     VisualElement template = UI.CreateFromTemplate("UI/TableTop/StatTemplate");
-        //     template.Q<Label>("Label").text = $"TRAIT: {s.Substring(1)}";
-        //     template.Q<Label>("Value").text = "";
-        //     panel.Q("Stats").Add(template);
-        // }
-
-        // panel.Q("Pills").Add(Pill.InitStatic("HousePill", $"{House} {PType}", actorData.Color));
-        // panel.Q("Pills").Q("HousePill").SendToBack();
     }
 
     public override List<MenuItem> GetMenuItems(bool placed)
