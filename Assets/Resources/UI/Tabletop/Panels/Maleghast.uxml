@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/Resources/Styles/GlobalStyles.uss?fileID=7433441132597879392&amp;guid=7121076cb2a24ed45a625b144b837ee6&amp;type=3#GlobalStyles"/>
-    <ui:VisualElement name="MaleghastActorPanel" class="panel edit-panel" style="position: relative; display: flex; -unity-background-image-tint-color: rgba(255, 255, 255, 0); transition-property: left, opacity; transition-duration: 0.3s, 0.3s; transition-timing-function: ease-in-out, ease-in-out; align-items: flex-start; color: rgb(34, 34, 34);">
+    <ui:VisualElement name="MaleghastActorPanel" class="panel edit-panel" style="position: relative; display: flex; -unity-background-image-tint-color: rgba(255, 255, 255, 0); transition-property: left, opacity; transition-duration: 0.3s, 0.3s; transition-timing-function: ease-in-out, ease-in-out; color: rgb(34, 34, 34);">
         <ui:VisualElement name="Row" style="flex-grow: 1; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); align-items: flex-end;">
             <ui:VisualElement name="Column" style="align-self: auto; min-width: 260px;">
                 <ui:VisualElement name="Id" style="flex-grow: 0; background-color: rgb(255, 255, 255); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 0; border-left-width: 1px; -unity-font-definition: resource(&quot;Fonts/Georgia&quot;);">
@@ -47,6 +47,6 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="Pills" style="flex-direction: row; min-width: auto; min-height: auto; justify-content: flex-start;"/>
+        <ui:VisualElement name="Pills" style="flex-direction: row; min-width: auto; min-height: auto; justify-content: flex-start; align-items: auto;"/>
     </ui:VisualElement>
 </ui:UXML>

@@ -316,6 +316,14 @@
     flex-direction: row;
 }
 
+#MaleghastActorPanel.right {
+    align-items: flex-end;
+}
+
 #MaleghastActorPanel.right #Row {
+    flex-direction: row-reverse;
+}
+
+#MaleghastActorPanel.right #Pills {
     flex-direction: row-reverse;
 }

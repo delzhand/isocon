@@ -318,7 +318,7 @@ public class MaleghastActorType : ActorType
         {
             armorValue = "MAG";
         }
-        if (HasTag("SuperArmor"))
+        if (HasTag("Super Armor"))
         {
             armorValue = "SUPER";
         }
@@ -433,6 +433,20 @@ public class MaleghastActorType : ActorType
 
         UI.ToggleDisplay(mgPanel.Q("HpUp"), selected);
         UI.ToggleDisplay(mgPanel.Q("HpDown"), selected);
+
+        mgPanel.Q("Pills").Clear();
+        foreach (ActorTag tag in Tags)
+        {
+            if (tag.HasNumber)
+            {
+                mgPanel.Q("Pills").Add(Pill.InitNumber(tag.Name, tag.Name, tag.Value, 0, tag.Color, true));
+            }
+            else
+            {
+                mgPanel.Q("Pills").Add(Pill.InitRemovable(tag.Name, tag.Name, tag.Color, true));
+            }
+        }
+
 
         // VisualElement panel = (elementName == "LeftTokenPanel") ? MaleghastLeftPanel : MaleghastRightPanel;
 

@@ -77,7 +77,7 @@
             "def": 4,
             "hp": 8,
             "type": "Necromancer",
-            "traits": "=Formation|=Hot Clip|=Loaded|-Bone Wall|-Gun Kata|-Clutch Reload",
+            "traits": "=Formation|=Hot Clip|-Bone Wall|-Gun Kata|-Clutch Reload",
             "tokens": "Soul#0"
         },
         {
