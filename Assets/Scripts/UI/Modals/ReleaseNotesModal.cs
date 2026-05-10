@@ -50,6 +50,7 @@ public class ReleaseNotesModal
 * Custom Maleghast actor panels
 * Overhead token display for Maleghast actors
 * Global actor scale added to Preferences
+* Upgrades can be configured for Maleghast units
 <size=+2><b>Fixes</b></size>
 * Map editing tools no longer 'stick' in alternate mode when alt-tabbing
 ");
