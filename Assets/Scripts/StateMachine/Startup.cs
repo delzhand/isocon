@@ -13,8 +13,8 @@ using UnityEngine.UIElements;
 
 public class Startup
 {
-    private static string _version = "0.9.0";
-    private static string _latestVersion = "0.9.0";
+    private static string _version = "0.9.1";
+    private static string _latestVersion = "0.9.1";
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     public static void RunTasks()

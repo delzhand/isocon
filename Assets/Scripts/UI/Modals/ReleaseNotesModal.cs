@@ -44,6 +44,16 @@ public class ReleaseNotesModal
     {
         var notes = new Dictionary<string, string>();
 
+        notes.Add("0.9.1", @"<size=+2><b>Features</b></size>
+* Black Mass generator for Maleghast to quickly generate a team
+* System Setup tool for Maleghast to quickly create certain tabletop tags
+* Custom Maleghast actor panels
+* Overhead token display for Maleghast actors
+* Global actor scale added to Preferences
+<size=+2><b>Fixes</b></size>
+* Map editing tools no longer 'stick' in alternate mode when alt-tabbing
+");
+
         notes.Add("0.9.0", @"<size=+2><b>Features</b></size>
 * Major UI Redesign
   > New token library

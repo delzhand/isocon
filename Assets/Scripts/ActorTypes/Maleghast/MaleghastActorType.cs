@@ -490,29 +490,63 @@ public class MaleghastActorType : ActorType
             SelectionMenu.Hide();
         }));
 
-        // if (House == "CARCASS")
-        // {
-        //     var carcass = new MenuItem("CARCASS", null);
-        //     items.Add(carcass);
-        //     if (!HasTag("Reload"))
-        //     {
-        //         carcass.Children.Add(new MenuItem("Set Reload", () =>
-        //         {
-        //             Actor actor = Actor.GetSelected();
-        //             ActorTag tag = new();
-        //             tag.Name = "Reload";
-        //             tag.Color = GetHouseColor("CARCASS");
-        //             Player.Self().CmdRequestActorCommand(actor.Data.Id, $"AddTag|{JsonUtility.ToJson(tag)}");
+        mg.Children.Add(new MenuItem("Upgrade Unit", () =>
+        {
+            SelectionMenu.Hide();
+            UpgradeUnitDialog();
+        }));
 
-        //         }));
-        //     }
-        //     else
-        //     {
-        //         carcass.Children.Add(new MenuItem("Set Reload", false));
-        //     }
-        // }
 
         return items;
+    }
+
+    private void UpgradeUnitDialog()
+    {
+        Modal2.CreateContext("PrimaryDialog");
+        Modal2.AddDialogHeader("Upgrade Unit");
+
+        var unitData = GetJob(Job);
+
+        if (unitData["type"] == "Necromancer")
+        {
+            ConfigModalSublist(Traits, "Upgrades", Traits);
+            ConfigModalSublist(ActAbilities, "ACT", ActAbilities);
+            ConfigModalSublist(SoulAbilities, "SOUL", SoulAbilities);
+        }
+        else
+        {
+            ConfigModalSublist(Upgrades, "Upgrades", Traits);
+        }
+
+        Modal2.AddDialogFooter("Close");
+        Modal2.Open("UpgradeUnit");
+    }
+
+    private void ConfigModalSublist(string[] list, string listName, string[] listToCheck)
+    {
+        foreach (string s in list)
+        {
+            if (s.StartsWith("="))
+            {
+                continue;
+            }
+            string itemName = s.Substring(1);
+            bool enabled = listToCheck.ToList<string>().Contains($"={itemName}");
+            string id = $"{listName}_{itemName}";
+            string label = $"{listName}: {itemName}";
+            var field = Modal2.AddSwitchField(id, label, enabled);
+            field.Q<ShunSwitch>().onValueChanged += (val) =>
+            {
+                if (val)
+                {
+                    Player.Self().RpcActorCommand(Actor.GetSelected().Data.Id, $"Add{listName}|{itemName}");
+                }
+                else
+                {
+                    Player.Self().RpcActorCommand(Actor.GetSelected().Data.Id, $"Remove{listName}|{itemName}");
+                }
+            };
+        }
     }
 
     private void AddTokenModal()
@@ -604,6 +638,48 @@ public class MaleghastActorType : ActorType
             Defense = lmu.Defense;
             Move = lmu.Move;
             PopoverText.Create(actor, $"_STAT|_CHANGE", Color.white);
+        }
+        else if (command.StartsWith("AddUpgrade"))
+        {
+            string trait = command.Split("|")[1];
+            List<string> _traits = Traits.ToList();
+            _traits.Add($"={trait}");
+            Traits = _traits.ToArray();
+        }
+        else if (command.StartsWith("RemoveUpgrade"))
+        {
+            string trait = command.Split("|")[1];
+            List<string> _traits = Traits.ToList();
+            _traits.Remove($"={trait}");
+            Traits = _traits.ToArray();
+        }
+        else if (command.StartsWith("AddACT"))
+        {
+            string act = command.Split("|")[1];
+            List<string> _acts = ActAbilities.ToList();
+            _acts.Add($"={act}");
+            ActAbilities = _acts.ToArray();
+        }
+        else if (command.StartsWith("RemoveACT"))
+        {
+            string act = command.Split("|")[1];
+            List<string> _acts = ActAbilities.ToList();
+            _acts.Remove($"={act}");
+            ActAbilities = _acts.ToArray();
+        }
+        else if (command.StartsWith("AddSOUL"))
+        {
+            string soul = command.Split("|")[1];
+            List<string> _souls = SoulAbilities.ToList();
+            _souls.Add($"={soul}");
+            SoulAbilities = _souls.ToArray();
+        }
+        else if (command.StartsWith("RemoveSOUL"))
+        {
+            string soul = command.Split("|")[1];
+            List<string> _souls = SoulAbilities.ToList();
+            _souls.Remove($"={soul}");
+            SoulAbilities = _souls.ToArray();
         }
         if (command.StartsWith("AddTag") || command.StartsWith("IncrementTag") || command.StartsWith("DecrementTag") || command.StartsWith("RemoveTag"))
         {
