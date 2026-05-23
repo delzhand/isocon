@@ -97,7 +97,7 @@ public class Preferences
 
     private static void DirectorySetup()
     {
-        string[] directories = { "maleghast_data", "hashed_tokens", "maps", "tokens", "logs", "sessions" };
+        string[] directories = { "maleghast_data", "hashed-tokens", "maps", "tokens", "logs", "sessions" };
         for (int i = 0; i < directories.Length; i++)
         {
             string path = $"{_current.DataPath}/{directories[i]}";
