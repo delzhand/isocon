@@ -145,7 +145,6 @@ public class TokenLibraryModal : MonoBehaviour
         add.clicked += () =>
         {
             FileBrowserHelper.Open(ConfirmSelect, "", FileBrowserType.Tokens);
-            Modal2.Close(_dialogName);
         };
         footer.Add(add);
 
