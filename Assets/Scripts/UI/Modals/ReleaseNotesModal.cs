@@ -44,6 +44,11 @@ public class ReleaseNotesModal
     {
         var notes = new Dictionary<string, string>();
 
+        notes.Add("0.9.2", @"<size=+2><b>Fixes</b></size>
+* Fixed a bug that prevented tokens from being added on new installs
+* Token Library no longer automatically closes after adding a token
+");
+
         notes.Add("0.9.1", @"<size=+2><b>Features</b></size>
 * Black Mass generator for Maleghast to quickly generate a team
 * System Setup tool for Maleghast to quickly create certain tabletop tags
