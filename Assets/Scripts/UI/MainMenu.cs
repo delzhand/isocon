@@ -28,14 +28,14 @@ public class MainMenu
         var gameMenu = menu.AddMenu("Game Tools");
         gameMenu.AddItem("Maleghast Black Mass", MaleghastActorType.BlackMassGeneratorDialog);
         gameMenu.AddItem("Maleghast Setup", MaleghastActorType.SetupDialog);
+        gameMenu.AddItem("Dice Roller", DiceRoller.ToggleVisible);
 
         var mapMenu = menu.AddMenu("Map");
         mapMenu.AddItem("Edit", () => StateManager.PushState(new MapEditingState()));
+        mapMenu.AddItem("Set View: Overhead", Viewport.FixViewOverhead);
+        mapMenu.AddItem("Set View: Initial", Viewport.FixViewIso);
 
         var viewMenu = menu.AddMenu("Config");
-        viewMenu.AddItem("Dice Roller", DiceRoller.ToggleVisible);
-        viewMenu.AddItem("Set View: Overhead", Viewport.FixViewOverhead);
-        viewMenu.AddItem("Set View: Initial", Viewport.FixViewIso);
         viewMenu.AddItem("Preferences", ConfigModal.Open);
     }
 
