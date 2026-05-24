@@ -1,6 +1,13 @@
 {
     "Units": [
         {
+            "name": "Wall",
+            "house": "Environmental",
+            "color": "000000",
+            "hp": 2,
+            "type": "Special"
+        },
+        {
             "conditions": "",
             "name": "Gunwight",
             "house": "CARCASS",

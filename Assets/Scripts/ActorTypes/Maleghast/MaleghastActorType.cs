@@ -468,6 +468,30 @@ public class MaleghastActorType : ActorType
 
         mg.Children.Add(new MenuItem("Alter Stats", AlterStatModal));
 
+        var dice = new MenuItem("Quick Roll", null);
+        items.Add(dice);
+        dice.Children.Add(new MenuItem("Attack", () =>
+        {
+            DiceRoller.DirectDieRoll("max", "1d6", "1d6 Attack");
+        }));
+        dice.Children.Add(new MenuItem("Attack +1D", () =>
+        {
+            DiceRoller.DirectDieRoll("max", "2d6", "2d6 Attack");
+        }));
+        dice.Children.Add(new MenuItem("Attack +2D", () =>
+        {
+            DiceRoller.DirectDieRoll("max", "3d6", "3d6 Attack");
+        }));
+        dice.Children.Add(new MenuItem("Attack +3D", () =>
+        {
+            DiceRoller.DirectDieRoll("max", "4d6", "4d6 Attack");
+        }));
+        dice.Children.Add(new MenuItem("Effect Die", () =>
+        {
+            DiceRoller.DirectDieRoll("max", "1d6", "Effect Die");
+        }));
+
+
         if (!HasTag("Turn Ended"))
         {
             mg.Children.Add(new MenuItem("End Turn", () =>
