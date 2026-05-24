@@ -44,6 +44,18 @@ public class ReleaseNotesModal
     {
         var notes = new Dictionary<string, string>();
 
+        notes.Add("0.9.3", @"<size=+2><b>Features</b></size>
+* Added a Wall entity to default Maleghast data
+* Added Quick Roll menu item to Maleghast actors
+* Added a Dice History dialog
+<size=+2><b>Changes</b></size>
+* Moved 'Flip' and 'Remove' to the 'Other' section of the actor menu
+* Moved 'Dice Roller' to 'Game Tools' in main menu
+* Moved camera presets to 'Map' in main menu
+<size=+2><b>Fixes</b></size>
+* Hidden Act/Soul panels in Maleghast no longer block mouse cursor to world space
+");
+
         notes.Add("0.9.2", @"<size=+2><b>Fixes</b></size>
 * Fixed a bug that prevented tokens from being added on new installs
 * Token Library no longer automatically closes after adding a token
