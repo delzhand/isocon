@@ -63,17 +63,6 @@ public abstract class ActorType : IActorType
 
         var configToken = new MenuItem("Configure Token", null);
         items.Add(configToken);
-        if (placed)
-        {
-            configToken.Children.Add(new MenuItem("Remove", () =>
-            {
-                Actor.GetSelected().Remove();
-            }));
-            configToken.Children.Add(new MenuItem("Flip Left/Right", () =>
-            {
-                Actor.GetSelected().Flip();
-            }));
-        }
         configToken.Children.Add(new MenuItem("Change Size/Shape", ReshapeModal));
         configToken.Children.Add(new MenuItem("Change Color", RecolorModal));
 
@@ -101,6 +90,17 @@ public abstract class ActorType : IActorType
         items.Add(other);
         other.Children.Add(new MenuItem("Clone", CloneConfirm));
         other.Children.Add(new MenuItem("Delete", DeleteConfirm));
+        if (placed)
+        {
+            other.Children.Add(new MenuItem("Remove", () =>
+            {
+                Actor.GetSelected().Remove();
+            }));
+            other.Children.Add(new MenuItem("Flip Left/Right", () =>
+            {
+                Actor.GetSelected().Flip();
+            }));
+        }
 
         return items;
     }
