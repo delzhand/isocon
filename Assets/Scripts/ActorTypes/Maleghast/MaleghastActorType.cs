@@ -326,10 +326,12 @@ public class MaleghastActorType : ActorType
         mgPanel.Q<Label>("ArmValue").text = armorValue;
 
         StringBuilder actionsValue = new();
+        int actTraitCount = 0;
         foreach (string s in ActAbilities)
         {
             if (s.Substring(0, 1) == "=")
             {
+                actTraitCount++;
                 actionsValue.AppendLine($"<b>· {s.Substring(1)}</b>");
             }
         }
@@ -340,6 +342,7 @@ public class MaleghastActorType : ActorType
         {
             if (s.Substring(0, 1) == "=")
             {
+                actTraitCount++;
                 traitsValue.AppendLine($"· {s.Substring(1)}");
             }
         }
@@ -347,10 +350,12 @@ public class MaleghastActorType : ActorType
         {
             if (s.Substring(0, 1) == "=")
             {
+                actTraitCount++;
                 traitsValue.AppendLine($"· {s.Substring(1)}");
             }
         }
         mgPanel.Q<Label>("TraitValue").text = traitsValue.ToString();
+        UI.ToggleDisplay(mgPanel.Q("ActColumn"), actTraitCount > 0);
 
         StringBuilder soulValue = new();
         int soulAbilityCount = 0;
@@ -363,7 +368,9 @@ public class MaleghastActorType : ActorType
             }
         }
         mgPanel.Q<Label>("SoulValue").text = soulValue.ToString();
-        UI.ToggleDisplay(mgPanel.Q("SOUL"), soulAbilityCount > 0);
+
+        UI.ToggleDisplay(mgPanel.Q("SoulColumn"), soulAbilityCount > 0);
+
     }
 
     public override void InitOverhead(ActorData actorData)
