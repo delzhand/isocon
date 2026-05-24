@@ -285,6 +285,9 @@ public class DiceRoller
 
         // Toast.AddCustom(resultElement, 15);
         Toast.AddDiceRoll(rolls, @$"<size=+4>{result}</size> | {description}", icon);
+        string historyItem = @$"<size=+4>{result}</size> | {description}
+<size=-1><color=grey>{rolls}</color></size>";
+        DiceHistoryModal.history.Add((historyItem, System.DateTime.Now));
     }
 
     public static void AddOutcome(string description, string result, string rolls, int die)
@@ -299,6 +302,7 @@ public class DiceRoller
 
         Texture2D icon = Resources.Load<Texture2D>($"Textures/die_{die}");
         Toast.AddDiceRoll(rolls, @$"<size=+4>{result}</size> | {description}", icon);
+        DiceHistoryModal.history.Add((@$"<size=+4>{result}</size> | {description}", System.DateTime.Now));
     }
 
 

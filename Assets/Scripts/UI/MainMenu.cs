@@ -29,6 +29,7 @@ public class MainMenu
         gameMenu.AddItem("Maleghast Black Mass", MaleghastActorType.BlackMassGeneratorDialog);
         gameMenu.AddItem("Maleghast Setup", MaleghastActorType.SetupDialog);
         gameMenu.AddItem("Dice Roller", DiceRoller.ToggleVisible);
+        gameMenu.AddItem("Dice History", DiceHistoryModal.Open);
 
         var mapMenu = menu.AddMenu("Map");
         mapMenu.AddItem("Edit", () => StateManager.PushState(new MapEditingState()));
