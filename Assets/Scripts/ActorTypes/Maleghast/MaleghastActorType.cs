@@ -481,6 +481,10 @@ public class MaleghastActorType : ActorType
         {
             DiceRoller.DirectDieRoll("max", "1d6", "1d6 Attack");
         }));
+        dice.Children.Add(new MenuItem("Attack -1D", () =>
+        {
+            DiceRoller.DirectDieRoll("min", "2d6", "0d6 Attack");
+        }));
         dice.Children.Add(new MenuItem("Attack +1D", () =>
         {
             DiceRoller.DirectDieRoll("max", "2d6", "2d6 Attack");
