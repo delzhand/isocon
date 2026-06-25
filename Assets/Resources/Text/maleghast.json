@@ -744,13 +744,13 @@
             "house": "Volvadani",
             "type": "Scion",
             "color": "004BDB",
-            "move": 4,
+            "move": 3,
             "hp": 4,
             "def": 3,
             "traits": "=Clad in Law",
             "actAbilities": "=Drum Shotgun|=Piston Fist|=Roaring Reload",
-            "upgrades": "-Superheated Furnace|-Blast Slag|-Shimmering Heat",
-            "tokens": "Drum Shotgun Burst#1|Piston Fist Burst#2|Super Armor v Criminals"
+            "upgrades": "-Superheated|-Blast Slag|-Shimmering Heat",
+            "tokens": "Drum Shotgun Burst#2|Piston Fist Burst#1|Super Armor v Criminals"
         },
         {
             "name": "Bobby",
@@ -760,10 +760,10 @@
             "move": 4,
             "hp": 4,
             "def": 4,
-            "traits": "=Screw Drive",
+            "traits": "=Clattering Engine",
             "actAbilities": "=Ferocious Walloping|=The Clamps|=Bloodhound",
             "upgrades": "-Hunter|-Frenzied Bobby|-Mage Hunter",
-            "tokens": "Screw Drive Burst#3|Ferocious Walloping#1"
+            "tokens": "Clattering Engine Burst#3|Ferocious Walloping#1"
         },
         {
             "name": "Mancatcher",
@@ -774,35 +774,35 @@
             "hp": 4,
             "def": 4,
             "traits": "=Make Quota",
-            "actAbilities": "=Mancatcher Chain|=Spinecracker",
+            "actAbilities": "=Chain Grab|=Spinecracker",
             "upgrades": "-Wicked Chain|-Caltrops|-Prison Coffin",
             "tokens": "Mancatcher Chain Burst#2"
         },
         {
             "name": "Clerk",
             "house": "Volvadani",
-            "type": "Hunter",
+            "type": "Freak",
             "color": "004BDB",
             "move": 3,
             "hp": 4,
             "def": 3,
             "traits": "=Technicality",
             "actAbilities": "=Court Summons|=Discard Contraband|=Deputize",
-            "upgrades": "-Shuffle Papers|-Contractual Loophole|-Unionized Healthcare",
-            "tokens": "Magic Armor|Discard Contraband Burst#2"
+            "upgrades": "-Shuffle Papers|-Contractual Loophole|-Union Healthcare",
+            "tokens": "Discard Contraband Burst#1"
         },
         {
-            "name": "Punishment Engine",
+            "name": "Penitent Engine",
             "house": "Volvadani",
             "type": "Tyrant",
             "color": "004BDB",
             "move": 3,
-            "hp": 5,
+            "hp": 6,
             "def": 2,
             "traits": "=Sin Furnace",
-            "actAbilities": "=Pendulum Swing|=Penitent Gaze|=Sentence to Suffering",
-            "upgrades": "-Wages of Sin|-Hellpins|-Pendulum Storm",
-            "tokens": "Super Armor|Pendulum Swing Burst#1",
+            "actAbilities": "=Pendulum Swing|=Penitent Gaze|=Final Sentence",
+            "upgrades": "-Heavy Swing|-Hell Pins|-Decapitate",
+            "tokens": "Physical Armor|Pendulum Swing Burst#1",
             "size": 2
         },
         {
@@ -810,13 +810,13 @@
             "house": "Volvadani",
             "type": "Necromancer",
             "color": "004BDB",
-            "move": 3,
+            "move": 4,
             "hp": 8,
-            "def": 4,
-            "traits": "=Clad in Law|-Steel Purpose|-Fueled by Hate|-Paragon",
+            "def": 3,
+            "traits": "=Steel Purpose|-Iron Tithe|-Fueled by Hate|-Paragon",
             "actAbilities": "=Hammer Shotgun|=Stoke Furnace|-Judicator Cannon|-Pressure Hammer|-Steel Eagle Heavy Demolisher Rifle|-Penitent's Mortification|-Serve Penance|-Imprison|-Fiery Ordinance",
-            "soulAbilities": "=Indict|=Call Witness|-De Jure Proxy|-Supreme Prohibition|-Purified Corpse Oil|-Weight of Sin|-Throw the Book|-Supreme Judgment",
-            "tokens": "Soul#0|Super Armor v Criminals"
+            "soulAbilities": "=Indict|=Call Witness|-De Jure Proxy|-Supreme Prohibition|-Purified Corpse Oil|-Weight of Sin|-Throw the Book|-EGO LEX SUM",
+            "tokens": "Soul#0"
         },
         {
             "name": "Tarsal Ghoul",
@@ -838,6 +838,64 @@
             "def": 4,
             "traits": "=Demon of Starvation|=Endless Hunger",
             "actAbilities": "=Harvest|=Leap|=The Black Retch"
+        },
+        {
+            "name": "Eglen Ghoul",
+            "house": "Mercenary",
+            "type": "Thrall",
+            "color": "555555",
+            "move": 4,
+            "hp": 2,
+            "def": 3,
+            "traits": "=Sated",
+            "actAbilities": "=Meat Slap|=Gobble"
+        },
+        {
+            "name": "Pauper's Shade",
+            "house": "Mercenary",
+            "type": "Horror",
+            "color": "555555",
+            "move": 4,
+            "hp": 3,
+            "def": 4,
+            "traits": "=Flight|=Ethereal",
+            "actAbilities": "=Claw Warmth|=Bone Splitting Howl|=Ghostly Step"
+        },
+        {
+            "name": "Wardemon",
+            "house": "Mercenary",
+            "type": "Scion",
+            "color": "555555",
+            "move": 3,
+            "hp": 6,
+            "def": 2,
+            "traits": "=Demon of War|=Iron Skin",
+            "actAbilities": "=Relentless Hacking|=Revel in Slaughter|=Gigakaiser",
+            "tokens": "Physical Armor|Relentless Hacking#1|Gigakaiser#1"
+        },
+        {
+            "name": "Slithering Cultist",
+            "house": "Mercenary",
+            "type": "Freak",
+            "color": "555555",
+            "move": 4,
+            "hp": 4,
+            "def": 4,
+            "traits": "=Slithering Pact",
+            "actAbilities": "=Slithering Kiss|=Slithering Flesh|=Lucifron"
+        },
+        {
+            "name": "Heliosphinx",
+            "house": "Mercenary",
+            "type": "Horror",
+            "color": "555555",
+            "move": 3,
+            "hp": 6,
+            "def": 3,
+            "traits": "=Petrify",
+            "actAbilities": "=Turn Aside Thy Hated Face|=Abhorrence of the Ancient Ones|=Bastion of the Black Gates",
+            "tokens": "Magic Armor",
+            "size": 2
         }
     ],
     "Tokens": [
