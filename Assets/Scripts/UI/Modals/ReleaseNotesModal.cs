@@ -45,6 +45,11 @@ public class ReleaseNotesModal
         var notes = new Dictionary<string, string>();
 
         notes.Add("0.9.3", @"<size=+2><b>Features</b></size>
+* Games For Freaks 4 updates to Maleghast data
+* A -1D roll option has been added to Maleghast actors
+");
+
+        notes.Add("0.9.3", @"<size=+2><b>Features</b></size>
 * Added a Wall entity to default Maleghast data
 * Added Quick Roll menu item to Maleghast actors
 * Added a Dice History dialog
