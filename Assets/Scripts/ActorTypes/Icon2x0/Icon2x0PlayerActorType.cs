@@ -209,6 +209,20 @@ public class Icon2x0PlayerActorType : Icon2x0Base
     //     return baseItems.Concat(items.ToArray()).ToArray();
     // }
 
+        public override List<MenuItem> GetMenuItems(bool placed)
+    {
+        var baseItems = base.GetMenuItems(placed);
+
+        var changeValues = FindParent("Change Values", baseItems);
+
+        changeValues.Children.Add(new MenuItem("Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+        changeValues.Children.Add(new MenuItem("Modify Vigor", () => { NumberPicker.ActorCommand("ModVIG"); }));
+        changeValues.Children.Add(new MenuItem("Modify Resolve", () => { NumberPicker.ActorCommand("ModRES"); }));
+        changeValues.Children.Add(new MenuItem("Modify Party Resolve", () => { NumberPicker.AllTokensCommand("ModPRES"); }));
+
+        return baseItems;
+    }
+
     public override void Command(string command, ActorData tokenData)
     {
         base.Command(command, tokenData);
