@@ -44,11 +44,11 @@ public class ReleaseNotesModal
     {
         var notes = new Dictionary<string, string>();
 
-        notes.Add("0.9.4", @"<size=+2><b>Features</b></size>
+        notes.Add("0.9.5", @"<size=+2><b>Features</b></size>
 * Restores missing unit commands to ICON 2.0 player actors"
 );
 
-        notes.Add("0.9.3", @"<size=+2><b>Features</b></size>
+        notes.Add("0.9.4", @"<size=+2><b>Features</b></size>
 * Games For Freaks 4 updates to Maleghast data
 * A -1D roll option has been added to Maleghast actors
 ");
