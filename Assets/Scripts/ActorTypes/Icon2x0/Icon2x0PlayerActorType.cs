@@ -197,17 +197,21 @@ public class Icon2x0PlayerActorType : Icon2x0Base
         global::AddActorModal.FinalizeToken(json);
     }
 
-    // public override MenuItem[] GetMenuItems(bool placed)
-    // {
-    //     MenuItem[] baseItems = base.GetMenuItems(placed);
+    public override List<MenuItem> GetMenuItems(bool placed)
+    {
+        var baseItems = base.GetMenuItems(placed);
 
-    //     List<MenuItem> items = new();
-    //     items.Add(new MenuItem("ModHP", "Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
-    //     items.Add(new MenuItem("ModVIG", "Modify Vigor", () => { NumberPicker.ActorCommand("ModVIG"); }));
-    //     items.Add(new MenuItem("ModRES", "Modify Resolve", () => { NumberPicker.ActorCommand("ModRES"); }));
-    //     items.Add(new MenuItem("ModPRES", "Modify Party Resolve", () => { NumberPicker.AllTokensCommand("ModPRES"); }));
-    //     return baseItems.Concat(items.ToArray()).ToArray();
-    // }
+        var changeValues = FindParent("Change Values", baseItems);
+
+        changeValues.Children.Add(new MenuItem("Modify HP", () => { NumberPicker.ActorCommand("ModHP"); }));
+        changeValues.Children.Add(new MenuItem("Modify Vigor", () => { NumberPicker.ActorCommand("ModVIG"); }));
+        changeValues.Children.Add(new MenuItem("Modify Resolve", () => { NumberPicker.ActorCommand("ModRES"); }));
+
+        var icon = FindParent("ICON 2.0", baseItems);
+        icon.Children.Add(new MenuItem("Modify Party Resolve", () => { NumberPicker.AllTokensCommand("ModPRES"); }));
+
+        return baseItems;
+    }
 
     public override void Command(string command, ActorData tokenData)
     {
